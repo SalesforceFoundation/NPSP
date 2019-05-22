@@ -67,13 +67,8 @@ public class BDI_MigrationMappingHelper {
      * @return Data_Import_Field_Mapping_Set__mdt
      */
     public Metadata.CustomMetadata createNewFieldMappingSet(String fieldMappingName) {
-        System.debug('createNewFieldMappingSet');
-
         BDI_HelpTextCMT.DataImportFieldMappingSet fieldMappingSet =
             new BDI_HelpTextCMT.DataImportFieldMappingSet(fieldMappingName, DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
-        System.debug(fieldMappingSet);
-
-        System.debug(fieldMappingSet.getMetadataRecord());
 
         return fieldMappingSet.getMetadataRecord();
     }

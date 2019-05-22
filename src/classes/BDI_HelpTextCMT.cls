@@ -48,7 +48,7 @@ public class BDI_HelpTextCMT {
     private static final Boolean IS_PROTECTED = false;
 
     /**
-     * Wrapper class for Data_Import_Field_Mapping_Set__mdt used to create
+     * @description Wrapper class for Data_Import_Field_Mapping_Set__mdt used to create
      * the custom CMT data as well as for use in the Custom UI.
      */
     public class DataImportFieldMappingSet {
@@ -81,7 +81,7 @@ public class BDI_HelpTextCMT {
     }
 
     /**
-     * Wrapper class for Data_Import_Field_Mapping__mdt used to create
+     * @description Wrapper class for Data_Import_Field_Mapping__mdt used to create
      * the default CMT data as well as for use in the Custom UI.
      */
     public class DataImportFieldMapping {
@@ -152,7 +152,7 @@ public class BDI_HelpTextCMT {
     }
 
     /**
-     * Wrapper class for import status and lookup fields
+     * @description Wrapper class for import status and lookup fields
      */
     public class ImportStatusAndLookupParts {
         public String objectName;
@@ -188,7 +188,7 @@ public class BDI_HelpTextCMT {
     }
 
     /**
-     * Wrapper class for help text field
+     * @description Wrapper class for help text field
      */
     public class HelpTextParts {
         public String objectName;
@@ -208,7 +208,7 @@ public class BDI_HelpTextCMT {
     }
 
     /**
-     * Intermediary wrapper class for Data_Import_Field_Mapping__mdt; Probably scrub later and use DataImportFieldMapping directly.
+     * @description Wrapper class for Data_Import_Field_Mapping__mdt;
      */
     public class MappingDetail {
         public String dataImportObjectName;
@@ -263,7 +263,9 @@ public class BDI_HelpTextCMT {
         return name;
     }
 
-    /** @description Map of object names from the data import help text field to actual object names */
+    /**
+    * @description Map of object names from the data import help text field to actual object names
+    */
     private static final Map<String, String> DI_OBJECT_MAP = new Map<String, String>{
         'Account1' => 'Account',
         'Account2' => 'Account',

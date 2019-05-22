@@ -99,9 +99,23 @@ public class BDI_MigrationMappingUtility {
         'Help Text';
 
     /**
+    * @description String to determine value of Data Import custom settings field Default Data Impor Field
+    * Mapping Set
+    */
+    private static final String DEFAULT_MAPPING =
+        'default';
+
+    /**
+    * @description String to determine value of Data Import custom settings field Default Data Impor Field
+    * Mapping Set
+    */
+    private static final String CUSTOM_MAPPING =
+        'custom';
+
+    /**
     * @description Determines if we're using the default field mapping set or a migrated custom set
     */
-    public String migrationType = 'default';
+    public String migrationType = DEFAULT_MAPPING;
 
     /**
     * @description Default packaged Field Mapping Set metadata record
@@ -147,9 +161,8 @@ public class BDI_MigrationMappingUtility {
 
         if (queuedMetadataTypesForDeploy.isEmpty()) {
             // queue is empty, nothing to deploy
-            upsertCustomSettings(DATA_IMPORT_FIELD_MAPPING, 'default', String.valueOf(Metadata.DeployStatus.SUCCEEDED));
+            upsertCustomSettings(DATA_IMPORT_FIELD_MAPPING, DEFAULT_MAPPING, String.valueOf(Metadata.DeployStatus.SUCCEEDED));
         } else {
-
             try {
                 Metadata.DeployContainer deploymentContainer = new Metadata.DeployContainer();
 
@@ -203,7 +216,7 @@ public class BDI_MigrationMappingUtility {
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         dataImportSettings.Field_Mapping_Method__c = fieldMappingMethod;
 
-        if (migrationType == 'default') {
+        if (migrationType == DEFAULT_MAPPING) {
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
         } else {
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
@@ -284,7 +297,7 @@ public class BDI_MigrationMappingUtility {
         conflictingMappings.clear();
         pendingMappings.clear();
         pendingStandardMappings.clear();
-        migrationType = 'custom';
+        migrationType = CUSTOM_MAPPING;
 
         buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME);
 
@@ -307,6 +320,7 @@ public class BDI_MigrationMappingUtility {
             pendingCMTs.add(fieldMappingSet);
 
             for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : allMappings) {
+                // TODO: Remove this if condition, used while developing to limit what cmts get created
                 if (dataImportFieldMapping.dataImportObjectName == 'Payment') {
 
                     dataImportFieldMapping.dataImportFieldMappingSetRecordName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
@@ -345,7 +359,7 @@ public class BDI_MigrationMappingUtility {
     * help text mappings as custom metadata mappings under our default field mapping set.
     */
     public void discardConflicts() {
-        migrationType = 'default';
+        migrationType = DEFAULT_MAPPING;
 
         // Keep any net new custom help text mappings to be added to our standard defaults
         if (pendingMappings.size() > 0) {
@@ -479,22 +493,26 @@ public class BDI_MigrationMappingUtility {
                                                      Data_Import_Field_Mapping__mdt existingFieldMapping,
                                                      Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
 
-        Boolean badMappingSetId = (existingFieldMapping.Data_Import_Field_Mapping_Set__c != 
-            DEFAULT_FIELD_MAPPING_SET.Id);
         Boolean badRequiredField = (existingFieldMapping.Required__c != 'No');
-        Boolean badSourceFieldAPIName = (existingFieldMapping.Source_Field_API_Name__c != 
-            newFieldMapping.sourceFieldAPIName);
-        Boolean badTargetFieldAPIName = (existingFieldMapping.Target_Field_API_Name__c != 
-            newFieldMapping.targetFieldAPIName);
-        Boolean badTargetObjectMappingId = (existingFieldMapping.Target_Object_Mapping__c != 
-            existingDefaultObjectMapping.Id);
         Boolean badIsDeletedField = (existingFieldMapping.Is_Deleted__c != false);
-        Boolean foundMismatch = badMappingSetId || 
-                badRequiredField || 
-                badSourceFieldAPIName || 
-                badTargetFieldAPIName || 
-                badTargetObjectMappingId || 
-                badIsDeletedField;
+        Boolean badMappingSetId = (
+            existingFieldMapping.Data_Import_Field_Mapping_Set__c != DEFAULT_FIELD_MAPPING_SET.Id
+        );
+        Boolean badSourceFieldAPIName = (
+            existingFieldMapping.Source_Field_API_Name__c != newFieldMapping.sourceFieldAPIName
+        );
+        Boolean badTargetFieldAPIName = (
+            existingFieldMapping.Target_Field_API_Name__c != newFieldMapping.targetFieldAPIName
+        );
+        Boolean badTargetObjectMappingId = (
+            existingFieldMapping.Target_Object_Mapping__c != existingDefaultObjectMapping.Id
+        );
+        Boolean foundMismatch = badMappingSetId
+            || badRequiredField
+            || badSourceFieldAPIName
+            || badTargetFieldAPIName
+            || badTargetObjectMappingId
+            || badIsDeletedField;
 
         return foundMismatch;
     }
@@ -505,17 +523,17 @@ public class BDI_MigrationMappingUtility {
      */
     public String checkDeployStatus(String deploymentId) {
         Http h = new Http();
-        HttpRequest req = new HttpRequest();
-        req.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
             '/services/data/v44.0/metadata/deployRequest/' +
             deploymentId +
             '?includeDetails=true'
         );
-        req.setMethod('GET');
-        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
-        HttpResponse res = h.send(req);
+        request.setMethod('GET');
+        request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
+        HttpResponse response = h.send(request);
 
-        return res.getBody();
+        return response.getBody();
     }
 
     private class DeploymentException extends Exception {}

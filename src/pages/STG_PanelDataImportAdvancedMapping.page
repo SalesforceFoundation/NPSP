@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelDataImportMapping_CTRL" docType="html-5.0" standardStylesheets="false">
+<apex:page controller="STG_PanelDataImportAdvancedMapping_CTRL" docType="html-5.0" standardStylesheets="false">
 
     <apex:slds/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}" />
@@ -25,7 +25,7 @@
                                         <div class="slds-media__body">
                                             <h2 class="slds-card__header-title">
                                                 <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Accounts">
-                                                    <span>Deployment in progress</span>
+                                                    <span>Previous Deployment</span>
                                                 </a>
                                             </h2>
                                         </div>
@@ -182,12 +182,10 @@
             }
 
             function handleDiscardConflicts() {
-                console.log('Attempting to discard Conflicts');
                 discardConflicts();
             }
 
             function handleKeepConflicts() {
-                console.log('Attempting to keep Conflicts');
                 keepConflicts();
             }
         </script>

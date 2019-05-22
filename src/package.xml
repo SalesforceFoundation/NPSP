@@ -356,7 +356,7 @@
         <members>STG_PanelContacts_CTRL</members>
         <members>STG_PanelCreatePayments_CTRL</members>
         <members>STG_PanelCustomizableRollup_CTRL</members>
-        <members>STG_PanelDataImportMapping_CTRL</members>
+        <members>STG_PanelDataImportAdvancedMapping_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
@@ -538,7 +538,7 @@
         <members>STG_PanelContacts</members>
         <members>STG_PanelCreatePayments</members>
         <members>STG_PanelCustomizableRollup</members>
-        <members>STG_PanelDataImportMapping</members>
+        <members>STG_PanelDataImportAdvancedMapping</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
         <members>STG_PanelHealthCheck</members>

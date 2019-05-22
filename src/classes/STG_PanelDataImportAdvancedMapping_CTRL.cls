@@ -34,12 +34,31 @@
 * @group-content ../../ApexDocContent/Settings.htm
 * @description Controller extension for the Data Import Fied Mapping settings panel.
 */
-public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
+public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
     * @description Returns the string Id of the Data Import Mapping panel
     */
     public override string idPanel() { return 'idPanelDataImportMapping'; }
+
+    /*******************************************************************************************************
+    * @description Value for Data Import custom settings Field Mapping Method
+    */
+    private static final String DATA_IMPORT_FIELD_MAPPING =
+        'Data Import Field Mapping';
+
+    /*******************************************************************************************************
+    * @description Value for Data Import custom settings Field Mapping Method
+    */
+    private static final String HELP_TEXT =
+        'Help Text';
+
+    /*******************************************************************************************************
+    * @description String to determine value of Data Import custom settings field Default Data Impor Field
+    * Mapping Set
+    */
+    private static final String DEFAULT_MAPPING =
+        'default';
 
     /*******************************************************************************************************
     * @description is the panel currently Polling for deployment results
@@ -81,7 +100,7 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     */
     public Boolean isDataImportFieldMapping {
         get {
-            return dataImportSettings.Field_Mapping_Method__c == 'Data Import Field Mapping' ? true : false;
+            return dataImportSettings.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false;
         }
         set;
     }
@@ -97,22 +116,26 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
-    * @description Custom metadata deployment status
+    * @description Custom metadata deployment result
     */
     public Metadata.DeployResult deployment { get; set; }
 
+    /*******************************************************************************************************
+    * @description Boolean that determines if the toggle should be disabled
+    */
     public Boolean toggleDisabled { get; set; }
 
-    //private final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME = 'Migrated_Custom_Mapping_Set';
-
+    /*******************************************************************************************************
+    * @description Instance of BDI_MigrationMappingUtility
+    */
     public BDI_MigrationMappingUtility migrationMappingUtility { get; set; }
-    
-    public String previousFieldMappingMethod;
 
-    public STG_PanelDataImportMapping_CTRL() {
+    /*******************************************************************************************************
+    * @description Constructor for STG_PanelDataImportAdvancedMapping_CTRL class
+    */
+    public STG_PanelDataImportAdvancedMapping_CTRL() {
         this.migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
         this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        this.previousFieldMappingMethod = this.dataImportSettings.Field_Mapping_Method__c;
         this.deployment = checkDeploymentStatus();
     }
 
@@ -138,8 +161,18 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
                     isPolling = false;
                 } else {
                     if (migrationMappingUtility.queuedMetadataTypesForDeploy.isEmpty()) {
-                        dataImportSettings = BDI_MigrationMappingUtility.upsertCustomSettings('Data Import Field Mapping', 'default', String.valueOf(Metadata.DeployStatus.Succeeded));
-                        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled));
+                        dataImportSettings =
+                            BDI_MigrationMappingUtility.upsertCustomSettings(
+                                DATA_IMPORT_FIELD_MAPPING,
+                                DEFAULT_MAPPING,
+                                String.valueOf(Metadata.DeployStatus.Succeeded)
+                            );
+                        ApexPages.addMessage(
+                            new ApexPages.Message(
+                                ApexPages.Severity.CONFIRM,
+                                Label.stgDeploymentCustomMetadataMappingEnabled
+                            )
+                        );
                     } else {
                         migrationMappingUtility.deployCustomMetadata();
                     }
@@ -151,7 +184,12 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             }
         } else {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'There is a deployment currently in progess.'));
+            ApexPages.addMessage(
+                new ApexPages.Message(
+                    ApexPages.Severity.WARNING,
+                    'There is a deployment currently in progess.'
+                )
+            );
         }
         return null;
     }
@@ -164,8 +202,18 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         try {
-            dataImportSettings = BDI_MigrationMappingUtility.upsertCustomSettings('Help Text', 'default', String.valueOf(Metadata.DeployStatus.Succeeded));
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled));
+            dataImportSettings =
+                BDI_MigrationMappingUtility.upsertCustomSettings(
+                    HELP_TEXT,
+                    DEFAULT_MAPPING,
+                    String.valueOf(Metadata.DeployStatus.Succeeded)
+                );
+            ApexPages.addMessage(
+                new ApexPages.Message(
+                    ApexPages.Severity.CONFIRM,
+                    Label.stgDeploymentHelpTextMappingEnabled
+                )
+            );
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
@@ -200,7 +248,6 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     * @return void
     */
     public PageReference discardConflicts() {
-        System.debug('*** discardConflicts()');
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         Savepoint sp = Database.setSavepoint();
@@ -226,28 +273,54 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         timeoutCount++;
 
         deployment = checkDeploymentStatus();
-        if (deployment != null) {
-            dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
-            if (deployment.status == Metadata.DeployStatus.Succeeded && dataImportSettings.Field_Mapping_Method__c == 'Data Import Field Mapping') {
+        if (deployment != null) {
+            Boolean isSuccess = deployment.status == Metadata.DeployStatus.Succeeded
+                && dataImportSettings.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING;
+
+            if (isSuccess) {
                 isPolling = false;
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled));
+                ApexPages.addMessage(
+                    new ApexPages.Message(
+                        ApexPages.Severity.CONFIRM,
+                        Label.stgDeploymentCustomMetadataMappingEnabled
+                    )
+                );
             } else if (deployment.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain));
             }
+
+        } else if (deployment == null && dataImportSettings.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING) {
+            isPolling = false;
+            ApexPages.addMessage(
+                new ApexPages.Message(
+                    ApexPages.Severity.CONFIRM,
+                    Label.stgDeploymentCustomMetadataMappingEnabled
+                )
+            );
         }
 
         if (timeoutCount > MAX_TIME_OUT) {
             isPolling = false;
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain));
+            ApexPages.addMessage(
+                new ApexPages.Message(
+                    ApexPages.Severity.WARNING,
+                    Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain
+                )
+            );
             return null;
         }
 
         return null;
     }
 
-    
+    /*******************************************************************************************************
+    * @description Method checks to see if we have a saved custom metadata deployment id,
+    * inspects the deployment status, and sets the page's toggle status
+    * @return Metadata.DeployResult
+    */
     private Metadata.DeployResult checkDeploymentStatus() {
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
@@ -256,20 +329,25 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             DeployResultWrapper responseWrapper =
                 (DeployResultWrapper)JSON.deserialize(response, DeployResultWrapper.class);
 
-            updateToggleStatus(responseWrapper.deployResult);
+            if (responseWrapper != null && responseWrapper.deployResult != null) {
+                updateToggleStatus(responseWrapper.deployResult.status);
+            }
 
             return responseWrapper.deployResult;
         }
         return null;
     }
 
-    private void updateToggleStatus(Metadata.DeployResult deploymentResult) {
-        if (deploymentResult != null) {
-            Boolean disabled = (
-                deploymentResult.status == Metadata.DeployStatus.INPROGRESS ||
-                deploymentResult.status == Metadata.DeployStatus.PENDING ||
-                deploymentResult.status == Metadata.DeployStatus.CANCELING
-            );
+    /*******************************************************************************************************
+    * @description Sets toggleDisabled boolean, should be disabled if we have an active deployment.
+    * @return Metadata.DeployStatus
+    */
+    private void updateToggleStatus(Metadata.DeployStatus deploymentStatus) {
+        if (deploymentStatus != null) {
+            Boolean disabled = deploymentStatus == Metadata.DeployStatus.INPROGRESS
+                || deploymentStatus == Metadata.DeployStatus.PENDING
+                || deploymentStatus == Metadata.DeployStatus.CANCELING;
+
             if (disabled) {
                 toggleDisabled = true;
             } else {
@@ -280,6 +358,9 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Wrapper for Metadata.DeployResult
+    */
     public class DeployResultWrapper {
         public Id id { get; set; }
         public Metadata.DeployResult deployResult { get; set; }
