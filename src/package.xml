@@ -1360,6 +1360,7 @@
         <members>alloPaymentOverallocatedError</members>
         <members>alloPaidPmtsExceedsOpp</members>
         <members>alloPaymentNotEnabled</members>
+        <members>alloPaymentOverallocatedError</members>
         <members>alloPercentExceed100</members>
         <members>alloPmtOppSingleTransaction</members>
         <members>alloRemainder</members>
