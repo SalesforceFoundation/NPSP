@@ -114,24 +114,24 @@ public with sharing class BDI_AdditionalObjectService {
                 if (fieldMappings != null && fieldMappings.size() > 0) {
 
                     BDI_ObjectWrapper[] objWrapsForProcessing = new BDI_ObjectWrapper[]{};
-                    for (DataImport__c di : dataImportRecords) {
+                    for (DataImport__c dataImport : dataImportRecords) {
 
-                        BDI_ObjectWrapper objWrap = new BDI_ObjectWrapper(di,objMapping,fieldMappings,predecessor);
+                        BDI_ObjectWrapper objWrap = new BDI_ObjectWrapper(dataImport,objMapping,fieldMappings,predecessor);
 
                         //null out any existing value in the status field for this object mapping
-                        di.put(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Status_Field_Name__c),'');
+                        dataImport.put(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Status_Field_Name__c),'');
 
                         //If the imported record field for the object is not populated then create a new Sobject, otherwise update existing.
-                        if (di.get(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Field_Name__c)) == null) {
+                        if (dataImport.get(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Field_Name__c)) == null) {
 
-                            //If there are no fields populated or required fields are not populated for this object mapping then ignore this DI and continue.
+                            //If there are no fields populated or required fields are not populated for this object mapping then ignore this dataImport and continue.
                             if (!validateFields(objWrap)) {
                                 continue;
                             }
 
-                            //If the predecessor doesn't exist, then update the Data import object with an error and continue with the next di.
+                            //If the predecessor doesn't exist, then update the Data import object with an error and continue with the next dataImport.
                             if (!predecessorExists(objWrap,predecessor)) {
-                                di.put(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Status_Field_Name__c),System.label.bdiAdditionalObjPredNotFound);
+                                dataImport.put(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Status_Field_Name__c),System.label.bdiAdditionalObjPredNotFound);
                                 continue;
                             }
 
@@ -139,7 +139,7 @@ public with sharing class BDI_AdditionalObjectService {
 
                             //If there is an existing record then we don't need to perform the normal validation and can proceed to populating
                             //the record with any non-null values.
-                            objWrap.existingSobjectId = (Id)di.get(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Field_Name__c));
+                            objWrap.existingSobjectId = (Id)dataImport.get(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Field_Name__c));
 
                         }
 
