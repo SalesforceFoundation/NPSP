@@ -46,3 +46,34 @@ Create Donation from a Contact
     ${flag}     Verify payment    
     should be equal as strings     ${flag}    pass
     
+Verify values in Create one or more Payments for this Opportunity page
+    [tags]  unstable
+    Click Element With Locator    breadcrumb-link    ${opp_name}
+    Select Tab    Related
+    Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
+    Wait Until Modal Is Open
+    Select Lightning Checkbox    Written Off
+    ${pay_id}    Return Locator Value    payments.field-value    Payment Number
+    Click Modal Button    Save
+    Wait Until Modal Is Closed
+    Click Special Related List Button  Payments    Schedule Payments
+    Wait For Locator    frame    Create one or more Payments for this Opportunity
+    Choose Frame    Create one or more Payments for this Opportunity
+    Verify Field Values
+    ...    Payment Writeoff Amount=$250.00
+    ...    Remaining Balance=$750.00
+    Click Button    Cancel
+    Select Tab    Related
+    Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
+    Wait Until Modal Is Open
+    Select Lightning Checkbox    Written Off
+    Select Lightning Checkbox    Paid
+    Click Modal Button    Save
+    Page Should Contain    A Payment can't be both paid and written off. You must deselect one or both checkboxes.
+    Click Modal Button    Cancel
+    Wait Until Modal Is Closed
+    Click ViewAll Related List    Payments
+    Verify Details
+    ...    Unpaid=3
+    ...    Written Off=1
+    
