@@ -391,6 +391,8 @@ flows:
                     path: unpackaged/config/perf
                     namespace_inject: $project_config.project__package__namespace
             3:
+                task: update_admin_profile
+            4:
                 task: performance_tests
 
     beta_dependencies:
