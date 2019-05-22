@@ -301,6 +301,15 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                 assertValue(ROLLUP_LASTTDATE, a.npo02__LastCloseDate__c, 'Account.npo02__LastCloseDate__c should be');
                 assertValue(ROLLUP_TOTAL_LASTYEAR, a.npo02__OppAmountLastYear__c, 'Account.npo02__OppAmountLastYear__c should be');
 
+                AggregateResult ag = [SELECT Count(Id) cnt, Sum(Amount) sum FROM Opportunity
+                    WHERE AccountId = :a.Id
+                    AND IsWon = TRUE
+                    AND (CloseDate = LAST_N_DAYS:365 OR CloseDate > TODAY)];
+                Integer countLastNDays = ((Decimal)ag.get('cnt')).intValue();
+                Decimal sumLastNDays = (Decimal)ag.get('sum');
+                assertValue(countLastNDays, a.npo02__OppsClosedLastNDays__c, a.Id + ' Account.npo02__OppsClosedLastNDays__c should be');
+                assertValue(sumLastNDays, a.npo02__OppAmountLastNDays__c, a.Id + ' Account.npo02__OppAmountLastNDays__c should be');
+
                 assertValue(MEMBERSHIP_FIRST_DATE, a.npo02__MembershipJoinDate__c, 'Account.npo02__MembershipJoinDate__c should be');
                 assertValue(MEMBERSHIP_FIRST_DATE.addYears(4).addDays(-1), a.npo02__MembershipEndDate__c, 'Account.npo02__MembershipEndDate__c should be');
                 assertValue(4, a.npo02__NumberOfMembershipOpps__c, 'Account.npo02__NumberOfMembershipOpps__c should be');
@@ -343,13 +352,28 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         contactSOQL = contactSOQL.replace('Id,', 'Id,Account.Name,');
         contacts = Database.query(contactSOQL);
 
+        // The number of Opps in the last 365 days could vary slightly based on a few factors such as the
+        // current date. As a result, it's safer to force a manual count and sum of the values to validate against.
+        List<AggregateResult> agr = [SELECT Primary_Contact__c, Count(Id) cnt, Sum(Amount) sum FROM Opportunity
+            WHERE IsWon = TRUE
+            AND (CloseDate = LAST_N_DAYS:365 OR CloseDate > TODAY)
+            GROUP BY Primary_Contact__c];
+        Map<Id, Integer> countLastNDays = new Map<Id, Integer>();
+        Map<Id, Decimal> sumLastNDays = new Map<Id, Decimal>();
+        for (AggregateResult ag : agr) {
+            countLastNDays.put((Id)ag.get('Primary_Contact__c'), ((Decimal)ag.get('cnt')).intValue());
+            sumLastNDays.put((Id)ag.get('Primary_Contact__c'), (Decimal)ag.get('sum'));
+        }
+
         for (Contact c : contacts) {
+
             // The organization account will only have a single donation
             if (c.Account.Name == ACCOUNT_NAME_RD) {
                 // No need to validate rollups on the Recurring Donations Account Contact
                 continue;
 
             } else if (c.Account.npe01__One2OneContact__c == c.Id) {
+
                 // Hard Credit
                 assertValue(ROLLUP_TOTAL_WON_AMOUNT, c.npo02__TotalOppAmount__c, 'Contact.npo02__TotalOppAmount__c should be');
                 assertValue(ROLLUP_TOTAL_WON_COUNT, c.npo02__NumberOfClosedOpps__c, 'Contact.npo02__NumberOfClosedOpps__c should be');
@@ -360,6 +384,9 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                 assertValue(ROLLUP_FIRSTDATE, c.npo02__FirstCloseDate__c, 'Contact.npo02__FirstCloseDate__c should be');
                 assertValue(ROLLUP_LASTTDATE, c.npo02__LastCloseDate__c, 'Contact.npo02__LastCloseDate__c should be');
                 assertValue(ROLLUP_TOTAL_LASTYEAR, c.npo02__OppAmountLastYear__c, 'Contact.npo02__OppAmountLastYear__c should be');
+
+                assertValue(countLastNDays.get(c.Id), c.npo02__OppsClosedLastNDays__c, c.Id + ' Contact.npo02__OppsClosedLastNDays__c should be');
+                assertValue(sumLastNDays.get(c.Id), c.npo02__OppAmountLastNDays__c, c.Id + ' Contact.npo02__OppAmountLastNDays__c should be');
 
                 assertValue(0, c.npo02__Soft_Credit_Total__c, 'Contact.npo02__Soft_Credit_Total__c should be');
 
@@ -383,6 +410,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                     assertValue(ORG_DONATION_AMT, c.Largest_Soft_Credit_Amount__c, 'Org Contact.Largest_Soft_Credit_Amount__c should be');
                 }
                 assertValue(0, c.npo02__TotalOppAmount__c, 'Contact.npo02__TotalOppAmount__c should be');
+                assertValue(OPPORTUNITY_AMOUNT, (Double) c.get('First_Soft_Credit_Amount__c'), c.Id + ' Contact.First_Soft_Credit_Amount__c should be');
 
                 assertValue(null, c.npo02__MembershipJoinDate__c, 'Contact.npo02__MembershipJoinDate__c should be');
                 assertValue(null, c.npo02__MembershipEndDate__c, 'Contact.npo02__MembershipEndDate__c should be');
@@ -578,6 +606,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                 }
                 countByYear.put(theYear, countByYear.get(theYear) + 1);
 
+                // Limit each year to 150 opportunities
                 if (countByYear.get(theYear) == 150 && theYear != BASE_YEAR-1) {
                     nextDate = Date.newInstance(theYear+1, 1, 1);
                 }
@@ -778,5 +807,93 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             }
             return closedLostStage;
         } private set;
+    }
+
+
+    /**
+     * @description Used to test Rollup Performance and Grouping Size for each individual rollup type.
+     * This testing uses the ExecuteRollups api to avoid SOQL and DML from impacting the performance
+     * because those are notoriously unreliable. It should be noted that there is a single query in the
+     * executeRollups() api to retrieve the parent record using the passed Id. It's minor, but
+     * because SOQL performance varies so widely it should be considered when it comes to testing.
+     *
+     * Notes:
+     * - Test Data created by this class must exist in the org first
+     * - The "Apex" Debug Levels must be changed to "Debug" instead of "Finest" to avoid a CPU Timeout
+     * - This expects to only test out of the box rollups because the query of fields across the Opportunity
+     *   and related objects is hardcoded in this method.
+     * - Execute this test at least 5 times to get an average of performance times.
+     * @param CRLP_RollupProcessingOptions.RollupType enum
+     */
+    public static void testRollupPerformance(CRLP_RollupProcessingOptions.RollupType rt) {
+        System.Callable npspApi = new callable_Api();
+
+        Map<String, Object> params = new Map<String, Object>{
+            'RollupType' => rt.name()
+        };
+
+        String rollupDefs = (String)npspApi.call('CRLP.GetDefinitionsForRollupType', params);
+        List<CRLP_Rollup> rollups = (List<CRLP_Rollup>)JSON.deserialize(rollupDefs,
+            List<CRLP_Rollup>.class);
+        System.debug('=============================================');
+        System.debug('- RollupType=' + params.get('RollupType'));
+        System.debug('- CRLP_Rollup Size=' + rollups.size());
+        System.debug('- Serialized Size=' + rollupDefs.length());
+
+        // Select an Account or Contact
+        Account acctHC = [SELECT Id, npe01__One2OneContact__c FROM Account WHERE Name = 'CRLP TEST HOUSEHOLD 1' LIMIT 1];
+        Contact conHC = [SELECT Id FROM Contact WHERE Id = :acctHC.npe01__One2OneContact__c LIMIT 1];
+        Contact conSC = [SELECT Id FROM Contact WHERE AccountId = :acctHC.Id AND Id != :conHC.Id LIMIT 1];
+        General_Accounting_Unit__c gau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'CRLP Default GAU' LIMIT 1];
+
+        // Retrieve all Opps for the specified Account
+        List<Opportunity> opps = [SELECT Id, AccountId, Primary_Contact__c,
+            Amount, CloseDate, IsWon, RecordTypeId, RecordType.DeveloperName,
+            npe01__Member_Level__c, npe01__Membership_Origin__c,
+            npe01__Membership_End_Date__c, npe01__Membership_Start_Date__c,
+        (SELECT Id, ContactId, Contact.AccountId, Role FROM OpportunityContactRoles),
+        (SELECT Id, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c, npe01__Payment_Date__c FROM npe01__OppPayment__r),
+        (SELECT Id, Contact__c, Role_Name__c, Contact_Role_ID__c, Opportunity__c, Amount__c FROM Partial_Soft_Credits__r),
+        (SELECT Id, Opportunity__c, Amount__c, General_Accounting_Unit__c FROM Allocations__r)
+        FROM Opportunity
+        WHERE AccountId = :acctHC.Id];
+
+        Map<Id, Map<SObjectType, List<SObject>>> rollupData = new Map<Id, Map<SObjectType, List<SObject>>>();
+        for (Opportunity opp : opps) {
+            Map<SObjectType, List<SObject>> data = new Map<SObjectType, List<SObject>>();
+            data.put(Opportunity.SObjectType, new List<SObject>{ opp });
+            data.put(npe01__OppPayment__c.SObjectType, opp.npe01__OppPayment__r);
+            data.put(OpportunityContactRole.SObjectType, opp.OpportunityContactRoles);
+            data.put(Partial_Soft_Credit__c.SObjectType, opp.Partial_Soft_Credits__r);
+            data.put(Allocation__c.SObjectType, opp.Allocations__r);
+            rollupData.put(opp.Id, data);
+        }
+
+        Id parentId = acctHC.Id;
+        switch on rt {
+            when ContactHardCredit {
+                parentId = conHC.Id;
+            }
+            when ContactSoftCredit {
+                parentId = conSC.Id;
+            }
+            when GAU {
+                parentId = gau.Id;
+            }
+        }
+
+        Long startTime = System.currentTimeMillis();
+        for (Integer n = 0; n < 5; n++) {
+            CRLP_ApiExecuteRollups rollupApiProcess = new CRLP_ApiExecuteRollups()
+                .withRollupType(rt)
+                .withParentId(parentId)
+                .withRollupData(rollupData)
+                .withRollupDefs(rollups)
+                .withCommitToDatabase(false);
+            rollupApiProcess.executeRollups();
+        }
+        Long endTime = System.currentTimeMillis();
+        System.debug('- Number of Opps Passed: ' + opps.size());
+        System.debug('- Elapsed Time: ' + (endTime - startTime));
     }
 }
