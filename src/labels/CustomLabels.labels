@@ -2058,12 +2058,76 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Created</value>
     </labels>
     <labels>
-        <fullName>bdiCustomObjectMappingSummary</fullName>
+        <fullName>bdiAdvancedMapping</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Custom Object Mapping Summary</shortDescription>
-        <value>Data Import Field Mapping</value>
+        <shortDescription>Data Import Advanced Mapping Summary</shortDescription>
+        <value>Data Import Advanced Mapping</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdvancedMappingCustomHelpTextLabel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Data Import Advanced Mapping settings page table.</shortDescription>
+        <value>Customized Help Text Field Value</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdvancedMappingDIFieldLabel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Data Import Advanced Mapping settings page table.</shortDescription>
+        <value>Data Import Field</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdvancedMappingDiscardButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text for discarding conflicts</shortDescription>
+        <value>Discard Conflicts</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdvancedMappingExpectedHelpTextLabel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Data Import Advanced Mapping settings page table.</shortDescription>
+        <value>Expected Help Text Field Value</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdvancedMappingKeepButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text for keeping conflicts</shortDescription>
+        <value>Keep Conflicts</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdvancedMappingPromptBody</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body text in advanced mapping page when conflicts found during migration.</shortDescription>
+        <value>Would you like to keep or discard your help text mapping conflicts?</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdvancedMappingPromptTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title text in advanced mapping page when conflicts found during migration.</shortDescription>
+        <value>Standard Help Text Mappings have been changed in your org.</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdvancedMappingTableHeader</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Data Import Advanced Mapping settings page table.</shortDescription>
+        <value>Conflicting Help Text Mappings</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>

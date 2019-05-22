@@ -21,7 +21,10 @@
                 <div class="slds-grid">
                     <apex:outputPanel>
                         <div class="slds-m-vertical_medium">
-                            <c:UTIL_HtmlOutput html="{!$Label.stgHelpBDICustomObjectMappingEnable}" hasLink="true" styleClass="slds-text-body_small" />
+                            <c:UTIL_HtmlOutput
+                                html="{!$Label.stgHelpBDICustomObjectMappingEnable}"
+                                hasLink="true"
+                                styleClass="slds-text-body_small" />
                         </div>
 
                         <div class="slds-m-vertical_medium {!IF(deployment == null, 'slds-hide', '')}">
@@ -42,11 +45,21 @@
                                         <article class="slds-tile">
                                             <div class="slds-tile__detail">
                                                 <dl class="slds-list_horizontal slds-wrap">
-                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Deployment ID">Deployment ID:</dt>
-                                                    <dd class="slds-item_detail slds-truncate" title="{!deployment.id}">{!deployment.id}</dd>
-                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Status">Status:</dt>
-                                                    <dd class="slds-item_detail slds-truncate" title="{!deployment.status}">{!deployment.status}</dd>
-                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Created Date">Created Date:</dt>
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Deployment ID">
+                                                        Deployment ID:
+                                                    </dt>
+                                                    <dd class="slds-item_detail slds-truncate" title="{!deployment.id}">
+                                                        {!deployment.id}
+                                                    </dd>
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Status">
+                                                        Status:
+                                                    </dt>
+                                                    <dd class="slds-item_detail slds-truncate" title="{!deployment.status}">
+                                                        {!deployment.status}
+                                                    </dd>
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Created Date">
+                                                        Created Date:
+                                                    </dt>
                                                     <dd class="slds-item_detail slds-truncate" title="{!deployment.createdDate}">
                                                         <apex:outputText value="{0, date, MMMM d','  yyyy hh:mm:ss}">
                                                             <apex:param value="{!deployment.createdDate}" />
@@ -62,7 +75,7 @@
                         </div>
 
                         <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small" style="width: fit-content;">
-                            <span class="slds-form-element__label slds-m-bottom_none">{!$Label.bdiCustomObjectMappingSummary}</span>
+                            <span class="slds-form-element__label slds-m-bottom_none">{!$Label.bdiAdvancedMapping}</span>
                             <apex:inputCheckbox onClick="toggle(); return false;"
                                                 id="enableDIFMToggle"
                                                 html-name="checkbox-toggle-2"
@@ -98,17 +111,21 @@
                                     </div>
                                     <div class="slds-media__body">
                                         <h2 class="slds-card__header-title">
-                                            Standard Help Text Mappings have been changed in your org.
+                                            {!$Label.bdiAdvancedMappingPromptTitle}
                                         </h2>
                                     </div>
                                 </header>
                             </div>
                             <div class="slds-size_1-of-1 slds-m-vertical_small">
-                                <p>Would you like to keep or discard your help text mapping conflicts?</p>
+                                <p>{!$Label.bdiAdvancedMappingPromptBody}</p>
                             </div>
                             <div class="slds-size_1-of-1 slds-m-top_small slds-m-bottom_large">
-                                <button class="slds-button slds-button_brand" onclick="handleKeepConflicts();return false;">Keep Conflicts</button>
-                                <button class="slds-button slds-button_text-destructive" onclick="handleDiscardConflicts();return false;">Discard Conflicts</button>
+                                <button class="slds-button slds-button_brand" onclick="handleKeepConflicts();return false;">
+                                    {!$Label.bdiAdvancedMappingKeepButton}
+                                </button>
+                                <button class="slds-button slds-button_text-destructive" onclick="handleDiscardConflicts();return false;">
+                                    {!$Label.bdiAdvancedMappingDiscardButton}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -129,19 +146,27 @@
             <!-- CONFLICTS DATATABLE -->
             <div class="slds-grid slds-wrap slds-m-top_large {!IF(isPolling,'slds-hide','')}">
                 <div class="slds-size_1-of-1 {!IF(migrationMappingUtility.conflictingMappings.size > 0,'','slds-hide')}">
-                    <div class="slds-text-heading_medium slds-text-heading_medium__extension slds-p-bottom_medium">Conflicting Modified Standard Mappings</div>
+                    <div class="slds-text-heading_medium slds-text-heading_medium__extension slds-p-bottom_medium">
+                        {!$Label.bdiAdvancedMappingTableHeader}
+                    </div>
 
                     <table class="slds-table slds-table_cell-buffer slds-table_bordered">
                         <thead>
                             <tr class="slds-line-height_reset">
                                 <th class="" scope="col">
-                                    <div class="slds-truncate" title="Data Import Field">Data Import Field</div>
+                                    <div class="slds-truncate" title="{!$Label.bdiAdvancedMappingDIFieldLabel}">
+                                        {!$Label.bdiAdvancedMappingDIFieldLabel}
+                                    </div>
                                 </th>
                                 <th class="" scope="col">
-                                    <div class="slds-truncate" title="Expected Help Text Field Value">Expected Help Text Field Value</div>
+                                    <div class="slds-truncate" title="{!$Label.bdiAdvancedMappingExpectedHelpTextLabel}">
+                                        {!$Label.bdiAdvancedMappingExpectedHelpTextLabel}
+                                    </div>
                                 </th>
                                 <th class="" scope="col">
-                                    <div class="slds-truncate" title="Customized Help Text Field Value">Customized Help Text Field Value</div>
+                                    <div class="slds-truncate" title="{!$Label.bdiAdvancedMappingCustomHelpTextLabel}">
+                                        {!$Label.bdiAdvancedMappingCustomHelpTextLabel}
+                                    </div>
                                 </th>
                             </tr>
                         </thead>
@@ -152,10 +177,14 @@
                                         <div class="slds-truncate" title="{!cmt.label}">{!cmt.label}</div>
                                     </th>
                                     <td data-label="{!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' ,cmt.dataImportObjectName + '.' + cmt.expectedHelpTextValue)}">
-                                        <div class="slds-truncate" title="{!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' , cmt.expectedHelpTextValue)}">{!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' , cmt.expectedHelpTextValue)}</div>
+                                        <div class="slds-truncate" title="{!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' , cmt.expectedHelpTextValue)}">
+                                            {!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' , cmt.expectedHelpTextValue)}
+                                        </div>
                                     </td>
                                     <td data-label="{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}">
-                                        <div class="slds-truncate" title="{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}">{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}</div>
+                                        <div class="slds-truncate" title="{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}">
+                                            {!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}
+                                        </div>
                                     </td>
                                 </tr>
                             </apex:repeat>
@@ -165,15 +194,32 @@
             </div>
             <!-- END CONFLICTS DATATABLE -->
 
-            <apex:actionPoller action="{!startPolling}" enabled="{!isPolling}" reRender="form" interval="5" status="deploymentStatus"/>
+            <apex:actionPoller
+                action="{!startPolling}"
+                enabled="{!isPolling}"
+                reRender="form"
+                interval="5"
+                status="deploymentStatus" />
 
-            <apex:actionFunction name="enableDataImportFieldMapping" action="{!enableDataImportFieldMapping}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+            <apex:actionFunction
+                name="enableDataImportFieldMapping"
+                action="{!enableDataImportFieldMapping}"
+                reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
                 status="statusLoad" />
-            <apex:actionFunction name="disableDataImportFieldMapping" action="{!disableDataImportFieldMapping}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+            <apex:actionFunction
+                name="disableDataImportFieldMapping"
+                action="{!disableDataImportFieldMapping}"
+                reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
                 status="statusLoad" />
-            <apex:actionFunction name="keepConflicts" action="{!keepConflicts}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+            <apex:actionFunction
+                name="keepConflicts"
+                action="{!keepConflicts}"
+                reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
                 status="statusLoad" />
-            <apex:actionFunction name="discardConflicts" action="{!discardConflicts}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+            <apex:actionFunction
+                name="discardConflicts"
+                action="{!discardConflicts}"
+                reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
                 status="statusLoad" />
 
         </apex:form>
