@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>AccConSC_Count__c</fullName>
+        <externalId>false</externalId>
+        <label>AccConSC - Count</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>AccConSC_Total_SCs__c</fullName>
+        <externalId>false</externalId>
+        <label>AccConSC - Total SCs</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>AccConSC__c</fullName>
+        <externalId>false</externalId>
+        <label>AccConSC - Avg SC Amt</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Largest_SC_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - Largest SC Amount</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>SC_Avg_SC_Amt__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - Avg SC Amt</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>SC_First_SC_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - First SC Amount</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>SC_Largest_SC_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - Largest SC Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>SC_Last_SC_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - Last SC Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>SC_SC_Best_Year_Total__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - SC Best Year Total</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>SC_SC_Best_Year__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - SC Best Year</label>
+        <length>50</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SC_Smallest_SC_Amt__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - Smallest SC Amt</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>SC_Total_Amt_SCs_2_Yrs_Ago__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - Total Amt SCs 2 Yrs Ago</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>SC_Total__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - Total Amt SCs</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>SCs_Last_Year__c</fullName>
+        <externalId>false</externalId>
+        <label>AccSC - Num SC Last Year</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollup_Total_Payments__c</fullName>
+        <externalId>false</externalId>
+        <label>Payments: Total Payments</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Rollup_Total_Writeoffs__c</fullName>
+        <externalId>false</externalId>
+        <label>Payments: Total Write-Offs</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Average_In_Kind_Gifts__c</fullName>
+        <externalId>false</externalId>
+        <label>Average In-Kind Gifts</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Best_In_Kind_Total__c</fullName>
+        <externalId>false</externalId>
+        <label>Best In-Kind Total</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Best_In_Kind_Year__c</fullName>
+        <externalId>false</externalId>
+        <label>Best In-Kind Year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Campaign_of_Latest_Created_Opportunity__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Campaign of Latest Created Opportunity</label>
+        <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>Accounts</relationshipLabel>
+        <relationshipName>Accounts</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>First_In_Kind_Gift_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>First In-Kind Gift Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>First_In_Kind_Gift_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>First In-Kind Gift Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>In_Kind_Donor_Streak__c</fullName>
+        <externalId>false</externalId>
+        <label>In-Kind Donor Streak</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Largest_In_Kind_Gift_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Largest In-Kind Gift Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Largest_In_Kind_Gift_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Largest In-Kind Gift Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Last_In_Kind_Gift_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Last In-Kind Gift Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Last_In_Kind_Gift_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Last In-Kind Gift Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Smallest_In_Kind_Gift_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Smallest In-Kind Gift Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Smallest_In_Kind_Gift_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Smallest In-Kind Gift Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Total_Amount_In_Kind_Gifts__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Amount In-Kind Gifts</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Count_In_Kind_Gifts__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Count In-Kind Gifts</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>
