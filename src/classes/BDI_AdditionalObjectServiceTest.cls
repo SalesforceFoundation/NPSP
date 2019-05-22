@@ -35,7 +35,7 @@
 * @description Unit tests to cover the creation of additional objects during batch data import.
 */
 
-@isTest
+@isTest(isParallel=true)
 private class BDI_AdditionalObjectServiceTest {
 
     @testSetup
