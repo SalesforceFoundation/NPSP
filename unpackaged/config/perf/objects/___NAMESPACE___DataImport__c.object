@@ -4,7 +4,7 @@
         <fullName>Qualified_Date__c</fullName>
         <description>The date your organization identified this donor as qualifying for this Donation.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.Qualified_Date__c</inlineHelpText>
+        <inlineHelpText>Opportunity.npsp__Qualified_Date__c</inlineHelpText>
         <label>Qualified Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
