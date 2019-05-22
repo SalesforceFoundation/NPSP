@@ -38,15 +38,15 @@
 
 public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMappingLogic {
 
-    public override BDI_ObjectWrap[] populateObjects(BDI_ObjectWrap[] objWraps) {
+    public override BDI_ObjectWrapper[] populateObjects(BDI_ObjectWrapper[] objWraps) {
 
         Allocations_Settings__c settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
-        String PAYMENT_FN = 'npsp__Payment__c';
-        String OPPORTUNITY_FN = 'npsp__Opportunity__c';
-        String CAMPAIGN_FN = 'npsp__Campaign__c';
+        String PAYMENT_FIELDNAME = 'npsp__Payment__c';
+        String OPPORTUNITY_FIELDNAME = 'npsp__Opportunity__c';
+        String CAMPAIGN_FIELDNAME = 'npsp__Campaign__c';
 
-        for (BDI_ObjectWrap objWrap : objWraps) {
+        for (BDI_ObjectWrapper objWrap : objWraps) {
             Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c));
 
             objWrap.sObj = Schema.getGlobalDescribe().get(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c)).newSObject();
@@ -71,11 +71,11 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                     //Confirm that either the sObj Id is null (ie new record) or that the field is updatable if it is not new.
                     if (objWrap.sObj.Id == null || targetDescribe.isUpdateable()) {
                         // If the target field mapping is one of the key parent objects, then extract the values for later logic
-                        if (fieldMapping.Target_Field_API_Name__c == PAYMENT_FN) {
+                        if (fieldMapping.Target_Field_API_Name__c == PAYMENT_FIELDNAME) {
                             paymentValue = value;
-                        } else if (fieldMapping.Target_Field_API_Name__c == OPPORTUNITY_FN) {
+                        } else if (fieldMapping.Target_Field_API_Name__c == OPPORTUNITY_FIELDNAME) {
                             opportunityValue = value;
-                        } else if (fieldMapping.Target_Field_API_Name__c == CAMPAIGN_FN) {
+                        } else if (fieldMapping.Target_Field_API_Name__c == CAMPAIGN_FIELDNAME) {
                             campaignValue = value;
                         } else {
                             //only copy values that are not null to avoid overwriting data when updating existing sobjects.
@@ -89,11 +89,11 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
             // If the payment is specified and payment allocations are enabled, always use that first.
             if ( paymentValue != null && settings.Payment_Allocations_Enabled__c) {
-                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(PAYMENT_FN),paymentValue);
+                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(PAYMENT_FIELDNAME),paymentValue);
             } else if ( opportunityValue != null ) {
-                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(OPPORTUNITY_FN),opportunityValue);
+                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(OPPORTUNITY_FIELDNAME),opportunityValue);
             } else if ( campaignValue != null ) { 
-                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(CAMPAIGN_FN),campaignValue);
+                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(CAMPAIGN_FIELDNAME),campaignValue);
             }
 
         }

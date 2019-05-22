@@ -30,6 +30,10 @@
                 <behavior>Edit</behavior>
                 <field>Imported_Record_Status_Field_Name__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Custom_Mapping_Logic_Class__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -96,9 +100,17 @@
     </layoutSections>
     <relatedLists>
         <fields>MasterLabel</fields>
+        <fields>Data_Import_Field_Mapping_Set__c</fields>
         <fields>DeveloperName</fields>
+        <fields>Required__c</fields>
+        <fields>Source_Field_API_Name__c</fields>
+        <fields>Target_Field_API_Name__c</fields>
         <fields>NamespacePrefix</fields>
+        <fields>IsProtected</fields>
+        <fields>Is_Deleted__c</fields>
         <relatedList>Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c</relatedList>
+        <sortField>MasterLabel</sortField>
+        <sortOrder>Asc</sortOrder>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>

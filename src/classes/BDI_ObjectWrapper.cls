@@ -35,20 +35,22 @@
 * @description Wrapper class used to contain information about a particular object mapping and data import record combination.
 */
 
-public with sharing class BDI_ObjectWrap {
-	public String wrapId;
+public with sharing class BDI_ObjectWrapper {
+    public String wrapId;
 
-	public Data_Import_Object_Mapping__mdt objMapping;
-	public Data_Import_Field_Mapping__mdt[] fieldMappings;
-	public DataImport__c di;
-	public Sobject sobj;
+    public Data_Import_Object_Mapping__mdt objMapping;
+    public Data_Import_Object_Mapping__mdt predecessorObjMapping;
+    public Data_Import_Field_Mapping__mdt[] fieldMappings;
+    public DataImport__c di;
+    public Sobject sobj;
 
-	public Id existingSobjectId;
+    public Id existingSobjectId;
 
-	public BDI_ObjectWrap(DataImport__c di, Data_Import_Object_Mapping__mdt objMapping, Data_Import_Field_Mapping__mdt[] fieldMappings) {
-		this.objMapping = objMapping;
-		this.fieldMappings = fieldMappings;
-		this.di = di;
-		this.wrapId = di.Id + '' + objMapping.DeveloperName;
-	}
+    public BDI_ObjectWrapper(DataImport__c di, Data_Import_Object_Mapping__mdt objMapping, Data_Import_Field_Mapping__mdt[] fieldMappings, Data_Import_Object_Mapping__mdt predecessorObjMapping) {
+        this.objMapping = objMapping;
+        this.predecessorObjMapping = predecessorObjMapping;
+        this.fieldMappings = fieldMappings;
+        this.di = di;
+        this.wrapId = di.Id + '' + objMapping.DeveloperName;
+    }
 }

@@ -213,6 +213,7 @@ private class BDI_AdditionalObjectServiceTest {
     /*******************************************************************************************************
     * @description Tests that GAU allocations and Opportunity contact roles will be created as additional objects
     */
+
     @isTest static void shouldCreateAdditionalGAUAllocationsAndOCRs() {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
@@ -367,7 +368,6 @@ private class BDI_AdditionalObjectServiceTest {
         System.assertEquals(.25,gauAlloB2.Percent__c);
     }
 
-
     /*******************************************************************************************************
     * @description Tests that some of the GAU allocations should not be created due to missing required fields. 
     * Also, some of the OCRs should not be created because all non-relationship fields are missing data..
@@ -433,6 +433,14 @@ private class BDI_AdditionalObjectServiceTest {
         for (DataImport__c di : [SELECT Id,
                                         Status__c,
                                         FailureInformation__c,
+                                        GAU_Allocation_1_Import_Status__c,
+                                        GAU_Allocation_1_Imported__c,
+                                        GAU_Allocation_2_Import_Status__c,
+                                        GAU_Allocation_2_Imported__c,
+                                        Opportunity_Contact_Role_1_Imported__c,
+                                        Opportunity_Contact_Role_1_ImportStatus__c,
+                                        Opportunity_Contact_Role_2_Imported__c,
+                                        Opportunity_Contact_Role_2_ImportStatus__c,
                                         Contact1_Lastname__c,
                                         Account1ImportStatus__c,
                                         Account1Imported__c, 
@@ -446,17 +454,9 @@ private class BDI_AdditionalObjectServiceTest {
                                         DonationCampaignImported__c,
                                         DonationImportStatus__c,
                                         DonationImported__c,
-                                        GAU_Allocation_1_Import_Status__c,
-                                        GAU_Allocation_1_Imported__c,
-                                        GAU_Allocation_2_Import_Status__c,
-                                        GAU_Allocation_2_Imported__c,
                                         HomeAddressImportStatus__c,
                                         HomeAddressImported__c,
                                         HouseholdAccountImported__c,
-                                        Opportunity_Contact_Role_1_Imported__c,
-                                        Opportunity_Contact_Role_1_ImportStatus__c,
-                                        Opportunity_Contact_Role_2_Imported__c,
-                                        Opportunity_Contact_Role_2_ImportStatus__c,
                                         PaymentImportStatus__c,
                                         PaymentImported__c
                                     FROM DataImport__c]) {
@@ -517,7 +517,7 @@ private class BDI_AdditionalObjectServiceTest {
     /*******************************************************************************************************
     * @description Tests that GAU allocations and Opportunity contact roles will be updated via Batch Data Import. 
     */
-    
+
     @isTest static void shouldUpdateAdditionalGAUAllocationsAndOCRs() {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;

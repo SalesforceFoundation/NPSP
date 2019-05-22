@@ -40,25 +40,22 @@ public with sharing class BDI_AdditionalObjectService {
     /*******************************************************************************************************
     * @description the data import service we are invoked from
     */
-    private BDI_DataImportService bdi;
-    private BDI_FieldMappingCustomMetadata bdiFM;
+    private BDI_DataImportService dataImportService;
+    private BDI_FieldMappingCustomMetadata fieldMapping;
 
     private Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>> tierToObjMappings = new Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>>();
     private Map<String,Map<String,Data_Import_Object_Mapping__mdt>> predecessorDevNameToSuccessors = new Map<String,Map<String,Data_Import_Object_Mapping__mdt>>();
-    private Map<Id,String> diIdToError = new Map<Id,String>();
     private Set<String> importedRecordFieldNames = new Set<String>();
 
-    public Set<String> additionalObjectDiomDevNames = new Set<String>();
-
-    private String namespace = UTIL_Namespace.getNamespace();
+    public Set<String> objMappingDevNames = new Set<String>();
 
     /*******************************************************************************************************
     * @description Constructor
-    * @param bdi The data import service instance that invokes us
+    * @param dataImportService The data import service instance that invokes us
     */
-    public BDI_AdditionalObjectService(BDI_DataImportService bdi) {
-        this.bdi = bdi;
-        this.bdiFM = BDI_FieldMappingCustomMetadata.getInstance();
+    public BDI_AdditionalObjectService(BDI_DataImportService dataImportService) {
+        this.dataImportService = dataImportService;
+        this.fieldMapping = BDI_FieldMappingCustomMetadata.getInstance();
     }
 
 
@@ -67,46 +64,65 @@ public with sharing class BDI_AdditionalObjectService {
     */
     public void importAdditionalObjects(){
 
-        this.generateTiersOfObjMappings();
-        this.createSetOfImportedRecordFieldNames(bdiFM.diomDevNameToDiomMap.values());
+        generateTiersOfObjectMappings();
+        createSetOfImportedRecordFieldNames(fieldMapping.objMappingDevNameToObjMapping.values());
 
         //Iterate through the map of tiers, starting with the first tier that actually has a predecessor (ie 2nd tier), and
         //validate and create each object as appropriate.
         for (Integer i = 1; i < tierToObjMappings.size(); i++) {
 
-            Map<String,BDI_ObjectWrap[]> objAPINameToObjWraps = new Map<String,BDI_ObjectWrap[]>();
-
             Map<String,Data_Import_Object_Mapping__mdt> currentTier = tierToObjMappings.get(i);
 
-            for (Data_Import_Object_Mapping__mdt diom : currentTier.values()) {
+            DataImport__c[] disWithoutFailure = new DataImport__c[]{};
 
-                BDI_ObjectMappingLogic objMappingLogic = getObjectMappingLogicClass(diom);
+            // Removing DIs that have already failed from the list since it is likely that it will fail due to predecessors not existing anyway.
+            for (DataImport__c di : dataImportService.listDI) {
+                if(di.Status__c != BDI_DataImport_API.bdiFailed){
+                    disWithoutFailure.add(di);
+                }
+            }
 
-                Map<Id,DataImport__c> validDIsForObjMapping = new Map<Id,DataImport__c>(bdi.listDI);
+            //for the current tier of object mappings, validate and populate object wrappers for later processing.
+            Map<String,BDI_ObjectWrapper[]> objAPINameToObjWraps = prepareObjectWrappers(currentTier,disWithoutFailure);
 
-                Data_Import_Object_Mapping__mdt predecessor = bdiFM.diomDevNameToDiomMap.get(diom.Predecessor__c);
-                Data_Import_Field_Mapping__mdt[] fieldMappings = bdiFM.diomDevNameToDifmsMap.get(diom.DeveloperName);
+            // if this is not a dry run then perform the insert/update of the object wrappers.
+            if (!dataImportService.isDryRun) {
+                importObjectWrappers(objAPINameToObjWraps);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Prepares object wrappers for a given tier of object mappings and data import records.
+    * @param currentTierOfObjMappings a list of object mappings that are all on the same level of the object hierarchy
+    * @param dataImportRecords the data import records that the preparation should be performed on.
+    */
+
+    private Map<String,BDI_ObjectWrapper[]> prepareObjectWrappers (Map<String,Data_Import_Object_Mapping__mdt> currentTierOfObjMappings, DataImport__c[] dataImportRecords) {
+
+        Map<String,BDI_ObjectWrapper[]> objAPINameToObjWraps = new Map<String,BDI_ObjectWrapper[]>();
+
+        if (currentTierOfObjMappings != null) {
+            for (Data_Import_Object_Mapping__mdt objMapping : currentTierOfObjMappings.values()) {
+
+                BDI_ObjectMappingLogic objMappingLogic = getObjectMappingLogicClass(objMapping);
+
+                Data_Import_Object_Mapping__mdt predecessor = fieldMapping.objMappingDevNameToObjMapping.get(objMapping.Predecessor__c);
+                Data_Import_Field_Mapping__mdt[] fieldMappings = fieldMapping.objMappingDevNameToFieldMappings.get(objMapping.DeveloperName);
 
                 //Only proceed if at least one field mapping exists
                 if (fieldMappings != null && fieldMappings.size() > 0) {
-                    //Map<Id,DataImport__c> disForUpdate = new Map<Id,DataImport__c>();
-                    BDI_ObjectWrap[] objWrapsForProcessing = new BDI_ObjectWrap[]{};
-                    for (DataImport__c di: bdi.listDI) {
 
-                        // Skip over records that have already failed
-                        if (di.Status__c == BDI_DataImport_API.bdiFailed) {
-                            continue;
-                        }
+                    BDI_ObjectWrapper[] objWrapsForProcessing = new BDI_ObjectWrapper[]{};
+                    for (DataImport__c di : dataImportRecords) {
 
-                        BDI_ObjectWrap objWrap = new BDI_ObjectWrap(di,diom,fieldMappings);
+                        BDI_ObjectWrapper objWrap = new BDI_ObjectWrapper(di,objMapping,fieldMappings,predecessor);
 
                         //null out any existing value in the status field for this object mapping
-                        di.put(UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Status_Field_Name__c),'');
-                        String lcFieldName = UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Field_Name__c).toLowerCase();
-
+                        di.put(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Status_Field_Name__c),'');
 
                         //If the imported record field for the object is not populated then create a new Sobject, otherwise update existing.
-                        if (di.get(UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Field_Name__c)) == null) {
+                        if (di.get(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Field_Name__c)) == null) {
 
                             //If there are no fields populated or required fields are not populated for this object mapping then ignore this DI and continue.
                             if (!validateFields(objWrap)) {
@@ -115,7 +131,7 @@ public with sharing class BDI_AdditionalObjectService {
 
                             //If the predecessor doesn't exist, then update the Data import object with an error and continue with the next di.
                             if (!predecessorExists(objWrap,predecessor)) {
-                                di.put(UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Status_Field_Name__c),System.label.bdiAdditionalObjPredNotFound);
+                                di.put(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Status_Field_Name__c),System.label.bdiAdditionalObjPredNotFound);
                                 continue;
                             }
 
@@ -123,93 +139,101 @@ public with sharing class BDI_AdditionalObjectService {
 
                             //If there is an existing record then we don't need to perform the normal validation and can proceed to populating
                             //the record with any non-null values.
-                            objWrap.existingSobjectId = (Id)di.get(UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Field_Name__c));
+                            objWrap.existingSobjectId = (Id)di.get(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Field_Name__c));
 
                         }
 
                         objWrapsForProcessing.add(objWrap);
                     }
 
-                    if (!bdi.isDryRun && objWrapsForProcessing.size() > 0) {
+                    if (!dataImportService.isDryRun && objWrapsForProcessing.size() > 0) {
                         objWrapsForProcessing = objMappingLogic.populateObjects(objWrapsForProcessing);
 
-                        for (BDI_ObjectWrap objWrap : objWrapsForProcessing) {
+                        for (BDI_ObjectWrapper objWrap : objWrapsForProcessing) {
 
                             // If the sObject in the objWrap is not null then add it to the map of object wraps by sobject type to upsert.
                             // They are grouped by object api name so that we only need to do one upsert per object per tier.
                             if (objWrap.sObj != null) {
-                                if (objAPINameToObjWraps.get(diom.Object_API_Name__c) != null) {
-                                    objAPINameToObjWraps.get(diom.Object_API_Name__c).add(objWrap);
+                                if (objAPINameToObjWraps.get(objMapping.Object_API_Name__c) != null) {
+                                    objAPINameToObjWraps.get(objMapping.Object_API_Name__c).add(objWrap);
                                 } else {
-                                    objAPINameToObjWraps.put(diom.Object_API_Name__c,new BDI_ObjectWrap[]{objWrap});
+                                    objAPINameToObjWraps.put(objMapping.Object_API_Name__c,new BDI_ObjectWrapper[]{objWrap});
                                 }
                             }
                         }
                     }
                 }
             }
+        }
 
-            //If there are any records to create, then combine them into
-            if (objAPINameToObjWraps.size() > 0) {
-                for (String objApiName : objAPINameToObjWraps.keySet()) {
+        return objAPINameToObjWraps;
+    }
 
-                    BDI_ObjectWrap[] objWraps = objAPINameToObjWraps.get(objApiName);
-                    
-                    Sobject[] sObjsForUpdate = new Sobject[]{};
-                    Sobject[] sObjsForInsert = new Sobject[]{};
+    /*******************************************************************************************************
+    * @description Takes a map of Sobject api name to the object wrappers for that sobject and either updates or inserts the data.
+    * @param objAPINameToObjWraps map of Sobject api name to object wrappers.
+    */
 
-                    BDI_ObjectWrap[] objWrapsForUpdate = new BDI_ObjectWrap[]{};
-                    BDI_ObjectWrap[] objWrapsForInsert = new BDI_ObjectWrap[]{};
+    private void importObjectWrappers (Map<String,BDI_ObjectWrapper[]> objAPINameToObjWraps) {
+        //If there are any records to create, then combine them into lists for update
+        if (objAPINameToObjWraps.size() > 0) {
+            for (String objApiName : objAPINameToObjWraps.keySet()) {
 
-                    for (BDI_ObjectWrap objWrap : objWraps) {
-                        if (objWrap.sObj.Id != null) {
-                            sObjsForUpdate.add(objWrap.sObj);
-                            objWrapsForUpdate.add(objWrap);
-                        } else {
-                            sObjsForInsert.add(objWrap.sObj);
-                            objWrapsForInsert.add(objWrap);
+                BDI_ObjectWrapper[] objWraps = objAPINameToObjWraps.get(objApiName);
+                
+                Sobject[] sObjsForUpdate = new Sobject[]{};
+                Sobject[] sObjsForInsert = new Sobject[]{};
+
+                BDI_ObjectWrapper[] objWrapsForUpdate = new BDI_ObjectWrapper[]{};
+                BDI_ObjectWrapper[] objWrapsForInsert = new BDI_ObjectWrapper[]{};
+
+                for (BDI_ObjectWrapper objWrap : objWraps) {
+                    if (objWrap.sObj.Id != null) {
+                        sObjsForUpdate.add(objWrap.sObj);
+                        objWrapsForUpdate.add(objWrap);
+                    } else {
+                        sObjsForInsert.add(objWrap.sObj);
+                        objWrapsForInsert.add(objWrap);
+                    }
+                }
+
+                if (sObjsForUpdate.size() > 0) {
+
+                    Database.SaveResult[] updateSaveResults = UTIL_DMLService.updateRecords(sObjsForUpdate,false);
+                    //Cycle through all the upsert results and update the data import records with status appropriately.
+                    for (Integer t = 0; t < updateSaveResults.size(); t++) {
+                        Database.SaveResult result = updateSaveResults[t];
+
+                        BDI_ObjectWrapper objWrap = objWrapsForUpdate[t];
+
+                        if (result.isSuccess()) {
+                            objWrap.di.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c),System.label.bdiUpdated);
+                        } else { 
+                            dataImportService.LogBDIError(objWrap.di, result.getErrors()[0].getMessage(),UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
                         }
                     }
+                }
 
-                    if (sObjsForUpdate.size() > 0) {
+                if (sObjsForInsert.size() > 0) {
 
-                        Database.SaveResult[] updateSaveResults = UTIL_DMLService.updateRecords(sObjsForUpdate,false);
-                        //Cycle through all the upsert results and update the data import records with status appropriately.
-                        for (Integer t = 0; t < updateSaveResults.size(); t++) {
-                            Database.SaveResult result = updateSaveResults[t];
+                    Database.SaveResult[] insertSaveResults = UTIL_DMLService.insertRecords(sObjsForInsert,false);
+                    //Cycle through all the upsert results and update the data import records with status appropriately.
+                    for (Integer t = 0; t < insertSaveResults.size(); t++) {
+                        Database.SaveResult result = insertSaveResults[t];
 
-                            BDI_ObjectWrap objWrap = objWrapsForUpdate[t];
+                        BDI_ObjectWrapper objWrap = objWrapsForInsert[t];
 
-                            if (result.isSuccess()) {
-                                objWrap.di.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c),System.label.bdiUpdated);
-                            } else { 
-                                bdi.LogBDIError(objWrap.di, result.getErrors()[0].getMessage(),UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
-                            }
-                        }
-                    }
-
-                    if (sObjsForInsert.size() > 0) {
-
-                        Database.SaveResult[] insertSaveResults = UTIL_DMLService.insertRecords(sObjsForInsert,false);
-                        //Cycle through all the upsert results and update the data import records with status appropriately.
-                        for (Integer t = 0; t < insertSaveResults.size(); t++) {
-                            Database.SaveResult result = insertSaveResults[t];
-
-                            BDI_ObjectWrap objWrap = objWrapsForInsert[t];
-
-                            if (result.isSuccess()) {
-                                objWrap.di.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c),System.Label.bdiCreated);
-                                objWrap.di.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Field_Name__c),objWrap.sObj.Id);
-                            } else { 
-                                bdi.LogBDIError(objWrap.di, result.getErrors()[0].getMessage(),UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
-                            }
+                        if (result.isSuccess()) {
+                            objWrap.di.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c),System.Label.bdiCreated);
+                            objWrap.di.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Field_Name__c),objWrap.sObj.Id);
+                        } else { 
+                            dataImportService.LogBDIError(objWrap.di, result.getErrors()[0].getMessage(),UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
                         }
                     }
                 }
             }
         }
     }
-
 
     /*******************************************************************************************************
     * @description Determines if there is a custom mapping logic class and constructs it if there is, otherwise returns the default
@@ -233,7 +257,7 @@ public with sharing class BDI_AdditionalObjectService {
     * @description Determines if the predecessor to this Data Import Object Mapping exists
     * @param predecessor The Data Import Object Mapping for which the imported field can be checked to see if it exists.
     */
-    private Boolean predecessorExists(BDI_ObjectWrap objWrap, Data_Import_Object_Mapping__mdt predecessor){
+    private Boolean predecessorExists(BDI_ObjectWrapper objWrap, Data_Import_Object_Mapping__mdt predecessor){
         return objWrap.di.get(UTIL_Namespace.adjustNPSPNamespace(predecessor.Imported_Record_Field_Name__c)) != null;
     }
 
@@ -241,13 +265,13 @@ public with sharing class BDI_AdditionalObjectService {
     /*******************************************************************************************************
     * @description Validates the field mappings to make sure that the required ones are not null and that at least one non imported record
     * field is populated.
-    * @param objWrap The BDI_ObjectWrap that should have its field mappings validated.
+    * @param objWrap The BDI_ObjectWrapper that should have its field mappings validated.
     */
-    private Boolean validateFields(BDI_ObjectWrap objWrap){
+    private Boolean validateFields(BDI_ObjectWrapper objWrap){
 
         Boolean result = false;
         Boolean anyNonImportedRecordFieldsPopulated = false;
-        Boolean allReqFieldsPopulated = true;
+        Boolean allRequiredFieldsPopulated = true;
 
         String requiredFieldErrorMsg = System.label.bdiAdditionalObjRequiredFieldsNull;
 
@@ -271,20 +295,20 @@ public with sharing class BDI_AdditionalObjectService {
 
                     if (fieldMapping.Required__c == 'Yes') {
 
-                        allReqFieldsPopulated = false;
+                        allRequiredFieldsPopulated = false;
                         requiredFieldErrorMsg += UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Source_Field_API_Name__c) + '; ';
                     }
                 }
             }
 
             //if at least one of the fields is populated and all required fields are populated then set result to true
-            if (anyNonImportedRecordFieldsPopulated && allReqFieldsPopulated) {
+            if (anyNonImportedRecordFieldsPopulated && allRequiredFieldsPopulated) {
 
                 result = true;
 
-            } else if (anyNonImportedRecordFieldsPopulated && !allReqFieldsPopulated) {
+            } else if (anyNonImportedRecordFieldsPopulated && !allRequiredFieldsPopulated) {
                 requiredFieldErrorMsg = requiredFieldErrorMsg.removeEnd('; ').abbreviate(255);
-                bdi.LogBDIError(objWrap.di, requiredFieldErrorMsg ,UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
+                dataImportService.LogBDIError(objWrap.di, requiredFieldErrorMsg ,UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
             }
         }
 
@@ -296,28 +320,28 @@ public with sharing class BDI_AdditionalObjectService {
     * @description Generates a map of tier number to list of Data Import Object Mappings so that they mappings can be processed and imported in the correct
     * order.
     */
-    public void generateTiersOfObjMappings() {
+    public void generateTiersOfObjectMappings() {
 
-        if (bdiFM.diomDevNameToDiomMap != null && bdiFM.diomDevNameToDiomMap.size() > 0) {
+        if (fieldMapping.objMappingDevNameToObjMapping != null && fieldMapping.objMappingDevNameToObjMapping.size() > 0) {
 
             //Creates a map of predecessor dev name to successor and also identifies the base level objects with no predecessor defined.
-            for (Data_Import_Object_Mapping__mdt diom : bdiFM.diomDevNameToDiomMap.values()) {
+            for (Data_Import_Object_Mapping__mdt objMapping : fieldMapping.objMappingDevNameToObjMapping.values()) {
 
-                if (diom.Predecessor__c != null && diom.Relationship_Field__c != null && diom.Relationship_To_Predecessor__c != null) {
+                if (objMapping.Predecessor__c != null && objMapping.Relationship_Field__c != null && objMapping.Relationship_To_Predecessor__c != null) {
 
-                    additionalObjectDiomDevNames.add(diom.DeveloperName);
+                    objMappingDevNames.add(objMapping.DeveloperName);
 
-                    if (predecessorDevNameToSuccessors.get(diom.Predecessor__c) != null) {
-                        predecessorDevNameToSuccessors.get(diom.Predecessor__c).put(diom.DeveloperName,diom);
+                    if (predecessorDevNameToSuccessors.get(objMapping.Predecessor__c) != null) {
+                        predecessorDevNameToSuccessors.get(objMapping.Predecessor__c).put(objMapping.DeveloperName,objMapping);
                     } else {
-                        predecessorDevNameToSuccessors.put(diom.Predecessor__c,new Map<String,Data_Import_Object_Mapping__mdt>{diom.DeveloperName => diom});
+                        predecessorDevNameToSuccessors.put(objMapping.Predecessor__c,new Map<String,Data_Import_Object_Mapping__mdt>{objMapping.DeveloperName => objMapping});
                     }
                 } else {
 
                     if (tierToObjMappings.get(0) != null) {
-                        tierToObjMappings.get(0).put(diom.DeveloperName,diom);
+                        tierToObjMappings.get(0).put(objMapping.DeveloperName,objMapping);
                     } else {
-                        tierToObjMappings.put(0,new Map<String,Data_Import_Object_Mapping__mdt>{diom.DeveloperName => diom});
+                        tierToObjMappings.put(0,new Map<String,Data_Import_Object_Mapping__mdt>{objMapping.DeveloperName => objMapping});
                     }
                 }
             }
