@@ -338,7 +338,6 @@ public class BDI_MigrationMappingUtility {
                 dataImportFieldMapping = dataImportFieldMapping;
             }
 
-            // Update existing mappings to point to custom field mapping set
             List<Metadata.CustomMetadata> updatedCMTs = updateCustomMetadataRecords(
                 MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
                 conflictingMappings
@@ -360,31 +359,57 @@ public class BDI_MigrationMappingUtility {
     * because they aren't mapped in regular help text
     */
     public void handleGAUAndOpportunityContactRoles(String fieldMappingSet) {
+        System.debug(LoggingLevel.ERROR, '*** handleGAUAndOpportunityContactRoles');
         // Collect our default GAU and Opportunity Contact Role metadata mappings
         Map<String, Data_Import_Field_Mapping__mdt> specialCasedMappings =
             new Map<String, Data_Import_Field_Mapping__mdt>();
-        specialCasedMappings.putAll(helper.getMappingByFuzzyNameAndFieldSetName(
+
+        Map<String, Data_Import_Field_Mapping__mdt> tempMap =
+            new Map<String, Data_Import_Field_Mapping__mdt>();
+
+        tempMap = helper.getMappingByFuzzyNameAndFieldSetName(
             'Opportunity_Contact%',
-            DEFAULT_FIELD_MAPPING_SET_RECORD_NAME)
-        );
-        specialCasedMappings.putAll(helper.getMappingByFuzzyNameAndFieldSetName(
-            'GAU%',
-            DEFAULT_FIELD_MAPPING_SET_RECORD_NAME)
-        );
+            DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+
+        if (tempMap != null && tempMap.size() > 0) {
+            specialCasedMappings.putAll(tempMap);
+            tempMap.clear();
+        }
+
+        tempMap =
+            helper.getMappingByFuzzyNameAndFieldSetName(
+                'GAU%',
+                DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+
+        if (tempMap != null && tempMap.size() > 0) {
+            specialCasedMappings.putAll(tempMap);
+            tempMap.clear();
+        }
+
+        System.debug(LoggingLevel.ERROR, '*** after get fuzzy default field mapping set');
+        System.debug(specialCasedMappings);
 
         // Collect any existing migrated GAU and Opportunity Contact Role metadata mappings
         Map<String, Data_Import_Field_Mapping__mdt> migratedSpecialCasedMappings =
             new Map<String, Data_Import_Field_Mapping__mdt>();
-        migratedSpecialCasedMappings.putAll(
-            helper.getMappingByFuzzyNameAndFieldSetName(
-                'Opportunity_Contact%',
-                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME)
-        );
-        migratedSpecialCasedMappings.putAll(
-            helper.getMappingByFuzzyNameAndFieldSetName(
-                'GAU%',
-                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME)
-        );
+
+        tempMap = helper.getMappingByFuzzyNameAndFieldSetName(
+            'Opportunity_Contact%',
+            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
+        if (tempMap != null && tempMap.size() > 0) {
+            migratedSpecialCasedMappings.putAll(tempMap);
+            tempMap.clear();
+        }
+
+        tempMap = helper.getMappingByFuzzyNameAndFieldSetName(
+            'GAU%',
+            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
+        if (tempMap != null && tempMap.size() > 0) {
+            migratedSpecialCasedMappings.putAll(tempMap);
+            tempMap.clear();
+        }
 
         // If any existing migrated mappings exist, remove them from collection
         if (migratedSpecialCasedMappings.size() > 0) {

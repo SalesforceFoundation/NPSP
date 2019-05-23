@@ -118,7 +118,7 @@ private class BDI_MigrationMappingUtilityTest {
         Test.startTest();
 
         // Convert mappings to Custom Metadata and start deployment
-        System.assertEquals(3, util.queuedMetadataTypesForDeploy.size());
+        System.assertEquals(4, util.queuedMetadataTypesForDeploy.size());
 
         util.deployCustomMetadata();
 
