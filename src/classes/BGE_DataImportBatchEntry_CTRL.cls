@@ -183,6 +183,73 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Retrieves all open Opportunities and related Payments for the selected Donor (Account or Contact)
+    * @return JSON string of all open Opportunities and related Payments for the given donor
+    */
+    @AuraEnabled
+    public static String getOpportunitiesWithOppPayments(Id donorId, String donorType) {
+
+        String relationshipField = donorType == 'Account1' ? 'AccountId' : 'Primary_Contact__c';
+
+        String query = 'SELECT Id, ' +
+                'Name, ' +
+                'StageName, ' +
+                'Amount, ' +
+                    '(SELECT Id, ' +
+                    'Name, ' +
+                    'npe01__Scheduled_Date__c, ' +
+                    'npe01__Opportunity__r.Name, ' +
+                    'npe01__Opportunity__c, ' +
+                    'npe01__Payment_Amount__c,' +
+                    'npe01__Paid__c ' +
+                    'FROM npe01__OppPayment__r) ' +
+                'FROM Opportunity ' +
+                'WHERE ' + relationshipField + ' = :donorId ' +
+                'AND IsClosed = false';
+
+        try {
+            List<OpportunityWrapper> opportunityWrappers = new List<OpportunityWrapper>();
+            for (Opportunity opportunity : Database.query(query)) {
+                opportunityWrappers.add(new OpportunityWrapper(opportunity));
+            }
+            return JSON.serialize(opportunityWrappers);
+        } catch (Exception ex){
+            throw new AuraHandledException('ERROR: ' + ex.getMessage());
+        }
+    }
+
+    /**
+    * @description Wrapper class used to hold only the information needed in the
+    * component for each Opportunity.  The component does not need to store any of
+    * the paid Payments for a donor, but it does need to know if the Donation has
+    * any related Payments (hasPayments) to suppress the option to Update the Donation
+    * in the Donation Selector component.
+    */
+    private class OpportunityWrapper {
+        Opportunity opportunity {get; private set;}
+        List<npe01__OppPayment__c> unpaidPayments {get; private set;}
+        Boolean hasPayments {get; private set;}
+
+        private OpportunityWrapper(Opportunity opportunity){
+            this.opportunity = opportunity;
+            this.hasPayments = opportunity.npe01__OppPayment__r.size() > 0;
+            setUnpaidPayments(opportunity);
+        }
+
+        private void setUnpaidPayments(Opportunity opportunity) {
+            if (unpaidPayments == null) {
+                unpaidPayments = new List<npe01__OppPayment__c>();
+            }
+            for (npe01__OppPayment__c oppPayment : opportunity.npe01__OppPayment__r) {
+                if (oppPayment.npe01__Paid__c) {
+                    continue;
+                } else {
+                    unpaidPayments.add(oppPayment);
+                }
+            }
+        }
+    }
 
     /*******************************************************************************************************
     * @description runs BDI Dry Run against a given Id based on the processing settings of a given batch
