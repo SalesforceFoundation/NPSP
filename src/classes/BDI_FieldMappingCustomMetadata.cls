@@ -37,7 +37,7 @@
 
 public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMapping {
 
-    public static final String DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME = 'npsp__Default_Field_Mapping_Set';
+    public static final String DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME = 'Default_Field_Mapping_Set';
 
     public Data_Import_Field_Mapping_Set__mdt diFieldMappingSet;
     public String fieldMappingSetName;
@@ -104,7 +104,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
             //Retreive the Data Import Settings to determine the default field mapping set.
             Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
 
-            fieldMappingSetName = UTIL_Namespace.adjustNPSPNamespace(dis.Default_Data_Import_Field_Mapping_Set__c);            
+            fieldMappingSetName = UTIL_Namespace.adjustNPSPNamespace(dis.Default_Data_Import_Field_Mapping_Set__c);
         }
 
         return fieldMappingSetName;
