@@ -156,10 +156,10 @@ npsp_lex_locators={
         'card-header':'//article[./div[@class="slds-card__body"]//lightning-formatted-text[text()="{}"]]/header',
         'edit_button':'//td[@data-label="{}"]//button',
         'edit_field':'//lightning-primitive-datatable-iedit-panel//input',
-        'count':'//div[contains(@class,"cBGE_DataImportBatchEntry")]//tbody/tr',
+        'count':'//div[contains(@class,"BGE_DataImportBatchEntry")]//tbody/tr',
         'value':'//td[@data-label="{}"]//a',
-        'name':'//div[contains(@class,"cBGE_DataImportBatchEntry")]//tbody/tr/th//a',
-        'locate_dropdown':'//div[contains(@class,"cBGE_DataImportBatchEntry")]//tbody/tr[{}]/td[6]//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
+        'name':'//div[contains(@class,"BGE_DataImportBatchEntry")]//tbody/tr/th//a',
+        'locate_dropdown':'//div[contains(@class,"BGE_DataImportBatchEntry")]//tbody/tr[{}]/td[6]//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
         'gift-amount':'//div[./label[text()="{}"]]',
         },    
     'bge-lists':{
