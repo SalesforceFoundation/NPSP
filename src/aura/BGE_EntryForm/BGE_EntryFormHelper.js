@@ -103,7 +103,6 @@
             const state = response.getState();
             if (state === 'SUCCESS') {
                 const opportunitiesWithPayments = JSON.parse(response.getReturnValue());
-                component.set('v.donations', opportunitiesWithPayments);
                 let openOpportunitiesWithoutAnyPayments = [];
                 let unpaidPayments = [];
                 opportunitiesWithPayments.forEach(function (opportunityWrapper) {
