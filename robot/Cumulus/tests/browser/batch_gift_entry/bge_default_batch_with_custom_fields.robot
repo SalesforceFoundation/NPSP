@@ -88,25 +88,26 @@ Verify Custom Fields on Payment and Donation
     Click Link With Text    ${value}
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
+    ${org_ns} =  Get Org Namespace Prefix
     &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
-    ...    ${ns}custom_email__c=automation@robot.com
-    ...    ${ns}custom_multipick__c=1;2;3
-    ...    ${ns}custom_phone__c=1234567890
-    ...    ${ns}custom_url__c=automation.com
+    ...    ${org_ns}custom_email__c=automation@robot.com
+    ...    ${org_ns}custom_multipick__c=1;2;3
+    ...    ${org_ns}custom_phone__c=1234567890
+    ...    ${org_ns}custom_url__c=automation.com
     Verify Expected Values    nonns    Opportunity    &{payment}[npe01__Opportunity__c]
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    ...    ${ns}custom_currency__c=20.0
-    ...    ${ns}custom_date__c=${date}
-    ...    ${ns}custom_lookup__c=${camp_id}
-    ...    ${ns}custom_number__c=123.0
-    ...    ${ns}custom_picklist__c=2
-    ...    ${ns}custom_textarea__c=this is custom batch
-    ...    ${ns}custom_text__c=Robot
+    ...    ${org_ns}custom_currency__c=20.0
+    ...    ${org_ns}custom_date__c=${date}
+    ...    ${org_ns}custom_lookup__c=${camp_id}
+    ...    ${org_ns}custom_number__c=123.0
+    ...    ${org_ns}custom_picklist__c=2
+    ...    ${org_ns}custom_textarea__c=this is custom batch
+    ...    ${org_ns}custom_text__c=Robot
     
          
