@@ -103,19 +103,20 @@
             const state = response.getState();
             if (state === 'SUCCESS') {
                 const opportunitiesWithPayments = JSON.parse(response.getReturnValue());
-                let openOpportunitiesWithoutAnyPayments = [];
+                let openOpportunitiesWithoutAnyOpenPayments = [];
                 let unpaidPayments = [];
                 opportunitiesWithPayments.forEach(function (opportunityWrapper) {
-                        if (opportunityWrapper.hasPayments === false) {
-                            openOpportunitiesWithoutAnyPayments.push(opportunityWrapper.opportunity);
+                        if (opportunityWrapper.hasPayments === false || opportunityWrapper.unpaidPayments.length === 0) {
+                            openOpportunitiesWithoutAnyOpenPayments.push(opportunityWrapper);
                         }
+
                         opportunityWrapper.unpaidPayments.forEach(function (payment) {
                             unpaidPayments.push(payment);
                         });
                     }
                 );
                 component.set('v.unpaidPayments', unpaidPayments);
-                component.set('v.openOpportunities', openOpportunitiesWithoutAnyPayments);
+                component.set('v.openOpportunities', openOpportunitiesWithoutAnyOpenPayments);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
