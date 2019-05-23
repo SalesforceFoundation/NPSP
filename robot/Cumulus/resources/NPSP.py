@@ -397,6 +397,7 @@ class NPSP(object):
         
     def check_record_related_item(self,title,value):
         locator=npsp_lex_locators['record']['related']['item'].format(title,value)
+        self.selenium.wait_until_page_contains_element(locator)
         actual_value=self.selenium.get_webelement(locator).text
         assert value == actual_value, "Expected value to be {} but found {}".format(
             value, actual_value
@@ -433,6 +434,7 @@ class NPSP(object):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
+            self.selenium.wait_until_page_contains_element(locator)
             self.selenium.page_should_contain_element(locator)
             
     def page_contains_record(self,title):   
@@ -602,7 +604,7 @@ class NPSP(object):
         loc = "//*[@id='pmtTable']/tbody/tr/td[2]/div//input[@value= '{}']"
         values = int(amount)/int(no_payments)
         #global self.val
-        values_1 = "{0:.2f}".format(values)
+        values_1 = "{:0.2f}".format(values)
         self.val = str(values_1)
         locator =  loc.format(self.val)
         list_payments = self.selenium.get_webelements(locator)
@@ -649,17 +651,16 @@ class NPSP(object):
         locator=npsp_lex_locators['button'].format(title)
         self.selenium.get_webelement(locator).click()
         
-#         
-#     def verify_payments(self, amount,no_payments):
-#         """To select a row on object page based on name and open the dropdown"""
-#         locators = npsp_lex_locators['payments']['no_payments']
-#         list_ele = self.selenium.get_webelements(locators)
-#         t_count=len(list_ele)
-#         for index, element in enumerate(list_ele):
-#             if element.text == amount:
-#                 loc = npsp_lex_locators['payments']['pay_amount'].format(index + 1, amount)
-#                 self.selenium.page_should_contain_element(loc)
-#                 time.sleep(1)
+         
+    def verify_details(self, **kwargs):
+       """To verify no. of records with given same column values
+          key is value in a table column, value is expected count of rows with that value     
+       """
+       for key, value in kwargs.items():
+           locators = npsp_lex_locators['payments']['pays'].format(key)
+           list_ele = self.selenium.get_webelements(locators)
+           p_count=len(list_ele)
+           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)             
                 
     def verify_occurrence_payments(self,title,value=None):
         """"""
@@ -855,7 +856,7 @@ class NPSP(object):
         locator=npsp_lex_locators['bge']['count']
         actual_value=self.selenium.get_webelements(locator)
         count=len(actual_value)
-        assert int(value) == count, "Expected value to be {} but found {}".format(
+        assert int(value) == count, "Expected rows to be {} but found {}".format(
             value, count
         )       
         
@@ -968,3 +969,31 @@ class NPSP(object):
        rec=self.salesforce.salesforce_get(table,rec_id)
        for key, value in kwargs.items():
            self.builtin.should_be_equal_as_strings(rec[key], value)   
+           
+
+    def get_org_namespace_prefix(self):
+        if self.cumulusci.org.namespaced:
+            return "npsp__" 
+        else:
+            return ""       
+          
+    def click_first_matching_related_item_popup_link(self,heading,rel_status,link):
+        '''Clicks a link in the popup menu for first matching related list item.
+        heading specifies the name of the list,
+        rel_status specifies the status or other field vaule to identify a particular item,
+        and link specifies the name of the link'''  
+        self.salesforce.load_related_list(heading)
+        locator = npsp_lex_locators["record"]["related"]["link"].format(heading, rel_status)
+        list=self.selenium.get_webelements(locator)
+        title=list[0].text
+        self.salesforce.click_related_item_popup_link(heading, title, link)
+        
+    def verify_field_values(self,**kwargs):
+        """Verifies values in the specified fields""" 
+        for key, value in kwargs.items():
+            locator=npsp_lex_locators["field-value"].format(key)
+            res=self.selenium.get_webelement(locator).text
+            assert value == res, "Expected {} value to be {} but found {}".format(key,value,res)
+
+           
+
