@@ -83,7 +83,7 @@ public class BDI_MigrationMappingUtility {
     /**
     * @description Name of custom Field Mapping Set
     */
-    private static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME =
+    private static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME =
         'Migrated_Custom_Mapping_Set';
 
     /**
@@ -219,7 +219,7 @@ public class BDI_MigrationMappingUtility {
         if (migrationType == DEFAULT_MAPPING) {
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
         } else {
-            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
+            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
         }
 
         Map<String, String> statusMap = new Map<String, String>{
@@ -299,7 +299,7 @@ public class BDI_MigrationMappingUtility {
         pendingStandardMappings.clear();
         migrationType = CUSTOM_MAPPING;
 
-        buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME);
+        buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
         List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
         List<BDI_HelpTextCMT.DataImportFieldMapping> allMappings =
@@ -315,18 +315,17 @@ public class BDI_MigrationMappingUtility {
 
         if (allMappings.size() > 0) {
             Metadata.CustomMetadata fieldMappingSet =
-                helper.createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME);
+                helper.createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
             pendingCMTs.add(fieldMappingSet);
 
             for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : allMappings) {
                 // TODO: Remove this if condition, used while developing to limit what cmts get created
-                if (dataImportFieldMapping.dataImportObjectName == 'Payment') {
-
-                    dataImportFieldMapping.dataImportFieldMappingSetRecordName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
+                //if (dataImportFieldMapping.dataImportObjectName == 'Payment') {
+                    dataImportFieldMapping.dataImportFieldMappingSetRecordName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
                     dataImportFieldMapping = dataImportFieldMapping;
                     pendingCMTs.add(dataImportFieldMapping.getMetadataRecord());
-                }
+                //}
             }
 
             queuedMetadataTypesForDeploy = pendingCMTs;
@@ -335,21 +334,81 @@ public class BDI_MigrationMappingUtility {
         if (conflictingMappings.size() > 0) {
             // Update existing mappings to point to custom field mapping set
             for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : conflictingMappings) {
-                dataImportFieldMapping.dataImportFieldMappingSetRecordName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
+                dataImportFieldMapping.dataImportFieldMappingSetRecordName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
                 dataImportFieldMapping = dataImportFieldMapping;
             }
 
             // Update existing mappings to point to custom field mapping set
             List<Metadata.CustomMetadata> updatedCMTs = updateCustomMetadataRecords(
-                MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME,
+                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
                 conflictingMappings
             );
 
             queuedMetadataTypesForDeploy.addAll(updatedCMTs);
         }
 
+        //TODO: handle GAUs and Opportunity Contact Roles
+        handleGAUAndOpportunityContactRoles(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
         if (!Test.isRunningTest()) {
             deployCustomMetadata();
+        }
+    }
+
+    /**
+    * @description Method for handling special cased mappings (GAU and Opportunity Contact Role)
+    * because they aren't mapped in regular help text
+    */
+    public void handleGAUAndOpportunityContactRoles(String fieldMappingSet) {
+        // Collect our default GAU and Opportunity Contact Role metadata mappings
+        Map<String, Data_Import_Field_Mapping__mdt> specialCasedMappings =
+            new Map<String, Data_Import_Field_Mapping__mdt>();
+        specialCasedMappings.putAll(helper.getMappingByFuzzyNameAndFieldSetName(
+            'Opportunity_Contact%',
+            DEFAULT_FIELD_MAPPING_SET_RECORD_NAME)
+        );
+        specialCasedMappings.putAll(helper.getMappingByFuzzyNameAndFieldSetName(
+            'GAU%',
+            DEFAULT_FIELD_MAPPING_SET_RECORD_NAME)
+        );
+
+        // Collect any existing migrated GAU and Opportunity Contact Role metadata mappings
+        Map<String, Data_Import_Field_Mapping__mdt> migratedSpecialCasedMappings =
+            new Map<String, Data_Import_Field_Mapping__mdt>();
+        migratedSpecialCasedMappings.putAll(
+            helper.getMappingByFuzzyNameAndFieldSetName(
+                'Opportunity_Contact%',
+                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME)
+        );
+        migratedSpecialCasedMappings.putAll(
+            helper.getMappingByFuzzyNameAndFieldSetName(
+                'GAU%',
+                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME)
+        );
+
+        // If any existing migrated mappings exist, remove them from collection
+        if (migratedSpecialCasedMappings.size() > 0) {
+            for (String key : specialCasedMappings.keySet()) {
+                Boolean exists = (migratedSpecialCasedMappings.get(key) != null);
+                if (exists) {
+                    specialCasedMappings.remove(key);
+                }
+            }
+        }
+
+        System.debug(specialCasedMappings.size());
+
+        System.debug(LoggingLevel.ERROR, '*** Starting Special Mappings Loop');
+
+        // Queue up any relevant GAU and/or Opportunity Contact mappings
+        if (specialCasedMappings.size() > 0) {
+
+            for (String key : specialCasedMappings.keySet()) {
+                BDI_HelpTextCMT.DataImportFieldMapping wrapper =
+                    new BDI_HelpTextCMT.DataImportFieldMapping(specialCasedMappings.get(key), fieldMappingSet);
+
+                queuedMetadataTypesForDeploy.add(wrapper.getMetadataRecord());
+            }
         }
     }
 

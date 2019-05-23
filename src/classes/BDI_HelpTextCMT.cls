@@ -112,6 +112,19 @@ public class BDI_HelpTextCMT {
             this.isDeleted = false;
         }
 
+        public DataImportFieldMapping(Data_Import_Field_Mapping__mdt sourceFieldMapping, String fieldMappingSet) {
+            this.dataImportFieldMappingSetRecordName = fieldMappingSet;
+            this.label = sourceFieldMapping.MasterLabel;
+            this.sourceFieldAPIName = sourceFieldMapping.Source_Field_API_Name__c;
+            this.targetFieldAPIName = sourceFieldMapping.Target_Field_API_Name__c;
+            this.targetObjectMappingRecordName = sourceFieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.targetObjectMappingLabel = sourceFieldMapping.Target_Object_Mapping__r.MasterLabel;
+            this.dataImportObjectName = sourceFieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
+            this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
+            this.isRequired = 'No';
+            this.isDeleted = false;
+        }
+
         public Metadata.CustomMetadata getMetadataRecord() {
             String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(BDI_HelpTextCMT.MetadataObject.Data_Import_Field_Mapping.Name() + '__mdt');
 

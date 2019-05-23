@@ -251,4 +251,35 @@ public class BDI_MigrationMappingHelper {
 
         return diFieldNameToFieldMappingMap;
     }
+
+    public Map<String, Data_Import_Field_Mapping__mdt> getMappingByFuzzyNameAndFieldSetName(String fuzzyTargetName, String fieldMappingSet) {
+        List<Data_Import_Field_Mapping__mdt> foundMappings = [SELECT Id,
+                DeveloperName,
+                MasterLabel,
+                Source_Field_API_Name__c,
+                Target_Field_API_Name__c,
+                Target_Object_Mapping__r.DeveloperName,
+                Target_Object_Mapping__r.MasterLabel,
+                Target_Object_Mapping__r.Object_API_Name__c
+            FROM Data_Import_Field_Mapping__mdt
+            WHERE Target_Object_Mapping__r.DeveloperName LIKE :fuzzyTargetName
+            AND Data_Import_Field_Mapping_Set__r.DeveloperName = :fieldMappingSet];
+
+        Map<String, Data_Import_Field_Mapping__mdt> diFieldNameToFieldMappingMap =
+            new Map<String, Data_Import_Field_Mapping__mdt>();
+
+        String namespace = UTIL_Namespace.getNamespace();
+
+        for (Data_Import_Field_Mapping__mdt fieldMapping : foundMappings) {
+            if (namespace != 'npsp') {
+                fieldMapping.Source_Field_API_Name__c = UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+            }
+            diFieldNameToFieldMappingMap.put(
+                fieldMapping.Target_Object_Mapping__r.DeveloperName + '.' + fieldMapping.Source_Field_API_Name__c,
+                fieldMapping
+            );
+        }
+
+        return diFieldNameToFieldMappingMap;
+    }
 }
