@@ -106,7 +106,8 @@
                 let openOpportunitiesWithoutAnyOpenPayments = [];
                 let unpaidPayments = [];
                 opportunitiesWithPayments.forEach(function (opportunityWrapper) {
-                        if (opportunityWrapper.hasPayments === false || opportunityWrapper.unpaidPayments.length === 0) {
+                        if (opportunityWrapper.hasPayments === false ||
+                            opportunityWrapper.unpaidPayments.length === 0) {
                             openOpportunitiesWithoutAnyOpenPayments.push(opportunityWrapper);
                         }
 
