@@ -36,7 +36,13 @@
 @isTest(IsParallel=true)
 private class CMT_MetadataAPI_TEST {
 
-    static testMethod void test_cmt_api() {
+    private static final String SUCCESS_HANDLER_EXECUTED = 'SuccessHandlerExecuted';
+
+    /******************************************************************************************************************
+     * @description verify that the metadata deploy calls the callback handler when provided
+     *****************************************************************************************************************/
+    @isTest
+    private static void metadataDeployExecutesCallbackHandler() {
         CMT_MetadataAPI.upsertCustomMetadata(CRLP_RollupCMT.MetadataObject.Filter_Rule, 'Rule_1', 'Rule 1: OCR.Role',
                 new Map<String,Object>{
                         'Filter_Group__c' => 'm016A000000YXdG',
@@ -51,19 +57,44 @@ private class CMT_MetadataAPI_TEST {
 
         // Construct our callback class
         CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack('Test');
+        MockCallbackHandler callbackHandler = new MockCallbackHandler();
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+        callback.callbackHandler = callbackHandler;
 
         // Call the handleResult() method of our main Callback with our dummy context var
         callback.handleResult(null, context);
+
+        List<Account> accounts = [SELECT Id, Name FROM Account WHERE Name = :SUCCESS_HANDLER_EXECUTED];
+        System.assertEquals(0, accounts.size(), 'No accounts should be created.');
+
+        Metadata.DeployResult result = new Metadata.DeployResult();
+        result.status = Metadata.DeployStatus.Succeeded;
+
+        callback.handleResult(result, context);
+
+        accounts = [SELECT Id, Name FROM Account WHERE Name = :SUCCESS_HANDLER_EXECUTED];
+        System.assertEquals(1, accounts.size(), 'A single accounts should be created.');
+ 
     }
 
-
-    /* @description DeployCallbackContext subclass for testing that returns myJobId */
+    /******************************************************************************************************************
+     * @description DeployCallbackContext subclass for testing that returns myJobId
+     *****************************************************************************************************************/
     public class TestingDeployCallbackContext extends Metadata.DeployCallbackContext {
         public override Id getCallbackJobId() {
             return '000000000122345';
+        }
+    }
+
+    /******************************************************************************************************************
+     * @description Callback Handler to test the result callback
+     *****************************************************************************************************************/
+    public class MockCallbackHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
+        public void performSuccessHandler(Map<String, Object> params) {
+            Account newAccount = new Account(Name = SUCCESS_HANDLER_EXECUTED);
+            insert newAccount;
         }
     }
 
