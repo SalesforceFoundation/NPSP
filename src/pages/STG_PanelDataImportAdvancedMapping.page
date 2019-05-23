@@ -11,7 +11,7 @@
 
     <div class="slds-scope">
         <apex:form id="form" styleClass="slds-m-around_x-large">
-            <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.bdiCustomObjectMappingSummary}" />
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.bdiAdvancedMapping}" />
 
             <c:UTIL_PageMessages allowClose="false" id="messages" />
             <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
