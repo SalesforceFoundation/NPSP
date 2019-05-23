@@ -59,20 +59,21 @@
         </lightning:layoutItem>
 
         <!--START UNPAID PAYMENTS CARDS-->
-        <aura:iteration var="donation" items="{!v.unpaidPayments}">
+        TODO: change var name here to payment
+        <aura:iteration var="payment" items="{!v.unpaidPayments}">
             <lightning:layoutItem largeDeviceSize="4"
                                   mediumDeviceSize="6"
                                   size="12"
                                   padding="around-small">
-                <lightning:card class="{!'slds-card_boundary sameCardHeight' + if(equals(donation.Id, v.selectedDonation.Id), ' selectedDonationCard')}">
+                <lightning:card class="{!'slds-card_boundary sameCardHeight' + if(equals(payment.Id, v.selectedDonation.Id), ' selectedDonationCard')}">
 
                     <aura:set attribute="title">
                         <lightning:icon iconName="standard:currency" size="small" class="slds-m-right_small" />
-                        <lightning:formattedText value="{!donation.Name}"/>
+                        <lightning:formattedText value="{!payment.Name}"/>
                     </aura:set>
 
                     <aura:set attribute="footer">
-                        <aura:if isTrue="{!equals(donation.Id, v.selectedDonation.Id)}">
+                        <aura:if isTrue="{!equals(payment.Id, v.selectedDonation.Id)}">
                             <div class="selectedDonationBody">
                                 <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small selectedCheckmark"
                                                 alternativeText="{!$Label.c.stgCheckboxTrue}" title="{!$Label.c.stgCheckboxTrue}"/>
@@ -80,7 +81,7 @@
                             </div>
                             <aura:set attribute="else">
                                 <lightning:button
-                                        value="{!donation}"
+                                        value="{!payment}"
                                         label="{!$Label.c.bgeFormUpdatePayment}"
                                         onclick="{!c.handleDonationSelection}"
                                         variant="base"/>
@@ -94,19 +95,19 @@
                             <lightning:formattedText value="{!v.labels.opportunityName + ': '}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="8" smallDeviceSize="6">
-                            <lightning:formattedText value="{!donation.npe01__Opportunity__r.Name}"/>
+                            <lightning:formattedText value="{!payment.npe01__Opportunity__r.Name}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="4" smallDeviceSize="6">
                             <lightning:formattedText value="{!v.labels.paymentAmount + ': '}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="8" smallDeviceSize="6">
-                            <ui:outputCurrency value="{!donation.npe01__Payment_Amount__c}"/>
+                            <ui:outputCurrency value="{!payment.npe01__Payment_Amount__c}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="4" smallDeviceSize="6">
                             <lightning:formattedText value="{!v.labels.paymentScheduledDate + ': '}"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="8" smallDeviceSize="6">
-                            <lightning:formattedText value="{!donation.npe01__Scheduled_Date__c}"/>
+                            <lightning:formattedText value="{!payment.npe01__Scheduled_Date__c}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
                     <!--END CARD BODY-->
