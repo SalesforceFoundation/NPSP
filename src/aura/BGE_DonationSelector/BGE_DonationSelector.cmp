@@ -59,7 +59,6 @@
         </lightning:layoutItem>
 
         <!--START UNPAID PAYMENTS CARDS-->
-        TODO: change var name here to payment
         <aura:iteration var="payment" items="{!v.unpaidPayments}">
             <lightning:layoutItem largeDeviceSize="4"
                                   mediumDeviceSize="6"
@@ -129,7 +128,8 @@
                         <div class="selectedDonationBody">
                             <lightning:layout multipleRows="true">
                                 <aura:if isTrue="{!not(opportunityWrapper.hasPayments)}">
-                                    <lightning:layoutItem size="12" padding="around_xx-small">
+                                    <lightning:layoutItem size="12" padding="around_xx-small"
+                                                          class="slds-border_bottom slds-p-bottom_x-small slds-m-bottom_x-small">
                                         <aura:if isTrue="{!and(equals(opportunityWrapper.opportunity.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
                                             <lightning:icon iconName="utility:check" size="small"
                                                             class="slds-p-right_small selectedCheckmark"
@@ -147,8 +147,7 @@
                                         </aura:if>
                                     </lightning:layoutItem>
                                 </aura:if>
-                                <lightning:layoutItem size="12" padding="around_xx-small"
-                                                      class="slds-border_top slds-p-top_x-small slds-m-top_x-small">
+                                <lightning:layoutItem size="12" padding="around_xx-small">
                                     <aura:if isTrue="{!and(equals(opportunityWrapper.opportunity.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
                                         <lightning:icon iconName="utility:check" size="small"
                                                         class="slds-p-right_small selectedCheckmark"
