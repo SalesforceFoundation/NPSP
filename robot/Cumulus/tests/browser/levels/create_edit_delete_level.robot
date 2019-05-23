@@ -34,9 +34,12 @@ ${contact_id}
     ...            Maximum Amount=0.99
     Set Focus To Element   xpath: //input[@value='Save']
     Click Button  Save
+    #adding a workaround to go back to levels tab due to core issue
     Unselect Frame
-    Wait For Locator  breadcrumb  Level
-    Reload Page
+    Select App Launcher Tab  Levels
+    Click Link    link=${level_name}
+    # Wait For Locator  breadcrumb  Level
+    # Reload Page
     Wait Until Loading Is Complete
     Confirm Value    Minimum Amount (>=)    0.01    Y
     Confirm Value    Maximum Amount (<)     0.99    Y
