@@ -975,10 +975,16 @@ class NPSP(object):
        for key, value in kwargs.items():
            self.builtin.should_be_equal_as_strings(rec[key], value)
 
-    def batch_data_import(self):
+    def batch_data_import(self, batchsize):
         """"Do a BDI import using the API and wait for it to complete"""
+
+        code = """Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+                diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+                BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+                ID ApexJobId = Database.executeBatch(bdi, %d);
+                """ % int(batchsize)
         subtask_config = TaskConfig(
-                {"options": {"apex" : "BDI_DataImport_API.importData();"}}
+                {"options": {"apex" : code}}
         )
 
         self.cumulusci._run_task(AnonymousApexTask, subtask_config)

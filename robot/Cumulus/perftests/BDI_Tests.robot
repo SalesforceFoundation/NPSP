@@ -8,4 +8,4 @@ Suite Setup       Run Task Class   tasks.generate_bdi_data.GenerateBDIData
 *** Test Cases ***
 
 Import a data batch via the API
-    Batch Data Import
+    Batch Data Import   1000
