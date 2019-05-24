@@ -130,7 +130,6 @@ public class ALLO_PaymentSync_SVC {
 
         // Retrieve all payments, with associated allocations
         Map<Id, npe01__OppPayment__c> paymentsWithAllocations = retrievePaymentsWithAllocations(paymentIds, paymentsByOpportunityId.keySet());
-
         for (npe01__OppPayment__c payment : paymentsWithAllocations.values()) {
             opportunityIdByPaymentId.put(payment.Id, payment.npe01__Opportunity__c);
 
