@@ -88,7 +88,7 @@ public with sharing class STG_SettingsManager_TEST {
         UTIL_UnitTestData_TEST.assertPageHasError('Test Exception');
     }
 
-
+     
     /*********************************************************************************************************
     * @description Tests the DataBoundMultiSelect control used in Settings
     * @return void
@@ -104,7 +104,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('a;b;c', ctrl.strValues);
         list<string> listStr = new list<string>{'x', 'y', 'z'};
         ctrl.listStrValues = listStr;
-        system.assertEquals('x;y;z', ctrl.strValues);
+        system.assertEquals('x;y;z', ctrl.strValues);        
     }
 
     /*********************************************************************************************************
@@ -137,7 +137,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, STG_Panel.listSOCampaignTypes);
         system.assertNotEquals(null, STG_Panel.listSOMailingReportIds);
     }
-
+    
     /*********************************************************************************************************
     * @description Tests that the Settings Service has each settings object loaded
     * @return void
@@ -158,7 +158,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, svc.listPMTFieldMapping);
         svc.saveAll();
     }
-
+    
     /*********************************************************************************************************
     * @description Tests the Affiliations panel
     * @return void
@@ -181,7 +181,7 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelAllo() {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;
-
+        
         STG_PanelAllocations_CTRL panel = new STG_PanelAllocations_CTRL();
 
         // Try again with just default allocations enabled
@@ -250,7 +250,7 @@ public with sharing class STG_SettingsManager_TEST {
     */
     public static testMethod void testPanelContacts() {
         String hhAccountRecTypeLabel = STG_PanelContacts_CTRL.strHHAccountRecordTypeLabel;
-        String oneToOneRecordTypeLabel = STG_PanelContacts_CTRL.strOneToOneRecordTypeLabel;
+        String oneToOneRecordTypeLabel = STG_PanelContacts_CTRL.strOneToOneRecordTypeLabel;  
 
         STG_PanelContacts_CTRL panel = new STG_PanelContacts_CTRL();
         system.assertEquals('idPanelCon', panel.idPanel());
@@ -264,7 +264,7 @@ public with sharing class STG_SettingsManager_TEST {
         panel.saveSettings();
 
         system.assertEquals('One-to-One', UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Account_Processor__c);
-    }
+    }    
 
     /*********************************************************************************************************
     @description
