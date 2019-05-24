@@ -131,7 +131,6 @@ public with sharing class BDI_AdditionalObjectService {
 
                             //If the predecessor doesn't exist, then update the Data import object with an error and continue with the next dataImport.
                             if (!predecessorExists(objWrap,predecessor)) {
-                                dataImport.put(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Status_Field_Name__c),System.label.bdiAdditionalObjPredNotFound);
                                 continue;
                             }
 
@@ -258,7 +257,12 @@ public with sharing class BDI_AdditionalObjectService {
     * @param predecessor The Data Import Object Mapping for which the imported field can be checked to see if it exists.
     */
     private Boolean predecessorExists(BDI_ObjectWrapper objWrap, Data_Import_Object_Mapping__mdt predecessor){
-        return objWrap.di.get(UTIL_Namespace.adjustNPSPNamespace(predecessor.Imported_Record_Field_Name__c)) != null;
+        Boolean result = true;
+        if (objWrap.di.get(UTIL_Namespace.adjustNPSPNamespace(predecessor.Imported_Record_Field_Name__c)) == null) {
+            result = false;
+            dataImportService.LogBDIError(objWrap.di, System.label.bdiAdditionalObjPredNotFound ,UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
+        }
+        return result;
     }
 
 
