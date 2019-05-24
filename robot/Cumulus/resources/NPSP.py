@@ -970,11 +970,13 @@ class NPSP(object):
        for key, value in kwargs.items():
            self.builtin.should_be_equal_as_strings(rec[key], value)
 
+
     def get_org_namespace_prefix(self):
         if self.cumulusci.org.namespaced:
             return "npsp__"
         else:
             return ""
+
     def click_first_matching_related_item_popup_link(self,heading,rel_status,link):
         '''Clicks a link in the popup menu for first matching related list item.
         heading specifies the name of the list,
@@ -992,5 +994,6 @@ class NPSP(object):
             locator=npsp_lex_locators["field-value"].format(key)
             res=self.selenium.get_webelement(locator).text
             assert value == res, "Expected {} value to be {} but found {}".format(key,value,res)
+
 
 
