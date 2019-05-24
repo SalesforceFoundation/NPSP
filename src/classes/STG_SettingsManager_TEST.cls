@@ -267,13 +267,13 @@ public with sharing class STG_SettingsManager_TEST {
     }    
 
     /*********************************************************************************************************
-    @description
+    @description 
         Tests Refresh Household Names batch when Automatic Household Naming is turned off
         and Household Naming Settings is invalid
     verify:
         Household Naming batch has not been run.
         Automatic Household Naming field is still turned off.
-        The Page contains an error.
+        The Page contains an error.        
     **********************************************************************************************************/
     private static testMethod void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
@@ -290,19 +290,19 @@ public with sharing class STG_SettingsManager_TEST {
 
         System.assertEquals(null, pg, 'Returned PageReference should be null');
         System.assert(!ctrl.isRunningBatch, 'The batch should not run');
-        System.assertEquals(false, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned off');
-
+        System.assertEquals(false, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned off');        
+        
         UTIL_UnitTestData_TEST.assertPageHasError('Invalid field');
     }
 
     /*********************************************************************************************************
-    @description
-        Tests Refresh Household Names batch when Automatic Household Naming is turned off
+    @description 
+        Tests Refresh Household Names batch when Automatic Household Naming is turned off 
         and Household Naming Settings is valid
     verify:
         Household Naming batch has been run.
         Automatic Household Naming field is turned on.
-        The Page contains no error.
+        The Page contains no error.        
     **********************************************************************************************************/
     private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
@@ -318,17 +318,17 @@ public with sharing class STG_SettingsManager_TEST {
 
         System.assertEquals(null, pg, 'Returned PageReference should be null');
         System.assert(ctrl.isRunningBatch, 'The batch should run');
-        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');
-
+        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');    
+        
         System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
     }
 
     /*********************************************************************************************************
-    @description
+    @description 
         Tests Refresh Household Names batch when Automatic Household Naming is turned on
     verify:
         Household Naming batch has been run.
-        The Page contains no error.
+        The Page contains no error.        
     **********************************************************************************************************/
     private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
@@ -343,8 +343,8 @@ public with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
         System.assertEquals(null, pg, 'Returned PageReference should be null');
-        System.assert(ctrl.isRunningBatch, 'The batch should run');
-        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');
+        System.assert(ctrl.isRunningBatch, 'The batch should run');    
+        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');    
 
         System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
     }
