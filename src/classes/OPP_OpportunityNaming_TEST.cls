@@ -38,12 +38,6 @@
 private class OPP_OpportunityNaming_TEST
 {
     /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
-    /*********************************************************************************************************
     * @description Returns an active record type id for the current profile.
     */
     private static boolean hasActiveRecType() {
@@ -63,8 +57,6 @@ private class OPP_OpportunityNaming_TEST
     ********************************************************************************************************/
     @isTest
     static void testButton() {
-        if (strTestOnly != '*' && strTestOnly != 'testButton') return;
-
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
             Opportunity_Name_Format__c = '{!Account.Name} {!Contact.Name} {!CloseDate} {!RecordType.Name}',
@@ -124,8 +116,6 @@ private class OPP_OpportunityNaming_TEST
     ********************************************************************************************************/
     @isTest
     static void testMissingData() {
-        if (strTestOnly != '*' && strTestOnly != 'testMissingData') return;
-
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
             Opportunity_Name_Format__c = '{!Account.Name} {!Account.npe01__One2OneContact__r.Primary_Affiliation__r.Name} {!Campaign.Name} {!Type} {!RecordType.Name}',
@@ -169,8 +159,6 @@ private class OPP_OpportunityNaming_TEST
     ********************************************************************************************************/
     @isTest
     static void testBulk() {
-        if (strTestOnly != '*' && strTestOnly != 'testBulk') return;
-
         list<Opportunity_Naming_Settings__c> onsList = new list<Opportunity_Naming_Settings__c>();
         onsList.add(new Opportunity_Naming_Settings__c(
             Name = 'foo',
@@ -249,8 +237,6 @@ private class OPP_OpportunityNaming_TEST
     ********************************************************************************************************/
     @isTest
     static void testException() {
-        if (strTestOnly != '*' && strTestOnly != 'testException') return;
-
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
             Opportunity_Name_Format__c = '{!Account.Invalid_Field}',

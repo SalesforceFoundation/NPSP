@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>De batch waar deze lead vandaan komt.</help>
+        <help>De Batch waar deze Lead vandaan komt.</help>
         <label><!-- Batch --></label>
         <name>Batch__c</name>
         <relationshipLabel><!-- Leads --></relationshipLabel>
@@ -15,11 +15,11 @@
         <name>CompanyCountry__c</name>
     </fields>
     <fields>
-        <label>Bedrijf Zip/Postcode</label>
+        <label>Bedrijf Postcode</label>
         <name>CompanyPostalCode__c</name>
     </fields>
     <fields>
-        <label>Bedrijf Staat/Provincie</label>
+        <label>Bedrijf Provincie</label>
         <name>CompanyState__c</name>
     </fields>
     <fields>

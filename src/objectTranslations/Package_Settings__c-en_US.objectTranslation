@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>NPSP Package Settings</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>NPSP Package Settings</value>
+    </caseValues>
+    <fields>
+        <help><!-- The active package namespace prefix for NPSP. Do not edit manually. --></help>
+        <label><!-- Namespace Prefix --></label>
+        <name>Namespace_Prefix__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

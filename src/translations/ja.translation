@@ -82,9 +82,8 @@
         <name>Addr_Valid_Key_Pair</name>
     </customLabels>
     <customLabels>
-        <label>&lt;p&gt;団体のすべての住所を検証および標準化するには、[すべての住所を検証] をクリックします。
-        一括検証プロセスには上記の設定が使用されます。&lt;/p&gt;
- &lt;br/&gt;</label>
+        <label>団体のすべての住所を検証および標準化するには、[すべての住所を検証] をクリックします。
+        一括検証プロセスには上記の設定が使用されます。</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>
@@ -154,6 +153,54 @@
     <customLabels>
         <label>一度に 100 件を超える住所は検証できません。</label>
         <name>Address_Verification_Limit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Confirmation message when a user wants to delete something. --></label>
+        <name>CMT_DeleteConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the active rollups tree --></label>
+        <name>CMT_FilterGroupActiveRollupsHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message when a user wants to delete a filter group with rollups. --></label>
+        <name>CMT_FilterGroupDeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter group description --></label>
+        <name>CMT_FilterGroupDescriptionHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter group name --></label>
+        <name>CMT_FilterGroupNameHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- New filter group button --></label>
+        <name>CMT_FilterGroupNameLimitError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- New filter group button --></label>
+        <name>CMT_FilterNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message when a user wants to delete a filter rule. --></label>
+        <name>CMT_FilterRuleDeleteWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message when a user creates a duplicate filter rule. --></label>
+        <name>CMT_FilterRuleDuplicateError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message preventing a user from saving a filter rule with fields missing. --></label>
+        <name>CMT_FilterRuleFieldsMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter rules --></label>
+        <name>CMT_FilterRulesHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter rule value field --></label>
+        <name>CMT_FilterRulesValueHelpText</name>
     </customLabels>
     <customLabels>
         <label>このツールの使用に伴う、データ損失、データの不整合などのリスクを受け入れます。</label>
@@ -328,12 +375,184 @@
         <name>CONV_What_This_Tool_Does</name>
     </customLabels>
     <customLabels>
+        <label><!-- Label for the advanced customization section on a Rollup__mdt record. --></label>
+        <name>CRLP_AdvancedCustomizationHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Context for when to add a date, amount, or detail field to a Rollup__mdt record. --></label>
+        <name>CRLP_AdvancedCustomizationText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label to be used for table describing rollup types. --></label>
+        <name>CRLP_AvailableRollupType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for the active flag. --></label>
+        <name>CRLP_CreateRollupActiveHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for amount field picklist. --></label>
+        <name>CRLP_CreateRollupAmountFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for date field picklist. --></label>
+        <name>CRLP_CreateRollupDateFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for days back integer. --></label>
+        <name>CRLP_CreateRollupDaysBackHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for description. --></label>
+        <name>CRLP_CreateRollupDescriptionHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for detail field picklist. --></label>
+        <name>CRLP_CreateRollupDetailFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for filter group. --></label>
+        <name>CRLP_CreateRollupFilterGroupHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for fiscal year. --></label>
+        <name>CRLP_CreateRollupFiscalYearHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for user adding a summary object, field, and a description. --></label>
+        <name>CRLP_CreateRollupIntroHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for operation. --></label>
+        <name>CRLP_CreateRollupOperationHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for target field. --></label>
+        <name>CRLP_CreateRollupTargetFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for target object. --></label>
+        <name>CRLP_CreateRollupTargetObjectHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for time bound operation. --></label>
+        <name>CRLP_CreateRollupTimeBoundOperationHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for rollup type. --></label>
+        <name>CRLP_CreateRollupTypeHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for years ago picklist. --></label>
+        <name>CRLP_CreateRollupYearsAgoHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Credit Type --></label>
+        <name>CRLP_CreditType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Days back error message for integers with any characters other than numbers. --></label>
+        <name>CRLP_DaysBack</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Successfully Deleted --></label>
+        <name>CRLP_DeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Delete Progress Message --></label>
+        <name>CRLP_DeleteProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Successfully Deleted --></label>
+        <name>CRLP_DeleteSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Timeout error message --></label>
+        <name>CRLP_DeleteTimeout</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message for CRLP Disabled Toast --></label>
+        <name>CRLP_DisabledMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for CRLP Disabled Toast --></label>
+        <name>CRLP_DisabledTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when user tries to save a Rollup with a duplicate Target Field. --></label>
+        <name>CRLP_DuplicateTargetField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Hard Credit --></label>
+        <name>CRLP_HardCredit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message when user doesn&apos;t have available detail fields on a custom rollup. --></label>
+        <name>CRLP_NoAvailableDetailFieldsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label when user doesn&apos;t have available summary fields on a custom rollup --></label>
+        <name>CRLP_NoAvailableTargetFieldsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label when user doesn&apos;t select a filter group. --></label>
+        <name>CRLP_NoFilterGroupSelected</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message to indicate in-progress operation for metadata deployments --></label>
+        <name>CRLP_PleaseWait</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Breadcrumb text to return to the specified location. --></label>
+        <name>CRLP_Return</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Create new rollup button --></label>
+        <name>CRLP_RollupNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Rollup Summary Page Title --></label>
+        <name>CRLP_RollupSummary</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Type of custom rollup --></label>
+        <name>CRLP_RollupType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Shows rollups using a specific filter group. --></label>
+        <name>CRLP_RollupsByFilterGroup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error Deploying Customizable Rollup data --></label>
+        <name>CRLP_SaveError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Saving Progress Message --></label>
+        <name>CRLP_SaveProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Successfully Saved --></label>
+        <name>CRLP_SaveSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Timeout error message --></label>
+        <name>CRLP_SaveTimeout</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Soft Credit --></label>
+        <name>CRLP_SoftCredit</name>
+    </customLabels>
+    <customLabels>
         <label>除外</label>
         <name>CampaignMemberStatusOmit</name>
     </customLabels>
     <customLabels>
-        <label><!-- CascadeDeletionError --></label>
+        <label><!-- Cascade Deletion Error Message In Classic --></label>
         <name>CascadeDeletionError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Cascade Deletion Error Message In Lightning Experience --></label>
+        <name>CascadeDeletionErrorLightning</name>
     </customLabels>
     <customLabels>
         <label><!-- ClosedWonOpportunities --></label>
@@ -342,6 +561,14 @@
     <customLabels>
         <label><!-- ConfirmDeleteAccount --></label>
         <name>ConfirmDeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DeleteAccount --></label>
+        <name>DeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DeleteContactLeaveAccount --></label>
+        <name>DeleteContactLeaveAccount</name>
     </customLabels>
     <customLabels>
         <label>連動 ToDo を追加</label>
@@ -388,8 +615,16 @@
         <name>HiddenForSecurity</name>
     </customLabels>
     <customLabels>
+        <label><!-- InactiveScheduledJobsOwnerErrMsg --></label>
+        <name>InactiveScheduledJobsOwnerErrMsg</name>
+    </customLabels>
+    <customLabels>
         <label>[件名] は必須項目です。</label>
         <name>NameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- OCR Remove Primary Duplicate Batch Error Text --></label>
+        <name>OCRRemovePrimaryDuplicateBatchErrorText</name>
     </customLabels>
     <customLabels>
         <label><!-- OrganizationalOpportunities --></label>
@@ -408,8 +643,20 @@
         <name>PageMessagesFatal</name>
     </customLabels>
     <customLabels>
+        <label><!-- Info --></label>
+        <name>PageMessagesInfo</name>
+    </customLabels>
+    <customLabels>
         <label>警告</label>
         <name>PageMessagesWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- More ClosedWon donations than Installments --></label>
+        <name>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The total Amount of all Closed Won Opps is not equal to the RD Amount. --></label>
+        <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
     </customLabels>
     <customLabels>
         <label>新規リレーションを作成</label>
@@ -436,6 +683,98 @@
         <name>REL_View_Contact_Record</name>
     </customLabels>
     <customLabels>
+        <label><!-- Resources Page - Customer Journey link --></label>
+        <name>RP_CustomerJourneyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Deeper Paragraph --></label>
+        <name>RP_DeeperParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Deeper Subtitle --></label>
+        <name>RP_DeeperSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Getting Started component title --></label>
+        <name>RP_GettingStarted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - GitHub Subtitle --></label>
+        <name>RP_GitHubSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - GitHub title --></label>
+        <name>RP_GitHubTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Npsp Link --></label>
+        <name>RP_NpspLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Product Name --></label>
+        <name>RP_ProductNameLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Release GitHub --></label>
+        <name>RP_ReleaseGitHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Release Notes Link --></label>
+        <name>RP_ReleaseNotesLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RP Remote Site Settings Deactivated --></label>
+        <name>RP_Remote_Site_Settings_Deactivated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Salesforce Org Link --></label>
+        <name>RP_SalesforceOrgLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - SubTitle --></label>
+        <name>RP_SubTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Title --></label>
+        <name>RP_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Trailhead Link --></label>
+        <name>RP_TrailheadLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Trailhead Paragraph --></label>
+        <name>RP_TrailheadParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Trailhead Subtitle --></label>
+        <name>RP_TrailheadSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Paragraph --></label>
+        <name>RP_USParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Hub Link --></label>
+        <name>RP_UsHubLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Subtitle --></label>
+        <name>RP_UsSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Youtube Videos --></label>
+        <name>RP_Videos</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Webinar Link --></label>
+        <name>RP_WebinarLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Salesforce Foundation Youtube Channel --></label>
+        <name>RP_YoutubeChannel</name>
+    </customLabels>
+    <customLabels>
         <label>継続支援には、団体または個人のいずれかのみを指定できます。</label>
         <name>RecurringDonationAccountAndContactError</name>
     </customLabels>
@@ -458,6 +797,10 @@
     <customLabels>
         <label>100 件を超える郵便番号の一括検証はできません。</label>
         <name>Zipcode_Verification_Limit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Throw exception to external call --></label>
+        <name>adapterException</name>
     </customLabels>
     <customLabels>
         <label>住所検証設定の認証トークン設定で Cicero API キーを指定する必要があります。</label>
@@ -564,6 +907,10 @@
         <name>alloNegativePercent</name>
     </customLabels>
     <customLabels>
+        <label><!-- alloObjectUnsupported --></label>
+        <name>alloObjectUnsupported</name>
+    </customLabels>
+    <customLabels>
         <label>パーセントベースの割り当ては 100% 以下にしてください。</label>
         <name>alloPercentExceed100</name>
     </customLabels>
@@ -594,6 +941,30 @@
     <customLabels>
         <label>処理中にエラーが発生しました。次の状況は、最初に報告されたエラーです:</label>
         <name>bdiBatchException</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for BestMatchOrCreate behavior --></label>
+        <name>bdiBehaviorBestMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for DoNotMatch behavior --></label>
+        <name>bdiBehaviorDoNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for ExactMatchOrCreate behavior --></label>
+        <name>bdiBehaviorExactMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireBestMatch behavior --></label>
+        <name>bdiBehaviorRequireBestMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireExactMatch behavior --></label>
+        <name>bdiBehaviorRequireExactMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireNoMatch behavior --></label>
+        <name>bdiBehaviorRequireNoMatch</name>
     </customLabels>
     <customLabels>
         <label>完了</label>
@@ -684,12 +1055,72 @@
         <name>bdiDonation</name>
     </customLabels>
     <customLabels>
+        <label><!-- error displayed in Data Importer if no donation matching rules set --></label>
+        <name>bdiDonationMatchingRuleEmpty</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- button label for begin Dry Run --></label>
+        <name>bdiDryRunBeginButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DI Object Status that it was matched in Dry Run --></label>
+        <name>bdiDryRunMatched</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object to specify it was matched from an ambiguous set in Dry Rn --></label>
+        <name>bdiDryRunMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BDI status when matching an object by its Salesforce ID in Dry Run --></label>
+        <name>bdiDryRunMatchedId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DI Object Status that it was not matched in Dry Run --></label>
+        <name>bdiDryRunNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- progress field label --></label>
+        <name>bdiDryRunRecordsError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label on progress widget during Dry Run --></label>
+        <name>bdiDryRunRecordsValidated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- title on the progress indicator during dry run mode --></label>
+        <name>bdiDryRunTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when a batch is missing a name --></label>
+        <name>bdiErrorBatchNameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error on BDI record if DonationImported or PaymentImported lookups are invalid --></label>
+        <name>bdiErrorDonationLookupMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple opps --></label>
+        <name>bdiErrorDonationMultiMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when no matching donation found, and a match is required --></label>
+        <name>bdiErrorDonationNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched opp(s), but behavior required no match --></label>
+        <name>bdiErrorDonationRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label>無効な支援キャンペーン名</label>
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
     <customLabels>
         <label>無効な支援者</label>
         <name>bdiErrorInvalidDonor</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error thrown if specified class doesn&apos;t support the given BDI interface --></label>
+        <name>bdiErrorInvalidIMatchDonations</name>
     </customLabels>
     <customLabels>
         <label>姓を指定する必要があります。</label>
@@ -702,6 +1133,10 @@
     <customLabels>
         <label>サポートされていない、世帯団体以外の既存の個人に一致しました。</label>
         <name>bdiErrorNonHHAccountContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple pmts --></label>
+        <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
         <label>失敗</label>
@@ -720,8 +1155,32 @@
         <name>bdiImported</name>
     </customLabels>
     <customLabels>
+        <label><!-- error when the importData() API is given a invalid Batch ID. --></label>
+        <name>bdiInvalidBatchId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the Donation Matching Behavior is invalid --></label>
+        <name>bdiInvalidDonationMatchingBehavior</name>
+    </customLabels>
+    <customLabels>
         <label>一致</label>
         <name>bdiMatched</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object to specify it was matched from an ambiguous set --></label>
+        <name>bdiMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BDI status when matching an object by its Salesforce ID --></label>
+        <name>bdiMatchedId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object when no matching record found --></label>
+        <name>bdiMatchedNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when numeric settings set to negative number --></label>
+        <name>bdiPositiveNumber</name>
     </customLabels>
     <customLabels>
         <label>レコードが失敗しました:</label>
@@ -738,6 +1197,18 @@
     <customLabels>
         <label>データインポート処理を開始</label>
         <name>bdiRunBtn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for contact matching rules in bDI --></label>
+        <name>bdiSettingsSectionContactMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Donation Matching in BDI Settings --></label>
+        <name>bdiSettingsSectionDonationMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Extensibility in BDI Settings --></label>
+        <name>bdiSettingsSectionExtensibility</name>
     </customLabels>
     <customLabels>
         <label>現在の状況:</label>
@@ -776,8 +1247,48 @@
         <name>conFailedAccountCreate</name>
     </customLabels>
     <customLabels>
+        <label><!-- conMergeBtnLabel --></label>
+        <name>conMergeBtnLabel</name>
+    </customLabels>
+    <customLabels>
         <label>個人団体はサポートされていません。</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeFoundContacts --></label>
+        <name>conMergeFoundContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergePageTitle --></label>
+        <name>conMergePageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergePageTitleDetail --></label>
+        <name>conMergePageTitleDetail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSearchPlaceholder --></label>
+        <name>conMergeSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectAll --></label>
+        <name>conMergeSelectAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectContact --></label>
+        <name>conMergeSelectContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectedContacts --></label>
+        <name>conMergeSelectedContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeStageComplete --></label>
+        <name>conMergeStageComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeWinnerAsstText --></label>
+        <name>conMergeWinnerAsstText</name>
     </customLabels>
     <customLabels>
         <label>このエンゲージメント計画を新しいオブジェクトに割り当てることができません。新しいエンゲージメント計画を作成してください。</label>
@@ -792,6 +1303,10 @@
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
+        <label><!-- exceptionDeletePermission --></label>
+        <name>exceptionDeletePermission</name>
+    </customLabels>
+    <customLabels>
         <label>必須項目が入力されていません:</label>
         <name>exceptionRequiredField</name>
     </customLabels>
@@ -804,12 +1319,28 @@
         <name>flsError</name>
     </customLabels>
     <customLabels>
+        <label><!-- Gift Processing account model error --></label>
+        <name>giftProcessingAccountException</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Gift Processing configuration error --></label>
+        <name>giftProcessingConfigException</name>
+    </customLabels>
+    <customLabels>
         <label>状態チェックを実行</label>
         <name>healthButtonRun</name>
     </customLabels>
     <customLabels>
         <label>個人が含まれていない 1 対 1 の団体が {0} 個あります。</label>
         <name>healthDetailsAccOne2OneNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountDefaultRTInvalid --></label>
+        <name>healthDetailsAccountDefaultRTInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountDefaultRTIssue --></label>
+        <name>healthDetailsAccountDefaultRTIssue</name>
     </customLabels>
     <customLabels>
         <label>有効な団体モデルが指定されていません。</label>
@@ -850,10 +1381,6 @@
     <customLabels>
         <label>世帯団体レコードタイプと 1 対 1 のレコードタイプに同じ団体レコードタイプを指定することはできません。</label>
         <name>healthDetailsDuplicateAcctRT</name>
-    </customLabels>
-    <customLabels>
-        <label>個人および積み上げ集計の値が重複している支援が状態チェックで見つかりました。</label>
-        <name>healthDetailsDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>性別項目 {0} が個人に存在しません。</label>
@@ -934,10 +1461,6 @@
     <customLabels>
         <label>Recordtype ID {0} が無効です。</label>
         <name>healthDetailsInvalidRecordtypeId</name>
-    </customLabels>
-    <customLabels>
-        <label>Recordtype 名 {0} が無効です。</label>
-        <name>healthDetailsInvalidRecordtypeName</name>
     </customLabels>
     <customLabels>
         <label>Schedulable__c オブジェクトのレコード {0} が無効です。</label>
@@ -1024,6 +1547,10 @@
         <name>healthLabelAccountData</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthLabelAccountDefaultRT --></label>
+        <name>healthLabelAccountDefaultRT</name>
+    </customLabels>
+    <customLabels>
         <label>団体モデルデータ</label>
         <name>healthLabelAccountModelData</name>
     </customLabels>
@@ -1042,10 +1569,6 @@
     <customLabels>
         <label>個人データ</label>
         <name>healthLabelContactData</name>
-    </customLabels>
-    <customLabels>
-        <label>個人および積み上げ集計の値が重複しています</label>
-        <name>healthLabelDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>エラー通知受信者は有効です。</label>
@@ -1078,10 +1601,6 @@
     <customLabels>
         <label>最終実行日: {0}</label>
         <name>healthLabelLastRun</name>
-    </customLabels>
-    <customLabels>
-        <label>個人または積み上げ集計の値が重複している支援が状態チェックで見つかりませんでした。</label>
-        <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>支払が設定されているすべての支援に支払が必要です。</label>
@@ -1180,6 +1699,14 @@
         <name>healthSolutionAccOne2OneNoContacts</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthSolutionAccountDefaultRTInvalid --></label>
+        <name>healthSolutionAccountDefaultRTInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAccountDefaultRTIssue --></label>
+        <name>healthSolutionAccountDefaultRTIssue</name>
+    </customLabels>
+    <customLabels>
         <label>すべての各個人で同じ団体モデルを使用する必要があります。これらの個人を表示するには、NPSP 状態チェックレポートフォルダで&lt;b&gt;団体種別ごとの別各個人&lt;/b&gt;レポートを実行します。</label>
         <name>healthSolutionAccountModel</name>
     </customLabels>
@@ -1210,12 +1737,6 @@
     <customLabels>
         <label>これらの個人を表示するには、NPSP 状態チェックレポートフォルダで&lt;b&gt;団体が関連しない個人&lt;/b&gt;レポートを実行します。</label>
         <name>healthSolutionContactData</name>
-    </customLabels>
-    <customLabels>
-        <label>これまでは、2 つの異なる支援個人の役割で支援に 2 回関連付けられた個人のソフトクレジットの積み上げ集計値が NPSP で二重にカウントされていました。支援の個人の関連付けの数に関係なく、このような積み上げ集計値が NPSP で 1 回のみカウントされるようになりました。&lt;br/&gt;
-&lt;br/&gt;
-以前にこのように積み上げ集計値が二重にカウントされていた支援を確認するには、開発者コンソールで「SELECT Count(Id), OpportunityId, Opportunity.Name OpportunityName, ContactId, Contact.Name ContactName FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND Role IN ({0}) GROUP BY OpportunityId, Opportunity.Name, ContactId, Contact.Name HAVING Count(Id) &gt; 1」という SOQL クエリを実行します</label>
-        <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>[NPSP 設定] タブで、{1} | {2} をクリックし、{0} 設定を編集します。</label>
@@ -1414,6 +1935,10 @@
         <name>lblDeleteContactPrompt</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblExtendedStatus --></label>
+        <name>lblExtendedStatus</name>
+    </customLabels>
+    <customLabels>
         <label>個人内</label>
         <name>lblFindInContacts</name>
     </customLabels>
@@ -1466,6 +1991,10 @@
         <name>lblPostalCode</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblProgress --></label>
+        <name>lblProgress</name>
+    </customLabels>
+    <customLabels>
         <label><!-- lblRequired --></label>
         <name>lblRequired</name>
     </customLabels>
@@ -1478,8 +2007,16 @@
         <name>lblState</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblStatus --></label>
+        <name>lblStatus</name>
+    </customLabels>
+    <customLabels>
         <label>町名・番地</label>
         <name>lblStreet</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblYouAreHere --></label>
+        <name>lblYouAreHere</name>
     </customLabels>
     <customLabels>
         <label>団体</label>
@@ -1674,6 +2211,10 @@
         <name>oppNamingOrganizational</name>
     </customLabels>
     <customLabels>
+        <label><!-- pmtModifyCurrency --></label>
+        <name>pmtModifyCurrency</name>
+    </customLabels>
+    <customLabels>
         <label>支払を計算</label>
         <name>pmtWizardBtnCalcPayments</name>
     </customLabels>
@@ -1700,6 +2241,10 @@
     <customLabels>
         <label>期間</label>
         <name>pmtWizardInterval</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardMonth --></label>
+        <name>pmtWizardMonth</name>
     </customLabels>
     <customLabels>
         <label>支援が見つかりません。</label>
@@ -1754,12 +2299,20 @@
         <name>pmtWizardWarning</name>
     </customLabels>
     <customLabels>
+        <label><!-- pmtWizardWeek --></label>
+        <name>pmtWizardWeek</name>
+    </customLabels>
+    <customLabels>
         <label>どの日付を使用しますか?</label>
         <name>pmtWizardWriteoffDate</name>
     </customLabels>
     <customLabels>
         <label>{0} 件の支払 (合計 {1}) を消去する準備をしています。</label>
         <name>pmtWizardWriteoffMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardYear --></label>
+        <name>pmtWizardYear</name>
     </customLabels>
     <customLabels>
         <label>行を削除</label>
@@ -1894,6 +2447,10 @@
         <name>statusNotStarted</name>
     </customLabels>
     <customLabels>
+        <label><!-- To add to a list --></label>
+        <name>stgAdd</name>
+    </customLabels>
+    <customLabels>
         <label>世帯および組織団体の管理では、団体への複数の住所の追加、デフォルト住所の指定、住所 (季節性) の指定ができます。住所管理は、世帯団体モデルを備えた NPSP3 以降でのみ利用できます。</label>
         <name>stgAddrGeneralSettingsIntro</name>
     </customLabels>
@@ -1908,6 +2465,10 @@
     <customLabels>
         <label>エラーログをクリア</label>
         <name>stgBtnClearErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnClone --></label>
+        <name>stgBtnClone</name>
     </customLabels>
     <customLabels>
         <label>自動リレーションを作成</label>
@@ -1992,6 +2553,46 @@
     <customLabels>
         <label>保存</label>
         <name>stgBtnSave</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPGoToSetup --></label>
+        <name>stgCRLPGoToSetup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPHouseholdAccountError --></label>
+        <name>stgCRLPHouseholdAccountError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPInfoOnUDRBody --></label>
+        <name>stgCRLPInfoOnUDRBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPInfoOnUDRHeading --></label>
+        <name>stgCRLPInfoOnUDRHeading</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPNonAdminError --></label>
+        <name>stgCRLPNonAdminError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- For alternative text when a boolean is not selected. --></label>
+        <name>stgCheckboxFalse</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- For alternative text when a boolean is selected. --></label>
+        <name>stgCheckboxTrue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCountOf --></label>
+        <name>stgCountOf</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentInProgress --></label>
+        <name>stgDeploymentInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentTryAgain --></label>
+        <name>stgDeploymentTryAgain</name>
     </customLabels>
     <customLabels>
         <label>ドキュメント</label>
@@ -2147,6 +2748,18 @@
 &lt;br/&gt; 
 処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。</label>
         <name>stgHelpCreateMissingPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <name>stgHelpCustomizableRollupsEnable2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <name>stgHelpCustomizableRollupsEnable3</name>
     </customLabels>
     <customLabels>
         <label>デフォルトの一般会計単位に対して GAU 割り当てレコードの自動作成および管理を有効にします。この機能を使用すると、デフォルトの一般会計単位のレポートが向上しますが、より多くのデータストレージを使用します。</label>
@@ -2383,6 +2996,10 @@
         <name>stgHelpPrimaryContactBatch</name>
     </customLabels>
     <customLabels>
+        <label><!-- Content of the &quot;Bulk Data Processes - Remove Duplicate Primary OCRs&quot; page --></label>
+        <name>stgHelpPrimaryContactRoleMergeBatch</name>
+    </customLabels>
+    <customLabels>
         <label>選択した場合、継続支援で指定したキャンペーンをすべての関連 (子) 支援に追加します。このオプションを選択していないと、キャンペーンは継続支援の最初の支援にのみ表示されます。</label>
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
@@ -2395,6 +3012,10 @@
 &lt;br/&gt;
 処理に時間がかかる場合がありますが、このページを閉じることができます。処理は引き続きバックグラウンドで実行されます。</label>
         <name>stgHelpRDBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD Batch Size Settings Help Text --></label>
+        <name>stgHelpRDBatchSize</name>
     </customLabels>
     <customLabels>
         <label>継続支援の夜間更新がスケジュールされないようにします。[設定] | [監視] | [スケジュール済みジョブ] で既存のスケジュール済みジョブを削除する必要があります。</label>
@@ -2493,12 +3114,12 @@
         <name>stgHelpRelSyncFields</name>
     </customLabels>
     <customLabels>
-        <label>&lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;エラーログ&lt;/a&gt;で、問題があるかどうかを確認してください。</label>
-        <name>stgHelpReviewErrorLog</name>
+        <label><!-- Respect the settings on a Duplicate Rule that control allowing duplicates. --></label>
+        <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
     <customLabels>
-        <label>支援者の統計情報の計算時に処理されるレコードの数。デフォルトサイズは 200 です。システムの制限により支援の積み上げ集計が失敗する場合は、この数値を小さくします。</label>
-        <name>stgHelpRollupBatchSize</name>
+        <label>&lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;エラーログ&lt;/a&gt;で、問題があるかどうかを確認してください。</label>
+        <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
         <label>団体支援の積み上げ集計時に統計から除外する支援レコードタイプの名前。</label>
@@ -2531,6 +3152,10 @@
     <customLabels>
         <label>支援が個人によるものでない (会社や財団などからの) 場合でも、常に支援者の統計情報を支援の主個人の役割、および対応する世帯に積み上げ集計します。</label>
         <name>stgHelpRollupPrimaryContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupSkewLimit --></label>
+        <name>stgHelpRollupSkewLimit</name>
     </customLabels>
     <customLabels>
         <label>ページレイアウトのカスタマイズ、項目の追加、またはユーザの追加を行いますか?  &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;「Salesforce Setup (Salesforce の設定)」&lt;/a&gt;ページをお試しください。</label>
@@ -2597,6 +3222,10 @@
         <name>stgHelpUDRTargetObject</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpUseDatedConvRates --></label>
+        <name>stgHelpUseDatedConvRates</name>
+    </customLabels>
+    <customLabels>
         <label>インストールに成功しましたが、軽微な問題が検出されました。問題を修正するには、Salesforce で [NPSP 設定] ページを読み込みます。
 
 注意: [NPSP 設定] が Nonprofit Success Pack アプリケーションに表示されます。タブが表示されない場合は、右上隅のアプリケーションメニューから [Nonprofit Success Pack] を選択します。</label>
@@ -2641,6 +3270,18 @@
     <customLabels>
         <label>バッチデータエントリ設定</label>
         <name>stgLabelBDESettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchJobRollupSkewSizes --></label>
+        <name>stgLabelBatchJobRollupSkewSizes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchJobSizes --></label>
+        <name>stgLabelBatchJobSizes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchProcessingOptions --></label>
+        <name>stgLabelBatchProcessingOptions</name>
     </customLabels>
     <customLabels>
         <label>バッチ状況</label>
@@ -2719,6 +3360,10 @@
         <name>stgLabelMembershipSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- Intended for the name of a metadata record and not a person. --></label>
+        <name>stgLabelName</name>
+    </customLabels>
+    <customLabels>
         <label>新規自動リレーション</label>
         <name>stgLabelNewAutoRel</name>
     </customLabels>
@@ -2745,6 +3390,10 @@
     <customLabels>
         <label>なし</label>
         <name>stgLabelNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOK --></label>
+        <name>stgLabelOK</name>
     </customLabels>
     <customLabels>
         <label>支援名設定</label>
@@ -2815,6 +3464,10 @@
         <name>stgLabelPaymentSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- Menu title for the Duplicate Primary OCRs in NPSP Settings --></label>
+        <name>stgLabelPrimaryContactRoleMergeBatch</name>
+    </customLabels>
+    <customLabels>
         <label>カスタム項目の対応付け</label>
         <name>stgLabelRDFieldMap</name>
     </customLabels>
@@ -2883,6 +3536,22 @@
         <name>stgLabelUDRTargetObject</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelView --></label>
+        <name>stgLabelView</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for previous year --></label>
+        <name>stgLabelYearPicklistLastYear</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for current year --></label>
+        <name>stgLabelYearPicklistThisYear</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for dynamic number of years ago --></label>
+        <name>stgLabelYearPicklistYearsAgo</name>
+    </customLabels>
+    <customLabels>
         <label>削除</label>
         <name>stgLinkDelete</name>
     </customLabels>
@@ -2921,6 +3590,10 @@
     <customLabels>
         <label>バッチデータエントリ</label>
         <name>stgNavBDE</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavBatchProcessSettings --></label>
+        <name>stgNavBatchProcessSettings</name>
     </customLabels>
     <customLabels>
         <label>一括データ処理</label>
@@ -3019,10 +3692,6 @@
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
-        <label>プロセススケジューラ</label>
-        <name>stgNavSchedule</name>
-    </customLabels>
-    <customLabels>
         <label>システムツール</label>
         <name>stgNavSystem</name>
     </customLabels>
@@ -3035,12 +3704,24 @@
         <name>stgNavUserDefinedRollups</name>
     </customLabels>
     <customLabels>
+        <label><!-- No records of an object found. Pass in the object&apos;s plural label. --></label>
+        <name>stgNoObjectsFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNotApplicable --></label>
+        <name>stgNotApplicable</name>
+    </customLabels>
+    <customLabels>
         <label>支援を作成すると、デフォルトの命名規則を使用して名前が自動的に入力されます。カスタム支援名を作成することで、命名規則をカスタマイズできます。</label>
         <name>stgOppNamingDescription</name>
     </customLabels>
     <customLabels>
         <label><!-- stgPowerOfUsHub --></label>
         <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgSelectOne --></label>
+        <name>stgSelectOne</name>
     </customLabels>
     <customLabels>
         <label>ツール</label>

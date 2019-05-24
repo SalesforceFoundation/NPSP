@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Opportunity__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Amount__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>FK_$%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>FK_$%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_This_Year__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>FK_$%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_Last_Year__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>FK_$%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Average_Allocation__c</field>
+    </columns>
+    <description>Provides various summary calculation figures for individual General Accounting Units. Click Show Details to see a breakdown of Allocations by Opportunity.</description>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>General Accounting Units</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$%%%NAMESPACE%%%Allocation__c@%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%General_Accounting_Unit__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

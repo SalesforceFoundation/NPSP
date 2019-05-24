@@ -33,9 +33,14 @@
 * @group Recurring Donations
 * @description Class provides a batchable wrapper for open ended recurring donations
 */
-public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful, 
+public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful,
 Schedulable {
-    
+
+    /*******************************************************************************************************
+    * @description Flag to specify when running the Refresh Opportunities button on Recurring Donations
+    */
+    public static Boolean isBatchButton = false;
+
     /*******************************************************************************************************
     * @description holds the query of all recurring donations to process
     */ 
@@ -50,6 +55,13 @@ Schedulable {
     * @description Count of RD's that hit errors while processing
     */ 
     public Integer failuresCount = 0;
+
+    /*******************************************************************************************************
+    * @description Batch size for Apex Job. Uses default of 50 if Custom Setting is null.
+    */
+    public static Integer batchSize = (UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c != null) ?
+            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue() : 50;
+
     
     /*******************************************************************************************************
     * @description Class constructor
@@ -57,14 +69,14 @@ Schedulable {
     public RD_RecurringDonations_BATCH() {
         query = RD_RecurringDonations.strQueryRDNoWhere();
         query += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
-        RD_ProcessControl.batchButton = true;
+        RD_RecurringDonations_BATCH.isBatchButton = true;
     }
-        
+
     /*******************************************************************************************************
     * @description Executes the RD Batch process.
     */ 
     public void execute(SchedulableContext context) {
-        Database.executeBatch(new RD_RecurringDonations_BATCH(), 50); 
+        Database.executeBatch(new RD_RecurringDonations_BATCH(), RD_RecurringDonations_BATCH.batchSize);
     }
     
     /*******************************************************************************************************
@@ -86,7 +98,7 @@ Schedulable {
     * @return void  
     */
     public void execute(Database.BatchableContext bc, Sobject[] result) {
-        RD_ProcessControl.batchButton = true;
+        RD_RecurringDonations_BATCH.isBatchButton = true;
         recCount += result.size();
         failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
     }

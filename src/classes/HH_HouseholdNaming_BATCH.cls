@@ -85,8 +85,8 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
     * @return void  
     ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, Sobject[] result) {
-        HH_ProcessControl.inFutureContext = true;     
-        
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
+
         //first, if this is coming from the VF settings interface, and the user just enabled
         //automatic household naming for the first time, we need to markup
         //all of the households that have existing names.        
@@ -168,7 +168,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
             if (updatelist.size() > 0)
                 //Database.Saveresult[] sr = database.update(updatelist, false);
                 // all or nothing so errors not lost.
-                update updatelist;
+                UTIL_DMLService.updateRecords(updatelist);
         }
         
         //No error handling necessary, because the only place this is called from is the widget that displays the batch
@@ -185,6 +185,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         hhidlist.addall(hhids);
         
         hn.UpdateNames(hhidlist);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
     
     /*******************************************************************************************************

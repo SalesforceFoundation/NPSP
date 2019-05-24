@@ -33,8 +33,8 @@
 * @group Utilities
 * @description Tests for the JobProgress indicator component controller.
 */
-@isTest
-public with sharing class UTIL_JobProgress_CTRL_TEST {
+@isTest(IsParallel=True)
+private class UTIL_JobProgress_CTRL_TEST {
 
     static testMethod void jobProgressController(){
 
@@ -46,25 +46,29 @@ public with sharing class UTIL_JobProgress_CTRL_TEST {
         //set the HH Account model before entering the batch
         CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
         String query = CONV_Account_Conversion_CTRL.getBatchQuery();
+
         Test.startTest();
         CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, null, null);
-        ID batchprocessid = Database.executeBatch(cacv);
+        Database.executeBatch(cacv);
         Test.stopTest();
 
         UTIL_JobProgress_CTRL controller = new UTIL_JobProgress_CTRL();
-        system.assertEquals(1, controller.getBatchJobs().size());
-        system.assertNotEquals(null, controller.bj);
-        system.assertEquals(20, controller.numberOfJobs);
-        system.assertEquals('Batch Apex Jobs', controller.batchComponentLabel);
-        system.assertEquals(false, controller.rerenderoncomplete);
-        system.assertEquals(false, controller.hasExtendedStatus);
-        system.assertEquals(false, controller.allCompleted);
+        System.assertEquals(1, controller.getBatchJobs().size());
+        System.assertNotEquals(null, controller.bj);
+        System.assertEquals(20, controller.numberOfJobs);
+        System.assertEquals('Batch Apex Jobs', controller.batchComponentLabel);
+        System.assertEquals(false, controller.rerenderoncomplete);
+        System.assertEquals(false, controller.hasExtendedStatus);
+        System.assertEquals(false, controller.allCompleted);
+
+        List<UTIL_JobProgress_CTRL.BatchJobStatus> bjs = UTIL_JobProgress_CTRL.getBatchJobsStatus(controller.numberOfJobs, controller.batchJobStartTimeString);
+        System.assertEquals(1, bjs.size());
     }
 
     //test behavior when no batch job is present for whatever reason
     static testMethod void checkNullBatchJobProgressBehavior(){
         UTIL_JobProgress_CTRL controller = new UTIL_JobProgress_CTRL();
-        system.assertEquals(true, controller.getBatchJobs().isEmpty());
-        system.assertEquals(null, controller.bj);
+        System.assertEquals(true, controller.getBatchJobs().isEmpty());
+        System.assertEquals(null, controller.bj);
     }
 }

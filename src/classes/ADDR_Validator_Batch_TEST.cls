@@ -36,10 +36,6 @@
 @isTest
 public with sharing class ADDR_Validator_Batch_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
-    private static string strTestOnly = '*';
-    
     public static void createDefaultSettings() {
     	// use the household account model
         UTIL_CustomSettingsFacade.getContactsSettings();
@@ -58,7 +54,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void oneValidAddress() {
-    	if (strTestOnly != '*' && strTestOnly != 'oneValidAddress') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
     	TDTM_DefaultConfig.startTestDataInit();
     	createDefaultSettings();
@@ -71,8 +68,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         contact.MailingPostalCode = '95014'; 
         contact.MailingCountry = 'United States';
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
@@ -122,14 +118,18 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void multipleValidAddresses() {
-    	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
+        Integer batchSize = 100;
+
+        UTIL_Debug.disableDebugLogging();
         TDTM_DefaultConfig.startTestDataInit();
     	createDefaultSettings();
         
         //create contacts
         List<Contact> contacts = new List<Contact>();
-        for(integer i = 0; i< 200; i++) {
+        for(integer i = 0; i< batchSize; i++) {
 	        Contact contact = new contact(firstname='Test', lastname='Person' + i);
 	        contact.MailingStreet = 'multiple-address';
 	        contact.MailingCity = 'Cupertino';
@@ -139,12 +139,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
 	        contacts.add(contact);
         }
         insert contacts;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         //check households got created for contacts
         List<Id> AccountIDs = new List<Id>();
         List<Contact> contactsWithAccId = [select Account.Id from Contact where Id IN :contacts];
-        System.assertEquals(200, contactsWithAccId.size());
+        System.assertEquals(batchSize, contactsWithAccId.size());
         for(Contact c : contactsWithAccId) {    
 	        Id accountId = c.Account.Id;
 	        System.assertNotEquals(null, accountId);
@@ -153,7 +152,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         
         //check address records got created for households, but have not yet been verified
         List<Address__c> addresses = [select Verified__c from Address__c where Household_Account__c IN :AccountIDs];
-        System.assertEquals(200, addresses.size());
+        System.assertEquals(batchSize, addresses.size());
         for(Address__c addr : addresses) {
         	System.assertEquals(false, addr.Verified__c);
         }
@@ -168,7 +167,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         //check address records were verified
         addresses = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
                     from Address__c where Household_Account__c IN :AccountIDs];
-        System.assertEquals(200, addresses.size());
+        System.assertEquals(batchSize, addresses.size());
         Integer i = 1;
         for(Address__c addr : addresses) {
         	UTIL_Debug.debug(LoggingLevel.WARN, '****Asserting address record #' + i);
@@ -181,7 +180,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void oneValidZipcode() {
-        if (strTestOnly != '*' && strTestOnly != 'oneValidZipcode') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         TDTM_DefaultConfig.startTestDataInit();
         createDefaultSettings();
@@ -190,8 +190,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         contact.MailingPostalCode = '90210';
         contact.MailingCity = 'single-zip';
         insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
@@ -222,12 +221,12 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void multipleValidZipcodes() {
-        if (strTestOnly != '*' && strTestOnly != 'multipleValidZipcodes') return;
         createDefaultSettings();
     }
     
     public static testmethod void multipleValidAddressessZipcodes() {
-    	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddressessZipcodes') return;  
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         TDTM_DefaultConfig.startTestDataInit();
     	createDefaultSettings();
@@ -245,8 +244,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         zipContact.MailingPostalCode = '90210';
         
         insert new Contact[] {addressContact, zipContact};
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
-        
+
         //check household got created for contact
         addressContact = [select Account.Id from Contact where Id = :addressContact.Id];
         Id addrAccountId = addressContact.Account.Id;
@@ -300,7 +298,6 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void validAddressInvalidZipcode() {
-        if (strTestOnly != '*' && strTestOnly != 'validAddressInvalidZipcode') return;     
         createDefaultSettings();
     }     
 }

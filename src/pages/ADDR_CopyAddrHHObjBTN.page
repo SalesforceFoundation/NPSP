@@ -1,7 +1,17 @@
 <apex:page controller="ADDR_CopyAddrHHObjBTN_CTRL" action="{!buttonClick}" >
-    <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/0_12_2/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
 
-	<c:UTIL_PageMessages />
-    <apex:outputLink target="_self" title="Return"  value="{!returnurl}" >Return</apex:outputLink>
-    <c:UTIL_NavigateBack recordId="{!$CurrentPage.parameters.id}" redirect="{!redirectPage}"/>
+    <apex:slds />
+
+    <div class="slds-scope slds-p-bottom_x-large">
+        <apex:form id="idForm" styleClass="slds-p-bottom_x-large">
+            <c:UTIL_PageHeader headerLabel="{!IF(strSrcObject == 'Contact', $ObjectType.Contact.Label, $ObjectType.npo02__Household__c.Label)}"
+                icon="{!IF(strSrcObject == 'Contact', 'contact', 'custom61')}" iconCategory="{!IF(strSrcObject == 'Contact', 'standard', 'custom')}"
+                saveLabel="{!$Label.btnContinue}" saveAction="{!copy}" saveReRender="idForm" showSaveBtn="{!canCopyAddress}"
+                cancelAction="{!close}"/>
+
+            <c:UTIL_PageMessages />
+
+            <c:UTIL_NavigateBack recordId="{!JSENCODE($CurrentPage.parameters.id)}" redirect="{!redirectPage}"/>
+        </apex:form>
+    </div>
 </apex:page>

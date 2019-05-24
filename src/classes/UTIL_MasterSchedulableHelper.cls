@@ -58,67 +58,84 @@ public without sharing class UTIL_MasterSchedulableHelper {
         }
     }
 
+    @testVisible
+    private static List<String> jobsToAbort = new List<String>();
+
     /*******************************************************************************************************
     * @description This map contains all necessary information for scheduling default NPSP jobs:
-    * Job name as key, and a list containing the cron expression for that job and its class name.
+    * Job name as key, and a list containing the cron expression for that job and its class name. Also builds
+    * a collection of jobsToAbort - a list of job names that if exist should be aborted.
     */
-    public static Map<String, List<String>> defaultScheduledJobs = new Map<String, List<String>>{
-        'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
-        'NPSP 01 - Opportunity Account Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppAccRollup_BATCH'},
-        'NPSP 02 - Opportunity Contact Rollups'     => new List<String>{'0 0 23 ? * *', 'RLLP_OppContactRollup_BATCH'},
-        'NPSP 03 - Opportunity Household Rollups'   => new List<String>{'0 0 23 ? * *', 'RLLP_OppHouseholdRollup_BATCH'},
-        'NPSP 04 - Opportunity Soft Credit Rollups' => new List<String>{'0 0 23 ? * *', 'RLLP_OppSoftCreditRollup_BATCH'},
-        'NPSP 05 - GAU Allocation Rollups'          => new List<String>{'0 0 23 ? * *', 'ALLO_Rollup_SCHED'},
-        'NPSP 06 - Recurring Donation Updates'      => new List<String>{'0 0 23 ? * *', 'RD_RecurringDonations_BATCH'},
-        'NPSP 07 - Seasonal Address Updates'        => new List<String>{'0 0 23 ? * *', 'ADDR_Seasonal_SCHED'},
-        'NPSP 08 - Level Assignment Updates'        => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'}
-    };
+    @testVisible
+    public static Map<String, List<String>> defaultScheduledJobs {
+        get {
+            if (defaultScheduledJobs == null) {
+                jobsToAbort.clear();
+                defaultScheduledJobs = new Map<String, List<String>>{
+                    'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
+                    // Start the Recurring Donations job one hour before the Rollup jobs to avoid any conflict with
+                    // the Opps that may be created/modified by the RD job.
+                    'NPSP 06 - Recurring Donation Updates'      => new List<String>{'0 0 22 ? * *', 'RD_RecurringDonations_BATCH'},
+                    'NPSP 07 - Seasonal Address Updates'        => new List<String>{'0 0 23 ? * *', 'ADDR_Seasonal_SCHED'},
+                    'NPSP 08 - Level Assignment Updates'        => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'},
+                    'NPSP 09 - Data Import Batch Processing'    => new List<String>{'0 0 22 ? * *', 'BDI_DataImportBatch_SCHED'}
+                };
+                if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+                    // When the Customizable Rollups Engine is enabled, the actual rollup job target classes change, but
+                    // keep the naming similar and stagger the job start times slightly.
+                    defaultScheduledJobs.put('NPSP 01A - Customizable Rollups - Account Hard Credit', new List<String>{'0 0 23 ? * *', 'CRLP_Account_BATCH'});
+                    defaultScheduledJobs.put('NPSP 02A - Customizable Rollups - Contact Hard Credit', new List<String>{'0 05 23 ? * *', 'CRLP_Contact_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account-level Contact Soft Credit', new List<String>{'0 10 23 ? * *', 'CRLP_Account_SoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Account Soft Credit', new List<String>{'0 10 23 ? * *', 'CRLP_Account_AccSoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 04A - Customizable Rollups - Contact Soft Credit', new List<String>{'0 15 23 ? * *', 'CRLP_Contact_SoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 01B - Customizable Rollups - Account Hard Credit Skew', new List<String>{'0 0 23 ? * *', 'CRLP_AccountSkew_BATCH'});
+                    defaultScheduledJobs.put('NPSP 02B - Customizable Rollups - Contact Hard Credit Skew', new List<String>{'0 05 23 ? * *', 'CRLP_ContactSkew_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03C - Customizable Rollups - Account-level Contact Soft Credit Skew', new List<String>{'0 10 23 ? * *', 'CRLP_AccountSkew_SoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03D - Customizable Rollups - Account Soft Credit Skew', new List<String>{'0 10 23 ? * *', 'CRLP_AccountSkew_AccSoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew', new List<String>{'0 15 23 ? * *', 'CRLP_ContactSkew_SoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 05 - Customizable Rollups - General Accounting Units', new List<String>{'0 20 23 ? * *', 'CRLP_GAU_BATCH'});
+                    defaultScheduledJobs.put('NPSP 06A - Customizable Rollups - Recurring Donations', new List<String>{'0 25 23 ? * *', 'CRLP_RD_BATCH'});
+                    defaultScheduledJobs.put('NPSP 06B - Customizable Rollups - Recurring Donations Skew', new List<String>{'0 30 23 ? * *', 'CRLP_RDSkew_BATCH'});
 
-    /*******************************************************************************************************
-    * @description Schedules all NPSP jobs based on whether they are marked Active in the old Schedulable__c
-    * table, then clears the Schedulable__c table. If some jobs were disabled, sets the setting to prevent
-    * NPSP from auto scheduling them in the future. This method is only called from the post install script. 
-    * @return void
-    */
-    public static void scheduleJobsFromOldObject() {
-        List<Schedulable__c> scheduleObjects = [SELECT Id, Class_Name__c, Active__c FROM Schedulable__c];
 
-        Boolean allJobsActive = true;
-        for (Schedulable__c sched : scheduleObjects) { 
-            if (!sched.Active__c) {
-                allJobsActive = false;
-            }
-        }
+                    // The following jobs should be aborted if the Customizable Rollups jobs are being enabled
+                    jobsToAbort.add('NPSP 01 - Opportunity Account Rollups');
+                    jobsToAbort.add('NPSP 02 - Opportunity Contact Rollups');
+                    jobsToAbort.add('NPSP 03 - Opportunity Household Rollups');
+                    jobsToAbort.add('NPSP 04 - Opportunity Soft Credit Rollups');
+                    jobsToAbort.add('NPSP 05 - GAU Allocation Rollups');
 
-        //if all jobs are still active or no records are in the schedulable table, schedule them all. 
-        //This will be the default once this method has run once, since we are
-        //deleting all Schedulable__c records at the end of this method.
-        if (scheduleObjects.isEmpty() || allJobsActive) {
-            setScheduledJobs();
-        } else {
-            //there was no Schedulable__c object for error processing, so create it anyway
-            createJob('NPSP 00 - Error Processing');
-            for (Schedulable__c sched : scheduleObjects) {
-                if (sched.Active__c) {
-                    for (String jobName : defaultScheduledJobs.keySet()) {
-                        if (sched.Class_Name__c.equalsIgnoreCase(defaultScheduledJobs.get(jobname)[1])) {
-                            createJob(jobName);
-                        }
-                    }
+                } else {
+                    // Legacy Rollups Engine jobs are enabled
+                    defaultScheduledJobs.put('NPSP 01 - Opportunity Account Rollups', new List<String>{'0 0 23 ? * *', 'RLLP_OppAccRollup_BATCH'});
+                    defaultScheduledJobs.put('NPSP 02 - Opportunity Contact Rollups', new List<String>{'0 0 23 ? * *', 'RLLP_OppContactRollup_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03 - Opportunity Household Rollups', new List<String>{'0 0 23 ? * *', 'RLLP_OppHouseholdRollup_BATCH'});
+                    defaultScheduledJobs.put('NPSP 04 - Opportunity Soft Credit Rollups', new List<String>{'0 0 23 ? * *', 'RLLP_OppSoftCreditRollup_BATCH'});
+                    defaultScheduledJobs.put('NPSP 05 - GAU Allocation Rollups', new List<String>{'0 0 23 ? * *', 'ALLO_Rollup_SCHED'});
+
+                    // The following jobs should be aborted if the Customizable Rollups jobs are NOT enabled
+                    jobsToAbort.add('NPSP 01A - Customizable Rollups - Account Hard Credit');
+                    jobsToAbort.add('NPSP 02A - Customizable Rollups - Contact Hard Credit');
+                    jobsToAbort.add('NPSP 03A - Customizable Rollups - Account-level Contact Soft Credit');
+                    jobsToAbort.add('NPSP 03B - Customizable Rollups - Account Soft Credit');
+                    jobsToAbort.add('NPSP 04A - Customizable Rollups - Contact Soft Credit');
+                    jobsToAbort.add('NPSP 01B - Customizable Rollups - Account Hard Credit Skew');
+                    jobsToAbort.add('NPSP 02B - Customizable Rollups - Contact Hard Credit Skew');
+                    jobsToAbort.add('NPSP 03C - Customizable Rollups - Account-level Contact Soft Credit Skew');
+                    jobsToAbort.add('NPSP 03D - Customizable Rollups - Account Soft Credit Skew');
+                    jobsToAbort.add('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew');
+                    jobsToAbort.add('NPSP 05 - Customizable Rollups - General Accounting Units');
+                    jobsToAbort.add('NPSP 06A - Customizable Rollups - Recurring Donations');
+                    jobsToAbort.add('NPSP 06B - Customizable Rollups - Recurring Donations Skew');
                 }
             }
-            Error_Settings__c orgErrorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
-            orgErrorSettings.Don_t_Auto_Schedule_Default_NPSP_Jobs__c = true;
-            if (!Test.isRunningTest()) {
-                update orgErrorSettings;
-            }
-        }
-
-        delete scheduleObjects;
+            return defaultScheduledJobs;
+        } private set;
     }
 
     /*******************************************************************************************************
-    * @description Schedules all NPSP jobs that are not already scheduled.
+    * @description Schedules all NPSP jobs that are not already scheduled, and abort any jobs that need to be
+    * aborted (where User is inactive or where listed in the jobsToAbort collection).
     * @return void
     */
     public static void setScheduledJobs() {
@@ -126,7 +143,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
         Map<String, CronTrigger> scheduledJobs = new Map<String, CronTrigger>();
         
         //query for all scheduled apex
-        for (CronTrigger ct : [SELECT Id, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
+        for (CronTrigger ct : [SELECT Id, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive
+                FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
             scheduledJobs.put(ct.CronJobDetail.Name, ct);
         }
 
@@ -137,7 +155,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     createJob(jobName);
                 }
             } else {
-                //if it's already scheduled, but the ghost user or an inactve user scheduled it, 
+                //if it's already scheduled, but the ghost user or an inactive user scheduled it,
                 //then abort and reschedule
                 CronTrigger currentJob = scheduledJobs.get(jobName);
                 if (currentJob.CreatedBy.Name == 'Nonprofit Success Pack' || !currentJob.CreatedBy.isActive) {
@@ -150,6 +168,15 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 }
             }
         }
+
+        // Abort Jobs that need to be aborted. For example, if switching from the Legacy Rollups to the new
+        // Customizable Rollups engine, the old rollup jobs need to be aborted. Same if the reverse is done.
+        for (String jobName : jobsToAbort) {
+            if (scheduledJobs.containsKey(jobName)) {
+                CronTrigger currentJob = scheduledJobs.get(jobName);
+                System.abortJob(currentJob.Id);
+            }
+        }
     }
 
     /*******************************************************************************************************
@@ -159,12 +186,34 @@ public without sharing class UTIL_MasterSchedulableHelper {
     private static void createJob(String jobName) {
         String cronExpression = defaultScheduledJobs.get(jobName)[0];
         String className = defaultScheduledJobs.get(jobName)[1];
-    
+
         try {
-            Schedulable classInstance = (Schedulable)Type.forName(className).newInstance();
+            Schedulable classInstance = (Schedulable) Type.forName(className).newInstance();
             System.schedule(jobName, cronExpression, classInstance);
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.STTG);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Checks for presently running jobs of a particular method
+    * @param methodName The name of the method to check for running jobs on
+    * @return Boolean
+    */
+    public static Boolean hasRunningJob(String className) {
+        className = (className.contains('.') ? className.substringAfter('.') : className);
+        // If any quick single-record rollup jobs have recently been launched, don't let these block the full re-run
+        Datetime tenMinutesAgo = DateTime.Now().addMinutes(-10);
+        Integer jobCount = [SELECT COUNT()
+            FROM AsyncApexJob
+            WHERE ApexClass.Name = :className
+            AND Status NOT IN ('Queued','Aborted','Completed','Failed')
+            AND CreatedDate < :tenMinutesAgo
+            LIMIT 1];
+        if (jobCount == 0) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

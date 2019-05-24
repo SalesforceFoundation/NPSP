@@ -1,0 +1,48 @@
+<apex:page showHeader="true" sidebar="false" standardStylesheets="false" applyBodyTag="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/css/style.css' )}"/>
+    <apex:slds/>
+
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <meta name="viewport" content="width=device-width" />
+
+    <body class="bodyDiv slds-scope" >
+
+        <div class="RP slds-p-horizontal_xx-large">
+
+            <div class="slds-clearfix">
+                <div class="slds-float_left">
+                    <img class="slds-p-vertical_medium" id="sfImage" src="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/images/Image_SF.png' )}" width="80" height="40"/>
+                    <img class="slds-p-vertical_medium" id="productImage" src="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/images/Image_ProductLogo.png' )}" width="80" height="40"/>
+                </div>
+            </div>
+
+            <div class="slds-grid">
+                <h1 class="slds-text-heading_large" >{!$Label.RP_Title} {!$Label.RP_ProductNameLabel}!</h1>
+            </div>
+
+            <div class="slds-grid">
+                <h2 class="slds-p-vertical_x-small">{!$Label.RP_SubTitle} </h2>
+            </div>
+
+            <div class="slds-box slds-m-bottom_medium getting-started-section">
+                <c:RP_GettingStarted />
+            </div>
+
+            <div class="slds-grid slds-wrap">
+                <div class="slds-m-vertical_large slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2">
+                    <c:RP_Youtube />
+                </div>
+
+                <div class="slds-m-vertical_large slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2">
+                    <c:RP_GitHub />
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
+</apex:page>

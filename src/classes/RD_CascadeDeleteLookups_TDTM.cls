@@ -30,44 +30,216 @@
 /**
  * @author Salesforce.org
  * @date 2017
- * @group Utilities
+ * @group Cascade Delete
  * @description Cascade deletion extension for Recurring Donation object.
  */
-public with sharing class RD_CascadeDeleteLookups_TDTM extends UTIL_CascadeDeleteLookups_TDTM {
-
+public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDeleteLookups_TDTM {
     /*******************************************************************************************************
-    * @description Cascade deletion definitions for Recurring Donation.
+    * @description Gets the deleted Recurring Donations CascadeDeleteLoader Object. 
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader.
     ********************************************************************************************************/
-    private static List<Cascade> cascades = new List<Cascade>{
-        new Cascade('Opportunity','npe03__Recurring_Donation__c', new List<String>{'IsWon','IsClosed'}),
-        new Cascade(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),'Recurring_Donation__c'),
-        new Cascade(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),'Opportunity__r.npe03__Recurring_Donation__c')
-    };
-    
-    /*******************************************************************************************************
-    * @description Override provides super class with cascades for this triger.
-    * @return List<Cascade> The cascade deletions to perform for this trigger.
-    ********************************************************************************************************/    
-    public override List<Cascade> getCascades() {
-        return cascades;
+    protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
+        return new CascadeDeleteLoader();
     }
 
     /*******************************************************************************************************
-    * @description This method override detects error conditions in cascade deleted objects. Opportunities 
-    * that are Closed/Won prevent deletion of the parent Recurring Donation.
-    * @return void This method adds to the errors property of the Cascades objects and returns nothing.
+    * @description Gets the undeleted Recurring Donations CascadeUndeleteLoader Object.
+    * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
     ********************************************************************************************************/
-    public override void addDeletionErrors() {
-        for (Cascade cc : getCascades()) {
-            //special case deleting opportunities
-            if (cc.objectName == 'Opportunity') {
-                for (SObject child : cc.children.values()) {
-                    //don't cascade closed/won opportunities
-                    if ((Boolean)child.get('IsClosed') && (Boolean)child.get('IsWon')) {
-                        putError(cc, child.id, Label.ClosedWonOpportunities);
+    protected override CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
+        return new FirstCascadeUndeleteLoader();
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the deleted Recurring Donations ChildrenValidator Object.
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteValidator.
+    ********************************************************************************************************/
+    protected override CDL_CascadeDeleteLookups.CascadeDeleteValidator getCascadeDeleteValidator() {
+        return new CascadeDeleteValidator();
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the children of the deleted Recurring Donations.
+    ********************************************************************************************************/
+    class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
+        
+        /*******************************************************************************************************
+        * @description Retrieves the related Opportunities and Allocations of the deleted Recurring Donations.
+        * @param Set<Id> The Ids of the deleted Recurring Donations.
+        * @return List<SObject> Deleted Recurring Donations' Opportunities and Allocations.
+        ****************************************************************************    ****************************/
+        public List<SObject> load(Set<Id> recurringDonationIds) {
+            List<SObject> result = new List<SObject>();
+
+            List<Opportunity> relatedOpportunities = [
+                SELECT Name, npe03__Recurring_Donation__c, IsWon, IsClosed
+                FROM Opportunity
+                WHERE npe03__Recurring_Donation__c IN :recurringDonationIds
+            ];
+            result.addAll((List<SObject>) relatedOpportunities);
+
+            List<Allocation__c> relatedAllocations = [
+                SELECT Recurring_Donation__c, Opportunity__c, Opportunity__r.npe03__Recurring_Donation__c
+                FROM Allocation__c
+                WHERE Recurring_Donation__c IN :recurringDonationIds
+                OR Opportunity__c IN :relatedOpportunities
+            ];
+            result.addAll((List<SObject>) relatedAllocations);
+
+            return result;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the first children group of the undeleted Recurring Donations.
+    ********************************************************************************************************/
+    class FirstCascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
+
+        private List<Opportunity> relatedOpportunities;
+
+        /******************************************************************************************************
+        * @description The Constructor of FirstCascadeUndeleteLoader.
+        */
+        FirstCascadeUndeleteLoader() {
+            this.relatedOpportunities = new List<Opportunity>();
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the related Opportunities of the undeleted Recurring Donations.
+        * @param Set<Id> The Ids of the undeleted Recurring Donations.
+        * @return List<SObject> Undeleted Recurring Donations's Opportunities.
+        ********************************************************************************************************/
+        public List<SObject> load(Set<Id> recurringDonationIds) {
+            relatedOpportunities = [
+                SELECT Name
+                FROM Opportunity
+                WHERE npe03__Recurring_Donation__c IN :recurringDonationIds
+                AND IsDeleted = TRUE
+                ALL ROWS
+            ];
+
+            return relatedOpportunities;
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the next children records group to be undeleted. In this case, there is another
+        * group of children records (Allocations) to undelete. To retrieve the Allocations, the logic needs the 
+        * the Opportunities undeleted (from the load method).
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
+        ********************************************************************************************************/
+        public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
+            List<Opportunity> undeletedOpportunities = [
+                SELECT Name
+                FROM Opportunity
+                WHERE Id IN :relatedOpportunities
+            ];
+            return new SecondCascadeUndeleteLoader(undeletedOpportunities);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the second children group of the undeleted Recurring Donations.
+    ********************************************************************************************************/
+    class SecondCascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
+        private List<Opportunity> relatedOpportunities;
+
+        /*********************************************************************************************************
+        * @description The Constructor of SecondCascadeUndeleteLoader.
+        * @param List<Opportunity> The Opportunities. 
+        */
+        SecondCascadeUndeleteLoader(List<Opportunity> relatedOpportunities) {
+            this.relatedOpportunities = relatedOpportunities;
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the related Allocations of the undeleted Recurring Donations.
+        * @param Set<Id> The Ids of the undeleted Recurring Donations.
+        * @return List<SObject> Undeleted Recurring Donations's Allocations.
+        ********************************************************************************************************/
+        public List<SObject> load(Set<Id> recurringDonationIds) {
+            return [
+                SELECT Id, Opportunity__c, Opportunity__r.npe03__Recurring_Donation__c
+                FROM Allocation__c
+                WHERE (Recurring_Donation__c IN :recurringDonationIds OR Opportunity__c IN :relatedOpportunities)
+                AND IsDeleted = TRUE
+                ALL ROWS
+            ];
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the next children records group to be undeleted. In this case, there is no other
+        * group of children records to undelete after Opportunities and Allocations undeletion.
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
+        ********************************************************************************************************/
+        public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
+            return null;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that validates the children of the deleted Recurring Donations.
+    ********************************************************************************************************/
+    class CascadeDeleteValidator implements CDL_CascadeDeleteLookups.CascadeDeleteValidator {
+
+        /*******************************************************************************************************
+        * @description validates the children of the Account.
+        * @param List<npe03__Recurring_Donation__c> The deleted Recurring Donations.
+        * @param List<SObject> The deleted Recurring Donations children to validate.
+        * @return void
+        ********************************************************************************************************/
+        public void validate(List<npe03__Recurring_Donation__c> deletedRecurringDonations, List<SObject> allChildren) {
+            for(npe03__Recurring_Donation__c deletedRecurringDonation : deletedRecurringDonations) {
+                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(deletedRecurringDonation.Name);
+                List<Sobject> currentRDChildren = getChildren(deletedRecurringDonation.Id, allChildren);
+
+                for (SObject child : currentRDChildren) {
+                    if (isClosedWonOpportunity(child)) {
+                        Opportunity closedWonOpportunity = (Opportunity) child;
+                        error.addChildError(Label.ClosedWonOpportunities, closedWonOpportunity.Id, closedWonOpportunity.Name);
                     }
                 }
+
+                String errorMessage = error.getMessage();
+                if (String.isNotBlank(errorMessage)) {
+                    deletedRecurringDonation.addError(errorMessage, false);
+                }
             }
+        }
+
+        /*******************************************************************************************************
+        * @description Checks if the record is a Closed Won Opportunity.
+        * @param SObject The child record.
+        * @param Id The Id of the deleted Recurring Donation.
+        * @return Boolean.
+        ********************************************************************************************************/
+        private Boolean isClosedWonOpportunity(SObject record) {
+            return (
+                record instanceof Opportunity && 
+                ((Opportunity) record).IsClosed && ((Opportunity) record).IsWon
+            );
+        }
+
+        /*******************************************************************************************************
+        * @description Gets the children records fo the given Recurring Donation.
+        * @param Id The Id of the deleted Recurring Donation.
+        * @param List<SObject> The deleted Recurring Donations children.
+        * @return List<SObject> The list of the children records of the given Recurring Donation.
+        ********************************************************************************************************/
+        private List<SObject> getChildren(Id deletedRecurringDonationId, List<SObject> allChildren) {
+            List<SObject> result = new List<SObject>();
+
+            for (SObject child : allChildren) {
+                if ((child instanceof Opportunity && ((Opportunity) child).npe03__Recurring_Donation__c == deletedRecurringDonationId) ||
+                    (child instanceof Allocation__c && (
+                        ((Allocation__c) child).Recurring_Donation__c == deletedRecurringDonationId ||
+                        ((Allocation__c) child).Opportunity__r.npe03__Recurring_Donation__c == deletedRecurringDonationId
+                    ))
+                ) {
+                    result.add(child);
+                }
+            }
+
+            return result;
         }
     }
 }

@@ -18,7 +18,7 @@
         <name>Address_Type__c</name>
         <picklistValues>
             <masterLabel>Home</masterLabel>
-            <translation>Thuis</translation>
+            <translation>Huis</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Other</masterLabel>
@@ -34,23 +34,23 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Afhankelijk van het land en het gebied, kan een stad, gemeente of andere burgelijke regio in verband worden gebracht met dit adres</help>
+        <help>Afhankelijk van het land en het gebied, kan dit een stad, een gemeente of een andere burgelijke regio zijn dat in verband wordt gebracht met dit adres.</help>
         <label>Administratief Gebied</label>
         <name>Administrative_Area__c</name>
     </fields>
     <fields>
-        <help>Geeft aan of er mee dan één geldig adres werd gevonden bij een poging om het te valideren door middel van een externe dienst</help>
+        <help>Geeft aan of er mee dan één geldig adres werd gevonden bij het valideren van het adres door middel van een externe dienst.</help>
         <label>Dubbel</label>
         <name>Ambiguous__c</name>
     </fields>
     <fields>
-        <help>Het congresdistrict waartoe het adres betrekking heeft</help>
+        <help>Het congresdistrict waartoe het adres betrekking heeft.</help>
         <label>Congresdistrict</label>
         <name>Congressional_District__c</name>
     </fields>
     <fields>
-        <help>Naam van de provincie waar het adres zich bevindt</help>
-        <label>Provincie Naam</label>
+        <help>Naam van de provincie waar het adres zich bevindt.</help>
+        <label>Regio Naam</label>
         <name>County_Name__c</name>
     </fields>
     <fields>
@@ -59,56 +59,56 @@
         <name>Default_Address__c</name>
     </fields>
     <fields>
-        <label>Verzend Adres</label>
+        <label>Adres</label>
         <name>Formula_MailingAddress__c</name>
     </fields>
     <fields>
-        <label>Verzend Straatadres</label>
+        <label>Straatadres</label>
         <name>Formula_MailingStreetAddress__c</name>
     </fields>
     <fields>
-        <help>Locatie uitgedrukt in lengte- en breedtegraad</help>
+        <help>Locatie uitgedrukt in lengte- en breedtegraad.</help>
         <label>Geolocatie</label>
         <name>Geolocation__c</name>
     </fields>
     <fields>
-        <help>Het Huishoud Account waar dit Adres bij hoort.</help>
+        <help>Het Account waar dit Adres bij hoort.</help>
         <label><!-- Account --></label>
         <name>Household_Account__c</name>
         <relationshipLabel>Adressen</relationshipLabel>
     </fields>
     <fields>
-        <help>De meest recente einddatum dat dit adres werd gebruikt voor dit huishouden</help>
-        <label>Laatste einddatum</label>
+        <help>De meest recente einddatum dit adres werd gebruikt. Over het algemeen gebruikt met de laatste startdatum, om de duur te bepalen voor adressen die niet meer gebruikt worden.</help>
+        <label>Laatste Einddatum</label>
         <name>Latest_End_Date__c</name>
     </fields>
     <fields>
-        <help>De meest recente startdatum dat dit adres werd gebruikt voor dit huishouden</help>
+        <help>De meest recente startdatum dit adres werd gebruikt. Over het algemeen gebruikt met de laatste einddatum, om de duur te bepalen voor adressen die niet meer gebruikt worden.</help>
         <label>Laatste Startdatum</label>
         <name>Latest_Start_Date__c</name>
     </fields>
     <fields>
-        <label>Verzend Stad</label>
+        <label>Stad</label>
         <name>MailingCity__c</name>
     </fields>
     <fields>
-        <label>Verzend Land</label>
+        <label>Land</label>
         <name>MailingCountry__c</name>
     </fields>
     <fields>
-        <label>Verzend Postcode</label>
+        <label>Postcode</label>
         <name>MailingPostalCode__c</name>
     </fields>
     <fields>
-        <label>Verzend Provincie</label>
+        <label>Provincie</label>
         <name>MailingState__c</name>
     </fields>
     <fields>
-        <label>Verzend Straat2</label>
+        <label>Straat2</label>
         <name>MailingStreet2__c</name>
     </fields>
     <fields>
-        <label>Verzend Straat</label>
+        <label>Straat</label>
         <name>MailingStreet__c</name>
     </fields>
     <fields>
@@ -117,7 +117,7 @@
         <name>Pre_Verification_Address__c</name>
     </fields>
     <fields>
-        <help>De dag van de maand wanneer dit adres het standaard adres niet langer vervangt</help>
+        <help>De dag van de maand wanneer dit adres het standaard adres niet langer vervangt.</help>
         <label>Laatste Dag Seizoen</label>
         <name>Seasonal_End_Day__c</name>
         <picklistValues>
@@ -491,12 +491,12 @@
         <name>State_Upper_District__c</name>
     </fields>
     <fields>
-        <help>Als dit adres verificatie nodig heeft, Klikt u op de adres verificatie knop boven aan de pagina. Raadpleeg de Help Documentatie in de &quot;power of us&quot; HUB for meer informatie</help>
+        <help>Als dit adres verificatie nodig heeft, klik op de adresverificatie knop boven aan de pagina. Raadpleeg de Help Documentatie in de Power of Us HUB for meer informatie.</help>
         <label>Verificatie Status</label>
         <name>Verification_Status__c</name>
     </fields>
     <fields>
-        <help>Geeft aan of het adres is geverifieerd door een externe adres verificatie service.</help>
+        <help>Geeft aan of het adres is geverifieerd door een externe adresverificatie service.</help>
         <label>Geverifieerd</label>
         <name>Verified__c</name>
     </fields>
@@ -504,11 +504,11 @@
     <layouts>
         <layout>Address Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Seasonal Information --></label>
+            <label>Seizoensinformatie</label>
             <section>Seasonal Information</section>
         </sections>
     </layouts>

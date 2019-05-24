@@ -44,12 +44,12 @@ public with sharing class CON_ContactMerge_CTRL {
     public String searchText { get { return searchText; } set { searchText = value; } }
     
     /*******************************************************************************************************
-    * @description List of contactWrapper objects for display in search results pane.
+    * @description List of ContactWrapper objects for display in search results pane.
     */
     public List<ContactWrapper> searchResults {get; private set;}
     
     /*******************************************************************************************************
-    * @description List of contactWrapper objects for display in search results pane.
+    * @description Map of the contacts selected for merge.
     */
     private Map<String, Contact> selectedRecords;
     
@@ -71,7 +71,7 @@ public with sharing class CON_ContactMerge_CTRL {
     /*******************************************************************************************************
     * @description Wraps a contact together with a checkbox, to allow contact selection.
     */
-    public class contactWrapper {
+    public class ContactWrapper {
         /*******************************************************************************************************
         * @description The contact.
         */
@@ -85,7 +85,7 @@ public with sharing class CON_ContactMerge_CTRL {
         * @description Constructor that initializes instance properties.
         * @c The contact to wrap.
         */ 
-        public contactWrapper(Contact c) {
+        public ContactWrapper(Contact c) {
             con = c;
             selected = false;
         }
@@ -179,7 +179,7 @@ public with sharing class CON_ContactMerge_CTRL {
     */
     public CON_ContactMerge_CTRL(ApexPages.StandardSetController controller){
         searchText='';
-        searchResults = new List<contactWrapper>();
+        searchResults = new List<ContactWrapper>();
         selectedRecords = new Map<String, Contact>();
         step = 1;
         fieldRows = new List<FieldRow>();
@@ -349,7 +349,7 @@ public with sharing class CON_ContactMerge_CTRL {
             temp.values.add(new Cell(c.id, con.name));  
         }
         fieldRows.add(temp);
-        
+
         // Add second row to select the master record. Select the one which is last modified
         temp = new FieldRow(MASTER_KEY, 'Master Record', true, null);
         {
@@ -364,7 +364,22 @@ public with sharing class CON_ContactMerge_CTRL {
             }
         }
         fieldRows.add(temp);
-        
+
+        // Add the portal row if any of the contacts have a user record
+        List<User> portalUsers = new List<User>([SELECT Id, ContactId FROM User WHERE ContactId IN :contacts]);
+        if (!portalUsers.isEmpty()) {
+            Map<Id, Boolean> hasUserRecordByContactId = new Map<Id, Boolean>();
+            for (User portalUser : portalUsers) {
+                hasUserRecordByContactId.put(portalUser.ContactId, true);
+            }
+            temp = new FieldRow(System.Label.conMergePortalUser, System.Label.conMergePortalUser, false, null);
+            for (Sobject c: contacts) {
+                Contact con = (Contact) c;
+                temp.values.add(new Cell(c.id, String.valueOf(hasUserRecordByContactId.containsKey(c.Id))));
+            }
+            fieldRows.add(temp);
+        }
+
         // Add a dummy row to add a 'Standard Fields' header before the list of standard fields
         fieldRows.add(new FieldRow('Standard Fields', 'Standard Fields', false, 'separator'));
         
@@ -590,7 +605,7 @@ public with sharing class CON_ContactMerge_CTRL {
         Try {           
             if(searchText != null && searchText.length()>0){
                 step = 2;
-                this.searchResults = wrapSOSLResults(mySOSL());
+                this.searchResults = wrapSOSLResults(searchRecords());
             }
         } catch (exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));         
@@ -600,26 +615,20 @@ public with sharing class CON_ContactMerge_CTRL {
     
     /*******************************************************************************************************
     * @description Runs SOSL query to find contacts according to the search text entered by the user.
-    * @return PageReference The page that it redirects to. Same page user is in.
+    * @return List<SObject> The list of sObjects returned by the search
     */
-    public List<List<SObject>> mySOSL() {
+    public List<SObject> searchRecords() {
         searchResults.clear();    
         
         //build the SOSL query and execute - NOTE: * wildcard will only have effect at the middle or end of the search term
-        String searchquery = 'FIND \'' + String.escapeSingleQuotes(searchText) + 
-            '*\' IN ALL FIELDS RETURNING Contact(';
-            
-        string strComma = '';
-        for (string strField : listStrContactField) {
-            searchquery += strComma + strField;
-            strComma = ',';
-        }
-        
-        searchquery += ' ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
-        //UTIL_Debug.debug('Search Query: ' + searchquery);
-        
-        return search.query(searchquery);
-        //List<List<SObject>> searchList = new List<List<SObject>>();
+        UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
+            .withSelectFields(listStrContactField)
+            .withSearchQuery(searchText)
+            .withWildcard()
+            .withOrderBy(Contact.LastName)
+            .withLimit(SOSL_LIMIT);
+
+        return finder.executeSearch();
     }
     
     /*******************************************************************************************************
@@ -643,29 +652,18 @@ public with sharing class CON_ContactMerge_CTRL {
     
     /*******************************************************************************************************
     * @description Wraps the SOSL results.
-    * @param mySearchList The list of SObjects to wrap. It contains a list per Sobject type.
+    * @param searchResults The list of SObjects to wrap. 
     * @return List<ContactWrapper> Those records from the passed parameter that are of type Contact are returned
     * in this list, inside wrappers.
     */
-    public List<ContactWrapper> wrapSOSLResults(List<List<SObject>> mySearchList){
-        
+    public List<ContactWrapper> wrapSOSLResults(List<SObject> searchResults) {        
         List<ContactWrapper> res = new List<ContactWrapper>();
-        //loop through the contacts putting them in an array of wrappers
-        if(mySearchList.size()>0){
-            for (List<SObject> returnedObjects : mySearchList) {
-                //UTIL_Debug.debug('List size' + returnedObjects.size());
-                for (SObject returnedObject : returnedObjects){
-                    //if the returned object is a contact, add it to the Contact list
-                    if(returnedObject.getSObjectType() == Contact.sObjectType){
-                        contactWrapper thisResult = new contactWrapper((Contact) returnedObject);   
-                        //UTIL_Debug.debug('Contact Id: ' + returnedObject.id);
-                        //UTIL_Debug.debug('Contact: ' + returnedObject);         
-                        res.add(thisResult);   
-                    }
-                }
-            }
+
+        for (SObject returnedObject : searchResults) {
+            ContactWrapper thisResult = new ContactWrapper((Contact) returnedObject);  
+            res.add(thisResult);  
         }
-        //UTIL_Debug.debug('Search Results Map Size: ' + res.size());
+
         return res;       
     }
     
@@ -728,7 +726,7 @@ public with sharing class CON_ContactMerge_CTRL {
             try {
                 Database.DMLOptions dml = new Database.DMLOptions();
                 dml.DuplicateRuleHeader.AllowSave = true;
-                Database.SaveResult sr = Database.update(master, dml);
+                Database.SaveResult sr = UTIL_DMLService.updateRecord(master, dml);
                 if (!sr.isSuccess()) {
                     string strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
                     for (Database.Error err : sr.getErrors()) {

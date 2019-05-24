@@ -427,7 +427,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         public string SourceFieldLabel {
         	get {
         		return UTIL_Describe.getFieldLabelSafe('Opportunity', SourceField);
-        	}
+        	} private set;
         }
         
         /*********************************************************************************************************
@@ -436,7 +436,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         public string TargetFieldLabel {
             get {
                 return UTIL_Describe.getFieldLabelSafe(TargetObject, TargetField);
-            }
+            } private set;
         }
         
         /*********************************************************************************************************

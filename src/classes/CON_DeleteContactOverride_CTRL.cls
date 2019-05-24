@@ -38,21 +38,42 @@
 * Also cascade deletes a Contact's Opportunities, and provides validation if any are closed/won or attributed to an organization.
 */
 public with sharing class CON_DeleteContactOverride_CTRL {
+    /** @description Contact home page. */
+    private static final String CONTACT_HOME = '/003/o';
+    /** @description LEx navigation value to go back. */
+    private static final String LEX_BACK = 'back';
+    /** @description LEx navigation value to go to Contact Home. */
+    private static final String LEX_HOME = 'home';
 
     /** @description The contact record the user is attempting to delete. */
     private Contact queryContact;
     /** @description The id of the contact's account. */
     private String accountId;
     /** @description The return URL. */
+    @TestVisible
     private String retURL;
+    /** @description The URL to be navigated to on Cancel. It is not provided every time (as it was the case for cancelUrl). */
+    @TestVisible
+    private String failRetUrl;
     /** @description for LEx and SF1 set navigation instructions for JS - navigate back if only del contact and not from contact */ 
     public String sforceNav {get; private set;}
-    /** @description Boolean that is set to true if user theme is LEx or SF1 */ 
-    private Boolean sforceUser;
-    /** @description Formatted string prompting the user to delete the account instead. */
-    public String helpDeleteAccountInstead {get;set;}
+
+    /** @description Boolean that is set to true if user theme is LEx or SF1 */
+    @TestVisible 
+    private Boolean sforceUser {
+        get {
+            return sforceUser = sforceUser == null 
+                ? UserInfo.getUiThemeDisplayed().contains('Theme4')
+                : sforceUser;
+        }
+        set;
+    }
+
     /** @description Flag to tell the page which operation we're doing. */
     public Boolean shouldDeleteContactAlone {get;set;}
+    /** @description Flag indicating if only this Contact should be deleted while leaving empty Account. */
+    private Boolean isDeleteContactLeaveAccount = false;
+    
     /** @description Boolean for disabling the account deletion button if there are errors preventing deletion. */
     public Boolean hasPageMessages {
         get {
@@ -66,32 +87,58 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * account should be deleted.
     */ 
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
-        sforceUser = UserInfo.getUiThemeDisplayed().contains('Theme4');
-        // In LEx and SF1 the returl param name differs from classic
-        String param = sforceUser ? 'vfRetURLInSFX' : 'returl';
-        retURL = ApexPages.currentPage().getParameters().get(param);
+        setNavigationParams(ApexPages.currentPage().getParameters());
 
-        //if we don't have a return URL, go back to Contacts home.
-        if (String.isBlank(retURL)) {
-            retURL = '/003/o';
-        }
-
-        queryContact = [SELECT Id, Name, AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :stdController.getId()];
-
-        helpDeleteAccountInstead = String.format(Label.ConfirmDeleteAccount, new List<String>{queryContact.Name, queryContact.Account.Name});
+        queryContact = [
+            SELECT Id, Name, FirstName, LastName,
+                AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c
+            FROM Contact
+            WHERE Id = :stdController.getId()
+        ];
 
         shouldDeleteContactAlone = true;
 
         if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
             accountId = queryContact.AccountId;
-            list<AggregateResult> contactsInHousehold = [SELECT COUNT(id) ct FROM Contact WHERE AccountId = :accountId GROUP BY AccountId HAVING COUNT(id) = 1];
+            List<AggregateResult> contactsInHousehold = [
+                SELECT COUNT(id) ct
+                FROM Contact
+                WHERE AccountId = :accountId
+                GROUP BY AccountId
+                HAVING COUNT(id) = 1
+            ];
 
             //This contact is alone in a system account, delete the system account and allow the cascading
             //delete to remove the contact
             if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
                 shouldDeleteContactAlone = false;
+
+                String helpDeleteAccountInstead = String.format(
+                    Label.ConfirmDeleteAccount,
+                    new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
+                );
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
             }
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if the page is used in LEx or Classic.
+    * Retrieves retUrl and failRetUrl values from the page params.
+    * @return void
+    */ 
+    @TestVisible 
+    private void setNavigationParams(Map<String, String> params) {
+        // In LEx and SF1 the returl param name differs from classic
+        String param = sforceUser ? 'vfRetURLInSFX' : 'retURL';
+        retURL = params.get(param);
+
+        //if we don't have a return URL, go back to Contacts home.
+        if (String.isBlank(retURL)) {
+            retURL = CONTACT_HOME;
+        }
+
+        failRetUrl = params.get('failRetURL');
     }
 
     /*******************************************************************************************************
@@ -105,34 +152,53 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         try {
             return deleteContact();
         } catch (Exception ex){
-            if (!hasPageMessages)
+            if (!hasPageMessages) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            }
             return null;
         }
     }
 
     /*******************************************************************************************************
-    * @description Deletes a contact, after adding cascade deletion records for related opportunities and 
-    * recurring donations. Validates opportunities and adds error messages where appropriate.
+    * @description Deletes a contact, leaving empty Household Account, once the user has accepted to do so,
+    * after adding cascade deletion records for related opportunities and recurring donations. 
+    * Validates opportunities and adds error messages where appropriate.
+    * @return pageReference Redirects to the Contacts tab if the contact has been deleted, otherwise stays
+    * on the page and displays error messages.
+    */ 
+    public PageReference deleteContactOnly() {
+        isDeleteContactLeaveAccount = true;
+
+        try {
+            return deleteContact();
+        } catch (Exception ex) {
+            isDeleteContactLeaveAccount = false;
+            if (!hasPageMessages) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            }
+            return null;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Deletes a contact, after adding cascade delete Loader and Validator to load and checks the 
+    * related opportunities, cases and recurring donations. Prevents the deletion if there are closed won 
+    * opportunities and cases.
     * @return pageReference Redirects to the Contacts tab if the contact has been deleted, otherwise stays
     * on the page and displays error messages.
     */ 
     public PageReference deleteContact() {
-        if (shouldDeleteContactAlone) {
-            //add cascades with validation that we can't include all the time
-            //this is because contact merge runs before delete triggers with no way to differentiate from standard delete
-            List<UTIL_CascadeDeleteLookups_TDTM.Cascade> contactCascades = new List<UTIL_CascadeDeleteLookups_TDTM.Cascade>{
-                new UTIL_CascadeDeleteLookups_TDTM.Cascade('Case', 'ContactId'),
-                new UTIL_CascadeDeleteLookups_TDTM.Cascade('Opportunity','Primary_Contact__c', new List<String>{'IsWon','IsClosed','AccountId'}),
-                new UTIL_CascadeDeleteLookups_TDTM.Cascade('npe03__Recurring_Donation__c', 'npe03__Contact__c')
-            };
-            //validate that there are no cases associated with this contact, but don't try to cascade delete them if validation passes
-            contactCascades[0].validateOnly = true;
-            CON_CascadeDeleteLookups_TDTM.cascades.addAll(contactCascades);
+        if (isDeleteContactOnly()) {
+
+            ContactCascadeDelete cascadeDelete = new ContactCascadeDelete(queryContact);
+            cascadeDelete.validate();
+            cascadeDelete.deleteOpportunities();
+            cascadeDelete.deleteRecurringDonations();
+            
             delete queryContact;
 
             if (sforceUser) {
-                sforceNav = returl.contains(queryContact.Id) ? 'home' : 'back';
+                sforceNav = retURL.contains(queryContact.Id) ? LEX_HOME : LEX_BACK;
                 return null;
             } else {
                 return getRedirect();
@@ -142,56 +208,214 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Deletes contact's account once the user has accepted to do so. Adds cascade deletion 
-    * records for validating that there are no related closed/won opportunities or cases associated with this
+    * @description Determines if only this Contact can be deleted.
+    * @return Boolean
+    */ 
+    private Boolean isDeleteContactOnly() {
+        return shouldDeleteContactAlone || isDeleteContactLeaveAccount;
+    }
+
+    /*******************************************************************************************************
+    * @description Deletes contact's account once the user has accepted to do so. Adds cascade delete Loader
+    * and Validator for validating that there are no related closed/won opportunities or cases associated with this
     * Account. Although the platform handles this validation, the error message returned in this custom page
     * wasn't friendly; the cascade deletion framework displays helpful errors with links to the offending records.
     * @return pageReference Redirects to the Contacts tab if the account has been deleted, otherwise stays
     * on the page and displays error messages.
     */ 
     public PageReference deleteAccount() {
-        Account accForDelete = new Account(id=accountId);
+        Account account =  [SELECT Id, Name FROM Account WHERE Id = :accountId];
         
-        //add cascade to make prettier error message on contact delete page,
-        //but don't want to attempt under normal account circumstances as these are handled by the platform 
-        List<UTIL_CascadeDeleteLookups_TDTM.Cascade> validationOnlyCascades = new List<UTIL_CascadeDeleteLookups_TDTM.Cascade>{
-            new UTIL_CascadeDeleteLookups_TDTM.Cascade('Opportunity', 'AccountId', new List<String>{'IsWon','IsClosed'}),
-            new UTIL_CascadeDeleteLookups_TDTM.Cascade('Case', 'AccountId')
-        };
-        //validate that there are no cases or closed/won opps associated with this account, but don't try to cascade delete them if validation passes
-        validationOnlyCascades[0].validateOnly = true;
-        validationOnlyCascades[1].validateOnly = true;
-
-        ACCT_CascadeDeleteLookups_TDTM.cascades.addAll(validationOnlyCascades);
-
         try {
-            delete accForDelete;
+            AccountCascadeDelete cascadeDelete = new AccountCascadeDelete(account);
+            cascadeDelete.validate();
+
+            delete account;
         } catch (Exception ex){
             if (!hasPageMessages)
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
             return null;
         }
 
-        //if we were returning to the account we just deleted, go back to contacts home
-        if (retURL.contains(accountId.substring(0,15))) {
-            retURL = '/003/o';
-        }
-
         if (sforceUser) {
-            sforceNav = 'home';
+            sforceNav = LEX_HOME;
             return null;
+
         } else {
+            //if we were returning to the account we just deleted, go back to contacts home
+            if (retURL.contains(accountId.substring(0,15))) {
+                retURL = CONTACT_HOME;
+            }
             return getRedirect();
         }
     }
 
     /*******************************************************************************************************
+    * @description Returns redirect PageReference based on failRetUrl or retUrl for Classic.
+    * Returns a value to navigate back for LEx.
+    * @return PageReference 
+    */ 
+    public PageReference onCancel() {
+        if (sforceUser) {
+            sforceNav = LEX_BACK;
+            return null;
+
+        } else {
+            String url = String.isNotBlank(failRetUrl) ? failRetUrl : retURL;
+            return getRedirect(url);
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Returns a redirect enabled PageReference for the return URL
-    * @return pageReference The PageReference with redirect enabled.
+    * @return PageReference The PageReference with redirect enabled.
     */ 
     private PageReference getRedirect() {
-        PageReference redirect = new PageReference(retURL);
+        return getRedirect(retUrl);
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a redirect enabled PageReference for a URL
+    * @return PageReference The PageReference with redirect enabled.
+    */ 
+    private PageReference getRedirect(String url) {
+        PageReference redirect = new PageReference(url);
         redirect.setRedirect(true);
         return redirect;
     }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves and validates the children of the Contacts to delete.
+    ********************************************************************************************************/
+    class ContactCascadeDelete {
+
+        private Contact contactToDelete;
+        private List<Case> relatedCases;
+        private List<Opportunity> relatedOpportunities;
+        private List<npe03__Recurring_Donation__c> relatedRecurringDonations;
+
+        /*******************************************************************************************************
+        * @description Constructor.
+        * Retrieves the Cases, Opportunities and Recurring Donations of the deleted Contacts. 
+        * @param Contact The Contact to delete.
+        ********************************************************************************************************/
+        public ContactCascadeDelete(Contact contactToDelete) {
+            this.contactToDelete = contactToDelete;
+
+            relatedCases = [
+                SELECT CaseNumber, ContactId
+                FROM Case
+                WHERE ContactId = :contactToDelete.Id
+            ];
+            relatedOpportunities = [
+                SELECT Name, AccountId, Primary_Contact__c, Primary_Contact__r.AccountId, IsWon, IsClosed
+                FROM Opportunity
+                WHERE Primary_Contact__c = :contactToDelete.Id
+            ];
+            relatedRecurringDonations = [
+                SELECT Name, npe03__Contact__c
+                FROM npe03__Recurring_Donation__c
+                WHERE npe03__Contact__c = :contactToDelete.Id
+            ];
+        }
+
+        /*******************************************************************************************************
+        * @description Validates the children of the Contacts.
+        * @return void
+        ********************************************************************************************************/
+        public void validate() {
+            CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(
+                (contactToDelete.Firstname != null ? contactToDelete.Firstname : '') + ' ' + contactToDelete.LastName);
+
+            for (Opportunity currentOpportunity : relatedOpportunities) {
+                if (currentOpportunity.IsClosed && currentOpportunity.IsWon) {
+                    error.addChildError(Label.ClosedWonOpportunities, currentOpportunity.Id, currentOpportunity.Name);
+                }
+            }
+            for (Opportunity currentOpportunity : relatedOpportunities) {
+                if (currentOpportunity.AccountId != currentOpportunity.Primary_Contact__r.AccountId) {
+                    error.addChildError(Label.OrganizationalOpportunities, currentOpportunity.Id, currentOpportunity.Name);
+                }
+            }
+            for (Case currentCase : relatedCases) {
+                error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), currentCase.Id, currentCase.CaseNumber);
+            }
+
+            String errorMessage = error.getMessage();
+            if (String.isNotBlank(errorMessage)) {
+                throw new CascadeDeleteException(errorMessage);
+            }
+        }
+
+        /*******************************************************************************************************
+        * @description Deletes the Contact Opportunities.
+        * @return void
+        ********************************************************************************************************/
+        public void deleteOpportunities() {
+            delete relatedOpportunities;
+        }
+
+        /*******************************************************************************************************
+        * @description Deletes the Contact Recurring Donations.
+        * @return void
+        ********************************************************************************************************/
+        public void deleteRecurringDonations() {
+            delete relatedRecurringDonations;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves and validates the children of the Account to delete
+    ********************************************************************************************************/
+    class AccountCascadeDelete {
+        Account accountToDelete;
+        private List<Case> relatedCases;
+        private List<Opportunity> relatedOpportunities;
+
+        /*******************************************************************************************************
+        * @description AccountCascadeDelete Constructor.
+        * @param Account The Account to delete.
+        ********************************************************************************************************/
+        public AccountCascadeDelete(Account accountToDelete) {
+            this.accountToDelete = accountToDelete;
+
+            relatedCases = [
+                SELECT CaseNumber, AccountId
+                FROM Case
+                WHERE AccountId = :accountToDelete.Id
+            ];
+            relatedOpportunities = [
+                SELECT Name, AccountId, IsWon, IsClosed
+                FROM Opportunity
+                WHERE AccountId = :accountToDelete.Id
+            ];
+        }
+
+        /*******************************************************************************************************
+        * @description Validates the children of the Account.
+        * @return void.
+        ********************************************************************************************************/
+        public void validate() {
+            CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(accountToDelete.Name);
+
+            for (Case currentCase : relatedCases) {
+                error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), currentCase.Id, currentCase.CaseNumber);
+            }
+            for (Opportunity currentOpportunity : relatedOpportunities) {
+                if (currentOpportunity.IsClosed && currentOpportunity.IsWon) {
+                    error.addChildError(Label.ClosedWonOpportunities, currentOpportunity.Id, currentOpportunity.Name);
+                }
+            }
+
+            String errorMessage = error.getMessage();
+            if (String.isNotBlank(errorMessage)) {
+                throw new CascadeDeleteException(errorMessage);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Account and Contact override Cascade Delete custom exception
+    ********************************************************************************************************/
+    class CascadeDeleteException extends Exception {}
 }

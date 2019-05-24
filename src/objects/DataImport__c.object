@@ -21,10 +21,6 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
-        <actionName>Follow</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
         <actionName>List</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -388,52 +384,63 @@
         <externalId>false</externalId>
         <inlineHelpText>Contact1.npe01__Preferred_Email__c</inlineHelpText>
         <label>Contact1 Preferred Email</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Personal</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Work</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Alternate</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Personal</fullName>
+                    <default>false</default>
+                    <label>Personal</label>
+                </value>
+                <value>
+                    <fullName>Work</fullName>
+                    <default>false</default>
+                    <label>Work</label>
+                </value>
+                <value>
+                    <fullName>Alternate</fullName>
+                    <default>false</default>
+                    <label>Alternate</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <fields>
         <fullName>Contact1_Preferred_Phone__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact1.npe01__PreferredPhone__c</inlineHelpText>
         <label>Contact1 Preferred Phone</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Home</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Work</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Mobile</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Other</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Home</fullName>
+                    <default>false</default>
+                    <label>Home</label>
+                </value>
+                <value>
+                    <fullName>Work</fullName>
+                    <default>false</default>
+                    <label>Work</label>
+                </value>
+                <value>
+                    <fullName>Mobile</fullName>
+                    <default>false</default>
+                    <label>Mobile</label>
+                </value>
+                <value>
+                    <fullName>Other</fullName>
+                    <default>false</default>
+                    <label>Other</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <fields>
         <fullName>Contact1_Salutation__c</fullName>
@@ -580,52 +587,63 @@
         <externalId>false</externalId>
         <inlineHelpText>Contact2.npe01__Preferred_Email__c</inlineHelpText>
         <label>Contact2 Preferred Email</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Personal</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Work</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Alternate</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Personal</fullName>
+                    <default>false</default>
+                    <label>Personal</label>
+                </value>
+                <value>
+                    <fullName>Work</fullName>
+                    <default>false</default>
+                    <label>Work</label>
+                </value>
+                <value>
+                    <fullName>Alternate</fullName>
+                    <default>false</default>
+                    <label>Alternate</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <fields>
         <fullName>Contact2_Preferred_Phone__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact2.npe01__PreferredPhone__c</inlineHelpText>
         <label>Contact2 Preferred Phone</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Home</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Work</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Mobile</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Other</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Home</fullName>
+                    <default>false</default>
+                    <label>Home</label>
+                </value>
+                <value>
+                    <fullName>Work</fullName>
+                    <default>false</default>
+                    <label>Work</label>
+                </value>
+                <value>
+                    <fullName>Mobile</fullName>
+                    <default>false</default>
+                    <label>Mobile</label>
+                </value>
+                <value>
+                    <fullName>Other</fullName>
+                    <default>false</default>
+                    <label>Other</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <fields>
         <fullName>Contact2_Salutation__c</fullName>
@@ -701,6 +719,28 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>DonationCampaignImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>Opportunity.CampaignId</inlineHelpText>
+        <label>Donation Campaign Source</label>
+        <referenceTo>Campaign</referenceTo>
+        <relationshipName>Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>DonationCampaignImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Campaign Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Donation_Campaign_Name__c</fullName>
         <externalId>false</externalId>
         <label>Campaign Name</label>
@@ -735,20 +775,24 @@
         <externalId>false</externalId>
         <inlineHelpText>Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.</inlineHelpText>
         <label>Donation Donor</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Contact1</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Account1</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Contact1</fullName>
+                    <default>false</default>
+                    <label>Contact1</label>
+                </value>
+                <value>
+                    <fullName>Account1</fullName>
+                    <default>false</default>
+                    <label>Account1</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <fields>
         <fullName>Donation_Member_Level__c</fullName>
@@ -803,10 +847,22 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Donation_Possible_Matches__c</fullName>
+        <description>A comma-separated list of Ids for the first 10 possible Opportunity matches for a donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A comma-separated list of Ids for the first 10 possible Opportunity matches for a donation.</inlineHelpText>
+        <label>Donation Possible Matches</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Donation_Record_Type_Name__c</fullName>
         <description>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Name of the Opportunity Record Type to use for the donation. Uses default Record Type if left blank.</inlineHelpText>
+        <inlineHelpText>Opportunity.RecordTypeId</inlineHelpText>
         <label>Donation Record Type Name</label>
         <length>255</length>
         <required>false</required>
@@ -945,13 +1001,49 @@
     </fields>
     <fields>
         <fullName>ImportedDate__c</fullName>
-        <description>When the Data Import record was successfully imported.</description>
+        <description>The date and time that the Data Import record was successfully imported.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When the Data Import record was successfully imported.</inlineHelpText>
+        <inlineHelpText>The date and time that the Data Import record was successfully imported.</inlineHelpText>
         <label>Imported Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>NPSP_Data_Import_Batch__c</fullName>
+        <description>Lookup to the NPSP Data Import Batch this record belongs to.</description>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>Lookup to the NPSP Data Import Batch this record belongs to.</inlineHelpText>
+        <label>NPSP Data Import Batch</label>
+        <referenceTo>DataImportBatch__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>PaymentImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Payment Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PaymentImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Payment Imported</label>
+        <referenceTo>npe01__OppPayment__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Payment_Check_Reference_Number__c</fullName>
@@ -976,25 +1068,51 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Status__c</fullName>
-        <description>The status of importing the Data Import record.</description>
+        <fullName>Payment_Possible_Matches__c</fullName>
+        <description>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The status of importing the Data Import record.</inlineHelpText>
+        <inlineHelpText>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</inlineHelpText>
+        <label>Payment Possible Matches</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <description>The status of the import for this record, for example, Imported or Failed.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The status of the import for this record, for example, Imported or Failed.</inlineHelpText>
         <label>Status</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Imported</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Failed</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Imported</fullName>
+                    <default>false</default>
+                    <label>Imported</label>
+                </value>
+                <value>
+                    <fullName>Dry Run - Validated</fullName>
+                    <default>false</default>
+                    <label>Dry Run - Validated</label>
+                </value>
+                <value>
+                    <fullName>Dry Run - Error</fullName>
+                    <default>false</default>
+                    <label>Dry Run - Error</label>
+                </value>
+                <value>
+                    <fullName>Failed</fullName>
+                    <default>false</default>
+                    <label>Failed</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <label>NPSP Data Import</label>
     <listViews>
@@ -1008,6 +1126,42 @@
         <columns>LAST_UPDATE</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Dry_Run_Errors</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Dry Run - Error</value>
+        </filters>
+        <label>Dry Run - Errors</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Dry_Run_Validated</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Dry Run - Validated</value>
+        </filters>
+        <label>Dry Run - Validated</label>
+        <language>en_US</language>
     </listViews>
     <listViews>
         <fullName>Failed_Data_Imports</fullName>
@@ -1094,6 +1248,7 @@
         <searchResultsCustomButtons>Delete_Imported_Data_Import_Records</searchResultsCustomButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
     <webLinks>
         <fullName>Delete_All_Data_Import_Records</fullName>
         <availability>online</availability>
@@ -1105,7 +1260,7 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/npsp__BDI_DataImportDeleteBTN?action=deleteAll&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
+        <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}BDI_DataImportDeleteBTN?action=deleteAll&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
     </webLinks>
     <webLinks>
         <fullName>Delete_Imported_Data_Import_Records</fullName>
@@ -1118,7 +1273,7 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/npsp__BDI_DataImportDeleteBTN?action=deleteImported&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
+        <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}BDI_DataImportDeleteBTN?action=deleteImported&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
     </webLinks>
     <webLinks>
         <fullName>Process_Data_Import</fullName>
@@ -1131,6 +1286,6 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/npsp__BDI_DataImport?retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
+        <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}BDI_DataImport?retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
     </webLinks>
 </CustomObject>

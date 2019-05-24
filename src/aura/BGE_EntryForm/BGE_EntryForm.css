@@ -1,0 +1,4 @@
+/*shrink textarea to be even with other fields*/
+.THIS .equalHeight textarea {
+    height: 32px;
+}

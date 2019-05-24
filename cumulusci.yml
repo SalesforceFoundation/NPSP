@@ -1,20 +1,22 @@
+minimum_cumulusci_version: 2.4.4
 project:
     name: Cumulus
     package:
         name: Cumulus
         name_managed: Nonprofit Success Pack
         namespace: npsp
-        api_version: 37.0
+        api_version: 43.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
         repo_url: https://github.com/SalesforceFoundation/Cumulus
-        default_branch: dev
         prefix_beta: uat/
         prefix_release: rel/
     apexdoc:
         homepage: ApexDocContent/homepage.htm
         banner: ApexDocContent/projectheader.htm
+        branch: gh-pages
+        repo_dir: ApexDocumentation
     dependencies:
         # npo02 (includes npe01)
         - github: https://github.com/SalesforceFoundation/Households
@@ -26,68 +28,92 @@ project:
         - github: https://github.com/SalesforceFoundation/Affiliations
 
 tasks:
-    download_browser_tests:
-        description: Downloads the browser tests from the NPSP-Browser-Tests Github repository.
+    download_ldv_tests:
+        description: Downloads the NPSP-LDV-Tests repository
         class_path: cumulusci.tasks.util.DownloadZip
         options:
-            url: 'https://github.com/SalesforceFoundation/NPSP-Browser-Tests/archive/master.zip'
-            dir: browser_tests
-            subfolder: NPSP-Browser-Tests-master
+            dir: ldv_tests
+            subfolder: Cumulus-LDV-Tests-master
+            url: 'https://github.com/SalesforceFoundation/Cumulus-LDV-Tests/archive/master.zip'
 
-    deploy_dev_config:
-        description: Deploys the post install configuration for an unmanaged DE org
+    deploy_ldv_tests:
+        description: Deploy the LDV-Tests repo to your org.
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: dev_config/src
+            path: ldv_tests/src
+        
+    deploy_dev_config:
+        description: Deploys the post-install configuration for an unmanaged DE org
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/dev
+
+    deploy_trial_config:
+        description: Deploys the post-install configuration for a trial/new org.
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/trial
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_qa_config:
+        description: Deploys additional fields used for QA purposes only
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/qa
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_reports:
+        description: Deploys reports & dashboards
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/reports
+            namespace_inject: $project_config.project__package__namespace
 
     deploy_dev_config_delete:
-        description: Deploys the metadata deletions for the post install unmanaged DE org config
+        description: Deploys the metadata deletions for the post-install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: dev_config/delete
+            path: unpackaged/config/delete
+    
+    ensure_record_type:
+        name: Ensure Opportunity Record Types
+        description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
+        class_path: cumulusci.tasks.salesforce.EnsureRecordTypes
+        options:
+            record_type_label: NPSP Default
+            record_type_developer_name: NPSP_Default
+            sobject: Opportunity
 
+    robot:
+        options:
+            suites: robot/Cumulus/tests
+            options:
+                outputdir: robot/Cumulus/results
+
+    robot_libdoc:
+        options:
+            path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot
+            output: robot/Cumulus/doc/Keywords.html
+            
     update_admin_profile:
-        class_path: tasks.salesforce.UpdateAdminProfile
         options:
             package_xml: lib/admin_profile.xml
+            record_types:
+                - record_type: Account.HH_Account
+                - record_type: Account.Organization
+                  default: true
+                  person_account_default: true
+                - record_type: Opportunity.NPSP_Default
+                  default: true
 
-    browsertests_firefox:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder using Firefox
-        class_path: cumulusci.tasks.command.SalesforceBrowserTest
+    pmd:
+        description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
+        class_path: tasks.pmd.PMDTask
         options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@flaky --tags ~@chrome' 
-            dir: '.'
-            env:
-                SELENIUM_BROWSER: firefox
-
-    browsertests_chrome:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder using Chrome
-        class_path: cumulusci.tasks.command.SalesforceBrowserTest
-        options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
-            dir: '.'
-            env:
-                SELENIUM_BROWSER: chrome
-
-    browsertests_unmanaged_firefox:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Firefox
-        class_path: cumulusci.tasks.command.SalesforceBrowserTest
-        options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@flaky --tags ~@chrome' 
-            dir: '.'
-            env:
-                SELENIUM_BROWSER: firefox
-                TARGET_ORG: unmanaged
-
-    browsertests_unmanaged_chrome:
-        description: Runs the Ruby/Watir browser tests in the browsertests folder against unmanaged metadata in Chrome
-        class_path: cumulusci.tasks.command.SalesforceBrowserTest
-        options:
-            command: 'cd browser_tests; bundle install --quiet; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags ~@firefox --tags ~@flaky'
-            dir: '.'
-            env:
-                SELENIUM_BROWSER: chrome
-                TARGET_ORG: unmanaged
+            path: 'src/classes'
+            output: text
+            runAllApex: False
+            htmlfilename: 'pmd.html'
 
     test_data_dev_org:
         description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'
@@ -124,6 +150,36 @@ tasks:
                 - General_Accounting_Unit__c
                 - Campaign
 
+    test_data_relationships:
+        description: 'Runs execute anonymous to insert the default relationships'
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                List<npe4__Relationship_Lookup__c> defaultRelationships = new List<npe4__Relationship_Lookup__c>{
+                    new npe4__Relationship_Lookup__c(Name = 'Father',npe4__Male__c = 'Son', npe4__Female__c = 'Daughter', npe4__Neutral__c = 'Child'),
+                    new npe4__Relationship_Lookup__c(Name = 'Mother',npe4__Male__c = 'Son', npe4__Female__c = 'Daughter', npe4__Neutral__c = 'Child'),
+                    new npe4__Relationship_Lookup__c(Name = 'Parent',npe4__Male__c = 'Son', npe4__Female__c = 'Daughter', npe4__Neutral__c = 'Child'),
+                    new npe4__Relationship_Lookup__c(Name = 'Son',npe4__Male__c = 'Father', npe4__Female__c = 'Mother', npe4__Neutral__c = 'Parent'),
+                    new npe4__Relationship_Lookup__c(Name = 'Daughter',npe4__Male__c = 'Father', npe4__Female__c = 'Mother', npe4__Neutral__c = 'Parent'),
+                    new npe4__Relationship_Lookup__c(Name = 'Child',npe4__Male__c = 'Father', npe4__Female__c = 'Mother', npe4__Neutral__c = 'Parent'),
+                    new npe4__Relationship_Lookup__c(Name = 'Aunt',npe4__Male__c = 'Nephew', npe4__Female__c = 'Niece', npe4__Neutral__c = 'Sibling\'s Child'),
+                    new npe4__Relationship_Lookup__c(Name = 'Uncle',npe4__Male__c = 'Nephew', npe4__Female__c = 'Niece', npe4__Neutral__c = 'Sibling\'s Child'),
+                    new npe4__Relationship_Lookup__c(Name = 'Husband',npe4__Male__c = 'Husband', npe4__Female__c = 'Wife', npe4__Neutral__c = 'Spouse'),
+                    new npe4__Relationship_Lookup__c(Name = 'Wife',npe4__Male__c = 'Husband', npe4__Female__c = 'Wife', npe4__Neutral__c = 'Spouse'),
+                    new npe4__Relationship_Lookup__c(Name = 'Partner',npe4__Male__c = 'Partner', npe4__Female__c = 'Partner', npe4__Neutral__c = 'Partner'),
+                    new npe4__Relationship_Lookup__c(Name = 'Cousin',npe4__Male__c = 'Cousin', npe4__Female__c = 'Cousin', npe4__Neutral__c = 'Cousin'),
+                    new npe4__Relationship_Lookup__c(Name = 'Grandmother',npe4__Male__c = 'Grandson', npe4__Female__c = 'Granddaughter', npe4__Neutral__c = 'Grandchild'),
+                    new npe4__Relationship_Lookup__c(Name = 'Grandfather',npe4__Male__c = 'Grandson', npe4__Female__c = 'Granddaughter', npe4__Neutral__c = 'Grandchild'),
+                    new npe4__Relationship_Lookup__c(Name = 'Grandparent',npe4__Male__c = 'Grandson', npe4__Female__c = 'Granddaughter', npe4__Neutral__c = 'Grandchild'),
+                    new npe4__Relationship_Lookup__c(Name = 'Grandson',npe4__Male__c = 'Grandfather', npe4__Female__c = 'Grandmother', npe4__Neutral__c = 'Grandparent'),
+                    new npe4__Relationship_Lookup__c(Name = 'Granddaughter',npe4__Male__c = 'Grandfather', npe4__Female__c = 'Grandmother', npe4__Neutral__c = 'Grandparent'),
+                    new npe4__Relationship_Lookup__c(Name = 'Grandchild',npe4__Male__c = 'Grandfather', npe4__Female__c = 'Grandmother', npe4__Neutral__c = 'Grandparent'),
+                    new npe4__Relationship_Lookup__c(Name = 'Employer',npe4__Male__c = 'Employee', npe4__Female__c = 'Employee', npe4__Neutral__c = 'Employee'),
+                    new npe4__Relationship_Lookup__c(Name = 'Employee',npe4__Male__c = 'Employer', npe4__Female__c = 'Employer', npe4__Neutral__c = 'Employer')
+                };
+                insert defaultRelationships;
+
+
     test_data_delete_managed:
         description: 'WARNING: Deletes all data in the objects specified in the objects option.'
         class_path: cumulusci.tasks.bulkdata.DeleteData
@@ -138,96 +194,127 @@ tasks:
                 - npsp__General_Accounting_Unit__c
                 - Campaign
 
+    npsp_default_settings:
+        description: Configure the default NPSP Settings including Membership RecordType
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            path: scripts/configure_npsp_default_settings.cls
+            apex: initializeNPSPSettings();
+
+    enable_customizable_rollups:
+        description: Enable the NPSP Customizable Rollups feature
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: new STG_PanelCustomizableRollup_CTRL().enableCRLPs();
+
+    add_second_currency:
+        description: Add CAD as a 2nd currency for a multicurrency org
+        class_path: tasks.multicurrency.ConfigureCAD
+
+    uninstall_packaged_incremental:
+        description: Deletes any metadata from the package in the target org not in the local workspace
+        class_path: cumulusci.tasks.salesforce.UninstallPackagedIncremental
+        options:
+            ignore:
+                QuickAction:
+                    - NewEvent
+                    - NewCase
+                    - SendEmail
+                # Unpackaged lightning record pages added by trial config
+                FlexiPage:
+                    - NPSP_Address_Record_Page
+                    - NPSP_Deliverable
+                    - NPSP_Engagement_Plan_Record_Page
+                    - NPSP_GAU_Allocation
+                    - NPSP_General_Accounting_Unit
+
 flows:
-    browsertests_firefox:
-        description: Runs the browser tests locally against a managed package in Firefox
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_firefox
-
-    browsertests_chrome:
-        description: Runs the browser tests locally against a managed package in Chrome
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_chrome
-
-    browsertests_unmanaged_firefox:
-        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Firefox
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_unmanaged_firefox
-
-    browsertests_unmanaged_chrome:
-        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Chrome
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_unmanaged_chrome
-
-    ci_browsertests_firefox:
-        description: Runs the browser tests via SauceLabs against a managed package in Firefox
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_firefox
-                options:
-                    use_saucelabs: True
-
-    ci_browsertests_chrome:
-        description: Runs the browser tests via SauceLabs against a managed package in Chrome
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_chrome
-                options:
-                    use_saucelabs: True
-
-    ci_browsertests_unmanaged_firefox:
-        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Firefox
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_unmanaged_firefox
-                options:
-                    use_saucelabs: True
-
-    ci_browsertests_unmanaged_chrome:
-        description: Runs the browser tests via SauceLabs against the unmanaged metadata in Chrome
-        tasks:
-            1:
-                task: download_browser_tests
-            2:
-                task: browsertests_unmanaged_chrome
-                options:
-                    use_saucelabs: True
-
-    dev_org:
-        tasks:
-            8:
+    config_dev:
+        steps:
+            3:
                 task: deploy_dev_config_delete
-            9:
+            4:
                 task: deploy_dev_config
-
-    release_beta:
-        tasks:
             5:
-                task: mrbelvedere_publish
+                task: npsp_default_settings
+
+    config_qa:
+        steps:
+            2:
+                task: None
+            3:
+                task: deploy_dev_config_delete
+            4:
+                task: deploy_trial_config
+            5:
+                task: npsp_default_settings
+            6:
+                task: deploy_qa_config
+            7:
+                task: update_admin_profile
+            8:
+                task: test_data_relationships
+            9:
+                task: deploy_reports
+    
+    deploy_rollup_testing:
+        description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
+        steps:
+            1:
+                task: deploy
                 options:
-                    tag: ^^github_release.tag_name
+                    path: unpackaged/config/crlp_testing
+            2:
+                task: update_admin_profile
+
+    config_managed:
+        steps:
+            2:
+                task: deploy_dev_config_delete
+            3:
+                task: deploy_trial_config
+                options:
+                    unmanaged: False
+            4:
+                task: update_admin_profile
+                options:
+                    managed: true
+            5:
+                task: test_data_relationships
+            6:
+                task: deploy_reports
+                options:
+                    unmanaged: False
+
+    install_regression:
+        steps:
+            # Add QA metadata needed for regression
+            5:
+                task: deploy_qa_config
+                options:
+                    unmanaged: False
+            6:
+                task: update_admin_profile
+                options:
+                    managed: true
+
+    config_offsetfiscal:
+        description: 'Configure an offset fiscal year'
+        steps:
+            1:
+                task: deploy
+                options:
+                    path: unpackaged/config/offsetfiscal
+
+    config_multicurrency:
+        description: 'Configure a second currency'
+        steps:
+            1:
+                task: add_second_currency
 
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
-        tasks:
+        steps:
             1:
                 task: test_data_delete
             2:
@@ -235,7 +322,7 @@ flows:
 
     test_data_dev_org_managed:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
-        tasks:
+        steps:
             1:
                 task: test_data_delete_managed
             2:
@@ -245,18 +332,128 @@ flows:
 
     test_data_1k:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
-        tasks:
+        steps:
             1:
                 task: test_data_delete
             2:
                 task: test_data_1k
 
+    ldv_tests:
+        description: 'Deploys and runs LDV tests'
+        steps:
+            1:
+                task: download_ldv_tests
+            2:
+                task: deploy_ldv_tests
+            3:
+                task: run_tests
+                options:
+                    test_name_match: LDV_%
+
+    dependencies:
+        steps:
+            3:
+                task: ensure_record_type
+    
+    beta_dependencies:
+        steps:
+            3:
+                task: ensure_record_type
 
 orgs:
     scratch:
+        dev_namespaced:
+            config_file: orgs/dev.json
+            namespaced: True
+            days: 7
         beta_middlesuffix:
             config_file: orgs/beta_middlesuffix.json
         beta_multicurrency:
             config_file: orgs/beta_multicurrency.json
-        browsertest_classic:
-            config_file: orgs/browsertest_classic.json
+        beta_personaccounts:
+            config_file: orgs/beta_personaccounts.json
+        beta_statecountry:
+            config_file: orgs/beta_statecountry.json
+        beta_wave:
+            config_file: orgs/beta_wave.json
+        prerelease:
+            config_file: orgs/prerelease.json
+        trial:
+            config_file: orgs/trial.json
+        enterprise:
+            config_file: orgs/enterprise.json
+
+plans:
+    existing_org:
+        slug: install
+        title: Install NPSP
+        tier: primary
+        steps:
+            1:
+                task: update_dependencies
+            2:
+                task: deploy
+                options:
+                    path: unpackaged/pre/account_record_types
+                ui_options:
+                    name: Account Record Types
+            3:
+                task: ensure_record_type
+                ui_options:
+                    name: Opportunity Record Types
+            4:
+                task: install_managed
+            5:
+                task: deploy_post
+                options:
+                    unmanaged: False
+                ui_options:
+                    first:
+                        name: NPSP Config for Salesforce Mobile App
+    new_org:
+        slug: trial
+        title: Install NPSP Trial
+        # This will be tier: unlisted once that is an option.
+        tier: additional
+        is_listed: False
+        steps:
+            1:
+                flow: dependencies
+                ui_options:
+                    deploy_pre:
+                        account_record_types:
+                            name: Account Record Types
+                        opportunity_record_types:
+                            name: Opportunity Record Types
+            2:
+                task: install_managed
+            3:
+                flow: config_managed
+                options:
+                    deploy_reports:
+                        unmanaged: False
+                ui_options:
+                    deploy_post:
+                        first:
+                            name: NPSP Config for Salesforce Mobile App
+                    deploy_dev_config_delete:
+                        name: Delete Developer Edition Sample Profiles
+                        description: This deletes sample page layouts and profiles intended for Sales, Marketing, and Support use cases.
+                        is_required: False
+                    deploy_trial_config:
+                        name: NPSP Trial Experience
+                    deploy_reports:
+                        name: NPSP Reports & Dashboards
+                        is_required: False
+    reports:
+        slug: reports
+        title: Install Reports & Dashboards
+        tier: additional
+        is_listed: True
+        steps:
+            1:
+                task: deploy_reports
+                options:
+                    unmanaged: False
+                ui_options:
+                    name: NPSP Reports & Dashboards

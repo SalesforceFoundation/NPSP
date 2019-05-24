@@ -34,23 +34,30 @@
 * @group ContactMerge
 */
 
-@isTest
-public with sharing class CON_ContactMergeTDTM_TEST2 {
+@isTest(IsParallel=true)
 
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
+public with sharing class CON_ContactMergeTDTM_TEST2 {
+    /*******************************************************************************************************************
+    * @description Counter for creating unique contacts
     */
-    private static string strTestOnly = '*';
+    private static Integer uniqueCounter {
+        get {
+            if (uniqueCounter == null) {
+                uniqueCounter = 0;
+            }
+            uniqueCounter++;
+            return uniqueCounter;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description merge three Contacts from different Household Accounts with many Relationships.  
     * verify: 
     *   No Duplicate Relationships
     */
-    static testMethod void mergeContactsDifferentHHAccountManyRel() {
-        if (strTestOnly != '*' && strTestOnly != 'mergeContactsDifferentHHAccountManyRel') return;
-        
+    @isTest
+    private static void mergeContactsDifferentHHAccountManyRel() {
         // this creates 3 Household Accounts, each with 2 Contacts, and a default Address for each HH
         ADDR_Addresses_TEST.createHHTestData(3, 2);
         
@@ -92,7 +99,7 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         list<Contact> listCon = [select Id, Firstname, AccountId, npo02__NumberOfClosedOpps__c,
             is_Address_Override__c, Current_Address__c, Current_Address__r.Household_Account__c,
             MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
         system.assertEquals(conWinner.Id, listCon[1].Id);
         conWinner = listCon[1];            
             
@@ -112,8 +119,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeHHToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToHH') return;
+    @isTest
+    private static void testNamesAndOppsMergeHHToHH() {
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -121,8 +128,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOne2OneToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOne2One') return;
+    @isTest
+    private static void testNamesAndOppsMergeOne2OneToOne2One() {
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -130,8 +137,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOrgToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToHH') return;
+    @isTest
+    private static void testNamesAndOppsMergeOrgToHH() {
         testNamesAndOppsMerge(null, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -139,8 +146,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeHHToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToOrg') return;
+    @isTest
+    private static void testNamesAndOppsMergeHHToOrg() {
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, null);
     }
 
@@ -148,8 +155,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOrgToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOne2One') return;
+    @isTest
+    private static void testNamesAndOppsMergeOrgToOne2One() {
         testNamesAndOppsMerge(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -157,8 +164,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOne2OneToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+    @isTest
+    private static void testNamesAndOppsMergeOne2OneToOrg() {
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
     }
     
@@ -166,8 +173,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOrgToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOrg') return;
+    @isTest
+    private static void testNamesAndOppsMergeOrgToOrg() {
         testNamesAndOppsMerge(null, null);
     }
 
@@ -179,7 +186,7 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     *   Soft Credits the contact previously had are still there.
     *   Opp Rollups are recalculated for both accounts.
     */
-    static void testNamesAndOppsMerge(string accTypeLoser, string accTypeWinner) {
+    private static void testNamesAndOppsMerge(string accTypeLoser, string accTypeWinner) {
     
         // create our losing account and contacts
         UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeLoser, 1, 2, 1);
@@ -305,4 +312,43 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
             system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
         }
     }
+
+    /*******************************************************************************************************
+    * @description Verifies rollup is calculted on merge
+    */
+    @isTest
+    private static void contactMergeShouldRecalculateRollup() {
+        List<Contact> contactsToMerge = buildContactsWithOppsForAccount();
+
+        Test.startTest();
+        merge contactsToMerge[0] contactsToMerge[1];
+        Test.stopTest();
+
+        List<Contact> contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
+        System.assertEquals(1, contacts.size(), 'There should only be one contact after merge');
+        System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated');
+    }
+
+    /*******************************************************************************************************************
+    * @description Builds and inserts contacts with one opportunity each for a single account
+    */
+    private static List<Contact> buildContactsWithOppsForAccount() {
+        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 1, 2, uniqueCounter);
+        List<Contact> contacts = UTIL_UnitTestData_TEST.listConT;
+
+        List<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(
+            contacts,
+            null,
+            UTIL_UnitTestData_TEST.getclosedWonStage(),
+            System.Today(),
+            100,
+            null,
+            null
+        );
+
+        insert listOpp;
+
+        return contacts;
+    }
+
 }

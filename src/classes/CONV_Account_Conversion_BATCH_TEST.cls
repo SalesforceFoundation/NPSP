@@ -37,29 +37,55 @@
 public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
     /*******************************************************************************************************
-    * @description Sets the test methods in the class you want to run for development testing purposes
-    */
-    private static string strTestOnly = '*';
-
-    /*******************************************************************************************************
     * @description Tests the conversion process for 1to1 Contacts & Households to Household Contacts and Household Accounts
     */
     public testmethod static void testAccountConversion1to1(){
-        if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        // Create one temp and one inactive User
+        User tempUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        tempUser.IsActive = true;
+
+        User inactiveUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        inactiveUser.IsActive = true;
+        insert new List<User>{tempUser, inactiveUser};
+
         //setup 1x1 model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
+        // Insert 150 test Contacts with a different owner than the Current User
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(150);
+        for (Contact c : cons) {
+            c.OwnerId = tempUser.Id;
+        }
         insert cons;
+        Contact c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id IN :cons LIMIT 1];
+        system.assertEquals(c.OwnerId, tempUser.Id, 'The Contact owner should be temp user');
+
         system.assertEquals(150, [select count() from Account where npe01__One2OneContact__c IN :cons]);
+
+        c = [SELECT Id, npo02__Household__r.OwnerId FROM Contact WHERE Id = :cons[149].Id LIMIT 1];
+        npo02__Household__c h = c.npo02__Household__r;
+        h.OwnerId = inactiveUser.Id;
+        update h;
+
+        // Set the Owner of the last household to inactive
+        System.runAs(tempUser) {
+            inactiveUser.IsActive = false;
+            update inactiveUser;
+        }
 
         String HHName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' ' + system.label.npo02.DefaultHouseholdName;
         List<npo02__Household__c> hhlist = [select id from npo02__Household__c where Name = :HHName];
         system.assertEquals(150, hhlist.size());
 
         //add a second contact to a random household
-        Contact c = new Contact(FirstName = 'Second', LastName = 'HouseholdMember', npo02__Household__c = hhlist[14].Id);
+        c = new Contact(FirstName = 'Second', LastName = 'HouseholdMember', npo02__Household__c = hhlist[14].Id);
         insert c;
+
+        List<Account> accounts = [SELECT Id FROM Account WHERE npe01__One2OneContact__c IN :cons OR npe01__One2OneContact__c = :c.Id];
+        system.assertEquals(151, accounts.size());
 
         //add opptys to the Contacts as well
         List<Opportunity> opps = UTIL_UnitTestData_TEST.OppsForContactList(cons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), system.today(), 100, null, '');
@@ -82,16 +108,24 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         ID batchprocessid = Database.executeBatch(cacv);
         Test.StopTest();
 
+        // Validate that the one Contact whose Household record was owned by an inactive User
+        // is now owned by the same owner as the Contact.
+        Contact inactiveOwnedContact = [SELECT Id, OwnerId, Account.OwnerId, Owner.IsActive, npo02__Household__r.Owner.IsActive
+            FROM Contact WHERE Id = :cons[149].Id LIMIT 1];
+        system.assertEquals(false, inactiveOwnedContact.npo02__Household__r.Owner.IsActive, 'Household owner should be inactive');
+        system.assertEquals(true, inactiveOwnedContact.Owner.IsActive, 'Contact owner should be active');
+        system.assertEquals(inactiveOwnedContact.OwnerId, inactiveOwnedContact.Account.OwnerId, 'Household Account Owner should match the Contact owner');
+
         //get the newly created Households
-        List<Account> newHHAccounts = [select npo02__TotalOppAmount__c, Id from Account where Name = :HHName];
+        List<Account> newHHAccounts = [SELECT Name, npo02__TotalOppAmount__c, Id FROM Account WHERE Id NOT IN :accounts];
         //should be total HH count from above
         system.assertEquals(150, newHHAccounts.size());
         //total gifts should be the same for any of the 149
         system.assertEquals(newHHAccounts[64].npo02__TotalOppAmount__c, 100.00);
         //our two-person household was also successfully converted and set the correct primary contact
-        Contact c2 = [select AccountId, Account.npe01__One2OneContact__c from Contact where Id = :c.Id];
+        Contact c2 = [SELECT Account.npe01__One2OneContact__c FROM Contact WHERE Id = :c.Id LIMIT 1];
         //the primary was set
-        system.assertNotEquals(null, Account.npe01__One2OneContact__c);
+        system.assertNotEquals(null, c2.Account.npe01__One2OneContact__c);
         //the primary is the contact w/ a total opp amount
         system.assertNotEquals(c2.Id, c2.Account.npe01__One2OneContact__c);
         system.assertEquals(2, [select count() from Contact where AccountId = :c2.AccountId]);
@@ -103,21 +137,29 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //Using the API class just to give it test coverage.
         system.assertEquals(UTIL_CustomSettings_API.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+
+        system.assertEquals(cons.size(), [SELECT count() FROM Account WHERE OwnerId = :tempUser.Id
+            AND npe01__One2OneContact__c IN :cons AND npe01__SYSTEM_AccountType__c = 'Household Account'],
+                'There should be 150 Accounts owned by the TempUser');
     }
+
     /*******************************************************************************************************
     * @description Tests the conversion process for Bucket Contacts & Households to Household Contacts and Household Accounts
     */
     public testmethod static void testAccountConversionBucket(){
-        if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         //setup bucket model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test');
         insert c;
-        Id indID = [select id from Account where Name = 'Individual'].id;
+        Id indID = CAO_Constants.getIndividualAccountId();
 
-        system.assertEquals(indID, CAO_Constants.GetIndividualAccountId());
+        system.assertNotEquals(null, indID);
 
         String HHName = 'Contact ' + system.label.npo02.DefaultHouseholdName;
         system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
@@ -148,7 +190,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         Test.StopTest();
 
         //get the newly created Household
-        Account newHHAccount = [select npo02__TotalOppAmount__c, Id from Account where Name = :HHName];
+        Account newHHAccount = [SELECT npo02__TotalOppAmount__c, Id FROM Account WHERE Id != :indID];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(newHHAccount.id, [select AccountId from Contact where id = :c.id].AccountId);
         system.assertEquals(newHHAccount.npo02__TotalOppAmount__c, 1000.00);
@@ -164,7 +206,10 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Contacts with a single address
     */
     public testMethod static void testSingleContactAddress(){
-        if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
@@ -173,9 +218,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
                                 MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
                                 MailingPostalCode = '94105', MailingState = 'California', MailingCountry = 'United States');
         insert c;
-        Id indID = [select id from Account where Name = 'Individual'].id;
+        Id indID = CAO_Constants.getIndividualAccountId();
 
-        system.assertEquals(indID, CAO_Constants.GetIndividualAccountId());
+        system.assertNotEquals(null, indID);
 
         String HHName = 'Contact ' + system.label.npo02.DefaultHouseholdName;
         system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
@@ -195,8 +240,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         Test.StopTest();
 
         //get the newly created Household
-        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, 
-            BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [SELECT npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, 
+            BillingStreet, BillingCity, Id FROM Account WHERE Id != :indID];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(1, newHHAccount.Number_of_Household_Members__c);
         system.assertEquals(c.MailingStreet, newHHAccount.BillingStreet);
@@ -213,7 +258,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Contacts with two addresses
     */
     public testMethod static void test2ContactAddresses(){
-        if (strTestOnly != '*' && strTestOnly != 'test2ContactAddresses') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
@@ -233,6 +279,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
                                 MailingPostalCode = '21230', MailingState = 'Maryland', MailingCountry = 'United States', npo02__TotalOppAmount__c = 100.00,
                                 npo02__Household__c = c.npo02__Household__c);
         insert c2;
+
+        List<Account> accounts = [SELECT Id FROM Account];
 
         //clear the values automatically copied to the household
         npo02__Household__c h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
@@ -262,18 +310,18 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //get the newly created Household
         String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
-        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account WHERE Id NOT IN :accounts];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
         system.assertEquals(c2.MailingStreet, newHHAccount.BillingStreet);
         system.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
         system.assertEquals(2, [select count() from Address__c]);
-        c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id and FirstName = 'Test2'];
+        c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id];
         system.assertEquals('1 1st Avenue', c2.Account.BillingStreet);
         system.assertEquals('1 1st Avenue', c2.MailingStreet);
         system.assertEquals(false, c2.is_Address_Override__c);
         system.assertNotEquals(null, c2.Current_Address__c);
-        c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id and FirstName = 'Test'];
+        c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id];
         system.assertEquals('1 1st Avenue', c.Account.BillingStreet);
         system.assertEquals('123 Main St.', c.MailingStreet);
         system.assertEquals(true, c.is_Address_Override__c);
@@ -286,7 +334,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Contacts with two addresses, but address verification disabled
     */
     public testMethod static void testContactDisableAddresses(){
-        if (strTestOnly != '*' && strTestOnly != 'testContactDisableAddresses') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         //setup individual model and test account creation
         npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(Household_Account_Addresses_Disabled__c=true, npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -307,6 +356,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
                                 MailingPostalCode = '21230', MailingState = 'Maryland', MailingCountry = 'United States', npo02__TotalOppAmount__c = 100.00,
                                 npo02__Household__c = c.npo02__Household__c);
         insert c2;
+
+        List<Account> accounts = [SELECT Id FROM Account];
 
         //clear the values automatically copied to the household
         npo02__Household__c h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
@@ -336,18 +387,18 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //get the newly created Household
         String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
-        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account WHERE Id NOT IN :accounts];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
         //system.assertEquals(null, newHHAccount.BillingStreet, 'The contact addresses shouldn\'t be copied over during the conversion.');
         system.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
         system.assertEquals(0, [select count() from Address__c], 'No address objects should be created.');
-        c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id and FirstName = 'Test2'];
+        c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id];
         system.assertEquals(null, c2.Account.BillingStreet);
         system.assertEquals('1 1st Avenue', c2.MailingStreet);
         system.assertEquals(false, c2.is_Address_Override__c);
         system.assertEquals(null, c2.Current_Address__c);
-        c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id and FirstName = 'Test'];
+        c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id];
         system.assertEquals(null, c.Account.BillingStreet);
         system.assertEquals('123 Main St.', c.MailingStreet);
         system.assertEquals(false, c.is_Address_Override__c);
@@ -361,7 +412,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process when setting primary affiliation
     */
     public testMethod static void testSettingPrimaryAffiliation(){
-        if (strTestOnly != '*' && strTestOnly != 'testSettingPrimaryAffiliation') return;
+        //skip the test if Advancement is installed - Bucket Account not supported in ADV
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
@@ -427,6 +479,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         else
             system.assert(CAO_Constants.isBucketModel());
     }
+
     /*******************************************************************************************************
     * @description Sets up Household Account Model settings configurations
     */

@@ -1,0 +1,257 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>AccountHardCreditNonSkew_Incremental__c</fullName>
+        <defaultValue>true</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the Account Hard Credit (Non-Skew) nightly job limits the number of Accounts selected for recalculation by looking for recently updated Opportunities on those Accounts. This helps to improve Customizable Rollup nightly job performance.</inlineHelpText>
+        <label>Incremental Account Hard Credit Non-Skew</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>CMT_API_Status__c</fullName>
+        <description>Result of the last CustomMetadataType deployment</description>
+        <externalId>false</externalId>
+        <inlineHelpText>JSON for the CMT deployment result
+{ &quot;jobId&quot;: &quot;repsonse&quot; }</inlineHelpText>
+        <label>CMT API Deployment Result</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Rollups_IncrementalLastNDays_FldOverride__c</fullName>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the field used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job. Defaults to SystemModStamp.</inlineHelpText>
+        <label>Incremental: Last N Days Field Override</label>
+        <length>43</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>ContactHardCreditNonSkew_Incremental__c</fullName>
+        <defaultValue>true</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the Contact Hard Credit (Non-Skew) nightly job limits the number of Contacts selected for recalculation by looking for those Contacts recently updated Opportunities. This helps to improve Customizable Rollup nightly job performance.</inlineHelpText>
+        <label>Incremental Contact Hard Credit Non-Skew</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Customizable_Rollups_Enabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Check this box to enable the new NPSP Customizable Rollup Engine</inlineHelpText>
+        <label>Enable Customizable Rollups</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Disable_Related_Records_Filter__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Check this box to prevent hard credit and soft credit rollups on Accounts and Contacts from only processing Account and Contact records that have existing related Opportunity or Opportunity Contact Role records.</inlineHelpText>
+        <label>Disable Related Records Filter</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Rollups_Account_Batch_Size__c</fullName>
+        <defaultValue>200</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the Account object.</inlineHelpText>
+        <label>Account Hard Credit Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_IncrementalLastNDays_ValOverride__c</fullName>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the calculated number of days used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job.</inlineHelpText>
+        <label>Incremental: Last N Days Value Override</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Account_SkewMode_Batch_Size__c</fullName>
+        <defaultValue>1000</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the Account object using Skew Mode.</inlineHelpText>
+        <label>Account Skew Mode Batch Size</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Account_Soft_Credit_Batch_Size__c</fullName>
+        <defaultValue>200</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating soft credit donor rollups to the Account object.</inlineHelpText>
+        <label>Account Soft Credit Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_AcctContactSoftCredit_Batch_Size__c</fullName>
+        <defaultValue>200</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating soft credit donor rollups to the Account object.</inlineHelpText>
+        <label>Contact Soft Credit to Acct Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Contact_Batch_Size__c</fullName>
+        <defaultValue>200</defaultValue>
+        <description>Used by the old and new Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating hard credit donor rollups to the Contact object.</inlineHelpText>
+        <label>Contact Hard Credit Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Contact_SkewMode_Batch_Size__c</fullName>
+        <defaultValue>1000</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the Contact object using Skew Mode.</inlineHelpText>
+        <label>Contact Skew Mode Batch Size</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Contact_Soft_Credit_Batch_Size__c</fullName>
+        <defaultValue>200</defaultValue>
+        <description>Used by the old and new Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating soft credit donor rollups to the Contact object.</inlineHelpText>
+        <label>Contact Soft Credit Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_GAU_Batch_Size__c</fullName>
+        <defaultValue>1000</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the General Accounting Unit object.</inlineHelpText>
+        <label>GAU Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Limit_on_Attached_Opps_for_Skew__c</fullName>
+        <defaultValue>250</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The maximum number of related Opportunities on an Account or Contact allowed in non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode.</inlineHelpText>
+        <label>Skew Mode Threshold</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Skew_Dispatcher_Batch_Size__c</fullName>
+        <defaultValue>300</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of Account, Contact, or GAU records per batch to select for Skew Mode processing.</inlineHelpText>
+        <label>Skew Mode Dispatcher Batch Size</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ChunkSize_Contact_HardCredit__c</fullName>
+        <description>Only used by the new Customizable Rollups engine in LDV Orgs and only when required for LDV orgs</description>
+        <externalId>false</externalId>
+        <inlineHelpText>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Contacts, this specifies the maximum number of Contacts processed in each batch.</inlineHelpText>
+        <label>LDV: Contact Hard Credit Chunk Size</label>
+        <precision>8</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ChunkSize_Account_HardCredit__c</fullName>
+        <description>Only used by the new Customizable Rollups engine in LDV Orgs and only when required for LDV orgs</description>
+        <externalId>false</externalId>
+        <inlineHelpText>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Accounts, this specifies the maximum number of Accounts processed in each batch.</inlineHelpText>
+        <label>LDV: Account Hard Credit Chunk Size</label>
+        <precision>8</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ChunkSize_Contact_SoftCredit__c</fullName>
+        <description>Only used by the new Customizable Rollups engine in LDV Orgs and only when required for LDV orgs</description>
+        <externalId>false</externalId>
+        <inlineHelpText>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Contacts, this specifies the maximum number of Contacts processed in each batch.</inlineHelpText>
+        <label>LDV: Contact Soft Credit Chunk Size</label>
+        <precision>8</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Customizable Rollup Settings</label>
+    <visibility>Public</visibility>
+</CustomObject>

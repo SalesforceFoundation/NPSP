@@ -36,23 +36,29 @@
 */
 public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
 
+    /** @description Instantiates RLLP_OppRollup_UTIL */
+    RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
         try {
-            Database.executeBatch(new RLLP_OppContactRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
+            if (RLLP_OppRollup_UTIL.customizableRollupEngineEnabled == false) {
+                Database.executeBatch(new RLLP_OppContactRollup_BATCH(), CRLP_RollupBatch_SVC.getBatchSize(
+                        CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+            }
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }
     }
     
     /*******************************************************************************************************
-    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for contact rollups.
+    * @description Batch start method and builds query for contact rollups.
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-        return Database.getQueryLocator(oppRollupUtil.buildContactQuery());      
+        RLLP_OppRollup_UTIL.setupUserRollupVars();
+        return Database.getQueryLocator(oppRollupUtil.buildContactQuery());
     }
     
     /*******************************************************************************************************
@@ -64,8 +70,8 @@ public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>,
         // exception percolate up the call stack, then the batch will think it all succeeded.
         // but if we were to log it, and then propagate the exception, the transaction will 
         // get rolled back, and the logging will be erased!
-        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
-        oppRoller.RollupContacts(new Map<id, Contact>((List<Contact>)result));    
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        oppRoller.RollupContacts(new Map<id, Contact>((List<Contact>)result));
     }
 
     /*******************************************************************************************************

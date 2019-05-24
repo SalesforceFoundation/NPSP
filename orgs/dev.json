@@ -1,13 +1,17 @@
 {
-  "Company": "NPSP - Dev Workspace",
-  "Country": "US",
-  "LastName": "Belvedere",
-  "Email": "mrbelvedere@salesforce.org",
-  "Edition": "Developer",
-  "OrgPreferences" : {
-    "DisableParallelApexTesting" : true,
-    "S1DesktopEnabled" : true,
-    "Translation" : true,
-    "ChatterEnabled" : true
+  "orgName": "NPSP - Dev Workspace",
+  "edition": "Developer",
+  "hasSampleData": "true",
+  "orgPreferences" : {
+    "enabled": [
+      "ChatterEnabled",
+      "DisableParallelApexTesting",
+      "NotesReservedPref01",
+      "S1DesktopEnabled",
+      "Translation"
+    ],
+    "disabled": [
+      "S1EncryptedStoragePref2"
+    ]
   }
 }

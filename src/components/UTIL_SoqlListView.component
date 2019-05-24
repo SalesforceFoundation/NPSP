@@ -70,9 +70,9 @@
                     </td>
                 </tr>
             </table>
-            <table style="table-layout:fixed; width:100%" class="slds-table slds-table--bordered slds-no-row-hover" >
+            <table style="table-layout:fixed; width:100%" class="slds-table slds-table_bordered slds-no-row-hover" >
                 <thead>
-                    <tr class="slds-text-heading--label">
+                    <tr class="slds-text-heading_label">
                         <apex:outputText rendered="{!showCheckboxes}">
                             <th scope="col" class="slds-cell-shrink">
                                 <input type="checkbox" name="cbxContactAll" id="cbxAll" onchange="CheckAllSLVObj(this.checked);" />
@@ -111,14 +111,14 @@
                                     <apex:inputCheckbox value="{!item.checked}" styleClass="slds-checkbox cbxSLVObj" />
                                 </td>
                             </apex:outputText>
-                            <td class="slds-text-body--small">
+                            <td class="slds-text-body_small">
                                 <apex:outputLink value="/{!item.sobj['id']}" >
                                     <apex:outputField value="{!item.sobj[pageController.strNameField]}" />
                                 </apex:outputLink>
                             </td>
                             <apex:repeat value="{!pageController.strFields}" var="f2" > 
                                 <apex:outputText rendered="{!f2 != pageController.strNameField}" >
-                                    <td style="word-wrap: break-word" class="slds-cell-wrap slds-text-body--small">
+                                    <td style="word-wrap: break-word" class="slds-cell-wrap slds-text-body_small">
                                         <apex:outputText value="{!item.err[f2]}" />
                                     </td>
                                 </apex:outputText>

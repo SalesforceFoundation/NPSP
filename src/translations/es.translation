@@ -154,6 +154,54 @@
         <name>Address_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <label><!-- Confirmation message when a user wants to delete something. --></label>
+        <name>CMT_DeleteConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the active rollups tree --></label>
+        <name>CMT_FilterGroupActiveRollupsHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message when a user wants to delete a filter group with rollups. --></label>
+        <name>CMT_FilterGroupDeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter group description --></label>
+        <name>CMT_FilterGroupDescriptionHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter group name --></label>
+        <name>CMT_FilterGroupNameHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- New filter group button --></label>
+        <name>CMT_FilterGroupNameLimitError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- New filter group button --></label>
+        <name>CMT_FilterNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message when a user wants to delete a filter rule. --></label>
+        <name>CMT_FilterRuleDeleteWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message when a user creates a duplicate filter rule. --></label>
+        <name>CMT_FilterRuleDuplicateError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message preventing a user from saving a filter rule with fields missing. --></label>
+        <name>CMT_FilterRuleFieldsMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter rules --></label>
+        <name>CMT_FilterRulesHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter rule value field --></label>
+        <name>CMT_FilterRulesValueHelpText</name>
+    </customLabels>
+    <customLabels>
         <label>Acepto el riesgo asociado al uso de esta herramienta, incluyendo la pérdida de datos y la inconsistencia de la misma.</label>
         <name>CONV_Accept_Risk</name>
     </customLabels>
@@ -326,12 +374,184 @@
         <name>CONV_What_This_Tool_Does</name>
     </customLabels>
     <customLabels>
+        <label><!-- Label for the advanced customization section on a Rollup__mdt record. --></label>
+        <name>CRLP_AdvancedCustomizationHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Context for when to add a date, amount, or detail field to a Rollup__mdt record. --></label>
+        <name>CRLP_AdvancedCustomizationText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label to be used for table describing rollup types. --></label>
+        <name>CRLP_AvailableRollupType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for the active flag. --></label>
+        <name>CRLP_CreateRollupActiveHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for amount field picklist. --></label>
+        <name>CRLP_CreateRollupAmountFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for date field picklist. --></label>
+        <name>CRLP_CreateRollupDateFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for days back integer. --></label>
+        <name>CRLP_CreateRollupDaysBackHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for description. --></label>
+        <name>CRLP_CreateRollupDescriptionHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for detail field picklist. --></label>
+        <name>CRLP_CreateRollupDetailFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for filter group. --></label>
+        <name>CRLP_CreateRollupFilterGroupHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for fiscal year. --></label>
+        <name>CRLP_CreateRollupFiscalYearHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for user adding a summary object, field, and a description. --></label>
+        <name>CRLP_CreateRollupIntroHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for operation. --></label>
+        <name>CRLP_CreateRollupOperationHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for target field. --></label>
+        <name>CRLP_CreateRollupTargetFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for target object. --></label>
+        <name>CRLP_CreateRollupTargetObjectHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for time bound operation. --></label>
+        <name>CRLP_CreateRollupTimeBoundOperationHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for rollup type. --></label>
+        <name>CRLP_CreateRollupTypeHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for years ago picklist. --></label>
+        <name>CRLP_CreateRollupYearsAgoHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Credit Type --></label>
+        <name>CRLP_CreditType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Days back error message for integers with any characters other than numbers. --></label>
+        <name>CRLP_DaysBack</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Successfully Deleted --></label>
+        <name>CRLP_DeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Delete Progress Message --></label>
+        <name>CRLP_DeleteProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Successfully Deleted --></label>
+        <name>CRLP_DeleteSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Timeout error message --></label>
+        <name>CRLP_DeleteTimeout</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message for CRLP Disabled Toast --></label>
+        <name>CRLP_DisabledMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for CRLP Disabled Toast --></label>
+        <name>CRLP_DisabledTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when user tries to save a Rollup with a duplicate Target Field. --></label>
+        <name>CRLP_DuplicateTargetField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Hard Credit --></label>
+        <name>CRLP_HardCredit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message when user doesn&apos;t have available detail fields on a custom rollup. --></label>
+        <name>CRLP_NoAvailableDetailFieldsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label when user doesn&apos;t have available summary fields on a custom rollup --></label>
+        <name>CRLP_NoAvailableTargetFieldsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label when user doesn&apos;t select a filter group. --></label>
+        <name>CRLP_NoFilterGroupSelected</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message to indicate in-progress operation for metadata deployments --></label>
+        <name>CRLP_PleaseWait</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Breadcrumb text to return to the specified location. --></label>
+        <name>CRLP_Return</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Create new rollup button --></label>
+        <name>CRLP_RollupNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Rollup Summary Page Title --></label>
+        <name>CRLP_RollupSummary</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Type of custom rollup --></label>
+        <name>CRLP_RollupType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Shows rollups using a specific filter group. --></label>
+        <name>CRLP_RollupsByFilterGroup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error Deploying Customizable Rollup data --></label>
+        <name>CRLP_SaveError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Saving Progress Message --></label>
+        <name>CRLP_SaveProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Successfully Saved --></label>
+        <name>CRLP_SaveSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Timeout error message --></label>
+        <name>CRLP_SaveTimeout</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Soft Credit --></label>
+        <name>CRLP_SoftCredit</name>
+    </customLabels>
+    <customLabels>
         <label>omitir</label>
         <name>CampaignMemberStatusOmit</name>
     </customLabels>
     <customLabels>
-        <label><!-- CascadeDeletionError --></label>
+        <label><!-- Cascade Deletion Error Message In Classic --></label>
         <name>CascadeDeletionError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Cascade Deletion Error Message In Lightning Experience --></label>
+        <name>CascadeDeletionErrorLightning</name>
     </customLabels>
     <customLabels>
         <label><!-- ClosedWonOpportunities --></label>
@@ -340,6 +560,14 @@
     <customLabels>
         <label><!-- ConfirmDeleteAccount --></label>
         <name>ConfirmDeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DeleteAccount --></label>
+        <name>DeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DeleteContactLeaveAccount --></label>
+        <name>DeleteContactLeaveAccount</name>
     </customLabels>
     <customLabels>
         <label>Agregar tarea dependiente</label>
@@ -382,8 +610,16 @@
         <name>HiddenForSecurity</name>
     </customLabels>
     <customLabels>
+        <label><!-- InactiveScheduledJobsOwnerErrMsg --></label>
+        <name>InactiveScheduledJobsOwnerErrMsg</name>
+    </customLabels>
+    <customLabels>
         <label>El campo Asunto es requerido.</label>
         <name>NameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- OCR Remove Primary Duplicate Batch Error Text --></label>
+        <name>OCRRemovePrimaryDuplicateBatchErrorText</name>
     </customLabels>
     <customLabels>
         <label><!-- OrganizationalOpportunities --></label>
@@ -402,8 +638,20 @@
         <name>PageMessagesFatal</name>
     </customLabels>
     <customLabels>
+        <label><!-- Info --></label>
+        <name>PageMessagesInfo</name>
+    </customLabels>
+    <customLabels>
         <label>Advertencia</label>
         <name>PageMessagesWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- More ClosedWon donations than Installments --></label>
+        <name>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The total Amount of all Closed Won Opps is not equal to the RD Amount. --></label>
+        <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
     </customLabels>
     <customLabels>
         <label>Crear nueva relación</label>
@@ -430,6 +678,98 @@
         <name>REL_View_Contact_Record</name>
     </customLabels>
     <customLabels>
+        <label><!-- Resources Page - Customer Journey link --></label>
+        <name>RP_CustomerJourneyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Deeper Paragraph --></label>
+        <name>RP_DeeperParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Deeper Subtitle --></label>
+        <name>RP_DeeperSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Getting Started component title --></label>
+        <name>RP_GettingStarted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - GitHub Subtitle --></label>
+        <name>RP_GitHubSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - GitHub title --></label>
+        <name>RP_GitHubTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Npsp Link --></label>
+        <name>RP_NpspLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Product Name --></label>
+        <name>RP_ProductNameLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Release GitHub --></label>
+        <name>RP_ReleaseGitHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Release Notes Link --></label>
+        <name>RP_ReleaseNotesLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RP Remote Site Settings Deactivated --></label>
+        <name>RP_Remote_Site_Settings_Deactivated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Salesforce Org Link --></label>
+        <name>RP_SalesforceOrgLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - SubTitle --></label>
+        <name>RP_SubTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Title --></label>
+        <name>RP_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Trailhead Link --></label>
+        <name>RP_TrailheadLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Trailhead Paragraph --></label>
+        <name>RP_TrailheadParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Trailhead Subtitle --></label>
+        <name>RP_TrailheadSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Paragraph --></label>
+        <name>RP_USParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Hub Link --></label>
+        <name>RP_UsHubLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Subtitle --></label>
+        <name>RP_UsSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Youtube Videos --></label>
+        <name>RP_Videos</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Webinar Link --></label>
+        <name>RP_WebinarLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Salesforce Foundation Youtube Channel --></label>
+        <name>RP_YoutubeChannel</name>
+    </customLabels>
+    <customLabels>
         <label>Las donaciones recurrentes sólo pueden tener una organización o contacto especificado, pero no ambos.</label>
         <name>RecurringDonationAccountAndContactError</name>
     </customLabels>
@@ -452,6 +792,10 @@
     <customLabels>
         <label>No se pueden verificar más de 100 códigos postales a la vez</label>
         <name>Zipcode_Verification_Limit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Throw exception to external call --></label>
+        <name>adapterException</name>
     </customLabels>
     <customLabels>
         <label>La Cicero API key debe ser especificada en el Auth Token en la configuración de la Verificación de Direcciones.</label>
@@ -558,6 +902,10 @@
         <name>alloNegativePercent</name>
     </customLabels>
     <customLabels>
+        <label><!-- alloObjectUnsupported --></label>
+        <name>alloObjectUnsupported</name>
+    </customLabels>
+    <customLabels>
         <label>Las asignaciones basadas en porcentaje no pueden exceder el 100%.</label>
         <name>alloPercentExceed100</name>
     </customLabels>
@@ -588,6 +936,30 @@
     <customLabels>
         <label>Ocurrió un error durante el proceso. El siguiente estado fue el primer error reportado:</label>
         <name>bdiBatchException</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for BestMatchOrCreate behavior --></label>
+        <name>bdiBehaviorBestMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for DoNotMatch behavior --></label>
+        <name>bdiBehaviorDoNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for ExactMatchOrCreate behavior --></label>
+        <name>bdiBehaviorExactMatchOrCreate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireBestMatch behavior --></label>
+        <name>bdiBehaviorRequireBestMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireExactMatch behavior --></label>
+        <name>bdiBehaviorRequireExactMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- settings label for RequireNoMatch behavior --></label>
+        <name>bdiBehaviorRequireNoMatch</name>
     </customLabels>
     <customLabels>
         <label>Cerrar</label>
@@ -678,12 +1050,72 @@
         <name>bdiDonation</name>
     </customLabels>
     <customLabels>
+        <label><!-- error displayed in Data Importer if no donation matching rules set --></label>
+        <name>bdiDonationMatchingRuleEmpty</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- button label for begin Dry Run --></label>
+        <name>bdiDryRunBeginButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DI Object Status that it was matched in Dry Run --></label>
+        <name>bdiDryRunMatched</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object to specify it was matched from an ambiguous set in Dry Rn --></label>
+        <name>bdiDryRunMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BDI status when matching an object by its Salesforce ID in Dry Run --></label>
+        <name>bdiDryRunMatchedId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DI Object Status that it was not matched in Dry Run --></label>
+        <name>bdiDryRunNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- progress field label --></label>
+        <name>bdiDryRunRecordsError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label on progress widget during Dry Run --></label>
+        <name>bdiDryRunRecordsValidated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- title on the progress indicator during dry run mode --></label>
+        <name>bdiDryRunTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when a batch is missing a name --></label>
+        <name>bdiErrorBatchNameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error on BDI record if DonationImported or PaymentImported lookups are invalid --></label>
+        <name>bdiErrorDonationLookupMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple opps --></label>
+        <name>bdiErrorDonationMultiMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when no matching donation found, and a match is required --></label>
+        <name>bdiErrorDonationNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched opp(s), but behavior required no match --></label>
+        <name>bdiErrorDonationRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
         <label>Nombre de Campaña de Donación inválida.</label>
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
     <customLabels>
         <label>Donante inválido.</label>
         <name>bdiErrorInvalidDonor</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error thrown if specified class doesn&apos;t support the given BDI interface --></label>
+        <name>bdiErrorInvalidIMatchDonations</name>
     </customLabels>
     <customLabels>
         <label>Debe especificarse el Apellido.</label>
@@ -696,6 +1128,10 @@
     <customLabels>
         <label>Se combinó un contacto existente de una Cuenta Familia, el cual no está permitido.</label>
         <name>bdiErrorNonHHAccountContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the donation matched multiple pmts --></label>
+        <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
         <label>Ha fallado.</label>
@@ -714,8 +1150,32 @@
         <name>bdiImported</name>
     </customLabels>
     <customLabels>
+        <label><!-- error when the importData() API is given a invalid Batch ID. --></label>
+        <name>bdiInvalidBatchId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error message if the Donation Matching Behavior is invalid --></label>
+        <name>bdiInvalidDonationMatchingBehavior</name>
+    </customLabels>
+    <customLabels>
         <label>Combinado.</label>
         <name>bdiMatched</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object to specify it was matched from an ambiguous set --></label>
+        <name>bdiMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BDI status when matching an object by its Salesforce ID --></label>
+        <name>bdiMatchedId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object when no matching record found --></label>
+        <name>bdiMatchedNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when numeric settings set to negative number --></label>
+        <name>bdiPositiveNumber</name>
     </customLabels>
     <customLabels>
         <label>Registros con error:</label>
@@ -732,6 +1192,18 @@
     <customLabels>
         <label>Empezar proceso de importación</label>
         <name>bdiRunBtn</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for contact matching rules in bDI --></label>
+        <name>bdiSettingsSectionContactMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Donation Matching in BDI Settings --></label>
+        <name>bdiSettingsSectionDonationMatching</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- section label for Extensibility in BDI Settings --></label>
+        <name>bdiSettingsSectionExtensibility</name>
     </customLabels>
     <customLabels>
         <label>Estado Actual</label>
@@ -770,8 +1242,48 @@
         <name>conFailedAccountCreate</name>
     </customLabels>
     <customLabels>
+        <label><!-- conMergeBtnLabel --></label>
+        <name>conMergeBtnLabel</name>
+    </customLabels>
+    <customLabels>
         <label>Las Cuentas Personales no son admitidas.</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeFoundContacts --></label>
+        <name>conMergeFoundContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergePageTitle --></label>
+        <name>conMergePageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergePageTitleDetail --></label>
+        <name>conMergePageTitleDetail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSearchPlaceholder --></label>
+        <name>conMergeSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectAll --></label>
+        <name>conMergeSelectAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectContact --></label>
+        <name>conMergeSelectContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectedContacts --></label>
+        <name>conMergeSelectedContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeStageComplete --></label>
+        <name>conMergeStageComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeWinnerAsstText --></label>
+        <name>conMergeWinnerAsstText</name>
     </customLabels>
     <customLabels>
         <label>No puede asignar este plan de acción a un nuevo objeto. Por favor, cree un nuevo plan de acción.</label>
@@ -786,6 +1298,10 @@
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
+        <label><!-- exceptionDeletePermission --></label>
+        <name>exceptionDeletePermission</name>
+    </customLabels>
+    <customLabels>
         <label><!-- exceptionRequiredField --></label>
         <name>exceptionRequiredField</name>
     </customLabels>
@@ -798,12 +1314,28 @@
         <name>flsError</name>
     </customLabels>
     <customLabels>
+        <label><!-- Gift Processing account model error --></label>
+        <name>giftProcessingAccountException</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Gift Processing configuration error --></label>
+        <name>giftProcessingConfigException</name>
+    </customLabels>
+    <customLabels>
         <label>Correr Control de salud</label>
         <name>healthButtonRun</name>
     </customLabels>
     <customLabels>
         <label>Hay {0} Cuentas Uno-a-Uno que no tienen Contactos.</label>
         <name>healthDetailsAccOne2OneNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountDefaultRTInvalid --></label>
+        <name>healthDetailsAccountDefaultRTInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountDefaultRTIssue --></label>
+        <name>healthDetailsAccountDefaultRTIssue</name>
     </customLabels>
     <customLabels>
         <label>No hay un modelo de cuenta válido especificado.</label>
@@ -844,10 +1376,6 @@
     <customLabels>
         <label>No se puede especificar el mismo tipo de registro de Cuenta para el tipo de registro Cuenta Familia y para el Tipo de registro Uno-a-Uno.</label>
         <name>healthDetailsDuplicateAcctRT</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- The details displayed when the duplicate contact roles health check fails --></label>
-        <name>healthDetailsDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>El campo de género {0} no existe en el Contacto.</label>
@@ -928,10 +1456,6 @@
     <customLabels>
         <label>El Id del tipo de registro {0} no es válido.</label>
         <name>healthDetailsInvalidRecordtypeId</name>
-    </customLabels>
-    <customLabels>
-        <label>El nombre del tipo de registro {0} no es válido.</label>
-        <name>healthDetailsInvalidRecordtypeName</name>
     </customLabels>
     <customLabels>
         <label>El registro {0} en el objeto Schedulable__c no es válido.</label>
@@ -1018,6 +1542,10 @@
         <name>healthLabelAccountData</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthLabelAccountDefaultRT --></label>
+        <name>healthLabelAccountDefaultRT</name>
+    </customLabels>
+    <customLabels>
         <label>Datos del modelo de cuenta</label>
         <name>healthLabelAccountModelData</name>
     </customLabels>
@@ -1036,10 +1564,6 @@
     <customLabels>
         <label>Datos del contacto</label>
         <name>healthLabelContactData</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- Label for Duplicate Contact Role health check --></label>
-        <name>healthLabelDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>Receptor de notificaciones de errores válido.</label>
@@ -1072,10 +1596,6 @@
     <customLabels>
         <label>Corrió por última vez: {0}</label>
         <name>healthLabelLastRun</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- The message displayed when the duplicate contact roles health check passes --></label>
-        <name>healthLabelNoDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>Todas las Oportunidades con Pagos tienen los Pagos esperados.</label>
@@ -1174,6 +1694,14 @@
         <name>healthSolutionAccOne2OneNoContacts</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthSolutionAccountDefaultRTInvalid --></label>
+        <name>healthSolutionAccountDefaultRTInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAccountDefaultRTIssue --></label>
+        <name>healthSolutionAccountDefaultRTIssue</name>
+    </customLabels>
+    <customLabels>
         <label>Todos los Contactos individuales deberían usar el mismo modelo de cuenta. Mire estos contactos en el reporte &lt;b&gt;Individual Contacts by Account Type&lt;/b&gt; en la carpeta de informes NPSP Health Check.</label>
         <name>healthSolutionAccountModel</name>
     </customLabels>
@@ -1204,10 +1732,6 @@
     <customLabels>
         <label>Vea estos contactos en el informe &lt;b&gt;Contacts without Accounts&lt;/b&gt; en la carpeta de informes NPSP Health Check.</label>
         <name>healthSolutionContactData</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- The recommended solution for when the duplicate contact roles health check fails --></label>
-        <name>healthSolutionDuplicateContactRoles</name>
     </customLabels>
     <customLabels>
         <label>En la pestaña Configuración del NPSP, haga clic en {0} | {1}, y elimine el registro inválido Auto creación de relaciones.</label>
@@ -1406,6 +1930,10 @@
         <name>lblDeleteContactPrompt</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblExtendedStatus --></label>
+        <name>lblExtendedStatus</name>
+    </customLabels>
+    <customLabels>
         <label><!-- autocomplete&apos;s label for &quot;smith in Contacts&quot; --></label>
         <name>lblFindInContacts</name>
     </customLabels>
@@ -1458,6 +1986,10 @@
         <name>lblPostalCode</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblProgress --></label>
+        <name>lblProgress</name>
+    </customLabels>
+    <customLabels>
         <label><!-- lblRequired --></label>
         <name>lblRequired</name>
     </customLabels>
@@ -1470,8 +2002,16 @@
         <name>lblState</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblStatus --></label>
+        <name>lblStatus</name>
+    </customLabels>
+    <customLabels>
         <label><!-- lblStreet --></label>
         <name>lblStreet</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblYouAreHere --></label>
+        <name>lblYouAreHere</name>
     </customLabels>
     <customLabels>
         <label>Cuenta</label>
@@ -1666,6 +2206,10 @@
         <name>oppNamingOrganizational</name>
     </customLabels>
     <customLabels>
+        <label><!-- pmtModifyCurrency --></label>
+        <name>pmtModifyCurrency</name>
+    </customLabels>
+    <customLabels>
         <label>Calcular pagos</label>
         <name>pmtWizardBtnCalcPayments</name>
     </customLabels>
@@ -1692,6 +2236,10 @@
     <customLabels>
         <label>Intervalo</label>
         <name>pmtWizardInterval</name>
+    </customLabels>
+    <customLabels>
+        <label>Mes</label>
+        <name>pmtWizardMonth</name>
     </customLabels>
     <customLabels>
         <label>No se encontró oportunidad.</label>
@@ -1746,12 +2294,20 @@
         <name>pmtWizardWarning</name>
     </customLabels>
     <customLabels>
+        <label>Semana</label>
+        <name>pmtWizardWeek</name>
+    </customLabels>
+    <customLabels>
         <label>¿Qué fecha desea utilizar?</label>
         <name>pmtWizardWriteoffDate</name>
     </customLabels>
     <customLabels>
         <label>Se está preparando para anular {0} Pago (s) por un total de {1}.</label>
         <name>pmtWizardWriteoffMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Año</label>
+        <name>pmtWizardYear</name>
     </customLabels>
     <customLabels>
         <label><!-- pscDeleteRow --></label>
@@ -1886,6 +2442,10 @@
         <name>statusNotStarted</name>
     </customLabels>
     <customLabels>
+        <label><!-- To add to a list --></label>
+        <name>stgAdd</name>
+    </customLabels>
+    <customLabels>
         <label><!-- stgAddrGeneralSettingsIntro --></label>
         <name>stgAddrGeneralSettingsIntro</name>
     </customLabels>
@@ -1900,6 +2460,10 @@
     <customLabels>
         <label>Borrar registro de errores</label>
         <name>stgBtnClearErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnClone --></label>
+        <name>stgBtnClone</name>
     </customLabels>
     <customLabels>
         <label>Crear una Relación automática</label>
@@ -1984,6 +2548,46 @@
     <customLabels>
         <label>Guardar</label>
         <name>stgBtnSave</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPGoToSetup --></label>
+        <name>stgCRLPGoToSetup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPHouseholdAccountError --></label>
+        <name>stgCRLPHouseholdAccountError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPInfoOnUDRBody --></label>
+        <name>stgCRLPInfoOnUDRBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPInfoOnUDRHeading --></label>
+        <name>stgCRLPInfoOnUDRHeading</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPNonAdminError --></label>
+        <name>stgCRLPNonAdminError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- For alternative text when a boolean is not selected. --></label>
+        <name>stgCheckboxFalse</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- For alternative text when a boolean is selected. --></label>
+        <name>stgCheckboxTrue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCountOf --></label>
+        <name>stgCountOf</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentInProgress --></label>
+        <name>stgDeploymentInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentTryAgain --></label>
+        <name>stgDeploymentTryAgain</name>
     </customLabels>
     <customLabels>
         <label><!-- stgDocumentation --></label>
@@ -2132,6 +2736,18 @@ Antes de iniciar este proceso, se recomienda desactivar los siguientes cuando af
 &lt;br/&gt; 
 Una vez que el proceso se completó al 100%, puede abandonar o actualizar esta página.</label>
         <name>stgHelpCreateMissingPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <name>stgHelpCustomizableRollupsEnable2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <name>stgHelpCustomizableRollupsEnable3</name>
     </customLabels>
     <customLabels>
         <label>Permite la creación automática y la gestión de los registros de Asignación CCG a la Cuenta Contable General por defecto. Esta característica permite mejores informes sobre la Cuenta Contable General por defecto, pero se utiliza más espacio en el sistema.</label>
@@ -2368,12 +2984,20 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
         <name>stgHelpPrimaryContactBatch</name>
     </customLabels>
     <customLabels>
+        <label><!-- Content of the &quot;Bulk Data Processes - Remove Duplicate Primary OCRs&quot; page --></label>
+        <name>stgHelpPrimaryContactRoleMergeBatch</name>
+    </customLabels>
+    <customLabels>
         <label>Si seleccionado, agrega la campaña especificada en donaciones recurrentes a todas las oportunidades relacionadas. Si no se selecciona, solo la primera oportunidad tendrá la campaña.</label>
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
     <customLabels>
         <label><!-- stgHelpRDBatch --></label>
         <name>stgHelpRDBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD Batch Size Settings Help Text --></label>
+        <name>stgHelpRDBatchSize</name>
     </customLabels>
     <customLabels>
         <label>Previene que la programación nocturna modifique las donaciones recurrentes. Deberá remover trabajos programados existentes en Configuración | Supervisar | Trabajos programados.</label>
@@ -2472,12 +3096,12 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
         <name>stgHelpRelSyncFields</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpReviewErrorLog --></label>
-        <name>stgHelpReviewErrorLog</name>
+        <label><!-- Respect the settings on a Duplicate Rule that control allowing duplicates. --></label>
+        <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
     <customLabels>
-        <label>El número de registros que se procesa a la vez cuando se calculas las estadísticas del donante. Por defecto el tamaño es de 200. Reducir a un número menor si los Totales de oportunidades están fallando debido a limites en el sistema.</label>
-        <name>stgHelpRollupBatchSize</name>
+        <label><!-- stgHelpReviewErrorLog --></label>
+        <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
         <label>Nombre del tipo de registro de oportunidad excluidos de las estadísticas cuando se calculan los totales de oportunidades en cuenta.</label>
@@ -2510,6 +3134,10 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
     <customLabels>
         <label>Siempre sumar a los totales de donaciones del contacto con función de contacto principal, y a su correspondiente familia, en una oportunidad, incluso si la oportunidad no es de un individuo (por ejemplo: de una empresa, fundación, etc.)</label>
         <name>stgHelpRollupPrimaryContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupSkewLimit --></label>
+        <name>stgHelpRollupSkewLimit</name>
     </customLabels>
     <customLabels>
         <label><!-- stgHelpSalesforceSetup --></label>
@@ -2576,6 +3204,10 @@ Una vez que el procesos es 100% completo, usted puede abandonar est página o re
         <name>stgHelpUDRTargetObject</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpUseDatedConvRates --></label>
+        <name>stgHelpUseDatedConvRates</name>
+    </customLabels>
+    <customLabels>
         <label>Su instalación se realizó correctamente, pero detectó un pequeño problema. Para solucionar el problema, sólo tiene que cargar la página Configuración de NPSP en Salesforce.
 
 Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Success Pack. Si no ve la pestaña, seleccione Nonprofit Success Pack desde el menú de aplicaciones en la esquina superior derecha.</label>
@@ -2620,6 +3252,18 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customLabels>
         <label>Configuración del Lote de Data Entry</label>
         <name>stgLabelBDESettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchJobRollupSkewSizes --></label>
+        <name>stgLabelBatchJobRollupSkewSizes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchJobSizes --></label>
+        <name>stgLabelBatchJobSizes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchProcessingOptions --></label>
+        <name>stgLabelBatchProcessingOptions</name>
     </customLabels>
     <customLabels>
         <label>Estado del Lote</label>
@@ -2698,6 +3342,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelMembershipSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- Intended for the name of a metadata record and not a person. --></label>
+        <name>stgLabelName</name>
+    </customLabels>
+    <customLabels>
         <label>Nueva Relación automática</label>
         <name>stgLabelNewAutoRel</name>
     </customLabels>
@@ -2724,6 +3372,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customLabels>
         <label>- ninguna-</label>
         <name>stgLabelNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOK --></label>
+        <name>stgLabelOK</name>
     </customLabels>
     <customLabels>
         <label>Configuración de Nombre de Oportunidades</label>
@@ -2794,6 +3446,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelPaymentSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- Menu title for the Duplicate Primary OCRs in NPSP Settings --></label>
+        <name>stgLabelPrimaryContactRoleMergeBatch</name>
+    </customLabels>
+    <customLabels>
         <label>Asignación de Campos Personalizados</label>
         <name>stgLabelRDFieldMap</name>
     </customLabels>
@@ -2862,6 +3518,22 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgLabelUDRTargetObject</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelView --></label>
+        <name>stgLabelView</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for previous year --></label>
+        <name>stgLabelYearPicklistLastYear</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for current year --></label>
+        <name>stgLabelYearPicklistThisYear</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for dynamic number of years ago --></label>
+        <name>stgLabelYearPicklistYearsAgo</name>
+    </customLabels>
+    <customLabels>
         <label>Borrar</label>
         <name>stgLinkDelete</name>
     </customLabels>
@@ -2900,6 +3572,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customLabels>
         <label>Data Entry en lote</label>
         <name>stgNavBDE</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavBatchProcessSettings --></label>
+        <name>stgNavBatchProcessSettings</name>
     </customLabels>
     <customLabels>
         <label>Procesos en lote</label>
@@ -2998,10 +3674,6 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavSchedule --></label>
-        <name>stgNavSchedule</name>
-    </customLabels>
-    <customLabels>
         <label>Herramientas del sistema</label>
         <name>stgNavSystem</name>
     </customLabels>
@@ -3014,12 +3686,24 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavUserDefinedRollups</name>
     </customLabels>
     <customLabels>
+        <label><!-- No records of an object found. Pass in the object&apos;s plural label. --></label>
+        <name>stgNoObjectsFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNotApplicable --></label>
+        <name>stgNotApplicable</name>
+    </customLabels>
+    <customLabels>
         <label><!-- stgOppNamingDescription --></label>
         <name>stgOppNamingDescription</name>
     </customLabels>
     <customLabels>
         <label><!-- stgPowerOfUsHub --></label>
         <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgSelectOne --></label>
+        <name>stgSelectOne</name>
     </customLabels>
     <customLabels>
         <label><!-- stgTools --></label>

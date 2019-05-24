@@ -51,17 +51,27 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     * @return PageReference to the calling page
     */ 
     public PageReference buttonClick(){
+
+        if (sc.getId() == null) { 
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationMissingId));
+            return null;
+        }
+        
+        if (!Schema.SObjectType.Opportunity.isCreateable()) { 
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied));
+            return null;
+        }
+
         Savepoint sp = Database.setSavepoint();
         try {
-            system.assert(sc.getId() != null);
-	        string qString = RD_RecurringDonations.strQueryRDNoWhere();
+            String qString = RD_RecurringDonations.strQueryRDNoWhere();
             qString += ' where id = \'' + sc.getId() + '\'';
-	        npe03__Recurring_Donation__c RecurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
-	        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{RecurringDonation});
-	        
-	        PageReference pageRef = sc.view();
-	        pageRef.setRedirect(true);
-	        return pageRef;
+            npe03__Recurring_Donation__c recurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
+            // This recalculates Rollups only in Legacy mode. 
+            RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{recurringDonation});
+            //This recalculates Rollups only if Customizable Rollup is enabled.
+            recalculateRollups(sc.getId());
+            return redirectToRecurringDonationsPage();
         
         } catch(Exception e) {
             Database.rollback(sp);
@@ -69,8 +79,44 @@ public with sharing class RD_AddDonationsBTN_CTRL {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }
-        
     }
     
+    /*******************************************************************************************************
+    * @description Action method to redirect to the Recurring Donation calling page. Redirects to 
+    * recurring donation list if the ID is missing.
+    * @return PageReference to the calling page
+    */ 
+    public PageReference redirectToRecurringDonationsPage() {
 
+        if (sc.getId() == null) {
+            Schema.DescribeSObjectResult describeResult = npe03__Recurring_Donation__c.SObjectType.getDescribe();
+            return new PageReference('/' + describeResult.getKeyPrefix());
+        }
+
+        PageReference pageRef = sc.view();
+        pageRef.setRedirect(true);
+        return pageRef;
+    }
+
+    /*********************************************************************************************************
+    * @description Recalculates the Rollup for Recurring Donation.
+    * @return void.
+    */
+    private void recalculateRollups(Id recordId) {
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, CRLP_RollupProcessingOptions.RollupType.RecurringDonations)) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(
+                    CRLP_RollupProcessingOptions.RollupType.RecurringDonations, 
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, 
+                    new List<Id>{ recordId }, 
+                    null
+                );
+            } else {
+                System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{ recordId }));
+            }
+        }
+        else {
+            RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(new Set<Id>{ recordId });
+        }
+    }
 }

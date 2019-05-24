@@ -262,6 +262,10 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         for (string field : getOppFields(fields)) {
             result += field + ', ';
         }
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization() && !result.containsIgnoreCase('currencyisocode')) {
+            result += ' CurrencyIsoCode, ';
+        }
+
         result += '(' + getConRoleQuery(fields) + ' WHERE IsPrimary=TRUE LIMIT 1) ';
         result += 'FROM Opportunity';
         return result;
@@ -278,6 +282,9 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         string result = 'SELECT ';
         for (string field : getConFields(fields)) {
             result += field.substring(field.indexOf('.')+1) + ', ';
+        }
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization() && !result.containsIgnoreCase('currencyisocode')) {
+            result += ' CurrencyIsoCode, ';
         }
 
         result = result.substring(0, result.length()-2) + ' FROM Contact';
@@ -428,7 +435,11 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             }
         } else if (dt == Schema.DisplayType.Currency) {
             if (obj.get(fieldName.trim())!=null) {
-                String currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol((Id)obj.get('Id'));
+                String currCode = null;
+                if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+                    currCode = (String) obj.get('CurrencyIsoCode');
+                }
+                String currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(currCode);
                 if (currencySymbol.length() == 3) {
                     currencySymbol += ' ';
                 }

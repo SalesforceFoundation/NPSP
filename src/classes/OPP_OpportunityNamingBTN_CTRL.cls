@@ -46,6 +46,10 @@ public with sharing class OPP_OpportunityNamingBTN_CTRL {
 
     /** @description Button click method runs opportunity naming for the current opportunity.*/
     public PageReference buttonClick() {
+        if (ctrl.getId() == null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Missing Id'));
+            return null;
+        }
         list<Opportunity> thisOpp = new list<Opportunity>{(Opportunity)ctrl.getRecord()};
 
         if (!thisOpp.isEmpty()) {

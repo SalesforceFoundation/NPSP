@@ -1,0 +1,25 @@
+<apex:component>
+    <apex:attribute name="isRendered" type="Boolean" default="false" description="Determines if the message is rendered" />
+    <apex:attribute name="message" type="String" description="Message to display" />
+
+    <apex:outputPanel rendered="{!isRendered}">
+        <div class="slds" id="page_messages">
+            <div role="alert" class="slds-notify slds-notify_toast slds-notify_toast slds-theme_info slds-theme_info">
+                <div class="notify__content">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <c:UTIL_SLDS_Icon icon="info" iconCategory="utility" size="small" />
+                        </div>
+                        <div class="slds-media__body">
+                            <h2 class="slds-text-heading_small slds-text-heading_small">
+                                <apex:outputText value="{!$Label.PageMessagesInfo}: " />
+                                <apex:outputText value="{!message}" />
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </apex:outputPanel>
+
+</apex:component>

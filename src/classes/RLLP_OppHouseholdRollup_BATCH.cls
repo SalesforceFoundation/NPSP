@@ -35,24 +35,30 @@
 * @description Batch class for opportunity household rollups. 
 */
 public class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
-    
+
+    /** @description Instantiates RLLP_OppRollup_UTIL */
+    RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
         try {
-            Database.executeBatch(new RLLP_OppHouseholdRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
+            if (RLLP_OppRollup_UTIL.customizableRollupEngineEnabled == false) {
+                Database.executeBatch(new RLLP_OppHouseholdRollup_BATCH(), CRLP_RollupBatch_SVC.getBatchSize(
+                        CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+            }
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }
     }
     
     /*******************************************************************************************************
-    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for household rollups.
+    * @description Batch start method and builds query for household rollups.
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();     
-        return Database.getQueryLocator(oppRollupUtil.buildHouseholdQuery()); 
+        RLLP_OppRollup_UTIL.setupUserRollupVars();
+        return Database.getQueryLocator(oppRollupUtil.buildHouseholdQuery());
     }
     
     /*******************************************************************************************************
@@ -64,7 +70,7 @@ public class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject
         // exception percolate up the call stack, then the batch will think it all succeeded.
         // but if we were to log it, and then propagate the exception, the transaction will 
         // get rolled back, and the logging will be erased!
-        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
         oppRoller.RollupHouseholds(new Map<id, npo02__Household__c>((List<npo02__Household__c>)result));    
     }
 

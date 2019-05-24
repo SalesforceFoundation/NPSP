@@ -41,9 +41,6 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     private List<Id> listCampaignId = new List<Id>();
     private List<String> listMemberStatus = new List<String>();
 
-    /**@description Static flag to prevent recursion. */
-    public static Boolean hasRun = false;
-
     /*******************************************************************************************************
     * @description Creates and updates campaign members based on opportunity primary contact, primary 
     * campaign source, and the primary contact status field.
@@ -58,7 +55,7 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
         
         dmlWrapper dmlWrapper = new DmlWrapper();
 
-        if (hasRun) {
+        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.OPP_CampaignMember)) {
             return dmlWrapper;
         }
 
@@ -110,8 +107,13 @@ public class OPP_CampaignMember_TDTM extends TDTM_Runnable {
             dmlWrapper = CON_AddToCampaign.CreateCampaignMembers(listContactId, listCampaignId, listMemberStatus);
         }
 
-        hasRun = true;
-        return dmlWrapper;
+        // Increment the recursion flag, process the DML, and then decrement the recursion flag
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.OPP_CampaignMember, true);
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        dmlWrapper = null;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.OPP_CampaignMember, false);
+
+        return null;
     }
 
     /*******************************************************************************************************

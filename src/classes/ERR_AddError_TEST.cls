@@ -37,10 +37,14 @@
 */
 @isTest
 public with sharing class ERR_AddError_TEST {
+
     /*******************************************************************************************************
     * @description test (lack of) error handling on a database dml operation, verify success and failure results
     */
     public testmethod static void databaseDml() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
     	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
     	// Delete the error settings if they are from the database
     	if (errorSettings.id != null) {

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Filter Rule --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הFilter Rule --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Filter Rule --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הFilter Rule --></value>
+    </caseValues>
+    <fields>
+        <label><!-- Value --></label>
+        <name>Constant__c</name>
+    </fields>
+    <fields>
+        <label><!-- Field --></label>
+        <name>Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Filter Group --></label>
+        <name>Filter_Group__c</name>
+        <relationshipLabel><!-- Filter Rules --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Deleted --></label>
+        <name>Is_Deleted__c</name>
+    </fields>
+    <fields>
+        <label><!-- Object --></label>
+        <name>Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Operator --></label>
+        <name>Operator__c</name>
+        <picklistValues>
+            <masterLabel>Contains</masterLabel>
+            <translation><!-- Contains --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Does Not Contain</masterLabel>
+            <translation><!-- Does Not Contain --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Equals</masterLabel>
+            <translation><!-- Equals --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Greater Than</masterLabel>
+            <translation><!-- Greater Than --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Greater or Equal</masterLabel>
+            <translation><!-- Greater or Equal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In List</masterLabel>
+            <translation><!-- In List --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Is Included</masterLabel>
+            <translation><!-- Is Included --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Is Not Included</masterLabel>
+            <translation><!-- Is Not Included --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Less Than</masterLabel>
+            <translation><!-- Less Than --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Less or Equal</masterLabel>
+            <translation><!-- Less or Equal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Not Equals</masterLabel>
+            <translation><!-- Not Equals --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Not In List</masterLabel>
+            <translation><!-- Not In List --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Starts With</masterLabel>
+            <translation><!-- Starts With --></translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Filter Rule Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

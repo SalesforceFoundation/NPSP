@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Account Soft Credit --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Account Soft Credit --></value>
+    </caseValues>
+    <fields>
+        <label><!-- Account --></label>
+        <name>Account__c</name>
+        <relationshipLabel><!-- Account Soft Credits --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Amount --></label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Opportunity --></label>
+        <name>Opportunity__c</name>
+        <relationshipLabel><!-- Account Soft Credits --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Role --></label>
+        <name>Role__c</name>
+        <picklistValues>
+            <masterLabel>Influence</masterLabel>
+            <translation><!-- Influence --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Match</masterLabel>
+            <translation><!-- Match --></translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <nameFieldLabel><!-- Account Soft Credit Name --></nameFieldLabel>
+</CustomObjectTranslation>

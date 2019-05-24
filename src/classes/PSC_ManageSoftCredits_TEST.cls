@@ -45,35 +45,48 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     public static integer cPSCExisting = 2;
     public static list<Contact> listCon;
     public static Opportunity opp;
+
+    /*******************************************************************************************************
+    * @description Initialize test data and create Partial Soft Credits
+    * @return void
+    */ 
+    public static void initTestDataWithPscs() {
+        initTestData(true);
+    }
+
+    /*******************************************************************************************************
+    * @description Initialize test data without creating Partial Soft Credits
+    * @return void
+    */ 
+    public static void initTestDataWithoutPscs() {
+        initTestData(false);
+    }
         
     /*******************************************************************************************************
     * @description initialize test data for all tests
-    * @param isMGClosedWon whether the Matching Gift should be created as Closed Won or Open.
+    * @param createPSCs Create Partial Soft Credit flag
+    * @return void
     */ 
     public static void initTestData(boolean createPSCs) {
         
         // create a matching gift company
-        acc = new Account(name='some company');
-        insert acc;
+        insert acc = new Account(name='some company');
         
         // create some Contacts in Household Accounts
-        listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cContact);
-        insert listCon;
+        insert listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cContact);
         listCon = [select Id, Firstname,Lastname, AccountId from Contact];
         system.assertEquals(cContact, listCon.size());
         
         // create an Opportunity
-        opp = new Opportunity(
+        insert opp = new Opportunity(
             Name='test opp', 
             Amount=1000, 
             AccountId=acc.Id, 
             CloseDate=System.Today(),
             StageName=UTIL_UnitTestData_TEST.getClosedWonStage()
             ); 
-        insert opp;
         
         if (createPSCs) {
-	        // create Partial Soft Credits
 	        list<Partial_Soft_Credit__c> listPSC = new list<Partial_Soft_Credit__c>();
 	        for (integer i = 0; i < cPSCExisting; i++) {
 	            listPSC.add(new Partial_Soft_Credit__c(
@@ -83,8 +96,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
 	                Amount__c = 100                
 	                ));
 	        }
-	        insert listPSC;
-            
+	        insert listPSC;            
         }        
     }
     
@@ -93,7 +105,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     * verify OCRs and PSCs created
     */ 
     static testmethod void createNewPSCs() {
-        initTestData(false); // no existing PSCs
+        initTestDataWithoutPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(0, ctrl.softCredits.size());
@@ -140,7 +152,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     * verify OCRs and PSCs created
     */ 
     static testmethod void createNewPSCsByPercent() {
-        initTestData(false); // no existing PSCs
+        initTestDataWithoutPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(0, ctrl.softCredits.size());
@@ -200,7 +212,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     * verify OCRs and PSCs created
     */ 
     static testmethod void createNewPSCsToExistingPSCs() {
-        initTestData(true); // creates cPSCExisting PSCs!
+        initTestDataWithPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(cPSCExisting, ctrl.softCredits.size());
@@ -208,9 +220,9 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         ctrl.addAnotherSoftCredit();
         ctrl.addAnotherSoftCredit();
         system.assertEquals(cPSCExisting + 3, ctrl.softCredits.size());
-        ctrl.softCredits[cPSCExisting + 0].contactRole.ContactId = listCon[cPSCExisting + 0].Id;
-        ctrl.softCredits[cPSCExisting + 0].contactRole.Role = 'Soft Credit';
-        ctrl.softCredits[cPSCExisting + 0].partial.Amount__c = 100;
+        ctrl.softCredits[cPSCExisting].contactRole.ContactId = listCon[cPSCExisting].Id;
+        ctrl.softCredits[cPSCExisting].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting].partial.Amount__c = 100;
 
         ctrl.softCredits[cPSCExisting + 1].contactRole.ContactId = listCon[cPSCExisting + 1].Id;
         ctrl.softCredits[cPSCExisting + 1].contactRole.Role = 'Soft Credit';
@@ -241,7 +253,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     * @description handle loading PSC's with invalid OCR id's
     */ 
     static testmethod void loadInvalidPSCs() {
-        initTestData(true); // creates cPSCExisting PSCs!
+        initTestDataWithPscs();
 
         // set the PSC's OCR lookups to invalid values
         list<Partial_Soft_Credit__c> listPSC = [select Id, Contact__c, Opportunity__c, Amount__c, Role_Name__c, 
@@ -280,7 +292,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     * verify PSC's deleted, OCR's remain
     */ 
     static testmethod void makeExistingPSCsFullCredits() {
-        initTestData(true); // creates cPSCExisting PSCs!
+        initTestDataWithPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(cPSCExisting, ctrl.softCredits.size());        
@@ -307,7 +319,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     * verify PSC's not there, OCR's created
     */ 
     static testmethod void makeNewPSCsFullCredits() {
-        initTestData(false); // no existing PSCs
+        initTestDataWithoutPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(0, ctrl.softCredits.size());        
@@ -342,27 +354,33 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     }
     
     /*******************************************************************************************************
-    * @description delete some existing PSCs by clearing their contactId.
-    * verify PSC's deleted, OCR's deleted
+    * @description verify empty contact records are not saved.
+    * verify PSC's are not deleted and OCR's are not deleted
     */ 
-    static testmethod void deleteExistingPSCsByClearContactId() {
-        initTestData(true); // creates cPSCExisting PSCs!
+    @IsTest
+    private static void verifyEmptyContactRecordsAreNotSaved() {
+        initTestDataWithPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
-        system.assertEquals(cPSCExisting, ctrl.softCredits.size());        
-        system.assertEquals(cPSCExisting * 100 , ctrl.oppTotalSoftCredit.Amount);
-        for (integer i = 0; i < cPSCExisting; i++)
+        System.assertEquals(cPSCExisting, ctrl.softCredits.size());
+        System.assertEquals(cPSCExisting * 100 , ctrl.oppTotalSoftCredit.Amount);
+
+        for (Integer i = 0; i < cPSCExisting; i++) {
             ctrl.softCredits[i].contactRole.ContactId = null;
-        
+        }
+
+        List<OpportunityContactRole> existingOCRs = [SELECT Id, ContactId, OpportunityId, Role FROM OpportunityContactRole];
+         
         Test.startTest();
-        system.assertNotEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save());
+        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.pscManageSoftCreditsContactMissing, ApexPages.Severity.WARNING);
         Test.stopTest();
         
-        list<Partial_Soft_Credit__c> listPSC = [select Id, Contact__c, Opportunity__c, Amount__c, Role_Name__c from Partial_Soft_Credit__c];
-        system.assertEquals(0, listPSC.size());
-        
-        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role from OpportunityContactRole];
-        system.assertEquals(0, listOCR.size());        
+        List<Partial_Soft_Credit__c> listPSC = [SELECT Id, Contact__c, Opportunity__c, Amount__c, Role_Name__c FROM Partial_Soft_Credit__c];
+        System.assertEquals(cPSCExisting, listPSC.size());
+
+        List<OpportunityContactRole> listOCR = [SELECT Id, ContactId, OpportunityId, Role FROM OpportunityContactRole];
+        System.assertEquals(existingOCRs.size(), listOCR.size());
     }
 
     /*******************************************************************************************************
@@ -370,7 +388,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     * verify one PSC was deleted, one OCR was deleted
     */
     static testmethod void deleteExistingPSCs() {
-        initTestData(true); // creates cPSCExisting PSCs!
+        initTestDataWithPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(cPSCExisting, ctrl.softCredits.size());
@@ -394,14 +412,14 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     * verify PSC's and OCR's
     */ 
     static testmethod void updateExistingPSCs() {
-        initTestData(true); // creates cPSCExisting PSCs!
+        initTestDataWithPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
         system.assertEquals(cPSCExisting, ctrl.softCredits.size());        
         system.assertEquals(cPSCExisting * 100 , ctrl.oppTotalSoftCredit.Amount);
         system.assert(cPSCExisting >= 2);
         // change to a different contact
-        ctrl.softCredits[0].contactRole.ContactId = listCon[cPSCExisting + 0].Id;
+        ctrl.softCredits[0].contactRole.ContactId = listCon[cPSCExisting].Id;
         // change Amount
         ctrl.softCredits[1].partial.Amount__c = 500;
 
@@ -421,12 +439,95 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         system.assertEquals(cPSCExisting, listOCR.size());        
     }
 
+    /*********************************************************************************************************
+    @description 
+        Test save rollback when an exception occurs 
+    verify:
+        The transaction is completely rolled back and there is no partial commit
+    **********************************************************************************************************/ 
+    private static testMethod void testSaveRollsBackAllDmlsOnError() {
+        initTestDataWithPscs();
+        Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+        PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+
+        System.assertEquals(cPSCExisting, ctrl.softCredits.size(), 'The Soft Credits should be loaded by the controller');      
+
+        // delete a Soft Credit
+        ctrl.rowNumber = 0;
+        ctrl.delRow();
+
+        ctrl.addAnotherSoftCredit();
+        ctrl.softCredits[cPSCExisting - 1].contactRole.ContactId = listCon[cPSCExisting - 1].Id;
+        ctrl.softCredits[cPSCExisting - 1].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting - 1].partial.Amount__c = 100;
+
+        ctrl.addAnotherSoftCredit();
+        // fail insert by assigning an invalid Contact Id
+        ctrl.softCredits[cPSCExisting].contactRole.ContactId = Contact.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+        ctrl.softCredits[cPSCExisting].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting].partial.Amount__c = 200;
+
+        system.assertEquals(cPSCExisting + 1, ctrl.softCredits.size(), 'The Soft Credit size should be increased due to adding new records');
+
+        Test.startTest();
+        PageReference retPage = ctrl.save();
+        Test.stopTest();
+
+        System.assertEquals(null, retPage, 'The return page on the error should be null. Page messages: ' + ApexPages.getMessages());
+        UTIL_UnitTestData_TEST.assertPageHasError('INVALID_CROSS_REFERENCE_KEY');
+
+        List<Partial_Soft_Credit__c> pscs = new List<Partial_Soft_Credit__c>([SELECT Contact__c, Opportunity__c, Amount__c, Role_Name__c FROM Partial_Soft_Credit__c]);
+        System.assertEquals(cPSCExisting, pscs.size(), 'The Soft Credits should not change');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test re-saving of Soft Credits after an error is fixed 
+    verify:
+        Records are saved as expected
+    **********************************************************************************************************/ 
+    private static testMethod void testResaveSucceedsWhenErrorIsFixed() {
+        initTestDataWithPscs();
+        Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+        PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+
+        System.assertEquals(cPSCExisting, ctrl.softCredits.size(), 'The Soft Credits should be loaded by the controller');  
+        
+        ctrl.addAnotherSoftCredit();
+        ctrl.softCredits[cPSCExisting].contactRole.ContactId = listCon[cPSCExisting].Id;
+        ctrl.softCredits[cPSCExisting].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting].partial.Amount__c = 100;
+
+        ctrl.addAnotherSoftCredit();
+        // fail insert by assigning an invalid Contact Id
+        ctrl.softCredits[cPSCExisting + 1].contactRole.ContactId = Contact.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+        ctrl.softCredits[cPSCExisting + 1].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting + 1].partial.Amount__c = 200;
+
+        system.assertEquals(cPSCExisting + 2, ctrl.softCredits.size(), 'The Soft Credit size should be increased due to adding new records');    
+
+        PageReference retPage = ctrl.save();
+        System.assertEquals(null, retPage, 'The return page on the error should be null. Page messages: ' + ApexPages.getMessages());
+
+        // fix an issue
+        ctrl.softCredits[cPSCExisting + 1].contactRole.ContactId = listCon[cPSCExisting + 1].Id;
+
+        Test.startTest();
+        retPage = ctrl.save();
+        Test.stopTest();
+
+        System.assertNotEquals(null, retPage, 'The return page on success should be provided. Page messages: ' + ApexPages.getMessages());
+
+        List<Partial_Soft_Credit__c> pscs = new List<Partial_Soft_Credit__c>([SELECT Contact__c, Opportunity__c, Amount__c, Role_Name__c FROM Partial_Soft_Credit__c]);
+        System.assertEquals(cPSCExisting + 2, pscs.size(), 'The new Soft Credits should be created');
+    }
+
     /*******************************************************************************************************
     * @description test error scenarios
     * verify errors detected and reported
     */ 
     static testmethod void testErrors() {
-        initTestData(false); // no existing PSCs
+        initTestDataWithoutPscs();
         
         // create a primary donor OCR on the opp
         OpportunityContactRole ocrPrimary = new OpportunityContactRole(
@@ -472,13 +573,13 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         ctrl.refresh();
         system.assertNotEquals(null, ctrl.cancel());
     }
- 
+
     /*******************************************************************************************************
     * @description test handling of no Soft Credit Roles in NPSP Settings
     * verify errors detected and reported
     */ 
     static testmethod void testNoSoftCreditRoles() {
-        initTestData(false); // no existing PSCs
+        initTestDataWithoutPscs();
         
         // create a primary donor OCR on the opp
         OpportunityContactRole ocrPrimary = new OpportunityContactRole(
@@ -497,4 +598,25 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         
         system.assertNotEquals(0, ApexPages.getMessages().size());
     }
+
+    /*******************************************************************************************************
+    * @description Verify the page displays an error when the user does not have the access required to
+    * view the page
+    */
+    @isTest
+    private static void shouldDisplayMessageWhenUserDoesNotHavePermissions() {
+        initTestDataWithoutPscs();
+        User user = UTIL_UnitTestData_TEST.createNewUserForTests(Datetime.now().getTime() + 'managepsc@salesforce.org.test');
+
+        System.runAs(user) {
+            Test.startTest();
+            Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+            PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+            Test.stopTest();
+
+            System.assertEquals(null, ctrl.opp.Name, 'The opportunity query should not be executed.');
+            System.assertNotEquals(0, ApexPages.getMessages().size(), 'A message should be displayed on the page.');
+        }
+    }
+
 }

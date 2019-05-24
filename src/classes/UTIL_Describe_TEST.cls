@@ -84,6 +84,5 @@ public with sharing class UTIL_Describe_TEST {
         } catch (exception e) {
             system.assertEquals('Invalid field name \'sdlkfjsdlkfjsldkfjlsdkfj\'', e.getMessage());
         } 
-    }       
-
+    }  
 }

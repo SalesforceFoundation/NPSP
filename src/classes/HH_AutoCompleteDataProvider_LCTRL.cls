@@ -35,6 +35,15 @@
 * @description Lightning Component Server Controller for the Manage Household UI page's HH_AutoCompleteDateProvider LC.
 */
 public with sharing class HH_AutoCompleteDataProvider_LCTRL {
+    @TestVisible private static Boolean isNameFilterable {
+        get {
+            if (isNameFilterable == null) {
+                isNameFilterable = Schema.sObjectType.Contact.fields.Name.isFilterable();
+            }
+            return isNameFilterable;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description returns a list of matching contacts given the queryValue
@@ -45,33 +54,78 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
     @AuraEnabled
     public static List<ProviderResult> queryObjects(String queryValue, list<Contact> listCon) {
         try {
-            if (listCon == null)
+            if (listCon == null) {
                 listCon = new list<Contact>();
-            
+            }            
+
+            List<ProviderResult> providerResults = new List<ProviderResult>();
+            Set<Id> contactIds = new Set<Id>();
+            Boolean isValidSearchQuery = isValidSearchQuery(queryValue);
+
+            // Return empty result list if the Contact.Name is encrypted and the queryValue is not SOSL valid
+            if (!isNameFilterable && !isValidSearchQuery) {
+                return providerResults;
+            }
+
+            // use helper to get all contact fields to support custom household naming and greetings.
+            // note that our helper does FLS, so we don't have to do it here.
+            String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls() + ' WHERE ';
+
             // '%', '_', and '\' all are special characters in LIKE syntax.
             // We escape them here by prepending those characters with a backslash
             String preparedQueryValue = '%' + queryValue.replaceAll('([%_\\\\])', '\\\\$0') + '%';
-            
-            // use helper to get all contact fields to support custom household naming and greetings.
-            // note that our helper does FLS, so we don't have to do it here.
-            String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls();
-            strSoql += ' WHERE Name LIKE :preparedQueryValue AND Id not in :listCon LIMIT 100';
-    
-            List<SObject> results = Database.query(strSoql);
-    
-            List<ProviderResult> providerResults = new List<ProviderResult>();
-    
-            for (SObject so : results) {
+
+            // See known issue / limitation for soql with middle name enabled:
+            // https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
+            Boolean useSearch = (UTIL_Describe.isMiddleNameEnabled() && isValidSearchQuery) || !isNameFilterable;
+
+            if (useSearch) {
+                List<List<SObject>> searchResults = [FIND :queryValue IN NAME FIELDS RETURNING Contact(Id, Name) LIMIT 100];
+                for (SObject s : searchResults[0]) {
+                    contactIds.add((Id) s.get('Id'));
+                }
+                strSoql += ' Id in :contactIds ';
+
+            } else {
+                
+                strSoql += ' Name LIKE :preparedQueryValue ';
+            }
+
+            strSoql += ' LIMIT 100';
+
+            Map<Id, SObject> resultsById = new Map<Id, SObject>(Database.query(strSoql));
+            for (Contact aContact : listCon) {
+                resultsById.remove(aContact.Id);
+            }
+
+            for (SObject so : resultsById.values()) {
                 ProviderResult result = new ProviderResult();
                 result.value = so;
                 result.displayValue = (String) so.get('Name');
                 providerResults.add(result);
             }
-    
+
             return providerResults;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies if the queryValue is a valid search query for the SOSL
+    * @param queryValue The text to search for
+    * @return Boolean 
+    */
+    @TestVisible private static Boolean isValidSearchQuery(String queryValue) {
+        Integer length = String.isBlank(queryValue) ? 0 : queryValue.length();
+
+        if (length <= 1) {
+            return false;
+        } else if (length == 2) {
+            return queryValue.endsWith('*') ? false : true;
+        }
+
+        return true;
     }
 
     /*******************************************************************************************************

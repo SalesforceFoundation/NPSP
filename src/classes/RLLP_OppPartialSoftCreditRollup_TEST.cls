@@ -37,12 +37,6 @@
 @isTest
 private class RLLP_OppPartialSoftCreditRollup_TEST {
 
-    /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
     /*******************************************************************************************************
     * @description test data for Soft Credit and Partial Soft Credit tests
     */ 
@@ -105,7 +99,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @description tests the original NPSP Soft Credit rollups for OCR's (not Partial Soft Credits)
     * @return void
     static testmethod void testOLDSoftCreditRollups() {
-        if (strTestOnly != '*' && strTestOnly != 'testOLDSoftCreditRollups') return;
         createPSCData(cContactTest, cOppTest, amountTest);
         
         RLLP_OppRollup rllp = new RLLP_OppRollup();
@@ -138,8 +131,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testDuplicateOCRSoftCredits() {
-      if (strTestOnly != '*' && strTestOnly != 'testDuplicateOCRSoftCredits') return;
-      
       Contact con = new Contact(lastname='Testy');
       insert con;
       con = [select Id, lastname, AccountId from Contact];
@@ -186,7 +177,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testPartialSoftCreditRollups() {
-        if (strTestOnly != '*' && strTestOnly != 'testPartialSoftCreditRollups') return;
         createPSCData(cContactTest, cOppTest, amountTest);
 
         RLLP_OppRollup rllp = new RLLP_OppRollup();
@@ -218,8 +208,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testPartialSoftCreditRollupsAllStats() {
-        if (strTestOnly != '*' && strTestOnly != 'testPartialSoftCreditRollupsAllStats') return;
-        
         // to deal with leap years, need to make N a little larger!
         npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings(); 
         hs.npo02__Rollup_N_Day_Value__c = 366;
@@ -327,7 +315,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testMulticurrencyPartialSoftCreditRollups() {
-        if (strTestOnly != '*' && strTestOnly != 'testMulticurrencyPartialSoftCreditRollups') return;
         //only run test in multicurrency orgs
         if (!RLLP_OppRollup_UTIL.isMultiCurrency())
             return;
@@ -407,8 +394,8 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
         listCon = [select Id, Lastname, npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Total__c,
             Number_of_Soft_Credits_This_Year__c, Number_of_Soft_Credits__c from Contact];
         system.assertEquals(1, listCon.size());
-        
-        decimal convertedAmount = 2 * RLLP_OppRollup_UTIL.convertCurrency((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 5);
+
+        decimal convertedAmount = 2 * UTIL_CurrencyConversion.convertAmountUsingStandardRates((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 5);
 
         system.assertEquals(10+convertedAmount, listCon[0].npo02__Soft_Credit_This_Year__c);
         system.assertEquals(10+convertedAmount, listCon[0].npo02__Soft_Credit_Total__c);
@@ -434,5 +421,369 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
             ex = e;
         }
         system.assertNotEquals(null,ex,'An exception should be caught.');
+    }
+
+    /*********************************************************************************************************
+    * @description Given Household Setting → Always Rollup To Primary Contact = FALSE, and a Household Contact
+    * donates a gift, and his organization matches the gift, when the Soft Credit Batch runs,
+    * Soft Credit (Amount equals to Organization match) should be given to the Contact.
+    */
+    @isTest static void test_ContactApplySoftCredit_AlwaysRollupToPrimaryContactIsFalse() {
+        String role = 'Soft Credit';
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Always_Rollup_to_Primary_Contact__c = false,
+            npo02__Soft_Credit_Roles__c = role
+        ));
+        deactivateTriggers();
+
+        Account household = new Account(
+            Name = 'TEST_ACCOUNT1',
+            npe01__SYSTEMIsIndividual__c = true
+        );
+        Account organization = new Account(
+            Name = 'TEST_ACCOUNT2',
+            npe01__SYSTEMIsIndividual__c = false
+        );
+        insert new List<Account>{household, organization};
+
+        Contact contact = new Contact(
+            LastName = 'TEST_CONTACT',
+            AccountId = household.Id
+        );
+        insert contact;
+
+        // Create the Contact Household and the Organization donation
+        Opportunity householdContactDonation = new Opportunity(
+            Name = 'TEST_CONTACT_DONATION',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today(),
+            Amount = 100,
+            AccountId = household.Id,
+            Primary_Contact__c = contact.Id
+        );
+        Opportunity organizationDonation = new Opportunity(
+            Name = 'TEST_ORGANIZATION_DONATION',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today(),
+            Amount = 100,
+            AccountId = organization.Id,
+            Primary_Contact__c = contact.Id
+        );
+        insert new List<Opportunity>{householdContactDonation, organizationDonation};
+
+        // Make the Contact as Primary Contact on both donations.
+        List<OpportunityContactRole> contactOCRs = new List<OpportunityContactRole>{
+            new OpportunityContactRole(
+                OpportunityId = householdContactDonation.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = role
+            ),
+            new OpportunityContactRole(
+                OpportunityId = organizationDonation.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = role
+            )
+        };
+        insert contactOCRs;
+
+        activateTriggers();
+        
+        Test.startTest();
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        oppRoller.RollupSoftCreditsWithPartialSupport(new List<Contact>{contact});
+        Test.stopTest();
+
+        List<Contact> updatedContact = [
+            SELECT npo02__Soft_Credit_Total__c
+            FROM Contact
+            WHERE Id = :contact.Id
+        ];
+        System.assertEquals(
+          organizationDonation.Amount, 
+          updatedContact[0].npo02__Soft_Credit_Total__c, 
+          'The Soft Credit Amount should be equal to the Organization Donation, because "Always Rollup To Primary Contact" is false');
+    }
+
+    /*********************************************************************************************************
+    * @description Given Household Setting → Always Rollup To Primary Contact = FALSE, and a Household Contact
+    * donates a gift, and his organization matches the gift, and the Contact has a Partial Soft Credit applied 
+    * to the Organization gift, when the Soft Credit Batch runs, Soft Credit should be given to the Contact, 
+    * and the amount should be equal to the Partial Soft Credit amount.
+    */
+    @isTest static void test_ContactApplyPartialSoftCredit_AlwaysRollupToPrimaryContactIsFalse() {
+        String role = 'Soft Credit';
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Always_Rollup_to_Primary_Contact__c = false,
+            npo02__Soft_Credit_Roles__c = role
+        ));
+        deactivateTriggers();
+
+        Account household = new Account(
+            Name = 'TEST_ACCOUNT1',
+            npe01__SYSTEMIsIndividual__c = true
+        );
+        Account organization = new Account(
+            Name = 'TEST_ACCOUNT2',
+            npe01__SYSTEMIsIndividual__c = false
+        );
+        insert new List<Account>{household, organization};
+
+        Contact contact = new Contact(
+            LastName = 'TEST_CONTACT',
+            AccountId = household.Id
+        );
+        insert contact;
+
+        // Create the Contact Household and the Organization donation
+        Opportunity householdContactDonation = new Opportunity(
+            Name = 'TEST_CONTACT_DONATION',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today(),
+            Amount = 100,
+            AccountId = household.Id,
+            Primary_Contact__c = contact.Id
+        );
+        Opportunity organizationDonation = new Opportunity(
+            Name = 'TEST_ORGANIZATION_DONATION',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today(),
+            Amount = 100,
+            AccountId = organization.Id,
+            Primary_Contact__c = contact.Id
+        );
+        insert new List<Opportunity>{householdContactDonation, organizationDonation};
+
+        // Make the Contact as Primary Contact on both donations.
+        List<OpportunityContactRole> contactOCRs = new List<OpportunityContactRole>{
+          new OpportunityContactRole(
+              OpportunityId = householdContactDonation.Id,
+              ContactId = contact.Id,
+              IsPrimary = true,
+              Role = role
+          ),
+          new OpportunityContactRole(
+              OpportunityId = organizationDonation.Id,
+              ContactId = contact.Id,
+              IsPrimary = false,
+              Role = role
+          )
+        };
+        insert contactOCRs;
+
+        Partial_Soft_Credit__c contactPartialSoftCredit = new Partial_Soft_Credit__c(
+            Amount__c = 75,
+            Contact_Role_ID__c = contactOCRs[1].Id,
+            Contact__c = contactOCRs[1].ContactId,
+            Opportunity__c = contactOCRs[1].OpportunityId,
+            Role_Name__c = contactOCRs[1].Role
+        );
+        insert contactPartialSoftCredit;
+
+        activateTriggers();
+
+        Test.startTest();
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        oppRoller.RollupSoftCreditsWithPartialSupport(new List<Contact>{contact});
+        Test.stopTest();
+
+        List<Contact> updatedContact = [
+            SELECT npo02__Soft_Credit_Total__c
+            FROM Contact
+            WHERE Id = :contact.Id
+        ];
+        System.assertEquals(
+          contactPartialSoftCredit.Amount__c, 
+          updatedContact[0].npo02__Soft_Credit_Total__c, 
+          'The Soft Credit Amount should be equal to the the Contact Partial Soft Credit on Organization Donation, because "Always Rollup To Primary Contact" is false');
+    }
+
+    /*********************************************************************************************************
+    * @description Given Household Setting → Always Rollup To Primary Contact = TRUE, and a Household Contact
+    * donates a gift, and his organization matches the gift, when the Soft Credit Batch runs,
+    * no Soft Credit should be given to the Contact.
+    */
+    @isTest static void test_ContactApplySoftCredit_AlwaysRollupToPrimaryContactIsTrue() {
+        String role = 'Soft Credit';
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Always_Rollup_to_Primary_Contact__c = true,
+            npo02__Soft_Credit_Roles__c = role
+        ));
+        deactivateTriggers();
+
+        Account household = new Account(
+            Name = 'TEST_ACCOUNT1',
+            npe01__SYSTEMIsIndividual__c = true
+        );
+        Account organization = new Account(
+            Name = 'TEST_ACCOUNT2',
+            npe01__SYSTEMIsIndividual__c = false
+        );
+        insert new List<Account>{household, organization};
+
+        Contact contact = new Contact(
+            LastName = 'TEST_CONTACT',
+            AccountId = household.Id
+        );
+        insert contact;
+
+        Opportunity householdContactDonation = new Opportunity(
+            Name = 'TEST_CONTACT_DONATION',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today(),
+            Amount = 100,
+            AccountId = household.Id,
+            Primary_Contact__c = contact.Id
+        );
+        Opportunity organizationDonation = new Opportunity(
+            Name = 'TEST_ORGANIZATION_DONATION',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today(),
+            Amount = 100,
+            AccountId = organization.Id,
+            Primary_Contact__c = contact.Id
+        );
+        insert new List<Opportunity>{householdContactDonation, organizationDonation};
+
+        List<OpportunityContactRole> contactOCRs = new List<OpportunityContactRole>{
+            new OpportunityContactRole(
+                OpportunityId = householdContactDonation.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = role
+            ),
+            new OpportunityContactRole(
+                OpportunityId = organizationDonation.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = role
+            )
+        };
+        insert contactOCRs;
+
+        activateTriggers();
+        
+        Test.startTest();
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        oppRoller.RollupSoftCreditsWithPartialSupport(new List<Contact>{contact});
+        Test.stopTest();
+
+        List<Contact> updatedContact = [
+            SELECT npo02__Soft_Credit_Total__c
+            FROM Contact
+            WHERE Id = :contact.Id
+        ];
+        System.assertEquals(0, updatedContact[0].npo02__Soft_Credit_Total__c, 'The Soft Credit Amount should be 0, because "Always Rollup To Primary Contact" is true');
+    }
+
+    /*********************************************************************************************************
+    * @description Given Household Setting → Always Rollup To Primary Contact = TRUE, and a Household Contact
+    * donates a gift, and his organization matches the gift, and the Contact has a Partial Soft Credit applied 
+    * to the Organization gift, when the Soft Credit Batch runs, Soft Credit should be given to the Contact, 
+    * and the amount should be equal to the Partial Soft Credit amount.
+    */
+    @isTest static void test_ContactApplyPartialSoftCredit_AlwaysRollupToPrimaryContactIsTrue() {
+        String role = 'Soft Credit';
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Always_Rollup_to_Primary_Contact__c = true,
+            npo02__Soft_Credit_Roles__c = role
+        ));
+        deactivateTriggers();
+
+        Account household = new Account(
+            Name = 'TEST_ACCOUNT1',
+            npe01__SYSTEMIsIndividual__c = true
+        );
+        Account organization = new Account(
+            Name = 'TEST_ACCOUNT2',
+            npe01__SYSTEMIsIndividual__c = false
+        );
+        insert new List<Account>{household, organization};
+
+        Contact contact = new Contact(
+            LastName = 'TEST_CONTACT',
+            AccountId = household.Id
+        );
+        insert contact;
+
+        // Create the Contact Household and the Organization donation
+        Opportunity householdContactDonation = new Opportunity(
+            Name = 'TEST_CONTACT_DONATION',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today(),
+            Amount = 100,
+            AccountId = household.Id,
+            Primary_Contact__c = contact.Id
+        );
+        Opportunity organizationDonation = new Opportunity(
+            Name = 'TEST_ORGANIZATION_DONATION',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today(),
+            Amount = 100,
+            AccountId = organization.Id,
+            Primary_Contact__c = contact.Id
+        );
+        insert new List<Opportunity>{householdContactDonation, organizationDonation};
+
+        // Make the Contact as Primary Contact on both donations.
+        List<OpportunityContactRole> contactOCRs = new List<OpportunityContactRole>{
+            new OpportunityContactRole(
+                OpportunityId = householdContactDonation.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = role
+            ),
+            new OpportunityContactRole(
+                OpportunityId = organizationDonation.Id,
+                ContactId = contact.Id,
+                IsPrimary = false,
+                Role = role
+            )
+        };
+        insert contactOCRs;
+
+        Partial_Soft_Credit__c contactPartialSoftCredit = new Partial_Soft_Credit__c(
+            Amount__c = 75,
+            Contact_Role_ID__c = contactOCRs[1].Id,
+            Contact__c = contactOCRs[1].ContactId,
+            Opportunity__c = contactOCRs[1].OpportunityId,
+            Role_Name__c = contactOCRs[1].Role
+        );
+        insert contactPartialSoftCredit;
+
+        activateTriggers();
+
+        Test.startTest();
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        oppRoller.RollupSoftCreditsWithPartialSupport(new List<Contact>{contact});
+        Test.stopTest();
+
+        List<Contact> updatedContact = [
+            SELECT npo02__Soft_Credit_Total__c
+            FROM Contact
+            WHERE Id = :contact.Id
+        ];
+        System.assertEquals(contactPartialSoftCredit.Amount__c, updatedContact[0].npo02__Soft_Credit_Total__c);
+      }
+
+    /*******************************************************************************************************
+    * @description Deactivates all the Triggers.
+    * @return void.
+    ********************************************************************************************************/
+    private static void deactivateTriggers() {
+        for (Trigger_Handler__c triggerHandler : TDTM_Config_API.getCachedRecords()) {
+            triggerHandler.Active__c = false;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Activates all the Triggers.
+    * @return void.
+    ********************************************************************************************************/
+    private static void activateTriggers() {
+        for (Trigger_Handler__c triggerHandler : TDTM_Config_API.getCachedRecords()) {
+            triggerHandler.Active__c = true;
+        }
     }
 }

@@ -48,6 +48,30 @@ public with sharing virtual class STG_Panel {
     * @description the id of the panel, which we assume all derived classes will override.
     */ 
 	public virtual string idPanel() { return null; }
+
+    /*******************************************************************************************************
+    * @description Opportunity object label
+    */ 
+    static public string oppLabel {
+        get {
+            if(oppLabel == null){
+                oppLabel = Schema.sObjectType.Opportunity.getLabel();
+            }
+            return oppLabel;
+        } private set;
+    }
+
+    /*******************************************************************************************************
+    * @description Payment object label
+    */ 
+	static public string paymentLabel {
+        get {
+            if(paymentLabel == null){
+                paymentLabel = Schema.sObjectType.npe01__OppPayment__c.getLabel();
+            }
+            return paymentLabel;
+        } private set;
+    }
 	
     /*******************************************************************************************************
     * @description is the panel in Edit Mode
@@ -60,7 +84,7 @@ public with sharing virtual class STG_Panel {
 	public boolean isReadOnlyMode {
 		get {
 			return !isEditMode;
-		}
+		} private set;
 	}
     
     /*******************************************************************************************************
@@ -70,11 +94,9 @@ public with sharing virtual class STG_Panel {
         get {
             if (stgService == null) { 
             	stgService = STG_SettingsService.stgService;
-                //UTIL_Debug.debug('***** getting STG_SettingsService.stgService: ' + stgService);
             }
             return stgService;
-        }
-        private set;
+        } set;
     }
 
     /*******************************************************************************************************
@@ -244,6 +266,21 @@ public with sharing virtual class STG_Panel {
     }    
 
     /*******************************************************************************************************
+    * @description list of SelectOptions for Allocation Level setting
+    */ 
+    static public list<SelectOption> listSOAllocationLevels {
+        get {
+            if (listSOAllocationLevels == null) {
+                listSOAllocationLevels = new list<SelectOption>();
+                listSOAllocationLevels.add(new SelectOption(oppLabel, oppLabel));
+                listSOAllocationLevels.add(new SelectOption(paymentLabel, paymentLabel));
+            }
+            return listSOAllocationLevels;
+        }
+        private set;
+    }
+
+    /*******************************************************************************************************
     * @description list of SelectOptions for Opportunity Contact Roles
     */ 
     static public list<SelectOption> listSOOppContactRoles {
@@ -328,7 +365,12 @@ public with sharing virtual class STG_Panel {
             if (listSOMailingReportIds == null) {
                 listSOMailingReportIds = new list<SelectOption>();
                 listSOMailingReportIds.add(new SelectOption('', Label.stgLabelNone));
-                for (Report rpt : [select Id, Name from Report where Name like '%mail%']) {
+                for (Report rpt : [SELECT Id, Name, DeveloperName, NamespacePrefix FROM Report WHERE Name LIKE '%mail%']) {
+                    if (rpt.NamespacePrefix == 'npo02' && rpt.DeveloperName == 'NPSP_Campaign_Household_Mailing_List') {
+                        // The original report included in the Households package is no longer compatible with
+                        // the Household Mailing List button so exclude it from this picklist.
+                        continue;
+                    }
                     listSOMailingReportIds.add(new SelectOption(rpt.Id, rpt.Name));
                 }
             }
@@ -336,33 +378,7 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }
-       
-    /*******************************************************************************************************
-    * @description the Household Account Record Type Name
-    */ 
-    static public string strHHAccountRecordTypeLabel {
-    	get {
-    		if (strHHAccountRecordTypeLabel == null) {
-    			strHHAccountRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName(Account.sObjectType, stgService.stgCon.npe01__HH_Account_RecordTypeID__c);
-    		}
-    		return strHHAccountRecordTypeLabel;
-    	}
-    	private set;
-    }
-       
-    /*******************************************************************************************************
-    * @description the One-to-One Account Record Type Name
-    */ 
-    static public string strOneToOneRecordTypeLabel {
-        get {
-            if (strOneToOneRecordTypeLabel == null) {
-                strOneToOneRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName(Account.sObjectType, stgService.stgCon.npe01__One_to_One_RecordTypeID__c);
-            }
-            return strOneToOneRecordTypeLabel;
-        }
-        private set;
-    }     
-
+  
     /**
      * @description Given an sObjectType and a list of semicolon ';' separated
      * ids corresponding to record types, return a comma ',' separated string
@@ -415,5 +431,17 @@ public with sharing virtual class STG_Panel {
      */
     public static String getRecordTypeNamesFromPicklistString(Schema.sObjectType objectType, String idValues) {
         return getRecordTypeNamesFromPicklistString(objectType, idValues, Label.stgLabelNone);
+    }
+
+    /*******************************************************************************************************
+    * @description Returns whether the running user is a System Administrator.
+    * @return boolean
+    */
+    public static Boolean runningUserIsAdmin() {
+
+        Id runningUserId = UserInfo.getUserId();
+        Id runningUserProfileId = UserInfo.getProfileId();
+        return USER_UserService.isSysAdmin(new List<User>{(new User(Id = runningUserId, ProfileId = runningUserProfileId))}).get(runningUserId);
+
     }
 }

@@ -47,7 +47,7 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
-        RD_ProcessControl.hasRun = true;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
         DmlWrapper dmlWrapper = new DmlWrapper();
         
         set<id> rdIDs = new set<id>();        
@@ -55,14 +55,26 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
             integer i = 0;
             for (SObject sobj : newlist) {
                 Opportunity o = (Opportunity)sobj;
-                //does it have a recurring donation reference?
-                //has it changed closed state or amount?
+                
+                // Has the Opportunity's closed state, amount, or recurring donation changed?
                 Opportunity oppOld = (Opportunity)oldlist[i];
-                if (o.npe03__Recurring_Donation__c != null && (o.isClosed != oppOld.isClosed || o.Amount != oppOld.Amount)){
-                    rdIds.add(o.npe03__Recurring_Donation__c);
+                if (o.isClosed != oppOld.isClosed 
+                    || o.Amount != oppOld.Amount
+                    || o.npe03__Recurring_Donation__c != oppOld.npe03__Recurring_Donation__c) {
+                    
+                    // If the Recurring Donation has changed, also update the Recurring Donation 
+                    // associated with the old (previous) version of the Opportunity
+                    if (oppOld.npe03__Recurring_Donation__c != null
+                        && o.npe03__Recurring_Donation__c != oppOld.npe03__Recurring_Donation__c) {
+                        rdIds.add(oppOld.npe03__Recurring_Donation__c);
+                    }
+                
+                    if (o.npe03__Recurring_Donation__c != null) {
+                        rdIds.add(o.npe03__Recurring_Donation__c);  
+                    }
                 }
                 i++;
-            }                  
+            }                        
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
@@ -87,12 +99,18 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                                                                                           
         //recurring donations that need to be updated      
         if (rdcount > 0) {
-            if (rdcount == 1 || system.isBatch() || system.isFuture() || RD_ProcessControl.batchButton)
+            if (rdcount == 1 || system.isBatch() || system.isFuture() || RD_RecurringDonations_BATCH.isBatchButton) {
                 RD_RecurringDonations.updateRecurringDonationOnOppChange(rdIds, dmlWrapper); 
-            else
+            }
+            else {
                 RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(rdIds);                                        
+            }
         }
-        
-        return dmlWrapper;
+
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        dmlWrapper = null;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
+
+        return null;
     }
 }

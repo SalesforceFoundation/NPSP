@@ -35,8 +35,9 @@
 */
 public class UTIL_Debug {
 
-    //enable debug logs in all tests, otherwise get the setting
-    public static boolean enabled = test.isRunningTest() ? true : UTIL_CustomSettingsFacade.getErrorSettings().Enable_Debug__c;
+    // Disable debug logs in all tests, otherwise get the setting
+    // August 2018: Previously, debugging was enabled in all tests. Disabling should significantly help with performance.
+    public static Boolean enabled = Test.isRunningTest() ? false : UTIL_CustomSettingsFacade.getErrorSettings().Enable_Debug__c;
 
     /*******************************************************************************************************
     * @description Prints a debug message to the debug log, if debugging is enabled or a test is being run.
@@ -100,4 +101,16 @@ public class UTIL_Debug {
             );
         }
     }
+
+    /*******************************************************************************************************
+    * @description Force the enabled static var to false regardless of the Test.isRunningTest() or custom
+    * settings value to prevent all system.debug() logging through this class. Debug statements can be
+    * expensive in terms of cpu time especially if they're called repitively in loops, through recursive
+    * triggers, or repetitive operations. Disabling debug statements can help reduce the change of an apex
+    * cpu time out in a unit test.
+    */
+    public static void disableDebugLogging() {
+        enabled = false;
+    }
+
 }

@@ -36,7 +36,11 @@
 
 @isTest
 public class UTIL_UnitTestData_TEST { 
-    static final String PROFILE_STANDARD_USER = 'Standard User';
+    /** @description A mock Account Id .*/
+    public static final String MOCK_ACCOUNT_ID = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+    
+    public static final String PROFILE_STANDARD_USER = 'Standard User';
+    public static final String PROFILE_READONLY_USER = 'Read Only';
 
 // create data for use in unit tests
 // should not be referenced by production code
@@ -260,7 +264,7 @@ public class UTIL_UnitTestData_TEST {
         return oppsToAdd;
     }
 
-    public static List<Account> CreateMultipleTestAccounts (integer n, string strType) {
+    public static List<Account> createMultipleTestAccounts (integer n, string strType) {
         
         List<Account> AcctsToAdd = New List<Account> ();
         
@@ -412,16 +416,25 @@ public class UTIL_UnitTestData_TEST {
     /**
      * @description Create a User having specified profile assigned
      * @param profileName Profile Name
-     * @return User
+     * @return Inserted User
      */
     public static User createUser(String profileName) {
-        User u = buildUser(buildUniqueLastName(), profileName);
+        User u = createUserWithoutInsert(profileName);
 
         //create the user
         System.runAs(u) {}
 
         return u;      
     } 
+
+    /**
+     * @description Build a User having specified profile assigned, but do not insert
+     * @param profileName Profile Name
+     * @return User
+     */
+    public static User createUserWithoutInsert(String profileName) {
+        return buildUser(buildUniqueLastName(), profileName);
+    }
 
     /**
      * @description Construct a unique last name to be assigned to a User
@@ -442,7 +455,7 @@ public class UTIL_UnitTestData_TEST {
     static User buildUser(String lastName, String profileName) {
         Profile p = [SELECT Id FROM Profile WHERE name = :profileName];
         String alias = lastName.replaceAll(' ', '').leftPad(8, '0').right(8);
-        String email = lastName.left(70) + '@email.com';
+        String email = lastName.left(70) + '@email.npsp';
 
         return new User(
             LastName = lastName, 
@@ -463,15 +476,25 @@ public class UTIL_UnitTestData_TEST {
      * @return void
      */
     public static void assertPageHasError(String expectedMsg) {
+        assertPageHasMessage(expectedMsg, ApexPages.Severity.ERROR);
+    }
+
+    /**
+     * @description Assert a Visualforce page has a message displayed
+     * @param expectedMsg Expected error message
+     * @param expectedSeverity Expected severity level
+     * @return void
+     */
+    public static void assertPageHasMessage(String expectedMsg, ApexPages.Severity expectedSeverity) {
         ApexPages.Message[] msgs = ApexPages.getMessages();
 
         System.assert(
-            ApexPages.hasMessages(ApexPages.Severity.ERROR), 
+            ApexPages.hasMessages(expectedSeverity), 
             'Expected page to contain at least one error message. Messages: ' + msgs
         );
  
         for (ApexPages.Message msg : msgs) {
-            if (msg.getSummary().contains(expectedMsg) && msg.getSeverity() == ApexPages.Severity.ERROR) {
+            if (msg.getSummary().contains(expectedMsg) && msg.getSeverity() == expectedSeverity) {
                 return;       
             }
         }
@@ -515,10 +538,7 @@ public class UTIL_UnitTestData_TEST {
                 con.MailingCity = 'City' + iUnique + iCon;
             }
         }        
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        insert listConT;        
-        // clear our triggers recursion prevention since we are starting a new test
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listConT;
     }
 
     private static testMethod void testCreateNewUserWithDefaultRole() {
@@ -573,4 +593,239 @@ public class UTIL_UnitTestData_TEST {
         System.assertEquals(false, queriedUser.IsActive);
     }
 
+    /*********************************************************************************************************
+    * @description Turns on Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    public static void turnOnAutomaticHHNaming() {
+        setupAutomaticHHNaming(true);
+    }
+
+    /*********************************************************************************************************
+    * @description Turns off Automatic Household Naming
+    * @return void
+    **********************************************************************************************************/
+    public static void turnOffAutomaticHHNaming() {
+        setupAutomaticHHNaming(false);
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Settings' Automatic Household Naming field
+    * @param isOn Automatic Household Naming is turned on when parameter is true, otherwise, the settings is turned off
+    * @return void
+    **********************************************************************************************************/
+    public static void setupAutomaticHHNaming(Boolean isOn) {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Advanced_Household_Naming__c = isOn
+            )
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with invalid Name and Greetings formats
+    * @return Household_Naming_Settings__c
+    **********************************************************************************************************/
+    public static Household_Naming_Settings__c setupInvalidHHNamingSettings() {
+        return setupHHNamingSettings(
+            '{!{!FirstName}} {!LastName}} Household',
+            '{!{!Title} {!FirstName}}}{!LastName}',
+            '{!{!FirstName}}}'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings with valid Name and Greetings formats
+    * @return Household_Naming_Settings__c
+    **********************************************************************************************************/
+    public static Household_Naming_Settings__c setupHHNamingSettings() {
+        return setupHHNamingSettings(            
+            '{!{!FirstName} {!LastName}} Household',
+            '{!{!Title} {!FirstName}} {!LastName}',
+            '{!{!FirstName}}'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Configures Household Naming Settings 
+    * @param hhNameFormat Household Naming Format
+    * @param formalGreetingFormat Formal Greeting Format
+    * @param informalGreetingFormat Informal Greeting Format
+    * @return Household_Naming_Settings__c
+    **********************************************************************************************************/
+    public static Household_Naming_Settings__c setupHHNamingSettings(String hhNameFormat, String formalGreetingFormat, String informalGreetingFormat) {
+        return UTIL_CustomSettingsFacade.getHouseholdNamingSettingsForTests(
+            new Household_Naming_Settings__c(
+                Household_Name_Format__c = hhNameFormat,
+                Formal_Greeting_Format__c = formalGreetingFormat,
+                Informal_Greeting_Format__c = informalGreetingFormat,
+                Name_Connector__c = label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Contact_Overrun_Count__c = 9,
+                Implementing_Class__c = 'HH_NameSpec'
+            )
+        );
+    }
+
+    // =====================================================================================================
+    // Methods to disable blocks of TDTM trigger handlers to aid in staying within unit test governor limits
+    // =====================================================================================================
+
+    /* @description Disable all Affiliations related trigger handlers when not needed to improve performance */
+    public static void disableAffiliationsTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Account', 'AFFL_Affiliations_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe5__Affiliation__c', 'AFFL_Affiliations_TDTM', false);
+    }
+    /* @description Disable all Relationship related trigger handlers when not needed to improve performance */
+    public static void disableRelationshipTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('CampaignMember', 'REL_Relationships_Cm_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'REL_Relationships_Con_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe4__Relationship__c', 'REL_Relationships_TDTM', false);
+    }
+    /* @description Disable all OppContactRole elated trigger handlers when not needed to improve performance */
+    public static void disableOCRTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'OPP_OpportunityContactRoles_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'HH_OppContactRoles_TDTM', false);
+    }
+    /* @description Disable all non-OCR related Opportunity trigger handlers when not needed to improve performance */
+    public static void disableOppNonOCRTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'MTCH_Opportunity_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'PSC_Opportunity_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'OPP_CampaignMember_TDTM', false);
+    }
+    /* @description Disable all OppRollup related trigger handlers when not needed to improve performance */
+    public static void disableRollupTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RLLP_OppRollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Task', 'EP_TaskRollup_TDTM', false);
+    }
+    /* @description Disable all OppRollup related trigger handlers when not needed to improve performance */
+    public static void disableCustomizableRollupTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
+    }
+    /* @description Disable all Account/Contact Merge related trigger handlers when not needed to improve performance */
+    public static void disableMergeTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'CON_ContactMerge_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Account', 'ACCT_AccountMerge_TDTM', false);
+    }
+    /* @description Disable all HH Naming related trigger handlers and setting when not needed to improve performance */
+    public static void disableHHNamingTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'HH_Households_TDTM', false);
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+    }
+
+    /*********************************************************************************************************
+    * @description Extracts Ids of sObjects
+    * @param sObjects List of sObjects
+    * @return Set<Id> Set of sObjects' Ids
+    **********************************************************************************************************/
+    public static Set<Id> extractIds(List<sObject> sObjects) {
+        return (new Map<Id, sObject>(sObjects)).keySet();
+    }
+
+    /*********************************************************************************************************
+    * @description Sets the Fixed Search Results to the Ids of the sObjects
+    * @param sObjects List of sObjects
+    **********************************************************************************************************/
+    public static void setFixedSearchResults(List<sObject> sObjects) {
+        Test.setFixedSearchResults(new List<Id>(extractIds(sObjects)));
+    }
+
+    /**
+     * @description Create the default trigger handler records if they haven't already been created
+     */
+    private static Boolean haveTriggerRecordsBeenCreated = false;
+    private static void createDefaultTDTMHandlers() {
+        if (!haveTriggerRecordsBeenCreated && TDTM_Config_API.getCachedRecords().size() == 0) {
+            insert TDTM_DefaultConfig.getDefaultRecords();
+            TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
+            haveTriggerRecordsBeenCreated = true;
+        }
+    }
+
+    /**
+     * @description Returns True if the Account.Name is encrypted.
+     * It is mainly used in test methods with Individual Account model which is not supported when the Account.Name is encrypted.
+     */
+    public static Boolean isAccountNameEncrypted() {
+        return !Schema.sObjectType.Account.fields.Name.isFilterable();
+    }
+
+    /**
+    * @description Returns a currency that isn't the org default so we can test behavior for multicurrency orgs.
+    * To get the default currency code, use UTIL_CurrencyCache.getOrgDefaultCurrency()
+    */
+    @TestVisible
+    private static UTIL_CurrencyCache.CurrencyData nonDefaultCurrencyType {
+        get {
+            if (nonDefaultCurrencyType == null) {
+                // get a valid ISO code
+                List<SObject> nonDefaultCurrency = Database.query(
+                    'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = false LIMIT 1'
+                );
+                if (nonDefaultCurrency.size() > 0) {
+                    String nonDefaultCurrencyCode = (String)nonDefaultCurrency[0].get('IsoCode');
+                    nonDefaultCurrencyType = UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.get(nonDefaultCurrencyCode);
+                }
+            }
+            return nonDefaultCurrencyType;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************************
+    * @description Ensures that mockIds() does not produce the same ID twice
+    */
+    private static Integer dummyIdCounter {
+        get {
+            if (dummyIdCounter == null) {
+                dummyIdCounter = 0;
+            }
+            dummyIdCounter++;
+            return dummyIdCounter;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************************
+    * @description Generates a mock Id for an sObject
+    */
+    public static Id mockId(SObjectType sObjectType) {
+        return mockIds(sObjectType, 1)[0];
+    }
+
+    /*******************************************************************************************************************
+    * @description Generates mock Ids for an sObject
+    */
+    public static List<Id> mockIds(SObjectType sObjectType, Integer size) {
+        String keyPrefix = sObjectType.getDescribe().getKeyPrefix();
+        List<Id> ids = new List<Id>();
+
+        for (Integer i = 0; i < size; i++) {
+            Integer uniqueCounter = dummyIdCounter;
+            ids.add(keyPrefix + '0'.repeat(12 - String.valueOf(uniqueCounter).length()) + uniqueCounter);
+        }
+
+        return ids;
+    }
+
+    /*******************************************************************************************************************
+    * @description Sets mock Ids for a list of sObjects
+    */
+    public static void setMockIds(List<SObject> records) {
+        for (SObject record : records) {
+            record.Id = mockId(record.getSObjectType());
+        }
+    }
 }

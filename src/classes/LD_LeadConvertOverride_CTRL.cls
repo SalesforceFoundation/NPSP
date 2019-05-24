@@ -107,17 +107,17 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Select options for the possible Lead Statuses
     */
-    public list<selectOption> lcStatuses {
-      get {
-        if (lcStatuses == null) {
-          lcStatuses = new list<selectOption>();
-          for (LeadStatus ls : [Select Id, Masterlabel from LeadStatus where IsConverted=true] ) {
-            lcStatuses.add( new SelectOption(ls.masterlabel, ls.masterlabel));
-          }
-        }
-        return lcStatuses;
-      }
-      private set;
+    public List<SelectOption> lcStatuses {
+        get {
+            if (lcStatuses == null) {
+                lcStatuses = new List<SelectOption>();
+
+                for (LeadStatus ls : [SELECT Id, ApiName, Masterlabel FROM LeadStatus WHERE IsConverted = true]) {
+                    lcStatuses.add(new SelectOption(ls.ApiName.escapeHtml4(), ls.Masterlabel.escapeHtml4()));
+                }
+            }
+            return lcStatuses;
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -134,7 +134,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 l.company.toLowerCase() == 'individual' ||
                 l.company.toLowerCase() == l.name.toLowerCase()
             );
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -167,24 +167,40 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Display the selection list for matching Contacts
     */
-    private map<id, contact> conMap {
+    @TestVisible private Map<id, contact> conMap {
         get {
             if (conMap == null) {
-                String lLastName = l.LastName;
-                String lFirstName = l.FirstName;
-                String lEmail = l.Email;
-
-                Set<String> fieldSet = new Set<String>{'Id', 'Name', 'FirstName', 'LastName'};
-                String queryStr = 'SELECT ';
-                for (FieldSetMember cfs : conFieldSet)
-                   fieldSet.add(cfs.getFieldPath());
-                queryStr += String.join(new List<String>(fieldSet), ',');
-                queryStr += ' FROM Contact WHERE (LastName = :lLastName AND FirstName = :lFirstName) OR (Email = :lEmail AND Email != null) LIMIT 50';
-
-                // find contact matches
-                conMap = new map<id, contact>((List<Contact>)Database.query(queryStr));
+                conMap = new Map<Id, Contact>((List<Contact>) contactFinder.find());
             }
             return conMap;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description Finder used to search Contact using either SOQl or SOSL
+    */
+    @TestVisible private UTIL_Finder contactFinder {
+        get {
+            if (contactFinder == null) {
+                UTIL_Where whereClause = new UTIL_Where().withOr()
+                    .add(UTIL_Where.AndGroup()
+                        .add(new UTIL_Where.FieldExpression(Contact.LastName).equals(l.LastName))
+                        .add(new UTIL_Where.FieldExpression(Contact.FirstName).equals(l.FirstName))
+                    );
+                if (String.isNotBlank(l.Email)) {
+                    whereClause.add(UTIL_Where.AndGroup()
+                        .add(new UTIL_Where.FieldExpression(Contact.Email).equals(l.Email))
+                    );
+                }
+
+                contactFinder = new UTIL_Finder(Contact.sObjectType)
+                    .withSelectFields(new Set<Schema.SObjectField>{ Contact.Id, Contact.Name, Contact.FirstName, Contact.LastName, Contact.Email })
+                    .withSelectFields(conFieldSet)
+                    .withWhere(whereClause)
+                    .withLimit(50);
+            }
+            return contactFinder;
         }
         set;
     }
@@ -274,9 +290,25 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public map<Id, Account> mapIdAccountMatches {
         get {
             if (mapIdAccountMatches == null) {
-                mapIdAccountMatches = new map<Id, Account>([select Id, Name, BillingCity from Account where name = :l.company limit 50]);
+                mapIdAccountMatches = new Map<Id, Account>((List<Account>) accountFinder.find());
             }
             return mapIdAccountMatches;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description Finder used to search Accounts using either SOQl or SOSL (the Account.Name is encryted)
+    */
+    @TestVisible private UTIL_Finder accountFinder {
+        get {
+            if (accountFinder == null) {
+                accountFinder = new UTIL_Finder(Account.sObjectType)
+                    .withSelectFields(new Set<Schema.SObjectField>{ Account.Id, Account.Name, Account.BillingCity })
+                    .withWhere(new UTIL_Where.FieldExpression(Account.Name).equals(l.Company))
+                    .withLimit(50);
+            }
+            return accountFinder;
         }
         set;
     }
@@ -375,10 +407,9 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 lc.setAccountID(CAO_Constants.getIndividualAccountID());
 	        }
 
-	        // avoid auto-affiliation creation
-            AFFL_Affiliations_TDTM.doNotRunForContacts = true;
-            AFFL_Affiliations_TDTM.hasRunForAccounts = true;
-            
+	        // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
+            TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', false);
+
             // temporarily disable address management
             boolean hhAcctAddrDisabled = UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c;
             boolean orgAcctAddrEnabled = UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c;
@@ -423,19 +454,20 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 if (!CAO_Constants.isBucketModel()) {
                     // change its recordtype if specified in settings
                     ID rtIdAcccount = ACCT_IndividualAccounts_TDTM.rtIdForNewAccount();
-                    if (rtIdAcccount != null) 
+                    if (rtIdAcccount != null) {
                         myAccount.put('RecordTypeID', rtIdAcccount);
+                    }
                     myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
                     myAccount.npe01__One2OneContact__c = con.Id;
-                    update myAccount;
-                    }
+                    UTIL_DMLService.updateRecord(myAccount);
+                }
 
 	            // see if we need to create a household object for this contact (1:1 & bucket only)
 	            if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
 	                if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR || 
 	                   hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
 	                    HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
-	                    update con;
+	                    UTIL_DMLService.updateRecord(con);
 	                }
 	            }
 	            
@@ -447,7 +479,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 		            addr.Latest_Start_Date__c = system.today();
 		            addr.Latest_End_Date__c = null;
 		            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
-		            insert addr;         
+		            UTIL_DMLService.insertRecord(addr);
 	            }
             }
 
@@ -477,7 +509,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     OpportunityContactRole ocr = ocrList[0];
                     ocr.IsPrimary = true;
                     ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c; 
-                    update ocr;
+                    UTIL_DMLService.updateRecord(ocr);
                 }
 
 	        }
@@ -501,7 +533,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country picklists if enabled
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
-                update acc;
+                UTIL_DMLService.updateRecord(acc);
             }   
             // handle the optional Affiliation to a new or existing Account.
             ID afflAccId = null;
@@ -511,15 +543,15 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 );
                 //copy address from temporary address__c record, handles state and country picklists if enabled
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
-                insert acc;
+                UTIL_DMLService.insertRecord(acc);
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {
             	afflAccId = strAfflAccountId;
             }
             if (afflAccId != null) {
-                AFFL_Affiliations_TDTM.doNotRunForContacts = false;
-                AFFL_Affiliations_TDTM.hasRunForAccounts = false;
-                AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true); 
+                // Re-Enable the Affilations Trigger for the Contact
+                TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', true);
+                AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true);
             }
             
             //// Opportunity Cleanup 
@@ -535,13 +567,14 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             	}
                 String oppName = convertedOpp.Name;
 
-            	update convertedOpp;
+                UTIL_DMLService.updateRecord(convertedOpp);
 
                 // refresh opportunity names after update. if no opportunity names are defined, keeps original name
                 OPP_OpportunityNaming.refreshOppNames(new List<Opportunity>{convertedOpp});
                 // update Opportunity again if refreshed name is different
-                if (convertedOpp.Name != oppName)
-                    update convertedOpp;
+                if (convertedOpp.Name != oppName) {
+                    UTIL_DMLService.updateRecord(convertedOpp);
+                }
             }
             
 	        // redirect

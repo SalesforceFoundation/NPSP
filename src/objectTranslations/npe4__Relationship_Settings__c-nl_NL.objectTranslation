@@ -9,8 +9,8 @@
         <value><!-- Relationship Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- If TRUE, then synchronization of custom Relationship fields is enabled. --></help>
-        <label><!-- Enable Custom Field Sync --></label>
+        <help>Als dit WAAR is, wordt de synchronisatie van Aangepaste Velden ingeschakeld.</help>
+        <label>Inschakelen Aangepast Veld Sync</label>
         <name>Enable_Custom_Field_Sync__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

@@ -37,12 +37,6 @@
 @isTest
 public class CON_ContactMerge_TEST {
 
-    /**
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
     public static void selectMasterRecord(CON_ContactMerge_CTRL cont, Id masterId) {
         for (CON_ContactMerge_CTRL.FieldRow row : cont.fieldRows) {
             if (row.showRadio) {
@@ -52,11 +46,9 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void exerciseUIOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'exerciseUIOne2One') return;
         exerciseUI(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void exerciseUIHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'exerciseUIHHAccount') return;
         exerciseUI(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //exercise the many UI variables
@@ -152,11 +144,9 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void failNextStepWithDeletedRecordSelectedOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'failNextStepWithDeletedRecordSelectedOne2One') return;
         failNextStepWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void failNextStepWithDeletedRecordSelectedHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'failNextStepWithDeletedRecordSelectedHHAccount') return;
         failNextStepWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     // Try selecting a deleted record for merge
@@ -207,11 +197,9 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void failMergeWithDeletedRecordSelectedOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'failMergeWithDeletedRecordSelectedOne2One') return;
         failMergeWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void failMergeWithDeletedRecordSelectedHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'failMergeWithDeletedRecordSelectedHHAccount') return;
         failMergeWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
         // Try selecting a deleted record for merge
@@ -268,11 +256,9 @@ public class CON_ContactMerge_TEST {
     }
    
     static testMethod void tooFewContactsSelectedOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'tooFewContactsSelectedOne2One') return;
         tooFewContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void tooFewContactsSelectedHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'tooFewContactsSelectedHHAccount') return;
         tooFewContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void tooFewContactsSelected(string strProcessor) {
@@ -306,11 +292,9 @@ public class CON_ContactMerge_TEST {
     
     
     static testMethod void tooManyContactsSelectedOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'tooManyContactsSelectedOne2One') return;
         tooManyContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void tooManyContactsSelectedHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'tooManyContactsSelectedHHAccount') return;
         tooManyContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void tooManyContactsSelected(string strProcessor) {
@@ -359,11 +343,15 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2OneToOneOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneOne2One') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         merge2OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OneToOneHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneHHAccount') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         merge2OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two contacts that are both in the one-to-one account model
@@ -418,11 +406,15 @@ public class CON_ContactMerge_TEST {
 
 
     static testMethod void merge2OneToOneOppsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneOppsOne2One') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         merge2OneToOneOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OneToOneOppsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneOppsHHAccount') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         merge2OneToOneOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two contacts that are both in the one-to-one account model
@@ -494,11 +486,9 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2OrganizationsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2OrganizationsOne2One') return;
         merge2Organizations(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OrganizationsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2OrganizationsHHAccount') return;
         merge2Organizations(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge a one-to-one contact with one in a normal organzation
@@ -563,11 +553,15 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2PrivateContactsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2PrivateContactsOne2One') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         merge2PrivateContacts(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2PrivateContactsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2PrivateContactsHHAccount') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         merge2PrivateContacts(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two private contacts
@@ -620,11 +614,15 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2IndividualsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2IndividualsOne2One') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         merge2Individuals(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2IndividualsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2IndividualsHHAccount') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         merge2Individuals(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two contacts in the Individual Account
@@ -780,11 +778,15 @@ public class CON_ContactMerge_TEST {
 
 
     static testMethod void merge1Org1OneToOneOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'merge1Org1OneToOneOne2One') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         merge1Org1OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge1Org1OneToOneHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'merge1Org1OneToOneHHAccount') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         merge1Org1OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge one contacts in the Individual Account, one in one-to-one model

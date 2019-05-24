@@ -35,23 +35,26 @@
 * @description Batch class for opportunity soft credit rollups. 
 */
 public class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
-            
+
+    /** @description Instantiates RLLP_OppRollup_UTIL */
+    RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
         try {
-            Database.executeBatch(new RLLP_OppSoftCreditRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);  
+            Database.executeBatch(new RLLP_OppSoftCreditRollup_BATCH(), CRLP_RollupBatch_SVC.getBatchSize(
+                    CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }
     }
     
     /*******************************************************************************************************
-    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for household rollups.
+    * @description Batch start method and builds query for household rollups.
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
         return Database.getQueryLocator(oppRollupUtil.buildContactQuery());      
     }
     

@@ -32,26 +32,31 @@
         <booleanFilter>1 AND 2 AND 3 AND (4 or 5)</booleanFilter>
         <criteriaItems>
             <column>Opportunity.npe01__Number_of_Payments__c</column>
+            <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>AMOUNT</column>
+            <isUnlocked>false</isUnlocked>
             <operator>greaterThan</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</column>
+            <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>WON</column>
+            <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
             <value>1</value>
         </criteriaItems>
         <criteriaItems>
             <column>CLOSED</column>
+            <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
             <value>0</value>
         </criteriaItems>

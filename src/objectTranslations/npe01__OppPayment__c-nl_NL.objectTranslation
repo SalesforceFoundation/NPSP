@@ -9,25 +9,25 @@
         <value><!-- Payment --></value>
     </caseValues>
     <fields>
-        <help>Datum van Erkenning</help>
-        <label>Betaling Erkenning Datum</label>
+        <help>Datum van Ontvangstbevestiging</help>
+        <label>Betaling Ontvangstbevestiging Datum</label>
         <name>Payment_Acknowledged_Date__c</name>
     </fields>
     <fields>
-        <help>Status van Erkenning van deze betaling.</help>
-        <label>Betaling Erkenning Status</label>
+        <help>Status van Ontvangstbevestiging van deze betaling.</help>
+        <label>Betaling Ontvangstbevestiging Status</label>
         <name>Payment_Acknowledgment_Status__c</name>
         <picklistValues>
             <masterLabel>Acknowledged</masterLabel>
-            <translation>Erkend</translation>
+            <translation>Ontvangst Bevestigd</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation>Niet Erkend</translation>
+            <translation>Ontvangst Niet Bevestigen</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>Erkend Te Worden</translation>
+            <translation>Ontvangst Nog Te Bevestigen</translation>
         </picklistValues>
     </fields>
     <gender><!-- Neuter --></gender>

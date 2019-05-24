@@ -45,5 +45,10 @@
         <label>Rolle des zugewiesenen Spenders</label>
         <name>Matched_Donor_Role__c</name>
     </fields>
+    <fields>
+        <help><!-- Check this box to use Dated Conversion Rates when Advanced Currency Management is enabled in this Organization. If unchecked and ACM is enabled, all NPSP roll-ups will use the default exchange rate for by currency. --></help>
+        <label><!-- Use Dated Conversion Rates if available --></label>
+        <name>Use_Dated_Conversion_Rates__c</name>
+    </fields>
     <gender><!-- Neuter --></gender>
 </CustomObjectTranslation>

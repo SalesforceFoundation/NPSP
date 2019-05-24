@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Address --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הAddress --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Address --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הAddress --></value>
+    </caseValues>
+    <fields>
+        <help>מכילה את התגובה הגולמית או הודעת שגיאה.</help>
+        <label>תגובת API</label>
+        <name>API_Response__c</name>
+    </fields>
+    <fields>
+        <label>סוג כתובת</label>
+        <name>Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>בית</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>אחר</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vacation Residence</masterLabel>
+            <translation>מגורים בחופשה</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>עבודה</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>בהתאם לארץ והאזור, יכול להיות עיר, ישוב, רשות מקומית או אזור אחר המשויך לכתובת זו.</help>
+        <label>אזור מנהלי</label>
+        <name>Administrative_Area__c</name>
+    </fields>
+    <fields>
+        <help>מציין אם נמצאה יותר מכתובת חוקית אחת בעת ניסיון לאמת אותה באמצעות שירות חיצוני.</help>
+        <label>רב-משמעית</label>
+        <name>Ambiguous__c</name>
+    </fields>
+    <fields>
+        <help>מציין את מחוז הקונגרס (בארה&quot;ב) שאליו שייכת הכתובת.</help>
+        <label>מחוז קונגרס</label>
+        <name>Congressional_District__c</name>
+    </fields>
+    <fields>
+        <help>שם הארץ שבה הכתובת ממוקמת.</help>
+        <label>שם ארץ</label>
+        <name>County_Name__c</name>
+    </fields>
+    <fields>
+        <help>האם זו כתובת ברירת המחדל שבה יש להשתמש עבור משק הבית ואנשי הקשר שלו?</help>
+        <label>כתובת ברירת מחדל</label>
+        <name>Default_Address__c</name>
+    </fields>
+    <fields>
+        <label>כתובת למשלוח דואר</label>
+        <name>Formula_MailingAddress__c</name>
+    </fields>
+    <fields>
+        <label>רחוב למשלוח דואר</label>
+        <name>Formula_MailingStreetAddress__c</name>
+    </fields>
+    <fields>
+        <help>מיקום המבוטא כקו אורך ורוחב.</help>
+        <label>מיקום גיאוגרפי</label>
+        <name>Geolocation__c</name>
+    </fields>
+    <fields>
+        <help>חשבון משק הבית שכתובת זו מייצגת.</help>
+        <label>חשבון</label>
+        <name>Household_Account__c</name>
+        <relationshipLabel>כתובות</relationshipLabel>
+    </fields>
+    <fields>
+        <help>תאריך הסיום האחרון שבו כתובת זו שימשה עבור משק בית זה.</help>
+        <label>תאריך סיום אחרון</label>
+        <name>Latest_End_Date__c</name>
+    </fields>
+    <fields>
+        <help>תאריך ההתחלה האחרון שבו כתובת זו שימשה עבור משק בית זה.</help>
+        <label>תאריך התחלה אחרון</label>
+        <name>Latest_Start_Date__c</name>
+    </fields>
+    <fields>
+        <label>עיר למשלוח דואר</label>
+        <name>MailingCity__c</name>
+    </fields>
+    <fields>
+        <label>ארץ למשלוח דואר</label>
+        <name>MailingCountry__c</name>
+    </fields>
+    <fields>
+        <label>מיקוד למשלוח דואר</label>
+        <name>MailingPostalCode__c</name>
+    </fields>
+    <fields>
+        <label>מדינה/מחוז למשלוח דואר</label>
+        <name>MailingState__c</name>
+    </fields>
+    <fields>
+        <label>רחוב למשלוח דואר 2</label>
+        <name>MailingStreet2__c</name>
+    </fields>
+    <fields>
+        <label>רחוב למשלוח דואר</label>
+        <name>MailingStreet__c</name>
+    </fields>
+    <fields>
+        <help>שמירת הכתובת כפי שהוזנה לפני האימות באמצעות שירות מרוחק, למקרה של אובדן מידע בתהליך האימות.</help>
+        <label>כתובת לפני האימות</label>
+        <name>Pre_Verification_Address__c</name>
+    </fields>
+    <fields>
+        <help>היום בחודש שבו כתובת זו מפסיקה להחליף את כתובת ברירת המחדל.</help>
+        <label>יום סיום עונה</label>
+        <name>Seasonal_End_Day__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation><!-- 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation><!-- 10 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation><!-- 11 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation><!-- 12 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>13</masterLabel>
+            <translation><!-- 13 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>14</masterLabel>
+            <translation><!-- 14 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>15</masterLabel>
+            <translation><!-- 15 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>16</masterLabel>
+            <translation><!-- 16 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>17</masterLabel>
+            <translation><!-- 17 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>18</masterLabel>
+            <translation><!-- 18 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>19</masterLabel>
+            <translation><!-- 19 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation><!-- 2 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20</masterLabel>
+            <translation><!-- 20 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>21</masterLabel>
+            <translation><!-- 21 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>22</masterLabel>
+            <translation><!-- 22 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>23</masterLabel>
+            <translation><!-- 23 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>24</masterLabel>
+            <translation><!-- 24 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>25</masterLabel>
+            <translation><!-- 25 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>26</masterLabel>
+            <translation><!-- 26 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>27</masterLabel>
+            <translation><!-- 27 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>28</masterLabel>
+            <translation><!-- 28 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation><!-- 29 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation><!-- 3 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation><!-- 30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>31</masterLabel>
+            <translation><!-- 31 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation><!-- 4 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation><!-- 5 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation><!-- 6 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation><!-- 7 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation><!-- 8 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation><!-- 9 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>החודש בשנה שבו כתובת זו מפסיקה להחליף את כתובת ברירת המחדל.</help>
+        <label>חודש סיום עונה</label>
+        <name>Seasonal_End_Month__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation><!-- 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation><!-- 10 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation><!-- 11 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation><!-- 12 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation><!-- 2 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation><!-- 3 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation><!-- 4 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation><!-- 5 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation><!-- 6 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation><!-- 7 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation><!-- 8 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation><!-- 9 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>היום בחודש שבו כתובת זו מחליפה את כתובת ברירת המחדל.</help>
+        <label>יום התחלת עונה</label>
+        <name>Seasonal_Start_Day__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation><!-- 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation><!-- 10 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation><!-- 11 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation><!-- 12 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>13</masterLabel>
+            <translation><!-- 13 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>14</masterLabel>
+            <translation><!-- 14 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>15</masterLabel>
+            <translation><!-- 15 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>16</masterLabel>
+            <translation><!-- 16 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>17</masterLabel>
+            <translation><!-- 17 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>18</masterLabel>
+            <translation><!-- 18 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>19</masterLabel>
+            <translation><!-- 19 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation><!-- 2 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20</masterLabel>
+            <translation><!-- 20 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>21</masterLabel>
+            <translation><!-- 21 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>22</masterLabel>
+            <translation><!-- 22 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>23</masterLabel>
+            <translation><!-- 23 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>24</masterLabel>
+            <translation><!-- 24 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>25</masterLabel>
+            <translation><!-- 25 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>26</masterLabel>
+            <translation><!-- 26 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>27</masterLabel>
+            <translation><!-- 27 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>28</masterLabel>
+            <translation><!-- 28 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation><!-- 29 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation><!-- 3 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation><!-- 30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>31</masterLabel>
+            <translation><!-- 31 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation><!-- 4 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation><!-- 5 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation><!-- 6 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation><!-- 7 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation><!-- 8 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation><!-- 9 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>החודש בשנה שבו כתובת זו מחליפה את כתובת ברירת המחדל.</help>
+        <label>חודש התחלת עונה</label>
+        <name>Seasonal_Start_Month__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation><!-- 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation><!-- 10 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation><!-- 11 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation><!-- 12 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation><!-- 2 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation><!-- 3 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation><!-- 4 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation><!-- 5 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation><!-- 6 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation><!-- 7 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation><!-- 8 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation><!-- 9 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>מחוז המדינה התחתון (מחוז בחירה בארה&quot;ב, כגון מחוז מועצת המדינה) שאליו שייכת כתובת זו.</help>
+        <label>מחוז מדינה תחתון</label>
+        <name>State_Lower_District__c</name>
+    </fields>
+    <fields>
+        <help>מחוז המדינה העליון (מחוז בחירה בארה&quot;ב, כגון מחוז הסנאט של מדינה) שאליו שייכת כתובת זו.</help>
+        <label>מחוז מדינה עליון</label>
+        <name>State_Upper_District__c</name>
+    </fields>
+    <fields>
+        <help>אם כתובת זו מחייבת אימות, לחץ על &apos;אמת כתובת&apos; בראש דף זה. עיין במסמכי העזרה ב-Power of Us Hub לקבלת מידע נוסף.</help>
+        <label>מצב אימות</label>
+        <name>Verification_Status__c</name>
+    </fields>
+    <fields>
+        <help>מציין אם הכתובת אומתה על-ידי שירות חיצוני לאימות כתובות.</help>
+        <label>מאומת</label>
+        <name>Verified__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Address Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>פרטים עונתיים</label>
+            <section>Seasonal Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Address ID --></nameFieldLabel>
+    <quickActions>
+        <label>עדכן כתובת</label>
+        <name>Update_Address</name>
+    </quickActions>
+    <webLinks>
+        <label>אימות כתובת</label>
+        <name>Verify_Address</name>
+    </webLinks>
+</CustomObjectTranslation>

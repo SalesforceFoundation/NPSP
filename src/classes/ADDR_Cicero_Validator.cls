@@ -173,7 +173,6 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                 }
                 addr.API_Response__c = responseBody;
                 
-                boolean foundData = false;
                 if (cresp != null && cresp.response != null && cresp.response.results != null && cresp.response.results.candidates != null) {
                     list<Candidates> listCandidates = cresp.response.results.candidates;  
     
@@ -190,22 +189,23 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                             if (district.district_type == 'NATIONAL_LOWER') {
                                 addr.Congressional_District__c = district.district_id;
                                 addr.MailingCountry__c = district.country;
-                                foundData = true;
-                            }
-
-                            if (district.district_type == 'STATE_UPPER')
+                            } else if (district.district_type == 'STATE_UPPER') {
                                 addr.State_Upper_District__c = district.district_id;
-
-                            if (district.district_type == 'STATE_LOWER')
+                            } else if (district.district_type == 'STATE_LOWER') {
                                 addr.State_Lower_District__c = district.district_id;
+                            } else if (district.district_type == 'LOCAL' && district.subtype != 'COUNTY') {
+                                addr.Administrative_Area__c = district.district_id;
+                            }
                         }
-                    
-                        addr.MailingStreet__c = candidate.match_addr.split(',')[0].trim();
-                        addr.MailingCity__c = candidate.match_city;
-                        addr.MailingState__c = candidate.match_region;
-                        addr.MailingPostalCode__c = candidate.match_postal;
-                        if (!String.isBlank(lastFourPostalDigits)) {
-                            addr.MailingPostalCode__c += '-' + lastFourPostalDigits;
+
+                        if(!settings.Prevent_Address_Overwrite__c){
+                            addr.MailingStreet__c = candidate.match_addr.split(',')[0].trim();
+                            addr.MailingCity__c = candidate.match_city;
+                            addr.MailingState__c = candidate.match_region;
+                            addr.MailingPostalCode__c = candidate.match_postal;
+                            if (!String.isBlank(lastFourPostalDigits)) {
+                                addr.MailingPostalCode__c += '-' + lastFourPostalDigits;
+                            }
                         }
                         addr.County_Name__c  = candidate.match_subregion;
 
@@ -216,7 +216,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                         addr.Geolocation__Longitude__s = decimal.valueOf(candidate.x);
                     }
                 }   
-                addr.Verified__c = foundData;
+                addr.Verified__c = true;
                 addr.Verification_Status__c = 'Response Received';
                 return addr;
             } else {

@@ -36,6 +36,8 @@
  
 @isTest 
 public with sharing class MTCH_FindGifts_TEST {
+
+    private static final String RECEIVED_STATUS = 'Received';
     
     /*******************************************************************************************************
     * @description test data for all tests
@@ -47,28 +49,37 @@ public with sharing class MTCH_FindGifts_TEST {
     public static Opportunity oppMG;
         
     /*******************************************************************************************************
+    * @description Initialize test data, create Matching Gift as Closed Won and set gift percent to 100
+    * @return void
+    */ 
+    public static void initTestData() {
+        initTestData(true, 100);
+    }
+
+    /*******************************************************************************************************
     * @description initialize test data for all tests
-    * @param isMGClosedWon whether the Matching Gift should be created as Closed Won or Open.
+    * @param isMGClosedWon whether the Matching Gift should be created as Closed Won or Open
+    * @param matchingGiftPercent Matching Gift percent
+    * @return void
     */ 
     public static void initTestData(boolean isMGClosedWon, double matchingGiftPercent) {
+        Date today = System.today();
         
         // create a matching gift company
-        accMG = new Account(name='matching gift company', Matching_Gift_Percent__c = matchingGiftPercent);
-        insert accMG;
+        insert accMG = new Account(name='matching gift company', Matching_Gift_Percent__c = matchingGiftPercent);
         
         // create some Contacts in Household Accounts
-        listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cItem);
-        insert listCon;
+        insert listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cItem);
         listCon = [select Id, Firstname,Lastname, AccountId from Contact];
         system.assertEquals(cItem, listCon.size());
         
         // create an Opportunity for each Contact
-        listOpp = UTIL_UnitTestData_TEST.OppsForContactWithAccountList (listCon, null,             
-            UTIL_UnitTestData_TEST.getClosedWonStage(), system.Today(), 100, null, null); 
-        for (integer i = 0; i < cItem; i++) {
-            // only make half of them matching gift potentials
-            if (i >= cItem/2)
-                break;
+        listOpp = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(
+            listCon, null, UTIL_UnitTestData_TEST.getClosedWonStage(), today, 100, null, null
+        ); 
+
+        // only make half of them matching gift potentials
+        for (integer i = 0; i < cItem/2; i++) {
             Opportunity opp = listOpp[i];
             opp.Matching_Gift_Account__c = accMG.Id;
             opp.Matching_Gift_Status__c = 'Potential';
@@ -76,11 +87,11 @@ public with sharing class MTCH_FindGifts_TEST {
         insert listOpp;
         
         // create the Matching Gift Opp
-        String stage = UTIL_UnitTestData_TEST.getOpenStage();
-        if (isMGClosedWon)
-            stage = UTIL_UnitTestData_TEST.getClosedWonStage();
-        oppMG = new Opportunity(Name='Matching Gift Opp', AccountId=accMG.Id, Amount=1000, StageName=stage, CloseDate=system.Today());  
-        insert oppMG;   
+        String stage = isMGClosedWon
+            ? UTIL_UnitTestData_TEST.getClosedWonStage()
+            : UTIL_UnitTestData_TEST.getOpenStage();
+
+        insert oppMG = new Opportunity(Name='Matching Gift Opp', AccountId=accMG.Id, Amount=1000, StageName=stage, CloseDate=today);  
     }
 
     /*******************************************************************************************************
@@ -91,20 +102,16 @@ public with sharing class MTCH_FindGifts_TEST {
         list<Partial_Soft_Credit__c> listPSC = new list<Partial_Soft_Credit__c>();
         
         listOpp[0].Matching_Gift__c = oppMG.Id;
-        listOpp[0].Matching_Gift_Status__c = 'Received';
+        listOpp[0].Matching_Gift_Status__c = RECEIVED_STATUS;
         listOpp[2].Matching_Gift__c = oppMG.Id;
-        listOpp[2].Matching_Gift_Status__c = 'Received';
+        listOpp[2].Matching_Gift_Status__c = RECEIVED_STATUS;
         update listOpp;
         
         string role = UTIL_CustomSettingsFacade.getHouseholdsSettings().Matched_Donor_Role__c;
-        /* now that PSC trigger handlers creates OCRs if needed, no need to create them here.
-        listOCR.add(new OpportunityContactRole(OpportunityId=oppMG.Id, ContactId=listCon[0].Id, Role=role));
-        listOCR.add(new OpportunityContactRole(OpportunityId=oppMG.Id, ContactId=listCon[2].Id, Role=role));
-        insert listOCR;
-        */
+        // The PSC trigger handler creates OCRs if needed, no need to create them here.
 
-        listPSC.add(new Partial_Soft_Credit__c(Opportunity__c=oppMG.Id, Contact__c=listCon[0].Id, /* Contact_Role_ID__c=listOCR[0].Id, */ Role_Name__c=role, Amount__c=100));
-        listPSC.add(new Partial_Soft_Credit__c(Opportunity__c=oppMG.Id, Contact__c=listCon[2].Id, /* Contact_Role_ID__c=listOCR[1].Id, */ Role_Name__c=role, Amount__c=100));
+        listPSC.add(new Partial_Soft_Credit__c(Opportunity__c=oppMG.Id, Contact__c=listCon[0].Id, Role_Name__c=role, Amount__c=100));
+        listPSC.add(new Partial_Soft_Credit__c(Opportunity__c=oppMG.Id, Contact__c=listCon[2].Id, Role_Name__c=role, Amount__c=100));
         insert listPSC;
     }
     
@@ -113,25 +120,27 @@ public with sharing class MTCH_FindGifts_TEST {
     * verify OCR and PSC created
     */ 
     static testmethod void testCreateMatches() {
-        initTestData(true, 100);
+        initTestData();
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
+
         system.assertEquals(cItem/2, ctrl.potentialGifts.size());
         system.assertEquals(cItem/2, ctrl.selection.size());
         system.assertEquals(false, ctrl.selection.get(listOpp[0].Id));
         system.assertEquals(false, ctrl.selection.get(listOpp[2].Id));
         system.assertEquals(0, ctrl.oppTotalSelected.Amount);
+
         ctrl.selection.put(listOpp[0].Id, true);    
         ctrl.selection.put(listOpp[2].Id, true);
+
         system.assertEquals(200, ctrl.oppTotalSelected.Amount);
         system.assertEquals(0, [select count() from Partial_Soft_Credit__c]);
-        test.startTest();
+
+        Test.startTest();
         system.assertNotEquals(null, ctrl.saveAndClose());
-        test.stopTest();
-        system.assertEquals(2, [select count() from Partial_Soft_Credit__c]);
-        system.assertEquals(2, [select count() from OpportunityContactRole where OpportunityId = :oppMG.Id]);
-        system.assertEquals(2, [select count() from Opportunity where Matching_Gift_Status__c = 'Received']);
-        system.assertEquals(2, [select count() from Opportunity where Matching_Gift__c = :oppMG.Id]);
+        Test.stopTest();
+
+        assertMatchingGiftsCount(2);
     }
 
     /*******************************************************************************************************
@@ -142,22 +151,24 @@ public with sharing class MTCH_FindGifts_TEST {
         initTestData(true, 50);
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
+
         system.assertEquals(cItem/2, ctrl.potentialGifts.size());
         system.assertEquals(cItem/2, ctrl.selection.size());
         system.assertEquals(false, ctrl.selection.get(listOpp[0].Id));
         system.assertEquals(false, ctrl.selection.get(listOpp[2].Id));
         system.assertEquals(0, ctrl.oppTotalSelected.Amount);
+
         ctrl.selection.put(listOpp[0].Id, true);    
         ctrl.selection.put(listOpp[2].Id, true);
+
         system.assertEquals(100, ctrl.oppTotalSelected.Amount);
         system.assertEquals(0, [select count() from Partial_Soft_Credit__c]);
-        test.startTest();
+
+        Test.startTest();
         system.assertNotEquals(null, ctrl.saveAndClose());
-        test.stopTest();
-        system.assertEquals(2, [select count() from Partial_Soft_Credit__c]);
-        system.assertEquals(2, [select count() from OpportunityContactRole where OpportunityId = :oppMG.Id]);
-        system.assertEquals(2, [select count() from Opportunity where Matching_Gift_Status__c = 'Received']);
-        system.assertEquals(2, [select count() from Opportunity where Matching_Gift__c = :oppMG.Id]);
+        Test.stopTest();
+
+        assertMatchingGiftsCount(2);
     }
 
     /*******************************************************************************************************
@@ -165,26 +176,28 @@ public with sharing class MTCH_FindGifts_TEST {
     * verify OCR and PSC deleted
     */ 
     static testmethod void testUnmatchMatches() {
-        initTestData(true, 100);
+        initTestData();
         createMatchesWithTestData();
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
+
         system.assertEquals(cItem/2, ctrl.potentialGifts.size());
         system.assertEquals(cItem/2, ctrl.selection.size());
         system.assertEquals(true, ctrl.selection.get(listOpp[0].Id));
         system.assertEquals(true, ctrl.selection.get(listOpp[2].Id));
         system.assertEquals(200, ctrl.oppTotalSelected.Amount);
+
         ctrl.selection.put(listOpp[0].Id, false);    
         ctrl.selection.put(listOpp[2].Id, false);
+
         system.assertEquals(0, ctrl.oppTotalSelected.Amount);
         system.assertEquals(2, [select count() from Partial_Soft_Credit__c]);
-        test.startTest();
+
+        Test.startTest();
         system.assertNotEquals(null, ctrl.saveAndClose());
-        test.stopTest();
-        system.assertEquals(0, [select count() from Partial_Soft_Credit__c]);
-        system.assertEquals(0, [select count() from OpportunityContactRole where OpportunityId = :oppMG.Id]);
-        system.assertEquals(0, [select count() from Opportunity where Matching_Gift_Status__c = 'Received']);
-        system.assertEquals(0, [select count() from Opportunity where Matching_Gift__c = :oppMG.Id]);
+        Test.stopTest();
+
+        assertMatchingGiftsCount(0);
     }
 
     /*******************************************************************************************************
@@ -192,9 +205,10 @@ public with sharing class MTCH_FindGifts_TEST {
     * verify OCR and PSC created
     */ 
     static testmethod void testCreateSearchedMatches() {
-        initTestData(true, 100);
+        initTestData();
         Test.setCurrentPage(Page.MTCH_FindGifts);
         MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
+
         system.assertEquals(cItem/2, ctrl.potentialGifts.size());
         system.assertEquals(cItem/2, ctrl.selection.size());
 
@@ -209,19 +223,69 @@ public with sharing class MTCH_FindGifts_TEST {
         system.assertEquals(false, ctrl.selection.get(listOpp[5].Id));
         system.assertEquals(false, ctrl.selection.get(listOpp[6].Id));
         system.assertEquals(0, ctrl.oppTotalSelected.Amount);
+        
         ctrl.selection.put(listOpp[5].Id, true);    
         ctrl.selection.put(listOpp[6].Id, true);
+
         system.assertEquals(200, ctrl.oppTotalSelected.Amount);
         system.assertEquals(0, [select count() from Partial_Soft_Credit__c]);
-        test.startTest();
+
+        Test.startTest();
         system.assertNotEquals(null, ctrl.saveAndClose());
-        test.stopTest();
-        system.assertEquals(2, [select count() from Partial_Soft_Credit__c]);
-        system.assertEquals(2, [select count() from OpportunityContactRole where OpportunityId = :oppMG.Id]);
-        system.assertEquals(2, [select count() from Opportunity where Matching_Gift_Status__c = 'Received']);
-        system.assertEquals(2, [select count() from Opportunity where Matching_Gift__c = :oppMG.Id]);
+        Test.stopTest();
+
+        assertMatchingGiftsCount(2);
         
         // does nothing, but hey, let's get that code coverage up!
         system.assertEquals(null, ctrl.refresh());
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test save rollback when an exception occurs 
+    verify:
+        The transaction is completely rolled back and there is no partial commit
+    **********************************************************************************************************/ 
+    private static testMethod void testSaveAndCloseRollsBackAllDmlsOnError() {
+        initTestData();
+        createMatchesWithTestData();
+        Test.setCurrentPage(Page.MTCH_FindGifts);
+        MTCH_FindGifts_CTRL ctrl = new MTCH_FindGifts_CTRL(new ApexPages.StandardController(oppMG));
+
+        // deselect one match
+        ctrl.selection.put(listOpp[0].Id, false); 
+
+        // select new matches, listOpp[2] is already selected       
+        ctrl.selection.put(listOpp[1].Id, true);  
+        ctrl.selection.put(listOpp[3].Id, true); 
+
+        // fail Opportunity Contact Role insert for a newly selected match
+        Map<Id, Opportunity> potentialGiftsById = new Map<Id, Opportunity>(ctrl.potentialGifts);
+        Opportunity matchedOpp = potentialGiftsById.get(listOpp[1].Id);
+        System.assert(!matchedOpp.OpportunityContactRoles.isEmpty(), 'Matched Opportunity should have a Primary Contact');
+        matchedOpp.OpportunityContactRoles[0].ContactId = Contact.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA'; 
+
+        Test.startTest();
+        PageReference retPage = ctrl.saveAndClose();
+        Test.stopTest();  
+
+        System.assertEquals(null, retPage, 'The return page should be null on error.');
+
+        assertMatchingGiftsCount(2);
+    }
+
+    // Helpers
+    ////////////
+
+    /**
+     * @description Asserts Matching Gifts' related data
+     * @param expectedCount An expected count of records for each data query
+     * @return void
+     */
+    private static void assertMatchingGiftsCount(Integer expectedCount) {
+        system.assertEquals(expectedCount, [SELECT count() FROM Partial_Soft_Credit__c]);
+        system.assertEquals(expectedCount, [SELECT count() FROM OpportunityContactRole where OpportunityId = :oppMG.Id]);
+        system.assertEquals(expectedCount, [SELECT count() FROM Opportunity where Matching_Gift_Status__c = :RECEIVED_STATUS]);
+        system.assertEquals(expectedCount, [SELECT count() FROM Opportunity where Matching_Gift__c = :oppMG.Id]);
     }
 }

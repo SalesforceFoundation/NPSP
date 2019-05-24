@@ -9,54 +9,54 @@
         <value><!-- GAU Allocation --></value>
     </caseValues>
     <fields>
-        <help>Bedrag van de opportunity wat toegewezen moet worden aan deze algemene accounting unit. Laat leeg voor procent gebaseerde allocaties.</help>
+        <help>Bedrag van de Opportunity wat toegewezen moet worden aan deze Bestemming. Laat leeg voor procent gebaseerde Toewijzingen.</help>
         <label>Bedrag</label>
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help>Optioneel toeschrijven van allocaties aan een campagne. Alle nieuwe opportunities met deze campagne als primaire campagne bron zal automatisch toegewezen worden op dezelfde manier.</help>
+        <help>Optioneel toeschrijven van Toewijzingen aan een Campagne. Alle nieuwe Opportunities met deze Campagne als Primaire Campagne Bron zal automatisch toegewezen worden op dezelfde manier.</help>
         <label>Campagne</label>
         <name>Campaign__c</name>
-        <relationshipLabel>GAU Allocaties</relationshipLabel>
+        <relationshipLabel>Bestemming Toewijzingen</relationshipLabel>
     </fields>
     <fields>
-        <help>De standaard accounting unit voor deze allocatie. Alleen standaard accounting units die gemarkeerd zijn als actief zijn beschikbaar voor nieuwe allocaties.</help>
-        <label>Standaard Accounting Unit</label>
+        <help>De Bestemming voor deze Toewijzing. Alleen Bestemmingen die gemarkeerd zijn als actief zijn beschikbaar voor nieuwe Toewijzingen.</help>
+        <label>Bestemming</label>
         <lookupFilter>
-            <errorMessage>Allocaties kunnen alleen worden toegewezen aan actieve algemene accounting units. Allocaties toegewezen aan inactieve algemene accounting units kunnen niet worden aangepast.</errorMessage>
-            <informationalMessage>Alleen actieve algemene accounting units kunnen geselecteerd worden.</informationalMessage>
+            <errorMessage>Toewijzingen kunnen alleen worden toegewezen aan actieve Bestemmingen. Toewijzingen toegewezen aan inactieve Bestemmingen kunnen niet worden aangepast.</errorMessage>
+            <informationalMessage>Alleen actieve Bestemmingen kunnen worden geselecteerd.</informationalMessage>
         </lookupFilter>
         <name>General_Accounting_Unit__c</name>
-        <relationshipLabel>GAU Allocaties</relationshipLabel>
+        <relationshipLabel>Bestemming Toewijzingen</relationshipLabel>
     </fields>
     <fields>
-        <help>Toeschrijven van allocaties aan een opportunity. Alle opportunities in een gesloten en gewonnen fase zullen worden toegewezen aan deze standaard accounting unit.</help>
+        <help>Toeschrijven van Toewijzingen aan een Opportunity. Alle Opportunities in een Gesloten/Gewonnen fase zullen worden toegewezen aan deze Bestemming.</help>
         <label><!-- Opportunity --></label>
         <name>Opportunity__c</name>
-        <relationshipLabel>GAU Allocaties</relationshipLabel>
+        <relationshipLabel>Bestemming Toewijzingen</relationshipLabel>
     </fields>
     <fields>
-        <help>Percentage van opportunity bedrag die toegewezen wordt aan deze standaard accounting unit. Wijzigen van een opportunity bedrag die op percentage is toegewezen zal ook het allocatie bedrag wijzigen.</help>
+        <help>Percentage van het Opportunity bedrag dat toegewezen wordt aan deze Bestemming. Wijzigen van een Opportunity Bedrag die op percentage is toegewezen zal ook het Toewijzing Bedrag wijzigen.</help>
         <label>Percentage</label>
         <name>Percent__c</name>
     </fields>
     <fields>
-        <help>Optioneel toeschrijven van allocaties aan een terugkerende donatie. Alle nieuwe opportunities met deze terugkerende donatie schema zal automatisch toegewezen worden op dezelfde manier.</help>
+        <help>Optioneel toeschrijven van Toewijzingen aan een Terugkerende Donatie. Alle nieuwe Opportunities met dit Terugkerende Donatie schema zullen automatisch toegewezen worden op dezelfde manier.</help>
         <label>Terugkerende Donatie</label>
         <name>Recurring_Donation__c</name>
-        <relationshipLabel>GAU Allocaties</relationshipLabel>
+        <relationshipLabel>Bestemming Toewijzingen</relationshipLabel>
     </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
         <layout>Allocation Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- GAU Allocation Name --></nameFieldLabel>
     <webLinks>
-        <label>Beheer Allocaties</label>
+        <label>Beheer Toewijzingen</label>
         <name>Manage_Allocations</name>
     </webLinks>
 </CustomObjectTranslation>

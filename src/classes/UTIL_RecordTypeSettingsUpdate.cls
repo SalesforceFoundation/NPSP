@@ -34,15 +34,6 @@
  * (where record types were stored by display name) to new format (where record
  * types are stored by id).
  *
- * This will handle the conversion of the following custom settings:
- *  Allocations_Settings__c.Excluded_Opp_RecTypes__c (Opportunity, Hierarchy)
- *  npe01__Contacts_And_Orgs_Settings__c.Opp_RecTypes_Excluded_for_Payments__c (Opportunity, Hierarchy)
- *  npo02__Households_Settings__c.npo02__Household_Creation_Excluded_Recordtypes__c (Contact, Hierarchy)
- *  npo02__Households_Settings__c.npo02__Household_OCR_Excluded_Recordtypes__c (Contact, Hierarchy)
- *  npo02__Households_Settings__c.npo02__Membership_Record_Types__c (Opportunity, Hierarchy)
- *  npo02__Households_Settings__c.npo02__Excluded_Account_Opp_Rectypes__c (Opportunity, Hierarchy)
- *  npo02__Households_Settings__c.npo02__Excluded_Contact_Opp_Rectypes__c (Opportunity, Hierarchy)
- *  Opportunity_Naming_Settings__c.Opportunity_Record_Types__c (Opportunity, List)
  */
 global virtual class UTIL_RecordTypeSettingsUpdate {
     @TestVisible
@@ -70,6 +61,7 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
     global virtual void updateSettings() {
         Map<String, Id> opportunityNameMap = getNameToRecordTypeIdMap(Opportunity.sObjectType);
         Map<String, Id> contactNameMap = getNameToRecordTypeIdMap(Contact.sObjectType);
+        Map<String, Id> accountNameMap = getNameToRecordTypeIdMap(Account.sObjectType);
 
         RecordTypeSettings settings = new RecordTypeSettings();
 
@@ -79,7 +71,9 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
         ];
 
         settings.contactsAndOrgsSettings = [
-            SELECT Opp_RecTypes_Excluded_for_Payments__c
+            SELECT Opp_RecTypes_Excluded_for_Payments__c,
+                npe01__HH_Account_RecordTypeID__c,
+                npe01__One_to_One_RecordTypeID__c
             FROM npe01__Contacts_And_Orgs_Settings__c
         ];
 
@@ -98,7 +92,12 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
             FROM Opportunity_Naming_Settings__c
         ];
 
-        settings = updateSettings(settings, opportunityNameMap, contactNameMap);
+        settings.recurringDonationSettings = [
+            SELECT npe03__Record_Type__c
+            FROM npe03__Recurring_Donations_Settings__c
+        ];
+
+        settings = updateSettings(settings, opportunityNameMap, contactNameMap, accountNameMap);
 
         if (settings.allocationsSettings != null && !settings.allocationsSettings.isEmpty()) {
             upsert settings.allocationsSettings;
@@ -115,6 +114,10 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
         if (settings.opportunityNamingSettings != null && !settings.opportunityNamingSettings.isEmpty()) {
             upsert settings.opportunityNamingSettings;
         }
+
+        if (settings.recurringDonationSettings != null && !settings.recurringDonationSettings.isEmpty()) {
+            upsert settings.recurringDonationSettings;
+        }
     }
 
     @TestVisible
@@ -126,9 +129,10 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
      * @param settings The custom settings to be updated
      * @param opportunityNameMap A mapping of Opportunity record type display names to record type ids
      * @param contactNameMap A mapping of Contact record type display names to record type ids
+     * @param accountNameMap A mapping of Account record type display names to record type ids
      * @return RecordTypeSettings The settings after they have been converted
      */
-    private RecordTypeSettings updateSettings(RecordTypeSettings settings, Map<String, Id> opportunityNameMap, Map<String, Id> contactNameMap) {
+    private RecordTypeSettings updateSettings(RecordTypeSettings settings, Map<String, Id> opportunityNameMap, Map<String, Id> contactNameMap, Map<String, Id> accountNameMap) {
         for (Allocations_Settings__c allocationsSettings : settings.allocationsSettings) {
             allocationsSettings.Excluded_Opp_RecTypes__c = getIdsFromNames(
                 allocationsSettings.Excluded_Opp_RecTypes__c,
@@ -140,6 +144,16 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
                 contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c = getIdsFromNames(
                     contactsAndOrgsSettings.Opp_RecTypes_Excluded_for_Payments__c,
                     opportunityNameMap
+                );
+
+                contactsAndOrgsSettings.npe01__HH_Account_RecordTypeID__c = getIdFromName(
+                    contactsAndOrgsSettings.npe01__HH_Account_RecordTypeID__c,
+                    accountNameMap
+                );
+
+                contactsAndOrgsSettings.npe01__One_to_One_RecordTypeID__c = getIdFromName(
+                    contactsAndOrgsSettings.npe01__One_to_One_RecordTypeID__c,
+                    accountNameMap
                 );
             }
 
@@ -177,6 +191,13 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
             );
         }
 
+        for (npe03__Recurring_Donations_Settings__c rdSettings : settings.recurringDonationSettings) {
+            rdSettings.npe03__Record_Type__c = getIdFromName(
+                rdSettings.npe03__Record_Type__c,
+                opportunityNameMap
+            );
+        }
+
         return settings;
     }
 
@@ -208,11 +229,13 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
         Map<String, Id> nameMap = new Map<String, Id>();
 
         for (RecordType rt : recordTypes) {
-            nameMap.put(rt.Name, rt.Id);
+            nameMap.put(rt.Name.toLowerCase(), rt.Id);
+
             try {
                 for (sObject rtl : rt.getSobjects('Localization')) {
                     // potentially overwrite existing entry due to ambiguity in naming-- fine
-                    nameMap.put((String) rtl.get('Value'), rt.Id);
+                    String rtlName = (String) rtl.get('Value');
+                    nameMap.put(rtlName.toLowerCase(), rt.Id);
                 }
             } catch (SObjectException e) {
                 // no localizations available
@@ -240,13 +263,37 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
         }
 
         List<String> names = nameString.split(';', 0);
+        return resolveNamesToIds(names, nameMap);
+    }
 
+    @TestVisible
+    /*******************************************************************************************************
+    * @description Determines the Record Type Id based on the name
+     * @param name A Record Type name
+     * @param nameMap A mapping of Record Type names to Record Type Ids
+     * @return String An Id if the name is a valid Record Type name, otherwise null.
+    */
+    private String getIdFromName(String name, Map<String, Id> nameMap) {
+        if (name == null) {
+            return null;
+        }
+
+        return resolveNamesToIds(new List<String>{ name }, nameMap);
+    }
+
+    /*******************************************************************************************************
+    * @description Determines the Record Type Ids based on the names
+     * @param names List of valid and invalid names and Ids
+     * @param nameMap A mapping of Record Type names to Record Type Ids
+     * @return String A String containing valid semi-colon separated Record Type Ids
+    */
+    private String resolveNamesToIds(List<String> names, Map<String, Id> nameMap) {
         Set<String> ids = new Set<String>();
         for (String name : names) {
             if (isId(name)) {
                 ids.add(name);
-            } else if (nameMap.containsKey(name)) {
-                ids.add(String.valueOf(nameMap.get(name)));
+            } else if (nameMap.containsKey(name.toLowerCase())) {
+                ids.add(String.valueOf(nameMap.get(name.toLowerCase())));
             }
         }
 
@@ -254,6 +301,7 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
 
         return idsString;
     }
+
 
     /**
      * @description Determine if the given name is an id or not
@@ -279,5 +327,6 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
         public List<npe01__Contacts_And_Orgs_Settings__c> contactsAndOrgsSettings;
         public List<npo02__Households_Settings__c> householdSettings;
         public List<Opportunity_Naming_Settings__c> opportunityNamingSettings;
+        public List<npe03__Recurring_Donations_Settings__c> recurringDonationSettings;
     }
 }

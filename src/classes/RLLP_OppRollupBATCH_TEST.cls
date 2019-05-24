@@ -38,10 +38,6 @@
 @isTest
 private class RLLP_OppRollupBATCH_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
-    private static string strTestOnly = '*';
-    
     static void setup() {
     	npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
@@ -67,7 +63,9 @@ private class RLLP_OppRollupBATCH_TEST {
     }
     
     static testMethod void testOppAcctRollupBatch() {
-    	if (strTestOnly != '*' && strTestOnly != 'testOppAcctRollupBatch') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
     	setup();
     	
         //The record type is an optional parameter when creating opps
@@ -96,7 +94,6 @@ private class RLLP_OppRollupBATCH_TEST {
     }
 
     static testMethod void testOppContactRollupBatch() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppContactRollupBatch') return;
         setup();
         
         //The record type is an optional parameter when creating opps
@@ -132,7 +129,6 @@ private class RLLP_OppRollupBATCH_TEST {
     }
     
     static testMethod void testOppSoftCreditRollupBatch() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppSoftCreditRollupBatch') return;
         setup();
         
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
@@ -172,7 +168,6 @@ private class RLLP_OppRollupBATCH_TEST {
     }
 
     static testMethod void testOppPartialSoftCreditRollupBatch() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppPartialSoftCreditRollupBatch') return;
         setup();
         
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);

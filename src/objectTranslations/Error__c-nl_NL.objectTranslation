@@ -15,12 +15,12 @@
     </fields>
     <fields>
         <help>Datum en tijd wanneer de fout is opgetreden</help>
-        <label>Datum Tijd</label>
+        <label>Datum/Tijd</label>
         <name>Datetime__c</name>
     </fields>
     <fields>
-        <help>Geeft aan of een e-mail notificatie is verzonden met betrekking tot deze fout.</help>
-        <label>Email Verzonden</label>
+        <help>Geeft aan of een e-mailnotificatie is verzonden met betrekking tot deze fout.</help>
+        <label>E-mail Verzonden</label>
         <name>Email_Sent__c</name>
     </fields>
     <fields>
@@ -39,7 +39,7 @@
         <name>Object_Type__c</name>
     </fields>
     <fields>
-        <help>Geeft aan of de fout is gepost in Chatter</help>
+        <help>Geeft aan of de fout is geplaatst in Chatter.</help>
         <label>Geplaatst in Chatter</label>
         <name>Posted_in_Chatter__c</name>
     </fields>
@@ -49,7 +49,7 @@
         <name>Record_URL__c</name>
     </fields>
     <fields>
-        <help>Stack trace for the geworpen fout, indien beschikbaar tijdens looptijd</help>
+        <help>Stack trace voor de thrown error, indien beschikbaar tijdens runtime.</help>
         <label><!-- Stack Trace --></label>
         <name>Stack_Trace__c</name>
     </fields>
@@ -57,7 +57,7 @@
     <layouts>
         <layout>Error Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
     </layouts>

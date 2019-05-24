@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FeatureParameterBoolean xmlns="http://soap.sforce.com/2006/04/metadata">
+    <dataflowDirection>SubscriberToLmo</dataflowDirection>
+    <masterLabel>Org: Run Time Of The Longest Running Batch In The Last 7 Days</masterLabel>
+    <value>0</value>
+</FeatureParameterBoolean>

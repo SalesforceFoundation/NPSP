@@ -35,9 +35,10 @@
 * such as detecting whether we are in a managed package, and some string helpers.
 */
 @isTest
-public with sharing class UTIL_Namespace_TEST {
+private with sharing class UTIL_Namespace_TEST {
 
-    static testmethod void TestNamespacePrefixFixups() {
+    @isTest 
+    private static void TestNamespacePrefixFixups() {
         if (UTIL_Namespace.getNamespace()!='') {
             system.assertNotEquals('',UTIL_Namespace.getNamespace());
             system.assertEquals(UTIL_Namespace.getNamespace()+'__foo', UTIL_Namespace.StrTokenNSPrefix('foo'));
@@ -54,11 +55,36 @@ public with sharing class UTIL_Namespace_TEST {
             system.assertEquals('foo_bar_baz__c', UTIL_Namespace.StrAllNSPrefix('foo_bar_baz__c'));
             system.assertEquals('select foo__c, bar, baz1__c, biz_buz__c from Contact', UTIL_Namespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));           
         }
+        system.assertEquals('npe01__foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npe01__foo__c'));
+        system.assertEquals('npe5__foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npe5__foo__c'));
         system.assertEquals('foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npsp__foo__c'));
         system.assertEquals('foo_npsp__c', UTIL_Namespace.StrTokenRemoveNSPrefix('foo_npsp__c'));
-    }               
+    } 
+    
+    /*******************************************************************************************************************
+    * @description Verifies namespace is removed
+    */
+    @isTest 
+    private static void shouldRemoveClassNamespace() {
+        String className = 'foo.BarClassName';
+        String actualClassName = UTIL_Namespace.removeClassNamespace(className);
 
-    static testmethod void testSandboxEmailToRealEmail() {
+        System.assertEquals('BarClassName', actualClassName, 'Namespace should be removed from the class name');
+    }
+
+    /*******************************************************************************************************************
+    * @description Verifies class name is returned as is when namespace is not included in the class name
+    */
+    @isTest 
+    private static void shouldReturnClassNameWhenNoNamespacePresent() {
+        String className = 'BarClassName';
+        String actualClassName = UTIL_Namespace.removeClassNamespace(className);
+
+        System.assertEquals(className, actualClassName, 'The class name should be returned as is');
+    }              
+
+    @isTest 
+    private static void testSandboxEmailToRealEmail() {
         String fixedEmail = UTIL_Namespace.sandboxEmailToRealEmail('awheeler=universalcontainers.com@example.com');	
         System.assertEquals('awheeler@universalcontainers.com', fixedEmail);
     }
@@ -67,7 +93,8 @@ public with sharing class UTIL_Namespace_TEST {
     //unfortunately, this causes our local DE Orgs to not include them in our local package.
     //but these labels were already released in the managed package and cannot be deleted.
     //so we now refer to them here, just so our DE Orgs will keep the in our local package.
-    static testmethod void keepUnusedPackagedLabelsInPackage() {
+    @isTest 
+    private static void keepUnusedPackagedLabelsInPackage() {
         string str;
         str = Label.Addr_Settings_API_Body;
         str = Label.Addr_Settings_Intro_Body;
@@ -77,6 +104,8 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.Addr_Settings_Test_Response_Title;
         str = Label.Addr_Settings_Test_Title;
         str = Label.Addr_Verification_Batch_Status;
+        str = System.Label.DeleteAccount;
+        str = System.Label.DeleteContactLeaveAccount;
         str = Label.stgHHNameRefreshTitle;
         str = Label.stgLabelAfflSettings;
         str = Label.stgLabelBDESettings;
@@ -109,9 +138,20 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.alloTotals;
         str = Label.alloCampaignExceedsOppAmount;
         str = Label.alloUnallocated;
+        str = Label.alloBtnCancel;
+        str = Label.alloBtnSaveAndClose;
         str = Label.stgHelpBatchCreateDefault;
         str = Label.addrHHAddressAlwaysDefault;
         str = Label.Addr_Verification_Cant_Load_Class;
+        str = Label.pmtWizardWarning;
+        str = Label.hhCmpDedupLabelReturnToCmp;
+        str = Label.sendAcknowledgmentReturnLinkLabel;
+        str = System.Label.stgHelpRespectDuplicateRuleSettings;
+        str = Label.bdiFailed;
+        str = Label.bdiImported;
+        // The following label should be kept even when not in use to allow
+        // the deprecation warning to be translated
+        str = System.Label.lblDeprecated;
 
         // The following labels are referenced because the spider was having
         // issues resolving references to them and they need to be directly
@@ -159,5 +199,7 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.healthSolutionInvalidScheduledJob;
         str = Label.healthDetailsScheduleJobs;
         str = Label.healthSolutionScheduleJobs;
+        str = Label.RD_ErrorMoreClosedWonOpportunitiesThanInstallments;
+        str = Label.RD_ErrorNotEnoughClosedValueForFixedLength;
     }
 }

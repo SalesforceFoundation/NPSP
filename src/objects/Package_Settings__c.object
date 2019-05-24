@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <enableFeeds>false</enableFeeds>
+    <label>NPSP Package Settings</label>
+    <visibility>Protected</visibility>
+    <fields>
+        <fullName>Namespace_Prefix__c</fullName>
+        <description>The active package namespace prefix for NPSP.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The active package namespace prefix for NPSP. Do not edit manually.</inlineHelpText>
+        <label>Namespace Prefix</label>
+        <length>17</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

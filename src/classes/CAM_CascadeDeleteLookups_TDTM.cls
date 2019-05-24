@@ -30,23 +30,73 @@
 /**
  * @author Salesforce.org
  * @date 2017
- * @group Utilities
+ * @group Cascade Delete
  * @description Cascade deletion extension for Campaign object.
  */
-public with sharing class CAM_CascadeDeleteLookups_TDTM extends UTIL_CascadeDeleteLookups_TDTM {
-    
+public with sharing class CAM_CascadeDeleteLookups_TDTM extends CDL_CascadeDeleteLookups_TDTM {
+
     /*******************************************************************************************************
-    * @description Cascade deletion definitions for Campaign.
+    * @description Gets the deleted Campaigns CascadeDeleteLoader Object. 
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader.
     ********************************************************************************************************/
-    private static List<Cascade> cascades = new List<Cascade>{
-        new Cascade(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),'Campaign__c')
-    };
-    
+    protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
+        return new CascadeDeleteLoader();
+    }
+
     /*******************************************************************************************************
-    * @description Override provides super class with cascades for this triger.
-    * @return List<Cascade> The cascade deletions to perform for this trigger.
-    ********************************************************************************************************/    
-    public override List<Cascade> getCascades() {
-        return cascades;
+    * @description Gets the undeleted Campaigns CascadeUndeleteLoader Object.
+    * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
+    ********************************************************************************************************/
+    protected override CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
+        return new CascadeUndeleteLoader();
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the children of the deleted Campaigns.
+    ********************************************************************************************************/
+    class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
+        
+        /*******************************************************************************************************
+        * @description Retrieves the related Allocations of the deleted Campaigns.
+        * @param Set<Id> The Ids of the deleted Campaigns.
+        * @return List<Allocation__c> Deleted Campaigns' Allocations.
+        ********************************************************************************************************/
+        public List<Allocation__c> load(Set<Id> campaignIds) {
+            return [
+                SELECT Campaign__c
+                FROM Allocation__c
+                WHERE Campaign__c IN :campaignIds
+            ];
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the children of the undeleted Campaigns.
+    ********************************************************************************************************/
+    class CascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
+
+        /*******************************************************************************************************
+        * @description Retrieves the related Allocations of the undeleted Campaigns.
+        * @param Set<Id> The Ids of the undeleted Campaigns.
+        * @return List<Allocation__c> Undeleted Campaigns' Allocations.
+        ********************************************************************************************************/
+        public List<Allocation__c> load(Set<Id> campaignIds) {
+            return [
+                SELECT Campaign__c
+                FROM Allocation__c
+                WHERE Campaign__c IN :campaignIds
+                AND IsDeleted = TRUE
+                ALL ROWS
+            ];
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the next children records group to be undeleted. In this case, there is no other
+        * group of children records to undelete after Allocations undeletion.
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
+        ********************************************************************************************************/
+        public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
+            return null;
+        }
     }
 }

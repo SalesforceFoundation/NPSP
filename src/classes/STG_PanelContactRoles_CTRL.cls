@@ -87,10 +87,17 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
             STG_Panel.stgService.stgHH.npo02__Household_Member_Contact_Role__c = '';
         }
 
-        //add error for blank Primary Contact Role value
+        //add error for blank Default Individual Contact Role value
         if (String.isBlank(STG_Panel.stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c)) {
             String defaultRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', 'npe01__Opportunity_Contact_Role_Default_role__c');
             ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, defaultRoleLabel + ' ' + Label.isARequiredField));
+            isValid = false;
+        }
+
+        // Add error for blank Default Oranizational Contact Role value
+        if (String.isBlank(STG_Panel.stgService.stgCon.Contact_Role_for_Organizational_Opps__c)) {
+            String defaultOrganizationalRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', UTIL_Namespace.StrTokenNSPrefix('Contact_Role_for_Organizational_Opps__c'));
+            ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, defaultOrganizationalRoleLabel + ' ' + Label.isARequiredField));
             isValid = false;
         }
 
@@ -126,8 +133,10 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
     public static List<String> getInvalidOCRSettings() {
         List<String> results = new List<String>();
 
+        // Individual Default Contact Role
         String defaultRole = STG_Panel.stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c;
         String defaultRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', 'npe01__Opportunity_Contact_Role_Default_role__c');
+
         String softCreditRoles = STG_Panel.stgService.stgHH.npo02__Soft_Credit_Roles__c;
         String softCreditRolesLabel = UTIL_Describe.getFieldLabel('npo02__Households_Settings__c', 'npo02__Soft_Credit_Roles__c');
         String hhMemberRole = STG_Panel.stgService.stgHH.npo02__Household_Member_Contact_Role__c;

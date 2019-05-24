@@ -33,24 +33,29 @@
 * @group Settings
 * @description Controller for the Batch Opp Rollups panel.
 */
-public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel { 
+public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
+
+    public Integer numJobSubmitted { get; private set; }
 
     /*********************************************************************************************************
     * @description The panel's constructor 
     */
     public STG_PanelOppBatch_CTRL() {
-        isRunningBatch = false;
+        this.isRunningBatch = false;
+        this.numJobSubmitted = 0;
     }
     
     /*********************************************************************************************************
     * @description Returns the string Id of the Batch Opp Rollups panel. 
     */
-    public override string idPanel() { return 'idPanelOppBatch'; }
+    public override String idPanel() {
+        return 'idPanelOppBatch';
+    }
     
     /*********************************************************************************************************
     * @description Whether we are currently running the batch process 
     */
-    public boolean isRunningBatch { get; set; }
+    public Boolean isRunningBatch { get; set; }
     
     /*********************************************************************************************************
     * @description Action Method to run the Batch Opp Rollups  
@@ -59,9 +64,50 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
     public PageReference runBatch() {
         isRunningBatch = true;
 
-        // run batch rollup
-        RLLP_OppRollup rg = new RLLP_OppRollup();
-        rg.rollupAll();        
+        if (!CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            // run legacy batch rollups
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupAll();
+            this.numJobSubmitted = 4; // hardcoded to match what this runs
+        } else {
+
+            // Customizable Rollup Jobs are more complicated. There are 5 base jobs, but there may be 5 more
+            // Skew jobs to execute if necessary.
+            List<CRLP_RollupProcessingOptions.RollupType> jobTypeList = new List<CRLP_RollupProcessingOptions.RollupType>{
+                    CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                    CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                    CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
+                    CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
+                    CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+                    CRLP_RollupProcessingOptions.RollupType.RecurringDonations
+            };
+
+            this.numJobSubmitted = 0;
+            for (CRLP_RollupProcessingOptions.RollupType jobType : jobTypeList) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+                this.numJobSubmitted++;
+
+                // Determine if the SkewMode job is needed based on a simple count of the number of records
+                // that meet the skew mode criteria.
+                String objName = CRLP_Rollup_SVC.getSummaryObjectType(jobType).getDescribe().getName();
+
+                String query = 'SELECT Count() FROM ' + objName + ' WHERE ' +
+                        CRLP_RollupBatch_SVC.getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) +
+                        ' LIMIT 1';
+
+                Boolean executeSkewMode = true;
+                // Only attempt a count of skew mode if there is enough cpu time left for the query
+                // otherwise just assume it's needed to avoid the CPU timeout on the page.
+                Decimal cpuTime = (Decimal)Limits.getCpuTime();
+                if (cpuTime.divide(Limits.getLimitCpuTime(), 2) < .80) {
+                    executeSkewMode = (Database.countQuery(query) != 0);
+                }
+                if (executeSkewMode) {
+                    Database.executeBatch(new CRLP_SkewDispatcher_BATCH(jobType), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+                    this.numJobSubmitted++;
+                }
+            }
+        }
         return null;
     }
 

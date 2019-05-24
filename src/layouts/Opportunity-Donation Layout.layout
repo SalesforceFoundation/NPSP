@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>npe01__Matching_Donation</customButtons>
     <customButtons>Email_Acknowledgment</customButtons>
     <customButtons>Manage_Soft_Credits</customButtons>
     <excludeButtons>Submit</excludeButtons>

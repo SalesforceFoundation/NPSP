@@ -9,18 +9,18 @@
         <value><!-- Deliverable --></value>
     </caseValues>
     <fields>
-        <help><!-- The date on which this particular Deliverable is due. --></help>
-        <label>Verloopdatum</label>
+        <help>De datum waarop deze Levering verloopt.</help>
+        <label>Vervaldatum</label>
         <name>Grant_Deadline_Due_Date__c</name>
     </fields>
     <fields>
-        <help>De datum waarop de levering daadwerkelijk was ingediend</help>
+        <help>De datum waarop de levering daadwerkelijk was ingediend.</help>
         <label>Sluitingsdatum</label>
         <name>Grant_Deliverable_Close_Date__c</name>
     </fields>
     <fields>
-        <help><!-- Description of what is required for this deliverable. --></help>
-        <label>Eisen</label>
+        <help>Omschrijving wat nodig is voor de Levering.</help>
+        <label>Vereisten</label>
         <name>Grant_Deliverable_Requirements__c</name>
     </fields>
     <fields>
@@ -52,11 +52,11 @@
     <layouts>
         <layout>Grant Deadline Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label>Verleen Leverbaar Eisen</label>
+            <label>Fonds Leverbaarheid Vereisten</label>
             <section>Grant Deliverable Requirements</section>
         </sections>
     </layouts>

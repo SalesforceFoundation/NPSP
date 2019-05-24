@@ -1,0 +1,51 @@
+.THIS.slds-tabs_card {
+    background: white;
+}
+
+/*link-like behaviors*/
+.THIS .bgeLinkButton:focus {
+    outline: -webkit-focus-ring-color auto 5px;
+    border-width: 0px;
+    box-shadow: none;
+}
+.THIS .bgeLinkButton:hover, .THIS .bgeLinkButton:active {
+    outline: 0;
+    text-decoration: underline;
+}
+/*formatting for edit mode checkboxes*/
+.THIS .bgeInputCheckbox {
+    display: inline-flex;
+}
+/*padding for helptext icon*/
+.THIS .uiOutputCheckbox {
+    padding-right: .5rem;
+}
+/*override different sized list options*/
+.THIS .wideListbox .slds-dueling-list__column_responsive .slds-dueling-list__options {
+    min-width: 240px;
+}
+/*removes the automatic tooltip for inputFields*/
+.THIS .hideTooltip lightning-helptext {
+    display: none;
+    visibility: hidden;
+}
+/*formatting for checkboxes with help text */
+.THIS .inputCheckbox {
+    display: inline-flex;
+}
+/* hide rogue label spacing on lightning:select when variant="label-hidden" */
+.THIS .label-hidden > label {
+    position: absolute!important;
+}
+/*Workaround since label-hidden variant on lightning:inputField is inconsistent in hiding labels for types of fields.
+Revist this Summer '19 and after to see if it's still necessary or the CSS has changed*/
+.THIS .hideLabelFix lightning-grouped-combobox .slds-form-element__label {
+    /*partial copy from .slds-assistive-text*/
+    position: absolute!important;
+    overflow: hidden!important;
+}
+.THIS .hideLabelFix lightning-textarea .slds-form-element__label {
+    /*partial copy from .slds-assistive-text*/
+    position: absolute!important;
+    overflow: hidden!important;
+}

@@ -1,6 +1,9 @@
-<apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" standardStylesheets="false" cache="false" >
+<apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations"
+           tabStyle="Allocation__c" showHeader="true" sidebar="true" cache="false" action="{!getPageLoadValidationMessages}"
+           standardStylesheets="true" docType="html-5.0">
+
+    <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.sfdo203, '/assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +11,7 @@
     (function($) {
 
         var sumAmount;
-        
+
         var parentAmount = {!parentAmount};
         var decimalSeparator = "{!decimalSeparator}";
         var thousandsSeparator = "{!thousandsSeparator}";
@@ -66,20 +69,21 @@
 
             //write total amount. if we have a parent amount, include the unallocated remainder. 
             //if we're over the parent amount, make it red.
-            if (parentAmount > 0) {
-                var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
-                $('#totalAmount').text(reformatCurrency(unallocated));
-                if (unallocated < 0) {
-                    $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
-                    $('[id$="saveCloseBTN"]').attr('disabled','disabled');
-                } else {
-                    $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
-                    $('[id$="saveCloseBTN"]').removeAttr('disabled');
-                }
+            //also supports negative payments, rejecting positive allocations in that case
+            var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
+            var totalToShow = unallocated;
+            if (parentAmount > 0 && unallocated < 0 || parentAmount < 0 && unallocated > 0){
+                // Disable the save button when the total is invalid
+                $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
+                $('[id$="saveBTN"]').attr('disabled','disabled');
+            } else if(parentAmount) {
+                $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
+                $('[id$="saveBTN"]').removeAttr('disabled');
             } else {
-                $('#totalAmount').text(reformatCurrency((Math.round(sumAmount)/100).toFixed(2)));
+                // Only used when parentAmount is 0
+                totalToShow = (Math.round(sumAmount)/100).toFixed(2);
             }
-            
+            $('#totalAmount').text(reformatCurrency(totalToShow));
         }
 
         //adds all percent fields together
@@ -96,7 +100,7 @@
                 } else {
                     thisRowAmount.prop('disabled', true);
                     //if we have a parent amount, set the calculated amount based on the percent
-                    if (parentAmount > 0) {
+                    if (parentAmount != 0) {
                         var pct = thisRowPercent.val();
                         // if the users locale uses commas as the decimal separator, replace
                         // those with a period so it works with js. don't have to worry about
@@ -148,48 +152,23 @@
 
     </script>
     <apex:form id="theForm">
-        <div class="sfdo203">
+        <div class="slds-scope">
+            <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
             <!-- PAGE HEADER -->
-            <div class="slds-page-header" role="banner">
-                <div class="slds-grid">
-                    <div class="slds-col">
-                        <nav role="navigation">
-                            <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
-                            <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
-                                <li class="slds-breadcrumb__item slds-text-heading--label">
-                                    <a class="slds-type-focus" href="javascript:window.urlHome();">{!objectLabelPlural}</a>
-                                </li>
-                                <li class="slds-breadcrumb__item slds-text-heading--label">
-                                    <a class="slds-type-focus" href="/{!parentId}">
-                                        {!objectName}<apex:outputText rendered="{!parentAmount<>0}"><apex:outputText value=" - {!currencySymbol}{!IF(LEN(currencySymbol) == 3, ' ', '')}{0,number,#.##}"><apex:param value="{!parentAmount}"/></apex:outputText></apex:outputText>
-                                    </a>
-                                </li>
-                            </ol>
-                        </nav>              
-                        <h1 class="slds-text-heading--medium slds-p-top-medium">{!pageTitle}</h1>
-                        <p class="slds-text-body--small slds-m-top--x-small"><apex:outputField value="{!opp.amount}" rendered="opp<>null"/></p>
-                    </div>        
-
-                    <div class="slds-col slds-no-flex slds-align-middle">
-                        <div class="slds-button-group" role="group">
-                            <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button--neutral" action="{!cancel}" value="{!$Label.alloBtnCancel}"  immediate="true"/>
-                            <apex:commandButton id="saveCloseBTN" styleClass="slds-button slds-button--brand" action="{!saveClose}" value="{!$Label.alloBtnSaveAndClose}" immediate="false" disabled="{!opp<>null&&parentAmount==0}"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div> 
-                <apex:pageMessages id="messages"/>
-            </div>
+            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
+                parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}" parentRecordAction="/{!parentId}"
+                header="{!pageTitle}" icon="custom" iconCategory="standard" cancelAction="{!cancel}"
+                saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0))}"/>
+            <c:UTIL_PageMessages id="messages"/>
             <div>
                 <apex:outputPanel id="theTable">
-                <table class="slds-table slds-table--bordered slds-table--cell-buffer" >
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer" >
                     <thead>
-                        <tr class="slds-text-heading--label">
+                        <tr class="slds-text-heading_label">
                             <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
                             <th scope="col" width="250px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</span></th>
-                            <th scope="col" width="130px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
-                            <th scope="col" width="200px"></th>
+                            <th scope="col" width="150px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
+                            <th scope="col" width="100px"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -200,7 +179,7 @@
                                     <div class="slds-form-element">
                                         <label for="alloInputGAU{!cnt}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label} {!cnt}</label>
                                         <div id="alloInputGAU{!cnt}" >
-                                            <apex:inputField value="{!Allo.General_Accounting_Unit__c}" styleClass="lookupInput"/>
+                                            <c:UTIL_InputField sObj="{!Allo}" sObjType="Allocation__c" field="General_Accounting_Unit__c"/>
                                         </div>
                                     </div>
                                 </td>
@@ -217,19 +196,17 @@
                                     <div class="slds-form-element">
                                         <label for="{!$Component.alloInputPercent}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Percent__c.Label} {!cnt}</label>
                                         <div class="slds-form-element__control slds-input-has-fixed-addon">
-                                            <apex:inputField id="alloInputPercent" styleClass="slds-input slds-size--2-of-3 alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
+                                            <apex:inputField id="alloInputPercent" styleClass="slds-input slds-size_2-of-3 alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
                                             <span class="slds-form-element__addon">%</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <apex:commandButton styleClass="slds-button slds-button--destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theTable" immediate="true">
+                                    <apex:commandButton 
+                                        styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" 
+                                        action="{!delRow}" reRender="theTable,messages" immediate="false">
                                         <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
                                         <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
-                                    </apex:commandButton>
-                                    <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theTable" immediate="true">
-                                        <span class="slds-form-element__label slds-assistive-text">{!$Label.alloAddRowAtPosition} {!cnt}</span>
-                                        <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
                                     </apex:commandButton>
                                 </td>
                             </tr>
@@ -247,17 +224,16 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                            </td>
-                            <td>
-                                <apex:commandButton styleClass="slds-button slds-button--neutral slds-button--small" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theTable" immediate="true" rendered="{!listAlloSize==0}">
-                                    <span class="slds-form-element__label slds-assistive-text">{!$Label.alloAddRowAtPosition} {!cnt}</span>
-                                    <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
-                                </apex:commandButton>
-                            </td>
+                            <td colspan="2"></td>
                         </tr>
                    </tbody>
                 </table>
+
+                 <!-- Add Row -->
+                <div class="slds-p-around_medium">
+                        <apex:commandLink action="{!addRow}" immediate="true" reRender="theTable, messages" 
+                            value="{!$Label.alloAddRow}" title="{!$Label.alloAddRow}" />
+                </div>
                 <script>
                     window.initOrReload();
                 </script>

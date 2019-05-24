@@ -21,10 +21,6 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
-        <actionName>Follow</actionName>
-        <type>Default</type>
-    </actionOverrides>
-    <actionOverrides>
         <actionName>List</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -58,9 +54,9 @@
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Grant_Deadline_Due_Date__c</fullName>
-        <description>The date on which this particular Deliverable is due.</description>
+        <description>The date this Deliverable is due.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The date on which this particular Deliverable is due.</inlineHelpText>
+        <inlineHelpText>The date this Deliverable is due.</inlineHelpText>
         <label>Due Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
@@ -69,9 +65,9 @@
     </fields>
     <fields>
         <fullName>Grant_Deliverable_Close_Date__c</fullName>
-        <description>The date on which the deliverable was actually submitted.</description>
+        <description>The date this Deliverable was actually submitted.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The date on which the deliverable was actually submitted.</inlineHelpText>
+        <inlineHelpText>The date this Deliverable was actually submitted.</inlineHelpText>
         <label>Close Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
@@ -80,9 +76,9 @@
     </fields>
     <fields>
         <fullName>Grant_Deliverable_Requirements__c</fullName>
-        <description>Description of what is required for this deliverable.</description>
+        <description>Description of what is required for this Deliverable.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Description of what is required for this deliverable.</inlineHelpText>
+        <inlineHelpText>Description of what is required for this Deliverable.</inlineHelpText>
         <label>Requirements</label>
         <length>32768</length>
         <trackHistory>false</trackHistory>
@@ -109,29 +105,35 @@
         <fullName>Type__c</fullName>
         <externalId>false</externalId>
         <label>Type</label>
-        <picklist>
-            <picklistValues>
-                <fullName>LOI</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Application</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Interim Report</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Final Report</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>LOI</fullName>
+                    <default>false</default>
+                    <label>LOI</label>
+                </value>
+                <value>
+                    <fullName>Application</fullName>
+                    <default>false</default>
+                    <label>Application</label>
+                </value>
+                <value>
+                    <fullName>Interim Report</fullName>
+                    <default>false</default>
+                    <label>Interim Report</label>
+                </value>
+                <value>
+                    <fullName>Final Report</fullName>
+                    <default>false</default>
+                    <label>Final Report</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <label>Deliverable</label>
     <nameField>
@@ -142,4 +144,5 @@
     <pluralLabel>Deliverables</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
+    <visibility>Public</visibility>
 </CustomObject>

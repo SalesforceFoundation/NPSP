@@ -34,7 +34,10 @@
 * @description Schedulable class that creates the batch processes to compute Levels for each Target object
 */
 public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
-    
+
+    /** @description Custom Settings record that defines specific Customizable Rollups settings */
+    private static final Levels_Settings__c levelsSettings = UTIL_CustomSettingsFacade.getLevelsSettings();
+
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     */
@@ -46,28 +49,23 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
     * @description Starts one batch job per level object.
     */
     public void runBatch() {
+        Integer batchSize; 
+        if(levelsSettings != null && levelsSettings.Level_Assignment_Batch_Size__c != null) {
+            batchSize = levelsSettings.Level_Assignment_Batch_Size__c.intValue();
+        } else {
+            batchSize = 200;
+        }
+
         try {
             cLvlAssignBatch = 0;
 
             // for a given Object (Contact, Account, etc), provides the set of fields from that object that need to be queried.
-            map<String, set<String>> mapStrObjectToQueryFields = LVL_LevelAssign_BATCH.getMapStrObjectToQueryFields();
+            List<LVL_LevelAssign_BATCH.Ladder> ladders = LVL_LevelAssign_BATCH.getLadders();
             
             // create batch for each Object
-            for (String strObj : mapStrObjectToQueryFields.keySet()) {
-                
-                // get the fields needed for that object
-                set<String> setFlds = mapStrObjectToQueryFields.get(strObj);
-                
-                // construct our query
-                String strSoql = 'select Id';
-                for (String strFld : setFlds) {
-                    strSoql += ', ' + strFld;
-                }
-                strSoql += ' from ' + strObj;
-                
-                // kick off our batch
-                LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(strSoql, strObj);
-                Database.executeBatch(batch);
+            for (LVL_LevelAssign_BATCH.Ladder ladder : ladders) {
+                LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(ladder.buildQuery(), ladder.target);
+                Database.executeBatch(batch, batchSize);
                 cLvlAssignBatch++;
             }
         } catch(Exception e) {

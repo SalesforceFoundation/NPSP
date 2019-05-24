@@ -43,6 +43,9 @@ private class TDTM_Config_API_Test {
     */
     @isTest
     static void test_disable_trigger_in_context() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         TDTM_DefaultConfig.startTestDataInit();
         Test.startTest();
 
@@ -72,6 +75,9 @@ private class TDTM_Config_API_Test {
     */
     @isTest
     static void test_disable_for_specific_user() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         // disable this one trigger
         List<Trigger_Handler__c> handlers = TDTM_Config_API.getDefaultRecords();
         for (Trigger_Handler__c th : handlers) {
@@ -86,5 +92,30 @@ private class TDTM_Config_API_Test {
         con = [SELECT AccountId FROM Contact WHERE Id = :con.Id LIMIT 1];
         system.assertEquals(null, con.AccountId, 'there should not be an account id associated with this new contact');
     }
-    
+
+
+    /*******************************************************************************************************
+    * @description verify the TDTM Callable Action does not modify the TDTM Triggers globally
+    ********************************************************************************************************/
+    @IsTest
+    private static void triggersAreDisabledForCurrentContext() {
+        // skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        Integer accountCountBefore = Database.countQuery('SELECT COUNT() FROM Account');
+
+        TDTM_Config_Api.disableAllTriggers();
+        
+        Contact contact1 = new Contact(LastName = 'TDTM_Config_Api_Test');
+        insert contact1;
+
+        Integer accountCountAfter = Database.countQuery('SELECT COUNT() FROM Account');
+
+        System.assertEquals(accountCountBefore, accountCountAfter, 'Account record was created');
+        System.assertEquals(null, contact1.AccountId, 'Contact Triggers were not turned off');
+
+    }
+
 }

@@ -1,0 +1,19 @@
+/*changes lightningtable buttons into links*/
+.THIS .lightningTable :not(lightning-button-menu) > button{
+    /*not() selector avoids editing action button*/
+    border: none;
+    padding: .25em 0em .25em 0em;
+    line-height: 19.5px;
+    text-align: left;
+    font-size: 13px;
+    background-color: transparent;
+}
+/*lightning table links hover*/
+.THIS .lightningTable button:hover{
+    text-decoration: underline;
+    background-color: transparent;
+}
+/*allows spinner to fill the full page*/
+.THIS.rollupsDiv {
+    position: relative
+}

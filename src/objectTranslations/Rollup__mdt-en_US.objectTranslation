@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Rollup</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Rollups</value>
+    </caseValues>
+    <fields>
+        <label><!-- Active --></label>
+        <name>Active__c</name>
+    </fields>
+    <fields>
+        <label><!-- Amount Field --></label>
+        <name>Amount_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Amount Object --></label>
+        <name>Amount_Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Date Field --></label>
+        <name>Date_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Date Object --></label>
+        <name>Date_Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Field to Roll Up --></label>
+        <name>Detail_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Detail Object --></label>
+        <name>Detail_Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Filter Group --></label>
+        <name>Filter_Group__c</name>
+        <relationshipLabel><!-- Rollups --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Integer --></label>
+        <name>Integer__c</name>
+    </fields>
+    <fields>
+        <label><!-- IsDeleted --></label>
+        <name>Is_Deleted__c</name>
+    </fields>
+    <fields>
+        <label><!-- Operation --></label>
+        <name>Operation__c</name>
+        <picklistValues>
+            <masterLabel>Average</masterLabel>
+            <translation><!-- Average --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Best Year</masterLabel>
+            <translation><!-- Best Year --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Best Year Total</masterLabel>
+            <translation><!-- Best Year Total --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Count</masterLabel>
+            <translation><!-- Count --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Donor Streak</masterLabel>
+            <translation><!-- Donor Streak --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>First</masterLabel>
+            <translation><!-- First --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Largest</masterLabel>
+            <translation><!-- Largest --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Last</masterLabel>
+            <translation><!-- Last --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Smallest</masterLabel>
+            <translation><!-- Smallest --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sum</masterLabel>
+            <translation><!-- Sum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Years Donated</masterLabel>
+            <translation><!-- Years Donated --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Target Field --></label>
+        <name>Summary_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Target Object --></label>
+        <name>Summary_Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Time Frame --></label>
+        <name>Time_Bound_Operation_Type__c</name>
+        <picklistValues>
+            <masterLabel>All Time</masterLabel>
+            <translation><!-- All Time --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Days Back</masterLabel>
+            <translation><!-- Days Back --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Years Ago</masterLabel>
+            <translation><!-- Years Ago --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Use Fiscal Year --></label>
+        <name>Use_Fiscal_Year__c</name>
+    </fields>
+    <layouts>
+        <layout>Rollup Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+        <sections>
+            <label><!-- Rollup Details --></label>
+            <section>Rollup Details</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

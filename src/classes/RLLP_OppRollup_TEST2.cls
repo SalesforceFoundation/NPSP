@@ -37,10 +37,6 @@
 */
 @isTest
 public with sharing class RLLP_OppRollup_TEST2 {
-
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
-    private static String strTestOnly = '*';
     
     static String giftRecordTypeIdForTests = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
     
@@ -48,15 +44,13 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testOpportunityUtilityErrorHandling test method for the One to One account processor.
     */
     static testMethod void testOpportunityUtilityErrorHandlingOne2One() {
-    	if (strTestOnly != '*' && strTestOnly != 'testOpportunityUtilityErrorHandlingOne2One') return;
-        testOpportunityUtilityErrorHandling(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	testOpportunityUtilityErrorHandling(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testOpportunityUtilityErrorHandling test method for the household account processor.
     */
     static testMethod void testOpportunityUtilityErrorHandlingHHAccount() {
-    	if (strTestOnly != '*' && strTestOnly != 'testOpportunityUtilityErrorHandlingHHAccount') return;
-        testOpportunityUtilityErrorHandling(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    	testOpportunityUtilityErrorHandling(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Creates a contact, inserts an opportunity missing required close date, and verifies no
@@ -124,14 +118,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testGivingRollupTooManyOpps test method for the One to One account processor.
     */
     static testMethod void testGivingRollupTooManyOppsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testGivingRollupTooManyOppsOne2One') return;
         testGivingRollupTooManyOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testGivingRollupTooManyOpps test method for the household account processor.
     */
     static testMethod void testGivingRollupTooManyOppsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testGivingRollupTooManyOppsHHAccount') return;
         testGivingRollupTooManyOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -192,14 +184,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testHouseholdStats test method for the One to One account processor.
     */
     static testMethod void testHouseholdStatsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testHouseholdStatsOne2One') return;
         testHouseholdStats(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testHouseholdStats test method for the household account processor.
     */
     static testMethod void testHouseholdStatsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testHouseholdStatsHHAccount') return;
         testHouseholdStats(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -274,9 +264,13 @@ public with sharing class RLLP_OppRollup_TEST2 {
             insert testOpps;
             Test.StopTest();
 
-            Contact c = [SELECT Id,npo02__Total_Household_Gifts__c,npo02__OppAmountThisYearHH__c,npo02__OppAmountLastYearHH__c,
-                            npo02__LastCloseDateHH__c, npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c, npo02__Household__r.npo02__Best_Gift_Year__c, npo02__Household__r.npo02__Best_Gift_Year_Total__c
-                FROM Contact WHERE LastName=:CAO_Constants.CONTACT_LASTNAME_FOR_TESTS AND FirstName=:CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS+'second' LIMIT 1];
+            Contact c = [
+                SELECT Id,npo02__Total_Household_Gifts__c,npo02__OppAmountThisYearHH__c,npo02__OppAmountLastYearHH__c,
+                    npo02__LastCloseDateHH__c, npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c,
+                    npo02__Household__r.npo02__Best_Gift_Year__c, npo02__Household__r.npo02__Best_Gift_Year_Total__c
+                FROM Contact
+                WHERE Id = :Con2.Id
+                LIMIT 1];
             System.assertEquals (375,c.npo02__Total_Household_Gifts__c);
             System.assertEquals (100,c.npo02__OppAmountThisYearHH__c);
             System.assertEquals (0,c.npo02__OppAmountLastYearHH__c);
@@ -291,14 +285,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testUserDefinedRollup test method for the One to One account processor.
     */
     static testMethod void testUserDefinedRollupOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testUserDefinedRollupOne2One') return;
         testUserDefinedRollup(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testUserDefinedRollup test method for the household account processor.
     */
     static testMethod void testUserDefinedRollupHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testUserDefinedRollupHHAccount') return;
         testUserDefinedRollup(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -339,13 +331,13 @@ public with sharing class RLLP_OppRollup_TEST2 {
         testUserRollup1.Name = 'TestRollup8675309';
         testURFS.add(TestUserRollup1);
 
-        npo02__User_Rollup_Field_Settings__c TestUserRollup2 = new npo02__User_Rollup_Field_Settings__c();
+        npo02__User_Rollup_Field_Settings__c testUserRollup2 = new npo02__User_Rollup_Field_Settings__c();
         testUserRollup2.npo02__Target_Field__c = 'NumberOfEmployees'; 
         testUserRollup2.npo02__Source_Field__c = 'FiscalYear';
         testUserRollup2.npo02__Object_Name__c = 'Account'; 
         testUserRollup2.npo02__Field_Action__c = 'MAX';
         testUserRollup2.Name = 'TestRollup2';
-        testURFS.add(TestUserRollup2);
+        testURFS.add(testUserRollup2);
 
         npo02__User_Rollup_Field_Settings__c testUserRollup3 = new npo02__User_Rollup_Field_Settings__c();
         testUserRollup3.npo02__Target_Field__c = 'npo02__LastCloseDate__c'; 
@@ -353,8 +345,15 @@ public with sharing class RLLP_OppRollup_TEST2 {
         testUserRollup3.npo02__Object_Name__c = 'npo02__Household__c'; 
         testUserRollup3.npo02__Field_Action__c = 'MAX';
         testUserRollup3.Name = 'TestRollup3';
-        testURFS.add(TestUserRollup3);
+        testURFS.add(testUserRollup3);
 
+        npo02__User_Rollup_Field_Settings__c testUserRollup4 = new npo02__User_Rollup_Field_Settings__c();
+        testUserRollup4.npo02__Target_Field__c = 'AnnualRevenue';
+        testUserRollup4.npo02__Source_Field__c = 'Amount';
+        testUserRollup4.npo02__Object_Name__c = 'Account';
+        testUserRollup4.npo02__Field_Action__c = 'SUM';
+        testUserRollup4.Name = 'TestRollup4';
+        testURFS.add(testUserRollup4);
         insert testURFS; 
 
         Contact c = new Contact(LastName = 'Lastname', BirthDate = system.today().addDays(-4));
@@ -373,7 +372,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             }
 
         map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings();
-        system.assertEquals(3, urfsMap.keySet().size());                    
+        system.assertEquals(4, urfsMap.keySet().size());
 
         Test.StartTest();
         insert newOpp;
@@ -388,14 +387,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testMultiCurrencyMethods test method for the One to One account processor.
     */
     static testMethod void testMultiCurrencyMethodsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testMultiCurrencyMethodsOne2One') return;
         testMultiCurrencyMethods(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testMultiCurrencyMethods test method for the household account processor.
     */
     static testMethod void testMultiCurrencyMethodsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testMultiCurrencyMethodsHHAccount') return;
         testMultiCurrencyMethods(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -408,9 +405,9 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
-        //exercise internal multicurrency helper methods, check currency conversion             
-        decimal d = RLLP_OppRollup_UTIL.ConvertFromCorporate('USD', 55.00);      
-        d = RLLP_OppRollup_UTIL.ConvertCurrency('USD', 'USD', 55.00);
+        //exercise internal multicurrency helper methods, check currency conversion
+        decimal d = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates('USD', 55.00);
+        d = UTIL_CurrencyConversion.convertAmountUsingStandardRates('USD', 'USD', 55.00);
 
         //create & insert second household member
         Contact Con = new contact(
@@ -446,14 +443,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testRollupAlls test method for the One to One account processor.
     */
     static testMethod void testRollupAllsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testRollupAllsOne2One') return;
         testRollupAlls(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testRollupAlls test method for the household account processor.
     */
     static testMethod void testRollupAllsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testRollupAllsHHAccount') return;
         testRollupAlls(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -471,10 +466,10 @@ public with sharing class RLLP_OppRollup_TEST2 {
 
         test.startTest();
         og.rollupAllContacts();
-        og.rollupAllAccounts();     
+        og.rollupAllAccounts();
         boolean x = RLLP_OppRollup_UTIL.isMultiCurrency();
-        decimal y = RLLP_OppRollup_UTIL.ConvertFromCorporate('USD', 500.00);
-        decimal z = RLLP_OppRollup_UTIL.ConvertCurrency('USD', 'USD', 6565.54);
+        decimal y = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates('USD', 500.00);
+        decimal z = UTIL_CurrencyConversion.convertAmountUsingStandardRates('USD', 'USD', 6565.54);
         test.stopTest();
 
         // UNDONE: THERE ARE NO ASSERTS!!!!
@@ -483,14 +478,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testFiscalYearandCustomNDay test method for the One to One account processor.
     */
     static testMethod void testFiscalYearandCustomNDayOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testFiscalYearandCustomNDayOne2One') return;
         testFiscalYearandCustomNDay(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testFiscalYearandCustomNDay test method for the household account processor.
     */
     static testMethod void testFiscalYearandCustomNDayHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testFiscalYearandCustomNDayHHAccount') return;
         testFiscalYearandCustomNDay(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -556,14 +549,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testSoftCredits test method for the One to One account processor.
     */
     static testMethod void testSoftCreditsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testSoftCreditsOne2One') return;
         testSoftCredits(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testSoftCredits test method for the household account processor.
     */
     static testMethod void testSoftCreditsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testSoftCreditsHHAccount') return;
         testSoftCredits(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -651,14 +642,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testOrgSoftCredits test method for the One to One account processor.
     */           
     static testMethod void testOrgSoftCreditsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testOrgSoftCreditsOne2One') return;
         testOrgSoftCredits(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testOrgSoftCredits test method for the household account processor.
     */
     static testMethod void testOrgSoftCreditsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testOrgSoftCreditsHHAccount') return;
         testOrgSoftCredits(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -703,7 +692,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 listAcc.add(new Account(name='Test Account' + string.valueOf(i), npe01__SYSTEMIsIndividual__c=false));
             }
             insert listAcc;
-            listAcc = [select Id, Name, npe01__SYSTEMIsIndividual__c from Account where Name like 'Test Account%'];
+            listAcc = [SELECT Id, Name, npe01__SYSTEMIsIndividual__c FROM Account WHERE Id IN : listAcc];
             system.assertEquals(cTest, listAcc.size());
             system.assertEquals(false, listAcc[0].npe01__SYSTEMIsIndividual__c);
             
@@ -740,14 +729,12 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testFutureMethods test method for the One to One account processor.
     */
     static testMethod void testFutureMethodsOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testFutureMethodsOne2One') return;
         testFutureMethods(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
     * @description Runs testFutureMethods test method for the household account processor.
     */
     static testMethod void testFutureMethodsHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testFutureMethodsHHAccount') return;
         testFutureMethods(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -806,7 +793,6 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Verifies the RLLP_OppRollup_UTIL getCurrentFY() is not null
     */
     static testMethod void testFYUtility(){
-        if (strTestOnly != '*' && strTestOnly != 'testFYUtility') return;
         integer fy = RLLP_OppRollup_UTIL.getCurrentFY();
         system.assert(fy != null);
     }
@@ -815,8 +801,6 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * combinations of org fiscal year settings
     */
     static testMethod void testGetFiscalYearForDate() {
-        if (strTestOnly != '*' && strTestOnly != 'testGetFiscalYearForDate') return;
-
         Date targetDate = Date.newInstance(2014, 10, 1);
 
         // Target date is in fiscal year Jan 2014 through Dec 2014, year comes from start
@@ -895,7 +879,6 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * @description Runs testUDRChangeBehavior test method for the One to One account processor.
     */
     static testMethod void testUDRChangeBehaviorOne2One(){
-        if (strTestOnly != '*' && strTestOnly != 'testUDRChangeBehaviorOne2One') return;
         testUDRChangeBehavior(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -903,7 +886,6 @@ public with sharing class RLLP_OppRollup_TEST2 {
     * Total Quantity and verifies rollup fields from opportunity trigger for the contacts reflects the update.
     */
     static testMethod void testUDRChangeBehaviorHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'testUDRChangeBehaviorHHAccount') return;
         testUDRChangeBehavior(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************

@@ -1,0 +1,19 @@
+<apex:component selfClosing="true" >
+    <apex:attribute name="tooltip" type="String" description="the string to display." />
+
+    <style>
+    </style>
+
+    <apex:outputPanel style="inline" styleClass="slds-form-element__icon" rendered="{!NOT(ISBLANK(tooltip))}" >
+        <button aria-describedby="help" class="slds-button slds-button_icon" onclick="return false;">
+            <svg class="slds-icon slds-icon_xx-small slds-icon-text-default" aria-hidden="true">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#info')}"></use>
+            </svg>
+            <span class="slds-assistive-text">{!tooltip}</span>
+        </button>
+        <div class="util-tooltip slds-popover slds-popover_tooltip slds-nubbin_top-left" role="tooltip" id="help">
+            <div class="slds-popover__body">{!tooltip}</div>
+        </div>
+    </apex:outputPanel>
+
+</apex:component>

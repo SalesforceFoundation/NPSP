@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Deliverable --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הDeliverable --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Deliverable --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הDeliverable --></value>
+    </caseValues>
+    <fields>
+        <help><!-- The date on which this particular Deliverable is due. --></help>
+        <label>תאריך יעד</label>
+        <name>Grant_Deadline_Due_Date__c</name>
+    </fields>
+    <fields>
+        <help>התאריך שבו התוצר נשלח בפועל.</help>
+        <label>תאריך סגירה</label>
+        <name>Grant_Deliverable_Close_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Description of what is required for this deliverable. --></help>
+        <label>דרישות</label>
+        <name>Grant_Deliverable_Requirements__c</name>
+    </fields>
+    <fields>
+        <label>הזדמנות</label>
+        <name>Opportunity__c</name>
+        <relationshipLabel>תוצרים</relationshipLabel>
+    </fields>
+    <fields>
+        <label>סוג</label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Application</masterLabel>
+            <translation>יישום</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Final Report</masterLabel>
+            <translation>דוח סופי</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Interim Report</masterLabel>
+            <translation>דוח ביניים</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LOI</masterLabel>
+            <translation><!-- LOI --></translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Grant Deadline Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>דרישות להענקת מענק</label>
+            <section>Grant Deliverable Requirements</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Deliverable Name --></nameFieldLabel>
+</CustomObjectTranslation>

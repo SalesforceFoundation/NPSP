@@ -388,7 +388,8 @@
         if (typeof sforce === "undefined") {
             window.location.replace('/' + component.get('v.hhId'));
         } else {
-            sforce.one.navigateToSObject(component.get('v.hhId'));
+            // using back() instead of navigateToSObject() causes LEX to refresh related lists on the page.
+            sforce.one.back(true);
         }
     },
 
@@ -498,6 +499,7 @@
             $A.get("$Label.npsp.lblFindOrAddContact");
             $A.get("$Label.npsp.lblFindInContacts");
             $A.get("$Label.npsp.lblNoHHMergePermissions");
+            $A.get("$Label.npsp.lblYouAreHere");
         } catch (e) {}
     },
 

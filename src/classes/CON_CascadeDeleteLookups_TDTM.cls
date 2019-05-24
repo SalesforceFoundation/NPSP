@@ -30,64 +30,85 @@
 /**
  * @author Salesforce.org
  * @date 2017
- * @group Utilities
- * @description When contacts are deleted, cascade deletes related relationships, recurring donations, and 
- * opportunities. Prevents Contact deletion if any attributed opportunities are closed/won or attributed
- * to an organization.
+ * @group Cascade Delete
+ * @description Cascade deletion extension for Contact object.
  */
-public with sharing class CON_CascadeDeleteLookups_TDTM extends UTIL_CascadeDeleteLookups_TDTM {
-    
+public with sharing class CON_CascadeDeleteLookups_TDTM extends CDL_CascadeDeleteLookups_TDTM {
+
     /*******************************************************************************************************
-    * @description Cascade deletion definitions for Contact.
+    * @description Gets the deleted Contacts CascadeDeleteLoader Object. 
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader.
     ********************************************************************************************************/
-    public static List<Cascade> cascades = new List<Cascade>{
-        /* Opportunity and Recurring Donation deletion are applied in CON_DeleteContactOverride_CTRL
-        to avoid applying validation to contact merge operations.
-
-        new Cascade('Opportunity','Primary_Contact__c', new List<String>{'IsWon','IsClosed','AccountId'}),
-        new Cascade('npe03__Recurring_Donation__c', 'npe03__Contact__c'),
-        */
-        new Cascade('npe4__Relationship__c', 'npe4__ReciprocalRelationship__r.npe4__Contact__c')
-    };
-
-    /*******************************************************************************************************
-    * @description Override provides super class with cascades for this triger.
-    * @return List<Cascade> The cascade deletions to perform for this trigger.
-    ********************************************************************************************************/    
-    public override List<Cascade> getCascades() {
-        return cascades;
+    protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
+        return new CascadeDeleteLoader();
     }
 
     /*******************************************************************************************************
-    * @description This method override detects error conditions in cascade deleted objects. Opportunities 
-    * that are Closed/Won or attributed to an account that is not the deleted contact's household account 
-    * prevent deletion of the contact. This validation only applies in the Contact Delete button override.
-    * @return void This method adds to the errors property of the Cascades objects and returns nothing.
+    * @description Gets the undeleted Contacts CascadeUndeleteLoader Object.
+    * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
     ********************************************************************************************************/
-    public override void addDeletionErrors() {
-        for (Cascade cc : getCascades()) {
-            //special case deleting opportunities
-            if (cc.objectName == 'Opportunity') {
-                for (SObject child : cc.children.values()) {
-                    Id parentId = cc.childToParent.get(child.id);
-                    Id oppAccount = (Id)child.get('AccountId');
-                    Id conAccount = (Id)cc.parents.get(parentId).get('AccountId');
-                    
-                    //contacts deleting opps: verify opp attribution is contact's hh account
-                    if (oppAccount != conAccount) {
-                        putError(cc, child.id, Label.OrganizationalOpportunities);
-                    }
-                    //don't cascade closed/won opportunities
-                    if ((Boolean)child.get('IsClosed') && (Boolean)child.get('IsWon')) {
-                        putError(cc, child.id, Label.ClosedWonOpportunities);
-                    }
-                }
-            }
-            if (cc.objectName == 'Case') {
-                for (SObject child : cc.children.values()) {
-                    putError(cc, child.id, Case.SObjectType.getDescribe().getLabelPlural());
-                }
-            }
+    protected override CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
+        return new CascadeUndeleteLoader();
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the children of the deleted Contacts.
+    ********************************************************************************************************/
+    class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
+        
+        /*******************************************************************************************************
+        * @description Retrieves the related Relationships of the deleted Contacts.
+        * @param Set<Id> The Ids of the deleted Contacts.
+        * @return List<npe4__Relationship__c> Deleted Contacts' Relationships.
+        ********************************************************************************************************/
+        public List<npe4__Relationship__c> load(Set<Id> contactIds) {
+            List<SObject> reciprocalRelationships = [
+                SELECT Id
+                FROM npe4__Relationship__c
+                WHERE npe4__Contact__c IN :contactIds
+            ];
+
+            return [
+                SELECT Name
+                FROM npe4__Relationship__c
+                WHERE npe4__ReciprocalRelationship__c IN :reciprocalRelationships
+            ];
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the children of the undeleted Contacts.
+    ********************************************************************************************************/
+    class CascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
+
+        /*******************************************************************************************************
+        * @description Retrieves the Relationships of the undeleted Contacts.
+        * @param Set<Id> The Ids of the undeleted Contacts.
+        * @return List<npe4__Relationship__c> Undeleted Contacts' Relationships.
+        ********************************************************************************************************/
+        public List<npe4__Relationship__c> load(Set<Id> contactIds) {
+            List<npe4__Relationship__c> reciprocalRelationships = [
+                SELECT Id
+                FROM npe4__Relationship__c
+                WHERE npe4__Contact__c IN :contactIds
+            ];
+
+            return [
+                SELECT Name
+                FROM npe4__Relationship__c
+                WHERE npe4__ReciprocalRelationship__c IN :reciprocalRelationships
+                AND IsDeleted = TRUE
+                ALL ROWS
+            ];
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the next children records group to be undeleted. In this case, there is no other
+        * group of children records to undelete after Relationships undeletion.
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader
+        ********************************************************************************************************/
+        public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
+            return null;
         }
     }
 }

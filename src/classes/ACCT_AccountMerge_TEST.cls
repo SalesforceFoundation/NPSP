@@ -44,12 +44,6 @@
 @isTest
 private with sharing class ACCT_AccountMerge_TEST {
 
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
     /*******************************************************************************************************
     * @description set the Account Model processor for the test.
     * @param strProcessor The Processor to set
@@ -71,7 +65,9 @@ private with sharing class ACCT_AccountMerge_TEST {
     *   Addresses are merged.
     */
     static testMethod void testMergeTwoHHAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'testMergeTwoHHAccounts') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         integer cHH;
         integer cCon;
         
@@ -102,7 +98,7 @@ private with sharing class ACCT_AccountMerge_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the accounts and contacts
         system.assertEquals(1, listAcc.size());
@@ -150,7 +146,9 @@ private with sharing class ACCT_AccountMerge_TEST {
     *   - default address correctly pushed to appropriate contacts. 
     */
     static testMethod void testMergeThreeHHAccountsManyAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'testMergeThreeHHAccountsManyAddr') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         integer cHH;
         integer cCon;
         
@@ -169,11 +167,8 @@ private with sharing class ACCT_AccountMerge_TEST {
             con.MailingCountry = 'United States';
             con.is_Address_Override__c = true;
         }
-        // clear our triggers recursion prevention since we starting a new test
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update ADDR_Addresses_TEST.listConT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // decide who wins (and remember who was primary contact)
         Account accWinner = [select Id, Name, npe01__One2OneContact__c from Account where Id = :ADDR_Addresses_TEST.listAccT[1].Id];
         list<Account> listAccLoser = new list<Account>();
@@ -194,7 +189,7 @@ private with sharing class ACCT_AccountMerge_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the accounts and contacts
         system.assertEquals(1, listAcc.size());
@@ -227,8 +222,9 @@ private with sharing class ACCT_AccountMerge_TEST {
     *   Opp Rollups are recalculated.
     */
     static testMethod void testMergeTwoOne2OneAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'testMergeTwoOne2OneAccounts') return;
-        
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         setAccountModelForTest(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
@@ -258,7 +254,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         // reload our contacts and accounts
         listAcc = new list<Account>([select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
             npo02__NumberOfClosedOpps__c, npe01__One2OneContact__c from Account order by Id]);
-        listCon = [select Id, Firstname, AccountId from Contact order by Firstname];
+        listCon = [select Id, Firstname, AccountId from Contact order by Id];
             
         // verify the accounts and contacts
         system.assertEquals(1, listAcc.size());
@@ -285,8 +281,9 @@ private with sharing class ACCT_AccountMerge_TEST {
     *   - only one default address
     */
     static testMethod void testMergeThreeOrgAccountsManyAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'testMergeThreeOrgAccountsManyAddr') return;
-        
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         TDTM_DefaultConfig.startTestDataInit();
         integer cAcc = 3;
         
@@ -306,14 +303,12 @@ private with sharing class ACCT_AccountMerge_TEST {
         }
         
         insert listAcc;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-                
+
         // create one additional unique address
         Account acc = listAcc[0];
         acc.BillingStreet = '987 xyz';
         acc.BillingCity = 'Bellevue';
         update acc;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         system.assertEquals(4, [select count() from Address__c]);
         system.assertEquals(3, [select count() from Address__c where Default_Address__c = true]);  
 
@@ -353,7 +348,6 @@ private with sharing class ACCT_AccountMerge_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeHHToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToHH') return;
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -362,7 +356,6 @@ private with sharing class ACCT_AccountMerge_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOne2OneToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOne2One') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -371,7 +364,6 @@ private with sharing class ACCT_AccountMerge_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOrgToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToHH') return;
         testNamesAndOppsMerge(null, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -380,7 +372,6 @@ private with sharing class ACCT_AccountMerge_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeHHToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, null);
     }
 
@@ -389,7 +380,6 @@ private with sharing class ACCT_AccountMerge_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOrgToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOne2One') return;
         testNamesAndOppsMerge(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -398,7 +388,6 @@ private with sharing class ACCT_AccountMerge_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOne2OneToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
     }
     
@@ -440,7 +429,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         accWinner = listAcc[0];
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         system.assertEquals(listCon[0].AccountId, accWinner.Id);

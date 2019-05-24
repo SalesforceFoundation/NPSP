@@ -1,0 +1,37 @@
+.THIS .slds-form-element__icon {
+    margin-left: .2rem;
+}
+.THIS .slds-input[readonly] {
+    padding-left: .5rem;
+}
+/*removes the extra required asterisk and any assistive-text for tooltip workaround*/
+.THIS .hasTooltip .slds-form-element__label {
+    display: none;
+    visibility: hidden;
+}
+/*elongates filter group fields*/
+.THIS .filterGroupField > .slds-form-element__control {
+    display: inline;
+}
+.THIS .datatableContainer {
+    height: 175px;
+}
+.THIS .datatableContainer .slds-scrollable_y {
+    height: 100%;
+}
+/*stops save button from jumping by fixing the size of the error height*/
+.THIS .slds-has-error + .filterGroupField {
+    max-height: 60px;
+}
+.THIS .nameField {
+    height: 60px;
+}
+/*allows for visibility of date/datetime pickers*/
+.THIS lightning-calendar {
+    position: fixed;
+    z-index: 9998;
+}
+.THIS lightning-base-combobox {
+    position: fixed;
+    z-index: 9999;
+}

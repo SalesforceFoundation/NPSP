@@ -36,64 +36,257 @@
 */
 
 public with sharing class BDI_DataImport_CTRL {
+
+    /*******************************************************************************************************
+    * @description is the batch currently running
+    */
     public Boolean batchRunning { get; set; }
+
+    /*******************************************************************************************************
+    * @description is the batch currently running in Dry Run mode
+    */
+    public Boolean isDryRun { get; set; }
+
+    /*******************************************************************************************************
+    * @description the job Id of the currently running batch
+    */
     private ID apexJobId;
+
+    /*******************************************************************************************************
+    * @description when the batch process was started
+    */
     private DateTime dtStart;
 
-    public boolean userCanEditSettings {
+    /*******************************************************************************************************
+    * @description does the user have permissions and an eligible DataImportBatch record to update the batch/settings
+    */
+    public Boolean userCanEditSettings {
         get {
-            return Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
-        }
+            if (!isGiftBatch) {
+                return isTrueBatch ?
+                        DataImportBatch__c.SobjectType.getDescribe().isUpdateable() :
+                        Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
+            } else {
+                return false;
+            }
+        } private set;
     }
     
+    /*******************************************************************************************************
+    * @description constructor
+    */
     public BDI_DataImport_CTRL() {
         batchRunning = false;
+        isDryRun = false;
         apexJobId = null;
         dtStart = null;
+        isEditMode = false;
+
+        // load up default settings or a specified batch
+        loadBatchAndSettings(ApexPages.currentPage().getParameters().get('batchId'));
     }
 
-    public PageReference preload() { 
-        // force loading data import settings.
-        // for some reason, just leaving the references to diSettings in the page
-        // wasn't enough to get the settings initially saved (the upsert in the CustomSettingsFacade failed),
-        // and our explicit upsert when running the batch would hit a runtime error.
-        // by referring to diSettings in our initial action method, the upsert from the Facade succeeds,
-        // and our later upsert succeeds!
-        diSettings = diSettings;     
-        
+    /*******************************************************************************************************
+    * @description loads up the specified batch and it settings, or loads custom settings if no batch
+    * @return null
+    */
+    private void loadBatchAndSettings(string strBatchId) {
+        if (string.isNotBlank(strBatchId)) {
+            // load up the batch and get our settings from it
+            diBatch = BDI_DataImportBatch_SEL.selectById(strBatchId);
+            diSettings = BDI_DataImportService.diSettingsFromDiBatch(diBatch);
+            diTemp.NPSP_Data_Import_Batch__c = diBatch.Id;
+        } else {
+            diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+            // need to create our in-memory batch to hold the custom settings
+            diBatch = BDI_DataImportService.diBatchFromDiSettings(diSettings);
+        }
+
+        // our picklist options hold lowercase DIfields
+        diBatch.Donation_Matching_Rule__c = diBatch.Donation_Matching_Rule__c.toLowercase();
+    }
+
+    /*******************************************************************************************************
+    * @description initial actionMethod called when page first loaded.  handles loading custom settings.
+    * @return null
+    */
+    public PageReference preload() {
         return null;
     }
     
-    public Data_Import_Settings__c diSettings {
+    /*******************************************************************************************************
+    * @description the initial custom settings object we load by default.  will be converted to a diBatch.
+    */
+    @TestVisible
+    private Data_Import_Settings__c diSettings { get; set; }
+
+    /*******************************************************************************************************
+    * @description the current batch we are going to process. it will be an in-memory only batch (no Id)
+    * if we are going to process records that have no batch.
+    */
+    public DataImportBatch__c diBatch { get; private set; }
+
+    /*******************************************************************************************************
+    * @description a temporary DataImport record, we can use to bind the Batch lookup to in the UI.
+    */
+    public DataImport__c diTemp {
         get {
-            if (diSettings == null) {
-                diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+            if (diTemp == null) {
+                diTemp = new DataImport__c();
             }
-            return diSettings;
+            return diTemp;
         }
         private set;
     }
+
+    /*******************************************************************************************************
+    * @description whether we are processing a record created for Batch Gift Entry or only the Data Importer
+    */
+    public Boolean isGiftBatch {
+        get {
+            return diBatch.GiftBatch__c;
+        } private set;
+    }
+
+    /*******************************************************************************************************
+    * @description whether we are processing a real saved batch, or just using custom settings with an
+    * in-memory batch.
+    */
+    public Boolean isTrueBatch {
+        get {
+            return diBatch.Id != null;
+        } private set;
+    }
     
+    /*******************************************************************************************************
+    * @description is the panel in Edit Mode
+    */ 
+    public boolean isEditMode { get; set; }
+
+    /*********************************************************************************************************
+    * @description puts the Settings panel into Edit mode
+    * @return null
+    */
+    public PageReference editBDISettings() {
+        isEditMode = true;
+        return null;
+    }        
+
+    /*********************************************************************************************************
+    * @description saves the Batch/Settings, and puts panel into readonly mode.
+    * @return null
+    */
+    public PageReference saveBDISettings() {
+
+        try {
+            if (!userCanEditSettings) {
+                String strObj = isTrueBatch ?
+                    DataImportBatch__c.SobjectType.class.getName() :
+                    Data_Import_Settings__c.SObjectType.class.getName();
+                throw(new BDIException(String.format(Label.flsError, new list<String>{strObj})));
+            }
+
+            // first validate the settings
+            Data_Import_Settings__c diSettingsT = BDI_DataImportService.diSettingsFromDiBatch(diBatch);
+            if (isTrueBatch) {
+                BDI_DataImportService.validateSettings(diBatch);
+            } else {
+                BDI_DataImportService.validateSettings(diSettingsT);
+            }
+
+            // update the correct object (batch vs custom settings)
+            if (isTrueBatch) {
+                UTIL_DMLService.upsertRecord(diBatch);
+            } else {
+                diSettingsT.Id = diSettings.Id;
+                UTIL_DMLService.upsertRecord(diSettingsT);
+                diSettings = diSettingsT;
+            }
+            isEditMode = false;
+        } catch (Exception ex) {
+            ApexPages.addMessages(ex);
+        }
+        return null;
+
+    }        
+    
+    /*********************************************************************************************************
+    * @description puts the Settings panel into readonly mode.
+    * @return null
+    */
+    public PageReference cancelBDISettings() {
+        isEditMode = false;
+        return null;
+    }        
+
+    /*********************************************************************************************************
+    * @description closes the page and returns to the original calling page
+    * @return PageReference
+    */
     public PageReference close() {
         String retUrl = ApexPages.currentPage().getParameters().get('retURL');
-        if (String.isBlank(retUrl)) retUrl = '/home/home.jsp';
-
-        PageReference p = new PageReference(retUrl);
+        PageReference p;
+        if (!String.isBlank(retUrl)) {
+            p = new PageReference(retUrl);
+        } else {
+            p = USER_UserService.getHomePageReference();
+        }
         p.setRedirect(true);
         return p;
     }
     
+    /*********************************************************************************************************
+    * @description starts the batch job to import data
+    * @return null
+    */
     public PageReference importData() {
-        if (!Test.isRunningTest() && this.userCanEditSettings){
-            upsert diSettings;
-        }
+
         dtStart = system.now();
-        apexJobId = BDI_DataImport_API.importData();
-        if(apexJobId != null)
-            batchRunning = true;
+        try {
+            list<BDI_DataImport_API.ProcessDataImportBatchesResult> listResults =
+                BDI_DataImport_API.processDataImportBatches(new list<Id>{diBatch.Id});
+            apexJobId = listResults[0].apexJobId;
+            if (apexJobId != null) {
+                batchRunning = true;
+            }
+        } catch (Exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            batchRunning = false;
+        }
         return null;
     }
 
+    /*********************************************************************************************************
+    * @description starts the batch job to process data in Dry Run mode
+    * @return null
+    */
+    public PageReference startDryRun() {
+
+        dtStart = system.now();
+        try {
+            list<BDI_DataImport_API.ProcessDataImportBatchesResult> listResults =
+                BDI_DataImport_API.processDataImportBatches(new list<Id>{diBatch.Id}, true);
+            apexJobId = listResults[0].apexJobId;
+            if (apexJobId != null) {
+                batchRunning = true;
+                isDryRun = true;
+            }
+        } catch (Exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            batchRunning = false;
+            isDryRun = false;
+        }
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description our exception object for BDI errors.
+    */
+    private class BDIException extends Exception {}
+
+    /*******************************************************************************************************
+    * @description the AsyncApexJob for the running batch job
+    */
     public AsyncApexJob aaj {
         get {
             if (apexJobId != null) {
@@ -106,14 +299,20 @@ public with sharing class BDI_DataImport_CTRL {
         private set;
     }
     
+    /*******************************************************************************************************
+    * @description the current status of the batch job
+    */
     public string strBatchStatus {
         get {
             string strLabel = (aaj.Status == 'Processing' ? label.bdiStatusProcessing : label.bdiStatusProcessed);
             return string.format(strLabel, new string[]{string.valueOf(aaj.JobItemsProcessed), string.valueOf(aaj.TotalJobItems)});
-        }
+        } private set;
     }
     
-    public integer crecProcessed { 
+    /*******************************************************************************************************
+    * @description the number of records processed for the batch job
+    */
+    public integer crecProcessed {
         get {
             if (apexJobId != null) {
                 crecProcessed = [select count() from DataImport__c where ApexJobId__c = :apexJobId];
@@ -124,10 +323,14 @@ public with sharing class BDI_DataImport_CTRL {
         set;
     }
 
-    public integer crecImported { 
+    /*******************************************************************************************************
+    * @description the number of records successfully imported for the batch job
+    */
+    public integer crecImported {
         get {
             if (apexJobId != null) {
-                crecImported = [select count() from DataImport__c where Status__c = :label.bdiImported and ApexJobId__c = :apexJobId];
+                String status = isDryRun ? BDI_DataImport_API.bdiDryRunValidated : BDI_DataImport_API.bdiImported;
+                crecImported = [select count() from DataImport__c where Status__c = :status and ApexJobId__c = :apexJobId];
                 return crecImported;
             }
             return null;
@@ -135,10 +338,14 @@ public with sharing class BDI_DataImport_CTRL {
         set;
     }
 
-    public integer crecFailed { 
+    /*******************************************************************************************************
+    * @description the number of records that failed to import for the batch job
+    */
+    public integer crecFailed {
         get {
             if (apexJobId != null) {
-                crecFailed = [select count() from DataImport__c where Status__c = :label.bdiFailed and ApexJobId__c = :apexJobId];
+                String status = isDryRun ? BDI_DataImport_API.bdiDryRunError : BDI_DataImport_API.bdiFailed;
+                crecFailed = [select count() from DataImport__c where Status__c = :status and ApexJobId__c = :apexJobId];
                 return crecFailed;
             }
             return null;
@@ -146,21 +353,33 @@ public with sharing class BDI_DataImport_CTRL {
         set;
     }
 
+    /*******************************************************************************************************
+    * @description the number of records to process at the beginning of the job.  it does not reflect
+    * how many are left to process, since validated and failed records would get counted, and you
+    * can't tell if they were already processed or not.
+    */
     public integer crecToProcess {
         get {
-            crecToProcess = [select count() from DataImport__c where Status__c <> :label.bdiImported];
+            crecToProcess = [select count() from DataImport__c where Status__c <> :BDI_DataImport_API.bdiImported and
+            NPSP_Data_Import_Batch__c = :diBatch.Id];
             return crecToProcess;
         }
         set;
     }
 
-    public boolean isBatchJobCompleted { 
+    /*******************************************************************************************************
+    * @description whether the batch job has completed processing
+    */
+    public boolean isBatchJobCompleted {
         get {
             return (batchRunning == true && (aaj.Status == 'Completed' || aaj.Status == 'Failed' || aaj.Status == 'Aborted'));
         }
         set;
     }
 
+    /*******************************************************************************************************
+    * @description the percentage completed for the batch job
+    */
     public integer percentComplete {
         get {
             if (aaj != null) {
@@ -189,6 +408,9 @@ public with sharing class BDI_DataImport_CTRL {
         private set;
     }
 
+    /*******************************************************************************************************
+    * @description the amount of time, formatted as a string, spent processing the batch job
+    */
     public string strTimeSpent {
         get {
             if (dtStart != null && !isBatchJobCompleted) {
@@ -200,58 +422,6 @@ public with sharing class BDI_DataImport_CTRL {
             } else {
                 return null;
             }
-        }
-        private set;
-    }
-
-    public list<SelectOption> listSOContactUniqueID {
-        get {
-            if (listSOContactUniqueID == null) {
-                listSOContactUniqueID = new list<SelectOption>();
-                //add a default option
-                listSOContactUniqueID.add(new SelectOption('', Label.stgLabelNone));
-                            
-                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Contact');               
-                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
-                    //only allow custom fields that have no namespace
-                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                        Schema.Displaytype dt = dfr.getType();
-                        // only strings and numbers
-                        if (dt == Schema.DisplayType.String ||
-                           dt == Schema.DisplayType.Integer ||
-                           dt == Schema.DisplayType.Double) {
-                           listSOContactUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                        } 
-                    }               
-                }
-            }               
-            return listSOContactUniqueID;
-        }
-        private set;
-    }
-
-    public list<SelectOption> listSOAccountUniqueID {
-        get {
-            if (listSOAccountUniqueID == null) {
-                listSOAccountUniqueID = new list<SelectOption>();
-                //add a default option
-                listSOAccountUniqueID.add(new SelectOption('', Label.stgLabelNone));
-                                           
-                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Account');               
-                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
-                    //only allow custom fields that have no namespace
-                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
-                        Schema.Displaytype dt = dfr.getType();
-                        // only strings and numbers
-                        if (dt == Schema.DisplayType.String ||
-                           dt == Schema.DisplayType.Integer ||
-                           dt == Schema.DisplayType.Double) {
-                           listSOAccountUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
-                        } 
-                    }               
-                }
-            }               
-            return listSOAccountUniqueID;
         }
         private set;
     }

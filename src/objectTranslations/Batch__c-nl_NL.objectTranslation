@@ -37,7 +37,7 @@
     <layouts>
         <layout>Batch Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
     </layouts>

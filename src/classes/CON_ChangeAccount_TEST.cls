@@ -36,19 +36,15 @@
 
 @isTest
 public with sharing class CON_ChangeAccount_TEST {
-
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
             
     /*******************************************************************************************************
     * @description Move a Contact to a different Account and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsUpdatedHHToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedHHToHH') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         testNamesAndOppsUpdated(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -57,7 +53,9 @@ public with sharing class CON_ChangeAccount_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsUpdatedOne2OneToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedOne2OneToOne2One') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         testNamesAndOppsUpdated(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -66,7 +64,9 @@ public with sharing class CON_ChangeAccount_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsUpdatedOrgToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedOrgToHH') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         testNamesAndOppsUpdated(null, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -75,7 +75,9 @@ public with sharing class CON_ChangeAccount_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsUpdatedHHToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedHHToOrg') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         testNamesAndOppsUpdated(CAO_Constants.HH_ACCOUNT_TYPE, null);
     }
 
@@ -84,7 +86,6 @@ public with sharing class CON_ChangeAccount_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsUpdatedOrgToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedOrgToOne2One') return;
         testNamesAndOppsUpdated(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -93,7 +94,9 @@ public with sharing class CON_ChangeAccount_TEST {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsUpdatedOne2OneToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedOne2OneToOrg') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         testNamesAndOppsUpdated(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
     }
     
@@ -139,7 +142,7 @@ public with sharing class CON_ChangeAccount_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         system.assertEquals(conSrc.Id, listCon[0].Id);
@@ -225,7 +228,9 @@ public with sharing class CON_ChangeAccount_TEST {
     *   the contact is updated with the new account's default address if appropriate
     */
     static testmethod void testGetsDefaultAddressHHToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressHHToHH') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         testGetsDefaultAddress(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -234,7 +239,9 @@ public with sharing class CON_ChangeAccount_TEST {
     *   the contact is updated with the new account's default address if appropriate
     */
     static testmethod void testGetsDefaultAddressOne2OneToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressOne2OneToOne2One') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         testGetsDefaultAddress(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -243,7 +250,9 @@ public with sharing class CON_ChangeAccount_TEST {
     *   the contact is updated with the new account's default address if appropriate
     */
     static testmethod void testGetsDefaultAddressOrgToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressOrgToHH') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         testGetsDefaultAddress(null, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -252,7 +261,9 @@ public with sharing class CON_ChangeAccount_TEST {
     *   the contact is updated with the new account's default address if appropriate
     */
     static testmethod void testGetsDefaultAddressHHToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressHHToOrg') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         testGetsDefaultAddress(CAO_Constants.HH_ACCOUNT_TYPE, null);
     }
 
@@ -261,7 +272,9 @@ public with sharing class CON_ChangeAccount_TEST {
     *   the contact is updated with the new account's default address if appropriate
     */
     static testmethod void testGetsDefaultAddressOrgToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressOrgToOne2One') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         testGetsDefaultAddress(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -270,7 +283,6 @@ public with sharing class CON_ChangeAccount_TEST {
     *   the contact is updated with the new account's default address if appropriate
     */
     static testmethod void testGetsDefaultAddressOne2OneToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressOne2OneToOrg') return;
         testGetsDefaultAddress(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
     }
     
@@ -306,7 +318,7 @@ public with sharing class CON_ChangeAccount_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         system.assertEquals(conSrc.Id, listCon[0].Id);
@@ -363,8 +375,9 @@ public with sharing class CON_ChangeAccount_TEST {
     *   the Contact's mailing address matches the override
     */
     static testMethod void testAddressOverride() {
-        if (strTestOnly != '*' && strTestOnly != 'testAddressOverride') return;
-        
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         integer cHH = 2;
         integer cCon = 2;
             
@@ -377,10 +390,8 @@ public with sharing class CON_ChangeAccount_TEST {
         con.MailingStreet = 'street override';
         con.MailingCity = 'city override';
         con.is_Address_Override__c = true;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update con;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
+
         // move the first contact in the first account to the other account.
         con.AccountId = ADDR_Addresses_TEST.listAccT[1].Id;
         Test.startTest();
@@ -393,7 +404,7 @@ public with sharing class CON_ChangeAccount_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         system.assertEquals(ADDR_Addresses_TEST.listConT[0].Id, listCon[0].Id);

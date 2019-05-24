@@ -1,0 +1,35 @@
+.THIS .slds-checkbox, .THIS .rollupOutputCheckbox{
+    padding-top: 2em;
+}
+/*margin is for view mode indentation*/
+.THIS .slds-form-element__label{
+    margin-left: .5rem;
+    font-size: 13px;
+}
+.THIS .slds-form-element__icon{
+    margin-left: .2rem;
+}
+.THIS .slds-input[readonly]{
+    padding-left: .5rem;
+}
+/*formatting for edit mode checkboxes*/
+.THIS .rollupInputCheckbox{
+    display: inline-flex;
+}
+/*lightning input checkbox reset margin from checkbox*/
+.THIS .rollupInputCheckbox + .slds-form-element__label{
+    margin-left: 0rem;
+}
+/*removes the extra required asterisk for tooltip workaround*/
+.THIS .hasTooltip .slds-form-element__label {
+    display: none;
+    visibility: hidden;
+}
+/*elongates rollup fields*/
+.THIS .rollupField > .slds-form-element__control{
+    display: inline;
+}
+/*stops save button from jumping by fixing the size of the error height*/
+.THIS .slds-has-error {
+    max-height: 60px;
+}

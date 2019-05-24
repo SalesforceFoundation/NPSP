@@ -175,7 +175,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     
                     if (c.npo02__household__c != null) {
                         if (hhNamingFields == null)
-                            hhNamingFields = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
+                            hhNamingFields = new HH_HouseholdNaming().getHouseholdNamingContactFields();
                             
                         for (String fieldName : hhNamingFields) {
                             // make sure to use case sensitive comparison
@@ -373,7 +373,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             // ideally, we'd do this all with dmlWrapper.  But since we
             // need to update the contact's hhId, we can't defer creating the HH's.
             
-            Database.SaveResult[] lsr = Database.insert(householdInserts, false);
+            Database.SaveResult[] lsr = UTIL_DMLService.insertRecords(householdInserts, false);
                        
             Integer i = 0;
             for (Contact c : contacts)

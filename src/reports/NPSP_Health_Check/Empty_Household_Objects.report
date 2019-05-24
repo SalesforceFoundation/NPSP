@@ -22,6 +22,7 @@
     <filter>
         <criteriaItems>
             <column>npo02__Household__c.Number_of_Household_Members__c</column>
+            <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
             <value>0</value>
         </criteriaItems>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <enableHistory>false</enableHistory>
+
+    <label>NPSP Data Import Batch</label>
+    <pluralLabel>NPSP Data Import Batches</pluralLabel>
+    <nameField>
+        <label>Batch Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableReports>true</enableReports>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

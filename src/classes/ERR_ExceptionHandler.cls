@@ -50,19 +50,26 @@ public with sharing class ERR_ExceptionHandler {
     };
 
     /*******************************************************************************************************
-    * @description Updates an exception's message to a more friendly format.
+    * @description Updates an exception's message property to a more friendly format.
     * @param ex Exception to update.
     * @return void This method modifies the exception message directly and has no return.
     */
     public static void beautifyExceptionMessage(Exception ex) {
-        String message = ex.getMessage();
+        ex.setMessage(beautifyExceptionMessage(ex.getMessage()));
+    }
+
+    /*******************************************************************************************************
+    * @description Updates an exception's message string to a more friendly format.
+    * @param message String of the error to update.
+    * @return String Cleaned up error message
+    */
+    public static String beautifyExceptionMessage(String message) {
         for (String STATUS : EXCEPTION_MESSAGES.keySet()) {
             if (message.contains(STATUS)) {
-                message = EXCEPTION_MESSAGES.get(STATUS) + message.substringBetween(SUBSTRINGS.get(STATUS)[0], SUBSTRINGS.get(STATUS)[1]);
-                ex.setMessage(message);
-                break;
+                return EXCEPTION_MESSAGES.get(STATUS) + message.substringBetween(SUBSTRINGS.get(STATUS)[0], SUBSTRINGS.get(STATUS)[1]);
             }
         }
+        return message;
     }
 
     /*******************************************************************************************************

@@ -34,11 +34,13 @@
     <filter>
         <criteriaItems>
             <column>Account.npe01__SYSTEM_AccountType__c</column>
+            <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
             <value>Household Account</value>
         </criteriaItems>
         <criteriaItems>
             <column>Account.Number_of_Household_Members__c</column>
+            <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
             <value>0</value>
         </criteriaItems>

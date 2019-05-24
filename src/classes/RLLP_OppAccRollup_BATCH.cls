@@ -35,24 +35,30 @@
 * @description Batch class for opportunity account rollups. 
 */
 public class RLLP_OppAccRollup_BATCH implements Database.Batchable<SObject>, Schedulable {
-        
+
+    /** @description Instantiates RLLP_OppRollup_UTIL */
+    RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
         try {
-            Database.executeBatch(new RLLP_OppAccRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
+            if (RLLP_OppRollup_UTIL.customizableRollupEngineEnabled == false) {
+                Database.executeBatch(new RLLP_OppAccRollup_BATCH(), CRLP_RollupBatch_SVC.getBatchSize(
+                        CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+            }
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }
     }
     
     /*******************************************************************************************************
-    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for account rollups.
+    * @description Batch start method and builds query for account rollups.
     ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-        String acctQuery = oppRollupUtil.buildAccountQuery();        
+        RLLP_OppRollup_UTIL.setupUserRollupVars();
+        String acctQuery = oppRollupUtil.buildAccountQuery();
         return Database.getQueryLocator(acctQuery);
     }
     

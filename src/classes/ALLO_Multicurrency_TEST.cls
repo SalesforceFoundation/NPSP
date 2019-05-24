@@ -37,12 +37,6 @@
 @isTest
 public class ALLO_Multicurrency_TEST {
     
-    /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
     /*******************************************************************************************************
     * @description Setup of allocations settings.
     * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
@@ -89,8 +83,6 @@ public class ALLO_Multicurrency_TEST {
     * modifying an allocation's currency.
     */
     static testMethod void alloMultiCurrency() {
-        if (strTestOnly != '*' && strTestOnly != 'alloMultiCurrency') return;
-
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization())
             return;
@@ -100,6 +92,8 @@ public class ALLO_Multicurrency_TEST {
         //if we don't have a non default currency, we can't run our test
         if (nonDefaultCurrencyType==null)
             return;
+
+        String usersDefaultCurrency = UTIL_Currency.getInstance().getDefaultCurrency();
 
         setupSettings(null);
 
@@ -115,7 +109,7 @@ public class ALLO_Multicurrency_TEST {
         insert amountAllo;
 
         list<sObject> queryAllo = database.query('SELECT Id, CurrencyIsoCode FROM Allocation__c');
-        system.assertEquals(defaultCurrencyType.get('IsoCode'), queryAllo[0].get('CurrencyIsoCode'), 'Allocation should have the default currency type.');
+        system.assertEquals(usersDefaultCurrency, queryAllo[0].get('CurrencyIsoCode'), 'Allocation should have the default currency type.');
 
         cam.put('CurrencyIsoCode',nonDefaultCurrencyType.get('IsoCode'));
         update cam;
@@ -123,20 +117,18 @@ public class ALLO_Multicurrency_TEST {
         queryAllo = database.query('SELECT Id, CurrencyIsoCode FROM Allocation__c');
         system.assertEquals(nonDefaultCurrencyType.get('IsoCode'), queryAllo[0].get('CurrencyIsoCode'), 'Allocation should have an updated non-default currency type.');
 
-        ALLO_Allocations_TDTM.resetFlags(false);
         Opportunity opp = new Opportunity(Name='success', Amount = 10, AccountID=acc.id, CampaignId=cam.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
 
-        decimal convertedAmount = ALLO_Multicurrency_TDTM.convertCurrency((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 5);
+        decimal convertedAmount = UTIL_CurrencyConversion.convertAmountUsingStandardRates((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 5);
 
         queryAllo = database.query('SELECT Id, Amount__c, CurrencyIsoCode FROM Allocation__c WHERE Opportunity__c != null');
         system.assertEquals(1,queryAllo.size(), 'Opportunity allocation should be automatically created from the Campaign allocation.');
-        system.assertEquals(defaultCurrencyType.get('IsoCode'), queryAllo[0].get('CurrencyIsoCode'), 'Opportunity Allocation should have the default currency type.');
+        system.assertEquals(usersDefaultCurrency, queryAllo[0].get('CurrencyIsoCode'), 'Opportunity Allocation should have the default currency type.');
         system.assertEquals(convertedAmount, queryAllo[0].get('Amount__c'), 'Opportunity\'s automatically created allocation\'s amount should have be converted to the default currency type.');
 
 
         //update the currency manually, an exception should be thrown.
-        ALLO_Allocations_TDTM.resetFlags(false);
         queryAllo[0].put('CurrencyIsoCode',nonDefaultCurrencyType.get('IsoCode'));
 
         Exception ex = null;
@@ -153,8 +145,6 @@ public class ALLO_Multicurrency_TEST {
     * otherwise. Verifies that rollups correctly convert amounts of different currencies.
     */
     static testMethod void rollupMultiCurrency() {
-        if (strTestOnly != '*' && strTestOnly != 'rollupMultiCurrency') return;
-
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization())
             return;
@@ -182,7 +172,6 @@ public class ALLO_Multicurrency_TEST {
         list<Allocation__c> alloForInsert = new list<Allocation__c>();
         alloForInsert.add(new Allocation__c(Opportunity__c=oppsForInsert[0].id, Amount__c = 8, General_Accounting_Unit__c = gau.id));
         alloForInsert.add(new Allocation__c(Opportunity__c=oppsForInsert[1].id, Amount__c = 8, General_Accounting_Unit__c = gau.id));
-        ALLO_Allocations_TDTM.resetFlags(false);
         insert alloForInsert;
 
         id alloid = alloForInsert[1].id;
@@ -193,7 +182,7 @@ public class ALLO_Multicurrency_TEST {
         PageReference pageRef = Page.ALLO_RollupBTN;
         Test.setCurrentPage(pageRef);
 
-        ALLO_RollupBTN_CTRL ctrl = new ALLO_RollupBTN_CTRL(new ApexPages.StandardController(gau));
+        CRLP_RecalculateBTN_CTRL ctrl = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(gau));
 
         ctrl.buttonClick();
 
@@ -202,7 +191,7 @@ public class ALLO_Multicurrency_TEST {
                                                     Total_Allocations_Two_Years_Ago__c, Total_Number_of_Allocations__c FROM General_Accounting_Unit__c WHERE Id = :gau.id];
         system.debug('LookHere: queryGAU ' + queryGAU);
         
-        decimal convertedAmount = ALLO_Multicurrency_TDTM.convertCurrency((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 8);
+        decimal convertedAmount = UTIL_CurrencyConversion.convertAmountUsingStandardRates((string)nonDefaultCurrencyType.get('IsoCode'), (string)defaultCurrencyType.get('IsoCode'), 8);
 
         system.assertEquals(8+convertedAmount, queryGAU[0].Total_Allocations__c, 'Total allocations should equal 16.');
         system.assertEquals(system.today(), queryGAU[0].Last_Allocation_Date__c, 'Last allocation should be today.');
@@ -219,8 +208,6 @@ public class ALLO_Multicurrency_TEST {
     * otherwise. Verifies that Make Default Allocations respects multicurrency configuration.
     */
     static testMethod void testMakeDefaultAllocations() {
-        if (strTestOnly != '*' && strTestOnly != 'testMakeDefaultAllocations') return;
-        
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization())
             return;
@@ -236,14 +223,15 @@ public class ALLO_Multicurrency_TEST {
 
         setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
-        //setting flags to not create default allocations for the new opportunities
-        ALLO_Allocations_TDTM.resetFlags(true);
+        //  Turn off the allocation triggers so it doesn't create a default
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, true);
 
         Account acc = new Account(Name='foo');
         insert acc;
         Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         opp.put('CurrencyIsoCode', nonDefaultCurrencyType.get('IsoCode'));
         insert opp;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
 
 
         list<Allocation__c>  queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c];

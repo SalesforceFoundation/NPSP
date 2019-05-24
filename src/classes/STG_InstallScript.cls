@@ -35,38 +35,105 @@
 */
 global without sharing class STG_InstallScript implements InstallHandler {
     
+    @TestVisible
+    private enum InstallAction { 
+        POPULATE_RD_INSTALLMENT_NUMBER, RUN_NEW_ORG_SCRIPT, 
+        INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
+        CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
+        UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS_FOR_UPGRADE,
+        CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL
+    }
+
     /*******************************************************************************************************
     * @description Runs on package install.
     * @param context The install context.
     * @return void
     */
     global void onInstall(InstallContext context) {
-        try { 
-            database.executeBatch(new RD_InstallScript_BATCH(), 10); 
-            //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
-            if(context.previousVersion() == null) {
-                runNewOrgScript();
-            } else if(context.isUpgrade()) {
-                insertTdtmDefaults(null);
-            } else if(context.isPush()) {
-                insertTdtmDefaults(null);
-            }
-            UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
-            UTIL_MasterSchedulableHelper.scheduleJobsFromOldObject();
-        } catch(Exception e) {
-            sendEmailOnInstallError(e, context);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            //We won't rethrow the exception, to avoid package failure installation due to install script error
-            return;
+        ErrorLogger logger = new ErrorLogger(context, ERR_Handler_API.Context.STTG);
+
+        // First install of Cumulus
+        if (context.previousVersion() == null) {
+            // Ensure custom settings that we manage are populated
+            executeAction(InstallAction.CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL, logger);
+
+            // Populate Recurring Donation Installment Number on Opportunity for fresh installs;
+            // This also covers upgrades from v2
+            executeAction(InstallAction.POPULATE_RD_INSTALLMENT_NUMBER, logger);
+            
+            executeAction(InstallAction.RUN_NEW_ORG_SCRIPT, logger);
+
+        // Upgrade of existing Cumulus installation
+        } else if (context.isUpgrade() || context.isPush()) {
+            // Ensure the any new Custom Settings objects are populated
+            executeAction(InstallAction.CREATE_DEFAULT_SETTINGS_FOR_UPGRADE, logger);
+
+            // Insert/Update the TDTM defaults as needed
+            executeAction(InstallAction.INSERT_TDTM_DEFAULTS, logger);
+
+            // Submit generic org telemetry data back to the LMO using FeatureManagement
+            executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
         }
+
+        executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
+
+        // Upgrade from NPSP 3.79
         if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
-            // update record type settings ONLY if upgrading from a version prior to 3.78
-            UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
+            executeAction(InstallAction.CLEANUP_RECORD_TYPE_SETTINGS, logger);
         }
+
+        // Upgrade from NPSP 3.112
+        if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 112)) < 0) {
+            executeAction(InstallAction.UPDATE_CAMPAIGN_LIST_REPORT, logger);
+        }
+
+        logger.log();
+    }
+
+    private void executeAction(InstallAction action, ErrorLogger logger) {
+
+        Savepoint sp = Database.setSavepoint();  
+
+        try {
+            if (action == InstallAction.POPULATE_RD_INSTALLMENT_NUMBER) {
+                database.executeBatch(new RD_InstallScript_BATCH(), 10);
+
+            } else if (action == InstallAction.RUN_NEW_ORG_SCRIPT) {
+                runNewOrgScript();
+
+            } else if (action == InstallAction.INSERT_TDTM_DEFAULTS) {
+                insertTdtmDefaults(null);
+
+            } else if (action == InstallAction.ABORT_OLD_SCHEDULED_JOBS) {
+                UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
+
+            } else if (action == InstallAction.CLEANUP_RECORD_TYPE_SETTINGS) {
+                UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
+
+            } else if (action == InstallAction.UPDATE_CAMPAIGN_LIST_REPORT) {
+                updateCampaignListReport();
+
+            } else if (action == InstallAction.UPDATE_ORG_TELEMETRY && !Test.isRunningTest()) {
+                UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
+
+            } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS_FOR_UPGRADE) {
+                populateNamespacePrefix();
+                createNewDefaultCustomSettingRecords();
+
+            } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL) {
+                populateNamespacePrefix();
+            }
+
+        } catch(Exception e) {
+            Database.rollback(sp);
+            
+            logger.add(e);
+        } 
     }
 
     /*******************************************************************************************************
-    * @description Sets up TDTM in new orgs.
+    * @description Sets up TDTM in new orgs. Also called by the NPSP Settings page on page load (i.e., this method
+    * runs every single time the NPSP Settings page is loaded).
     * @return void
     */
     global void runNewOrgScript() {      
@@ -78,6 +145,32 @@ global without sharing class STG_InstallScript implements InstallHandler {
         setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
     }
 
+    /*******************************************************************************************************
+    * @description NPSP Version 3.112 changed the report distributed and used for the Campaign Household Mailing
+    * List report launched by the HH_CampaignDedupeBTN VF page (from a custom button). The old report previously
+    * installed as part of the Households package is not Lightning compatible, requiring a new report.
+    * @return void
+    */
+    private void updateCampaignListReport() {
+        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        Report r;
+        try{
+            r = [SELECT Id FROM Report WHERE DeveloperName = 'NPSP_Campaign_Household_Mailing_List_V2'];
+        } catch(QueryException e) {
+            // Ignore this error
+        }
+        if (r != null && hs.npo02__Household_Mailing_List_ID__c != r.Id) {
+            hs.npo02__Household_Mailing_List_ID__c = r.Id;
+            update hs;
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Called only during a new install of v3 by runNewOrgScript() to configure the default NPSP TDTM
+     * Trigger Configuration. This could involve removing legacy TDTM entries as well.
+     * @param npspToCumulusMap
+     * @return
+     */
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
         
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
@@ -153,7 +246,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     
     /*******************************************************************************************************
     * @description Inserts the default TDTM records, if necessary. Updates those that need to be updated, since the last package
-    * upgradade. Public just for testing purposes (it should otherwise be private).
+    * upgrade. Public just for testing purposes (it should otherwise be private).
     * @return void
     */
     public static void insertTdtmDefaults(List<Trigger_Handler__c> defaultHandlers) {
@@ -214,35 +307,177 @@ global without sharing class STG_InstallScript implements InstallHandler {
         List<Trigger_Handler__c> handlersToUpdate = [select Active__c, Class__c from Trigger_Handler__c where Class__c 
                                                      IN :handlerSettingsToUpdate];
         for(Trigger_Handler__c handler : handlersToUpdate) {
-            //UTIL_Debug.debug('****Deactivating class: ' + handler.Class__c);
             handler.Active__c = false;
         }
         if(handlersToUpdate.size() > 0) update handlersToUpdate; 
     }
 
     /*******************************************************************************************************
-    * @description Sends an email to the user installing the package warning of package installation failure.
-    * @param e Exception thrown during the package installation process.
-    * @param context The installation context.
-    * @return void
+    * @description Ensure that any default Custom Settings Records are created for "new" custom settings objects
+    * added
     */
-    public static void sendEmailOnInstallError(Exception e, InstallContext context) {
-        try {
-            String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
-            userEmail = UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
-            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setUseSignature(false);
-            mail.setReplyTo('donotreply@salesforce.org');
-            mail.setSenderDisplayName('Nonprofit Success Pack');
-            mail.setSubject('NPSP Install Errors');
-            String bodyString = Label.stgInstallScriptError;
-            bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
-            + 'Error stack trace: \n' + e.getStackTraceString();
-            mail.setPlainTextBody(bodyString);      
-            mail.setToAddresses(new String[]{'errors@salesforce.org', userEmail});
-            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
-        } catch(Exception e2) {
-            //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
+    private void createNewDefaultCustomSettingRecords() {
+        updateDefaultRollupSettings();
+        updateDefaultOrgContactsSettings();
+    }
+
+    /*******************************************************************************************************
+    * @description Ensure that any default Org Contacts Settings Records are updated for custom settings
+    * objects accordingly.
+    */
+    public static void updateDefaultOrgContactsSettings() {
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+        if (npe01Settings.Contact_Role_for_Organizational_Opps__c == null) {
+            npe01Settings.Contact_Role_for_Organizational_Opps__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
+            update npe01Settings;
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Ensure that any default Org Rollup Settigns are updated for custom settings 
+    * objects accordingly.  There was a swap of custom setting fields to get the account soft credit settings
+    * pointed to the corresponding setting
+    */
+    public static void updateDefaultRollupSettings() {
+        Customizable_Rollup_Settings__c rollupSettings = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+        Boolean isUpdateNeeded = false;
+        Decimal currentAccountSoftCreditBatchSize = UTIL_CustomSettingsFacade.DEFAULT_ROLLUP_BATCH_SIZE;
+
+        if (rollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c != null) {
+            currentAccountSoftCreditBatchSize = rollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c;
+        }
+
+        if (rollupSettings.Rollups_AcctContactSoftCredit_Batch_Size__c == null) {
+            rollupSettings.Rollups_AcctContactSoftCredit_Batch_Size__c = currentAccountSoftCreditBatchSize;
+            isUpdateNeeded = true;
+        }
+        
+        if (isUpdateNeeded) {
+            update rollupSettings;
+        }
+        
+    }
+
+    /*******************************************************************************************************
+    * @description Make sure a value is set for the namespace prefix custom setting.
+    */
+    private void populateNamespacePrefix() {
+        Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
+        if (pkgSettings.Id == null) {
+            pkgSettings.Namespace_Prefix__c = UTIL_Namespace.StrTokenNSPrefix('');
+            insert pkgSettings;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Collects exceptions. Logs exceptions by sending an email and processing error via ERR_Handler.
+    */
+    public class ErrorLogger {
+        /** @description The install context. */
+        InstallContext installContext;
+
+        /** @description The error handler context. */
+        ERR_Handler_API.Context errContext;
+
+        /** @description The list of exceptions. */
+        List<Exception> exceptions = new List<Exception>();
+
+        /*******************************************************************************************************
+        * @description The constructor
+        * @param installContext The install context
+        * @param errContext The error handler context
+        */
+        public ErrorLogger(InstallContext installContext, ERR_Handler_API.Context errContext) {
+            this.installContext = installContext;
+            this.errContext = errContext;
+        }
+
+        /*******************************************************************************************************
+        * @description Returns true if the logger has at least one exception stored
+        * @return Boolean
+        */
+        public Boolean hasErrors() {
+            return !exceptions.isEmpty();
+        }
+
+        /*******************************************************************************************************
+        * @description Adds the exception to the list of exceptions
+        * @param e The Exception
+        * @return void
+        */
+        public void add(Exception e) {
+            if (e != null) {
+                exceptions.add(e);
+            }
+        }
+
+        /*******************************************************************************************************
+        * @description Logs the exception by sending an email and processing the errors via ERR_Handler
+        * @return void
+        */
+        public void log() {
+            if (!hasErrors()) {
+                return;
+            }
+
+            sendEmail();
+            ERR_Handler.processErrors(exceptions, errContext);
+        }
+
+        /*******************************************************************************************************
+        * @description Sends an email to the user installing the package notifying them about failed installation steps.
+        * @return void
+        */
+        private void sendEmail() {
+            try {
+                Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                mail.setUseSignature(false);
+                mail.setReplyTo(ERR_Notifier.EMAIL_REPLY_TO);
+                mail.setSenderDisplayName(ERR_Notifier.EMAIL_SENDER_NAME);
+                mail.setSubject('NPSP Install Errors');
+
+                mail.setPlainTextBody(buildEmailBody());  
+
+                mail.setToAddresses(new String[] { ERR_Notifier.EMAIL_SYSTEM_ERRORS_TO, getUserEmail() });
+
+                Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+
+            } catch(Exception e) {
+                //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
+            }
+
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the installing user email
+        * @return String
+        */
+        private String getUserEmail() {
+            String userEmail = [SELECT Id, Email FROM User WHERE Id =:installContext.installerID()].Email;  
+            return UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
+        }
+
+        /*******************************************************************************************************
+        * @description Builds email body by displaying exception messages and stack traces.
+        * @return String
+        */
+        @TestVisible
+        private String buildEmailBody() {
+            String bodyString = Label.stgInstallScriptError;
+
+            bodyString += String.format(
+                '\n\n==========================. \n\nError message{0}:',
+                new String[] { exceptions.size() == 1 ? '' : 's'}
+            );
+
+            for (Exception e : exceptions) {
+                bodyString += '\n' + e.getMessage() +
+                    '\nError stack trace: \n' + e.getStackTraceString() + 
+                    '\n\n';
+            }
+
+            return bodyString;
+        }
+
     }
 }

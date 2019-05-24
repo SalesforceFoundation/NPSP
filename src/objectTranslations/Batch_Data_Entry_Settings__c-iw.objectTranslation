@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Batch Data Entry Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הBatch Data Entry Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Batch Data Entry Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הBatch Data Entry Settings --></value>
+    </caseValues>
+    <fields>
+        <help>אם אפשרות זו מוגדרת, הזנת ערכים באצווה לעולם לא תעניק שמות להזדמנויות, גם אם הם ריקים (לא נכלל בדף BDE).</help>
+        <label>אפשר שמות תרומה ריקים</label>
+        <name>Allow_Blank_Opportunity_Names__c</name>
+    </fields>
+    <fields>
+        <help>הגדרה זו יוצרת באופן אוטומטי את שם הרשומה עבור רשומות הזדמנות שהוזנו באצווה, על בסיס ערך השדות שהוזנו.</help>
+        <label>מתן שם לתרומה</label>
+        <name>Opportunity_Naming__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+</CustomObjectTranslation>
