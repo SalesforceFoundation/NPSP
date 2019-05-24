@@ -6085,6 +6085,14 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <value>When selected, this option enables fiscal year settings, rather than calendar year settings, for Allocation rollup totals. To set Fiscal Year information, go to Setup and search for Fiscal Year. NOTE: Nonprofit Success Pack does not support custom fiscal year settings.</value>
     </labels>
     <labels>
+        <fullName>stgHelpAlloNDayValue</fullName>
+        <categories>Allocation, Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAlloNDayValue</shortDescription>
+        <value>Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to roll up GAU Allocations over the past 365 days.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpAllocationLevel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6097,14 +6105,6 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
 If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations. Review the Payment Allocations documentation to better understand the potential impact.&lt;br/&gt;&lt;br/&gt;
 
 When you enable Payment Allocations, existing rollups remain the same. We do not modify rollups or create new Custom Rollups. You can create new rollups based only on Payments, if you want to.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpAlloNDayValue</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpAlloNDayValue</shortDescription>
-        <value>Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to roll up GAU Allocations over the past 365 days.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
