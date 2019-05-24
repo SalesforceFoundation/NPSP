@@ -1,4 +1,4 @@
-minimum_cumulusci_version: 2.4.4
+minimum_cumulusci_version: 2.5.0
 project:
     name: Cumulus
     package:
@@ -301,7 +301,7 @@ flows:
                 task: deploy_qa_config
                 options:
                     unmanaged: False
-            2:
+            3:
                 task: update_admin_profile
                 options:
                     managed: true
@@ -372,13 +372,6 @@ flows:
         steps:
             3:
                 task: ensure_record_type
-
-    regression_org:
-        steps:
-            1:
-                flow: install_regression
-            2:
-                flow: config_regression
     
     trial_org:
         steps:
