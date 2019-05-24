@@ -268,13 +268,13 @@ public with sharing class STG_SettingsManager_TEST {
 
     /*********************************************************************************************************
     @description 
-        Tests Refresh Household Names batch when Automatic Household Naming is turned off
+        Tests Refresh Household Names batch when Automatic Household Naming is turned off 
         and Household Naming Settings is invalid
     verify:
         Household Naming batch has not been run.
         Automatic Household Naming field is still turned off.
         The Page contains an error.        
-    **********************************************************************************************************/
+    **********************************************************************************************************/ 
     private static testMethod void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
@@ -303,7 +303,7 @@ public with sharing class STG_SettingsManager_TEST {
         Household Naming batch has been run.
         Automatic Household Naming field is turned on.
         The Page contains no error.        
-    **********************************************************************************************************/
+    **********************************************************************************************************/ 
     private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
 
@@ -329,7 +329,7 @@ public with sharing class STG_SettingsManager_TEST {
     verify:
         Household Naming batch has been run.
         The Page contains no error.        
-    **********************************************************************************************************/
+    **********************************************************************************************************/ 
     private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
@@ -373,7 +373,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelMembership', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 10;
         panel.saveSettings();
-        system.assertEquals(10, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Membership_Grace_Period__c);
+        system.assertEquals(10, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Membership_Grace_Period__c);        
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 20;
         panel.saveSettings();
         system.assertEquals(20, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Membership_Grace_Period__c);
@@ -400,7 +400,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelOppRollup', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 10;
         panel.saveSettings();
-        system.assertEquals(10, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Batch_Size__c);
+        system.assertEquals(10, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Batch_Size__c);        
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 20;
         panel.saveSettings();
         system.assertEquals(20, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Batch_Size__c);
