@@ -306,11 +306,6 @@ flows:
                 options:
                     managed: true
 
-    config_trial:
-        steps:
-            1:
-                flow: config_managed
-
     config_offsetfiscal:
         description: 'Configure an offset fiscal year'
         steps:
@@ -372,15 +367,6 @@ flows:
         steps:
             3:
                 task: ensure_record_type
-    
-    trial_org:
-        steps:
-            1:
-                flow: dependencies
-            2:
-                task: install_managed
-            3:
-                flow: config_trial
 
 orgs:
     scratch:
