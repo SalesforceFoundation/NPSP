@@ -130,7 +130,6 @@ public class ALLO_PaymentSync_SVC {
 
         // Retrieve all payments, with associated allocations
         Map<Id, npe01__OppPayment__c> paymentsWithAllocations = retrievePaymentsWithAllocations(paymentIds, paymentsByOpportunityId.keySet());
-
         for (npe01__OppPayment__c payment : paymentsWithAllocations.values()) {
             opportunityIdByPaymentId.put(payment.Id, payment.npe01__Opportunity__c);
 
@@ -611,6 +610,51 @@ public class ALLO_PaymentSync_SVC {
             }
 
         }
+        recalcDefaultAllocsForOppToPmt(context);
+    }
+
+    /*******************************************************************************************************
+    * @description Iterates over the payments associated with a context, updating/adding/removing the
+    * Default GAU as necessary
+    * @param SynchronizationContext context - The context of the current Opportunity, Allocations and Payments to work with
+    ********************************************************************************************************/
+    private void recalcDefaultAllocsForOppToPmt (SynchronizationContext context) {
+
+        Id defaultGAU = UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c;
+
+        for (npe01__OppPayment__c payment : context.payments.values()) {
+            Decimal allocAmt = (allocatedAmountByPayment.containsKey(payment.Id)) ? allocatedAmountByPayment.get(payment.Id) : 0;
+            Decimal paymentAmt = (payment.npe01__Payment_Amount__c != null) ? payment.npe01__Payment_Amount__c : 0;
+            Decimal remainder = paymentAmt - allocAmt;
+
+            List<Allocation__c> defaultAllocs = defaultAllocsByPayment.get(payment.Id);
+            Allocation__c defaultAlloc = null;
+            if ((defaultAllocs != null) && (defaultAllocs.size() > 0)) {
+                defaultAlloc = defaultAllocs.get(0);
+                for (Integer i = 1; i < defaultAllocs.size(); i++) { // Remove any duplicates
+                    allocationsChanges.objectsToDelete.add(defaultAllocs.get(i));
+                }
+            }
+
+            if ((paymentAmt > 0 && remainder > 0) || (paymentAmt < 0 && remainder < 0)) { // Default Allocation is needed with this amount
+                if (defaultAlloc == null) {
+                    defaultAlloc = makeAmountBasedAllocation(payment, defaultGAU, remainder);
+                    allocationsChanges.objectsToInsert.add(defaultAlloc);
+                } else if (defaultAlloc.Amount__c != remainder || (UserInfo.isMultiCurrencyOrganization() && defaultAlloc.get('CurrencyIsoCode') != payment.get('CurrencyIsoCode'))) {
+                    defaultAlloc.Amount__c = remainder;
+                    if (UserInfo.isMultiCurrencyOrganization()) {
+                        defaultAlloc.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
+                    }
+                    allocationsChanges.objectsToUpdate.add(defaultAlloc);
+                }
+            } else if (remainder == 0) { // Default Allocation should be removed
+                if (defaultAlloc != null)
+                    allocationsChanges.objectsToDelete.add(defaultAlloc);
+            } else { // Payment is overallocated...should never occur...generate an error.
+                throw new PaymentSyncException(String.format(Label.alloPaymentOverAllocatedError, new String[] {context.Opportunity.Name, context.Opportunity.Id}));
+            }
+
+        }
     }
 
     /*******************************************************************************************************
@@ -705,6 +749,61 @@ public class ALLO_PaymentSync_SVC {
             }
 
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if a scale is necessary for the allocations, and if so what it is.
+    * If Opportunity Amount is null/0, the total payment Amount is null/0 or the paymentAmount is < than the Opportunity Amount a scale is
+    * considered unnecessary, and a scale of 1 (meaning no scale is returned).  Otherwise, it will return the
+    * a percentage to upscale the allocations by, dividing the unsigned value of the total payment amount by the
+    * unsigned value of the opportunity amount
+    * @param Decimal totalPaymentAmount Decimal Amount of the Payment Total (paid and unpaid)
+    * @param Decimal opportunityAmount Decimal Amount of the Opportunity
+    * @return Decimal ratio to upscale the allocation by, or 1
+    ********************************************************************************************************/
+    @testVisible private static Decimal computePaymentScale(Decimal totalPaymentAmount, Decimal opportunityAmount) {
+        if (opportunityAmount == null || opportunityAmount == 0 || totalPaymentAmount == 0 || totalPaymentAmount == null) {
+            return 1;
+        }
+
+        Decimal unsignedOpportunityAmount = Math.abs(opportunityAmount);
+        Decimal unsignedTotalPaymentAmount = Math.abs(totalPaymentAmount);
+
+        if (unsignedTotalPaymentAmount <= unsignedOpportunityAmount) {
+            return 1;
+        }
+
+        return unsignedTotalPaymentAmount / unsignedOpportunityAmount;
+
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an amount based allocation for the specified Opportunity/Payment using the specified gau
+    * @param SObject parentSObj An Opportunity or Payment.
+    * @param Id gau The Id of the GAU to use when creating the allocation
+    * @return Allocation__c An allocation for the amount of the Opportunity/Payment.
+    ********************************************************************************************************/
+    public static Allocation__c makeAmountBasedAllocation(SObject parentSObj, Id gau, Decimal amount) {
+
+        Allocation__c defaultAllo = new Allocation__c(
+            General_Accounting_Unit__c = gau
+        );
+
+        if (parentSObj instanceof npe01__OppPayment__c) {
+            defaultAllo.Payment__c = parentSObj.Id;
+        }
+
+        if (parentSObj instanceof Opportunity) {
+            defaultAllo.Opportunity__c = parentSObj.Id;
+        }
+
+        defaultAllo.Amount__c = (Decimal) amount;
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            defaultAllo.put('CurrencyIsoCode', parentSObj.get('CurrencyIsoCode'));
+        }
+
+        return defaultAllo;
     }
 
     /*******************************************************************************************************

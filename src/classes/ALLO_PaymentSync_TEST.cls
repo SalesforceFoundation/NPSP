@@ -593,7 +593,6 @@ private with sharing  class ALLO_PaymentSync_TEST {
         System.assertEquals(-50, allocations[2].Amount__c, 'Allocation Amount for GAU 1');
         System.assertEquals(gaus[0].Id, allocations[2].General_Accounting_Unit__c, 'GAU 1');
     }
-
     /*******************************************************************************************************
     * @description Prevent creating or modifying Opportunity and Payment Allocations for the same Opportunity
     * in the same transaction.
