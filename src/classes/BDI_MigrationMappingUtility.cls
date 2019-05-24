@@ -173,10 +173,11 @@ public class BDI_MigrationMappingUtility {
                 if (Test.isRunningTest()) {
                     deploymentId = '123';
                 } else {
-                    deploymentId = Metadata.Operations.enqueueDeployment(deploymentContainer, new DeploymentCallback(migrationType));
+                    deploymentId = Metadata.Operations.enqueueDeployment(
+                        deploymentContainer,
+                        new DeploymentCallback(migrationType)
+                    );
                 }
-
-                saveDeploymentId(deploymentId);
             } catch (Exception e) {
                 throw new DeploymentException('There was an error attempting to deploy the custom metadata records.');
             }
@@ -187,22 +188,6 @@ public class BDI_MigrationMappingUtility {
         conflictingMappings.clear();
 
         return deploymentId;
-    }
-
-    /**
-     * @description Save the metadata deployment id in data import custom settings
-     * @param deploymentId Metadata deployment id
-     */
-    @future
-    public static void saveDeploymentId(String deploymentId) {
-        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        dataImportSettings.CMT_Deployment_ID__c = deploymentId;
-
-        try {
-            upsert dataImportSettings;
-        } catch (Exception e) {
-            throw new DeploymentException('There was an error attempting to update custom settings.');
-        }
     }
 
     /**
@@ -347,11 +332,7 @@ public class BDI_MigrationMappingUtility {
         }
 
         //TODO: handle GAUs and Opportunity Contact Roles
-        handleGAUAndOpportunityContactRoles(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-
-        if (!Test.isRunningTest()) {
-            deployCustomMetadata();
-        }
+        handleGAUAndOpportunityContactRoleMappings();
     }
 
     /**
@@ -454,10 +435,6 @@ public class BDI_MigrationMappingUtility {
 
             queuedMetadataTypesForDeploy = pendingCMTs;
             pendingMappings.clear();
-        }
-
-        if (!Test.isRunningTest()) {
-            deployCustomMetadata();
         }
     }
 

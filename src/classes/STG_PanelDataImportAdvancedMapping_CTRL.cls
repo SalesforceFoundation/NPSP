@@ -174,7 +174,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                             )
                         );
                     } else {
-                        migrationMappingUtility.deployCustomMetadata();
+                        Id deploymentId = migrationMappingUtility.deployCustomMetadata();
+                        saveDeploymentId(deploymentId);
                     }
                 }
 
@@ -234,6 +235,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             isPolling = true;
 
             migrationMappingUtility.keepConflicts();
+            Id deploymentId = migrationMappingUtility.deployCustomMetadata();
+            saveDeploymentId(deploymentId);
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -256,6 +259,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             isPolling = true;
 
             migrationMappingUtility.discardConflicts();
+            Id deploymentId = migrationMappingUtility.deployCustomMetadata();
+            saveDeploymentId(deploymentId);
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -263,6 +268,23 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
+    }
+
+    /**
+     * @description Save the metadata deployment id in data import custom settings
+     * @param deploymentId Metadata deployment id
+     */
+    @future
+    public static void saveDeploymentId(String deploymentId) {
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings.CMT_Deployment_ID__c = deploymentId;
+
+        try {
+            upsert dataImportSettings;
+        } catch (Exception e) {
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+        }
     }
 
     /*******************************************************************************************************
