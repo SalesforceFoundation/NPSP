@@ -443,23 +443,23 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelPaymentMapping() {
         STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
         system.assertEquals('idPanelPaymentMapping', panel.idPanel());
-        system.assertEquals(false, ApexPages.hasMessages());
+        system.assertEquals(false, ApexPages.hasMessages());               
         system.assertNotEquals(null, panel.getSourceFields());
         system.assertNotEquals(null, panel.getTargetFields());
-        system.assertEquals(null, panel.newPfm());
+        system.assertEquals(null, panel.newPfm());        
         system.assertNotEquals(null, panel.pfmNew);
         system.assertEquals(true, panel.isEditMode);
         system.assertEquals(null, panel.cancelPfmEdit());
         system.assertEquals(false, panel.isEditMode);
-        system.assertEquals(null, panel.newPfm());
+        system.assertEquals(null, panel.newPfm());        
         system.assertNotEquals(null, panel.pfmNew);
         system.assertEquals(true, panel.isEditMode);
-        panel.pfmNew.npe01__Opportunity_Field__c = null;
+        panel.pfmNew.npe01__Opportunity_Field__c = null;        
         panel.pfmNew.npe01__Payment_Field__c = null;
         system.assertEquals(null, panel.savePfm());
         system.assertEquals(true, panel.isEditMode);
-        panel.pfmNew.npe01__Opportunity_Field__c = 'Amount';
-        system.assertEquals(null, panel.onSelectSourceField());
+        panel.pfmNew.npe01__Opportunity_Field__c = 'Amount';  
+        system.assertEquals(null, panel.onSelectSourceField());      
         panel.pfmNew.npe01__Payment_Field__c = 'npe01__Payment_Amount__c';
         system.assertEquals(true, panel.isPfmNewValid);
         system.assertEquals(null, panel.savePfm());
@@ -469,17 +469,17 @@ public with sharing class STG_SettingsManager_TEST {
         panel.pfmIdDelete = panel.listPMTFieldMapping[0].Id;
         system.assertEquals(null, panel.deletePfm());
         system.assertNotEquals(null, panel.listPMTFieldMapping);
-        system.assertEquals(0, panel.listPMTFieldMapping.size());
+        system.assertEquals(0, panel.listPMTFieldMapping.size());  
 
         // save a bogus mapping, and verify our check complains
-        panel.pfmNew.npe01__Opportunity_Field__c = 'NoExist';
+        panel.pfmNew.npe01__Opportunity_Field__c = 'NoExist';        
         panel.pfmNew.npe01__Payment_Field__c = 'NoExist';
         system.assertEquals(true, panel.isPfmNewValid);
         system.assertEquals(null, panel.savePfm());
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.listPMTFieldMapping);
         system.assertEquals(1, panel.listPMTFieldMapping.size());
-
+             
     }
 
     /*********************************************************************************************************
@@ -523,10 +523,10 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelRDCustomFieldMapping() {
         STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
         system.assertEquals('idPanelRDFieldMap', panel.idPanel());
-        system.assertEquals(false, ApexPages.hasMessages());
+        system.assertEquals(false, ApexPages.hasMessages());               
         system.assertNotEquals(null, STG_PanelRDCustomFieldMapping_CTRL.listSORDFields);
         system.assertNotEquals(null, STG_PanelRDCustomFieldMapping_CTRL.listSOOppFields);
-        system.assertEquals(null, panel.newCustomFieldMapping());
+        system.assertEquals(null, panel.newCustomFieldMapping());        
         system.assertNotEquals(null, panel.fmNew);
         system.assertEquals(true, panel.isEditMode);
         system.assertEquals(null, panel.cancelCustomFieldMapping());
