@@ -37,5 +37,5 @@ output.xml
 report.html
 /*.png
 robot/Cumulus/results/
-testdata/dev_org/test_data.db
+datasets/dev_org/test_data.db
 *.db
