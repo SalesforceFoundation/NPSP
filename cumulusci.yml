@@ -1,4 +1,4 @@
-minimum_cumulusci_version: 2.4.4
+minimum_cumulusci_version: 2.5.0
 project:
     name: Cumulus
     package:
@@ -119,22 +119,22 @@ tasks:
         description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'
         class_path: cumulusci.tasks.bulkdata.LoadData
         options:
-            database_url: 'sqlite:///testdata/dev_org/test_data.db'
-            mapping: 'testdata/mapping.yml'
+            database_url: 'sqlite:///datasets/dev_org/test_data.db'
+            mapping: 'datasets/mapping.yml'
 
     test_data_1k:
         description: 'Loads a test data set for most NPSP objects based on 1024 Contacts'
         class_path: cumulusci.tasks.bulkdata.LoadData
         options:
-            database_url: 'sqlite:///testdata/1k/test_data.db'
-            mapping: 'testdata/mapping.yml'
+            database_url: 'sqlite:///datasets/1k/test_data.db'
+            mapping: 'datasets/mapping.yml'
 
     test_data_100k:
         description: 'Loads a test data set for most NPSP objects based on 102400 Contacts.  NOTE: The sqlite data set is not included in the repo for this task so you need to load it into the correct filesystem location'
         class_path: cumulusci.tasks.bulkdata.LoadData
         options:
-            database_url: 'sqlite:///testdata/100k/test_data.db'
-            mapping: 'testdata/mapping.yml'
+            database_url: 'sqlite:///datasets/100k/test_data.db'
+            mapping: 'datasets/mapping.yml'
 
     test_data_delete:
         description: 'WARNING: Deletes all data in the objects specified in the objects option.'
@@ -202,10 +202,19 @@ tasks:
             apex: initializeNPSPSettings();
 
     enable_customizable_rollups:
-        description: Enable the NPSP Customizable Rollups feature
+        description: Enable the NPSP Customizable Rollups feature (unmanaged deploys only)
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
             apex: new STG_PanelCustomizableRollup_CTRL().enableCRLPs();
+
+    enable_incremental_rollups:
+        description: Configure NPSP Customizable Rollups to activate Incremental Rollups (unmanaged deploys only)
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                STG_SettingsService.stgService.stgCRLP.AccountHardCreditNonSkew_Incremental__c = true;
+                STG_SettingsService.stgService.stgCRLP.ContactHardCreditNonSkew_Incremental__c = true;
+                STG_SettingsService.stgService.saveAll();
 
     add_second_currency:
         description: Add CAD as a 2nd currency for a multicurrency org
@@ -256,7 +265,7 @@ flows:
                 task: test_data_relationships
             9:
                 task: deploy_reports
-    
+
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
         steps:
@@ -286,14 +295,13 @@ flows:
                 options:
                     unmanaged: False
 
-    install_regression:
+    config_regression:
         steps:
-            # Add QA metadata needed for regression
-            5:
+            2:
                 task: deploy_qa_config
                 options:
                     unmanaged: False
-            6:
+            3:
                 task: update_admin_profile
                 options:
                     managed: true
@@ -328,7 +336,7 @@ flows:
             2:
                 task: test_data_dev_org
                 options:
-                    mapping: testdata/mapping_managed.yml
+                    mapping: datasets/mapping_managed.yml
 
     test_data_1k:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
