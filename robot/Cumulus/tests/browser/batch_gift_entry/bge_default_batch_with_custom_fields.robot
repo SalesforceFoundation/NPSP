@@ -24,7 +24,7 @@ Create BGE Batch With Custom Fields
     ...                       Name=${batch}
     ...                       Batch Description=This batch is created by Robot.
     Click BGE Button        Next
-    Select Multiple Values From Duellist    bge.duellist    Opportunity    Available Fields    custom_campaign    custom_currency    custom_date    custom_number    custom_picklist    custom_text    custom_textarea
+    Select Multiple Values From Duellist    bge.duellist    Opportunity    Available Fields    custom_campaign    custom_currency    custom_date    custom_number    custom_picklist    custom_text    custom_textarea    
     Click Duellist Button    Opportunity    Move selection to Selected Fields
     Execute JavaScript    document.getElementsByClassName('wideListbox slds-form-element')[1].scrollIntoView()
     Select Multiple Values From Duellist    bge.duellist    Payment    Available Fields    custom_email    custom_multipick    custom_phone    custom_url
@@ -79,11 +79,11 @@ Create New gift and process batch and validate
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
     Verify Row Count    1
-
-
+    
+    
 Verify Custom Fields on Payment and Donation
-    [tags]  unstable
-    ${date} =     Get Current Date    result_format=%Y-%m-%d
+    [tags]  unstable 
+    ${date} =     Get Current Date    result_format=%Y-%m-%d       
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
     ${pay_id}    Get Current Record ID
@@ -109,5 +109,5 @@ Verify Custom Fields on Payment and Donation
     ...    ${org_ns}custom_picklist__c=2
     ...    ${org_ns}custom_textarea__c=this is custom batch
     ...    ${org_ns}custom_text__c=Robot
-
-
+    
+         

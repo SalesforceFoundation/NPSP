@@ -19,7 +19,7 @@ Create Donation from a Contact
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $1000 donation    Amount=1000    StageName=Pledged    npe01__Do_Not_Automatically_Create_Payment__c=false
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
-    ${opp_name}    Get Main Header
+    ${opp_name}    Get Main Header 
     Set Global Variable      ${opp_name}
     Load Related List    Payments
     Click Special Related List Button  Payments    Schedule Payments
@@ -36,16 +36,16 @@ Create Donation from a Contact
     Should be equal as strings    ${value}    ${No_of_payments}
     Verify Date Split    ${date}    ${No_of_payments}    ${intervel}
     ${xpath}    Get NPSP Locator    button    Create Payments
-    Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
+    Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)    
     Click Button with Value    Create Payments
     Select Window
     Page Scroll To Locator    record.related.check_occurrence    Payments
     Wait For Locator    record.related.viewall    Payments
     Verify Occurrence    Payments    4
     Click ViewAll Related List    Payments
-    ${flag}     Verify payment
+    ${flag}     Verify payment    
     should be equal as strings     ${flag}    pass
-
+    
 Verify values in Create one or more Payments for this Opportunity page
     [tags]  unstable
     Click Element With Locator    breadcrumb-link    ${opp_name}
@@ -76,4 +76,4 @@ Verify values in Create one or more Payments for this Opportunity page
     Verify Details
     ...    Unpaid=3
     ...    Written Off=1
-
+    
