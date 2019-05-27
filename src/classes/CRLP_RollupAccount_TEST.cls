@@ -66,27 +66,32 @@ public class CRLP_RollupAccount_TEST {
         // Create a single Filter Group (no need for filter rules here)
         String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
+        String filterGroupId3 = CMT_UnitTestData_TEST.getNewRecordId();
 
         DateTime dt = DateTime.now().addMonths(-100).addDays(-1);
         String dtValue = dt.format('yyyy-MM-dd', UserInfo.getTimezone().toString());
 
         // Simple testing filters for IsWon, RecordType, and Paid/Written Off
         String filterGroupsJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
-                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') +
-            ']';
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') + ',' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId3, 'TestFilterGroup3-IsLost') +
+        ']';
+
         String filterRulesJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
-                /* Add a rule that should filter out Opportunities created more than 100 months ago */
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'CloseDate', CMT_FilterRule.FilterOperation.Greater.name(), dtvalue) + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
+            /* Add a rule that should filter out Opportunities created more than 100 months ago */
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'CloseDate', CMT_FilterRule.FilterOperation.Greater.name(), dtvalue) + ',' +
 
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule3', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule3', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') + ',' +
 
-            ']';
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule1', 'Opportunity', 'IsWon', 'Equals', 'False') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule2', 'Opportunity', 'IsClosed', 'Equals', 'True') +
+        ']';
 
         // Deserialize the filter group and filter rule to use for the tests
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
@@ -155,6 +160,13 @@ public class CRLP_RollupAccount_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Total Count of Opps', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__OppAmountLastYear__c', CRLP_Operation.RollupType.Count, '') + ',' +
+
+                /* Using a simple Count to validate YearsAgo operations with a different Filter Group.
+                *  Purposely only use one rollup with this filter group to test rollup grouping logic */
+                CMT_UnitTestData_TEST.createRollupRecord('Count Test with Different Filter', filterGroupId3,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__OppsClosed2YearsAgo__c', CRLP_Operation.RollupType.Count, null,
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 0) + ',' +
 
                 /* Payment Rollups for Total Paid and Total Written Off - using a field that can hold the value */
                 CMT_UnitTestData_TEST.createRollupRecord('Total Payments', filterGroupId1,
@@ -472,6 +484,8 @@ public class CRLP_RollupAccount_TEST {
 
         System.assertEquals(cnt, hardCreditAcc.npo02__OppAmountLastYear__c, 'Count should be all Won Opps');
         System.assertEquals(hardCreditAcctOppCount, hardCreditAcc.npo02__OppAmountThisYear__c, 'Count should be ALL opps regardless of stage');
+
+        System.assertEquals(1, hardCreditAcc.npo02__OppsClosed2YearsAgo__c, 'The number of close lost opps should be 1');
 
         if (tt == TestType.TestMultiCurrBatch) {
             // Query the MultiCurrency Account with all the target fields specified in the rollups
