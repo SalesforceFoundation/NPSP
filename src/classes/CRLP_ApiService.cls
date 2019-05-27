@@ -224,7 +224,7 @@ public without sharing class CRLP_ApiService {
 
          if (!changedRollupTypes.isEmpty()) {
             callback.params = new Map<String, Set<String>> {
-                PARAM_ROLLUP_TYPES => changedRollupTypes
+                CallableApiParameters.PARAM_ROLLUP_TYPES => changedRollupTypes
             };
         }
 
@@ -454,7 +454,7 @@ public without sharing class CRLP_ApiService {
             updateDeploymentStatus(status, true);
 
             try {
-                new CRLP_ApiService().setRollupStateAsStale( (Set<String>)callbackParams.get(PARAM_ROLLUP_TYPES) );
+                new CRLP_ApiService().setRollupStateAsStale( (Set<String>)callbackParams.get(CallableApiParameters.PARAM_ROLLUP_TYPES) );
             } catch (Exception ex) {
                 logError(ex);
             }
@@ -462,8 +462,9 @@ public without sharing class CRLP_ApiService {
 
         /**
         * @description write the deployment status to the custom settings object
-        * @param statusMap a map of the status of the deployment
-        */            
+        * @param status string of the status
+        * @param isSuccess boolean that indicates if the rollups was sucessful
+        */
         private void updateDeploymentStatus(String status, Boolean isSuccess) {
             Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             crlpSettings.CMT_API_Status__c = status;
