@@ -452,8 +452,7 @@ public inherited sharing class CRLP_RollupProcessor {
     @TestVisible
     private Boolean isOppContactRoleSoftCreditRollup {
         get {
-            return rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+            return CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.rollupType);
         }
     }
 
