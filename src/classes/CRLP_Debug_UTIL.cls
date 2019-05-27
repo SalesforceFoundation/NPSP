@@ -50,6 +50,7 @@ public class CRLP_Debug_UTIL {
      * Level 1 = MINIMAL
      * Level 2 = DETAILED
      */
+    @TestVisible
     public static Integer debuggingLevel {
         get {
             if (debuggingLevel == null) {
@@ -67,6 +68,7 @@ public class CRLP_Debug_UTIL {
     /**
      * @description Meant to be used externally to determine when debugging is enabled
      */
+    @TestVisible
     public static Boolean isDebuggingEnabled {
         get {
             return (debuggingLevel > 0);
@@ -120,30 +122,42 @@ public class CRLP_Debug_UTIL {
         return val;
     }
 
-    public static String getRollupCurrentValues(CRLP_Rollup r) {
-        return (debuggingLevel == 0 ? '' :
-                '\n* # of MDT records=' + r.rollupsMdt.size() +
-                '\n* resultFieldName=' + r.resultFieldName + '/' + r.resultFieldType +
-                '\n* timeBoundOperation=' + r.timeBoundOperation +
-                '\n* theCount=' + r.theCount +
-                '\n* theSum=' + r.theSum +
-                '\n* minDateTime=' + r.minDateTime +
-                '\n* maxDateTime=' + r.maxDateTime +
-                '\n* minByYear=' + JSON.serialize(r.minByYear) +
-                '\n* maxByYear=' + JSON.serialize(r.maxByYear) +
-                '\n* sumByYear=' + JSON.serialize(r.sumByYear) +
-                '\n* countByYear=' + JSON.serialize(r.countByYear) +
-                '\n* textValue=' + JSON.serialize(r.textValue) +
-                '\n* numValue=' + JSON.serialize(r.numValue) +
-                '\n* dateValue=' + JSON.serialize(r.dateValue) +
-                '\n* dateTimeValue=' + JSON.serialize(r.dateTimeValue) +
-                '\n* idValue=' + JSON.serialize(r.idValue) +
-                '\n==================================' );
+    private static String getRollupCurrentValues(CRLP_Rollup rlp) {
+        String debugText = null;
+        if (debuggingLevel != 0) {
+            debugText =
+                '\n* # of MDT records=' + rlp.rollupsMdt.size() +
+                '\n* detail=' + rlp.detailObject +
+                '\n* theCount=' + rlp.theCount +
+                '\n* theSum=' + rlp.theSum +
+                '\n* minDateTime=' + rlp.minDateTime +
+                '\n* maxDateTime=' + rlp.maxDateTime +
+                '\n* minByYear=' + JSON.serialize(rlp.minByYear) +
+                '\n* maxByYear=' + JSON.serialize(rlp.maxByYear) +
+                '\n* sumByYear=' + JSON.serialize(rlp.sumByYear) +
+                '\n* countByYear=' + JSON.serialize(rlp.countByYear) +
+                (rlp.isDaysAgoOperation ? '\n* DaysAgoOperation=' + rlp.daysBack : '') +
+                (rlp.isYearsAgoSingleResult ? '\n* YearsAgoSingleResult=' + rlp.yearsAgo : '');
+            for (CRLP_Rollup.Rollupmdt r : rlp.rollupsMdt) {
+                debugText += '\n   -- ' + r.summaryObject + '.' + r.summaryField + ' [' + r.resultFieldDisplayType + ']'
+                    + (r.singleResultRollupType ? '[SingleResult]=' + r.getResultValue() : '');
+            }
+            debugText += '\n==================================';
+        }
+        return debugText;
     }
 
     public static String getRollupState(List<CRLP_Rollup> rollups) {
         String theState = '';
         if (isDebuggingEnabled) {
+            Integer numRollupFields = 0;
+            for (CRLP_Rollup r : rollups) {
+                numRollupFields += r.rollupsMdt.size();
+            }
+            theState += '\n******************************************************' +
+                '\nNumber of Rollup Fields: ' + numRollupFields +
+                '\nNumber of Rollup Instances: ' + rollups.size() +
+                '\n==================================';
             for (CRLP_Rollup r : rollups) {
                 theState += getRollupCurrentValues(r) + '\n';
             }
