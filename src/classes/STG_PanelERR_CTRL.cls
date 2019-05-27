@@ -160,7 +160,9 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     * @return PageReference The page to redirect to, if any.
     */
     public override PageReference editSettings() {
-        if((STG_SettingsService.stgService.stgErr.Error_Notifications_To__c).startsWith(ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX)) {
+        if (STG_SettingsService.stgService.stgErr.Error_Notifications_To__c != null &&
+                STG_SettingsService.stgService.stgErr.Error_Notifications_To__c.startsWith(ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX)
+        ) {
             notificationToDropDown = ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX;
         }
 

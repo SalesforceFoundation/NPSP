@@ -330,10 +330,10 @@ public class CRLP_RollupCMT {
         public String dateObjectLabel;
         public String dateFieldLabel;
         public String dateField;
-        public Boolean isActive;
-        public Boolean isDeleted;
         public Boolean useFiscalYear;
         public Integer intValue;
+        public Boolean isActive;
+        public Boolean isDeleted;
 
         public Rollup(String label) {
             //check to see if UDR; these need a unique name

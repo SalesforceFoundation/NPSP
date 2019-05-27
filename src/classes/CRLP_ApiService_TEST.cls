@@ -38,8 +38,6 @@ private class CRLP_ApiService_TEST {
     private static UTIL_IntegrationConfig_TEST.MockPackage mockPackage;
     private static MockCallable callableMock;
 
-    private static final String ROLLUP_DEFINITIONS = '[{"useFiscalYear":false,"timeBoundOperation":"All_Time","theSum":0,"theCount":0,"textValue":[null,null,null,null],"summaryObject":"General_Accounting_Unit__c","sumByYear":{}}]';
-
     /**
     * @description Validate the getRollupDefinitions returns the expected collection of CRLP_Rollup instances.
     * Calls the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
@@ -106,7 +104,7 @@ private class CRLP_ApiService_TEST {
      * @description Confirms that isRollupStateEnabled returns true if the bridge is installed
      */
     @isTest
-    private static void shouldReturnTrueIfRollupStateEnabled() {
+    private static void shouldReturnTrueWhenRollupStateIsEnabled() {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
 
@@ -121,7 +119,7 @@ private class CRLP_ApiService_TEST {
      * @description Confirms that isRollupStateEnabled returns false if the bridge is not installed
      */
     @isTest
-    private static void shouldReturnFalseIfRollupStateEnabled() {
+    private static void shouldReturnFalseWhenRollupStateIsNotEnabled() {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
         mockPackage.isInstalled = false;
@@ -137,7 +135,7 @@ private class CRLP_ApiService_TEST {
      * @description Confirms that getBaseRollupStateForRecords calls Bridge callable with correct action and params
      */
     @isTest
-    private static void getBaseRollupStateForRecordsShouldCallBridgeCallable() {
+    private static void getBaseRollupStateForRecordsShouldCallArchiveBridgeCallable() {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
 
@@ -179,7 +177,7 @@ private class CRLP_ApiService_TEST {
      * @description Confirms that getBaseRollupStateForRecords returns an empty map if not installed
      */
     @isTest
-    private static void getBaseRollupStateForRecordsShouldReturnAnEmptyMapIfNotInstalled() {
+    private static void baseRollupStateForRecordsShouldBeEmptyWhenArchiveBridgeIsNotInstalled() {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
         mockPackage.isInstalled = false;
@@ -201,13 +199,14 @@ private class CRLP_ApiService_TEST {
      */
     @isTest
     private static void getBaseRollupStateForRecordsShouldBuildCRLPRollupMap() {
+        final String MOCK_ROLLUP_DEFINITIONS = '[{"mockRollupDefinition":"randomData"}]';
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
 
         Map<Id, String> expectedRollupsByReferenceId = new Map<Id, String>();
         Set<Id> expectedReferenceIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Account.SObjectType, 3));
         for (Id referenceId : expectedReferenceIds) {
-            expectedRollupsByReferenceId.put(referenceId, ROLLUP_DEFINITIONS);
+            expectedRollupsByReferenceId.put(referenceId, MOCK_ROLLUP_DEFINITIONS);
         }
 
         callableMock.withReturnValue(expectedRollupsByReferenceId);
@@ -234,7 +233,7 @@ private class CRLP_ApiService_TEST {
      * @description Confirms that mark records as stale calls Bridge callable with correct action and params
      */
     @isTest
-    private static void markRollupStateAsStaleShouldCallBridgeCallable() {
+    private static void markRollupStateAsStaleShouldCallArchiveBridgeCallable() {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
 
@@ -250,7 +249,7 @@ private class CRLP_ApiService_TEST {
         System.assertNotEquals(
             null, 
             callableMock.actionCalled, 
-            'The callabled action should be called'
+            'The callable action should be called'
         );
     }
 
@@ -259,13 +258,14 @@ private class CRLP_ApiService_TEST {
      * bridge is not installed
      */
     @isTest
-    private static void markRollupStateAsStaleWillNotThrowExceptionWhenNoBridgeInstalled() {
+    private static void markRollupStateAsStaleShouldNotThrowExceptionWhenArchiveBridgeIsNotInstalled() {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
             Customizable_Rollups_Enabled__c = true
         ));
 
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
+        mockPackage.isInstalled = false;
         
         Set<String> expectedRollupTypes = new Set<String> { 
             CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name(),
