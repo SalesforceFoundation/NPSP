@@ -231,6 +231,39 @@ public without sharing class CRLP_ApiService {
         return callback;
     }
 
+    /*
+    * @description build a set of changed rollup types based on a list of rollups
+    * @param rollups is a list of rollups
+    * @return a set of change rollup types
+    */
+
+    private Set<String> buildChangedRollupTypes(List<CRLP_RollupCMT.Rollup> rollups) {
+        Set<String> changedRollupTypes = new Set<String>();
+        for (CRLP_RollupCMT.Rollup cmtRollup : rollups) {
+            RollupUtil util = new RollupUtil(cmtRollup);
+            if (util.hasChanged()) {
+                changedRollupTypes.addAll(util.getRollupTypes());
+            }
+        }
+        return changedRollupTypes;
+    }
+
+    /*
+    * @description build a set of changed rollup types based on a list of filter groups
+    * @param filterGroups is a List of filtergroups
+    * @return a set of change rollup types
+    */
+    private Set<String> buildChangedRollupTypes(List<CRLP_RollupCMT.FilterGroup> filterGroups) {
+        Set<String> changedRollupTypes = new Set<String>();
+
+        FilterGroupUtil util = new FilterGroupUtil();
+        for (CRLP_RollupCMT.FilterGroup cmtFilterGroup : filterGroups) {
+            if (util.hasChanged(cmtFilterGroup)) {
+                changedRollupTypes.addAll(util.getRollupTypes(cmtFilterGroup.recordId));
+            }
+        }
+        return changedRollupTypes;
+    }
 
     /*
     * @description handle changes to customizable rollups and send back a callback handler if 
@@ -243,17 +276,11 @@ public without sharing class CRLP_ApiService {
         Set<String> changedRollupTypes = new Set<String>();
 
         if (isRollupStateEnabled()) {
-            for (CRLP_RollupCMT.Rollup cmtRollup : rollups) {
-                RollupUtil util = new RollupUtil(cmtRollup);
-                if (util.hasChanged()) {
-                    changedRollupTypes.addAll(util.getRollupTypes());
-                }
-            }
+            changedRollupTypes.addAll(buildChangedRollupTypes(rollups));
         }
 
        return getRollupHandler(changedRollupTypes);
     }
-
 
     /*
     * @description handle changes to customizable filter groups and send back a callback handler if
@@ -265,18 +292,29 @@ public without sharing class CRLP_ApiService {
         Set<String> changedRollupTypes = new Set<String>();
 
         if (isRollupStateEnabled()) {
-            FilterGroupUtil util = new FilterGroupUtil();
-            for (CRLP_RollupCMT.FilterGroup cmtFilterGroup : filterGroups) {
-                if (util.hasChanged(cmtFilterGroup)) {
-                    changedRollupTypes.addAll(util.getRollupTypes(cmtFilterGroup.recordId));
-                }
-            }
+            changedRollupTypes.addAll(buildChangedRollupTypes(filterGroups));
         }
 
         return getRollupHandler(changedRollupTypes);
     }
 
+    /*
+    * @description handle changes to both rollups and customizable filter groups and send back a callback handler if
+    * there is processing that needs to be executed after deployment
+    * @param rollups is a list of Rollups
+    * @param filterGroups is a list of filtergroups
+    * @return a MetadataHandler that can be used for deployment callbacks
+    */
+    public RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.Rollup> rollups, List<CRLP_RollupCMT.FilterGroup> filterGroups) {
+        Set<String> changedRollupTypes = new Set<String>();
 
+        if (isRollupStateEnabled()) {
+            changedRollupTypes.addAll(buildChangedRollupTypes(rollups));
+            changedRollupTypes.addAll(buildChangedRollupTypes(filterGroups));
+        }
+
+        return getRollupHandler(changedRollupTypes);
+    }
 
     /*******************************************************************************************************
     * @description Utility class for a CMT rollup
