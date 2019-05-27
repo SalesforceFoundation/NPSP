@@ -714,13 +714,7 @@ public with sharing class CRLP_RollupUI_SVC {
             CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
 
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
-
-            String jobId;
-            if (changeHandler == null) {
-                jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
-            } else {
-                jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
-            }
+            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
 
             // Return the unique record DeveloperName value of the Rollup__mdt record
             return jobId + '-' + cmtRollup.recordName;
@@ -759,13 +753,7 @@ public with sharing class CRLP_RollupUI_SVC {
             CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(filterGroups);
 
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
-
-            String jobId;
-            if (changeHandler == null) {
-                jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
-            } else {
-                jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
-            }
+            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
             
             // Return the unique record DeveloperName value of the FilterGroup__mdt record
             return jobId + '-' + cmtFilterGroup.recordName;
