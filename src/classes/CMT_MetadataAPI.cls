@@ -128,6 +128,7 @@ public class CMT_MetadataAPI {
      *****************************************************************************************************************/
     public interface MetadataCallbackHandler {
         void performSuccessHandler(Map<String, Object> params, String status);
+        void performErrorHandler(Map<String, Object> params, String status);
     }
 
     /******************************************************************************************************************
@@ -181,6 +182,10 @@ public class CMT_MetadataAPI {
 
                 if (callbackHandler != null) {
                     callbackHandler.performSuccessHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
+                }
+            } else {
+                if (callbackHandler != null) {
+                    callbackHandler.performErrorHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
                 }
             }
         }

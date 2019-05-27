@@ -239,12 +239,18 @@ public without sharing class CRLP_ApiService {
 
     private Set<String> buildChangedRollupTypes(List<CRLP_RollupCMT.Rollup> rollups) {
         Set<String> changedRollupTypes = new Set<String>();
+
+        if (!isRollupStateEnabled()) {
+            return changedRollupTypes;
+        }
+
         for (CRLP_RollupCMT.Rollup cmtRollup : rollups) {
             RollupUtil util = new RollupUtil(cmtRollup);
             if (util.hasChanged()) {
                 changedRollupTypes.addAll(util.getRollupTypes());
             }
         }
+
         return changedRollupTypes;
     }
 
@@ -256,12 +262,17 @@ public without sharing class CRLP_ApiService {
     private Set<String> buildChangedRollupTypes(List<CRLP_RollupCMT.FilterGroup> filterGroups) {
         Set<String> changedRollupTypes = new Set<String>();
 
+        if (!isRollupStateEnabled()) {
+            return changedRollupTypes;
+        }
+
         FilterGroupUtil util = new FilterGroupUtil();
         for (CRLP_RollupCMT.FilterGroup cmtFilterGroup : filterGroups) {
             if (util.hasChanged(cmtFilterGroup)) {
                 changedRollupTypes.addAll(util.getRollupTypes(cmtFilterGroup.recordId));
             }
         }
+
         return changedRollupTypes;
     }
 
@@ -274,10 +285,7 @@ public without sharing class CRLP_ApiService {
     public RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.Rollup> rollups) {
 
         Set<String> changedRollupTypes = new Set<String>();
-
-        if (isRollupStateEnabled()) {
-            changedRollupTypes.addAll(buildChangedRollupTypes(rollups));
-        }
+        changedRollupTypes.addAll(buildChangedRollupTypes(rollups));
 
        return getRollupHandler(changedRollupTypes);
     }
@@ -290,10 +298,7 @@ public without sharing class CRLP_ApiService {
     */
     public RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.FilterGroup> filterGroups) {
         Set<String> changedRollupTypes = new Set<String>();
-
-        if (isRollupStateEnabled()) {
-            changedRollupTypes.addAll(buildChangedRollupTypes(filterGroups));
-        }
+        changedRollupTypes.addAll(buildChangedRollupTypes(filterGroups));
 
         return getRollupHandler(changedRollupTypes);
     }
@@ -308,10 +313,8 @@ public without sharing class CRLP_ApiService {
     public RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.Rollup> rollups, List<CRLP_RollupCMT.FilterGroup> filterGroups) {
         Set<String> changedRollupTypes = new Set<String>();
 
-        if (isRollupStateEnabled()) {
-            changedRollupTypes.addAll(buildChangedRollupTypes(rollups));
-            changedRollupTypes.addAll(buildChangedRollupTypes(filterGroups));
-        }
+        changedRollupTypes.addAll(buildChangedRollupTypes(rollups));
+        changedRollupTypes.addAll(buildChangedRollupTypes(filterGroups));
 
         return getRollupHandler(changedRollupTypes);
     }
@@ -473,16 +476,16 @@ public without sharing class CRLP_ApiService {
     private class ApiException extends Exception {}
 
 
-    /******************************************************************************************************************
+    /**************************************************************************************************************
     * @description Metadata Call back handler class to execute actions when the metadata has successfully been deployed
-    /*****************************************************************************************************************/
+    **/
     public class RollupMetadataHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
 
         public Map<String, Object> params;
 
-        /**************************************************************************************************************
-        * @description success handler - will call the ApiService to set rollus as stale 
-        /*************************************************************************************************************/
+        /**********************************************************************************************************
+        * @description success handler - will call the ApiService to set rollup as stale 
+        **/
         public void performSuccessHandler(Map<String, Object> callbackParams, String status) {
 
             if (callbackParams == null || callbackParams.isEmpty()) {
@@ -496,6 +499,13 @@ public without sharing class CRLP_ApiService {
             } catch (Exception ex) {
                 logError(ex);
             }
+        }
+
+        /**
+        * @description error handler - will call the update deployment status
+        */
+        public void performErrorHandler(Map<String, Object> callbackParams, String status) {
+            updateDeploymentStatus(status, false);
         }
 
         /**

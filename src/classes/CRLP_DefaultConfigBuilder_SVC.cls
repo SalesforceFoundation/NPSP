@@ -81,8 +81,6 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // send change event check
         CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(allChangedRollups, allChangedFilterGroups);
 
-        //String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
-        //return jobId;
         return CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
     }
 
