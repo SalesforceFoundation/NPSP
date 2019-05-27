@@ -486,7 +486,8 @@ public class CRLP_RollupCMT {
 
             return other.filterGroupRecordName != this.filterGroupRecordName
             || other.operation != this.operation
-            || other.timeBoundOperationType != this.timeBoundOperationType
+            || ( (String.isBlank(other.timeBoundOperationType) ? null : other.timeBoundOperationType) != 
+                 (String.isBlank(this.timeBoundOperationType) ? null : this.timeBoundOperationType) )
             || other.summaryObject != this.summaryObject
             || other.summaryField != this.summaryField
             || other.detailObject != this.detailObject
