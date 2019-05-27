@@ -91,8 +91,7 @@ public class CRLP_RollupBatch_SVC {
                 queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
             }
 
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+        } else if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(jobType)) {
             // TODO -- How to get Accounts that require using this method for Soft Credits??
             // For now just use the NumberOfClosedOpportunities field as a proxy for the number of SoftCredits
             String softCreditField = parentRelationshipField + 'npo02__NumberOfClosedOpps__c';
