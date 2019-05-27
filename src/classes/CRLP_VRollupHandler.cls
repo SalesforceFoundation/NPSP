@@ -136,11 +136,14 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      * whether that value be null or an actual rolled-up value.
      */
     public SObject getPopulatedSObject() {
-        this.record = CRLP_Rollup_SVC.createEmptyResultObject(this.objectId, this.rollups);
         Boolean debugMode = CRLP_Debug_UTIL.debuggingLevel == CRLP_Debug_UTIL.LEVEL_MAX;
+        if (debugMode) {
+            System.debug(CRLP_Debug_UTIL.getRollupState(this.rollups));
+        }
+
+        this.record = CRLP_Rollup_SVC.createEmptyResultObject(this.objectId, this.rollups);
         for (CRLP_Rollup rollup : this.rollups) {
             Map<String,Object> results = rollup.getFinalValues();
-            CRLP_Debug_UTIL.setCurrentRollupState(this.objectId + ': ' + CRLP_Debug_UTIL.getRollupCurrentValues(rollup));
             for (String fld : results.keySet()) {
                 if (debugMode) {
                     CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
@@ -173,12 +176,23 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
 
     /**
      * @description Build the list of Rollup defintion groupings to use for the specified rollup operation type.
-     * Builds the rollup collection in the current instance of the class
+     * This is done in two loops, the first excluding Count type rollups (because in grouping count rollups
+     * do not use the Amount or Date fields, and thus can be ignored)
      * @param rollupType Rollup Type Enum
      */
     public void buildGroupedRollups(CRLP_RollupProcessingOptions.RollupType rollupType) {
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, this.jobFilter)) {
-            addRollupDefinition(r);
+        String countOperation = CRLP_Operation.RollupType.Count.name();
+        List<Rollup__mdt> rollupDefs = CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, this.jobFilter);
+
+        for (Rollup__mdt nonCountRollup : rollupDefs) {
+            if (nonCountRollup.Operation__c != countOperation) {
+                addRollupDefinition(nonCountRollup);
+            }
+        }
+        for (Rollup__mdt countRollup : rollupDefs) {
+            if (countRollup.Operation__c == countOperation) {
+                addRollupDefinition(countRollup);
+            }
         }
     }
 

@@ -586,7 +586,7 @@ public class CMT_UnitTestData_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
                         CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount__c') + ',' +
 
                 // Account Soft Credit
                 CMT_UnitTestData_TEST.createRollupRecord('Total Account Soft Credits', filterGroupId,
@@ -595,7 +595,7 @@ public class CMT_UnitTestData_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
                         CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount__c') + ',' +
 
                 // Contact Soft Credit
                 CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - Total', filterGroupId,
@@ -604,7 +604,7 @@ public class CMT_UnitTestData_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
                         CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
-                        'Number_of_Soft_Credits__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+                        'Number_of_Soft_Credits__c', CRLP_Operation.RollupType.Count, 'Amount__c') + ',' +
 
                 // GAU
                 CMT_UnitTestData_TEST.createRollupRecord('Total Allocations All Time', filterGroupId,
@@ -614,7 +614,7 @@ public class CMT_UnitTestData_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
-                        'Total_Number_of_Allocations__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+                        'Total_Number_of_Allocations__c', CRLP_Operation.RollupType.Count, 'Amount__c') + ',' +
 
                 // Recurring Donations
                 CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', filterGroupId,
