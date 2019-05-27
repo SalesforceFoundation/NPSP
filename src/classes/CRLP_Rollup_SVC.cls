@@ -399,5 +399,32 @@ public class CRLP_Rollup_SVC {
         return (Id)dtlRecord.get(parentKeyField);
     }
 
+    /**
+     * @description Returns true if the Rollup Type is either ContactSoftCredit or AccountContactSoftCredit.
+     * This is an extremely common scenario where it's necessary to check this condition frequently.
+     * @param rollupType
+     * @return Boolean
+     */
+    public static Boolean isOppContactRoleSoftCreditRollup(CRLP_RollupProcessingOptions.RollupType rollupType) {
+        return rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+    }
+
+
+    /**
+     * @description Returns true if the RollupMDT record is for a SingleResult operation
+     * (i.e., Largest, Smallest, First or Last).
+     * @param Rollup__mdt
+     * @return Boolean
+     */
+    public static Boolean isSingleResultRollup(Rollup__mdt rlp) {
+        return (
+            rlp.Operation__c == CRLP_Operation.RollupType.Largest.name()
+                || rlp.Operation__c == CRLP_Operation.RollupType.Smallest.name()
+                || rlp.Operation__c == CRLP_Operation.RollupType.First.name()
+                || rlp.Operation__c == CRLP_Operation.RollupType.Last.name()
+        );
+    }
+
     public class CRLP_Exception extends Exception {}
 }
