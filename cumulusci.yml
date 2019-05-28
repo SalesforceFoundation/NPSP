@@ -121,7 +121,7 @@ tasks:
         options:
             suites: robot/Cumulus/perftests/
             options:
-                outputdir: robot/Cumulus/results/perf
+                outputdir: robot/Cumulus/results
 
     pmd:
         description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
