@@ -64,32 +64,38 @@ public class CRLP_RollupContact_TEST {
         // Create a single Filter Group (no need for filter rules here)
         String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
+        String filterGroupId3 = CMT_UnitTestData_TEST.getNewRecordId();
 
         // Simple testing filters for IsWon, RecordType, and Paid/Written Off
         String filterGroupsJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
-                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') +
-            ']';
-        String filterRulesJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
-                /* The following rules test Inclusion and Exclusion filters against picklist fields that have and don't have any data */
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'Opportunity', 'Type', 'Equals', 'New') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'Type', 'Contains', 'New') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule5', 'Opportunity', 'Type', 'Starts_With', 'New') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule6', 'Opportunity', 'Type', 'Does_Not_Contain', 'Old') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule7', 'Opportunity', 'npe01__Membership_Origin__c', 'Does_Not_Contain', 'Nothing') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule8', 'Opportunity', 'npe01__Membership_Origin__c', 'Equals', '') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule9', 'Opportunity', 'npe01__Membership_Origin__c', 'Contains', '') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule10', 'Opportunity', 'npe01__Membership_Origin__c', 'Not_Equals', 'Nothing') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule11', 'Opportunity', 'npe01__Membership_Origin__c', 'Starts_With', '') + ',' +
-                /* The following rule is for testing against paid payments */
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule12', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') + ',' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId3, 'TestFilterGroup3-IsLost') +
+        ']';
 
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule4', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
-            ']';
+        String filterRulesJSON = '[' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
+            /* The following rules test Inclusion and Exclusion filters against picklist fields that have and don't have any data */
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'Opportunity', 'Type', 'Equals', 'New') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'Type', 'Contains', 'New') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule5', 'Opportunity', 'Type', 'Starts_With', 'New') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule6', 'Opportunity', 'Type', 'Does_Not_Contain', 'Old') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule7', 'Opportunity', 'npe01__Membership_Origin__c', 'Does_Not_Contain', 'Nothing') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule8', 'Opportunity', 'npe01__Membership_Origin__c', 'Equals', '') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule9', 'Opportunity', 'npe01__Membership_Origin__c', 'Contains', '') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule10', 'Opportunity', 'npe01__Membership_Origin__c', 'Not_Equals', 'Nothing') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule11', 'Opportunity', 'npe01__Membership_Origin__c', 'Starts_With', '') + ',' +
+            /* The following rule is for testing against paid payments */
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule12', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
+
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule4', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') + ',' +
+
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule1', 'Opportunity', 'IsWon', 'Equals', 'False') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule2', 'Opportunity', 'IsClosed', 'Equals', 'True') +
+        ']';
 
         // Deserialize the filter group and filter rule to use for the tests
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
@@ -118,7 +124,7 @@ public class CRLP_RollupContact_TEST {
                 /* Using nonsense fields to test Smallest with different Detail Field and Years Ago */
                 CMT_UnitTestData_TEST.createRollupRecord('Num from Smallest Opp Last Year', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'Number_of_Soft_Credits__c', CRLP_Operation.RollupType.SMALLEST, 'Recurring_Donation_Installment_Number__c',
+                        'npo02__SmallestAmount__c', CRLP_Operation.RollupType.SMALLEST, 'Recurring_Donation_Installment_Number__c',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 1) + ',' +
 
                 /* Using nonsense fields to test Largest with different Detail Field and Years Ago */
@@ -178,6 +184,13 @@ public class CRLP_RollupContact_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Custom Result Field Test', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'Department', CRLP_Operation.RollupType.FIRST, 'Type') + ',' +
+
+                /* Using a simple Count to validate YearsAgo operations with a different Filter Group.
+                *  Purposely only use one rollup with this filter group to test rollup grouping logic */
+                CMT_UnitTestData_TEST.createRollupRecord('Count Test with Different Filter', filterGroupId3,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__OppsClosed2YearsAgo__c', CRLP_Operation.RollupType.Count, null,
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 0) + ',' +
 
                 /* Using SingleResult operation to get the last gift date */
                 CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId1,
@@ -482,18 +495,21 @@ public class CRLP_RollupContact_TEST {
         System.assertEquals(last365Days, c.npo02__OppAmountLastNDays__c);
         System.assertEquals('New', c.Department);
 
+        System.assertEquals(1, c.npo02__OppsClosed2YearsAgo__c, 'The number of close lost opps should be 1');
+
         // These 10 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalPayments, c.First_Soft_Credit_Amount__c,
                 'Total Payments should match total donations less $100 because one payment has been marked as written off');
         System.assertEquals(baseAmt, c.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), c.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), c.Description.split(';').size(), 'The list of donated years should match');
-        System.assertEquals(42, c4.Number_of_Soft_Credits__c);
+        System.assertEquals(42, c4.npo02__SmallestAmount__c);
         System.assertEquals(4, c4.Number_of_Soft_Credits_Last_N_Days__c);
         System.assertEquals(56, c4.Number_of_Soft_Credits_Last_Year__c);
         System.assertEquals(314, c4.Number_of_Soft_Credits_This_Year__c);
         System.assertEquals(4, c4.Number_of_Soft_Credits_Two_Years_Ago__c);
         System.assertEquals(42, c4.npo02__Household_Naming_Order__c);
+
 
         // THe batch process will query all Contacts, but these 2 are special circumstances to validate
         if (tt == TestType.TestBatch) {
