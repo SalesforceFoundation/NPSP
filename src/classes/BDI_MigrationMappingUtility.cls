@@ -284,7 +284,7 @@ public class BDI_MigrationMappingUtility {
     * and user decides to keep their customizations. Method creates a clone of our
     * default field mapping set with the customized field mappings.
     */
-    public void keepConflicts() {
+    public void enqueueCustomizedFieldMappingSetAndFields() {
 
         queuedMetadataTypesForDeploy.clear();
         conflictingMappings.clear();
@@ -422,7 +422,7 @@ public class BDI_MigrationMappingUtility {
     * and user decides to discard their customizations. Method inserts any net new
     * help text mappings as custom metadata mappings under our default field mapping set.
     */
-    public void discardConflicts() {
+    public void enqueueCustomizedFieldMappings() {
         migrationType = DEFAULT_MAPPING;
 
         // Keep any net new custom help text mappings to be added to our standard defaults

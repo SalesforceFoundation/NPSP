@@ -234,7 +234,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             isConflict = false;
             isPolling = true;
 
-            migrationMappingUtility.keepConflicts();
+            migrationMappingUtility.enqueueCustomizedFieldMappingSetAndFields();
             Id deploymentId = migrationMappingUtility.deployCustomMetadata();
             saveDeploymentId(deploymentId);
 
@@ -258,7 +258,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             isConflict = false;
             isPolling = true;
 
-            migrationMappingUtility.discardConflicts();
+            migrationMappingUtility.enqueueCustomizedFieldMappings();
             Id deploymentId = migrationMappingUtility.deployCustomMetadata();
             saveDeploymentId(deploymentId);
 
