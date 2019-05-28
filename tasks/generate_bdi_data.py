@@ -78,7 +78,7 @@ class Adder:
 
     def __call__(self, value):
         self.x += value
-        return self.x
+        return int(self.x)
 
 
 class GenerateBDIData(BatchDataTask):
@@ -118,7 +118,7 @@ class GenerateBDIData(BatchDataTask):
                 parent.record_type = "Organization"
             self.session.add(parent)
             self.session.flush()
-            kw = {key_field: parent.id, "name": f"{name} {i} Donation"}
+            kw = {key_field: parent.id, "name": "%s %d Donation" % (name, i)}
             self.make_opportunity(amount, date, paid, payment_amount, **kw)
             date = date + timedelta(days=1)
 
