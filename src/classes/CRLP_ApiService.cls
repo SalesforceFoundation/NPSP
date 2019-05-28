@@ -283,9 +283,7 @@ public without sharing class CRLP_ApiService {
     * @return a MetadataHandler that can be used for deployment callbacks
     */
     public RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.Rollup> rollups) {
-
-        Set<String> changedRollupTypes = new Set<String>();
-        changedRollupTypes.addAll(buildChangedRollupTypes(rollups));
+        Set<String> changedRollupTypes = buildChangedRollupTypes(rollups);
 
        return getRollupHandler(changedRollupTypes);
     }
@@ -297,8 +295,7 @@ public without sharing class CRLP_ApiService {
     * @return a MetadataHandler that can be used for deployment callbacks
     */
     public RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.FilterGroup> filterGroups) {
-        Set<String> changedRollupTypes = new Set<String>();
-        changedRollupTypes.addAll(buildChangedRollupTypes(filterGroups));
+        Set<String> changedRollupTypes = buildChangedRollupTypes(filterGroups);
 
         return getRollupHandler(changedRollupTypes);
     }
@@ -357,6 +354,7 @@ public without sharing class CRLP_ApiService {
          */
         public Boolean hasChanged() {
             if (isNew) {
+                System.debug('has changed new');
                 return true;
             }
 
@@ -364,6 +362,7 @@ public without sharing class CRLP_ApiService {
                 if (cmtRollup.recordName == rlp.DeveloperName) {
                     if (cmtRollup.isDifferent(rlp)) {
                         oldRollupType = new CRLP_RollupCMT.Rollup(rlp).getRollupType();
+                        system.debug('rollup has changed' + rlp.DeveloperName);
                         return true;
                     }
                     break;
@@ -439,6 +438,7 @@ public without sharing class CRLP_ApiService {
                     existingGroup.withRules(rulesByGroupId.get(existingGroup.recordId))
                 )) {
                     hasChanged = true;
+                    System.debug('has changed ' + cmtFilterGroup);
                 }
 
                 break;
