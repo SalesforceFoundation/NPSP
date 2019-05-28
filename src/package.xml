@@ -1360,6 +1360,7 @@
         <members>alloPaidPmtsExceedsOpp</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPercentExceed100</members>
+        <members>alloPmtOppSingleTransaction</members>
         <members>alloRemainder</members>
         <members>alloRemoveOppWithPmt</members>
         <members>alloSignMistmatch</members>
@@ -1764,8 +1765,6 @@
         <members>pmtModifyCurrency</members>
         <members>pmtPaidPaymentDateRequired</members>
         <members>pmtUnpaidPaymentScheduledDateRequired</members>
-        <members>pmtWriteOffPaidPayment</members>
-        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -1794,12 +1793,14 @@
         <members>pmtWizardToBeCreated</members>
         <members>pmtWizardWarning</members>
         <members>pmtWizardWeek</members>
+        <members>pmtWizardWriteOffInvalidRecords</members>
+        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
-        <members>pmtWizardWriteOffInvalidRecords</members>
-        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardYear</members>
+        <members>pmtWriteOffPaidPayment</members>
+        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
