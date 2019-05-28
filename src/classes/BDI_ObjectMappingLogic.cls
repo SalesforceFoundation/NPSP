@@ -48,9 +48,9 @@ public with sharing virtual class BDI_ObjectMappingLogic {
 
             objWrap.sObj = Schema.getGlobalDescribe().get(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c)).newSObject();
 
-            // If the object already has an existing sobject Id, then set it in the sObj
-            if (objWrap.existingSobjectId != null) {
-                objWrap.sObj.put('Id', objWrap.existingSobjectId);
+            // If the object already has an existing SObject Id, then set it in the sObj
+            if (objWrap.existingSObjectId != null) {
+                objWrap.sObj.put('Id', objWrap.existingSObjectId);
             }
 
             updateChildToPredecessorRelationship(objWrap);
@@ -67,10 +67,18 @@ public with sharing virtual class BDI_ObjectMappingLogic {
                     //Confirm that either the sObj Id is null (ie new record) or that the field is updatable if it is not new.
                     if (objWrap.sObj.Id == null || targetDescribe.isUpdateable()) {
 
-                        Object value = objWrap.di.get(sourceFieldName);
+                        Object value = objWrap.dataImport.get(sourceFieldName);
 
-                        //only copy values that are not null to avoid overwriting data when updating existing sobjects.
+                        //only copy values that are not null to avoid overwriting data when updating existing SObjects.
                         if (value != null) {
+
+                            // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
+                            // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
+                            // null, "True", or "False"
+                            if (targetDescribe.getType() == Schema.DisplayType.BOOLEAN && !(value instanceof Boolean)) {
+                                value = Boolean.valueOf(value);
+                            }
+
                             objWrap.sObj.put(targetFieldName,value);
                         }
                     }
@@ -81,12 +89,12 @@ public with sharing virtual class BDI_ObjectMappingLogic {
         return objWraps;
     }
 
-    // When the relationship to the predecessor is "Child" then this will put the Id of the predecessor into the defined relationship field on a new Sobject.
+    // When the relationship to the predecessor is "Child" then this will put the Id of the predecessor into the defined relationship field on a new SObject.
     public static void updateChildToPredecessorRelationship(BDI_ObjectWrapper objWrap) {
         // If the object we are working on is a child to its predecessor then set the relationship field 
         if (objWrap.sObj.Id == null && objWrap.objMapping.Relationship_To_Predecessor__c == 'Child') {
             
-            objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Relationship_Field__c),objWrap.di.get(UTIL_Namespace.adjustNPSPNamespace(objWrap.predecessorObjMapping.Imported_Record_Field_Name__c)));
+            objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Relationship_Field__c),objWrap.dataImport.get(UTIL_Namespace.adjustNPSPNamespace(objWrap.predecessorObjMapping.Imported_Record_Field_Name__c)));
         }
     }
 }

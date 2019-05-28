@@ -52,7 +52,7 @@ global with sharing class BDI_DataImportService {
         this.fieldMapper = fieldMapper;
 
         contactService = new BDI_ContactService(this);
-        if (fieldMapper != null && String.valueOf(fieldMapper).split(':')[0] == 'BDI_FieldMappingCustomMetadata'){
+        if (fieldMapper instanceof BDI_FieldMappingCustomMetadata){
             additionalObjectService = new BDI_AdditionalObjectService(this);
         }
     }

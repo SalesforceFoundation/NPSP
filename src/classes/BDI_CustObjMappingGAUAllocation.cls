@@ -51,8 +51,8 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
             objWrap.sObj = Schema.getGlobalDescribe().get(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c)).newSObject();
 
-            if (objWrap.existingSobjectId != null) {
-                objWrap.sObj.put('Id', objWrap.existingSobjectId);
+            if (objWrap.existingSObjectId != null) {
+                objWrap.sObj.put('Id', objWrap.existingSObjectId);
             }
 
             Object campaignValue;
@@ -62,7 +62,7 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
             for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
                 String sourceFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Source_Field_API_Name__c);
                 String targetFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Target_Field_API_Name__c);
-                Object value = objWrap.di.get(sourceFieldName);
+                Object value = objWrap.dataImport.get(sourceFieldName);
 
                 Schema.DescribeFieldResult targetDescribe = fieldDescribeMap.get(targetFieldName.toLowerCase());
 
@@ -78,9 +78,17 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                         } else if (fieldMapping.Target_Field_API_Name__c == CAMPAIGN_FIELDNAME) {
                             campaignValue = value;
                         } else {
-                            //only copy values that are not null to avoid overwriting data when updating existing sobjects.
+                            //only copy values that are not null to avoid overwriting data when updating existing SObjects.
                             if (value != null) {
-                                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Target_Field_API_Name__c),value);
+
+                                // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
+                                // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
+                                // null, "True", or "False"
+                                if (targetDescribe.getType() == Schema.DisplayType.BOOLEAN && !(value instanceof Boolean)) {
+                                    value = Boolean.valueOf(value);
+                                }
+                                
+                                objWrap.sObj.put(targetFieldName,value);
                             }
                         }
                     }
