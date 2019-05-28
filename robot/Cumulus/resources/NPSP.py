@@ -1003,6 +1003,7 @@ class NPSP(object):
 
         code = """Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
                 diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+                update diSettings;
                 BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
                 ID ApexJobId = Database.executeBatch(bdi, %d);
                 """ % int(batchsize)
