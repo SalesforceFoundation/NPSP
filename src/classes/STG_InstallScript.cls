@@ -41,7 +41,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
         INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
         CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
         UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS_FOR_UPGRADE,
-        CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL
+        CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL, 
+        CREATE_FINALIZED_OPP_STAGE_TO_STATE_RECORD
     }
 
     /*******************************************************************************************************
@@ -73,6 +74,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             // Submit generic org telemetry data back to the LMO using FeatureManagement
             executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
+
+            // Create the Opportunity Stage to State mapping record for finalized
+            executeAction(InstallAction.CREATE_FINALIZED_OPP_STAGE_TO_STATE_RECORD, logger);
         }
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
@@ -122,6 +126,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL) {
                 populateNamespacePrefix();
+            } else if (action == InstallAction.CREATE_FINALIZED_OPP_STAGE_TO_STATE_RECORD) {
+                createFinalizedOppStageToStateRecord();
             }
 
         } catch(Exception e) {
@@ -367,6 +373,14 @@ global without sharing class STG_InstallScript implements InstallHandler {
             pkgSettings.Namespace_Prefix__c = UTIL_Namespace.StrTokenNSPrefix('');
             insert pkgSettings;
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates the finalized opp stage to state record based on what value is set as the 
+    * "Opportunity Stage for When Fully Paid" 
+    */
+    private void createFinalizedOppStageToStateRecord() {
+        Opp_StageMappingUtil.createFinalizedOppStageToStateRecord();
     }
 
     /*******************************************************************************************************

@@ -45,6 +45,9 @@ public with sharing class OPP_StageMappingUtil {
     @testVisible private static final String UNCOMMITTED_STATE_VAL = 'UNCOMMITTED';
     @testVisible private static final String COMMITTED_STATE_VAL = 'COMMITTED';
     @testVisible private static final String FINALIZED_STATE_VAL = 'FINALIZED';
+    private static final String OPP_STAGE_TO_STATE_METADATA_NAME = 'Opportunity_Stage_To_State_Mapping__mdt';
+    private static final String OPP_STAGE_FIELD = 'Opportunity_Stage__c';
+    private static final String OPP_STATE_FIELD = 'Opportunity_State__c';
 
     /******************************************************************************************************
     * @description Used to Cache Set of Opportunity Stages that mean Opportunity is in a Committed State.
@@ -93,8 +96,140 @@ public with sharing class OPP_StageMappingUtil {
     @testVisible private static void initializeStates() {
         // These are temporary values to be used only during interim for internal development on Abacus project.
         // This will be updated in March 2019 timeframe with revised code to retrieve from Custom Metadata instead
-        COMMITTED_STATE_SET = new Set<String> {'closed won'};
-        FINALIZED_STATE_SET = new Set<String> {'finalized'};
+        // COMMITTED_STATE_SET = new Set<String> {'closed won'};
+        // FINALIZED_STATE_SET = new Set<String> {'finalized'};
+
+        // If either the committed state set or the finalized state set is null, query for everything and 
+        // reinitialize everything. 
+        if (COMMITTED_STATE_SET == null || FINALIZED_STATE_SET == null) {
+            COMMITTED_STATE_SET = new Set<String>();
+            FINALIZED_STATE_SET = new Set<String>();
+
+            List<Opportunity_Stage_To_State_Mapping__mdt> stageToStateRecords = [Select Id, Opportunity_Stage__c, Opportunity_State__c FROM Opportunity_Stage_To_State_Mapping__mdt];
+
+            for (Opportunity_Stage_To_State_Mapping__mdt mappingRecord : stageToStateRecords) {
+                String oppStage = mappingRecord.Opportunity_Stage__c.trim().toLowerCase();
+
+                if (mappingRecord.Opportunity_State__c.trim().toLowerCase() == 'committed') {
+                    COMMITTED_STATE_SET.add(oppStage);
+                } else {
+                    FINALIZED_STATE_SET.add(oppStage);
+                }
+            }
+        }
     }
 
+    public static void createFinalizedOppStageToStateRecord() {
+        npe01__Contacts_And_Orgs_Settings__c contactAndOrgCustomSetting = UTIL_CustomSEttingsFacade.getOrgContactsSettings();
+
+        // Take the value, if there is one, and create a finalized Opp Stage to State custom metadata type record. 
+        if (contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c != null && 
+            contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c != '') {
+            
+            /*
+            Opportunity_Stage_To_State_Mapping__mdt newOppStageToStateRecord = new Opportunity_Stage_To_State_Mapping__mdt();
+
+            newOppStageToStateRecord.DeveloperName = 'Finalized';
+            newOppStageToStateRecord.Opportunity_Stage__c = contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c;
+            newOppStageToStateRecord.Opportunity_State__c = 'Finalized';
+            */
+
+            String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(OPP_STAGE_TO_STATE_METADATA_NAME);
+            String recordName = FINALIZED_STATE_VAL;
+
+            // Setup custom metadata to be created or updated in the subscriber org.
+            Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
+            customMd.fullName = mdTypeName + '.' + recordName;
+            customMd.label = FINALIZED_STATE_VAL;
+            customMd.protected_x = false;
+
+            Map<String, Object> fieldMapping = new Map<String, Object>();
+            Map<String, Object> params = new Map<String, Object>();
+            fieldMapping.put(OPP_STAGE_FIELD, contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c);
+            fieldMapping.put(OPP_STATE_FIELD, FINALIZED_STATE_VAL);
+
+            Metadata.CustomMetadata md = new Metadata.CustomMetadata();
+            md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldMapping);
+
+            List<Metadata.CustomMetadata> metadataToInsert = new List<Metadata.CustomMetadata>();
+            metadataToInsert.add(md);
+
+            
+            // Deploy the metadata 
+            String jobId = UserInfo.getUserId().left(15).right(4).toUpperCase() + String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
+            CMT_MetadataAPI.MetadataCallbackHandler oppCallbackHandler = new OppStageToStateMetadataHandler();
+            CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId);
+            callback.callbackHandler = oppCallbackHandler;
+            callback.callbackParams = params;
+
+            CMT_MetadataAPI.deployMetadata(metadataToInsert, callback);
+        }
+    }
+
+/*
+    public static String deployedQueuedMetadataTypes(
+        CMT_MetadataAPI.MetadataCallbackHandler metadataHandler, 
+        Map<String, Object> params) {
+
+        String jobId = getUniqueJobId();
+
+        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId);
+        if (metadataHandler != null) {
+            callback.callbackHandler = metadataHandler;
+            callback.callbackParams = params;
+        }
+
+        CMT_MetadataAPI.deployMetadata(queuedMetadataTypes.clone(), callback);
+        return jobId;
+    }
+*/
+    public class OppStageToStateMetadataHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
+
+        public Map<String, Object> params;
+
+
+        /**************************************************************************************************************
+        * @description success handler - will call the ApiService to set rollus as stale 
+        /*************************************************************************************************************/
+        public void performSuccessHandler(Map<String, Object> params) {
+            if (params == null || params.isEmpty()) {
+                return;
+            }
+
+            try {
+                // Process a successful 
+            } catch (Exception ex) {
+                logError(ex);
+            }
+        }
+
+        public void performErrorHandler(Map<String, Object> params) {
+            if (params == null || params.isEmpty()) {
+                return;
+            }
+
+            try {
+                // Handle error 
+            } catch (Exception ex) {
+                logError(ex);
+            }
+        }
+
+
+        /**
+        * @description Inserts an error log into the Error table
+        * @param ex Exception object that is to be logged
+        */
+        private void logError(Exception ex) {
+            Error__c rollupHandlerError = new Error__c(
+                Error_Type__c = 'Opportunity Stage to State Metadata Handler Error',
+                Object_Type__c = 'CustomMetadata',
+                Context_Type__c = ERR_Handler_API.Context.OPP.name(),
+                Datetime__c = System.now(), 
+                Full_Message__c = ex.getMessage()
+            );
+
+            Database.insert(rollupHandlerError, true);
+        }
+    }
 }

@@ -182,6 +182,34 @@ public class CMT_MetadataAPI {
 
             upsert crlpSettings;
 
+            
+            if (isSuccess) {
+                Set<String> metadataObjectTypeSet = new Set<String>();
+
+                for (integer i = 0; i < result.details.componentSuccesses.size(); i++) {
+                    
+                    // Metadata full name for a custom metadata is in this format:
+                    // metadataObject.recordName
+                    // Example:
+                    // Opportunity_Stage_To_State_Mapping__mdt.FINALIZED
+                    String metadataFullName = result.details.componentSuccesses[i].fullName;
+
+                    if (metadataFullName.contains('__mdt')) {
+                        
+                        // Get the object name which is the first string after splitting on a period
+                        // [Opportunity_Stage_To_State_Mapping__mdt] [FINALIZED]
+                        String metadataObjectType = metadataFullName.split('\\.')[0];
+
+                        // Remove the __mdt suffix so we can use the CRLP_RollupCMT.MetadataObject enum for 
+                        // checking if we need to execute the telemetry code. 
+                        String metadataObjectNoSuffix = metadataObjectType.substring(0, metadataObjectType.length() - 5);
+                        metadataObjectTypeSet.add(metadataObjectNoSuffix.toLowerCase());
+                    }
+                }
+
+                UTIL_OrgTelemetry_SVC.asyncProcessCMTChange(metadataObjectTypeSet);
+            }
+
             if (isSuccess) {
                 if (!Test.isRunningTest()) {
                     UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
