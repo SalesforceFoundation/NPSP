@@ -49,8 +49,13 @@ public class ALLO_PaymentSync_SVC {
         // Need to keep track of default allocation(s) by Payment
     private Map<Id, List<Allocation__c>> defaultAllocsByPayment = new Map<Id, List<Allocation__c>>();
 
+    /**
+     *  Inner Class to facilitate processing of allocations updates by maintaining maps of allocations, etc.
+     */
     private class SynchronizationContext {
+        // Opportunity associated with this Synchronization Context
         Opportunity opportunity;
+        // List of Payments associated with this Opportunity (with Allocations)
         Map<Id, npe01__OppPayment__c> payments = new Map<Id, npe01__OppPayment__c>();
 
         //Orig allocations from trigger context, arranged by gau Id
@@ -72,18 +77,32 @@ public class ALLO_PaymentSync_SVC {
         Decimal totalPaidUnpaidPayments = 0;
     }
 
+    /*******************************************************************************************************
+    * @description Amount to add to the total of the allocations for that payment
+    * @param Id paymentId Payment whose allocation amount should be updated
+    * @param Decimal allocAmount amount to update total allocation amount by
+    ********************************************************************************************************/
     private void addAllocationAmountToPayment(Id paymentId, Decimal allocAmount) {
         Decimal amt = allocatedAmountByPayment.containsKey(paymentId) ? allocatedAmountByPayment.get(paymentId) : 0;
         amt += ((allocAmount != null) ? allocAmount : 0);
         allocatedAmountByPayment.put (paymentId, amt);
     }
 
+    /*******************************************************************************************************
+    * @description Amount to remove from the total of the allocations for that payment
+    * @param Id paymentId Payment whose allocation amount should be updated
+    * @param Decimal allocAmount amount to update total allocation amount by
+    ********************************************************************************************************/
     private void removeAllocationAmountFromPayment(Id paymentId, Decimal allocAmount) {
         Decimal amt = allocatedAmountByPayment.containsKey(paymentId) ? allocatedAmountByPayment.get(paymentId) : 0;
         amt -= ((allocAmount != null) ? allocAmount : 0);
         allocatedAmountByPayment.put (paymentId, amt);
     }
 
+    /*******************************************************************************************************
+    * @description Constructor for Payment Sync Service
+    * @param List<Allocation__c> allocations - a list of Allocations to process
+    ********************************************************************************************************/
     public ALLO_PaymentSync_SVC(List<Allocation__c> allocations) {
 
         Set<Id> paymentIds = new Set<Id>();
@@ -240,7 +259,7 @@ public class ALLO_PaymentSync_SVC {
     * @param Set<Id> opportunityIds A set of Opportunity Ids
     * @return Map<Id, npe01__OppPayment__c> map of Payments with Payment Allocations by Payment Id
     ********************************************************************************************************/
-    @testVisible Map<Id, npe01__OppPayment__c> retrievePaymentsWithAllocations(Set<Id> paymentIds, Set<Id> opportunityIds) {
+    @testVisible private Map<Id, npe01__OppPayment__c> retrievePaymentsWithAllocations(Set<Id> paymentIds, Set<Id> opportunityIds) {
         Boolean multiCurrencyOrg = UserInfo.isMultiCurrencyOrganization();
         String queryString = 'SELECT    Id, ' +
                                         'Name, ' +
@@ -268,7 +287,6 @@ public class ALLO_PaymentSync_SVC {
         for (SObject sobj :sobjs) {
             pmts.put (sobj.Id, (npe01__OppPayment__c)sobj);
         }
-
         return pmts;
     }
 
@@ -278,7 +296,7 @@ public class ALLO_PaymentSync_SVC {
     * @param Set<Id> opportunityIds A set of Opportunity Ids
     * @return Map<Id, npe01__OppPayment__c> map of Opportunities with Opportunity Allocations by Opportunity Id
     ********************************************************************************************************/
-    @testVisible Map<Id, Opportunity> retrieveOpportunitiesWithAllocations(Set<Id> opportunityIds) {
+    @testVisible private Map<Id, Opportunity> retrieveOpportunitiesWithAllocations(Set<Id> opportunityIds) {
         Boolean multiCurrencyOrg = UserInfo.isMultiCurrencyOrganization();
         String queryString = 'SELECT    Id, ' +
                                         'Name, ' +
@@ -302,7 +320,6 @@ public class ALLO_PaymentSync_SVC {
         for (SObject sobj :sobjs) {
             opps.put(sobj.Id, (Opportunity)sobj);
         }
-
         return opps;
     }
 
@@ -321,7 +338,6 @@ public class ALLO_PaymentSync_SVC {
                 totalAllocationAmount += alloc.Amount__c;
             }
         }
-
         return totalAllocationAmount;
     }
 
@@ -341,6 +357,11 @@ public class ALLO_PaymentSync_SVC {
         return fallocs;
     }
 
+    /*******************************************************************************************************
+    * @description Given an opportunity Id, it recalculates the Opportunity Allocations based
+    *  on the Payment Allocations associated with the opportunity
+    * @param Id opportunityId Id of the Opportunity to process
+    ********************************************************************************************************/
     public void syncPaymentAllocationsToOpportunity(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
         //loop through allocations totals by GAU
@@ -403,6 +424,11 @@ public class ALLO_PaymentSync_SVC {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Given an opportunity Id, it recalculates the Payment Allocations based
+    *  on the Opportunity Allocations associated with the opportunity
+    * @param Id opportunityId Id of the Opportunity to process
+    ********************************************************************************************************/
     public void syncOpportunityAllocationsToPayments(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
@@ -506,7 +532,6 @@ public class ALLO_PaymentSync_SVC {
                             allocationsChanges.objectsToInsert.add(newAllocation);
                         }
                     }
-
                 }
             //no payment allocations for this GAU; create them
             } else if (context.totalUnpaidPayments > 0) {
@@ -608,7 +633,6 @@ public class ALLO_PaymentSync_SVC {
             } else { // Payment is overallocated...should never occur...generate an error.
                 throw new PaymentSyncException(String.format(Label.alloPaymentOverAllocatedError, new String[] {context.Opportunity.Name, context.Opportunity.Id}));
             }
-
         }
     }
 
@@ -633,9 +657,7 @@ public class ALLO_PaymentSync_SVC {
         if (unsignedTotalPaymentAmount <= unsignedOpportunityAmount) {
             return 1;
         }
-
         return unsignedTotalPaymentAmount / unsignedOpportunityAmount;
-
     }
 
     /*******************************************************************************************************
@@ -663,7 +685,6 @@ public class ALLO_PaymentSync_SVC {
         if (UserInfo.isMultiCurrencyOrganization()) {
             defaultAllo.put('CurrencyIsoCode', parentSObj.get('CurrencyIsoCode'));
         }
-
         return defaultAllo;
     }
 }
