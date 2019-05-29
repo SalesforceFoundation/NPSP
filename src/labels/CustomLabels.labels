@@ -1858,6 +1858,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Payment-level Allocations aren't enabled for your organization. Try allocating at the Opportunity level instead.</value>
     </labels>
     <labels>
+        <fullName>alloPaymentOverallocatedError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaymentOverallocatedError</shortDescription>
+        <value>The amount allocated is more than the amount of the Payment. Please update the Payment Allocation amount(s) so the total equals the Payment Amount. See Opportunity “{0}, Id: {1}”</value>
+    </labels>
+    <labels>
         <fullName>alloPercentExceed100</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
