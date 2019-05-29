@@ -33,6 +33,7 @@ Payments:
         npe01__Payment_Amount__c: amount
         npe01__Payment_Date__c: payment_date
         npe01__Paid__c: paid
+        npe01__Scheduled_Date__c: scheduled_date
     lookups:
         npe01__Opportunity__c:
             table: opportunities

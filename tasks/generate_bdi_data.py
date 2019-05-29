@@ -104,6 +104,7 @@ class GenerateBDIData(BatchDataTask):
                 amount=payment_amount,
                 payment_date=date,
                 paid=paid,
+                scheduled_date=date
             )
             self.session.add(payment)
 
