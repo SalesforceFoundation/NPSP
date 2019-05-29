@@ -117,7 +117,7 @@ tasks:
     performance_tests:
         description: Runs Robot Framework performance tests
         class_path: cumulusci.tasks.robotframework.Robot
-        group: bdi
+        group: Performance Tests
         options:
             suites: robot/Cumulus/perftests/
             options:
@@ -398,6 +398,9 @@ flows:
                 task: update_admin_profile
             4:
                 task: performance_tests
+                options:
+                    options:
+                        outputdir: .
 
     beta_dependencies:
         steps:
