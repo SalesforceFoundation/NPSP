@@ -307,11 +307,11 @@ private class CRLP_ApiService_TEST {
 
 
     /**
-    * @description unchanged filter groups should not generate a callback
+    * @description unchanged filter groups should generate a callback
     */
 
     @isTest
-    private static void unChangedFilterGroupsShouldNotGenerateCallback() {
+    private static void unChangedFilterGroupsShouldGenerateCallback() {
          UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
             Customizable_Rollups_Enabled__c = true
         ));
@@ -328,7 +328,7 @@ private class CRLP_ApiService_TEST {
         );
         Test.stopTest();
 
-        System.assertEquals(null, callback, 'No callback handler for unmodified filter groups');
+        System.assertNotEquals(null, callback, 'Should get a Callback handler for unmodified filter groups');
     }
 
 

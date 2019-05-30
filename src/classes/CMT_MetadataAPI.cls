@@ -135,7 +135,8 @@ public class CMT_MetadataAPI {
      * Is used to allow metadata deployments to have customized on result handlers
      *****************************************************************************************************************/
     public interface MetadataCallbackHandler {
-        void performSuccessHandler(Map<String, Object> params);
+        void performSuccessHandler(Map<String, Object> params, String status);
+        void performErrorHandler(Map<String, Object> params, String status);
     }
 
     /******************************************************************************************************************
@@ -153,7 +154,7 @@ public class CMT_MetadataAPI {
          */
         public MetadataCallbackHandler callbackHandler { get; set; }
         public Map<String, Object> callbackParams {get; set;}
-
+        
         /**
          * @description Constructor for Callback Class
          * @param jobId Some unique string value to use when writing the deployment status to the Custom Settings object
@@ -182,17 +183,9 @@ public class CMT_MetadataAPI {
                 isSuccess = false;
             }
 
-            // Write the deployment status to the custom settings object
-            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-            crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-            // THIS WILL NEED TO BE REFACTORED IF THIS CMT DEPLOYMENT CODE IS USED BY SOMETHING OTHER THAN ROLLUPS
-            crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
-
-            upsert crlpSettings;
-
-            
             if (isSuccess) {
-                Set<String> metadataObjectTypeSet = new Set<String>();
+                if (!Test.isRunningTest()) {
+                    Set<String> metadataObjectTypeSet = new Set<String>();
 
                 for (integer i = 0; i < result.details.componentSuccesses.size(); i++) {
                     
@@ -216,15 +209,14 @@ public class CMT_MetadataAPI {
                 }
 
                 UTIL_OrgTelemetry_SVC.asyncProcessCMTChange(metadataObjectTypeSet);
-            }
-
-            if (isSuccess) {
-                if (!Test.isRunningTest()) {
-                    UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
                 }
 
                 if (callbackHandler != null) {
-                    callbackHandler.performSuccessHandler(callbackParams);
+                    callbackHandler.performSuccessHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
+                }
+            } else {
+                if (callbackHandler != null) {
+                    callbackHandler.performErrorHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
                 }
             }
         }
