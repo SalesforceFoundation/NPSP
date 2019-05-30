@@ -24,7 +24,7 @@ Create BGE Batch With Custom Fields
     ...                       Name=${batch}
     ...                       Batch Description=This batch is created by Robot.
     Click BGE Button        Next
-    Select Multiple Values From Duellist    bge.duellist    Opportunity    Available Fields    custom_campaign    custom_currency    custom_date    custom_number    custom_picklist    custom_text    custom_textarea    
+    Select Multiple Values From Duellist    bge.duellist    Opportunity    Available Fields    new_lookup_campaign    custom_currency    custom_date    custom_number    custom_picklist    custom_text    custom_textarea    
     Click Duellist Button    Opportunity    Move selection to Selected Fields
     Execute JavaScript    document.getElementsByClassName('wideListbox slds-form-element')[1].scrollIntoView()
     Select Multiple Values From Duellist    bge.duellist    Payment    Available Fields    custom_email    custom_multipick    custom_phone    custom_url
