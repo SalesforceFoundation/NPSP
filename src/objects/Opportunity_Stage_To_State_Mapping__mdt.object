@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Opportunity_Stage__c</fullName>
+        <description>The name of the Opportunity Stage</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The name of the Opportunity Stage</inlineHelpText>
+        <label>Opportunity Stage</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity_State__c</fullName>
+        <description>The state the Opportunity Stage maps to</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The state the Opportunity Stage maps to</inlineHelpText>
+        <label>Opportunity State</label>
+        <required>false</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Committed</fullName>
+                    <default>true</default>
+                    <label>Committed</label>
+                </value>
+                <value>
+                    <fullName>Finalized</fullName>
+                    <default>false</default>
+                    <label>Finalized</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <label>Opportunity Stage To State Mapping</label>
+    <pluralLabel>Opportunity Stage To State Mappings</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

@@ -121,6 +121,14 @@ public class CMT_MetadataAPI {
         deployMetadata(mtToDeploy, new MetadataCallBack(jobId));
     }
 
+    /**
+     * @return A 10 character unique 'jobId' to use for
+     */
+    public static String getUniqueJobId() {
+        return UserInfo.getUserId().left(15).right(4).toUpperCase() +
+                String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
+    }
+
 
     /******************************************************************************************************************
      * @description Interface for Metadata Callback Handler

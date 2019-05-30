@@ -151,7 +151,7 @@ public with sharing class OPP_StageMappingUtil {
             metadataToInsert.add(md);
             
             // Deploy the metadata 
-            String jobId = UserInfo.getUserId().left(15).right(4).toUpperCase() + String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
+            String jobId = CMT_MetadataAPI.getUniqueJobId();
             CMT_MetadataAPI.MetadataCallbackHandler oppCallbackHandler = new OppStageToStateMetadataHandler();
             CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId);
             callback.callbackHandler = oppCallbackHandler;
