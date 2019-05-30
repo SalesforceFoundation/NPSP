@@ -126,6 +126,17 @@ class NPSP(object):
         )
         self.selenium.click_link(locator)
         
+    def click_related_list_dd_button(self, heading, dd_title, button_title):
+        """ To Click on a related list dropdown button.
+            Pass the list name, dd name and button name"""
+        self.salesforce.load_related_list(heading)
+        locator = npsp_lex_locators["record"]["related"]["button"].format(heading, dd_title)
+        self.selenium.click_link(locator) 
+        time.sleep(1)
+        loc=npsp_lex_locators["record"]["related"]["dd-link"].format(button_title)
+        self.selenium.wait_until_element_is_visible(loc)
+        self.selenium.click_link(loc)   
+        
     def click_dropdown(self, title):
         locator = npsp_lex_locators['record']['list'].format(title)
         self.selenium.set_focus_to_element(locator)
