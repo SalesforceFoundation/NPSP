@@ -122,18 +122,14 @@ public with sharing class OPP_StageMappingUtil {
     public static void createFinalizedOppStageToStateRecord() {
         npe01__Contacts_And_Orgs_Settings__c contactAndOrgCustomSetting = UTIL_CustomSEttingsFacade.getOrgContactsSettings();
 
+        // Only create the finalized opp stage to state record if there's no existing finalized record. 
+        Integer finalizedCount = [Select Count() From Opportunity_Stage_To_State_Mapping__mdt Where Opportunity_State__c =: FINALIZED_STATE_VAL];
+        
         // Take the value, if there is one, and create a finalized Opp Stage to State custom metadata type record. 
-        if (contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c != null && 
-            contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c != '') {
+        if (finalizedCount == 0 && 
+            (contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c != null && 
+            contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c != '')) {
             
-            /*
-            Opportunity_Stage_To_State_Mapping__mdt newOppStageToStateRecord = new Opportunity_Stage_To_State_Mapping__mdt();
-
-            newOppStageToStateRecord.DeveloperName = 'Finalized';
-            newOppStageToStateRecord.Opportunity_Stage__c = contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c;
-            newOppStageToStateRecord.Opportunity_State__c = 'Finalized';
-            */
-
             String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(OPP_STAGE_TO_STATE_METADATA_NAME);
             String recordName = FINALIZED_STATE_VAL;
 
@@ -153,7 +149,6 @@ public with sharing class OPP_StageMappingUtil {
 
             List<Metadata.CustomMetadata> metadataToInsert = new List<Metadata.CustomMetadata>();
             metadataToInsert.add(md);
-
             
             // Deploy the metadata 
             String jobId = UserInfo.getUserId().left(15).right(4).toUpperCase() + String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
@@ -166,23 +161,6 @@ public with sharing class OPP_StageMappingUtil {
         }
     }
 
-/*
-    public static String deployedQueuedMetadataTypes(
-        CMT_MetadataAPI.MetadataCallbackHandler metadataHandler, 
-        Map<String, Object> params) {
-
-        String jobId = getUniqueJobId();
-
-        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId);
-        if (metadataHandler != null) {
-            callback.callbackHandler = metadataHandler;
-            callback.callbackParams = params;
-        }
-
-        CMT_MetadataAPI.deployMetadata(queuedMetadataTypes.clone(), callback);
-        return jobId;
-    }
-*/
     public class OppStageToStateMetadataHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
 
         public Map<String, Object> params;

@@ -115,11 +115,12 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         // We don't want this to run for Abacus. 
         // Parse the result and take the appropriate action. 
         // Currently, we will only call NPSP if it is an NPSP/Custom Rollup action. 
-
         if (customMetadataTypeSet.contains(CRLP_RollupCMT.MetadataObject.Rollup.name().toLowerCase()) || 
             customMetadataTypeSet.contains(CRLP_RollupCMT.MetadataObject.Filter_Group.name().toLowerCase()) || 
             customMetadataTypeSet.contains(CRLP_RollupCMT.MetadataObject.Filter_Rule.name().toLowerCase())) {
+            
             asyncTelemetrySvc.processTelemetryType(TelemetryBatchCategory.NPSP_Settings);
+            
         }
     }
 

@@ -109,4 +109,24 @@ private class OPP_StageMappingUtil_TEST {
         }
     }
 
+    @isTest
+    private static void testFinalizedOppStageToStateRecordCreation() {
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        System.debug(loggingLevel.ERROR, 'closed won stage is: ' + closedWonStage);
+        npe01__Contacts_And_Orgs_Settings__c configRecord = new npe01__Contacts_And_Orgs_Settings__c();
+        configRecord.Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        npe01__Contacts_And_Orgs_Settings__c contactAndOrgSetting = UTIL_CustomSettingsFacade.getContactsSettingsForTests(configRecord);
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+        Test.startTest();
+        System.debug(loggingLevel.ERROR, 'inside of test class');
+        OPP_StageMappingUtil.createFinalizedOppStageToStateRecord();
+        Test.stopTest();
+
+        /*
+        Integer countOfFinalizedRecords = [Select Count() From Opportunity_Stage_To_State_Mapping__mdt Where Opportunity_State__c = 'Finalized'];
+        System.assert(countOfFinalizedRecords == 1, 'Count of Finalized Records is not 1. It is actually: ' + countOfFinalizedRecords);
+        */
+
+    }
 }
