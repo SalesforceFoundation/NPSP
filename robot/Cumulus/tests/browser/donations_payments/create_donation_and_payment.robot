@@ -93,11 +93,10 @@ Verify values in Writeoff Remaining Balance Page
     ...    Payment Writeoff Amount=$450.00
     ...    Remaining Balance=$550.00  
     Page Should Contain    You are preparing to write off 2 Payment(s) totaling $550.00
-    Import Library  Dialogs
-    Pause Execution
-    Sleep    2
-    Click Button With Value    Cancel
+    Choose Frame    Write Off Remaining Balance
+    Click Button    Cancel
     Select Tab    Related
+    Load Related List    Payments
     Click ViewAll Related List    Payments
     Verify Details
     ...    Unpaid=2
