@@ -77,3 +77,27 @@ Verify values in Create one or more Payments for this Opportunity page
     ...    Unpaid=3
     ...    Written Off=1
     
+Verify values in Writeoff Remaining Balance Page
+    [tags]  unstable
+    Click Element With Locator    breadcrumb-link    ${opp_name}
+    Select Tab    Related
+    Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
+    Wait Until Modal Is Open  
+    Select Lightning Checkbox    Written Off
+    Populate Field    Payment Amount    200 
+    Click Modal Button    Save
+    Click Related List Dd Button    Payments    Show one more action    Write Off Payments 
+    Wait For Locator    frame    Write Off Remaining Balance
+    Choose Frame    Write Off Remaining Balance 
+    Verify Field Values
+    ...    Payment Writeoff Amount=$450.00
+    ...    Remaining Balance=$550.00  
+    Page Should Contain    You are preparing to write off 2 Payment(s) totaling $550.00
+    Choose Frame    Write Off Remaining Balance
+    Click Button    Cancel
+    Select Tab    Related
+    Load Related List    Payments
+    Click ViewAll Related List    Payments
+    Verify Details
+    ...    Unpaid=2
+    ...    Written Off=2
