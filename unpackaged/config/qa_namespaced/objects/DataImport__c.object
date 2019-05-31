@@ -4,7 +4,7 @@
         <fullName>new_lookup_campaign__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_lookup__c</inlineHelpText>
+        <inlineHelpText>Opportunity.npsp__custom_lookup__c</inlineHelpText>
         <label>new_lookup_campaign</label>
         <referenceTo>Campaign</referenceTo>
         <relationshipLabel>NPSP Data Imports (custom_campaign)</relationshipLabel>
@@ -16,7 +16,7 @@
     <fields>
         <fullName>custom_currency__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_currency__c</inlineHelpText>
+        <inlineHelpText>Opportunity.npsp__custom_currency__c</inlineHelpText>
         <label>custom_currency</label>
         <precision>18</precision>
         <required>false</required>
@@ -27,7 +27,7 @@
     <fields>
         <fullName>custom_date__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_date__c</inlineHelpText>
+        <inlineHelpText>Opportunity.npsp__custom_date__c</inlineHelpText>
         <label>custom_date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -36,7 +36,7 @@
     <fields>
         <fullName>custom_email__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Payment.custom_email__c</inlineHelpText>
+        <inlineHelpText>Payment.npsp__custom_email__c</inlineHelpText>
         <label>custom_email</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -46,7 +46,7 @@
     <fields>
         <fullName>custom_multipick__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Payment.custom_multipick__c</inlineHelpText>
+        <inlineHelpText>Payment.npsp__custom_multipick__c</inlineHelpText>
         <label>custom_multipick</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -82,7 +82,7 @@
     <fields>
         <fullName>custom_number__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_number__c</inlineHelpText>
+        <inlineHelpText>Opportunity.npsp__custom_number__c</inlineHelpText>
         <label>custom_number</label>
         <precision>18</precision>
         <required>false</required>
@@ -94,7 +94,7 @@
     <fields>
         <fullName>custom_phone__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Payment.custom_phone__c</inlineHelpText>
+        <inlineHelpText>Payment.npsp__custom_phone__c</inlineHelpText>
         <label>custom_phone</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -103,7 +103,7 @@
     <fields>
         <fullName>custom_picklist__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_picklist__c</inlineHelpText>
+        <inlineHelpText>Opportunity.npsp__custom_picklist__c</inlineHelpText>
         <label>custom_picklist</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -138,7 +138,7 @@
     <fields>
         <fullName>custom_text__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_text__c</inlineHelpText>
+        <inlineHelpText>Opportunity.npsp__custom_text__c</inlineHelpText>
         <label>custom_text</label>
         <length>255</length>
         <required>false</required>
@@ -149,7 +149,7 @@
     <fields>
         <fullName>custom_textarea__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Opportunity.custom_textarea__c</inlineHelpText>
+        <inlineHelpText>Opportunity.npsp__custom_textarea__c</inlineHelpText>
         <label>custom_textarea</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -158,7 +158,7 @@
     <fields>
         <fullName>custom_url__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Payment.custom_url__c</inlineHelpText>
+        <inlineHelpText>Payment.npsp__custom_url__c</inlineHelpText>
         <label>custom_url</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
