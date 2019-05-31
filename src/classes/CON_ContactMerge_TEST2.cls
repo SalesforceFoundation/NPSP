@@ -867,7 +867,7 @@ private class CON_ContactMerge_TEST2 {
             //Select the primary affiliation of the one that is not the one we selected as master
             List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;  
             for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
-                if (row.fieldName == 'Primary_Affiliation__c') {
+                if (row.fieldName == UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c')) {
                     row.selectedValue = String.valueOf(con2.id);
                     break;
                 }
