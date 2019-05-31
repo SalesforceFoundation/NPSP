@@ -21,10 +21,10 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>custom_cont_num_c__c</fullName>
+        <fullName>custom_cont_num__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact2.npsp__custom_cont_num__c</inlineHelpText>
-        <label>custom_cont_num__c</label>
+        <label>custom_cont_num</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
