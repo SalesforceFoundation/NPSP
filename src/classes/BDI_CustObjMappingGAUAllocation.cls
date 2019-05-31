@@ -42,6 +42,8 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
         Allocations_Settings__c settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
+        Map<String, Schema.DescribeFieldResult> sourceFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace('npsp__DataImport__c'));
+
         String PAYMENT_FIELDNAME = 'npsp__Payment__c';
         String OPPORTUNITY_FIELDNAME = 'npsp__Opportunity__c';
         String CAMPAIGN_FIELDNAME = 'npsp__Campaign__c';
@@ -62,14 +64,16 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
             for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
                 String sourceFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Source_Field_API_Name__c);
                 String targetFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Target_Field_API_Name__c);
+
                 Object value = objWrap.dataImport.get(sourceFieldName);
 
-                Schema.DescribeFieldResult targetDescribe = fieldDescribeMap.get(targetFieldName.toLowerCase());
+                Schema.DescribeFieldResult sourceFieldDescribe = sourceFieldDescribeMap.get(sourceFieldName.toLowerCase());
+                Schema.DescribeFieldResult targetFieldDescribe = fieldDescribeMap.get(targetFieldName.toLowerCase());
 
                 //Confirm that it is real field, and that it is accessible to the running user.
-                if (targetDescribe != null && targetDescribe.isAccessible()) {
+                if (targetFieldDescribe != null && targetFieldDescribe.isAccessible()) {
                     //Confirm that either the sObj Id is null (ie new record) or that the field is updatable if it is not new.
-                    if (objWrap.sObj.Id == null || targetDescribe.isUpdateable()) {
+                    if (objWrap.sObj.Id == null || targetFieldDescribe.isUpdateable()) {
                         // If the target field mapping is one of the key parent objects, then extract the values for later logic
                         if (fieldMapping.Target_Field_API_Name__c == PAYMENT_FIELDNAME) {
                             paymentValue = value;
@@ -78,18 +82,7 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                         } else if (fieldMapping.Target_Field_API_Name__c == CAMPAIGN_FIELDNAME) {
                             campaignValue = value;
                         } else {
-                            //only copy values that are not null to avoid overwriting data when updating existing SObjects.
-                            if (value != null) {
-
-                                // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
-                                // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
-                                // null, "True", or "False"
-                                if (targetDescribe.getType() == Schema.DisplayType.BOOLEAN && !(value instanceof Boolean)) {
-                                    value = Boolean.valueOf(value);
-                                }
-                                
-                                objWrap.sObj.put(targetFieldName,value);
-                            }
+                            castAndCopyField(objWrap, sourceFieldName, sourceFieldDescribe, targetFieldName, targetFieldDescribe);
                         }
                     }
                 }

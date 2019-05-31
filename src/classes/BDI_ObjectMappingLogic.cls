@@ -43,8 +43,10 @@ public with sharing virtual class BDI_ObjectMappingLogic {
             return objWraps;
         }
 
+        Map<String, Schema.DescribeFieldResult> sourceFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace('npsp__DataImport__c'));
+        
         for (BDI_ObjectWrapper objWrap : objWraps) {
-            Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c));
+            Map<String, Schema.DescribeFieldResult> targetFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c));
 
             objWrap.sObj = Schema.getGlobalDescribe().get(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c)).newSObject();
 
@@ -59,28 +61,16 @@ public with sharing virtual class BDI_ObjectMappingLogic {
                 String sourceFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Source_Field_API_Name__c);
                 String targetFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Target_Field_API_Name__c);
                 
-                Schema.DescribeFieldResult targetDescribe = fieldDescribeMap.get(targetFieldName.toLowerCase());
+                Schema.DescribeFieldResult sourceFieldDescribe = sourceFieldDescribeMap.get(sourceFieldName.toLowerCase());
+                Schema.DescribeFieldResult targetFieldDescribe = targetFieldDescribeMap.get(targetFieldName.toLowerCase());
 
                 //Confirm that it is real field, and that it is accessible to the running user.
-                if (targetDescribe != null && targetDescribe.isAccessible()) {
+                if (targetFieldDescribe != null && targetFieldDescribe.isAccessible()) {
 
                     //Confirm that either the sObj Id is null (ie new record) or that the field is updatable if it is not new.
-                    if (objWrap.sObj.Id == null || targetDescribe.isUpdateable()) {
+                    if (objWrap.sObj.Id == null || targetFieldDescribe.isUpdateable()) {
 
-                        Object value = objWrap.dataImport.get(sourceFieldName);
-
-                        //only copy values that are not null to avoid overwriting data when updating existing SObjects.
-                        if (value != null) {
-
-                            // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
-                            // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
-                            // null, "True", or "False"
-                            if (targetDescribe.getType() == Schema.DisplayType.BOOLEAN && !(value instanceof Boolean)) {
-                                value = Boolean.valueOf(value);
-                            }
-
-                            objWrap.sObj.put(targetFieldName,value);
-                        }
+                        castAndCopyField(objWrap, sourceFieldName, sourceFieldDescribe, targetFieldName, targetFieldDescribe);
                     }
                 }
 
@@ -95,6 +85,40 @@ public with sharing virtual class BDI_ObjectMappingLogic {
         if (objWrap.sObj.Id == null && objWrap.objMapping.Relationship_To_Predecessor__c == 'Child') {
             
             objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Relationship_Field__c),objWrap.dataImport.get(UTIL_Namespace.adjustNPSPNamespace(objWrap.predecessorObjMapping.Imported_Record_Field_Name__c)));
+        }
+    }
+
+
+    // Copies the value from the source field to the target field and handles casting type
+    // when needed.
+    public static void castAndCopyField(BDI_ObjectWrapper objWrap, 
+                                        String sourceFieldName,
+                                        Schema.DescribeFieldResult sourceFieldDescribe,
+                                        String targetFieldName, 
+                                        Schema.DescribeFieldResult targetFieldDescribe) {
+
+        Object value = objWrap.dataImport.get(sourceFieldName);
+
+        //only copy values that are not null to avoid overwriting data when updating existing SObjects.
+        if (value != null) {
+
+            // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
+            // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
+            // null, "True", or "False"
+            if (targetFieldDescribe.getType() == Schema.DisplayType.BOOLEAN && !(value instanceof Boolean)) {
+                value = Boolean.valueOf(value);
+            }
+
+            // If the destination field is an integer, and the source field is a double with a scale of 0 then
+            // convert the 
+            if (targetFieldDescribe.getType() == Schema.DisplayType.INTEGER 
+                    && !(value instanceof Integer) 
+                    && sourceFieldDescribe.getType() == Schema.DisplayType.DOUBLE
+                    && sourceFieldDescribe.getScale() == 0) {
+                value = Integer.valueOf(value);
+            }
+
+            objWrap.sObj.put(targetFieldName,value);
         }
     }
 }
