@@ -41,6 +41,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     public override string idPanel() { return 'idPanelDataImportMapping'; }
 
+    /**
+    * @description Name of default packaged Field Mapping Set
+    */
+    private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME =
+        'Default_Field_Mapping_Set';
+
     /*******************************************************************************************************
     * @description Value for Data Import custom settings Field Mapping Method
     */
@@ -54,11 +60,18 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         'Help Text';
 
     /*******************************************************************************************************
-    * @description String to determine value of Data Import custom settings field Default Data Impor Field
+    * @description String to determine value of Data Import custom settings field Default Data Import Field
     * Mapping Set
     */
     private static final String DEFAULT_MAPPING =
         'default';
+
+    /*******************************************************************************************************
+    * @description String to determine value of Data Import custom settings field Default Data Import Field
+    * Mapping Set
+    */
+    private static final String CUSTOM_MAPPING =
+        'custom';
 
     /*******************************************************************************************************
     * @description is the panel currently Polling for deployment results
@@ -154,7 +167,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 isPolling = true;
 
                 // Check to see if we have any existing help text mappings that conflict with our default cmt mappings
-                migrationMappingUtility.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
+                migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
 
                 if (!migrationMappingUtility.conflictingMappings.isEmpty()) {
                     isConflict = true;
@@ -189,6 +202,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 Database.rollback(sp);
                 ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+
+                BDI_MigrationMappingUtility.upsertCustomSettings(
+                    HELP_TEXT,
+                    DEFAULT_MAPPING,
+                    e.getMessage()
+                );
             }
         } else {
             ApexPages.addMessage(
@@ -224,6 +243,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+
+            BDI_MigrationMappingUtility.upsertCustomSettings(
+                HELP_TEXT,
+                DEFAULT_MAPPING,
+                e.getMessage()
+            );
         }
         return null;
     }
@@ -248,6 +273,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+
+            BDI_MigrationMappingUtility.upsertCustomSettings(
+                HELP_TEXT,
+                DEFAULT_MAPPING,
+                e.getMessage()
+            );
         }
         return null;
     }
@@ -272,6 +303,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+
+            BDI_MigrationMappingUtility.upsertCustomSettings(
+                HELP_TEXT,
+                DEFAULT_MAPPING,
+                e.getMessage()
+            );
         }
         return null;
     }
@@ -331,6 +368,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         }
 
         if (timeoutCount > MAX_TIME_OUT) {
+            // Reset instance of migration mapping utility
+            migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
             isPolling = false;
             ApexPages.addMessage(
                 new ApexPages.Message(

@@ -205,10 +205,12 @@ public class BDI_MigrationMappingUtility {
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         dataImportSettings.Field_Mapping_Method__c = fieldMappingMethod;
 
-        if (migrationType == DEFAULT_MAPPING) {
+        if (migrationType == CUSTOM_MAPPING) {
+            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
+        } else if (migrationType == DEFAULT_MAPPING) {
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
         } else {
-            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
+            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = '';
         }
 
         Map<String, String> statusMap = new Map<String, String>{
@@ -217,7 +219,7 @@ public class BDI_MigrationMappingUtility {
             'Field Mapping Method' => fieldMappingMethod
         };
 
-        dataImportSettings.CMT_API_Status__c = JSON.serialize(statusMap);
+        dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
 
         try {
             upsert dataImportSettings;
