@@ -42,7 +42,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
         UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS_FOR_UPGRADE,
         CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL, 
-        CREATE_FINALIZED_OPP_STAGE_TO_STATE_RECORD
+        CREATE_OPP_STAGE_TO_STATE_RECORDS
     }
 
     /*******************************************************************************************************
@@ -65,7 +65,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             executeAction(InstallAction.RUN_NEW_ORG_SCRIPT, logger);
 
             // Create the Opportunity Stage to State mapping record for finalized
-            executeAction(InstallAction.CREATE_FINALIZED_OPP_STAGE_TO_STATE_RECORD, logger);
+            executeAction(InstallAction.CREATE_OPP_STAGE_TO_STATE_RECORDS, logger);
         // Upgrade of existing Cumulus installation
         } else if (context.isUpgrade() || context.isPush()) {
             // Ensure the any new Custom Settings objects are populated
@@ -78,7 +78,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
 
             // Create the Opportunity Stage to State mapping record for finalized
-            executeAction(InstallAction.CREATE_FINALIZED_OPP_STAGE_TO_STATE_RECORD, logger);
+            executeAction(InstallAction.CREATE_OPP_STAGE_TO_STATE_RECORDS, logger);
         }
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
@@ -128,8 +128,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL) {
                 populateNamespacePrefix();
-            } else if (action == InstallAction.CREATE_FINALIZED_OPP_STAGE_TO_STATE_RECORD) {
-                createFinalizedOppStageToStateRecord();
+            } else if (action == InstallAction.CREATE_OPP_STAGE_TO_STATE_RECORDS) {
+                createOppStageToStateRecordsIfNecessary();
             }
 
         } catch(Exception e) {
@@ -381,8 +381,15 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * @description Creates the finalized opp stage to state record based on what value is set as the 
     * "Opportunity Stage for When Fully Paid" 
     */
-    private void createFinalizedOppStageToStateRecord() {
-        Opp_StageMappingUtil.createFinalizedOppStageToStateRecord();
+    private void createOppStageToStateRecordsIfNecessary() {
+
+        List<Metadata.CustomMetadata> metadataToInsert = new List<Metadata.CustomMetadata>();
+        Map<String, Object> params = new Map<String, Object>();
+
+        metadataToInsert = Opp_StageMappingUtil.createFinalizedOppStageToStateRecord(metadataToInsert);
+        metadataToInsert = Opp_StageMappingUtil.createPledgedOppStageToStateRecord(metadataToInsert);
+
+        Opp_StageMappingUtil.deployOppStageToStateMetadata(metadataToInsert, params);
     }
 
     /*******************************************************************************************************
