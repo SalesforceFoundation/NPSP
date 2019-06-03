@@ -160,6 +160,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                     isConflict = true;
                     isPolling = false;
                 } else {
+
+                    // Check if we have any new help text mappings and enqueue
+                    if (migrationMappingUtility.pendingMappings.size() > 0) {
+                        migrationMappingUtility.enqueueNewFieldMappings();
+                    }
+
                     if (migrationMappingUtility.queuedMetadataTypesForDeploy.isEmpty()) {
                         dataImportSettings =
                             BDI_MigrationMappingUtility.upsertCustomSettings(
@@ -258,7 +264,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             isConflict = false;
             isPolling = true;
 
-            migrationMappingUtility.enqueueCustomizedFieldMappings();
+            migrationMappingUtility.enqueueNewFieldMappings();
             Id deploymentId = migrationMappingUtility.deployCustomMetadata();
             saveDeploymentId(deploymentId);
 

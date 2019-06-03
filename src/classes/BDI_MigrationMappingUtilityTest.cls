@@ -70,7 +70,7 @@ private class BDI_MigrationMappingUtilityTest {
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
         util.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
 
-        util.enqueueCustomizedFieldMappings();
+        util.enqueueNewFieldMappings();
 
         Test.startTest();
 

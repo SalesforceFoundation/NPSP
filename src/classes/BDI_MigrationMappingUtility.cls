@@ -341,7 +341,7 @@ public class BDI_MigrationMappingUtility {
             queuedMetadataTypesForDeploy.addAll(updatedCMTs);
         }
 
-        //TODO: handle GAUs and Opportunity Contact Roles
+        // Handle GAU and Opportunity Contact Role mappings
         handleGAUAndOpportunityContactRoleMappings();
     }
 
@@ -422,7 +422,7 @@ public class BDI_MigrationMappingUtility {
     * and user decides to discard their customizations. Method inserts any net new
     * help text mappings as custom metadata mappings under our default field mapping set.
     */
-    public void enqueueCustomizedFieldMappings() {
+    public void enqueueNewFieldMappings() {
         migrationType = DEFAULT_MAPPING;
 
         // Keep any net new custom help text mappings to be added to our standard defaults
