@@ -94,12 +94,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
-    * @description is there a conflict between the org's help text mappings and the standard custom metadata
-    * type mappings
-    */
-    public Boolean isConflict { get; set; }
-
-    /*******************************************************************************************************
     * @description Maximum timeout for page polling, 12 = 1 minute
     */
     private static final Integer MAX_TIME_OUT = 12;
@@ -185,56 +179,26 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                     migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
                 }
 
-                System.debug('C: ' + migrationMappingUtility.conflictingMappings.size());
-                System.debug('PC: ' + migrationMappingUtility.pendingPreservedConflictingMappings.size());
-                System.debug('S: ' + migrationMappingUtility.pendingStandardMappings.size());
-                System.debug('SP: ' + migrationMappingUtility.pendingSpecialCasedMappings.size());
-                System.debug('N: ' + migrationMappingUtility.pendingMappings.size());
+                // Create Custom Field Mapping Set
+                isPolling = true;
 
-                if (migrationMappingUtility.conflictingMappings.size() > 0) {
-                    isConflict = true;
-                    isPolling = false;
+                // Start the migration, collect help text mappings, and compare against existing cmt mappings
+                migrationMappingUtility.startMigration();
 
-                    if (migrationMappingUtility.customFieldMappingSetExists == true) {
-                        ApexPages.addMessage(
-                            new ApexPages.Message(
-                                ApexPages.Severity.WARNING,
-                                'It looks like you\'ve already performed a migration and you\'re help text mappings have changed since then. Please review your changes below.'
-                            )
-                        );
-                    }
-                } else {
+                // Add standard field mappings
+                migrationMappingUtility.handleStandardMappings();
 
-                    if (migrationMappingUtility.queuedMetadataTypesForDeploy.isEmpty()
-                        && migrationMappingUtility.pendingMappings.isEmpty()) {
+                // Add net new field mappings
+                migrationMappingUtility.handleNewMappings();
 
-                        isPolling = false;
-                        dataImportSettings =
-                            BDI_MigrationMappingUtility.upsertCustomSettings(
-                                DATA_IMPORT_FIELD_MAPPING,
-                                migrationMappingUtility.customFieldMappingSetExists == true ? CUSTOM_MAPPING : DEFAULT_MAPPING,
-                                String.valueOf(Metadata.DeployStatus.Succeeded)
-                            );
-                        ApexPages.addMessage(
-                            new ApexPages.Message(
-                                ApexPages.Severity.CONFIRM,
-                                Label.stgDeploymentCustomMetadataMappingEnabled
-                            )
-                        );
+                // Add special cased mappings (GAU and Opportunity Contact Role)
+                migrationMappingUtility.handleSpecialCasedMappings();
 
-                        // Reset instance of mapping utility
-                        migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
-                    } else {
-                        migrationMappingUtility.startMigration();
+                // Add conflicting mappings
+                migrationMappingUtility.handleOverwriteConflictingMappings();
 
-                        // Add net new field mappings
-                        migrationMappingUtility.handleNewMappings();
-                        System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
-
-                        Id deploymentId = migrationMappingUtility.deployCustomMetadata();
-                        saveDeploymentId(deploymentId);
-                    }
-                }
+                Id deploymentId = migrationMappingUtility.deployCustomMetadata();
+                saveDeploymentId(deploymentId);
 
             } catch (Exception e) {
                 Database.rollback(sp);
@@ -280,104 +244,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 )
             );
         } catch (Exception e) {
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-
-            isPolling = false;
-            BDI_MigrationMappingUtility.upsertCustomSettings(
-                HELP_TEXT,
-                DEFAULT_MAPPING,
-                e.getMessage()
-            );
-        }
-        return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Action Method to discard help text Conflicts and continue to deploy
-    * @return void
-    */
-    public PageReference keepConflicts() {
-        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
-
-        Savepoint sp = Database.setSavepoint();
-        try {
-            isConflict = false;
-            isPolling = true;
-
-            // Start the migration, collect help text mappings, and compare against existing cmt mappings
-            migrationMappingUtility.startMigration();
-
-            // Add standard field mappings
-            migrationMappingUtility.handleStandardMappings();
-            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
-
-            // Add net new field mappings
-            migrationMappingUtility.handleNewMappings();
-            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
-
-            // Add special cased mappings (GAU and Opportunity Contact Role)
-            migrationMappingUtility.handleSpecialCasedMappings();
-            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
-
-            // Add conflicting mappings
-            migrationMappingUtility.handleOverwriteConflictingMappings();
-            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
-
-            Id deploymentId = migrationMappingUtility.deployCustomMetadata();
-            saveDeploymentId(deploymentId);
-
-        } catch (Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-
-            isPolling = false;
-            BDI_MigrationMappingUtility.upsertCustomSettings(
-                HELP_TEXT,
-                DEFAULT_MAPPING,
-                e.getMessage()
-            );
-        }
-        return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Action Method to discard help text Conflicts and continue to deploy
-    * @return void
-    */
-    public PageReference discardConflicts() {
-        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
-
-        Savepoint sp = Database.setSavepoint();
-        try {
-            isConflict = false;
-            isPolling = true;
-
-            // Start the migration, collect help text mappings, and compare against existing cmt mappings
-            migrationMappingUtility.startMigration();
-
-            // Add standard field mappings
-            migrationMappingUtility.handleStandardMappings();
-            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
-
-            // Add net new field mappings
-            migrationMappingUtility.handleNewMappings();
-            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
-
-            // Add special cased mappings (GAU and Opportunity Contact Role)
-            migrationMappingUtility.handleSpecialCasedMappings();
-            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
-
-            //Add preserved conflicting mappings
-            migrationMappingUtility.handlePreserveConflictingMappings();
-            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
-
-            Id deploymentId = migrationMappingUtility.deployCustomMetadata();
-            saveDeploymentId(deploymentId);
-
-        } catch (Exception e) {
-            Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
 
