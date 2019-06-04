@@ -113,7 +113,7 @@ private class BDI_MigrationMappingUtilityTest {
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
         util.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
 
-        util.enqueueCustomizedFieldMappingSetAndFields();
+        util.enqueueCustomFieldMappingSetAndFields();
 
         Test.startTest();
 
@@ -301,7 +301,7 @@ private class BDI_MigrationMappingUtilityTest {
                 };
             }
 
-            if (stubbedMethodName == 'getFieldMappingsByDeveloperName') {
+            if (stubbedMethodName == 'getFieldMappingsByFieldMappingSetDeveloperName') {
                 Data_Import_Field_Mapping__mdt fieldMapping1 = new Data_Import_Field_Mapping__mdt(
                     Label='Account 1 City',
                     DeveloperName='Account_1_City',

@@ -222,12 +222,14 @@ public class BDI_MigrationMappingHelper {
      * @param fieldMappingSetId Id of the default Field Mapping Set
      * @return Collection of Field Mapping DeveloperName to Field Mapping record
      */
-    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByDeveloperName(String developerName) {
+    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByFieldMappingSetDeveloperName(String developerName) {
         List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT 
                     Id, 
                     Label, 
                     DeveloperName, 
                     Data_Import_Field_Mapping_Set__c,
+                    Data_Import_Field_Mapping_Set__r.Label,
+                    Data_Import_Field_Mapping_Set__r.DeveloperName,
                     Required__c, 
                     Source_Field_API_Name__c, 
                     Target_Field_API_Name__c, 

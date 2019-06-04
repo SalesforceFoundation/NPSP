@@ -112,6 +112,19 @@ public class BDI_HelpTextCMT {
             this.isDeleted = false;
         }
 
+        public DataImportFieldMapping(DataImportFieldMapping sourceFieldMapping, String fieldMappingSet) {
+            this.dataImportFieldMappingSetRecordName = fieldMappingSet;
+            this.label = sourceFieldMapping.label;
+            this.sourceFieldAPIName = sourceFieldMapping.sourceFieldAPIName;
+            this.targetFieldAPIName = sourceFieldMapping.targetFieldAPIName;
+            this.targetObjectMappingRecordName = sourceFieldMapping.targetObjectMappingRecordName;
+            this.targetObjectMappingLabel = sourceFieldMapping.targetObjectMappingLabel;
+            this.dataImportObjectName = sourceFieldMapping.dataImportObjectName;
+            this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
+            this.isRequired = 'No';
+            this.isDeleted = false;
+        }
+
         public DataImportFieldMapping(Data_Import_Field_Mapping__mdt sourceFieldMapping, String fieldMappingSet) {
             this.dataImportFieldMappingSetRecordName = fieldMappingSet;
             this.label = sourceFieldMapping.MasterLabel;
