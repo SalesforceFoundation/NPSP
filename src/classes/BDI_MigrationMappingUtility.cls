@@ -329,6 +329,19 @@ public class BDI_MigrationMappingUtility {
 
     public void handlePreserveConflictingMappings() {
         if (pendingPreservedConflictingMappings.size() > 0) {
+
+            Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
+                helper.getFieldMappingsByFieldMappingSetDeveloperName(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
+            Integer index = pendingPreservedConflictingMappings.size() - 1;
+            for (Integer i = index; i >= 0; i--){
+                String sourceFieldName = pendingPreservedConflictingMappings.get(i).sourceFieldAPIName;
+                Data_Import_Field_Mapping__mdt existingFieldMapping = existingFieldMappings.get(sourceFieldName);
+                if (existingFieldMapping != null) {
+                        pendingPreservedConflictingMappings.remove(i);
+                }
+            }
+
             enqueueFieldMappings(pendingPreservedConflictingMappings);
         }
     }
