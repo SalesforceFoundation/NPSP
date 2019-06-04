@@ -143,7 +143,7 @@ public class BDI_MigrationMappingUtility {
     /**
     * @description Boolean flag to determine if a custom field mapping set exists 
     */
-    private Boolean customFieldMappingSetExists {
+    public Boolean customFieldMappingSetExists {
         get {
             List<Data_Import_Field_Mapping_Set__mdt> fieldMappingSets =
                 [SELECT Id
@@ -409,12 +409,10 @@ public class BDI_MigrationMappingUtility {
     }
 
     /**
-    * @description Method called when mapping conflicts are found during migration
-    * and user decides to keep their customizations. Method creates a clone of our
-    * default field mapping set with the customized field mappings.
+    * @description Method fills various field mapping lists that we later deploy as needed.
+    * pendingMappings, conflictingMappings, pendingStandardMappings, pendingPreservedConflictingMappings.
     */
-    public void enqueueCustomFieldMappingSetAndFields() {
-        System.debug('*** enqueueCustomFieldMappingSetAndFields()');
+    public void startMigration() {
         migrationType = CUSTOM_MAPPING;
 
         List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
@@ -436,72 +434,6 @@ public class BDI_MigrationMappingUtility {
 
         // Handle GAU and Opportunity Contact Role mappings
         handleGAUAndOpportunityContactRoleMappings();
-
-        /*if (pendingMappings.size() > 0) {
-            allMappings.addAll(pendingMappings);
-        }
-
-        if (pendingStandardMappings.size() > 0 && fieldMappingSets.size() <= 0) {
-            allMappings.addAll(pendingStandardMappings);
-        }
-
-        if (allMappings.size() > 0) {
-            for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : allMappings) {
-                // TODO: Remove this if condition, used while developing to limit what cmts get created
-                //if (dataImportFieldMapping.dataImportObjectName == 'Payment') {
-                    dataImportFieldMapping.dataImportFieldMappingSetRecordName =
-                        MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
-                    dataImportFieldMapping = dataImportFieldMapping;
-                    pendingCMTs.add(dataImportFieldMapping.getMetadataRecord());
-                //}
-            }
-
-            queuedMetadataTypesForDeploy = pendingCMTs;
-        }
-
-        if (conflictingMappings.size() > 0) {
-            System.debug('LOOPING THROUGH CONFLICTING MAPPINGS');
-            System.debug(conflictingMappings.size());
-            // Update existing mappings to point to custom field mapping set
-            List<BDI_HelpTextCMT.DataImportFieldMapping> updatedConflictingMappings =
-                new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-
-            for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : conflictingMappings) {
-                System.debug(dataImportFieldMapping.recordName);
-                System.debug(dataImportFieldMapping.dataImportFieldMappingSetRecordName);
-                if (dataImportFieldMapping.dataImportFieldMappingSetRecordName == DEFAULT_FIELD_MAPPING_SET_RECORD_NAME) {
-                    System.debug('Clone Field Mapping');
-                    BDI_HelpTextCMT.DataImportFieldMapping clonedFieldMapping =
-                        new BDI_HelpTextCMT.DataImportFieldMapping(
-                            dataImportFieldMapping,
-                            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
-                        );
-                        queuedMetadataTypesForDeploy.add(clonedFieldMapping.getMetadataRecord());
-                } else {
-                    System.debug('Update Field Mapping');
-                    updatedConflictingMappings.add(dataImportFieldMapping);
-                }
-            }
-
-            String fieldMappingSetToCompareAgainst =
-                (fieldMappingSets.size() > 0 ? MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME : DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
-
-            List<Metadata.CustomMetadata> updatedCMTs = updateCustomMetadataRecords(
-                fieldMappingSetToCompareAgainst,
-                updatedConflictingMappings
-            );
-
-            queuedMetadataTypesForDeploy.addAll(updatedCMTs);
-        }
-
-        // Handle GAU and Opportunity Contact Role mappings
-        handleGAUAndOpportunityContactRoleMappings();
-
-        if (pendingSpecialCasedMappings.size() > 0) {
-            for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : pendingSpecialCasedMappings) {
-                queuedMetadataTypesForDeploy.add(dataImportFieldMapping.getMetadataRecord());
-            }
-        }*/
     }
 
     /**
@@ -572,26 +504,6 @@ public class BDI_MigrationMappingUtility {
 
         if (foundFieldMappings != null && foundFieldMappings.size() > 0) {
             specialCasedMappings.putAll(foundFieldMappings);
-        }
-    }
-
-    /**
-    * @description Method called when mapping conflicts are found during migration
-    * and user decides to discard their customizations. Method inserts any net new
-    * help text mappings as custom metadata mappings under our default field mapping set.
-    */
-    public void enqueueNewFieldMappings() {
-        migrationType = CUSTOM_MAPPING;
-
-        // Keep any net new custom help text mappings to be added to our standard defaults
-        if (pendingMappings.size() > 0) {
-            List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
-            for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : pendingMappings) {
-                pendingCMTs.add(dataImportFieldMapping.getMetadataRecord());
-            }
-
-            queuedMetadataTypesForDeploy = pendingCMTs;
-            pendingMappings.clear();
         }
     }
 
