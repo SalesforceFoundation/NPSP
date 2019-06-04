@@ -122,7 +122,7 @@ public class CMT_MetadataAPI {
     }
 
     /**
-     * @return A 10 character unique 'jobId' to use for
+     * @return A 10 character unique 'jobId' to use for deploying metadata
      */
     public static String getUniqueJobId() {
         return UserInfo.getUserId().left(15).right(4).toUpperCase() +

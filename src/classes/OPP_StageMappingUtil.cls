@@ -78,6 +78,7 @@ public with sharing class OPP_StageMappingUtil {
         initializeStates();
 
         String oppStageToCheck = String.isNotBlank(opportunityStage) ? opportunityStage.trim().toLowerCase() : null;
+
         if (FINALIZED_STATE_SET != null && FINALIZED_STATE_SET.contains(oppStageToCheck)) {
             return FINALIZED_STATE_VAL;
         }
@@ -99,8 +100,8 @@ public with sharing class OPP_StageMappingUtil {
         // reinitialize everything. 
         if (COMMITTED_STATE_SET == null || FINALIZED_STATE_SET == null) {
             Map<String, Set<String>> oppStateStages = new Map<String, Set<String>>();
-            List<Opportunity_Stage_To_State_Mapping__mdt> stageToStateRecords = [Select Id, Opportunity_Stage__c, Opportunity_State__c FROM Opportunity_Stage_To_State_Mapping__mdt];
-
+            List<Opportunity_Stage_To_State_Mapping__mdt> stageToStateRecords = getOpportunityStageToStateMappings();
+            
             for (Opportunity_Stage_To_State_Mapping__mdt mappingRecord : stageToStateRecords) {
                 if (mappingRecord.Opportunity_State__c != null) {
 
@@ -108,12 +109,40 @@ public with sharing class OPP_StageMappingUtil {
                     String oppStage = mappingRecord.Opportunity_Stage__c.trim().toLowerCase();
                     Set<String> stages = oppStateStages.containsKey(oppState) ? oppStateStages.get(oppState) : new Set<String>();
                     stages.add(oppStage);
+                    oppStateStages.put(oppState, stages);
                 }
             }
-
+            
             COMMITTED_STATE_SET = oppStateStages.containsKey(COMMITTED_STATE_VAL) ? oppStateStages.get(COMMITTED_STATE_VAL) : new Set<String>();
             FINALIZED_STATE_SET = oppStateStages.containsKey(FINALIZED_STATE_VAL) ? oppStateStages.get(FINALIZED_STATE_VAL) : new Set<String>();
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a list of Opportunity stage to state mappings. If it is a test running,
+    * return an artificially created list. Otherwise, get it from the database
+    ********************************************************************************************************/
+    private static List<Opportunity_Stage_To_State_Mapping__mdt> getOpportunityStageToStateMappings() {
+        List<Opportunity_Stage_To_State_Mapping__mdt> metadataRecordList = new List<Opportunity_Stage_To_State_Mapping__mdt>();
+
+        if (Test.isRunningTest()) {
+            
+            // If it's a test running, return artificial records. This ensures consistency in the testing. 
+            Opportunity_Stage_To_State_Mapping__mdt finalizedRecord = new Opportunity_Stage_To_State_Mapping__mdt();
+            finalizedRecord.Opportunity_Stage__c = 'Closed Won';
+            finalizedRecord.Opportunity_State__c = FINALIZED_STATE_VAL;
+
+            Opportunity_Stage_To_State_Mapping__mdt pledgedRecord = new Opportunity_Stage_To_State_Mapping__mdt();
+            pledgedRecord.Opportunity_Stage__c = 'Pledged';
+            pledgedRecord.Opportunity_State__c = COMMITTED_STATE_VAL;
+
+            metadataRecordList.add(finalizedRecord);
+            metadataRecordList.add(pledgedRecord);
+        } else {
+            metadataRecordList = [Select Id, Opportunity_Stage__c, Opportunity_State__c FROM Opportunity_Stage_To_State_Mapping__mdt];
+        }
+
+        return metadataRecordList;
     }
 
     /*******************************************************************************************************
@@ -179,7 +208,7 @@ public with sharing class OPP_StageMappingUtil {
         String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(OPP_STAGE_TO_STATE_METADATA_NAME);
 
         customMd.fullName =  mdTypeName + '.' + oppState + '_' + datetime.now().getTime();
-        customMd.label = oppState + '.' + datetime.now().getTime();
+        customMd.label = oppState + '_' + datetime.now().getTime();
         customMd.protected_x = false;
 
         Map<String, Object> fieldMapping = new Map<String, Object>();
