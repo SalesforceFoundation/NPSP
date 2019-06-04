@@ -46,9 +46,9 @@ public with sharing virtual class BDI_ObjectMappingLogic {
         Map<String, Schema.DescribeFieldResult> sourceFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace('npsp__DataImport__c'));
         
         for (BDI_ObjectWrapper objWrap : objWraps) {
-            Map<String, Schema.DescribeFieldResult> targetFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c));
+            Map<String, Schema.DescribeFieldResult> targetFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
 
-            objWrap.sObj = Schema.getGlobalDescribe().get(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c)).newSObject();
+            objWrap.sObj = Schema.getGlobalDescribe().get(objWrap.objMapping.Object_API_Name__c).newSObject();
 
             // If the object already has an existing SObject Id, then set it in the sObj
             if (objWrap.existingSObjectId != null) {
@@ -58,8 +58,8 @@ public with sharing virtual class BDI_ObjectMappingLogic {
             updateChildToPredecessorRelationship(objWrap);
             
             for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
-                String sourceFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Source_Field_API_Name__c);
-                String targetFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Target_Field_API_Name__c);
+                String sourceFieldName = fieldMapping.Source_Field_API_Name__c;
+                String targetFieldName = fieldMapping.Target_Field_API_Name__c;
                 
                 Schema.DescribeFieldResult sourceFieldDescribe = sourceFieldDescribeMap.get(sourceFieldName.toLowerCase());
                 Schema.DescribeFieldResult targetFieldDescribe = targetFieldDescribeMap.get(targetFieldName.toLowerCase());
@@ -83,8 +83,8 @@ public with sharing virtual class BDI_ObjectMappingLogic {
     public static void updateChildToPredecessorRelationship(BDI_ObjectWrapper objWrap) {
         // If the object we are working on is a child to its predecessor then set the relationship field 
         if (objWrap.sObj.Id == null && objWrap.objMapping.Relationship_To_Predecessor__c == 'Child') {
-            
-            objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Relationship_Field__c),objWrap.dataImport.get(UTIL_Namespace.adjustNPSPNamespace(objWrap.predecessorObjMapping.Imported_Record_Field_Name__c)));
+
+            objWrap.sObj.put(objWrap.objMapping.Relationship_Field__c,objWrap.dataImport.get(objWrap.predecessorObjMapping.Imported_Record_Field_Name__c));
         }
     }
 

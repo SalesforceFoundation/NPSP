@@ -44,14 +44,14 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
         Map<String, Schema.DescribeFieldResult> sourceFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace('npsp__DataImport__c'));
 
-        String PAYMENT_FIELDNAME = 'npsp__Payment__c';
-        String OPPORTUNITY_FIELDNAME = 'npsp__Opportunity__c';
-        String CAMPAIGN_FIELDNAME = 'npsp__Campaign__c';
+        String PAYMENT_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Payment__c');
+        String OPPORTUNITY_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Opportunity__c');
+        String CAMPAIGN_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Campaign__c');
 
         for (BDI_ObjectWrapper objWrap : objWraps) {
-            Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c));
+            Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
 
-            objWrap.sObj = Schema.getGlobalDescribe().get(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Object_API_Name__c)).newSObject();
+            objWrap.sObj = Schema.getGlobalDescribe().get(objWrap.objMapping.Object_API_Name__c).newSObject();
 
             if (objWrap.existingSObjectId != null) {
                 objWrap.sObj.put('Id', objWrap.existingSObjectId);
@@ -62,8 +62,8 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
             Object opportunityValue;
 
             for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
-                String sourceFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Source_Field_API_Name__c);
-                String targetFieldName = UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Target_Field_API_Name__c);
+                String sourceFieldName = fieldMapping.Source_Field_API_Name__c;
+                String targetFieldName = fieldMapping.Target_Field_API_Name__c;
 
                 Object value = objWrap.dataImport.get(sourceFieldName);
 
@@ -90,11 +90,11 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
             // If the payment is specified and payment allocations are enabled, always use that first.
             if ( paymentValue != null && settings.Payment_Allocations_Enabled__c) {
-                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(PAYMENT_FIELDNAME),paymentValue);
+                objWrap.sObj.put(PAYMENT_FIELDNAME,paymentValue);
             } else if ( opportunityValue != null ) {
-                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(OPPORTUNITY_FIELDNAME),opportunityValue);
+                objWrap.sObj.put(OPPORTUNITY_FIELDNAME,opportunityValue);
             } else if ( campaignValue != null ) { 
-                objWrap.sObj.put(UTIL_Namespace.adjustNPSPNamespace(CAMPAIGN_FIELDNAME),campaignValue);
+                objWrap.sObj.put(CAMPAIGN_FIELDNAME,campaignValue);
             }
 
         }

@@ -83,16 +83,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
         if (diFieldMappings != null) {
             for (Data_Import_Field_Mapping__mdt difm : diFieldMappings) {
 
-                String sourceFieldName = difm.Source_Field_API_Name__c;
-                String targetFieldName = difm.Target_Field_API_Name__c;
-
-                //If we are not in the npsp namespace then remove the namespace from all relevant field references
-                if (namespace != 'npsp') {
-                    sourceFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(sourceFieldName);
-                    targetFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(targetFieldName);
-                }
-
-                dataImportFieldToTargetField.put(sourceFieldName,targetFieldName);
+                dataImportFieldToTargetField.put(difm.Source_Field_API_Name__c,difm.Target_Field_API_Name__c);
             }
         }
 
@@ -111,12 +102,15 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     }
 
     private void retrieveCustMetadata(){
+        //If the code is not in the npsp namespace, then the npsp field prefixes will need to be systematically removed.
+        Boolean removeNPSPNamespace = (UTIL_Namespace.getNamespace() != 'npsp');
 
         diFieldMappingSet = [SELECT id, DeveloperName, 
                         Data_Import_Object_Mapping_Set__c,
                         Data_Import_Object_Mapping_Set__r.DeveloperName    
                     FROM Data_Import_Field_Mapping_Set__mdt
                     WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
+                    
         for (Data_Import_Object_Mapping__mdt diom:[SELECT Custom_Mapping_Logic_Class__c,
                                             DeveloperName, 
                                             Data_Import_Object_Mapping_Set__c, 
@@ -129,6 +123,14 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                                     FROM Data_Import_Object_Mapping__mdt
                                     WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c]) {
 
+            // Removing the npsp namespace since the code is not currently packaged.
+            if (removeNPSPNamespace) {
+               diom.Imported_Record_Field_Name__c = UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Field_Name__c);
+               diom.Imported_Record_Status_Field_Name__c = UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Status_Field_Name__c);
+               diom.Object_API_Name__c = UTIL_Namespace.adjustNPSPNamespace(diom.Object_API_Name__c);
+               diom.Relationship_Field__c = UTIL_Namespace.adjustNPSPNamespace(diom.Relationship_Field__c);
+            }
+
             objMappingDevNameToObjMapping.put(diom.DeveloperName, diom);
         }
 
@@ -139,10 +141,15 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                                                     Source_Field_API_Name__c,
                                                     Target_Field_API_Name__c,
                                                     Target_Object_Mapping__c,
-                                                    Target_Object_Mapping__r.Object_API_Name__c,
                                                     Target_Object_Mapping__r.DeveloperName
                                         FROM Data_Import_Field_Mapping__mdt
                                         WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName]) {
+
+                // Removing the npsp namespace since the code is not currently packaged.
+                if (removeNPSPNamespace) {
+                   difm.Source_Field_API_Name__c = UTIL_Namespace.adjustNPSPNamespace(difm.Source_Field_API_Name__c);
+                   difm.Target_Field_API_Name__c = UTIL_Namespace.adjustNPSPNamespace(difm.Target_Field_API_Name__c);
+                }
 
                 Data_Import_Field_Mapping__mdt[] tempDifms = new Data_Import_Field_Mapping__mdt[]{};
 

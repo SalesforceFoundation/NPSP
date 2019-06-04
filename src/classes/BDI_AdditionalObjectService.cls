@@ -119,10 +119,10 @@ public with sharing class BDI_AdditionalObjectService {
                         BDI_ObjectWrapper objWrap = new BDI_ObjectWrapper(dataImport,objMapping,fieldMappings,predecessor);
 
                         //null out any existing value in the status field for this object mapping
-                        dataImport.put(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Status_Field_Name__c),'');
+                        dataImport.put(objMapping.Imported_Record_Status_Field_Name__c,'');
 
                         //If the imported record field for the object is not populated then create a new SObject, otherwise update existing.
-                        if (dataImport.get(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Field_Name__c)) == null) {
+                        if (dataImport.get(objMapping.Imported_Record_Field_Name__c) == null) {
 
                             //If there are no fields populated or required fields are not populated for this object mapping then ignore this dataImport and continue.
                             if (!validateFields(objWrap)) {
@@ -138,7 +138,7 @@ public with sharing class BDI_AdditionalObjectService {
 
                             //If there is an existing record then we don't need to perform the normal validation and can proceed to populating
                             //the record with any non-null values.
-                            objWrap.existingSObjectId = (Id)dataImport.get(UTIL_Namespace.adjustNPSPNamespace(objMapping.Imported_Record_Field_Name__c));
+                            objWrap.existingSObjectId = (Id)dataImport.get(objMapping.Imported_Record_Field_Name__c);
 
                         }
 
@@ -206,9 +206,9 @@ public with sharing class BDI_AdditionalObjectService {
                         BDI_ObjectWrapper objWrap = objWrapsForUpdate[t];
 
                         if (result.isSuccess()) {
-                            objWrap.dataImport.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c),System.label.bdiUpdated);
+                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name__c,System.label.bdiUpdated);
                         } else { 
-                            dataImportService.LogBDIError(objWrap.dataImport, result.getErrors()[0].getMessage(),UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
+                            dataImportService.LogBDIError(objWrap.dataImport, result.getErrors()[0].getMessage(),objWrap.objMapping.Imported_Record_Status_Field_Name__c);
                         }
                     }
                 }
@@ -223,10 +223,10 @@ public with sharing class BDI_AdditionalObjectService {
                         BDI_ObjectWrapper objWrap = objWrapsForInsert[t];
 
                         if (result.isSuccess()) {
-                            objWrap.dataImport.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c),System.Label.bdiCreated);
-                            objWrap.dataImport.put(UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Field_Name__c),objWrap.sObj.Id);
+                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name__c,System.Label.bdiCreated);
+                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Field_Name__c,objWrap.sObj.Id);
                         } else { 
-                            dataImportService.LogBDIError(objWrap.dataImport, result.getErrors()[0].getMessage(),UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
+                            dataImportService.LogBDIError(objWrap.dataImport, result.getErrors()[0].getMessage(),objWrap.objMapping.Imported_Record_Status_Field_Name__c);
                         }
                     }
                 }
@@ -258,9 +258,9 @@ public with sharing class BDI_AdditionalObjectService {
     */
     private Boolean predecessorExists(BDI_ObjectWrapper objWrap, Data_Import_Object_Mapping__mdt predecessor){
         Boolean result = true;
-        if (objWrap.dataImport.get(UTIL_Namespace.adjustNPSPNamespace(predecessor.Imported_Record_Field_Name__c)) == null) {
+        if (objWrap.dataImport.get(predecessor.Imported_Record_Field_Name__c) == null) {
             result = false;
-            dataImportService.LogBDIError(objWrap.dataImport, System.label.bdiAdditionalObjPredNotFound ,UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
+            dataImportService.LogBDIError(objWrap.dataImport, System.label.bdiAdditionalObjPredNotFound ,objWrap.objMapping.Imported_Record_Status_Field_Name__c);
         }
         return result;
     }
@@ -284,7 +284,7 @@ public with sharing class BDI_AdditionalObjectService {
         for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
 
             if (!importedRecordFieldNames.contains(fieldMapping.Source_Field_API_Name__c.toLowerCase())
-                && objWrap.dataImport.get(UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Source_Field_API_Name__c)) != null) {        
+                && objWrap.dataImport.get(fieldMapping.Source_Field_API_Name__c) != null) {        
                 anyNonImportedRecordFieldsPopulated = true;
             }
         }
@@ -295,12 +295,12 @@ public with sharing class BDI_AdditionalObjectService {
 
             for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
 
-                if (objWrap.dataImport.get(UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Source_Field_API_Name__c)) == null) {
+                if (objWrap.dataImport.get(fieldMapping.Source_Field_API_Name__c) == null) {
 
                     if (fieldMapping.Required__c == 'Yes') {
 
                         allRequiredFieldsPopulated = false;
-                        requiredFieldErrorMsg += UTIL_Namespace.adjustNPSPNamespace(fieldMapping.Source_Field_API_Name__c) + '; ';
+                        requiredFieldErrorMsg += fieldMapping.Source_Field_API_Name__c + '; ';
                     }
                 }
             }
@@ -312,7 +312,7 @@ public with sharing class BDI_AdditionalObjectService {
 
             } else if (anyNonImportedRecordFieldsPopulated && !allRequiredFieldsPopulated) {
                 requiredFieldErrorMsg = requiredFieldErrorMsg.removeEnd('; ').abbreviate(255);
-                dataImportService.LogBDIError(objWrap.dataImport, requiredFieldErrorMsg ,UTIL_Namespace.adjustNPSPNamespace(objWrap.objMapping.Imported_Record_Status_Field_Name__c));
+                dataImportService.LogBDIError(objWrap.dataImport, requiredFieldErrorMsg ,objWrap.objMapping.Imported_Record_Status_Field_Name__c);
             }
         }
 
