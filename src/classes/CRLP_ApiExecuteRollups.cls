@@ -124,7 +124,7 @@ public without sharing class CRLP_ApiExecuteRollups {
         options.useRollupDefsByParentIdMap = true;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-            .withExcludeExternalData()
+            .withoutRetrieveExternalRollupStateData()
             .withRollupType(rollupType)
             .withSummaryRecord(summaryRecord)
             .withRollupDefinitions(rollupDefs)

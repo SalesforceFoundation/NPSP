@@ -464,6 +464,7 @@ public class CRLP_ApiService_TEST {
     */
     public class Stub implements System.StubProvider {
         public Set<String> calledMethods = new Set<String>();
+        public Map<String, List<Object>> argsByMethodName = new Map<String, List<Object>>();
 
         private Map<String, Object> returnValueByMethodName = new Map<String, Object>{
             'getBaseRollupStateForRecords' => new Map<Id, List<CRLP_Rollup>>(),
@@ -484,6 +485,13 @@ public class CRLP_ApiService_TEST {
             List<Object> args
         ) {
             calledMethods.add(stubbedMethodName);
+
+            if (!argsByMethodName.containsKey(stubbedMethodName)) {
+                argsByMethodName.put(stubbedMethodName, new List<Object>());
+            }
+
+            argsByMethodName.get(stubbedMethodName).add(args);
+
             return returnValueByMethodName.get(stubbedMethodName);
         }
     }
