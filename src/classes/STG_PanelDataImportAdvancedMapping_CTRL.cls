@@ -208,7 +208,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 isPolling = false;
                 BDI_MigrationMappingUtility.upsertCustomSettings(
                     HELP_TEXT,
-                    DEFAULT_MAPPING,
                     e.getMessage()
                 );
             }
@@ -234,7 +233,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             dataImportSettings =
                 BDI_MigrationMappingUtility.upsertCustomSettings(
                     HELP_TEXT,
-                    DEFAULT_MAPPING,
                     String.valueOf(Metadata.DeployStatus.Succeeded)
                 );
             ApexPages.addMessage(
@@ -250,7 +248,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             isPolling = false;
             BDI_MigrationMappingUtility.upsertCustomSettings(
                 HELP_TEXT,
-                DEFAULT_MAPPING,
                 e.getMessage()
             );
         }
