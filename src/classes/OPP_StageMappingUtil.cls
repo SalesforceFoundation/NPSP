@@ -178,8 +178,8 @@ public with sharing class OPP_StageMappingUtil {
         Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
         String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(OPP_STAGE_TO_STATE_METADATA_NAME);
 
-        customMd.fullName =  mdTypeName + '.' + oppState + '_' + datetime.now().format('yyMMddHHmmss');
-        customMd.label = oppState + '.' + datetime.now().format('yyMMddHHmmss');
+        customMd.fullName =  mdTypeName + '.' + oppState + '_' + datetime.now().getTime();
+        customMd.label = oppState + '.' + datetime.now().getTime();
         customMd.protected_x = false;
 
         Map<String, Object> fieldMapping = new Map<String, Object>();
