@@ -55,6 +55,13 @@ public class BDI_MigrationMappingUtility {
         set;
     }
 
+    /**
+    * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
+    * Used later if we need to preserve the original mapping values during migration.
+    */
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingPreservedConflictingMappings =
+        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+
     /*
     * @description List of custom metatadata type mappings pending deployment
     */
@@ -134,6 +141,23 @@ public class BDI_MigrationMappingUtility {
         WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME];
 
     /**
+    * @description Boolean flag to determine if a custom field mapping set exists 
+    */
+    private Boolean customFieldMappingSetExists {
+        get {
+            List<Data_Import_Field_Mapping_Set__mdt> fieldMappingSets =
+                [SELECT Id
+                FROM Data_Import_Field_Mapping_Set__mdt
+                WHERE DeveloperName = :MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
+            if (fieldMappingSets.size() > 0) {
+                return true;
+            }
+            return false;
+        }
+        set;
+    }
+
+    /**
      * @description Metadata deployment id
      */
     public String deploymentId;
@@ -197,6 +221,7 @@ public class BDI_MigrationMappingUtility {
         pendingStandardMappings.clear();
         conflictingMappings.clear();
         pendingSpecialCasedMappings.clear();
+        pendingPreservedConflictingMappings.clear();
 
         return deploymentId;
     }
@@ -288,6 +313,101 @@ public class BDI_MigrationMappingUtility {
         }
     }
 
+    public void handleStandardMappings() {
+        if (customFieldMappingSetExists == false) {
+            enqueueFieldMappings(pendingStandardMappings);
+        }
+    }
+
+    public void handleNewMappings() {
+        enqueueFieldMappings(pendingMappings);
+    }
+
+    public void handleSpecialCasedMappings() {
+        enqueueFieldMappings(pendingSpecialCasedMappings);
+    }
+
+    public void handlePreserveConflictingMappings() {
+        if (pendingPreservedConflictingMappings.size() > 0) {
+            enqueueFieldMappings(pendingPreservedConflictingMappings);
+        }
+    }
+
+    public void handleOverwriteConflictingMappings() {
+        if (conflictingMappings.size() > 0) {
+            // Update existing mappings to point to custom field mapping set
+            List<BDI_HelpTextCMT.DataImportFieldMapping> updatedConflictingMappings =
+                new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+
+            for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : conflictingMappings) {
+
+                if (dataImportFieldMapping.dataImportFieldMappingSetRecordName == DEFAULT_FIELD_MAPPING_SET_RECORD_NAME) {
+                    BDI_HelpTextCMT.DataImportFieldMapping clonedFieldMapping =
+                        new BDI_HelpTextCMT.DataImportFieldMapping(
+                            dataImportFieldMapping,
+                            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
+                        );
+                        queuedMetadataTypesForDeploy.add(clonedFieldMapping.getMetadataRecord());
+                } else {
+                    updatedConflictingMappings.add(dataImportFieldMapping);
+                }
+            }
+
+            String fieldMappingSetToCompareAgainst =
+                (customFieldMappingSetExists == true ? MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME : DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+
+            List<Metadata.CustomMetadata> updatedCMTs = updateCustomMetadataRecords(
+                fieldMappingSetToCompareAgainst,
+                updatedConflictingMappings
+            );
+
+            queuedMetadataTypesForDeploy.addAll(updatedCMTs);
+        }
+    }
+
+    /**
+    * @description Method updates existing custom metadata records in memory.
+    * @param fieldMappingSetName Name of parent Field Mapping Set
+    * @param fieldMappings List of field mappings with new field values we want to keep
+    * @return List of custom metadata type records
+    */
+    public List<Metadata.CustomMetadata> updateCustomMetadataRecords(String fieldMappingSetName,
+                                                                     List<BDI_HelpTextCMT.DataImportFieldMapping> fieldMappings) {
+        Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
+            helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
+        List<Metadata.CustomMetadata> updatedCMTs = new List<Metadata.CustomMetadata>();
+
+        for (BDI_HelpTextCMT.DataImportFieldMapping fieldMapping : fieldMappings) {
+            Data_Import_Field_Mapping__mdt existingDefaultFieldMapping =
+                    existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
+
+            Metadata.CustomMetadata updatedCMT = fieldMapping.getMetadataRecord();
+            List<String> nameParts = updatedCMT.fullName.split('\\.', 2);
+            updatedCMT.fullName = nameParts[0] + '.' + existingDefaultFieldMapping.DeveloperName;
+            updatedCMTs.add(updatedCMT);
+        }
+
+        return updatedCMTs;
+    }
+
+    /**
+    * @description Add metadata records to queuedMedataTypesForDeploy list.
+    * @param fieldMappings List of DataImportFieldMapping wrappers
+    */
+    public void enqueueFieldMappings(List<BDI_HelpTextCMT.DataImportFieldMapping> fieldMappings) {
+        if (fieldMappings.size() > 0) {
+            for (BDI_HelpTextCMT.DataImportFieldMapping fieldMapping : fieldMappings) {
+                fieldMapping.dataImportFieldMappingSetRecordName =
+                    MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
+
+                System.debug(fieldMapping.label);
+                System.debug(fieldMapping.dataImportFieldMappingSetRecordName);
+                System.debug('======');
+                queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+            }
+        }
+    }
+
     /**
     * @description Method called when mapping conflicts are found during migration
     * and user decides to keep their customizations. Method creates a clone of our
@@ -295,23 +415,13 @@ public class BDI_MigrationMappingUtility {
     */
     public void enqueueCustomFieldMappingSetAndFields() {
         System.debug('*** enqueueCustomFieldMappingSetAndFields()');
-        queuedMetadataTypesForDeploy.clear();
-        conflictingMappings.clear();
-        pendingMappings.clear();
-        pendingStandardMappings.clear();
-        pendingSpecialCasedMappings.clear();
         migrationType = CUSTOM_MAPPING;
-
-        List<Data_Import_Field_Mapping_Set__mdt> fieldMappingSets =
-            [SELECT Id
-             FROM Data_Import_Field_Mapping_Set__mdt
-             WHERE DeveloperName = :MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
 
         List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
         List<BDI_HelpTextCMT.DataImportFieldMapping> allMappings =
             new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
-        if (fieldMappingSets.size() > 0) {
+        if (customFieldMappingSetExists == true) {
             System.debug('Existing Custom Field Mapping Set');
             buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
         } else {
@@ -320,10 +430,14 @@ public class BDI_MigrationMappingUtility {
             Metadata.CustomMetadata fieldMappingSet =
                 helper.createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
-            pendingCMTs.add(fieldMappingSet);
+            // Add custom field mapping set to list of metadata type records awaiting deployment
+            queuedMetadataTypesForDeploy.add(fieldMappingSet);
         }
 
-        if (pendingMappings.size() > 0) {
+        // Handle GAU and Opportunity Contact Role mappings
+        handleGAUAndOpportunityContactRoleMappings();
+
+        /*if (pendingMappings.size() > 0) {
             allMappings.addAll(pendingMappings);
         }
 
@@ -387,14 +501,7 @@ public class BDI_MigrationMappingUtility {
             for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : pendingSpecialCasedMappings) {
                 queuedMetadataTypesForDeploy.add(dataImportFieldMapping.getMetadataRecord());
             }
-        }
-
-        System.debug('Standard: ' + pendingStandardMappings.size());
-        System.debug('Conflict: ' + conflictingMappings.size());
-        System.debug('New: ' + pendingMappings.size());
-        System.debug('Special: ' + pendingSpecialCasedMappings.size());
-        System.debug(' ');
-        System.debug('Queued: ' + queuedMetadataTypesForDeploy.size());
+        }*/
     }
 
     /**
@@ -489,31 +596,6 @@ public class BDI_MigrationMappingUtility {
     }
 
     /**
-    * @description Method updates existing custom metadata records in memory.
-    * @param fieldMappingSetName Name of parent Field Mapping Set
-    * @param fieldMappings List of field mappings with new field values we want to keep
-    * @return List of updated custom metadata records
-    */
-    public List<Metadata.CustomMetadata> updateCustomMetadataRecords(String fieldMappingSetName,
-                                                                     List<BDI_HelpTextCMT.DataImportFieldMapping> fieldMappings) {
-        Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
-            helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
-        List<Metadata.CustomMetadata> updatedCMTs = new List<Metadata.CustomMetadata>();
-
-        for (BDI_HelpTextCMT.DataImportFieldMapping fieldMapping : fieldMappings) {
-            Data_Import_Field_Mapping__mdt existingDefaultFieldMapping =
-                    existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
-
-            Metadata.CustomMetadata updatedCMT = fieldMapping.getMetadataRecord();
-            List<String> nameParts = updatedCMT.fullName.split('\\.', 2);
-            updatedCMT.fullName = nameParts[0] + '.' + existingDefaultFieldMapping.DeveloperName;
-            updatedCMTs.add(updatedCMT);
-        }
-
-        return updatedCMTs;
-    }
-
-    /**
      * @description Collect all Help Text field mappings and compare against default Field Mapping Metadata Type
      * records reserve all non-standard NPSP Help Text mappings. Add new custom mappings to list pendingMappings
      * and add conflicting existing mappings to list conflictingMappings
@@ -521,6 +603,13 @@ public class BDI_MigrationMappingUtility {
     public void buildCustomMetadataRecordsFromHelpText(String fieldMappingSetName) {
         System.debug('=============================================');
         System.debug('***buildCustomMetadataRecordsFromHelpText()');
+        queuedMetadataTypesForDeploy.clear();
+        conflictingMappings.clear();
+        pendingMappings.clear();
+        pendingStandardMappings.clear();
+        pendingSpecialCasedMappings.clear();
+        pendingPreservedConflictingMappings.clear();
+
         Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails =
                 helper.getAllMappedHelpTextFields();
 
@@ -563,6 +652,14 @@ public class BDI_MigrationMappingUtility {
                             existingDefaultFieldMapping);
 
                     if (invalidFieldMapping) {
+                        // Preserve original mapping
+                        pendingPreservedConflictingMappings.add(
+                            new BDI_HelpTextCMT.DataImportFieldMapping(
+                                existingDefaultFieldMapping,
+                                customFieldMappingSetExists == true ? MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME : DEFAULT_FIELD_MAPPING_SET_RECORD_NAME
+                            )
+                        );
+
                         // If existing help text mapping doesn't match our packaged cmt record, park the mapping
                         fieldMapping.expectedHelpTextValue =
                             existingDefaultFieldMapping.Target_Object_Mapping__r.Object_API_Name__c

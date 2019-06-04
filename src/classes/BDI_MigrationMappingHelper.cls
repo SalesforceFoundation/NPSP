@@ -226,6 +226,7 @@ public class BDI_MigrationMappingHelper {
         List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT 
                     Id, 
                     Label, 
+                    MasterLabel,
                     DeveloperName, 
                     Data_Import_Field_Mapping_Set__c,
                     Data_Import_Field_Mapping_Set__r.Label,
@@ -235,6 +236,8 @@ public class BDI_MigrationMappingHelper {
                     Target_Field_API_Name__c, 
                     Target_Object_Mapping__c,
                     Target_Object_Mapping__r.Object_API_Name__c,
+                    Target_Object_Mapping__r.DeveloperName,
+                    Target_Object_Mapping__r.MasterLabel,
                     Is_Deleted__c
             FROM Data_Import_Field_Mapping__mdt
             WHERE Data_Import_Field_Mapping_Set__r.DeveloperName = :developerName];

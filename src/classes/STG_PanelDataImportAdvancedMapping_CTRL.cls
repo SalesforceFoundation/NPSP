@@ -191,6 +191,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                     migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
                 }
 
+                System.debug('C: ' + migrationMappingUtility.conflictingMappings.size());
+                System.debug('PC: ' + migrationMappingUtility.pendingPreservedConflictingMappings.size());
+                System.debug('S: ' + migrationMappingUtility.pendingStandardMappings.size());
+                System.debug('SP: ' + migrationMappingUtility.pendingSpecialCasedMappings.size());
+                System.debug('N: ' + migrationMappingUtility.pendingMappings.size());
+
                 if (migrationMappingUtility.conflictingMappings.size() > 0) {
                     isConflict = true;
                     isPolling = false;
@@ -212,7 +218,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                         dataImportSettings =
                             BDI_MigrationMappingUtility.upsertCustomSettings(
                                 DATA_IMPORT_FIELD_MAPPING,
-                                DEFAULT_MAPPING,
+                                fieldMappingSets.size() > 0 ? CUSTOM_MAPPING : DEFAULT_MAPPING,
                                 String.valueOf(Metadata.DeployStatus.Succeeded)
                             );
                         ApexPages.addMessage(
@@ -226,6 +232,11 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                         migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
                     } else {
                         migrationMappingUtility.enqueueCustomFieldMappingSetAndFields();
+
+                        // Add net new field mappings
+                        migrationMappingUtility.handleNewMappings();
+                        System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
+
                         Id deploymentId = migrationMappingUtility.deployCustomMetadata();
                         saveDeploymentId(deploymentId);
                     }
@@ -300,7 +311,25 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             isConflict = false;
             isPolling = true;
 
+            // Start the migration, collect help text mappings, and compare against existing cmt mappings
             migrationMappingUtility.enqueueCustomFieldMappingSetAndFields();
+
+            // Add standard field mappings
+            migrationMappingUtility.handleStandardMappings();
+            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
+
+            // Add net new field mappings
+            migrationMappingUtility.handleNewMappings();
+            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
+
+            // Add special cased mappings (GAU and Opportunity Contact Role)
+            migrationMappingUtility.handleSpecialCasedMappings();
+            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
+
+            // Add conflicting mappings
+            migrationMappingUtility.handleOverwriteConflictingMappings();
+            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
+
             Id deploymentId = migrationMappingUtility.deployCustomMetadata();
             saveDeploymentId(deploymentId);
 
@@ -331,7 +360,25 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             isConflict = false;
             isPolling = true;
 
-            migrationMappingUtility.enqueueNewFieldMappings();
+            // Start the migration, collect help text mappings, and compare against existing cmt mappings
+            migrationMappingUtility.enqueueCustomFieldMappingSetAndFields();
+
+            // Add standard field mappings
+            migrationMappingUtility.handleStandardMappings();
+            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
+
+            // Add net new field mappings
+            migrationMappingUtility.handleNewMappings();
+            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
+
+            // Add special cased mappings (GAU and Opportunity Contact Role)
+            migrationMappingUtility.handleSpecialCasedMappings();
+            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
+
+            //Add preserved conflicting mappings
+            migrationMappingUtility.handlePreserveConflictingMappings();
+            System.debug('Queued: ' + migrationMappingUtility.queuedMetadataTypesForDeploy.size());
+
             Id deploymentId = migrationMappingUtility.deployCustomMetadata();
             saveDeploymentId(deploymentId);
 
