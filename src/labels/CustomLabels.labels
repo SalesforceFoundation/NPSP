@@ -1919,7 +1919,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiAdditionalObjPredNotFound</shortDescription>
-        <value>Error: Predecessor object not found so record could not be created.</value>
+        <value>Error: record not created. This record is dependent on another record which couldn&apos;t be found.</value>
     </labels>
     <labels>
         <fullName>bdiAdditionalObjRequiredFieldsNull</fullName>
