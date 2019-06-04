@@ -45,8 +45,10 @@ public with sharing class BDI_AdditionalObjectService {
 
     private Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>> tierToObjMappings = 
         new Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>>();
+
     private Map<String,Map<String,Data_Import_Object_Mapping__mdt>> predecessorDevNameToSuccessors = 
         new Map<String,Map<String,Data_Import_Object_Mapping__mdt>>();
+        
     private Set<String> importedRecordFieldNames = new Set<String>();
 
     public Set<String> objMappingDevNames = new Set<String>();
@@ -86,7 +88,8 @@ public with sharing class BDI_AdditionalObjectService {
             }
 
             //for the current tier of object mappings, validate and populate object wrappers for later processing.
-            Map<String,BDI_ObjectWrapper[]> objAPINameToObjWraps = prepareObjectWrappers(currentTier,disWithoutFailure);
+            Map<String,BDI_ObjectWrapper[]> objAPINameToObjWraps = 
+                prepareObjectWrappers(currentTier,disWithoutFailure);
 
             // if this is not a dry run then perform the insert/update of the object wrappers.
             if (!dataImportService.isDryRun) {
@@ -97,7 +100,8 @@ public with sharing class BDI_AdditionalObjectService {
 
     /*******************************************************************************************************
     * @description Prepares object wrappers for a given tier of object mappings and data import records.
-    * @param currentTierOfObjMappings a list of object mappings that are all on the same level of the object hierarchy
+    * @param currentTierOfObjMappings a list of object mappings that are all on the same level of the object 
+    *    hierarchy
     * @param dataImportRecords the data import records that the preparation should be performed on.
     */
 
@@ -213,7 +217,9 @@ public with sharing class BDI_AdditionalObjectService {
                 if (sObjsForUpdate.size() > 0) {
 
                     Database.SaveResult[] updateSaveResults = UTIL_DMLService.updateRecords(sObjsForUpdate,false);
-                    //Cycle through all the upsert results and update the data import records with status appropriately.
+                    
+                    // Cycle through all the upsert results and update the data import records with status 
+                    // appropriately.
                     for (Integer t = 0; t < updateSaveResults.size(); t++) {
                         Database.SaveResult result = updateSaveResults[t];
 
@@ -233,7 +239,8 @@ public with sharing class BDI_AdditionalObjectService {
                 if (sObjsForInsert.size() > 0) {
 
                     Database.SaveResult[] insertSaveResults = UTIL_DMLService.insertRecords(sObjsForInsert,false);
-                    //Cycle through all the upsert results and update the data import records with status appropriately.
+                    // Cycle through all the upsert results and update the data import records with status 
+                    // appropriately.
                     for (Integer t = 0; t < insertSaveResults.size(); t++) {
                         Database.SaveResult result = insertSaveResults[t];
 
@@ -396,8 +403,11 @@ public with sharing class BDI_AdditionalObjectService {
             //Iterates through the tier list and builds out each tier starting with the objects with no predecessor.
             for (Integer i = 0; i < tierToObjMappings.size(); i++) {
 
-                Map<String,Data_Import_Object_Mapping__mdt> currentTier = new Map<String,Data_Import_Object_Mapping__mdt>();
-                Map<String,Data_Import_Object_Mapping__mdt> nextTier = new Map<String,Data_Import_Object_Mapping__mdt>();
+                Map<String,Data_Import_Object_Mapping__mdt> currentTier = 
+                    new Map<String,Data_Import_Object_Mapping__mdt>();
+
+                Map<String,Data_Import_Object_Mapping__mdt> nextTier = 
+                    new Map<String,Data_Import_Object_Mapping__mdt>();
 
                 if (tierToObjMappings.get(i) != null) {
                     currentTier = tierToObjMappings.get(i);
