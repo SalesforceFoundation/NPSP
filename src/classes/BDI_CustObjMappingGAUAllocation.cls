@@ -33,7 +33,7 @@
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Overrides the standard object mapping logic class for GAU allocation field mapping since only one of
-* the Opportunity__c, Payment__c and Campaign__c fields should be populated.
+* the Opportunity__c and Payment__c fields should be populated.
 */
 
 public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMappingLogic {
@@ -46,7 +46,6 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
         String PAYMENT_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Payment__c');
         String OPPORTUNITY_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Opportunity__c');
-        String CAMPAIGN_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Campaign__c');
 
         for (BDI_ObjectWrapper objWrap : objWraps) {
             Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
@@ -57,7 +56,6 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                 objWrap.sObj.put('Id', objWrap.existingSObjectId);
             }
 
-            Object campaignValue;
             Object paymentValue;
             Object opportunityValue;
 
@@ -79,8 +77,6 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                             paymentValue = value;
                         } else if (fieldMapping.Target_Field_API_Name__c == OPPORTUNITY_FIELDNAME) {
                             opportunityValue = value;
-                        } else if (fieldMapping.Target_Field_API_Name__c == CAMPAIGN_FIELDNAME) {
-                            campaignValue = value;
                         } else {
                             castAndCopyField(objWrap, sourceFieldName, sourceFieldDescribe, targetFieldName, targetFieldDescribe);
                         }
@@ -93,8 +89,6 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                 objWrap.sObj.put(PAYMENT_FIELDNAME,paymentValue);
             } else if ( opportunityValue != null ) {
                 objWrap.sObj.put(OPPORTUNITY_FIELDNAME,opportunityValue);
-            } else if ( campaignValue != null ) { 
-                objWrap.sObj.put(CAMPAIGN_FIELDNAME,campaignValue);
             }
 
         }
