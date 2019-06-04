@@ -102,14 +102,16 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     * @return database.Querylocator
     */
     public Database.QueryLocator start(Database.BatchableContext bc) {
+        String query;
         try {
 
-            String query = buildQueryLocatorAsSOQL();
+            query = buildQueryLocatorAsSOQL();
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
 
             return Database.getQueryLocator(query);
         } catch (Exception ex) {
+            ex.setMessage(ex.getMessage() + '\n\n' + query);
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
             return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
         }
@@ -130,7 +132,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // so that the list never changes throughout the life of the batch job
             if (this.statefulCacheOfRollupsToBeProcessed != null) {
                 CRLP_Rollup_SEL.addRollupsToCache(this.jobType, this.jobFilter,
-                        this.statefulCacheOfRollupsToBeProcessed);
+                    this.statefulCacheOfRollupsToBeProcessed);
             }
 
             String parentKeyField = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType);
@@ -173,8 +175,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             List<SObject> summaryRecords = queryAndSequenceSummaryRecords(parentIds, soql);
 
             // Contact-level Account Soft Credit rollups require changing the detail object type to PartialSoftCredit
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)) {
                 detailRecords = convertContactRolesToPartialSoftCredits(detailRecords);
             }
 
@@ -184,14 +185,14 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // Need to pass in the Rollup Type, Rollup Defnitions if they're available along
             // with the Summary Record(s), Detail Record(s) and any Related Records.
             CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                    .withRollupType(jobType)
-                    .withBatchJobMode(jobMode)
-                    .withSummaryRecords(summaryRecords)
-                    .withDetailRecords(detailRecords)
-                    .withRelatedRecords(paymentsByOpp)
-                    .withPreviouslyProcessedOppIdsMap(this.statefulMapOfOppIdsByParentId)
-                    .withRollupDefinitions(this.statefulRollupsById)
-                    .withJobOptions(options);
+                .withRollupType(jobType)
+                .withBatchJobMode(jobMode)
+                .withSummaryRecords(summaryRecords)
+                .withDetailRecords(detailRecords)
+                .withRelatedRecords(paymentsByOpp)
+                .withPreviouslyProcessedOppIdsMap(this.statefulMapOfOppIdsByParentId)
+                .withRollupDefinitions(this.statefulRollupsById)
+                .withJobOptions(options);
 
             List<SObject> updatedRecords = processor.startRollupProcessing();
 
@@ -293,18 +294,18 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
         // Exclude Organization Donations (where Opp.Account.SYSTEM_IsIndividual=false) from Contact Hard Credit rollups
         // Depending on the npo02__Always_Rollup_to_Primary_Contact__c custom setting
-        if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
-                this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+        if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false
+                && this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
             whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
 
-        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
-                (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false
+                && CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)
+        ) {
             whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
 
-        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == True &&
-                (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == true
+                && CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)
+        ) {
             whereClauses.add('IsPrimary = False');
         }
 
@@ -313,10 +314,13 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         if (detailObjectType == Opportunity.SObjectType) {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
                     this.statefulCacheOfRollupsToBeProcessed);
+
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
+
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
+
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
         }
@@ -432,7 +436,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         // Resequence the Parent (Summary) records to be in the exact order of the detail records
         // using the defined parent Id
         List<SObject> reorderedSummaryRecords = new List<SObject>();
-        Map<Id, SObject> mapOfSummaryRecords = new Map<Id, SObject>(database.query(soql));
+        Map<Id, SObject> mapOfSummaryRecords = new Map<Id, SObject>(Database.query(soql));
         for (Id parentId : parentIds) {
             reorderedSummaryRecords.add(mapOfSummaryRecords.get(parentId));
         }
@@ -473,8 +477,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     private void updateStatefulCollections(CRLP_RollupProcessor processor, Id recordId) {
         this.statefulRollupsById.put(recordId, processor.getRollupDefsForParent(recordId));
 
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-            this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+        if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)) {
             this.statefulMapOfOppIdsByParentId.put(recordId, processor.getPreviouslyProcessedOppIds(recordId));
         }
     }
