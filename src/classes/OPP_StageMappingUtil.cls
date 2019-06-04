@@ -78,7 +78,6 @@ public with sharing class OPP_StageMappingUtil {
         initializeStates();
 
         String oppStageToCheck = String.isNotBlank(opportunityStage) ? opportunityStage.trim().toLowerCase() : null;
-
         if (FINALIZED_STATE_SET != null && FINALIZED_STATE_SET.contains(oppStageToCheck)) {
             return FINALIZED_STATE_VAL;
         }
@@ -132,16 +131,7 @@ public with sharing class OPP_StageMappingUtil {
             (contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c != null && 
             contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c != '')) {
             
-            String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(OPP_STAGE_TO_STATE_METADATA_NAME);
-            String recordName = mdTypeName + '_' + FINALIZED_STATE_VAL + '_' + datetime.now().format('yyMMddHHmmss');
-            Map<String, Object> fieldMapping = new Map<String, Object>();
-
-            fieldMapping.put(OPP_STAGE_FIELD, contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c);
-            fieldMapping.put(OPP_STATE_FIELD, FINALIZED_STATE_VAL);
-
-            Metadata.CustomMetadata metadataRecord = createCustomMetadata(recordName, FINALIZED_STATE_VAL, fieldMapping, false);
-
-            metadataToInsert.add(metadataRecord);
+            metadataToInsert.add(createCustomMetadata(contactAndOrgCustomSetting.Payments_Auto_Close_Stage_Name__c, FINALIZED_STATE_VAL));
         }
 
         return metadataToInsert;
@@ -162,9 +152,11 @@ public with sharing class OPP_StageMappingUtil {
         Schema.DescribeFieldResult fieldResult = Opportunity.StageName.getDescribe();
         List<Schema.PicklistEntry> picklistEntryList = fieldResult.getPicklistValues();
         Boolean hasPledgedValue = false;
+        String normalPledgeValue = '';
 
         for (Schema.PicklistEntry picklistEntry : picklistEntryList) {
             if (picklistEntry.getValue().toUpperCase() == PLEDGED_STAGE) {
+                normalPledgeValue = picklistEntry.getValue();
                 hasPledgedValue = true;
                 break;
             }
@@ -173,16 +165,7 @@ public with sharing class OPP_StageMappingUtil {
         // Take the value, if there is one, and create a finalized Opp Stage to State custom metadata type record. 
         // Only create the pledged opp stage to state record if there's no existing opportunity stage to state records at all. 
         if (overallCount == 0 && hasPledgedValue) {
-            String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(OPP_STAGE_TO_STATE_METADATA_NAME);
-            String recordName = mdTypeName + '_' + COMMITTED_STATE_VAL + '_' + datetime.now().format('yyMMddHHmmss');
-
-            Map<String, Object> fieldMapping = new Map<String, Object>();
-            fieldMapping.put(OPP_STAGE_FIELD, PLEDGED_STAGE);
-            fieldMapping.put(OPP_STATE_FIELD, COMMITTED_STATE_VAL);
-
-            Metadata.CustomMetadata metadataRecord = createCustomMetadata(recordName, COMMITTED_STATE_VAL, fieldMapping, false);
-            
-            metadataToInsert.add(metadataRecord);
+            metadataToInsert.add(createCustomMetadata(normalPledgeValue, COMMITTED_STATE_VAL));
         }
 
         return metadataToInsert;
@@ -191,11 +174,17 @@ public with sharing class OPP_StageMappingUtil {
     /*******************************************************************************************************
     * @description Creates a custom metadata record based on the parameters provided to the method. 
     ********************************************************************************************************/
-    public static Metadata.CustomMetadata createCustomMetadata(String fullName, String label, Map<String, Object> fieldMapping, Boolean protectedRecord) {
+    public static Metadata.CustomMetadata createCustomMetadata(String oppStage, String oppState) {        
         Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
-        customMd.fullName = fullName;
-        customMd.label = label;
-        customMd.protected_x = protectedRecord;
+        String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(OPP_STAGE_TO_STATE_METADATA_NAME);
+
+        customMd.fullName =  mdTypeName + '.' + oppState + '_' + datetime.now().format('yyMMddHHmmss');
+        customMd.label = oppState + '.' + datetime.now().format('yyMMddHHmmss');
+        customMd.protected_x = false;
+
+        Map<String, Object> fieldMapping = new Map<String, Object>();
+        fieldMapping.put(OPP_STAGE_FIELD, oppStage);
+        fieldMapping.put(OPP_STATE_FIELD, oppState);
 
         Metadata.CustomMetadata md = new Metadata.CustomMetadata();
         md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldMapping);

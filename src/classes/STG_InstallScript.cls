@@ -386,9 +386,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
         List<Metadata.CustomMetadata> metadataToInsert = new List<Metadata.CustomMetadata>();
         Map<String, Object> params = new Map<String, Object>();
 
-        metadataToInsert = Opp_StageMappingUtil.createFinalizedOppStageToStateRecord(metadataToInsert);
         metadataToInsert = Opp_StageMappingUtil.createPledgedOppStageToStateRecord(metadataToInsert);
-
+        metadataToInsert = Opp_StageMappingUtil.createFinalizedOppStageToStateRecord(metadataToInsert);
+        
         Opp_StageMappingUtil.deployOppStageToStateMetadata(metadataToInsert, params);
     }
 

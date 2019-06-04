@@ -121,7 +121,35 @@ private class OPP_StageMappingUtil_TEST {
         Test.startTest();
         // We cannot test the result of this call since the response to this call is async. 
         // The best we can do right now is just execute the code. 
-        OPP_StageMappingUtil.createFinalizedOppStageToStateRecord();
+        List<Metadata.CustomMetadata> metadataToInsert = new List<Metadata.CustomMetadata>();
+        Map<String, Object> params = new Map<String, Object>();
+
+        metadataToInsert = Opp_StageMappingUtil.createFinalizedOppStageToStateRecord(metadataToInsert);
+
+        Opp_StageMappingUtil.deployOppStageToStateMetadata(metadataToInsert, params);
+        Test.stopTest();
+
+
+    }
+
+    @isTest
+    private static void testPledgedOppStageToStateRecordCreation() {
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        npe01__Contacts_And_Orgs_Settings__c configRecord = new npe01__Contacts_And_Orgs_Settings__c();
+        configRecord.Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        npe01__Contacts_And_Orgs_Settings__c contactAndOrgSetting = UTIL_CustomSettingsFacade.getContactsSettingsForTests(configRecord);
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+        
+        Test.startTest();
+        // We cannot test the result of this call since the response to this call is async. 
+        // The best we can do right now is just execute the code. 
+        List<Metadata.CustomMetadata> metadataToInsert = new List<Metadata.CustomMetadata>();
+        Map<String, Object> params = new Map<String, Object>();
+
+        metadataToInsert = Opp_StageMappingUtil.createPledgedOppStageToStateRecord(metadataToInsert);
+
+        Opp_StageMappingUtil.deployOppStageToStateMetadata(metadataToInsert, params);
         Test.stopTest();
 
 
