@@ -538,12 +538,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     accountRecord.put('CurrencyIsoCode', (String) contactRecord.get('CurrencyIsoCode'));
                 }
 
-                // only set account's billing address if address management is off.
-                // otherwise, we'll let ADDR_Contact_TDTM push the new address into the account.
-                if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+                // Always copy the Contact's Mailing & Others address to the new Account's
+                // Billing & Shipping address.
+//                if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+                if (contactRecord.is_Address_Override__c != true) {
                     ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
+                    ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
                 }
-                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
 
                 accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 if (individualRecordTypeId != null) {
@@ -565,6 +566,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         // identify the specific records that had the problem, and don't fail the whole batch
         List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
+System.debug('>>> Insert ' + accountInserts.size() + ' Account records');
         for (Integer index = 0; index < insertResults.size(); index++) {
             Database.SaveResult insertResult = insertResults[index];
             if (!insertResult.isSuccess()) {
@@ -572,6 +574,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     accountInserts[index].addError(err.getMessage());
                     Contact contactRecord = contacts[index];
                     contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.Firstname, contactRecord.Lastname, err.getMessage()}));
+                    System.debug('>>> Insert Error! ' + err.getMessage() + ' [Lastname=' + contactRecord.LastName
+                        + ' / Account.Name=' + accountInserts[index].Name + ']');
                 }
             }
         }
