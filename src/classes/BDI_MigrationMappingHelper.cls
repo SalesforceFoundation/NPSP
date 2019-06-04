@@ -123,12 +123,15 @@ public class BDI_MigrationMappingHelper {
 
                     // Pass help text values to a new instance of MappingDetail wrapper class
                     BDI_HelpTextCMT.MappingDetail newMappingDetail =
-                            new BDI_HelpTextCMT.MappingDetail(parts.objectName,
-                                    sourceField.Label,
-                                    parts.objectAPIName,parts.fieldName, null, null);
+                        new BDI_HelpTextCMT.MappingDetail(parts.objectName,
+                            sourceField.Label,
+                            parts.objectAPIName,
+                            parts.fieldName,
+                            null,
+                            null
+                        );
 
                     helpTextFieldMap.put(sourceField.Name, newMappingDetail);
-
                     // Remove from map once mapped
                     allDFRS.remove(dataImportFieldName);
                 }
@@ -155,8 +158,10 @@ public class BDI_MigrationMappingHelper {
         BDI_HelpTextCMT.ImportStatusAndLookupParts importStatusAndLookupParts =
                 importStatusAndLookupMap.get(mappingDetail.dataImportObjectName);
 
-        mappingDetail.importedRecordField = importStatusAndLookupParts.importLookupFieldName;
-        mappingDetail.importedRecordStatusField = importStatusAndLookupParts.importStatusFieldName;
+        if (importStatusAndLookupParts != null) {
+            mappingDetail.importedRecordField = importStatusAndLookupParts.importLookupFieldName;
+            mappingDetail.importedRecordStatusField = importStatusAndLookupParts.importStatusFieldName;
+        }
     }
 
     /**
