@@ -89,12 +89,14 @@ class NPSP(object):
         """
         xpath = npsp_lex_locators["placeholder"].format(loc)
         field = self.selenium.get_webelement(xpath)
+#         self.salesforce._populate_field(xpath, value)
+        
         field.send_keys(value)
-        time.sleep(1)
-#         if loc == ("Search Contacts" or "Search Accounts"):
+        time.sleep(2)
+# #         if loc == ("Search Contacts" or "Search Accounts"):
+#         field.send_keys(Keys.ENTER)
+# #             field.send_keys(Keys.ARROW_DOWN)
         field.send_keys(Keys.ENTER)
-#             field.send_keys(Keys.ARROW_DOWN)
-#             field.send_keys(Keys.ENTER)
 
     def click_record_button(self, title):
         """ Pass title of the button to click the buttons on the records edit page. Usually save and cancel are the buttons seen.
@@ -123,6 +125,17 @@ class NPSP(object):
             heading, button_title
         )
         self.selenium.click_link(locator)
+        
+    def click_related_list_dd_button(self, heading, dd_title, button_title):
+        """ To Click on a related list dropdown button.
+            Pass the list name, dd name and button name"""
+        self.salesforce.load_related_list(heading)
+        locator = npsp_lex_locators["record"]["related"]["button"].format(heading, dd_title)
+        self.selenium.click_link(locator) 
+        time.sleep(1)
+        loc=npsp_lex_locators["record"]["related"]["dd-link"].format(button_title)
+        self.selenium.wait_until_element_is_visible(loc)
+        self.selenium.click_link(loc)   
         
     def click_dropdown(self, title):
         locator = npsp_lex_locators['record']['list'].format(title)
@@ -314,12 +327,14 @@ class NPSP(object):
                 
     def fill_bge_form(self, **kwargs):
         for label, value in kwargs.items():
-            if label=="Batch Description":
-                locator= npsp_lex_locators['bge']['field-text'].format(label,value)  
+            if label=="Batch Description" or label == "custom_textarea":
+                locator= npsp_lex_locators['bge']['field-text'].format(label,value)
+                self.selenium.click_element(locator)  
                 self.salesforce._populate_field(locator, value)              
 
             else:
                 locator= npsp_lex_locators['bge']['field-input'].format(label,value)
+                self.selenium.click_element(locator)
                 self.salesforce._populate_field(locator, value)
      
          
@@ -393,6 +408,7 @@ class NPSP(object):
         
     def check_record_related_item(self,title,value):
         locator=npsp_lex_locators['record']['related']['item'].format(title,value)
+        self.selenium.wait_until_page_contains_element(locator)
         actual_value=self.selenium.get_webelement(locator).text
         assert value == actual_value, "Expected value to be {} but found {}".format(
             value, actual_value
@@ -429,6 +445,7 @@ class NPSP(object):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
+            self.selenium.wait_until_page_contains_element(locator)
             self.selenium.page_should_contain_element(locator)
             
     def page_contains_record(self,title):   
@@ -598,7 +615,7 @@ class NPSP(object):
         loc = "//*[@id='pmtTable']/tbody/tr/td[2]/div//input[@value= '{}']"
         values = int(amount)/int(no_payments)
         #global self.val
-        values_1 = "{0:.2f}".format(values)
+        values_1 = "{:0.2f}".format(values)
         self.val = str(values_1)
         locator =  loc.format(self.val)
         list_payments = self.selenium.get_webelements(locator)
@@ -645,17 +662,16 @@ class NPSP(object):
         locator=npsp_lex_locators['button'].format(title)
         self.selenium.get_webelement(locator).click()
         
-#         
-#     def verify_payments(self, amount,no_payments):
-#         """To select a row on object page based on name and open the dropdown"""
-#         locators = npsp_lex_locators['payments']['no_payments']
-#         list_ele = self.selenium.get_webelements(locators)
-#         t_count=len(list_ele)
-#         for index, element in enumerate(list_ele):
-#             if element.text == amount:
-#                 loc = npsp_lex_locators['payments']['pay_amount'].format(index + 1, amount)
-#                 self.selenium.page_should_contain_element(loc)
-#                 time.sleep(1)
+         
+    def verify_details(self, **kwargs):
+       """To verify no. of records with given same column values
+          key is value in a table column, value is expected count of rows with that value     
+       """
+       for key, value in kwargs.items():
+           locators = npsp_lex_locators['payments']['pays'].format(key)
+           list_ele = self.selenium.get_webelements(locators)
+           p_count=len(list_ele)
+           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)             
                 
     def verify_occurrence_payments(self,title,value=None):
         """"""
@@ -685,20 +701,27 @@ class NPSP(object):
         loc = self.selenium.get_webelement(locator)
         self.selenium.set_focus_to_element(locator)       
         self.selenium.select_from_list_by_label(loc,value) 
+          
         
-    def select_value_from_bge_dd(self,list_name,value):
-        """Pass the list name and value to be selected from the dropdown"""
-        if list_name == 'Payment Method': 
-            locator = npsp_lex_locators['bge']['dd'].format(list_name)
-            loc = self.selenium.get_webelement(locator)
-            self.selenium.set_focus_to_element(locator)       
-            self.selenium.select_from_list_by_label(loc,value) 
-        else:
-            locator = npsp_lex_locators['bge']['list'].format(list_name)
-            loc = self.selenium.get_webelement(locator)
-            self.selenium.set_focus_to_element(locator)       
-            self.selenium.select_from_list_by_label(loc,value)  
-        
+    def select_value_from_bge_dd(self, list_name,value):
+        list_found = False
+        locators = npsp_lex_locators["bge-lists"].values()
+
+        for i in locators:
+            locator = i.format(list_name)
+            if self.check_if_element_exists(locator):
+                loc=self.selenium.get_webelement(locator)
+                self.selenium.set_focus_to_element(locator)       
+                self.selenium.select_from_list_by_label(loc,value)
+                list_found = True
+                break
+
+        assert list_found, "Dropdown with the provided locator not found"
+
+    def check_if_element_exists(self, xpath):
+        elements =self.selenium.get_element_count(xpath)
+        return True if elements > 0 else False
+    
     def select_multiple_values_from_list(self,list_name,*args): 
         """Pass the list name and values to be selected from the dropdown. Please note that this doesn't unselect the existing values"""
         locator = npsp_lex_locators['npsp_settings']['multi_list'].format(list_name)
@@ -844,7 +867,7 @@ class NPSP(object):
         locator=npsp_lex_locators['bge']['count']
         actual_value=self.selenium.get_webelements(locator)
         count=len(actual_value)
-        assert int(value) == count, "Expected value to be {} but found {}".format(
+        assert int(value) == count, "Expected rows to be {} but found {}".format(
             value, count
         )       
         
@@ -919,4 +942,69 @@ class NPSP(object):
             except ElementNotFound:
                 time.sleep(0.2)
                         
-               
+    def select_multiple_values_from_duellist(self,path,list_name,section,*args): 
+        """Pass the list name and values to be selected from the dropdown. """
+        main_loc = npsp_lex_locators
+        for key in path.split('.'):
+            main_loc = main_loc[key]
+        for i in args:
+            locator = main_loc.format(list_name,section,i)
+            if args.index(i)==0:
+                self.selenium.click_element(locator)
+            else:
+                self.selenium.click_element(locator,'COMMAND')
+                
+    def click_duellist_button(self, list_name,button):
+        list_found = False
+        locators = npsp_lex_locators["bge-duellist-btn"].values()
+
+        for i in locators:
+            locator = i.format(list_name,button)
+            if self.check_if_element_exists(locator):
+                loc=self.selenium.get_webelement(locator)
+                self.selenium.click_element(locator)
+                list_found = True
+                break
+
+        assert list_found, "Dropdown with the provided locator not found"            
+    
+    def verify_expected_values(self,ns_ind,obj_api,rec_id,**kwargs):
+       """To verify that the data in database table match with expected value, 
+       provide ns if object has namespace prefix otherwise nonns,
+       object api name, record_id and the data u want to verify"""    
+       if(ns_ind=='ns'):
+           ns=self.get_npsp_namespace_prefix()
+           table=ns + "DataImportBatch__c"
+       else:
+            table=obj_api
+       rec=self.salesforce.salesforce_get(table,rec_id)
+       for key, value in kwargs.items():
+           self.builtin.should_be_equal_as_strings(rec[key], value)   
+           
+
+    def get_org_namespace_prefix(self):
+        if self.cumulusci.org.namespaced:
+            return "npsp__" 
+        else:
+            return ""       
+          
+    def click_first_matching_related_item_popup_link(self,heading,rel_status,link):
+        '''Clicks a link in the popup menu for first matching related list item.
+        heading specifies the name of the list,
+        rel_status specifies the status or other field vaule to identify a particular item,
+        and link specifies the name of the link'''  
+        self.salesforce.load_related_list(heading)
+        locator = npsp_lex_locators["record"]["related"]["link"].format(heading, rel_status)
+        list=self.selenium.get_webelements(locator)
+        title=list[0].text
+        self.salesforce.click_related_item_popup_link(heading, title, link)
+        
+    def verify_field_values(self,**kwargs):
+        """Verifies values in the specified fields""" 
+        for key, value in kwargs.items():
+            locator=npsp_lex_locators["field-value"].format(key)
+            res=self.selenium.get_webelement(locator).text
+            assert value == res, "Expected {} value to be {} but found {}".format(key,value,res)
+
+           
+

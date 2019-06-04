@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Average_In_Kind_Gifts__c</fullName>
+        <externalId>false</externalId>
+        <label>Average In-Kind Gifts</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Average_Test_Soft_Credit__c</fullName>
+        <externalId>false</externalId>
+        <label>Average Test Soft Credit</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Best_In_Kind_Total__c</fullName>
+        <externalId>false</externalId>
+        <label>Best In-Kind Total</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Best_In_Kind_Year__c</fullName>
+        <externalId>false</externalId>
+        <label>Best In-Kind Year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Best_Test_Soft_Credit_Total__c</fullName>
+        <externalId>false</externalId>
+        <label>Best Test Soft Credit Total</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Best_Test_Soft_Credit_year__c</fullName>
+        <externalId>false</externalId>
+        <label>Best Test Soft Credit year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Campaign_of_Latest_Created_Opportunity_S__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Campaign of Latest Created Opportunity (</label>
+        <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>Contacts (Campaign of Latest Created Opportunity ()</relationshipLabel>
+        <relationshipName>Contacts1</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Campaign_of_Latest_Created_Opportunity__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Campaign of Latest Created Opportunity</label>
+        <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>Contacts</relationshipLabel>
+        <relationshipName>Contacts</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>First_In_Kind_Gift_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>First In-Kind Gift Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>First_In_Kind_Gift_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>First In-Kind Gift Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>First_Test_Soft_Credit_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>First Test Soft Credit Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>First_Test_Soft_Credit_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>First Test Soft Credit Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>In_Kind_Donor_Streak__c</fullName>
+        <externalId>false</externalId>
+        <label>In-Kind Donor Streak</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Largest_In_Kind_Gift_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Largest In-Kind Gift Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Largest_In_Kind_Gift_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Largest In-Kind Gift Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Largest_Test_Soft_Credit_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Largest Test Soft Credit Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Largest_Test_Soft_Credit_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Largest Test Soft Credit Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Last_In_Kind_Gift_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Last In-Kind Gift Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Last_In_Kind_Gift_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Last In-Kind Gift Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Last_Test_Soft_Credit_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Last Test Soft Credit Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Last_Test_Soft_Credit_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Last Test Soft Credit Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Smallest_In_Kind_Gift_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Smallest In-Kind Gift Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Smallest_In_Kind_Gift__c</fullName>
+        <externalId>false</externalId>
+        <label>Smallest In-Kind Gift</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Smallest_Test_Soft_Credit_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Smallest Test Soft Credit Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Smallest_Test_Soft_Credit_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Smallest Test Soft Credit Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Test_Donor_Soft_Credit_Streak__c</fullName>
+        <externalId>false</externalId>
+        <label>Test Donor Soft Credit Streak</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Amount_In_Kind_Gifts__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Amount In-Kind Gifts</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Amount_Test_Soft_Credits__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Amount Test Soft Credits</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Count_In_Kind_Gifts__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Count In-Kind Gifts</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Count_Test_Soft_Credits__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Count Test Soft Credits</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

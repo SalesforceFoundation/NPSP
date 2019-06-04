@@ -140,6 +140,8 @@
         <members>CRLP_Account_AccSoftCredit_BATCH</members>
         <members>CRLP_Account_BATCH</members>
         <members>CRLP_Account_SoftCredit_BATCH</members>
+        <members>CRLP_ApiExecuteRollups</members>
+        <members>CRLP_ApiExecuteRollups_TEST</members>
         <members>CRLP_ApiService</members>
         <members>CRLP_ApiService_TEST</members>
         <members>CRLP_Batch_Base</members>
@@ -180,7 +182,11 @@
         <members>CRLP_RollupGAU_SVC</members>
         <members>CRLP_RollupGAU_TEST</members>
         <members>CRLP_RollupProcessingOptions</members>
+        <members>CRLP_RollupProcessor</members>
         <members>CRLP_RollupProcessor_SVC</members>
+        <members>CRLP_RollupProcessor_TEST</members>
+        <members>CRLP_RollupQueryBuilder</members>
+        <members>CRLP_RollupQueryBuilder_TEST</members>
         <members>CRLP_RollupQueueable</members>
         <members>CRLP_RollupRD_SVC</members>
         <members>CRLP_RollupRecurringDonation_TEST</members>
@@ -197,6 +203,8 @@
         <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_SkewDispatcher_BATCH</members>
         <members>CRLP_VRollupHandler</members>
+        <members>CallableApiParameters</members>
+        <members>CallableApiParameters_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
@@ -1126,6 +1134,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Contact_Role_for_Organizational_Opps__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Enforce_Accounting_Data_Consistency__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Honoree_Opportunity_Contact_Role__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
@@ -1289,6 +1298,7 @@
         <members>CRLP_SoftCredit</members>
         <members>CallableApiMethodNotImplemented</members>
         <members>CallableApiParameterError</members>
+        <members>CallableApiProcessingError</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>
@@ -1801,6 +1811,10 @@
         <members>oppNamingIndividual</members>
         <members>oppNamingOrganizational</members>
         <members>pmtModifyCurrency</members>
+        <members>pmtPaidPaymentDateRequired</members>
+        <members>pmtUnpaidPaymentScheduledDateRequired</members>
+        <members>pmtWriteOffPaidPayment</members>
+        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
