@@ -206,7 +206,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
 
                 isPolling = false;
-                BDI_MigrationMappingUtility.upsertCustomSettings(
+                migrationMappingUtility.upsertCustomSettings(
                     HELP_TEXT,
                     e.getMessage()
                 );
@@ -231,7 +231,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
         try {
             dataImportSettings =
-                BDI_MigrationMappingUtility.upsertCustomSettings(
+                migrationMappingUtility.upsertCustomSettings(
                     HELP_TEXT,
                     String.valueOf(Metadata.DeployStatus.Succeeded)
                 );
@@ -246,7 +246,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
 
             isPolling = false;
-            BDI_MigrationMappingUtility.upsertCustomSettings(
+            migrationMappingUtility.upsertCustomSettings(
                 HELP_TEXT,
                 e.getMessage()
             );
