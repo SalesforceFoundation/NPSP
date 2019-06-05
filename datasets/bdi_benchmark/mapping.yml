@@ -1,0 +1,51 @@
+Accounts:
+    sf_object: Account
+    table: accounts
+    fields:
+        Name: name
+    record_type: Organization
+Contacts:
+    sf_object: Contact
+    table: contacts
+    fields:
+        LastName: name
+Opportunities:
+    sf_object: Opportunity
+    table: opportunities
+    fields:
+        Name: name
+        Amount: amount
+        StageName: stage_name
+        CloseDate: close_date
+        npsp__Qualified_Date__c: qualified_date
+    static:
+        npe01__Do_Not_Automatically_Create_Payment__c: True
+    lookups:
+        AccountId:
+            table: accounts
+        npsp__Primary_Contact__c:
+            table: contacts
+            key_field: primary_contact__c
+Payments:
+    sf_object: npe01__OppPayment__c
+    table: payments
+    fields:
+        npe01__Payment_Amount__c: amount
+        npe01__Payment_Date__c: payment_date
+        npe01__Paid__c: paid
+        npe01__Scheduled_Date__c: scheduled_date
+    lookups:
+        npe01__Opportunity__c:
+            table: opportunities
+            key_field: npe01__opportunity__c
+DataImport:
+    sf_object: npsp__DataImport__c
+    table: npsp__DataImport__c
+    fields:
+        npsp__Account1_Name__c: npsp__Account1_Name__c
+        npsp__Contact1_Lastname__c: npsp__Contact1_Lastname__c
+        npsp__Donation_Amount__c: npsp__Donation_Amount__c
+        npsp__Donation_Date__c: npsp__Donation_Date__c
+        npsp__Donation_Donor__c: npsp__Donation_Donor__c
+        npsp__Do_Not_Automatically_Create_Payment__c: npsp__Do_Not_Automatically_Create_Payment__c
+        npsp__Qualified_Date__c: npsp__Qualified_Date__c
