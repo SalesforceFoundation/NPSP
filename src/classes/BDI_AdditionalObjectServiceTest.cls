@@ -230,6 +230,7 @@ private class BDI_AdditionalObjectServiceTest {
 
         for (DataImport__c di : [SELECT Id,
                                         Status__c,
+                                        FailureInformation__c,
                                         Contact1_Lastname__c,
                                         Account1ImportStatus__c,
                                         Account1Imported__c, 
@@ -257,6 +258,7 @@ private class BDI_AdditionalObjectServiceTest {
                                         PaymentImportStatus__c,
                                         PaymentImported__c
                                     FROM DataImport__c]) {
+            System.debug('DataimportResult is: ' + di);
             if (di.Contact1_Lastname__c == 'TestGroupA01') {
                 testDataImportAResult = di;
             } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
@@ -264,6 +266,7 @@ private class BDI_AdditionalObjectServiceTest {
             }
         }
 
+        System.assertEquals(null,testDataImportAResult.FailureInformation__c);
         System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
         System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
@@ -288,6 +291,7 @@ private class BDI_AdditionalObjectServiceTest {
         System.assertNotEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
 
+        System.assertEquals(null,testDataImportBResult.FailureInformation__c);
         System.assertEquals(System.label.bdiImported,testDataImportBResult.Status__c);
         System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);

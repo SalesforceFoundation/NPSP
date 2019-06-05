@@ -56,8 +56,8 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                 objWrap.sObj.put('Id', objWrap.existingSObjectId);
             }
 
-            Object paymentValue;
-            Object opportunityValue;
+            Object paymentIdValue;
+            Object opportunityIdValue;
 
             for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
                 String sourceFieldName = fieldMapping.Source_Field_API_Name__c;
@@ -74,9 +74,9 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                     if (objWrap.sObj.Id == null || targetFieldDescribe.isUpdateable()) {
                         // If the target field mapping is one of the key parent objects, then extract the values for later logic
                         if (fieldMapping.Target_Field_API_Name__c == PAYMENT_FIELDNAME) {
-                            paymentValue = value;
+                            paymentIdValue = value;
                         } else if (fieldMapping.Target_Field_API_Name__c == OPPORTUNITY_FIELDNAME) {
-                            opportunityValue = value;
+                            opportunityIdValue = value;
                         } else {
                             castAndCopyField(objWrap, sourceFieldName, sourceFieldDescribe, targetFieldName, targetFieldDescribe);
                         }
@@ -85,10 +85,10 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
             }
 
             // If the payment is specified and payment allocations are enabled, always use that first.
-            if ( paymentValue != null && settings.Payment_Allocations_Enabled__c) {
-                objWrap.sObj.put(PAYMENT_FIELDNAME,paymentValue);
-            } else if ( opportunityValue != null ) {
-                objWrap.sObj.put(OPPORTUNITY_FIELDNAME,opportunityValue);
+            if ( paymentIdValue != null && settings.Payment_Allocations_Enabled__c) {
+                objWrap.sObj.put(PAYMENT_FIELDNAME,paymentIdValue);
+            } else if ( opportunityIdValue != null ) {
+                objWrap.sObj.put(OPPORTUNITY_FIELDNAME,opportunityIdValue);
             }
 
         }
