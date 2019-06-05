@@ -31,6 +31,7 @@ Referenced Packages
 **/.sfdx/
 **/.vscode/
 **/.idea/
+**/.mypy_cache/
 /config/
 log.html
 output.xml
