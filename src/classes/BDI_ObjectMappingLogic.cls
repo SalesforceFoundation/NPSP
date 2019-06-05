@@ -79,7 +79,8 @@ public with sharing virtual class BDI_ObjectMappingLogic {
         return objWraps;
     }
 
-    // When the relationship to the predecessor is "Child" then this will put the Id of the predecessor into the defined relationship field on a new SObject.
+    // When the relationship to the predecessor is "Child" then this will put the Id 
+    // of the predecessor into the defined relationship field on a new SObject.
     public static void updateChildToPredecessorRelationship(BDI_ObjectWrapper objWrap) {
         // If the object we are working on is a child to its predecessor then set the relationship field 
         if (objWrap.sObj.Id == null && objWrap.objMapping.Relationship_To_Predecessor__c == 'Child') {
@@ -110,7 +111,8 @@ public with sharing virtual class BDI_ObjectMappingLogic {
             }
 
             // If the destination field is an integer, and the source field is a double with a scale of 0 then
-            // convert the 
+            // convert the value to be an integer.  This solves for the fact that some standard salesforce fields
+            // are listed as numbers with scale of zero, but internally are of type Integer.
             if (targetFieldDescribe.getType() == Schema.DisplayType.INTEGER 
                     && !(value instanceof Integer) 
                     && sourceFieldDescribe.getType() == Schema.DisplayType.DOUBLE

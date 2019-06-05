@@ -42,8 +42,8 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     public Data_Import_Field_Mapping_Set__mdt diFieldMappingSet;
     public String fieldMappingSetName;
 
-    public Map<String,Data_Import_Object_Mapping__mdt> objMappingDevNameToObjMapping = new Map<String,Data_Import_Object_Mapping__mdt>();
-    public Map<String,Data_Import_Field_Mapping__mdt[]> objMappingDevNameToFieldMappings = new Map<String,Data_Import_Field_Mapping__mdt[]>();
+    public Map<String,Data_Import_Object_Mapping__mdt> objMappingsByDevName = new Map<String,Data_Import_Object_Mapping__mdt>();
+    public Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingDevName = new Map<String,Data_Import_Field_Mapping__mdt[]>();
 
     private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
 
@@ -74,20 +74,18 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
     public Map<String,String> getFieldMap(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
 
-        Map<String,String> dataImportFieldToTargetField = new Map<String,String>();
-
-        String namespace = UTIL_Namespace.getNamespace();
+        Map<String,String> targetFieldByDataImportField = new Map<String,String>();
         
-        Data_Import_Field_Mapping__mdt[] diFieldMappings = objMappingDevNameToFieldMappings.get(dataImportObjectName); 
+        Data_Import_Field_Mapping__mdt[] diFieldMappings = fieldMappingsByObjMappingDevName.get(dataImportObjectName); 
 
         if (diFieldMappings != null) {
             for (Data_Import_Field_Mapping__mdt difm : diFieldMappings) {
 
-                dataImportFieldToTargetField.put(difm.Source_Field_API_Name__c,difm.Target_Field_API_Name__c);
+                targetFieldByDataImportField.put(difm.Source_Field_API_Name__c,difm.Target_Field_API_Name__c);
             }
         }
 
-        return dataImportFieldToTargetField;
+        return targetFieldByDataImportField;
     }
 
     private String getFieldMappingSetName(){
@@ -131,10 +129,10 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                diom.Relationship_Field__c = UTIL_Namespace.adjustNPSPNamespace(diom.Relationship_Field__c);
             }
 
-            objMappingDevNameToObjMapping.put(diom.DeveloperName, diom);
+            objMappingsByDevName.put(diom.DeveloperName, diom);
         }
 
-        if (objMappingDevNameToObjMapping != null && objMappingDevNameToObjMapping.size() > 0) {
+        if (objMappingsByDevName != null && objMappingsByDevName.size() > 0) {
             for (Data_Import_Field_Mapping__mdt difm:[SELECT DeveloperName,
                                                     Data_Import_Field_Mapping_Set__c,
                                                     Required__c,
@@ -153,12 +151,12 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
                 Data_Import_Field_Mapping__mdt[] tempDifms = new Data_Import_Field_Mapping__mdt[]{};
 
-                if (objMappingDevNameToFieldMappings.get(difm.Target_Object_Mapping__r.DeveloperName) != null) {
-                    tempDifms = objMappingDevNameToFieldMappings.get(difm.Target_Object_Mapping__r.DeveloperName);
+                if (fieldMappingsByObjMappingDevName.get(difm.Target_Object_Mapping__r.DeveloperName) != null) {
+                    tempDifms = fieldMappingsByObjMappingDevName.get(difm.Target_Object_Mapping__r.DeveloperName);
                 }
 
                 tempDifms.add(difm);
-                objMappingDevNameToFieldMappings.put(difm.Target_Object_Mapping__r.DeveloperName,tempDifms);
+                fieldMappingsByObjMappingDevName.put(difm.Target_Object_Mapping__r.DeveloperName,tempDifms);
             }
         }
     }

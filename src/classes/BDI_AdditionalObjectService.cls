@@ -43,12 +43,8 @@ public with sharing class BDI_AdditionalObjectService {
     private BDI_DataImportService dataImportService;
     private BDI_FieldMappingCustomMetadata fieldMappingCustomMetadata;
 
-    private Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>> tierToObjMappings = 
-        new Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>>();
-
-    private Map<String,Map<String,Data_Import_Object_Mapping__mdt>> predecessorDevNameToSuccessors = 
-        new Map<String,Map<String,Data_Import_Object_Mapping__mdt>>();
-        
+    private Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>> objMappingsByTier = new Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>>();
+    private Map<String,Map<String,Data_Import_Object_Mapping__mdt>> successorObjMappingsByPredecessorName = new Map<String,Map<String,Data_Import_Object_Mapping__mdt>>();
     private Set<String> importedRecordFieldNames = new Set<String>();
 
     public Set<String> objMappingDevNames = new Set<String>();
@@ -69,13 +65,13 @@ public with sharing class BDI_AdditionalObjectService {
     public void importAdditionalObjects(){
 
         generateTiersOfObjectMappings();
-        createSetOfImportedRecordFieldNames(fieldMappingCustomMetadata.objMappingDevNameToObjMapping.values());
+        createSetOfImportedRecordFieldNames(fieldMappingCustomMetadata.objMappingsByDevName.values());
 
         //Iterate through the map of tiers, starting with the first tier that actually has a predecessor 
         //(ie 2nd tier), and validate and create each object as appropriate.
-        for (Integer i = 1; i < tierToObjMappings.size(); i++) {
+        for (Integer i = 1; i < objMappingsByTier.size(); i++) {
 
-            Map<String,Data_Import_Object_Mapping__mdt> currentTier = tierToObjMappings.get(i);
+            Map<String,Data_Import_Object_Mapping__mdt> currentTier = objMappingsByTier.get(i);
 
             DataImport__c[] disWithoutFailure = new DataImport__c[]{};
 
@@ -117,9 +113,9 @@ public with sharing class BDI_AdditionalObjectService {
                 BDI_ObjectMappingLogic objMappingLogic = getObjectMappingLogicClass(objMapping);
 
                 Data_Import_Object_Mapping__mdt predecessor = 
-                    fieldMappingCustomMetadata.objMappingDevNameToObjMapping.get(objMapping.Predecessor__c);
+                    fieldMappingCustomMetadata.objMappingsByDevName.get(objMapping.Predecessor__c);
                 Data_Import_Field_Mapping__mdt[] fieldMappings = 
-                    fieldMappingCustomMetadata.objMappingDevNameToFieldMappings.get(objMapping.DeveloperName);
+                    fieldMappingCustomMetadata.fieldMappingsByObjMappingDevName.get(objMapping.DeveloperName);
 
                 //Only proceed if at least one field mapping exists
                 if (fieldMappings != null && fieldMappings.size() > 0) {
@@ -365,35 +361,30 @@ public with sharing class BDI_AdditionalObjectService {
     */
     public void generateTiersOfObjectMappings() {
 
-        if (fieldMappingCustomMetadata.objMappingDevNameToObjMapping != null && 
-            fieldMappingCustomMetadata.objMappingDevNameToObjMapping.size() > 0) {
+        if (fieldMappingCustomMetadata.objMappingsByDevName != null 
+            && fieldMappingCustomMetadata.objMappingsByDevName.size() > 0) {
 
-            // Creates a map of predecessor dev name to successor and also identifies the base level objects 
-            // with no predecessor defined.
-            for (Data_Import_Object_Mapping__mdt objMapping: 
-                fieldMappingCustomMetadata.objMappingDevNameToObjMapping.values()) {
+            // Creates a map of predecessor dev name to successor and also identifies 
+        // the base level objects with no predecessor defined.
+            for (Data_Import_Object_Mapping__mdt objMapping : fieldMappingCustomMetadata.objMappingsByDevName.values()) {
 
-                if (objMapping.Predecessor__c != null && 
-                    objMapping.Relationship_Field__c != null && 
-                    objMapping.Relationship_To_Predecessor__c != null) {
+                if (objMapping.Predecessor__c != null && objMapping.Relationship_Field__c != null 
+            && objMapping.Relationship_To_Predecessor__c != null) {
 
                     objMappingDevNames.add(objMapping.DeveloperName);
 
-                    if (predecessorDevNameToSuccessors.get(objMapping.Predecessor__c) != null) {
-                        predecessorDevNameToSuccessors.get(objMapping.Predecessor__c).put(
-                            objMapping.DeveloperName,objMapping);
+                    if (successorObjMappingsByPredecessorName.get(objMapping.Predecessor__c) != null) {
+                        successorObjMappingsByPredecessorName.get(objMapping.Predecessor__c).put(objMapping.DeveloperName,objMapping);
                     } else {
-                        predecessorDevNameToSuccessors.put(objMapping.Predecessor__c,
-                            new Map<String,Data_Import_Object_Mapping__mdt> {
-                                objMapping.DeveloperName => objMapping
-                            });
+                        successorObjMappingsByPredecessorName.put(objMapping.Predecessor__c,
+                            new Map<String,Data_Import_Object_Mapping__mdt>{objMapping.DeveloperName => objMapping});
                     }
                 } else {
 
-                    if (tierToObjMappings.get(0) != null) {
-                        tierToObjMappings.get(0).put(objMapping.DeveloperName,objMapping);
+                    if (objMappingsByTier.get(0) != null) {
+                        objMappingsByTier.get(0).put(objMapping.DeveloperName,objMapping);
                     } else {
-                        tierToObjMappings.put(0, new Map<String,Data_Import_Object_Mapping__mdt>{
+                        objMappingsByTier.put(0,new Map<String,Data_Import_Object_Mapping__mdt>{
                             objMapping.DeveloperName => objMapping
                         });
                     }
@@ -401,26 +392,25 @@ public with sharing class BDI_AdditionalObjectService {
             }
 
             //Iterates through the tier list and builds out each tier starting with the objects with no predecessor.
-            for (Integer i = 0; i < tierToObjMappings.size(); i++) {
+            for (Integer i = 0; i < objMappingsByTier.size(); i++) {
 
                 Map<String,Data_Import_Object_Mapping__mdt> currentTier = 
                     new Map<String,Data_Import_Object_Mapping__mdt>();
-
                 Map<String,Data_Import_Object_Mapping__mdt> nextTier = 
                     new Map<String,Data_Import_Object_Mapping__mdt>();
 
-                if (tierToObjMappings.get(i) != null) {
-                    currentTier = tierToObjMappings.get(i);
+                if (objMappingsByTier.get(i) != null) {
+                    currentTier = objMappingsByTier.get(i);
 
-                    for (String objMappingDevName:currentTier.keyset()) {
+                    for (String objMappingDevName : currentTier.keyset()) {
 
-                        if (predecessorDevNameToSuccessors.get(objMappingDevName) != null) {
-                            nextTier.putAll(predecessorDevNameToSuccessors.get(objMappingDevName));
+                        if (successorObjMappingsByPredecessorName.get(objMappingDevName) != null) {
+                            nextTier.putAll(successorObjMappingsByPredecessorName.get(objMappingDevName));
                         }
                     }
 
                     if (nextTier != null && nextTier.size() > 0) {
-                        tierToObjMappings.put(i + 1,nextTier);
+                        objMappingsByTier.put(i + 1,nextTier);
                     }
                 }
             }

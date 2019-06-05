@@ -42,13 +42,13 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
         Allocations_Settings__c settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
-        Map<String, Schema.DescribeFieldResult> sourceFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace('npsp__DataImport__c'));
+        Map<String, Schema.DescribeFieldResult> sourceFieldDescByFieldName = UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImport__c.getName());
 
         String PAYMENT_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Payment__c');
         String OPPORTUNITY_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Opportunity__c');
 
         for (BDI_ObjectWrapper objWrap : objWraps) {
-            Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
+            Map<String, Schema.DescribeFieldResult> targetFieldDescByFieldName = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
 
             objWrap.sObj = Schema.getGlobalDescribe().get(objWrap.objMapping.Object_API_Name__c).newSObject();
 
@@ -65,8 +65,8 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
                 Object value = objWrap.dataImport.get(sourceFieldName);
 
-                Schema.DescribeFieldResult sourceFieldDescribe = sourceFieldDescribeMap.get(sourceFieldName.toLowerCase());
-                Schema.DescribeFieldResult targetFieldDescribe = fieldDescribeMap.get(targetFieldName.toLowerCase());
+                Schema.DescribeFieldResult sourceFieldDescribe = sourceFieldDescByFieldName.get(sourceFieldName.toLowerCase());
+                Schema.DescribeFieldResult targetFieldDescribe = targetFieldDescByFieldName.get(targetFieldName.toLowerCase());
 
                 //Confirm that it is real field, and that it is accessible to the running user.
                 if (targetFieldDescribe != null && targetFieldDescribe.isAccessible()) {
