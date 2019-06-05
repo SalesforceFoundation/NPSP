@@ -2274,13 +2274,11 @@
         <members>Data_Import_Field_Mapping.Donation_Stage</members>
         <members>Data_Import_Field_Mapping.Donation_Type</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Amount</members>
-        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Campaign</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_GAU</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Percent</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Amount</members>
-        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Campaign</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_GAU</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Payment</members>
