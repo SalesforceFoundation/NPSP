@@ -278,7 +278,7 @@ public with sharing class OPP_StageMappingUtil {
         * @param ex Exception object that is to be logged
         */
         private void logError(Exception ex) {
-            Error__c rollupHandlerError = new Error__c(
+            Error__c oppStageToStateHandlerError = new Error__c(
                 Error_Type__c = 'Opportunity Stage to State Metadata Handler Error',
                 Object_Type__c = 'CustomMetadata',
                 Context_Type__c = ERR_Handler_API.Context.OPP.name(),
@@ -286,7 +286,7 @@ public with sharing class OPP_StageMappingUtil {
                 Full_Message__c = ex.getMessage()
             );
 
-            Database.insert(rollupHandlerError, true);
+            Database.insert(oppStageToStateHandlerError, true);
         }
     }
 }

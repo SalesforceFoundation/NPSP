@@ -108,19 +108,25 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Database.executeBatch(new UTIL_OrgTelemetry_BATCH(), 1);
     }
 
+    /**
+     * @description Determines if we should execute the telemetry code based on if the created custom metdata types
+     * are NPSP metadata type objects. 
+     * @param customMetadataTypeSet
+     */
     @Future
     public static void asyncProcessCMTChange(Set<String> customMetadataTypeSet) {
 
         // We need to parse and check so that only NPSP specific actions will have telemetry execution.
         // We don't want this to run for Abacus. 
-        // Parse the result and take the appropriate action. 
         // Currently, we will only call NPSP if it is an NPSP/Custom Rollup action. 
-        if (customMetadataTypeSet.contains(CRLP_RollupCMT.MetadataObject.Rollup.name().toLowerCase()) || 
-            customMetadataTypeSet.contains(CRLP_RollupCMT.MetadataObject.Filter_Group.name().toLowerCase()) || 
-            customMetadataTypeSet.contains(CRLP_RollupCMT.MetadataObject.Filter_Rule.name().toLowerCase())) {
-            
-            asyncTelemetrySvc.processTelemetryType(TelemetryBatchCategory.NPSP_Settings);
-            
+        for (String customMetadataTypeName : customMetadataTypeSet) {
+            if (customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Rollup.name().toLowerCase()) ||
+                customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Filter_Group.name().toLowerCase()) ||
+                customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Filter_Rule.name().toLowerCase())) {
+                    
+                asyncTelemetrySvc.processTelemetryType(TelemetryBatchCategory.NPSP_Settings);
+                break;
+            }
         }
     }
 
