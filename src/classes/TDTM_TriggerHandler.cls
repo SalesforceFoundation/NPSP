@@ -73,7 +73,7 @@ public class TDTM_TriggerHandler {
 
         TDTM_Runnable.Action thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore,
                                                       isAfter, isInsert, isUpdate, isDelete, isUnDelete);
-        UTIL_Debug.debugWithInfo('****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
+        UTIL_Debug.debug(LoggingLevel.ERROR, '****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 
@@ -159,7 +159,7 @@ public class TDTM_TriggerHandler {
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
 	        Type classType = Type.forName(classToRunName);
-	        
+
 	        if(classType != null) {   	
 	        	Object classInstance = classType.newInstance();
 	        	
@@ -178,7 +178,7 @@ public class TDTM_TriggerHandler {
                                 describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                         runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
                     } else {
-                        UTIL_Debug.debugWithInfo('****Calling synchronously: ' + classToRunName + ' for ' +
+                        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + classToRunName + ' for ' +
                                 describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                         return classToRun.run(newlist, oldlist, thisAction, describeObj);
                     }
@@ -234,8 +234,8 @@ public class TDTM_TriggerHandler {
             return null;
                     
         dmlWrapper.groupByType(); //sort thyself!
-        
-        /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client 
+
+        /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client
         process of all the errors that occurred in the context **/
         List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(dmlWrapper.objectsToInsert, allOrNothing);
         List<Database.SaveResult> updateResults = UTIL_DMLService.updateRecords(dmlWrapper.objectsToUpdate, allOrNothing);

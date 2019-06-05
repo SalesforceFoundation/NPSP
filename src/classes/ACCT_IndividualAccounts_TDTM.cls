@@ -566,7 +566,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         // identify the specific records that had the problem, and don't fail the whole batch
         List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
-System.debug('>>> Insert ' + accountInserts.size() + ' Account records');
         for (Integer index = 0; index < insertResults.size(); index++) {
             Database.SaveResult insertResult = insertResults[index];
             if (!insertResult.isSuccess()) {
@@ -574,8 +573,6 @@ System.debug('>>> Insert ' + accountInserts.size() + ' Account records');
                     accountInserts[index].addError(err.getMessage());
                     Contact contactRecord = contacts[index];
                     contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.Firstname, contactRecord.Lastname, err.getMessage()}));
-                    System.debug('>>> Insert Error! ' + err.getMessage() + ' [Lastname=' + contactRecord.LastName
-                        + ' / Account.Name=' + accountInserts[index].Name + ']');
                 }
             }
         }

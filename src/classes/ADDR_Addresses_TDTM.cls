@@ -78,7 +78,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // prevent recursion
         if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
-            System.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Addresses_TDTM');
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Addresses_TDTM');
             return null;
         }
 

@@ -198,14 +198,14 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
                 if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
-                    System.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                    UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
                 // If the Before Insert/Update trigger on the Contact has already executed and taken action
                 // and this is an After Insert/Update trigger, simply reset the flag and exit out.
                 if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore) &&
                 (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
-                    System.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
+                    UTIL_Debug.debug('**** RECURSION: Stop BeforeContact Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
 
@@ -467,7 +467,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         
         if (mapConAddrInsertNow.size() > 0 && isBefore) {
             UTIL_DMLService.insertRecords(mapConAddrInsertNow.values());
-System.debug('>>> Insert ' + mapConAddrInsertNow.size() + ' Address records');
             // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
             // prevent the After Insert/Update Contact logic from executing when it's eventually called.
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
