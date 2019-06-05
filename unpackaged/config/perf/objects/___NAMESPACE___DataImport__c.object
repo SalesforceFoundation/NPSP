@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Qualified_Date__c</fullName>
+        <description>The date your organization identified this donor as qualifying for this Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npsp__Qualified_Date__c</inlineHelpText>
+        <label>Qualified Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Do_Not_Automatically_Create_Payment__c</fullName>
+        <description>https://powerofus.force.com/s/article/NPSP-Manage-Multiple-Payment-Donations#ariaid-title2</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</inlineHelpText>
+        <label>Do Not Automatically Create Payment</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>True</fullName>
+                    <default>false</default>
+                    <label>True</label>
+                </value>
+                <value>
+                    <fullName>False</fullName>
+                    <default>false</default>
+                    <label>False</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+</CustomObject>
