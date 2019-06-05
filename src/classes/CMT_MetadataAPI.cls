@@ -198,6 +198,11 @@ public class CMT_MetadataAPI {
             }
         }
 
+        /**
+         * @description This method iterates through the successful deployments and grabs the 
+         * object name. It will then pass into the UTIL_OrgTelemetry_SVC class to determine
+         * whether or not to run the telemetry code. 
+         */
         private Set<String> buildChangedMetadata(Metadata.DeployResult result) {
             Set<String> metadataObjectTypeSet = new Set<String>();
 
@@ -207,7 +212,7 @@ public class CMT_MetadataAPI {
                 // metadataObject.recordName
                 // Example:
                 // Opportunity_Stage_To_State_Mapping__mdt.FINALIZED
-                String metadataFullName = result.details.componentSuccesses[i].fullName;
+                String metadataFullName = result.details.componentSuccesses[i].fullName.toLowerCase();
 
                 metadataObjectTypeSet.add(metadataFullName);
             }
