@@ -860,7 +860,6 @@ private class CON_ContactMerge_TEST2 {
 
             System.assertEquals(1, affiliations.size(), 'Affiliations are created for the contact');
             
-            // Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
             CON_ContactMerge_CTRL controller = setupPageController(contactsToMerge, 'test');
             CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
 
