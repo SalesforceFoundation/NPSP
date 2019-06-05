@@ -16,6 +16,10 @@ from cumulusci.robotframework.utils import selenium_retry
 import sys
 from email.mime import text
 
+from cumulusci.tasks.apex.anon import AnonymousApexTask
+from cumulusci.core.config import TaskConfig
+from cumulusci.tasks.apex.batch import BatchApexWait
+
 from locators_44 import npsp_lex_locators as locators_44
 from locators_45 import npsp_lex_locators as locators_45
 locators_by_api_version = {
@@ -979,8 +983,7 @@ class NPSP(object):
             table=obj_api
        rec=self.salesforce.salesforce_get(table,rec_id)
        for key, value in kwargs.items():
-           self.builtin.should_be_equal_as_strings(rec[key], value)   
-           
+           self.builtin.should_be_equal_as_strings(rec[key], value)
 
     def get_org_namespace_prefix(self):
         if self.cumulusci.org.namespaced:
@@ -1006,5 +1009,23 @@ class NPSP(object):
             res=self.selenium.get_webelement(locator).text
             assert value == res, "Expected {} value to be {} but found {}".format(key,value,res)
 
-           
+    def batch_data_import(self, batchsize):
+        """"Do a BDI import using the API and wait for it to complete"""
 
+        code = """Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+                diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+                update diSettings;
+                BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+                ID ApexJobId = Database.executeBatch(bdi, %d);
+                """ % int(batchsize)
+        subtask_config = TaskConfig(
+                {"options": {"apex" : code}}
+        )
+
+        self.cumulusci._run_task(AnonymousApexTask, subtask_config)
+
+        subtask_config = TaskConfig(
+                {"options": {"class_name" : "BDI_DataImport_BATCH"}}
+        )
+
+        self.cumulusci._run_task(BatchApexWait, subtask_config)
