@@ -85,6 +85,7 @@ private class CRLP_ApiService_TEST {
                 'An exception should be thrown for invalid param: ' + param);
             System.assert(actualException.getMessage().containsIgnoreCase(CallableApiParameters.PARAM_ROLLUP_TYPE),
                 'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_TYPE + '" param: ' + actualException.getMessage());
+
         }
     }
 
@@ -103,7 +104,7 @@ private class CRLP_ApiService_TEST {
      * @description Confirms that isRollupStateEnabled returns true if the bridge is installed
      */
     @isTest
-    private static void shouldReturnTrueIfRollupStateEnabled() {
+    private static void shouldReturnTrueWhenRollupStateIsEnabled() {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
 
@@ -118,7 +119,7 @@ private class CRLP_ApiService_TEST {
      * @description Confirms that isRollupStateEnabled returns false if the bridge is not installed
      */
     @isTest
-    private static void shouldReturnFalseIfRollupStateEnabled() {
+    private static void shouldReturnFalseWhenRollupStateIsNotEnabled() {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
         mockPackage.isInstalled = false;
@@ -134,7 +135,7 @@ private class CRLP_ApiService_TEST {
      * @description Confirms that getBaseRollupStateForRecords calls Bridge callable with correct action and params
      */
     @isTest
-    private static void getBaseRollupStateForRecordsShouldCallBridgeCallable() {
+    private static void getBaseRollupStateForRecordsShouldCallArchiveBridgeCallable() {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
 
@@ -176,7 +177,7 @@ private class CRLP_ApiService_TEST {
      * @description Confirms that getBaseRollupStateForRecords returns an empty map if not installed
      */
     @isTest
-    private static void getBaseRollupStateForRecordsShouldReturnAnEmptyMapIfNotInstalled() {
+    private static void baseRollupStateForRecordsShouldBeEmptyWhenArchiveBridgeIsNotInstalled() {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
         mockPackage.isInstalled = false;
@@ -227,6 +228,110 @@ private class CRLP_ApiService_TEST {
         }
     }
 
+
+     /**
+     * @description Confirms that mark records as stale calls Bridge callable with correct action and params
+     */
+    @isTest
+    private static void markRollupStateAsStaleShouldCallArchiveBridgeCallable() {
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        Set<String> expectedRollupTypes = new Set<String> { 
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name(),
+            CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name()
+        };
+
+        Test.startTest();
+        service.setRollupStateAsStale(expectedRollupTypes);
+        Test.stopTest();
+
+        System.assertNotEquals(
+            null, 
+            callableMock.actionCalled, 
+            'The callable action should be called'
+        );
+    }
+
+     /**
+     * @description Confirms that mark records as stale does not thrown an exception when the 
+     * bridge is not installed
+     */
+    @isTest
+    private static void markRollupStateAsStaleShouldNotThrowExceptionWhenArchiveBridgeIsNotInstalled() {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+        mockPackage.isInstalled = false;
+        
+        Set<String> expectedRollupTypes = new Set<String> { 
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name(),
+            CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name()
+        };
+
+        Exception actualException = null;
+        Test.startTest();
+        try {
+            service.setRollupStateAsStale(expectedRollupTypes);
+        } catch (Exception ex) {
+            actualException = ex;
+        }
+        Test.stopTest();
+        System.assertEquals(null, actualException, 'Should get rollup state successfully.');
+    }
+
+    /**
+    * @description changed rollups should generate a callback
+    */
+
+    @isTest
+    private static void changedRollupsShouldGenerateCallback() {
+         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        CRLP_RollupCMT.Rollup rollup1 = CRLP_RollupCMT_Test.generateRollup('1');
+        rollup1.recordName = null;
+        Test.startTest();
+        CRLP_ApiService.RollupMetadataHandler callback = service.sendChangeEvent(new List<CRLP_RollupCMT.Rollup> { rollup1} );
+        Test.stopTest();
+
+        System.assertNotEquals(null, callback, 'Should get a callback handler for new rollups');
+    }
+
+
+    /**
+    * @description unchanged filter groups should generate a callback
+    */
+
+    @isTest
+    private static void unChangedFilterGroupsShouldGenerateCallback() {
+         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        CRLP_RollupCMT.FilterGroup newFilterGroup = CRLP_RollupCMT_Test.generateFilterGroup('1');
+        CRLP_RollupCMT.FilterGroup existingFilterGroup = CRLP_RollupCMT_Test.generateFilterGroup('2');
+
+        Test.startTest();
+        CRLP_ApiService.RollupMetadataHandler callback = service.sendChangeEvent(
+            new List<CRLP_RollupCMT.FilterGroup> { newFilterGroup, existingFilterGroup } 
+        );
+        Test.stopTest();
+
+        System.assertNotEquals(null, callback, 'Should get a Callback handler for unmodified filter groups');
+    }
+
+
     /**
     * @description Validate that the ExecuteRollups() call throws an exception if the RollupType
     * parameter is null
@@ -259,6 +364,7 @@ private class CRLP_ApiService_TEST {
         System.assert(service.executeRollups(parentId, rollupType, null, null, false).isEmpty(),
             'The call should have succeeded, even with missing data, but returned an empty collection because there are no active rollups for this type.');
     }
+
 
     /**
     * @description Validate that the ExecuteRollups() call throws an exception if the RollupData

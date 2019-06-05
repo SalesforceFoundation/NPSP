@@ -169,6 +169,7 @@
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
         <members>CRLP_RollupCMT</members>
+        <members>CRLP_RollupCMT_TEST</members>
         <members>CRLP_RollupContact_SVC</members>
         <members>CRLP_RollupContact_TEST</members>
         <members>CRLP_RollupGAU_SVC</members>
@@ -429,9 +430,9 @@
         <members>UTIL_Finder_TEST</members>
         <members>UTIL_HtmlOutput_CTRL</members>
         <members>UTIL_HtmlOutput_TEST</members>
+        <members>UTIL_IScheduled</members>
         <members>UTIL_IntegrationConfig</members>
         <members>UTIL_IntegrationConfig_TEST</members>
-        <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
         <members>UTIL_LightningComponentSupport</members>
@@ -1761,7 +1762,6 @@
         <members>pmtModifyCurrency</members>
         <members>pmtPaidPaymentDateRequired</members>
         <members>pmtUnpaidPaymentScheduledDateRequired</members>
-        <members>pmtWriteOffPaidPayment</members>
         <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
@@ -1791,12 +1791,13 @@
         <members>pmtWizardToBeCreated</members>
         <members>pmtWizardWarning</members>
         <members>pmtWizardWeek</members>
+        <members>pmtWizardWriteOffInvalidRecords</members>
+        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
-        <members>pmtWizardWriteOffInvalidRecords</members>
-        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardYear</members>
+        <members>pmtWriteOffPaidPayment</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>

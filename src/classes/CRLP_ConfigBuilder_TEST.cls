@@ -97,25 +97,50 @@ private class CRLP_ConfigBuilder_TEST {
 
         // Construct our callback class
         CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId);
+        MockCallbackHandler handler = new MockCallbackHandler();
+        callback.callbackHandler = handler;
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+        Metadata.DeployResult dResult = new Metadata.DeployResult();
+        dResult.status = Metadata.DeployStatus.Succeeded;
 
         // Call the handleResult() method of our main Callback with our dummy context var
-        callback.handleResult(null, context);
+        callback.handleResult(dResult, context);
 
         Test.stopTest();
 
         // Verify that the callback method handler wrote a status update to the CustomizableRollupsSettings object
         Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         Map<String,String> result = (Map<String,String>)JSON.deserialize(crlpSettings.CMT_API_Status__c, Map<String,String>.class);
-        system.assertNotEquals(null, result.get(jobId), result);
+        System.assertNotEquals(null, result.get(jobId), result);
     }
 
     // DeployCallbackContext subclass for testing that returns myJobId
     public class TestingDeployCallbackContext extends Metadata.DeployCallbackContext {
         public override Id getCallbackJobId() {
             return '000000000122345';
+        }
+    }
+
+
+     /*************************************************************************************************************
+     * @description Callback Handler to test the result callback
+     **/
+    public class MockCallbackHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
+        public void performSuccessHandler(Map<String, Object> params, String status) {
+            updateStatus(status, true);
+        }
+
+        public void performErrorHandler(Map<String, Object> params, String status) {
+            updateStatus(status, false);
+        }
+
+        private void updateStatus(String status, Boolean isSuccess) {
+           Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+            crlpSettings.CMT_API_Status__c = status;
+            crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
+            upsert crlpSettings;
         }
     }
 }
