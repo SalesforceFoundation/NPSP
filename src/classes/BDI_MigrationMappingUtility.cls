@@ -55,13 +55,6 @@ public class BDI_MigrationMappingUtility {
         set;
     }
 
-    /**
-    * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
-    * Used later if we need to preserve the original mapping values during migration.
-    */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingPreservedConflictingMappings =
-        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-
     /*
     * @description List of custom metatadata type mappings pending deployment
     */
@@ -201,7 +194,6 @@ public class BDI_MigrationMappingUtility {
         pendingStandardMappings.clear();
         conflictingMappings.clear();
         pendingSpecialCasedMappings.clear();
-        pendingPreservedConflictingMappings.clear();
 
         return deploymentId;
     }
@@ -390,7 +382,7 @@ public class BDI_MigrationMappingUtility {
 
     /**
     * @description Method fills various field mapping lists that we later deploy as needed.
-    * pendingMappings, conflictingMappings, pendingStandardMappings, pendingPreservedConflictingMappings.
+    * pendingMappings, conflictingMappings, pendingStandardMappings.
     */
     public void startMigration() {
         List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
@@ -494,7 +486,6 @@ public class BDI_MigrationMappingUtility {
         pendingMappings.clear();
         pendingStandardMappings.clear();
         pendingSpecialCasedMappings.clear();
-        pendingPreservedConflictingMappings.clear();
 
         Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails =
                 helper.getAllMappedHelpTextFields();
@@ -538,13 +529,6 @@ public class BDI_MigrationMappingUtility {
                             existingDefaultFieldMapping);
 
                     if (invalidFieldMapping) {
-                        // Preserve original mapping
-                        pendingPreservedConflictingMappings.add(
-                            new BDI_HelpTextCMT.DataImportFieldMapping(
-                                existingDefaultFieldMapping,
-                                customFieldMappingSetExists == true ? MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME : DEFAULT_FIELD_MAPPING_SET_RECORD_NAME
-                            )
-                        );
 
                         // If existing help text mapping doesn't match our packaged cmt record, park the mapping
                         fieldMapping.expectedHelpTextValue =
