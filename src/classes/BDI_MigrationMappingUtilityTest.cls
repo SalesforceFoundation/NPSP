@@ -257,7 +257,7 @@ private class BDI_MigrationMappingUtilityTest {
                 Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
                 List<Object> listOfArgs) {
 
-            if (stubbedMethodName == 'getAllMappedHelpTextFields') {
+            if (stubbedMethodName == 'getAllMappingDetailsBySourceFieldName') {
                 BDI_HelpTextCMT.MappingDetail mapping1 = new BDI_HelpTextCMT.MappingDetail(
                         'Account1',
                         'test1_dataImportFieldLabel',
@@ -290,7 +290,7 @@ private class BDI_MigrationMappingUtilityTest {
                 };
             }
 
-            if (stubbedMethodName == 'getDefaultObjectMappings') {
+            if (stubbedMethodName == 'getObjectMappingsByDeveloperName') {
                 Data_Import_Object_Mapping__mdt objectMapping1 = new Data_Import_Object_Mapping__mdt(
                     Label='Account 1',
                     DeveloperName='Account1',

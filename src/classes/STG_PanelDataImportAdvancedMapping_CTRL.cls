@@ -68,7 +68,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Boolean used for toggle value in the visualforce page
     */
-    public Boolean advancedMappingEnabled {
+    public Boolean isAdvancedMappingEnabled {
         get {
             if (dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING) {
                 return true;

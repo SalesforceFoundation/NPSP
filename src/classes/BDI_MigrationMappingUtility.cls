@@ -359,13 +359,13 @@ public class BDI_MigrationMappingUtility {
     */
     public List<Metadata.CustomMetadata> updateCustomMetadataRecords(String fieldMappingSetName,
                                                                      List<BDI_HelpTextCMT.DataImportFieldMapping> fieldMappings) {
-        Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
+        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName =
             helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
         List<Metadata.CustomMetadata> updatedCMTs = new List<Metadata.CustomMetadata>();
 
         for (BDI_HelpTextCMT.DataImportFieldMapping fieldMapping : fieldMappings) {
             Data_Import_Field_Mapping__mdt existingDefaultFieldMapping =
-                    existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
+                fieldMappingsByFieldMappingSetDeveloperName.get(fieldMapping.sourceFieldAPIName);
 
             Metadata.CustomMetadata updatedCMT = fieldMapping.getMetadataRecord();
             List<String> nameParts = updatedCMT.fullName.split('\\.', 2);
@@ -408,50 +408,50 @@ public class BDI_MigrationMappingUtility {
     */
     public void handleGAUAndOpportunityContactRoleMappings() {
         // Collect our default GAU and Opportunity Contact Role metadata mappings
-        Map<String, Data_Import_Field_Mapping__mdt> specialCasedMappings =
+        Map<String, Data_Import_Field_Mapping__mdt> specialCasedMappingsByObjectAndFieldName =
             new Map<String, Data_Import_Field_Mapping__mdt>();
 
         addSpecialCasedMappingsToMap(
-            specialCasedMappings,
+            specialCasedMappingsByObjectAndFieldName,
             'Opportunity_Contact%',
             DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
 
         addSpecialCasedMappingsToMap(
-            specialCasedMappings,
+            specialCasedMappingsByObjectAndFieldName,
             'GAU%',
             DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
 
         // Collect any existing migrated GAU and Opportunity Contact Role metadata mappings
-        Map<String, Data_Import_Field_Mapping__mdt> migratedSpecialCasedMappings =
+        Map<String, Data_Import_Field_Mapping__mdt> migratedSpecialCasedMappingsByObjectAndFieldName =
             new Map<String, Data_Import_Field_Mapping__mdt>();
 
         addSpecialCasedMappingsToMap(
-            migratedSpecialCasedMappings,
+            migratedSpecialCasedMappingsByObjectAndFieldName,
             'GAU%',
             MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
         addSpecialCasedMappingsToMap(
-            migratedSpecialCasedMappings,
+            migratedSpecialCasedMappingsByObjectAndFieldName,
             'Opportunity_Contact%',
             MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
         // If any existing migrated mappings exist, remove them from collection
-        if (migratedSpecialCasedMappings.size() > 0) {
-            for (String key : specialCasedMappings.keySet()) {
-                Boolean exists = (migratedSpecialCasedMappings.get(key) != null);
+        if (migratedSpecialCasedMappingsByObjectAndFieldName.size() > 0) {
+            for (String key : specialCasedMappingsByObjectAndFieldName.keySet()) {
+                Boolean exists = (migratedSpecialCasedMappingsByObjectAndFieldName.get(key) != null);
                 if (exists) {
-                    specialCasedMappings.remove(key);
+                    specialCasedMappingsByObjectAndFieldName.remove(key);
                 }
             }
         }
 
         // Queue up any relevant GAU and/or Opportunity Contact mappings
-        if (specialCasedMappings.size() > 0) {
+        if (specialCasedMappingsByObjectAndFieldName.size() > 0) {
 
-            for (String key : specialCasedMappings.keySet()) {
+            for (String key : specialCasedMappingsByObjectAndFieldName.keySet()) {
                 BDI_HelpTextCMT.DataImportFieldMapping wrapper =
                     new BDI_HelpTextCMT.DataImportFieldMapping(
-                        specialCasedMappings.get(key),
+                        specialCasedMappingsByObjectAndFieldName.get(key),
                         MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
                     );
                 pendingSpecialCasedMappings.add(wrapper);
@@ -459,14 +459,17 @@ public class BDI_MigrationMappingUtility {
         }
     }
 
-    private void addSpecialCasedMappingsToMap(Map<String, Data_Import_Field_Mapping__mdt> specialCasedMappings,
+    private void addSpecialCasedMappingsToMap(Map<String, Data_Import_Field_Mapping__mdt> specialCasedMappingsByObjectAndFieldName,
                                               String fuzzyFieldMappingName,
                                               String fieldMappingSetName) {
-        Map<String, Data_Import_Field_Mapping__mdt> foundFieldMappings =
-            helper.getMappingByFuzzyNameAndFieldSetName(fuzzyFieldMappingName, fieldMappingSetName);
+        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByTargetObjectAndSourceFieldName =
+            helper.getFieldMappingsByTargetObjectAndSourceFieldName(fuzzyFieldMappingName, fieldMappingSetName);
 
-        if (foundFieldMappings != null && foundFieldMappings.size() > 0) {
-            specialCasedMappings.putAll(foundFieldMappings);
+        Boolean mappingsFound = fieldMappingsByTargetObjectAndSourceFieldName != null
+            && fieldMappingsByTargetObjectAndSourceFieldName.size() > 0;
+
+        if (mappingsFound) {
+            specialCasedMappingsByObjectAndFieldName.putAll(fieldMappingsByTargetObjectAndSourceFieldName);
         }
     }
 
@@ -483,28 +486,28 @@ public class BDI_MigrationMappingUtility {
         pendingStandardMappings.clear();
         pendingSpecialCasedMappings.clear();
 
-        Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails =
-                helper.getAllMappedHelpTextFields();
+        Map<String, BDI_HelpTextCMT.MappingDetail> mappingDetailsBySourceFieldName =
+                helper.getAllMappingDetailsBySourceFieldName();
 
-        Map<String, Data_Import_Object_Mapping__mdt> existingObjectMappings =
-                helper.getDefaultObjectMappings(helper.getDefaultObjectMappingSet().Id);
+        Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName =
+                helper.getObjectMappingsByDeveloperName(helper.getDefaultObjectMappingSet().Id);
 
-        Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
+        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName =
                 helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
 
-        for (String key : listHelpTextFieldDetails.keySet()) {
+        for (String key : mappingDetailsBySourceFieldName.keySet()) {
             BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = 
-                new BDI_HelpTextCMT.DataImportFieldMapping(key, listHelpTextFieldDetails.get(key));
+                new BDI_HelpTextCMT.DataImportFieldMapping(key, mappingDetailsBySourceFieldName.get(key));
 
             Data_Import_Object_Mapping__mdt existingDefaultObjectMapping = 
-                existingObjectMappings.get(fieldMapping.dataImportObjectName);
+                objectMappingsByDeveloperName.get(fieldMapping.dataImportObjectName);
 
             Boolean foundDefaultObjectMapping = (existingDefaultObjectMapping != null);
 
             if (foundDefaultObjectMapping) {
 
                 Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = 
-                    existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
+                    fieldMappingsByFieldMappingSetDeveloperName.get(fieldMapping.sourceFieldAPIName);
 
                 Boolean foundDefaultFieldMapping = (existingDefaultFieldMapping != null);
 
