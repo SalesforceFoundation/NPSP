@@ -56,12 +56,14 @@ public class BDI_MigrationMappingUtility {
 
     /**
     * @description Name of default packaged Field Mapping Set
+    * Set as static because it's used in the static method updateCustomSettings
     */
     public static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME =
         'Default_Field_Mapping_Set';
 
     /**
     * @description Name of custom Field Mapping Set
+    * Set as static because it's used in the static method updateCustomSettings
     */
     public static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME =
         'Migrated_Custom_Mapping_Set';
@@ -119,6 +121,7 @@ public class BDI_MigrationMappingUtility {
 
     /**
     * @description Boolean flag to determine if a custom field mapping set exists 
+    * Set as static because it's used in the static method updateCustomSettings
     */
     public static Boolean customFieldMappingSetExists {
         get {
@@ -203,6 +206,9 @@ public class BDI_MigrationMappingUtility {
      * @param fieldMappingMethod String that determines what data import field mapping method
      * to use (i.e. help text, custom metadata)
      * @param status Deployment status
+     *
+     * Set as static because it's used in a couple different contexts, inner class DeploymentCallback and
+     * STG_PanelDataImportAdvancedMapping_CTRL
      */
     public static Data_Import_Settings__c updateCustomSettings(String fieldMappingMethod, String status) {
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
