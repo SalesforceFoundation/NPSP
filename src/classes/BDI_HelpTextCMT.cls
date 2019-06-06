@@ -69,7 +69,6 @@ public class BDI_HelpTextCMT {
             customMd.label = this.label.left(40);
             this.recordName = generateRecordName(this.label, false, '', '');
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
-            customMd.protected_x = IS_PROTECTED;
 
             Map<String, Object> fieldValues = new Map<String, Object>{
                 'Data_Import_Object_Mapping_Set__c' => this.dataImportObjectMappingSetRecordName
