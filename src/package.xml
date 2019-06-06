@@ -1409,14 +1409,6 @@
         <members>alloUnallocated</members>
         <members>bdiAccountCustomIdError</members>
         <members>bdiAdvancedMapping</members>
-        <members>bdiAdvancedMappingCustomHelpTextLabel</members>
-        <members>bdiAdvancedMappingDIFieldLabel</members>
-        <members>bdiAdvancedMappingDiscardButton</members>
-        <members>bdiAdvancedMappingExpectedHelpTextLabel</members>
-        <members>bdiAdvancedMappingKeepButton</members>
-        <members>bdiAdvancedMappingPromptBody</members>
-        <members>bdiAdvancedMappingPromptTitle</members>
-        <members>bdiAdvancedMappingTableHeader</members>
         <members>bdiBatchException</members>
         <members>bdiBehaviorBestMatchOrCreate</members>
         <members>bdiBehaviorDoNotMatch</members>

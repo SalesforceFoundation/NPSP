@@ -70,7 +70,8 @@ private class BDI_MigrationMappingUtilityTest {
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
         util.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
 
-        util.enqueueNewFieldMappings();
+        // Add new mappings to queuedMetadataTypesForDeploy
+        util.handleNewMappings();
 
         Test.startTest();
 
@@ -80,7 +81,7 @@ private class BDI_MigrationMappingUtilityTest {
         util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
-        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback();
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
@@ -113,17 +114,21 @@ private class BDI_MigrationMappingUtilityTest {
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
         util.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
 
-        util.enqueueCustomizedFieldMappingSetAndFields();
+        util.startMigration();
+
+        util.handleNewMappings();
+        util.handleOverwriteConflictingMappings();
+        util.handleStandardMappings();
 
         Test.startTest();
 
         // Convert mappings to Custom Metadata and start deployment
-        System.assertEquals(4, util.queuedMetadataTypesForDeploy.size());
+        System.assertEquals(3, util.queuedMetadataTypesForDeploy.size());
 
         util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
-        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback();
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
@@ -154,7 +159,7 @@ private class BDI_MigrationMappingUtilityTest {
         util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
-        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback();
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
@@ -185,7 +190,7 @@ private class BDI_MigrationMappingUtilityTest {
         util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
-        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback();
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
@@ -221,7 +226,7 @@ private class BDI_MigrationMappingUtilityTest {
         util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
-        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback();
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
@@ -241,11 +246,18 @@ private class BDI_MigrationMappingUtilityTest {
 
     private class BDI_MigrationMappingHelperMock implements System.StubProvider {
 
+        private Integer startingNumber = 1;
+        private String getFakeId(Schema.SObjectType sObjectTypeSchema) {
+            String result = String.valueOf(startingNumber++);
+            return sObjectTypeSchema.getDescribe().getKeyPrefix()
+                + '0'.repeat(12-result.length()) + result;
+        }
+
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
                 Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
                 List<Object> listOfArgs) {
 
-            if (stubbedMethodName == 'getAllMappedHelpTextFields') {
+            if (stubbedMethodName == 'getAllMappingDetailsBySourceFieldName') {
                 BDI_HelpTextCMT.MappingDetail mapping1 = new BDI_HelpTextCMT.MappingDetail(
                         'Account1',
                         'test1_dataImportFieldLabel',
@@ -278,7 +290,7 @@ private class BDI_MigrationMappingUtilityTest {
                 };
             }
 
-            if (stubbedMethodName == 'getDefaultObjectMappings') {
+            if (stubbedMethodName == 'getObjectMappingsByDeveloperName') {
                 Data_Import_Object_Mapping__mdt objectMapping1 = new Data_Import_Object_Mapping__mdt(
                     Label='Account 1',
                     DeveloperName='Account1',
@@ -301,19 +313,49 @@ private class BDI_MigrationMappingUtilityTest {
                 };
             }
 
-            if (stubbedMethodName == 'getFieldMappingsByDeveloperName') {
+            if (stubbedMethodName == 'getFieldMappingsByFieldMappingSetDeveloperName') {
+                Data_Import_Field_Mapping_Set__mdt fieldMappingSet =
+                    new Data_Import_Field_Mapping_Set__mdt(
+                        Id=getFakeId(Schema.Data_Import_Field_Mapping_Set__mdt.SObjectType),
+                        DeveloperName='Default_Field_Mapping_Set',
+                        MasterLabel='Default Field Mapping Set',
+                        Label='Default Field Mapping Set'
+                    );
+
+                Data_Import_Object_Mapping__mdt objectMapping =
+                    new Data_Import_Object_Mapping__mdt(
+                        Id=getFakeId(Schema.Data_Import_Object_Mapping__mdt.SObjectType),
+                        DeveloperName='Account1',
+                        MasterLabel='Account 1',
+                        Label='Account 1',
+                        Object_API_Name__c='Account'
+                    );
+
+                Data_Import_Object_Mapping__mdt objectMapping2 =
+                    new Data_Import_Object_Mapping__mdt(
+                        Id=getFakeId(Schema.Data_Import_Object_Mapping__mdt.SObjectType),
+                        DeveloperName='Account2',
+                        MasterLabel='Account 2',
+                        Label='Account 2',
+                        Object_API_Name__c='Account'
+                    );
+
                 Data_Import_Field_Mapping__mdt fieldMapping1 = new Data_Import_Field_Mapping__mdt(
                     Label='Account 1 City',
                     DeveloperName='Account_1_City',
                     Source_Field_API_Name__c='npsp__Account1_City__c',
-                    Target_Field_API_Name__c='BillingCity'
+                    Target_Field_API_Name__c='BillingCity',
+                    Data_Import_Field_Mapping_Set__c=fieldMappingSet.Id,
+                    Target_Object_Mapping__c=objectMapping.Id
                 );
 
                 Data_Import_Field_Mapping__mdt fieldMapping2 = new Data_Import_Field_Mapping__mdt(
                     Label='Account 2 City',
                     DeveloperName='Account_2_City',
                     Source_Field_API_Name__c='npsp__Account2_City__c',
-                    Target_Field_API_Name__c='BillingCity'
+                    Target_Field_API_Name__c='BillingCity',
+                    Data_Import_Field_Mapping_Set__c=fieldMappingSet.Id,
+                    Target_Object_Mapping__c=objectMapping2.Id
                 );
 
                 return new Map<String, Data_Import_Field_Mapping__mdt>{

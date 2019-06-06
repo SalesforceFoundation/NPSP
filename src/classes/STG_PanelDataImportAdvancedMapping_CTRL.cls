@@ -36,43 +36,6 @@
 */
 public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Panel {
 
-    /*********************************************************************************************************
-    * @description Returns the string Id of the Data Import Mapping panel
-    */
-    public override string idPanel() { return 'idPanelDataImportMapping'; }
-
-    /**
-    * @description Name of default packaged Field Mapping Set
-    */
-    private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME =
-        'Default_Field_Mapping_Set';
-
-    /*******************************************************************************************************
-    * @description Value for Data Import custom settings Field Mapping Method
-    */
-    private static final String DATA_IMPORT_FIELD_MAPPING =
-        'Data Import Field Mapping';
-
-    /*******************************************************************************************************
-    * @description Value for Data Import custom settings Field Mapping Method
-    */
-    private static final String HELP_TEXT =
-        'Help Text';
-
-    /*******************************************************************************************************
-    * @description String to determine value of Data Import custom settings field Default Data Import Field
-    * Mapping Set
-    */
-    private static final String DEFAULT_MAPPING =
-        'default';
-
-    /*******************************************************************************************************
-    * @description String to determine value of Data Import custom settings field Default Data Import Field
-    * Mapping Set
-    */
-    private static final String CUSTOM_MAPPING =
-        'custom';
-
     /*******************************************************************************************************
     * @description is the panel currently Polling for deployment results
     */
@@ -86,12 +49,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         }
         private set;
     }
-
-    /*******************************************************************************************************
-    * @description is there a conflict between the org's help text mappings and the standard custom metadata
-    * type mappings
-    */
-    public Boolean isConflict { get; set; }
 
     /*******************************************************************************************************
     * @description Maximum timeout for page polling, 12 = 1 minute
@@ -109,11 +66,14 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public Data_Import_Settings__c dataImportSettings { get; set; }
 
     /*******************************************************************************************************
-    * @description Return boolean for the current field mapping method
+    * @description Boolean used for toggle value in the visualforce page
     */
-    public Boolean isDataImportFieldMapping {
+    public Boolean isAdvancedMappingEnabled {
         get {
-            return dataImportSettings.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false;
+            if (dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING) {
+                return true;
+            }
+            return false;
         }
         set;
     }
@@ -131,12 +91,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Custom metadata deployment result
     */
-    public Metadata.DeployResult deployment { get; set; }
+    public Metadata.DeployResult deploymentResult { get; set; }
 
     /*******************************************************************************************************
     * @description Boolean that determines if the toggle should be disabled
     */
-    public Boolean toggleDisabled { get; set; }
+    public Boolean hasDeploymentInProgress { get; set; }
 
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
@@ -149,7 +109,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public STG_PanelDataImportAdvancedMapping_CTRL() {
         this.migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
         this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        this.deployment = checkDeploymentStatus();
+        this.deploymentResult = checkDeploymentStatus();
     }
 
     /*******************************************************************************************************
@@ -159,63 +119,57 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public PageReference enableDataImportFieldMapping() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
-        deployment = checkDeploymentStatus();
+        // Check the deployment status and set hasDeploymentInProgress value
+        deploymentResult = checkDeploymentStatus();
 
-        if (toggleDisabled == false || toggleDisabled == null) {
+        if (hasDeploymentInProgress == true) {
+            throwMessage(ApexPages.Severity.WARNING, 'There is a deployment currently in progess.');
+        } else {
             Savepoint sp = Database.setSavepoint();
             try {
                 isPolling = true;
 
-                // Check to see if we have any existing help text mappings that conflict with our default cmt mappings
-                migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
-
-                if (!migrationMappingUtility.conflictingMappings.isEmpty()) {
-                    isConflict = true;
-                    isPolling = false;
+                if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
+                    // Compare help text mappings against migrated custom field mapping set
+                    migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(
+                        BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
+                    );
                 } else {
-
-                    // Check if we have any new help text mappings and enqueue
-                    if (migrationMappingUtility.pendingMappings.size() > 0) {
-                        migrationMappingUtility.enqueueNewFieldMappings();
-                    }
-
-                    if (migrationMappingUtility.queuedMetadataTypesForDeploy.isEmpty()) {
-                        dataImportSettings =
-                            BDI_MigrationMappingUtility.upsertCustomSettings(
-                                DATA_IMPORT_FIELD_MAPPING,
-                                DEFAULT_MAPPING,
-                                String.valueOf(Metadata.DeployStatus.Succeeded)
-                            );
-                        ApexPages.addMessage(
-                            new ApexPages.Message(
-                                ApexPages.Severity.CONFIRM,
-                                Label.stgDeploymentCustomMetadataMappingEnabled
-                            )
-                        );
-                    } else {
-                        Id deploymentId = migrationMappingUtility.deployCustomMetadata();
-                        saveDeploymentId(deploymentId);
-                    }
+                    // Compare help text mappings against default field mapping set
+                    migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(
+                        BDI_MigrationMappingUtility.DEFAULT_FIELD_MAPPING_SET_RECORD_NAME
+                    );
                 }
+
+                // Start the migration, collect help text mappings, and compare against existing cmt mappings
+                migrationMappingUtility.startMigration();
+
+                // Add standard field mappings
+                migrationMappingUtility.handleStandardMappings();
+
+                // Add net new field mappings
+                migrationMappingUtility.handleNewMappings();
+
+                // Add special cased mappings (GAU and Opportunity Contact Role)
+                migrationMappingUtility.handleSpecialCasedMappings();
+
+                // Add conflicting mappings
+                migrationMappingUtility.handleOverwriteConflictingMappings();
+
+                Id deploymentId = migrationMappingUtility.deployCustomMetadata();
+                saveDeploymentId(deploymentId);
 
             } catch (Exception e) {
                 Database.rollback(sp);
                 ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+                throwMessage(ApexPages.Severity.ERROR, e.getMessage());
 
-                BDI_MigrationMappingUtility.upsertCustomSettings(
-                    HELP_TEXT,
-                    DEFAULT_MAPPING,
+                isPolling = false;
+                BDI_MigrationMappingUtility.updateCustomSettings(
+                    BDI_MigrationMappingUtility.HELP_TEXT,
                     e.getMessage()
                 );
             }
-        } else {
-            ApexPages.addMessage(
-                new ApexPages.Message(
-                    ApexPages.Severity.WARNING,
-                    'There is a deployment currently in progess.'
-                )
-            );
         }
         return null;
     }
@@ -229,84 +183,18 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
         try {
             dataImportSettings =
-                BDI_MigrationMappingUtility.upsertCustomSettings(
-                    HELP_TEXT,
-                    DEFAULT_MAPPING,
+                BDI_MigrationMappingUtility.updateCustomSettings(
+                    BDI_MigrationMappingUtility.HELP_TEXT,
                     String.valueOf(Metadata.DeployStatus.Succeeded)
                 );
-            ApexPages.addMessage(
-                new ApexPages.Message(
-                    ApexPages.Severity.CONFIRM,
-                    Label.stgDeploymentHelpTextMappingEnabled
-                )
-            );
+            throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            throwMessage(ApexPages.Severity.ERROR, e.getMessage());
 
-            BDI_MigrationMappingUtility.upsertCustomSettings(
-                HELP_TEXT,
-                DEFAULT_MAPPING,
-                e.getMessage()
-            );
-        }
-        return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Action Method to discard help text Conflicts and continue to deploy
-    * @return void
-    */
-    public PageReference keepConflicts() {
-        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
-
-        Savepoint sp = Database.setSavepoint();
-        try {
-            isConflict = false;
-            isPolling = true;
-
-            migrationMappingUtility.enqueueCustomizedFieldMappingSetAndFields();
-            Id deploymentId = migrationMappingUtility.deployCustomMetadata();
-            saveDeploymentId(deploymentId);
-
-        } catch (Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-
-            BDI_MigrationMappingUtility.upsertCustomSettings(
-                HELP_TEXT,
-                DEFAULT_MAPPING,
-                e.getMessage()
-            );
-        }
-        return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Action Method to discard help text Conflicts and continue to deploy
-    * @return void
-    */
-    public PageReference discardConflicts() {
-        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
-
-        Savepoint sp = Database.setSavepoint();
-        try {
-            isConflict = false;
-            isPolling = true;
-
-            migrationMappingUtility.enqueueNewFieldMappings();
-            Id deploymentId = migrationMappingUtility.deployCustomMetadata();
-            saveDeploymentId(deploymentId);
-
-        } catch (Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-
-            BDI_MigrationMappingUtility.upsertCustomSettings(
-                HELP_TEXT,
-                DEFAULT_MAPPING,
+            isPolling = false;
+            BDI_MigrationMappingUtility.updateCustomSettings(
+                BDI_MigrationMappingUtility.HELP_TEXT,
                 e.getMessage()
             );
         }
@@ -337,46 +225,36 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public PageReference startPolling() {
         timeoutCount++;
 
-        deployment = checkDeploymentStatus();
+        deploymentResult = checkDeploymentStatus();
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
-        if (deployment != null) {
-            Boolean isSuccess = deployment.status == Metadata.DeployStatus.Succeeded
-                && dataImportSettings.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING;
+        if (deploymentResult != null) {
+            // We had a migration that contained CMT records to insert
+            Boolean isSuccess = deploymentResult.status == Metadata.DeployStatus.Succeeded
+                && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
 
             if (isSuccess) {
                 isPolling = false;
-                ApexPages.addMessage(
-                    new ApexPages.Message(
-                        ApexPages.Severity.CONFIRM,
-                        Label.stgDeploymentCustomMetadataMappingEnabled
-                    )
-                );
-            } else if (deployment.status == Metadata.DeployStatus.FAILED) {
+                throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
+            } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain));
+                throwMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
             }
 
-        } else if (deployment == null && dataImportSettings.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING) {
+        } else if (deploymentResult == null
+                   && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING) {
+            // We had a migration that didn't contain CMT records to insert
+            // DeploymentContainer was empty which means we're using our standard field mapping set
+            // Org had no conflicting field mappings nor any net new field mappings in their Data Import help text
             isPolling = false;
-            ApexPages.addMessage(
-                new ApexPages.Message(
-                    ApexPages.Severity.CONFIRM,
-                    Label.stgDeploymentCustomMetadataMappingEnabled
-                )
-            );
+            throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
         }
 
         if (timeoutCount > MAX_TIME_OUT) {
-            // Reset instance of migration mapping utility
+            // We timed out, reset instance of migration mapping utility
             migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
             isPolling = false;
-            ApexPages.addMessage(
-                new ApexPages.Message(
-                    ApexPages.Severity.WARNING,
-                    Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain
-                )
-            );
+            throwMessage(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
             return null;
         }
 
@@ -384,20 +262,27 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
-    * @description Method checks to see if we have a saved custom metadata deployment id,
-    * inspects the deployment status, and sets the page's toggle status
+    * @description Checks to see if we have a saved custom metadata deployment id,
+    * inspects the deployment status, and sets the hasDeploymentInProgress boolean
     * @return Metadata.DeployResult
     */
     private Metadata.DeployResult checkDeploymentStatus() {
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
         if (dataImportSettings.CMT_Deployment_ID__c != null) {
-            String response = migrationMappingUtility.checkDeployStatus(dataImportSettings.CMT_Deployment_ID__c);
+            String response = migrationMappingUtility.getDeploymentResult(dataImportSettings.CMT_Deployment_ID__c);
             DeployResultWrapper responseWrapper =
                 (DeployResultWrapper)JSON.deserialize(response, DeployResultWrapper.class);
 
             if (responseWrapper != null && responseWrapper.deployResult != null) {
-                updateToggleStatus(responseWrapper.deployResult.status);
+                Metadata.DeployStatus deploymentStatus = responseWrapper.deployResult.status;
+
+                // Set hasDeploymentInProgress boolean
+                if (deploymentStatus != null) {
+                    hasDeploymentInProgress = deploymentStatus == Metadata.DeployStatus.INPROGRESS
+                        || deploymentStatus == Metadata.DeployStatus.PENDING
+                        || deploymentStatus == Metadata.DeployStatus.CANCELING;
+                }
             }
 
             return responseWrapper.deployResult;
@@ -406,23 +291,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
-    * @description Sets toggleDisabled boolean, should be disabled if we have an active deployment.
-    * @return Metadata.DeployStatus
+    * @description Wrapper for Metadata.DeployResult
     */
-    private void updateToggleStatus(Metadata.DeployStatus deploymentStatus) {
-        if (deploymentStatus != null) {
-            Boolean disabled = deploymentStatus == Metadata.DeployStatus.INPROGRESS
-                || deploymentStatus == Metadata.DeployStatus.PENDING
-                || deploymentStatus == Metadata.DeployStatus.CANCELING;
-
-            if (disabled) {
-                toggleDisabled = true;
-            } else {
-                toggleDisabled = false;
-            }
-        } else {
-            toggleDisabled = false;
-        }
+    private void throwMessage(ApexPages.Severity severity, String message) {
+        ApexPages.addMessage(new ApexPages.Message(severity, message));
     }
 
     /*******************************************************************************************************

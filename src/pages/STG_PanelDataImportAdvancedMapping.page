@@ -17,7 +17,7 @@
             <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
 
             <!-- BEGIN INTRO TEXT AND TOGGLE -->
-            <div class="{!IF(OR(isConflict, isPolling), 'slds-hide', '')}">
+            <div class="{!IF(isPolling, 'slds-hide', '')}">
                 <div class="slds-grid">
                     <apex:outputPanel>
                         <div class="slds-m-vertical_medium">
@@ -27,61 +27,14 @@
                                 styleClass="slds-text-body_small" />
                         </div>
 
-                        <div class="slds-m-vertical_medium {!IF(deployment == null, 'slds-hide', '')}">
-                            <article class="slds-card">
-                                <div class="slds-card__header slds-grid">
-                                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                                        <div class="slds-media__body">
-                                            <h2 class="slds-card__header-title">
-                                                <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Accounts">
-                                                    <span>Previous Deployment</span>
-                                                </a>
-                                            </h2>
-                                        </div>
-                                    </header>
-                                </div>
-                                <div class="slds-card__body slds-card__body_inner slds-grid slds-wrap">
-                                    <div class="slds-size_1-of-1">
-                                        <article class="slds-tile">
-                                            <div class="slds-tile__detail">
-                                                <dl class="slds-list_horizontal slds-wrap">
-                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Deployment ID">
-                                                        Deployment ID:
-                                                    </dt>
-                                                    <dd class="slds-item_detail slds-truncate" title="{!deployment.id}">
-                                                        {!deployment.id}
-                                                    </dd>
-                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Status">
-                                                        Status:
-                                                    </dt>
-                                                    <dd class="slds-item_detail slds-truncate" title="{!deployment.status}">
-                                                        {!deployment.status}
-                                                    </dd>
-                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Created Date">
-                                                        Created Date:
-                                                    </dt>
-                                                    <dd class="slds-item_detail slds-truncate" title="{!deployment.createdDate}">
-                                                        <apex:outputText value="{0, date, MMMM d','  yyyy hh:mm:ss}">
-                                                            <apex:param value="{!deployment.createdDate}" />
-                                                        </apex:outputText>
-                                                    </dd>
-                                                </dl>
-                                            </div>
-                                        </article>
-                                    </div>
-                                </div>
-                                <footer class="slds-card__footer"></footer>
-                            </article>
-                        </div>
-
                         <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small" style="width: fit-content;">
                             <span class="slds-form-element__label slds-m-bottom_none">{!$Label.bdiAdvancedMapping}</span>
                             <apex:inputCheckbox onClick="toggle(); return false;"
                                                 id="enableDIFMToggle"
                                                 html-name="checkbox-toggle-2"
-                                                value="{!isDataImportFieldMapping}"
+                                                value="{!isAdvancedMappingEnabled}"
                                                 html-aria-describedby="checkbox-toggle-2"
-                                                disabled="{!toggleDisabled}"/>
+                                                disabled="{!hasDeploymentInProgress}"/>
                             <span class="slds-checkbox_faux_container" aria-live="assertive">
                                 <span class="slds-checkbox_faux"></span>
                                 <span class="slds-checkbox_on">Enabled</span>
@@ -89,46 +42,6 @@
                             </span>
                         </label>
                     </apex:outputPanel>
-                </div>
-            </div>
-            <!-- END -->
-
-            <!-- BEGIN CONFLICT TEXT -->
-            <div class="{!IF(isConflict, '', 'slds-hide')}">
-                <div class="slds-grid slds-m-top_small {!IF(!isPolling, '', 'slds-hide')}">
-                    <div class="slds-size_1-of-1">
-                        <div class="slds-grid slds-wrap">
-                            <div class="slds-size_1-of-1 slds-m-bottom_small">
-                                <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                                    <div class="slds-media__figure">
-                                        <span class="slds-icon_container slds-icon-utility-warning slds-no-flex slds-align-top" title="Description of icon when needed">
-                                            <svg class="slds-icon" aria-hidden="true" viewBox="0 0 24 24">
-                                                <path style="fill: #514f4d;" d="M23.7 19.6L13.2 2.5c-.6-.9-1.8-.9-2.4 0L.3 19.6c-.7 1.1 0 2.6 1.1 2.6h21.2c1.1 0 1.8-1.5 1.1-2.6zM12 18.5c-.8 0-1.4-.6-1.4-1.4s.6-1.4 1.4-1.4 1.4.6 1.4 1.4-.6 1.4-1.4 1.4zm1.4-4.2c0 .3-.2.5-.5.5h-1.8c-.3 0-.5-.2-.5-.5v-6c0-.3.2-.5.5-.5h1.8c.3 0 .5.2.5.5v6z"
-                                                />
-                                            </svg>
-                                            <span class="slds-assistive-text">warning</span>
-                                        </span>
-                                    </div>
-                                    <div class="slds-media__body">
-                                        <h2 class="slds-card__header-title">
-                                            {!$Label.bdiAdvancedMappingPromptTitle}
-                                        </h2>
-                                    </div>
-                                </header>
-                            </div>
-                            <div class="slds-size_1-of-1 slds-m-vertical_small">
-                                <p>{!$Label.bdiAdvancedMappingPromptBody}</p>
-                            </div>
-                            <div class="slds-size_1-of-1 slds-m-top_small slds-m-bottom_large">
-                                <button class="slds-button slds-button_brand" onclick="handleKeepConflicts();return false;">
-                                    {!$Label.bdiAdvancedMappingKeepButton}
-                                </button>
-                                <button class="slds-button slds-button_text-destructive" onclick="handleDiscardConflicts();return false;">
-                                    {!$Label.bdiAdvancedMappingDiscardButton}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <!-- END -->
@@ -142,57 +55,6 @@
                 </div>
             </div>
             <!-- END POLLING MESSAGE -->
-
-            <!-- CONFLICTS DATATABLE -->
-            <div class="slds-grid slds-wrap slds-m-top_large {!IF(isPolling,'slds-hide','')}">
-                <div class="slds-size_1-of-1 {!IF(migrationMappingUtility.conflictingMappings.size > 0,'','slds-hide')}">
-                    <div class="slds-text-heading_medium slds-text-heading_medium__extension slds-p-bottom_medium">
-                        {!$Label.bdiAdvancedMappingTableHeader}
-                    </div>
-
-                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
-                        <thead>
-                            <tr class="slds-line-height_reset">
-                                <th class="" scope="col">
-                                    <div class="slds-truncate" title="{!$Label.bdiAdvancedMappingDIFieldLabel}">
-                                        {!$Label.bdiAdvancedMappingDIFieldLabel}
-                                    </div>
-                                </th>
-                                <th class="" scope="col">
-                                    <div class="slds-truncate" title="{!$Label.bdiAdvancedMappingExpectedHelpTextLabel}">
-                                        {!$Label.bdiAdvancedMappingExpectedHelpTextLabel}
-                                    </div>
-                                </th>
-                                <th class="" scope="col">
-                                    <div class="slds-truncate" title="{!$Label.bdiAdvancedMappingCustomHelpTextLabel}">
-                                        {!$Label.bdiAdvancedMappingCustomHelpTextLabel}
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <apex:repeat value="{!migrationMappingUtility.conflictingMappings}" var="cmt">
-                                <tr class="slds-hint-parent">
-                                    <th data-label="{!cmt.label}" scope="row">
-                                        <div class="slds-truncate" title="{!cmt.label}">{!cmt.label}</div>
-                                    </th>
-                                    <td data-label="{!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' ,cmt.dataImportObjectName + '.' + cmt.expectedHelpTextValue)}">
-                                        <div class="slds-truncate" title="{!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' , cmt.expectedHelpTextValue)}">
-                                            {!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' , cmt.expectedHelpTextValue)}
-                                        </div>
-                                    </td>
-                                    <td data-label="{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}">
-                                        <div class="slds-truncate" title="{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}">
-                                            {!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}
-                                        </div>
-                                    </td>
-                                </tr>
-                            </apex:repeat>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- END CONFLICTS DATATABLE -->
 
             <apex:actionPoller
                 action="{!startPolling}"
@@ -211,16 +73,6 @@
                 action="{!disableDataImportFieldMapping}"
                 reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
                 status="statusLoad" />
-            <apex:actionFunction
-                name="keepConflicts"
-                action="{!keepConflicts}"
-                reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
-                status="statusLoad" />
-            <apex:actionFunction
-                name="discardConflicts"
-                action="{!discardConflicts}"
-                reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
-                status="statusLoad" />
 
         </apex:form>
 
@@ -231,14 +83,6 @@
                 } else {
                     disableDataImportFieldMapping();
                 }
-            }
-
-            function handleDiscardConflicts() {
-                discardConflicts();
-            }
-
-            function handleKeepConflicts() {
-                keepConflicts();
             }
         </script>
 
