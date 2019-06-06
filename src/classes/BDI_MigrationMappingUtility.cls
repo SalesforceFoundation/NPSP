@@ -117,7 +117,7 @@ public class BDI_MigrationMappingUtility {
     /**
     * @description Boolean flag to determine if a custom field mapping set exists 
     */
-    public Boolean customFieldMappingSetExists {
+    public static Boolean customFieldMappingSetExists {
         get {
             List<Data_Import_Field_Mapping_Set__mdt> fieldMappingSets =
                 [SELECT Id
@@ -181,7 +181,7 @@ public class BDI_MigrationMappingUtility {
                     );
                 }
             } else {
-                upsertCustomSettings(DATA_IMPORT_FIELD_MAPPING, String.valueOf(Metadata.DeployStatus.SUCCEEDED));
+                BDI_MigrationMappingUtility.updateCustomSettings(DATA_IMPORT_FIELD_MAPPING, String.valueOf(Metadata.DeployStatus.SUCCEEDED));
             }
         } catch (Exception e) {
             throw new DeploymentException('There was an error attempting to deploy the custom metadata records. ' + e.getMessage());
@@ -201,11 +201,11 @@ public class BDI_MigrationMappingUtility {
      * to use (i.e. help text, custom metadata)
      * @param status Deployment status
      */
-    public Data_Import_Settings__c upsertCustomSettings(String fieldMappingMethod, String status) {
+    public static Data_Import_Settings__c updateCustomSettings(String fieldMappingMethod, String status) {
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         dataImportSettings.Field_Mapping_Method__c = fieldMappingMethod;
 
-        if (customFieldMappingSetExists == true) {
+        if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
         } else {
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
@@ -232,8 +232,7 @@ public class BDI_MigrationMappingUtility {
      * class is used to handle the async response from the call to Metadata.Operations.enqueueDeployment().
      */
     public class DeploymentCallback implements Metadata.DeployCallback {
-        BDI_MigrationMappingUtility migrationMappingUtility =
-            new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
+
         /**
          * @description Method called by salesforce with the result of the Metadata deployment operation status.
          * This will write the status of the deployment to Data Import custom settings
@@ -242,7 +241,7 @@ public class BDI_MigrationMappingUtility {
 
             if (result != null && result.status == Metadata.DeployStatus.SUCCEEDED) {
                 // Deployment was successful
-                migrationMappingUtility.upsertCustomSettings(DATA_IMPORT_FIELD_MAPPING, String.valueOf(result.status));
+                BDI_MigrationMappingUtility.updateCustomSettings(DATA_IMPORT_FIELD_MAPPING, String.valueOf(result.status));
             } else if (result != null && result.status != Metadata.DeployStatus.SUCCEEDED) {
                 // Deployment was not successful
                 String errMsg = '';
@@ -251,13 +250,13 @@ public class BDI_MigrationMappingUtility {
                             '> ' + result.details.componentFailures[n].problem;
                 }
 
-                migrationMappingUtility.upsertCustomSettings(HELP_TEXT, errMsg);
+                BDI_MigrationMappingUtility.updateCustomSettings(HELP_TEXT, errMsg);
                 if (!Test.isRunningTest()) {
                     throw new DeploymentException('There was an error attempting to deploy custom metadata.');
                 }
             } else {
                 // Deployment was not successful and result is null
-                migrationMappingUtility.upsertCustomSettings(HELP_TEXT, 'Unknown error');
+                BDI_MigrationMappingUtility.updateCustomSettings(HELP_TEXT, 'Unknown error');
                 if (!Test.isRunningTest()) {
                     throw new DeploymentException('There was an error attempting to deploy custom metadata.');
                 }
@@ -270,7 +269,7 @@ public class BDI_MigrationMappingUtility {
     * records, and adds them to list of custom metadata types (queuedMetadataTypesForDeploy)
     */
     public void handleStandardMappings() {
-        if (customFieldMappingSetExists == false) {
+        if (BDI_MigrationMappingUtility.customFieldMappingSetExists == false) {
             enqueueFieldMappings(pendingStandardMappings);
         }
     }
@@ -332,7 +331,7 @@ public class BDI_MigrationMappingUtility {
             }
 
             String fieldMappingSetToCompareAgainst =
-                (customFieldMappingSetExists == true ? MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME : DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+                (BDI_MigrationMappingUtility.customFieldMappingSetExists == true ? MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME : DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
 
             List<Metadata.CustomMetadata> updatedCMTs = updateCustomMetadataRecords(
                 fieldMappingSetToCompareAgainst,
@@ -377,7 +376,7 @@ public class BDI_MigrationMappingUtility {
         List<BDI_HelpTextCMT.DataImportFieldMapping> allMappings =
             new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
-        if (customFieldMappingSetExists == true) {
+        if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
             buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
         } else {
             buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);

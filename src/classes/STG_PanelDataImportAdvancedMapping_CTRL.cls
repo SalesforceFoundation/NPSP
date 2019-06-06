@@ -171,7 +171,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 // This method will populate the lists pendingMappings, pendingStandardMappings, and conflictingMappings
                 //migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
 
-                if (migrationMappingUtility.customFieldMappingSetExists == true) {
+                if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
                     // Custom field mapping set exists
                     migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
                 } else {
@@ -206,7 +206,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
 
                 isPolling = false;
-                migrationMappingUtility.upsertCustomSettings(
+                BDI_MigrationMappingUtility.updateCustomSettings(
                     HELP_TEXT,
                     e.getMessage()
                 );
@@ -231,7 +231,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
         try {
             dataImportSettings =
-                migrationMappingUtility.upsertCustomSettings(
+                BDI_MigrationMappingUtility.updateCustomSettings(
                     HELP_TEXT,
                     String.valueOf(Metadata.DeployStatus.Succeeded)
                 );
@@ -246,7 +246,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
 
             isPolling = false;
-            migrationMappingUtility.upsertCustomSettings(
+            BDI_MigrationMappingUtility.updateCustomSettings(
                 HELP_TEXT,
                 e.getMessage()
             );
