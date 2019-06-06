@@ -44,7 +44,9 @@ public class BDI_HelpTextCMT {
         Data_Import_Object_Mapping_set
     }
 
-    /** @description Default value for the Protected_x property when inserting new Custom Metadata Type records */
+    /**
+     * @description Default value for the Protected_x property when inserting new Custom Metadata Type records
+     */
     private static final Boolean IS_PROTECTED = false;
 
     /**
@@ -69,6 +71,7 @@ public class BDI_HelpTextCMT {
             customMd.label = this.label.left(40);
             this.recordName = generateRecordName(this.label, false, '', '');
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
+            customMd.protected_x = IS_PROTECTED;
 
             Map<String, Object> fieldValues = new Map<String, Object>{
                 'Data_Import_Object_Mapping_Set__c' => this.dataImportObjectMappingSetRecordName
