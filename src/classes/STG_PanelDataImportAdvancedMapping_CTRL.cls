@@ -96,7 +96,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Boolean that determines if the toggle should be disabled
     */
-    public Boolean deploymentInProgress { get; set; }
+    public Boolean hasDeploymentInProgress { get; set; }
 
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
@@ -119,10 +119,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public PageReference enableDataImportFieldMapping() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
-        // Check the deployment status and set deploymentInProgress value
+        // Check the deployment status and set hasDeploymentInProgress value
         deploymentResult = checkDeploymentStatus();
 
-        if (deploymentInProgress == false) {
+        if (hasDeploymentInProgress == false) {
             Savepoint sp = Database.setSavepoint();
             try {
                 isPolling = true;
@@ -288,7 +288,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
     /*******************************************************************************************************
     * @description Checks to see if we have a saved custom metadata deployment id,
-    * inspects the deployment status, and sets the deploymentInProgress boolean
+    * inspects the deployment status, and sets the hasDeploymentInProgress boolean
     * @return Metadata.DeployResult
     */
     private Metadata.DeployResult checkDeploymentStatus() {
@@ -302,9 +302,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             if (responseWrapper != null && responseWrapper.deployResult != null) {
                 Metadata.DeployStatus deploymentStatus = responseWrapper.deployResult.status;
 
-                // Set deploymentInProgress boolean
+                // Set hasDeploymentInProgress boolean
                 if (deploymentStatus != null) {
-                    deploymentInProgress = deploymentStatus == Metadata.DeployStatus.INPROGRESS
+                    hasDeploymentInProgress = deploymentStatus == Metadata.DeployStatus.INPROGRESS
                         || deploymentStatus == Metadata.DeployStatus.PENDING
                         || deploymentStatus == Metadata.DeployStatus.CANCELING;
                 }
