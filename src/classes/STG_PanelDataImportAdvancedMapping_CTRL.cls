@@ -96,7 +96,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Boolean that determines if the toggle should be disabled
     */
-    public Boolean toggleDisabled { get; set; }
+    public Boolean canEnableAdvancedMapping { get; set; }
 
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
@@ -119,10 +119,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public PageReference enableDataImportFieldMapping() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
-        // Check the deployment status and set toggleDisabled value
+        // Check the deployment status and set canEnableAdvancedMapping value
         deployment = checkDeploymentStatus();
 
-        if (toggleDisabled == false || toggleDisabled == null) {
+        if (canEnableAdvancedMapping == false || canEnableAdvancedMapping == null) {
             Savepoint sp = Database.setSavepoint();
             try {
                 isPolling = true;
@@ -298,12 +298,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
         if (dataImportSettings.CMT_Deployment_ID__c != null) {
-            String response = migrationMappingUtility.checkDeployStatus(dataImportSettings.CMT_Deployment_ID__c);
+            String response = migrationMappingUtility.getDeploymentStatus(dataImportSettings.CMT_Deployment_ID__c);
             DeployResultWrapper responseWrapper =
                 (DeployResultWrapper)JSON.deserialize(response, DeployResultWrapper.class);
 
             if (responseWrapper != null && responseWrapper.deployResult != null) {
-                updateToggleStatus(responseWrapper.deployResult.status);
+                setCanEnableAdvancedMappingBoolean(responseWrapper.deployResult.status);
             }
 
             return responseWrapper.deployResult;
@@ -312,22 +312,22 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
-    * @description Sets toggleDisabled boolean, should be disabled if we have an active deployment.
+    * @description Sets canEnableAdvancedMapping boolean, should be disabled if we have an active deployment.
     * @return Metadata.DeployStatus
     */
-    private void updateToggleStatus(Metadata.DeployStatus deploymentStatus) {
+    private void setCanEnableAdvancedMappingBoolean(Metadata.DeployStatus deploymentStatus) {
         if (deploymentStatus != null) {
             Boolean disabled = deploymentStatus == Metadata.DeployStatus.INPROGRESS
                 || deploymentStatus == Metadata.DeployStatus.PENDING
                 || deploymentStatus == Metadata.DeployStatus.CANCELING;
 
             if (disabled) {
-                toggleDisabled = true;
+                canEnableAdvancedMapping = true;
             } else {
-                toggleDisabled = false;
+                canEnableAdvancedMapping = false;
             }
         } else {
-            toggleDisabled = false;
+            canEnableAdvancedMapping = false;
         }
     }
 

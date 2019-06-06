@@ -597,7 +597,7 @@ public class BDI_MigrationMappingUtility {
      * @description Check the status of custom metadata deployment
      * @return Metadata.DeployResult JSON
      */
-    public String checkDeployStatus(String deploymentId) {
+    public String getDeploymentStatus(String deploymentId) {
         Http h = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
