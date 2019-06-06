@@ -122,7 +122,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         // Check the deployment status and set hasDeploymentInProgress value
         deploymentResult = checkDeploymentStatus();
 
-        if (hasDeploymentInProgress == false) {
+        if (hasDeploymentInProgress == true) {
+            throwMessage(ApexPages.Severity.WARNING, 'There is a deployment currently in progess.');
+        } else {
             Savepoint sp = Database.setSavepoint();
             try {
                 isPolling = true;
@@ -160,7 +162,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             } catch (Exception e) {
                 Database.rollback(sp);
                 ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+                throwMessage(ApexPages.Severity.ERROR, e.getMessage());
 
                 isPolling = false;
                 BDI_MigrationMappingUtility.updateCustomSettings(
@@ -168,13 +170,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                     e.getMessage()
                 );
             }
-        } else {
-            ApexPages.addMessage(
-                new ApexPages.Message(
-                    ApexPages.Severity.WARNING,
-                    'There is a deployment currently in progess.'
-                )
-            );
         }
         return null;
     }
@@ -192,15 +187,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                     BDI_MigrationMappingUtility.HELP_TEXT,
                     String.valueOf(Metadata.DeployStatus.Succeeded)
                 );
-            ApexPages.addMessage(
-                new ApexPages.Message(
-                    ApexPages.Severity.CONFIRM,
-                    Label.stgDeploymentHelpTextMappingEnabled
-                )
-            );
+            throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            throwMessage(ApexPages.Severity.ERROR, e.getMessage());
 
             isPolling = false;
             BDI_MigrationMappingUtility.updateCustomSettings(
@@ -245,15 +235,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
             if (isSuccess) {
                 isPolling = false;
-                ApexPages.addMessage(
-                    new ApexPages.Message(
-                        ApexPages.Severity.CONFIRM,
-                        Label.stgDeploymentCustomMetadataMappingEnabled
-                    )
-                );
+                throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
             } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain));
+                throwMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
             }
 
         } else if (deploymentResult == null
@@ -262,24 +247,14 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             // DeploymentContainer was empty which means we're using our standard field mapping set
             // Org had no conflicting field mappings nor any net new field mappings in their Data Import help text
             isPolling = false;
-            ApexPages.addMessage(
-                new ApexPages.Message(
-                    ApexPages.Severity.CONFIRM,
-                    Label.stgDeploymentCustomMetadataMappingEnabled
-                )
-            );
+            throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
         }
 
         if (timeoutCount > MAX_TIME_OUT) {
             // We timed out, reset instance of migration mapping utility
             migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
             isPolling = false;
-            ApexPages.addMessage(
-                new ApexPages.Message(
-                    ApexPages.Severity.WARNING,
-                    Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain
-                )
-            );
+            throwMessage(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
             return null;
         }
 
@@ -307,12 +282,23 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                     hasDeploymentInProgress = deploymentStatus == Metadata.DeployStatus.INPROGRESS
                         || deploymentStatus == Metadata.DeployStatus.PENDING
                         || deploymentStatus == Metadata.DeployStatus.CANCELING;
+
+                    if (hasDeploymentInProgress) {
+                        throwMessage(ApexPages.Severity.WARNING, 'There is a deployment currently in progess.');
+                    }
                 }
             }
 
             return responseWrapper.deployResult;
         }
         return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Wrapper for Metadata.DeployResult
+    */
+    private void throwMessage(ApexPages.Severity severity, String message) {
+        ApexPages.addMessage(new ApexPages.Message(severity, message));
     }
 
     /*******************************************************************************************************
