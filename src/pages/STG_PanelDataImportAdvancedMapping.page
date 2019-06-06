@@ -32,7 +32,7 @@
                             <apex:inputCheckbox onClick="toggle(); return false;"
                                                 id="enableDIFMToggle"
                                                 html-name="checkbox-toggle-2"
-                                                value="{!isDataImportFieldMapping}"
+                                                value="{!advancedMappingEnabled}"
                                                 html-aria-describedby="checkbox-toggle-2"
                                                 disabled="{!toggleDisabled}"/>
                             <span class="slds-checkbox_faux_container" aria-live="assertive">

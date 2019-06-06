@@ -36,49 +36,6 @@
 */
 public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Panel {
 
-    /*********************************************************************************************************
-    * @description Returns the string Id of the Data Import Mapping panel
-    */
-    public override string idPanel() { return 'idPanelDataImportMapping'; }
-
-    /**
-    * @description Name of default packaged Field Mapping Set
-    */
-    private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME =
-        'Default_Field_Mapping_Set';
-
-    /**
-    * @description Name of custom Field Mapping Set
-    */
-    private static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME =
-        'Migrated_Custom_Mapping_Set';
-
-    /*******************************************************************************************************
-    * @description Value for Data Import custom settings Field Mapping Method
-    */
-    private static final String DATA_IMPORT_FIELD_MAPPING =
-        'Data Import Field Mapping';
-
-    /*******************************************************************************************************
-    * @description Value for Data Import custom settings Field Mapping Method
-    */
-    private static final String HELP_TEXT =
-        'Help Text';
-
-    /*******************************************************************************************************
-    * @description String to determine value of Data Import custom settings field Default Data Import Field
-    * Mapping Set
-    */
-    private static final String DEFAULT_MAPPING =
-        'default';
-
-    /*******************************************************************************************************
-    * @description String to determine value of Data Import custom settings field Default Data Import Field
-    * Mapping Set
-    */
-    private static final String CUSTOM_MAPPING =
-        'custom';
-
     /*******************************************************************************************************
     * @description is the panel currently Polling for deployment results
     */
@@ -109,11 +66,14 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public Data_Import_Settings__c dataImportSettings { get; set; }
 
     /*******************************************************************************************************
-    * @description Return boolean for the current field mapping method
+    * @description Boolean used for toggle value in the visualforce page
     */
-    public Boolean isDataImportFieldMapping {
+    public Boolean advancedMappingEnabled {
         get {
-            return dataImportSettings.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false;
+            if (dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING) {
+                return true;
+            }
+            return false;
         }
         set;
     }
@@ -167,16 +127,16 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             try {
                 isPolling = true;
 
-                // Collect and inspect Help Text mappings
-                // This method will populate the lists pendingMappings, pendingStandardMappings, and conflictingMappings
-                //migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
-
                 if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
                     // Custom field mapping set exists
-                    migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                    migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(
+                        BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
+                    );
                 } else {
                     // Custom field mapping set doesn't exist
-                    migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+                    migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(
+                        BDI_MigrationMappingUtility.DEFAULT_FIELD_MAPPING_SET_RECORD_NAME
+                    );
                 }
 
                 // Create Custom Field Mapping Set
@@ -207,7 +167,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
                 isPolling = false;
                 BDI_MigrationMappingUtility.updateCustomSettings(
-                    HELP_TEXT,
+                    BDI_MigrationMappingUtility.HELP_TEXT,
                     e.getMessage()
                 );
             }
@@ -232,7 +192,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         try {
             dataImportSettings =
                 BDI_MigrationMappingUtility.updateCustomSettings(
-                    HELP_TEXT,
+                    BDI_MigrationMappingUtility.HELP_TEXT,
                     String.valueOf(Metadata.DeployStatus.Succeeded)
                 );
             ApexPages.addMessage(
@@ -247,7 +207,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
             isPolling = false;
             BDI_MigrationMappingUtility.updateCustomSettings(
-                HELP_TEXT,
+                BDI_MigrationMappingUtility.HELP_TEXT,
                 e.getMessage()
             );
         }
@@ -282,8 +242,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
         if (deployment != null) {
+            // We had a migration that contained CMT records to insert
             Boolean isSuccess = deployment.status == Metadata.DeployStatus.Succeeded
-                && dataImportSettings.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING;
+                && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
 
             if (isSuccess) {
                 isPolling = false;
@@ -298,7 +259,11 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain));
             }
 
-        } else if (deployment == null && dataImportSettings.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING) {
+        } else if (deployment == null
+                   && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING) {
+            // We had a migration that didn't contain CMT records to insert
+            // DeploymentContainer was empty which means we're using our standard field mapping set
+            // Org had no conflicting field mappings nor any net new field mappings in their Data Import help text
             isPolling = false;
             ApexPages.addMessage(
                 new ApexPages.Message(
@@ -309,7 +274,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         }
 
         if (timeoutCount > MAX_TIME_OUT) {
-            // Reset instance of migration mapping utility
+            // We timed out, reset instance of migration mapping utility
             migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
             isPolling = false;
             ApexPages.addMessage(

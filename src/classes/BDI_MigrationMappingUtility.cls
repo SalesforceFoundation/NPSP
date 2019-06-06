@@ -42,10 +42,48 @@ public class BDI_MigrationMappingUtility {
     public List<Metadata.CustomMetadata> queuedMetadataTypesForDeploy =
         new List<Metadata.CustomMetadata>();
 
+    /**
+    * @description List of standard mappings
+    */
+    private List<BDI_HelpTextCMT.DataImportFieldMapping> pendingStandardMappings =
+        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+
+    /**
+    * @description List of special cased mappings (GAU and Opportunity)
+    */
+    private List<BDI_HelpTextCMT.DataImportFieldMapping> pendingSpecialCasedMappings =
+        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+
+    /**
+    * @description Name of default packaged Field Mapping Set
+    */
+    public static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME =
+        'Default_Field_Mapping_Set';
+
+    /**
+    * @description Name of custom Field Mapping Set
+    */
+    public static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME =
+        'Migrated_Custom_Mapping_Set';
+
+    /**
+    * @description Value for Data Import custom settings Field Mapping Method
+    * Set as static because it's used in the static method updateCustomSettings
+    */
+    public static final String DATA_IMPORT_FIELD_MAPPING =
+        'Data Import Field Mapping';
+
+    /**
+    * @description Value for Data Import Custom Setting's Field Mapping Method.
+    * Set as static because it's used in the static method updateCustomSettings
+    */
+    public static final String HELP_TEXT =
+        'Help Text';
+
     /*
     * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
     */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingMappings {
+    private List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingMappings {
         get {
             if (conflictingMappings == null) {
                 conflictingMappings = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
@@ -58,7 +96,8 @@ public class BDI_MigrationMappingUtility {
     /*
     * @description List of custom metatadata type mappings pending deployment
     */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingMappings {
+    @TestVisible
+    private List<BDI_HelpTextCMT.DataImportFieldMapping> pendingMappings {
         get {
             if (pendingMappings == null) {
                 pendingMappings = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
@@ -69,48 +108,12 @@ public class BDI_MigrationMappingUtility {
     }
 
     /**
-    * @description List of standard mappings
-    */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingStandardMappings =
-        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-
-    /**
-    * @description List of special cased mappings (GAU and Opportunity)
-    */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingSpecialCasedMappings =
-        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-
-    /**
-    * @description Name of default packaged Field Mapping Set
-    */
-    private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME =
-        'Default_Field_Mapping_Set';
-
-    /**
-    * @description Name of custom Field Mapping Set
-    */
-    private static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME =
-        'Migrated_Custom_Mapping_Set';
-
-    /**
-    * @description Value for Data Import custom settings Field Mapping Method
-    */
-    private static final String DATA_IMPORT_FIELD_MAPPING =
-        'Data Import Field Mapping';
-
-    /**
-    * @description Value for Data Import custom settings Field Mapping Method
-    */
-    private static final String HELP_TEXT =
-        'Help Text';
-
-    /**
     * @description Default packaged Field Mapping Set metadata record
     */
     private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [SELECT
-                Id,
-                DeveloperName,
-                Label
+            Id,
+            DeveloperName,
+            Label
         FROM Data_Import_Field_Mapping_Set__mdt
         WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME];
 
