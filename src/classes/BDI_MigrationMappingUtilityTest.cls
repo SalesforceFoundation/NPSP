@@ -96,7 +96,8 @@ private class BDI_MigrationMappingUtilityTest {
 
         // Confirm that we've updated the CMT API Status field in Data Import Settings
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+        Map<String,String> result =
+            (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
         System.assertNotEquals(null, result.get('Status'), result);
         System.assertEquals(result.get('Field Mapping Method'), 'Data Import Field Mapping');
@@ -115,10 +116,6 @@ private class BDI_MigrationMappingUtilityTest {
         util.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
 
         util.startMigration();
-
-        util.handleNewMappings();
-        util.handleConflictingMappings();
-        util.handleStandardMappings();
 
         Test.startTest();
 
@@ -147,7 +144,8 @@ private class BDI_MigrationMappingUtilityTest {
 
         // Confirm that we've updated the CMT API Status field in Data Import Settings
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+        Map<String,String> result =
+            (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
         System.assertNotEquals(null, result.get('Status'), result);
         System.assertEquals(result.get('Field Mapping Method'), 'Data Import Field Mapping');
@@ -178,7 +176,8 @@ private class BDI_MigrationMappingUtilityTest {
 
         // Confirm that we've updated the CMT API Status field in Data Import Settings
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+        Map<String,String> result =
+            (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
         System.assertNotEquals(null, result.get('Status'), result);
         System.assertEquals(result.get('Field Mapping Method'), 'Data Import Field Mapping');
@@ -214,7 +213,8 @@ private class BDI_MigrationMappingUtilityTest {
 
         // Confirm that we've updated the CMT API Status field in Data Import Settings
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+        Map<String,String> result =
+            (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
         System.assertNotEquals(null, result.get('Status'), result);
         System.assertEquals(result.get('Field Mapping Method'), 'Help Text');
@@ -242,7 +242,8 @@ private class BDI_MigrationMappingUtilityTest {
 
         // Confirm that we've updated the CMT API Status field in Data Import Settings
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+        Map<String,String> result =
+            (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
         System.assertNotEquals(null, result.get('Status'), result);
         System.assertEquals(result.get('Status'), 'Unknown error');
@@ -262,59 +263,49 @@ private class BDI_MigrationMappingUtilityTest {
                 List<Object> listOfArgs) {
 
             if (stubbedMethodName == 'getAllMappingDetailsBySourceFieldName') {
-                BDI_HelpTextCMT.MappingDetail mapping1 = new BDI_HelpTextCMT.MappingDetail(
-                        'Account1',
+                BDI_HelpTextCMT.MappingDetail mapping1 = new BDI_HelpTextCMT.MappingDetail('Account1',
                         'test1_dataImportFieldLabel',
                         'test1_targetObjectName',
                         'test1_targetFieldAPIName',
                         'test1_importedRecordField',
-                        'test1_importedRecordStatusField'
-                );
+                        'test1_importedRecordStatusField');
 
-                BDI_HelpTextCMT.MappingDetail mapping2 = new BDI_HelpTextCMT.MappingDetail(
-                        'Account2',
+                BDI_HelpTextCMT.MappingDetail mapping2 = new BDI_HelpTextCMT.MappingDetail('Account2',
                         'test2_dataImportFieldLabel',
                         'test2_targetObjectName',
                         'test2_targetFieldAPIName',
                         'test2_importedRecordField',
-                        'test2_importedRecordStatusField'
-                );
+                        'test2_importedRecordStatusField');
 
-                BDI_HelpTextCMT.MappingDetail mapping3 = new BDI_HelpTextCMT.MappingDetail(
-                        'Account2',
+                BDI_HelpTextCMT.MappingDetail mapping3 = new BDI_HelpTextCMT.MappingDetail('Account2',
                         'New Mapping',
                         'test3_targetObjectName',
                         'test3_targetFieldAPIName',
                         'test3_importedRecordField',
-                        'test3_importedRecordStatusField'
-                );
+                        'test3_importedRecordStatusField');
 
-                return new Map<String, BDI_HelpTextCMT.MappingDetail>{
-                        'npsp__Account1_City__c' => mapping1, 'npsp__Account2_City__c' => mapping2, 'New_Mapping__c' => mapping3
-                };
+                return new Map<String, BDI_HelpTextCMT.MappingDetail>{'npsp__Account1_City__c' => mapping1,
+                        'npsp__Account2_City__c' => mapping2,
+                        'New_Mapping__c' => mapping3};
             }
 
             if (stubbedMethodName == 'getObjectMappingsByDeveloperName') {
-                Data_Import_Object_Mapping__mdt objectMapping1 = new Data_Import_Object_Mapping__mdt(
-                    Label='Account 1',
-                    DeveloperName='Account1',
-                    Object_API_Name__c='Account',
-                    Imported_Record_Field_Name__c='npsp__Account1Imported__c',
-                    Imported_Record_Status_Field_Name__c='npsp__Account1ImportStatus__c'
-                );
+                Data_Import_Object_Mapping__mdt objectMapping1 =
+                    new Data_Import_Object_Mapping__mdt(Label='Account 1',
+                        DeveloperName='Account1',
+                        Object_API_Name__c='Account',
+                        Imported_Record_Field_Name__c='npsp__Account1Imported__c',
+                        Imported_Record_Status_Field_Name__c='npsp__Account1ImportStatus__c');
 
-                Data_Import_Object_Mapping__mdt objectMapping2 = new Data_Import_Object_Mapping__mdt(
-                    Label='Account 2',
-                    DeveloperName='Account2',
-                    Object_API_Name__c='Account',
-                    Imported_Record_Field_Name__c='npsp__Account2Imported__c',
-                    Imported_Record_Status_Field_Name__c='npsp__Account2ImportStatus__c'
-                );
+                Data_Import_Object_Mapping__mdt objectMapping2 =
+                    new Data_Import_Object_Mapping__mdt(Label='Account 2',
+                        DeveloperName='Account2',
+                        Object_API_Name__c='Account',
+                        Imported_Record_Field_Name__c='npsp__Account2Imported__c',
+                        Imported_Record_Status_Field_Name__c='npsp__Account2ImportStatus__c');
 
-                return new Map<String, Data_Import_Object_Mapping__mdt>{
-                    'Account1' => objectMapping1,
-                    'Account2' => objectMapping2
-                };
+                return new Map<String, Data_Import_Object_Mapping__mdt>{'Account1' => objectMapping1,
+                    'Account2' => objectMapping2};
             }
 
             if (stubbedMethodName == 'getFieldMappingsByFieldMappingSetDeveloperName') {
@@ -323,8 +314,7 @@ private class BDI_MigrationMappingUtilityTest {
                         Id=getFakeId(Schema.Data_Import_Field_Mapping_Set__mdt.SObjectType),
                         DeveloperName='Default_Field_Mapping_Set',
                         MasterLabel='Default Field Mapping Set',
-                        Label='Default Field Mapping Set'
-                    );
+                        Label='Default Field Mapping Set');
 
                 Data_Import_Object_Mapping__mdt objectMapping =
                     new Data_Import_Object_Mapping__mdt(
@@ -332,8 +322,7 @@ private class BDI_MigrationMappingUtilityTest {
                         DeveloperName='Account1',
                         MasterLabel='Account 1',
                         Label='Account 1',
-                        Object_API_Name__c='Account'
-                    );
+                        Object_API_Name__c='Account');
 
                 Data_Import_Object_Mapping__mdt objectMapping2 =
                     new Data_Import_Object_Mapping__mdt(
@@ -341,49 +330,43 @@ private class BDI_MigrationMappingUtilityTest {
                         DeveloperName='Account2',
                         MasterLabel='Account 2',
                         Label='Account 2',
-                        Object_API_Name__c='Account'
-                    );
+                        Object_API_Name__c='Account');
 
-                Data_Import_Field_Mapping__mdt fieldMapping1 = new Data_Import_Field_Mapping__mdt(
-                    Label='Account 1 City',
-                    DeveloperName='Account_1_City',
-                    Source_Field_API_Name__c='npsp__Account1_City__c',
-                    Target_Field_API_Name__c='BillingCity',
-                    Data_Import_Field_Mapping_Set__c=fieldMappingSet.Id,
-                    Target_Object_Mapping__c=objectMapping.Id
-                );
+                Data_Import_Field_Mapping__mdt fieldMapping1 =
+                    new Data_Import_Field_Mapping__mdt(
+                        Label='Account 1 City',
+                        DeveloperName='Account_1_City',
+                        Source_Field_API_Name__c='npsp__Account1_City__c',
+                        Target_Field_API_Name__c='BillingCity',
+                        Data_Import_Field_Mapping_Set__c=fieldMappingSet.Id,
+                        Target_Object_Mapping__c=objectMapping.Id);
 
-                Data_Import_Field_Mapping__mdt fieldMapping2 = new Data_Import_Field_Mapping__mdt(
-                    Label='Account 2 City',
-                    DeveloperName='Account_2_City',
-                    Source_Field_API_Name__c='npsp__Account2_City__c',
-                    Target_Field_API_Name__c='BillingCity',
-                    Data_Import_Field_Mapping_Set__c=fieldMappingSet.Id,
-                    Target_Object_Mapping__c=objectMapping2.Id
-                );
+                Data_Import_Field_Mapping__mdt fieldMapping2 =
+                    new Data_Import_Field_Mapping__mdt(
+                        Label='Account 2 City',
+                        DeveloperName='Account_2_City',
+                        Source_Field_API_Name__c='npsp__Account2_City__c',
+                        Target_Field_API_Name__c='BillingCity',
+                        Data_Import_Field_Mapping_Set__c=fieldMappingSet.Id,
+                        Target_Object_Mapping__c=objectMapping2.Id);
 
                 return new Map<String, Data_Import_Field_Mapping__mdt>{
                     'npsp__Account1_City__c' => fieldMapping1,
-                    'npsp__Account2_City__c' => fieldMapping2
-                };
+                    'npsp__Account2_City__c' => fieldMapping2};
             }
 
             if (stubbedMethodName == 'getDefaultObjectMappingSet') {
                 Data_Import_Object_Mapping_Set__mdt objectMappingSet =
-                    new Data_Import_Object_Mapping_Set__mdt(
-                        Label='Default Object Mapping Set',
-                        DeveloperName='Default_Object_Mapping_Set'
-                    );
+                    new Data_Import_Object_Mapping_Set__mdt(Label='Default Object Mapping Set',
+                        DeveloperName='Default_Object_Mapping_Set');
 
                 return objectMappingSet;
             }
 
             if (stubbedMethodName == 'createNewFieldMappingSet') {
                 BDI_HelpTextCMT.DataImportFieldMappingSet fieldMappingSet =
-                    new BDI_HelpTextCMT.DataImportFieldMappingSet(
-                        'Migrated Field Mapping Set',
-                        'Default_Object_Mapping_Set'
-                    );
+                    new BDI_HelpTextCMT.DataImportFieldMappingSet('Migrated Field Mapping Set',
+                        'Default_Object_Mapping_Set');
 
                 return fieldMappingSet.getMetadataRecord();
             }
