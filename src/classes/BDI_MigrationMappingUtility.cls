@@ -32,7 +32,7 @@
 * @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Service methods to handle building custom Help Text mapping records
+* @description Methods to handle converting data import help text mappings to custom metadata records
 */
 public with sharing class BDI_MigrationMappingUtility {
 
