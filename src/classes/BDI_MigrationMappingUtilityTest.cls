@@ -123,7 +123,11 @@ private class BDI_MigrationMappingUtilityTest {
         Test.startTest();
 
         // Convert mappings to Custom Metadata and start deployment
-        System.assertEquals(3, util.queuedMetadataTypesForDeploy.size());
+        if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
+            System.assertEquals(3, util.queuedMetadataTypesForDeploy.size());
+        } else {
+            System.assertEquals(4, util.queuedMetadataTypesForDeploy.size());
+        }
 
         util.deployCustomMetadata();
 
