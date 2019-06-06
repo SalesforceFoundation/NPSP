@@ -117,7 +117,7 @@ private class BDI_MigrationMappingUtilityTest {
         util.startMigration();
 
         util.handleNewMappings();
-        util.handleOverwriteConflictingMappings();
+        util.handleConflictingMappings();
         util.handleStandardMappings();
 
         Test.startTest();

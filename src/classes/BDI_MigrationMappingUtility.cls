@@ -282,14 +282,6 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /**
-    * @description Handles list of special cased mappings (pendingSpecialCasedMappings), converts them to custom
-    * metadata type records, and adds them to list of custom metadata types (queuedMetadataTypesForDeploy)
-    */
-    public void handleSpecialCasedMappings() {
-        enqueueFieldMappings(pendingSpecialCasedMappings);
-    }
-
-    /**
     * @description Add metadata records to queuedMedataTypesForDeploy list.
     * @param fieldMappings List of DataImportFieldMapping wrappers
     */
@@ -309,7 +301,7 @@ public with sharing class BDI_MigrationMappingUtility {
     * If custom metadata record exists, overwrite values.
     * If custom metadata record doesn't exist, clone existing record with help text values.
     */
-    public void handleOverwriteConflictingMappings() {
+    public void handleConflictingMappings() {
         if (conflictingMappings.size() > 0) {
             // Update existing mappings to point to custom field mapping set
             List<BDI_HelpTextCMT.DataImportFieldMapping> updatedConflictingMappings =
@@ -375,30 +367,6 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /**
-    * @description Method fills various field mapping lists that we later deploy as needed.
-    * pendingMappings, conflictingMappings, pendingStandardMappings.
-    */
-    public void startMigration() {
-        List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
-        List<BDI_HelpTextCMT.DataImportFieldMapping> allMappings =
-            new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-
-        if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
-            buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-        } else {
-            buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
-            Metadata.CustomMetadata fieldMappingSet =
-                helper.createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-
-            // Add custom field mapping set to list of metadata type records awaiting deployment
-            queuedMetadataTypesForDeploy.add(fieldMappingSet);
-        }
-
-        // Handle GAU and Opportunity Contact Role mappings
-        handleGAUAndOpportunityContactRoleMappings();
-    }
-
-    /**
     * @description Method for handling special cased mappings (GAU and Opportunity Contact Role).
     * Since GAUs and Opportunity Contact Roles aren't mapped in helptext, we need to inspect and collect
     * our existing packaged data import field mappings in order to clone them for the migrated custom
@@ -452,7 +420,7 @@ public with sharing class BDI_MigrationMappingUtility {
                         specialCasedMappingsByObjectAndFieldName.get(key),
                         MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
                     );
-                pendingSpecialCasedMappings.add(wrapper);
+                queuedMetadataTypesForDeploy.add(wrapper.getMetadataRecord());
             }
         }
     }

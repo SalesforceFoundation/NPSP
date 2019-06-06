@@ -129,32 +129,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             try {
                 isPolling = true;
 
-                if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
-                    // Compare help text mappings against migrated custom field mapping set
-                    migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(
-                        BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
-                    );
-                } else {
-                    // Compare help text mappings against default field mapping set
-                    migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(
-                        BDI_MigrationMappingUtility.DEFAULT_FIELD_MAPPING_SET_RECORD_NAME
-                    );
-                }
-
                 // Start the migration, collect help text mappings, and compare against existing cmt mappings
                 migrationMappingUtility.startMigration();
-
-                // Add standard field mappings
-                migrationMappingUtility.handleStandardMappings();
-
-                // Add net new field mappings
-                migrationMappingUtility.handleNewMappings();
-
-                // Add special cased mappings (GAU and Opportunity Contact Role)
-                migrationMappingUtility.handleSpecialCasedMappings();
-
-                // Add conflicting mappings
-                migrationMappingUtility.handleOverwriteConflictingMappings();
 
                 Id deploymentId = migrationMappingUtility.deployCustomMetadata();
                 saveDeploymentId(deploymentId);
