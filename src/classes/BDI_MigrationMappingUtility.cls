@@ -42,6 +42,19 @@ public with sharing class BDI_MigrationMappingUtility {
     public List<Metadata.CustomMetadata> queuedMetadataTypesForDeploy =
         new List<Metadata.CustomMetadata>();
 
+    /*
+    * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
+    */
+    private List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingMappings =
+        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+
+    /*
+    * @description List of custom metatadata type mappings pending deployment
+    */
+    @TestVisible
+    private List<BDI_HelpTextCMT.DataImportFieldMapping> pendingMappings =
+        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+
     /**
     * @description List of standard mappings
     */
@@ -81,33 +94,6 @@ public with sharing class BDI_MigrationMappingUtility {
     */
     public static final String HELP_TEXT =
         'Help Text';
-
-    /*
-    * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
-    */
-    private List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingMappings {
-        get {
-            if (conflictingMappings == null) {
-                conflictingMappings = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-            }
-            return conflictingMappings;
-        }
-        set;
-    }
-
-    /*
-    * @description List of custom metatadata type mappings pending deployment
-    */
-    @TestVisible
-    private List<BDI_HelpTextCMT.DataImportFieldMapping> pendingMappings {
-        get {
-            if (pendingMappings == null) {
-                pendingMappings = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-            }
-            return pendingMappings;
-        }
-        set;
-    }
 
     /**
     * @description Default packaged Field Mapping Set metadata record
