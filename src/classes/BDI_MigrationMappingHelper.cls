@@ -128,8 +128,7 @@ public class BDI_MigrationMappingHelper {
                             parts.objectAPIName,
                             parts.fieldName,
                             null,
-                            null
-                        );
+                            null);
 
                     mappingDetailsBySourceFieldName.put(sourceField.Name, newMappingDetail);
                     // Remove from map once mapped
@@ -227,7 +226,9 @@ public class BDI_MigrationMappingHelper {
      * @param fieldMappingSetId Id of the default Field Mapping Set
      * @return Collection of Field Mapping DeveloperName to Field Mapping record
      */
-    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByFieldMappingSetDeveloperName(String developerName) {
+    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByFieldMappingSetDeveloperName(
+        String developerName) {
+
         List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT 
                     Id, 
                     Label, 
@@ -254,7 +255,8 @@ public class BDI_MigrationMappingHelper {
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
             if (namespace != 'npsp') {
-                fieldMapping.Source_Field_API_Name__c = UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                fieldMapping.Source_Field_API_Name__c =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
             }
             fieldMappingsBySourceFieldName.put(fieldMapping.Source_Field_API_Name__c, fieldMapping);
         }
@@ -269,7 +271,9 @@ public class BDI_MigrationMappingHelper {
      * @param fieldMappingSet String Developer Name of the Data Import Field Mapping Set to search under
      * @return Collection of Field Mapping DeveloperName to Field Mapping record
      */
-    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByTargetObjectAndSourceFieldName(String fuzzyTargetName, String fieldMappingSet) {
+    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByTargetObjectAndSourceFieldName(
+        String fuzzyTargetName, String fieldMappingSet) {
+
         List<Data_Import_Field_Mapping__mdt> foundMappings = [SELECT Id,
                 DeveloperName,
                 MasterLabel,
@@ -290,12 +294,12 @@ public class BDI_MigrationMappingHelper {
 
             for (Data_Import_Field_Mapping__mdt fieldMapping : foundMappings) {
                 if (namespace != 'npsp') {
-                    fieldMapping.Source_Field_API_Name__c = UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                    fieldMapping.Source_Field_API_Name__c =
+                        UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
                 }
                 fieldMappingsByTargetObjectAndSourceFieldName.put(
                     fieldMapping.Target_Object_Mapping__r.DeveloperName + '.' + fieldMapping.Source_Field_API_Name__c,
-                    fieldMapping
-                );
+                    fieldMapping);
             }
         }
 

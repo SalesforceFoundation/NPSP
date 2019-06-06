@@ -141,10 +141,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 throwMessage(ApexPages.Severity.ERROR, e.getMessage());
 
                 isPolling = false;
-                BDI_MigrationMappingUtility.updateCustomSettings(
-                    BDI_MigrationMappingUtility.HELP_TEXT,
-                    e.getMessage()
-                );
+                BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
+                    e.getMessage());
             }
         }
         return null;
@@ -159,20 +157,16 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
         try {
             dataImportSettings =
-                BDI_MigrationMappingUtility.updateCustomSettings(
-                    BDI_MigrationMappingUtility.HELP_TEXT,
-                    String.valueOf(Metadata.DeployStatus.Succeeded)
-                );
+                BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
+                    String.valueOf(Metadata.DeployStatus.Succeeded));
             throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             throwMessage(ApexPages.Severity.ERROR, e.getMessage());
 
             isPolling = false;
-            BDI_MigrationMappingUtility.updateCustomSettings(
-                BDI_MigrationMappingUtility.HELP_TEXT,
-                e.getMessage()
-            );
+            BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
+                e.getMessage());
         }
         return null;
     }

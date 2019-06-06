@@ -111,8 +111,7 @@ public with sharing class BDI_MigrationMappingUtility {
     */
     public static Boolean customFieldMappingSetExists {
         get {
-            List<Data_Import_Field_Mapping_Set__mdt> fieldMappingSets =
-                [SELECT Id
+            List<Data_Import_Field_Mapping_Set__mdt> fieldMappingSets = [SELECT Id
                 FROM Data_Import_Field_Mapping_Set__mdt
                 WHERE DeveloperName = :MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
             if (fieldMappingSets.size() > 0) {
@@ -156,7 +155,6 @@ public with sharing class BDI_MigrationMappingUtility {
     public String deployCustomMetadata() {
 
         try {
-
             If (queuedMetadataTypesForDeploy.size() > 0) {
                 Metadata.DeployContainer deploymentContainer = new Metadata.DeployContainer();
 
@@ -167,16 +165,12 @@ public with sharing class BDI_MigrationMappingUtility {
                 if (Test.isRunningTest()) {
                     deploymentId = '123';
                 } else {
-                    deploymentId = Metadata.Operations.enqueueDeployment(
-                        deploymentContainer,
-                        new DeploymentCallback()
-                    );
+                    deploymentId = Metadata.Operations.enqueueDeployment(deploymentContainer,
+                        new DeploymentCallback());
                 }
             } else {
-                BDI_MigrationMappingUtility.updateCustomSettings(
-                    DATA_IMPORT_FIELD_MAPPING,
-                    String.valueOf(Metadata.DeployStatus.SUCCEEDED)
-                );
+                BDI_MigrationMappingUtility.updateCustomSettings(DATA_IMPORT_FIELD_MAPPING,
+                    String.valueOf(Metadata.DeployStatus.SUCCEEDED));
             }
         } catch (Exception e) {
             throw new DeploymentException(Label.bdiErrorDeploymentFailed + ' ' + e.getMessage());
@@ -237,10 +231,9 @@ public with sharing class BDI_MigrationMappingUtility {
 
             if (result != null && result.status == Metadata.DeployStatus.SUCCEEDED) {
                 // Deployment was successful
-                BDI_MigrationMappingUtility.updateCustomSettings(
-                    DATA_IMPORT_FIELD_MAPPING,
-                    String.valueOf(result.status)
-                );
+                BDI_MigrationMappingUtility.updateCustomSettings(DATA_IMPORT_FIELD_MAPPING,
+                    String.valueOf(result.status));
+
             } else if (result != null && result.status != Metadata.DeployStatus.SUCCEEDED) {
                 // Deployment was not successful
                 String errMsg = '';
@@ -253,6 +246,7 @@ public with sharing class BDI_MigrationMappingUtility {
                 if (!Test.isRunningTest()) {
                     throw new DeploymentException(Label.bdiErrorDeploymentFailed);
                 }
+
             } else {
                 // Deployment was not successful and result is null
                 BDI_MigrationMappingUtility.updateCustomSettings(HELP_TEXT, 'Unknown error');
@@ -261,6 +255,46 @@ public with sharing class BDI_MigrationMappingUtility {
                 }
             }
         }
+    }
+
+    /**
+    * @description Method fills various field mapping lists that we later deploy as needed.
+    * pendingMappings, conflictingMappings, pendingStandardMappings.
+    */
+    public void startMigration() {
+        List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
+        List<BDI_HelpTextCMT.DataImportFieldMapping> allMappings =
+            new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+
+        if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
+            // Inspects help text mappings, compares against migrated field mapping set, and
+            // parks cmt records in various lists (pendingMappings, pendingStandardMappings, etc)
+            buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+        } else {
+            // Inspects help text mappings, compares against default field mapping set, and
+            // parks cmt records in various lists (pendingMappings, pendingStandardMappings, etc)
+            buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+
+            // Create migrated field mapping set
+            Metadata.CustomMetadata fieldMappingSet =
+                helper.createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
+            // Add custom field mapping set to list queuedMetadataTypesForDeploy
+            queuedMetadataTypesForDeploy.add(fieldMappingSet);
+        }
+
+        // Add standard field mappings to list queuedMetadataTypesForDeploy
+        handleStandardMappings();
+
+        // Add net new field mappings to list queuedMetadataTypesForDeploy
+        handleNewMappings();
+
+        // Add conflicting mappings to list queuedMetadataTypesForDeploy
+        // If we had a conflict with an existing CMT record, we overwrite that existing record
+        handleConflictingMappings();
+
+        // Add GAU and Opportunity Contact Role mappings to list queuedMetadataTypesForDeploy
+        handleGAUAndOpportunityContactRoleMappings();
     }
 
     /**
@@ -313,10 +347,8 @@ public with sharing class BDI_MigrationMappingUtility {
 
                 if (isDefaultFieldMappingSet) {
                     BDI_HelpTextCMT.DataImportFieldMapping clonedFieldMapping =
-                        new BDI_HelpTextCMT.DataImportFieldMapping(
-                            dataImportFieldMapping,
-                            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
-                        );
+                        new BDI_HelpTextCMT.DataImportFieldMapping(dataImportFieldMapping,
+                            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
                         queuedMetadataTypesForDeploy.add(clonedFieldMapping.getMetadataRecord());
                 } else {
                     updatedConflictingMappings.add(dataImportFieldMapping);
@@ -330,10 +362,8 @@ public with sharing class BDI_MigrationMappingUtility {
                 fieldMappingSetToCompareAgainst = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
             }
 
-            List<Metadata.CustomMetadata> updatedCMTs = updateCustomMetadataRecords(
-                fieldMappingSetToCompareAgainst,
-                updatedConflictingMappings
-            );
+            List<Metadata.CustomMetadata> updatedCMTs = updateCustomMetadataRecords(fieldMappingSetToCompareAgainst,
+                updatedConflictingMappings);
 
             queuedMetadataTypesForDeploy.addAll(updatedCMTs);
         }
@@ -416,10 +446,8 @@ public with sharing class BDI_MigrationMappingUtility {
 
             for (String key : specialCasedMappingsByObjectAndFieldName.keySet()) {
                 BDI_HelpTextCMT.DataImportFieldMapping wrapper =
-                    new BDI_HelpTextCMT.DataImportFieldMapping(
-                        specialCasedMappingsByObjectAndFieldName.get(key),
-                        MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
-                    );
+                    new BDI_HelpTextCMT.DataImportFieldMapping(specialCasedMappingsByObjectAndFieldName.get(key),
+                        MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
                 queuedMetadataTypesForDeploy.add(wrapper.getMetadataRecord());
             }
         }
@@ -477,7 +505,6 @@ public with sharing class BDI_MigrationMappingUtility {
             Boolean foundDefaultObjectMapping = (existingDefaultObjectMapping != null);
 
             if (foundDefaultObjectMapping) {
-
                 Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = 
                     fieldMappingsByFieldMappingSetDeveloperName.get(fieldMapping.sourceFieldAPIName);
 
@@ -489,6 +516,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
                     // Add metadata record to queue for deployment
                     pendingMappings.add(fieldMapping);
+
                 } else if (foundDefaultFieldMapping) {
                     // Existing Field Mapping, check if CMTs field values match Help Text field values
                     Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, 
@@ -500,7 +528,6 @@ public with sharing class BDI_MigrationMappingUtility {
                             existingDefaultFieldMapping);
 
                     if (invalidFieldMapping) {
-
                         // If existing help text mapping doesn't match our packaged cmt record, park the mapping
                         fieldMapping.expectedHelpTextValue =
                             existingDefaultFieldMapping.Target_Object_Mapping__r.Object_API_Name__c
@@ -508,6 +535,7 @@ public with sharing class BDI_MigrationMappingUtility {
                             + existingDefaultFieldMapping.Target_Field_API_Name__c;
 
                         conflictingMappings.add(fieldMapping);
+
                     } else {
                         pendingStandardMappings.add(fieldMapping);
                     }
@@ -529,6 +557,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
         fieldMapping.targetObjectMappingLabel = existingDefaultObjectMapping.Label;
         fieldMapping.targetObjectMappingRecordName = existingDefaultObjectMapping.DeveloperName;
+
         if (fieldMapping.dataImportFieldMappingSetRecordName == null) {
             fieldMapping.dataImportFieldMappingSetLabel = DEFAULT_FIELD_MAPPING_SET.Label;
             fieldMapping.dataImportFieldMappingSetRecordName = DEFAULT_FIELD_MAPPING_SET.DeveloperName;
@@ -554,15 +583,13 @@ public with sharing class BDI_MigrationMappingUtility {
 
         Boolean badRequiredField = (existingFieldMapping.Required__c != 'No');
         Boolean badIsDeletedField = (existingFieldMapping.Is_Deleted__c == true);
-        Boolean badSourceFieldAPIName = (
-            existingFieldMapping.Source_Field_API_Name__c != newFieldMapping.sourceFieldAPIName
-        );
-        Boolean badTargetFieldAPIName = (
-            existingFieldMapping.Target_Field_API_Name__c != newFieldMapping.targetFieldAPIName
-        );
-        Boolean badTargetObjectMappingId = (
-            existingFieldMapping.Target_Object_Mapping__c != existingDefaultObjectMapping.Id
-        );
+        Boolean badSourceFieldAPIName =
+            (existingFieldMapping.Source_Field_API_Name__c != newFieldMapping.sourceFieldAPIName);
+        Boolean badTargetFieldAPIName =
+            (existingFieldMapping.Target_Field_API_Name__c != newFieldMapping.targetFieldAPIName);
+        Boolean badTargetObjectMappingId =
+            (existingFieldMapping.Target_Object_Mapping__c != existingDefaultObjectMapping.Id);
+
         Boolean foundMismatch = badRequiredField
             || badSourceFieldAPIName
             || badTargetFieldAPIName
@@ -593,8 +620,7 @@ public with sharing class BDI_MigrationMappingUtility {
         request.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
             '/services/data/v44.0/metadata/deployRequest/' +
             deploymentId +
-            '?includeDetails=true'
-        );
+            '?includeDetails=true');
         request.setMethod('GET');
         request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
         HttpResponse response = h.send(request);
