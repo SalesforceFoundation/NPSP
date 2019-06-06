@@ -123,7 +123,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         deploymentResult = checkDeploymentStatus();
 
         if (hasDeploymentInProgress == true) {
-            throwMessage(ApexPages.Severity.WARNING, 'There is a deployment currently in progess.');
+            throwMessage(ApexPages.Severity.WARNING, Label.bdiDeploymentInProgress);
         } else {
             Savepoint sp = Database.setSavepoint();
             try {

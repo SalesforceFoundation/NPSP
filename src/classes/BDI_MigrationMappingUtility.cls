@@ -179,7 +179,7 @@ public with sharing class BDI_MigrationMappingUtility {
                 );
             }
         } catch (Exception e) {
-            throw new DeploymentException('There was an error attempting to deploy the custom metadata records. ' + e.getMessage());
+            throw new DeploymentException(Label.bdiErrorDeploymentFailed + ' ' + e.getMessage());
         }
 
         clearLists();
@@ -219,7 +219,7 @@ public with sharing class BDI_MigrationMappingUtility {
             upsert dataImportSettings;
             return dataImportSettings;
         } catch (Exception e) {
-            throw new DeploymentException('There was an error attempting to update data import settings.');
+            throw new DeploymentException(Label.bdiErrorDataImportCustomSettings);
         }
     }
 
@@ -251,13 +251,13 @@ public with sharing class BDI_MigrationMappingUtility {
 
                 BDI_MigrationMappingUtility.updateCustomSettings(HELP_TEXT, errMsg);
                 if (!Test.isRunningTest()) {
-                    throw new DeploymentException('There was an error attempting to deploy custom metadata.');
+                    throw new DeploymentException(Label.bdiErrorDeploymentFailed);
                 }
             } else {
                 // Deployment was not successful and result is null
                 BDI_MigrationMappingUtility.updateCustomSettings(HELP_TEXT, 'Unknown error');
                 if (!Test.isRunningTest()) {
-                    throw new DeploymentException('There was an error attempting to deploy custom metadata.');
+                    throw new DeploymentException(Label.bdiErrorDeploymentFailed);
                 }
             }
         }

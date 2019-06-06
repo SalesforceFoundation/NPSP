@@ -2146,6 +2146,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>NPSP Data Import</value>
     </labels>
     <labels>
+        <fullName>bdiDeploymentInProgress</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDeploymentInProgress</shortDescription>
+        <value>There is a deployment in progess.</value>
+    </labels>
+    <labels>
         <fullName>bdiDonation</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2232,6 +2240,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>error when a batch is missing a name</shortDescription>
         <value>Batch Name is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDataImportCustomSettings</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when updating data import custom settings</shortDescription>
+        <value>There was an error attempting to update data import custom settings.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDeploymentFailed</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error deploying metadata during migration from help text to metadata mapping</shortDescription>
+        <value>There was an error attempting to deploy custom metadata.</value>
     </labels>
     <labels>
         <fullName>bdiErrorDonationLookupMatch</fullName>
