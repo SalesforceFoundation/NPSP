@@ -139,7 +139,7 @@ public with sharing class OPP_StageMappingUtil {
             metadataRecordList.add(finalizedRecord);
             metadataRecordList.add(pledgedRecord);
         } else {
-            metadataRecordList = [Select Id, Opportunity_Stage__c, Opportunity_State__c FROM Opportunity_Stage_To_State_Mapping__mdt];
+            metadataRecordList = [SELECT Id, Opportunity_Stage__c, Opportunity_State__c FROM Opportunity_Stage_To_State_Mapping__mdt];
         }
 
         return metadataRecordList;
@@ -153,7 +153,7 @@ public with sharing class OPP_StageMappingUtil {
         npe01__Contacts_And_Orgs_Settings__c contactAndOrgCustomSetting = UTIL_CustomSEttingsFacade.getOrgContactsSettings();
 
         // Only create the finalized opp stage to state record if there's no existing finalized record. 
-        Integer finalizedCount = [Select Count() From Opportunity_Stage_To_State_Mapping__mdt Where Opportunity_State__c =: FINALIZED_STATE_VAL];
+        Integer finalizedCount = [SELECT Count() FROM Opportunity_Stage_To_State_Mapping__mdt Where Opportunity_State__c =: FINALIZED_STATE_VAL];
         
         // Take the value, if there is one, and create a finalized Opp Stage to State custom metadata type record. 
         if (finalizedCount == 0 && 
@@ -175,7 +175,7 @@ public with sharing class OPP_StageMappingUtil {
         npe01__Contacts_And_Orgs_Settings__c contactAndOrgCustomSetting = UTIL_CustomSEttingsFacade.getOrgContactsSettings();
 
         
-        Integer overallCount = [Select Count() From Opportunity_Stage_To_State_Mapping__mdt];
+        Integer overallCount = [SELECT Count() FROM Opportunity_Stage_To_State_Mapping__mdt];
 
         // Get all opportunity stages to see if there is a pledged stage
         Schema.DescribeFieldResult fieldResult = Opportunity.StageName.getDescribe();
