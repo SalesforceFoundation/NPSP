@@ -282,10 +282,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                     hasDeploymentInProgress = deploymentStatus == Metadata.DeployStatus.INPROGRESS
                         || deploymentStatus == Metadata.DeployStatus.PENDING
                         || deploymentStatus == Metadata.DeployStatus.CANCELING;
-
-                    if (hasDeploymentInProgress) {
-                        throwMessage(ApexPages.Severity.WARNING, 'There is a deployment currently in progess.');
-                    }
                 }
             }
 
