@@ -91,12 +91,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Custom metadata deployment result
     */
-    public Metadata.DeployResult deployment { get; set; }
+    public Metadata.DeployResult deploymentResult { get; set; }
 
     /*******************************************************************************************************
     * @description Boolean that determines if the toggle should be disabled
     */
-    public Boolean canEnableAdvancedMapping { get; set; }
+    public Boolean deploymentInProgress { get; set; }
 
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
@@ -109,7 +109,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public STG_PanelDataImportAdvancedMapping_CTRL() {
         this.migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
         this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        this.deployment = checkDeploymentStatus();
+        this.deploymentResult = checkDeploymentStatus();
     }
 
     /*******************************************************************************************************
@@ -119,28 +119,25 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public PageReference enableDataImportFieldMapping() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
-        // Check the deployment status and set canEnableAdvancedMapping value
-        deployment = checkDeploymentStatus();
+        // Check the deployment status and set deploymentInProgress value
+        deploymentResult = checkDeploymentStatus();
 
-        if (canEnableAdvancedMapping == false || canEnableAdvancedMapping == null) {
+        if (deploymentInProgress == false) {
             Savepoint sp = Database.setSavepoint();
             try {
                 isPolling = true;
 
                 if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
-                    // Custom field mapping set exists
+                    // Compare help text mappings against migrated custom field mapping set
                     migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(
                         BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
                     );
                 } else {
-                    // Custom field mapping set doesn't exist
+                    // Compare help text mappings against default field mapping set
                     migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(
                         BDI_MigrationMappingUtility.DEFAULT_FIELD_MAPPING_SET_RECORD_NAME
                     );
                 }
-
-                // Create Custom Field Mapping Set
-                isPolling = true;
 
                 // Start the migration, collect help text mappings, and compare against existing cmt mappings
                 migrationMappingUtility.startMigration();
@@ -238,12 +235,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public PageReference startPolling() {
         timeoutCount++;
 
-        deployment = checkDeploymentStatus();
+        deploymentResult = checkDeploymentStatus();
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
-        if (deployment != null) {
+        if (deploymentResult != null) {
             // We had a migration that contained CMT records to insert
-            Boolean isSuccess = deployment.status == Metadata.DeployStatus.Succeeded
+            Boolean isSuccess = deploymentResult.status == Metadata.DeployStatus.Succeeded
                 && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
 
             if (isSuccess) {
@@ -254,12 +251,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                         Label.stgDeploymentCustomMetadataMappingEnabled
                     )
                 );
-            } else if (deployment.status == Metadata.DeployStatus.FAILED) {
+            } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain));
             }
 
-        } else if (deployment == null
+        } else if (deploymentResult == null
                    && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING) {
             // We had a migration that didn't contain CMT records to insert
             // DeploymentContainer was empty which means we're using our standard field mapping set
@@ -290,45 +287,32 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
-    * @description Method checks to see if we have a saved custom metadata deployment id,
-    * inspects the deployment status, and sets the page's toggle status
+    * @description Checks to see if we have a saved custom metadata deployment id,
+    * inspects the deployment status, and sets the deploymentInProgress boolean
     * @return Metadata.DeployResult
     */
     private Metadata.DeployResult checkDeploymentStatus() {
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
         if (dataImportSettings.CMT_Deployment_ID__c != null) {
-            String response = migrationMappingUtility.getDeploymentStatus(dataImportSettings.CMT_Deployment_ID__c);
+            String response = migrationMappingUtility.getDeploymentResult(dataImportSettings.CMT_Deployment_ID__c);
             DeployResultWrapper responseWrapper =
                 (DeployResultWrapper)JSON.deserialize(response, DeployResultWrapper.class);
 
             if (responseWrapper != null && responseWrapper.deployResult != null) {
-                setCanEnableAdvancedMappingBoolean(responseWrapper.deployResult.status);
+                Metadata.DeployStatus deploymentStatus = responseWrapper.deployResult.status;
+
+                // Set deploymentInProgress boolean
+                if (deploymentStatus != null) {
+                    deploymentInProgress = deploymentStatus == Metadata.DeployStatus.INPROGRESS
+                        || deploymentStatus == Metadata.DeployStatus.PENDING
+                        || deploymentStatus == Metadata.DeployStatus.CANCELING;
+                }
             }
 
             return responseWrapper.deployResult;
         }
         return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Sets canEnableAdvancedMapping boolean, should be disabled if we have an active deployment.
-    * @return Metadata.DeployStatus
-    */
-    private void setCanEnableAdvancedMappingBoolean(Metadata.DeployStatus deploymentStatus) {
-        if (deploymentStatus != null) {
-            Boolean disabled = deploymentStatus == Metadata.DeployStatus.INPROGRESS
-                || deploymentStatus == Metadata.DeployStatus.PENDING
-                || deploymentStatus == Metadata.DeployStatus.CANCELING;
-
-            if (disabled) {
-                canEnableAdvancedMapping = true;
-            } else {
-                canEnableAdvancedMapping = false;
-            }
-        } else {
-            canEnableAdvancedMapping = false;
-        }
     }
 
     /*******************************************************************************************************
