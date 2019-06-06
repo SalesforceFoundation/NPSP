@@ -182,10 +182,7 @@ public with sharing class BDI_MigrationMappingUtility {
             throw new DeploymentException('There was an error attempting to deploy the custom metadata records. ' + e.getMessage());
         }
 
-        pendingMappings.clear();
-        pendingStandardMappings.clear();
-        conflictingMappings.clear();
-        pendingSpecialCasedMappings.clear();
+        clearLists();
 
         return deploymentId;
     }
@@ -491,11 +488,7 @@ public with sharing class BDI_MigrationMappingUtility {
      */
     public void buildCustomMetadataRecordsFromHelpText(String fieldMappingSetName) {
 
-        queuedMetadataTypesForDeploy.clear();
-        conflictingMappings.clear();
-        pendingMappings.clear();
-        pendingStandardMappings.clear();
-        pendingSpecialCasedMappings.clear();
+        clearLists();
 
         Map<String, BDI_HelpTextCMT.MappingDetail> mappingDetailsBySourceFieldName =
                 helper.getAllMappingDetailsBySourceFieldName();
@@ -609,6 +602,17 @@ public with sharing class BDI_MigrationMappingUtility {
             || badIsDeletedField;
 
         return foundMismatch;
+    }
+
+    /**
+     * @description Empty deployment queue and related lists
+     */
+    private void clearLists() {
+        queuedMetadataTypesForDeploy.clear();
+        conflictingMappings.clear();
+        pendingMappings.clear();
+        pendingStandardMappings.clear();
+        pendingSpecialCasedMappings.clear();
     }
 
     /**
