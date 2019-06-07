@@ -196,7 +196,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         timeoutCount++;
 
         deploymentResult = checkDeploymentStatus();
-        dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
         if (deploymentResult != null) {
             // We had a migration that contained CMT records to insert
