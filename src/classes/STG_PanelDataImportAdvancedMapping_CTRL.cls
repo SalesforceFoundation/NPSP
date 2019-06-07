@@ -96,7 +96,18 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Boolean that determines if the toggle should be disabled
     */
-    public Boolean hasDeploymentInProgress { get; set; }
+    public Boolean hasDeploymentInProgress {
+        get {
+            if (hasDeploymentInProgress == null) {
+                hasDeploymentInProgress = deploymentResult.status == Metadata.DeployStatus.INPROGRESS
+                    || deploymentResult.status == Metadata.DeployStatus.PENDING
+                    || deploymentResult.status == Metadata.DeployStatus.CANCELING;
+                return hasDeploymentInProgress;
+            }
+            return false;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
@@ -109,7 +120,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public STG_PanelDataImportAdvancedMapping_CTRL() {
         this.migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
         this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        this.deploymentResult = checkDeploymentStatus();
+        setDeploymentResult();
     }
 
     /*******************************************************************************************************
@@ -120,7 +131,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         // Check the deployment status and set hasDeploymentInProgress value
-        deploymentResult = checkDeploymentStatus();
+        setDeploymentResult();
 
         if (hasDeploymentInProgress == true) {
             throwMessage(ApexPages.Severity.WARNING, Label.bdiDeploymentInProgress);
@@ -195,7 +206,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public PageReference startPolling() {
         timeoutCount++;
 
-        deploymentResult = checkDeploymentStatus();
+        setDeploymentResult();
 
         if (deploymentResult != null) {
             // We had a migration that contained CMT records to insert
@@ -231,9 +242,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Checks to see if we have a saved custom metadata deployment id,
     * inspects the deployment status, and sets the hasDeploymentInProgress boolean
-    * @return Metadata.DeployResult
     */
-    private Metadata.DeployResult checkDeploymentStatus() {
+    private void setDeploymentResult() {
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
         if (dataImportSettings.CMT_Deployment_ID__c != null) {
@@ -244,17 +254,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             if (responseWrapper != null && responseWrapper.deployResult != null) {
                 Metadata.DeployStatus deploymentStatus = responseWrapper.deployResult.status;
 
-                // Set hasDeploymentInProgress boolean
-                if (deploymentStatus != null) {
-                    hasDeploymentInProgress = deploymentStatus == Metadata.DeployStatus.INPROGRESS
-                        || deploymentStatus == Metadata.DeployStatus.PENDING
-                        || deploymentStatus == Metadata.DeployStatus.CANCELING;
-                }
+                deploymentResult = responseWrapper.deployResult;
             }
-
-            return responseWrapper.deployResult;
         }
-        return null;
     }
 
     /*******************************************************************************************************
