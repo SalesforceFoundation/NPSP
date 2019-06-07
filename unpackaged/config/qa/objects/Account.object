@@ -13,6 +13,16 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>custom_acc_text__c</fullName>
+        <externalId>false</externalId>
+        <label>custom_acc_text</label>
+        <length>10</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>UniqueId__c</fullName>
         <description>The unique id used for matching external data.</description>
         <externalId>true</externalId>
