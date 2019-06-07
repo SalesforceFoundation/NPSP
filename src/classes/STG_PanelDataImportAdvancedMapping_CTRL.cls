@@ -63,7 +63,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Get custom data import settings
     */
-    public Data_Import_Settings__c dataImportSettings { get; set; }
+    private Data_Import_Settings__c dataImportSettings { get; set; }
 
     /*******************************************************************************************************
     * @description Boolean used for toggle value in the visualforce page
@@ -91,14 +91,14 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Custom metadata deployment result
     */
-    public Metadata.DeployResult deploymentResult { get; set; }
+    private Metadata.DeployResult deploymentResult { get; set; }
 
     /*******************************************************************************************************
     * @description Boolean that determines if the toggle should be disabled
     */
     public Boolean hasDeploymentInProgress {
         get {
-            if (hasDeploymentInProgress == null) {
+            if (hasDeploymentInProgress == null && deploymentResult != null) {
                 hasDeploymentInProgress = deploymentResult.status == Metadata.DeployStatus.INPROGRESS
                     || deploymentResult.status == Metadata.DeployStatus.PENDING
                     || deploymentResult.status == Metadata.DeployStatus.CANCELING;
@@ -112,7 +112,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
     */
-    public BDI_MigrationMappingUtility migrationMappingUtility { get; set; }
+    private BDI_MigrationMappingUtility migrationMappingUtility { get; set; }
 
     /*******************************************************************************************************
     * @description Constructor for STG_PanelDataImportAdvancedMapping_CTRL class
