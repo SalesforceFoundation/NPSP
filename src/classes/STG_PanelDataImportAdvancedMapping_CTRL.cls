@@ -220,8 +220,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         }
 
         if (timeoutCount > MAX_TIME_OUT) {
-            // We timed out, reset instance of migration mapping utility
-            migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
             isPolling = false;
             throwMessage(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
             return null;
