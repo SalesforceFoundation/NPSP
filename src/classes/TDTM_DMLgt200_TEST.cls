@@ -71,14 +71,13 @@ private class TDTM_DMLgt200_TEST {
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
-        Integer n = 0;
         for (Contact c : contacts) {
             c.OtherCity = null;
-            c.LastName = c.LastName + '(' + n++ + ')';
+            c.LastName = c.LastName;
             c.Title = 'TestTitle';
         }
         Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.AllowSave = true;
+        dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
         System.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
@@ -127,15 +126,14 @@ private class TDTM_DMLgt200_TEST {
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         // as well as all the related Affiliation recorsd
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
-        Integer n = 0;
         for (Contact c : contacts) {
             c.OtherCity = null;
-            c.LastName = c.LastName + '(' + n++ + ')';
+            c.LastName = c.LastName;
             c.Title = 'TestTitle';
             c.Primary_Affiliation__c = orgAcct.Id;
         }
         Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.AllowSave = true;
+        dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
         Test.stopTest();
 
