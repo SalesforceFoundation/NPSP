@@ -154,11 +154,14 @@ public class UTIL_Namespace {
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
     public static string removeNSPrefixNpspOnly(string str) {
-        if (str.startsWith('npsp__')) {
-            str = str.replaceFirst('npsp__', '');
-        } else if (str.startsWith('npsp.')) {
-            str = str.replaceFirst('npsp.', '');
+        if (str != null) {
+            if (str.startsWith('npsp__')) {
+                str = str.replaceFirst('npsp__', '');
+            } else if (str.startsWith('npsp.')) {
+                str = str.replaceFirst('npsp.', '');
+            }
         }
+
         return str;
     }
 
