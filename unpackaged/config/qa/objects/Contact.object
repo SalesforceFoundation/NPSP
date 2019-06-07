@@ -25,6 +25,17 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>custom_cont_num__c</fullName>
+        <externalId>false</externalId>
+        <label>custom_cont_num</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Previous_Level__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
