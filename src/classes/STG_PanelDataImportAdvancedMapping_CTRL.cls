@@ -149,7 +149,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             } catch (Exception e) {
                 Database.rollback(sp);
                 ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-                throwMessage(ApexPages.Severity.ERROR, e.getMessage());
+                throwMessage(ApexPages.Severity.ERROR, Label.bdiErrorDeploymentFailed + ' ' + e.getMessage());
 
                 isPolling = false;
                 BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
@@ -173,7 +173,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            throwMessage(ApexPages.Severity.ERROR, e.getMessage());
+            throwMessage(ApexPages.Severity.ERROR, Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage());
 
             isPolling = false;
             BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
@@ -195,7 +195,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             upsert dataImportSettings;
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,
+                Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage()));
         }
     }
 

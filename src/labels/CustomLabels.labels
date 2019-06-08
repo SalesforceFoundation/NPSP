@@ -2151,7 +2151,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiDeploymentInProgress</shortDescription>
-        <value>There is a deployment in progess.</value>
+        <value>Help Text mappings are currently being converted to Custom Metadata.</value>
     </labels>
     <labels>
         <fullName>bdiDonation</fullName>
@@ -2247,7 +2247,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error when updating data import custom settings</shortDescription>
-        <value>There was an error attempting to update data import custom settings.</value>
+        <value>There was an error attempting to update the Custom Settings named Data Import Settings.</value>
     </labels>
     <labels>
         <fullName>bdiErrorDeploymentFailed</fullName>
@@ -2255,7 +2255,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error deploying metadata during migration from help text to metadata mapping</shortDescription>
-        <value>There was an error attempting to deploy custom metadata.</value>
+        <value>There was an error attempting to deploy Custom Metadata.</value>
     </labels>
     <labels>
         <fullName>bdiErrorDonationLookupMatch</fullName>

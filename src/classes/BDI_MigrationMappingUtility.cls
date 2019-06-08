@@ -213,7 +213,7 @@ public with sharing class BDI_MigrationMappingUtility {
             upsert dataImportSettings;
             return dataImportSettings;
         } catch (Exception e) {
-            throw new DeploymentException(Label.bdiErrorDataImportCustomSettings);
+            throw new DeploymentException(Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage());
         }
     }
 
