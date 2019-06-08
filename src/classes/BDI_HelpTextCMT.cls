@@ -76,7 +76,7 @@ public class BDI_HelpTextCMT {
             Map<String, Object> fieldValues = new Map<String, Object>{
                 'Data_Import_Object_Mapping_Set__c' => this.dataImportObjectMappingSetRecordName
             };
-            customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
+            customMd = addFieldsToMetadataObject(customMd, fieldValues);
 
             return customMd;
         }
@@ -174,7 +174,7 @@ public class BDI_HelpTextCMT {
             } else {
                 fieldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
             }
-            customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
+            customMd = addFieldsToMetadataObject(customMd, fieldValues);
 
             return customMd;
         }
@@ -256,6 +256,25 @@ public class BDI_HelpTextCMT {
             this.importedRecordField = importedRecordField;
             this.importedRecordStatusField = importedRecordStatusField;
         }
+    }
+
+    /**
+     * @description Set field values on the specified Custom Metadata Type record
+     * @param customMetadata CustomMetadata instance
+     * @param fieldValues Key-Value pair map of fields/values
+     * @return Updated CustomMetadata object instance with the fields added to the values collection
+     */
+    private static Metadata.CustomMetadata addFieldsToMetadataObject(Metadata.CustomMetadata customMetadata,
+        Map<String, Object> fieldValues) {
+
+        Metadata.CustomMetadataValue customField;
+        for (String fieldKey : fieldValues.keySet()) {
+            customField = new Metadata.CustomMetadataValue();
+            customField.field = UTIL_Namespace.StrAllNSPrefix(fieldKey);
+            customField.value = fieldValues.get(fieldKey);
+            customMetadata.values.add(customField);
+        }
+        return customMetadata;
     }
 
     /**
