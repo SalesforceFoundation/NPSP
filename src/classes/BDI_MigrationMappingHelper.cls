@@ -257,52 +257,18 @@ public class BDI_MigrationMappingHelper {
             if (namespace != 'npsp') {
                 fieldMapping.Source_Field_API_Name__c =
                     UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                fieldMapping.Target_Object_Mapping__r.Object_API_Name__c =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
             }
-            fieldMappingsBySourceFieldName.put(fieldMapping.Source_Field_API_Name__c, fieldMapping);
+            fieldMappingsBySourceFieldName.put(
+                fieldMapping.Target_Object_Mapping__r.Object_API_Name__c
+                    + '.'
+                    + fieldMapping.Target_Object_Mapping__r.DeveloperName
+                    + '.'
+                    + fieldMapping.Source_Field_API_Name__c,
+                fieldMapping);
         }
 
         return fieldMappingsBySourceFieldName;
-    }
-
-    /**
-     * @description Queries for default Field Mappings and builds a map of DeveloperName to Field Mapping record
-     * Used to collect default field mappings related to GAUs and Opportunity Contact Roles
-     * @param fuzzyTargetName String related to target object name (i.e. 'GAU%', 'Opportunity_Contact%')
-     * @param fieldMappingSet String Developer Name of the Data Import Field Mapping Set to search under
-     * @return Collection of Field Mapping DeveloperName to Field Mapping record
-     */
-    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByTargetObjectAndSourceFieldName(
-        String fuzzyTargetName, String fieldMappingSet) {
-
-        List<Data_Import_Field_Mapping__mdt> foundMappings = [SELECT Id,
-                DeveloperName,
-                MasterLabel,
-                Source_Field_API_Name__c,
-                Target_Field_API_Name__c,
-                Target_Object_Mapping__r.DeveloperName,
-                Target_Object_Mapping__r.MasterLabel,
-                Target_Object_Mapping__r.Object_API_Name__c
-            FROM Data_Import_Field_Mapping__mdt
-            WHERE Target_Object_Mapping__r.DeveloperName LIKE :fuzzyTargetName
-            AND Data_Import_Field_Mapping_Set__r.DeveloperName = :fieldMappingSet];
-
-        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByTargetObjectAndSourceFieldName =
-            new Map<String, Data_Import_Field_Mapping__mdt>();
-
-        if (foundMappings.size() > 0) {
-            String namespace = UTIL_Namespace.getNamespace();
-
-            for (Data_Import_Field_Mapping__mdt fieldMapping : foundMappings) {
-                if (namespace != 'npsp') {
-                    fieldMapping.Source_Field_API_Name__c =
-                        UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
-                }
-                fieldMappingsByTargetObjectAndSourceFieldName.put(
-                    fieldMapping.Target_Object_Mapping__r.DeveloperName + '.' + fieldMapping.Source_Field_API_Name__c,
-                    fieldMapping);
-            }
-        }
-
-        return fieldMappingsByTargetObjectAndSourceFieldName;
     }
 }

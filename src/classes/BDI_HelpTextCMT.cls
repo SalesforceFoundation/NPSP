@@ -109,6 +109,7 @@ public class BDI_HelpTextCMT {
             this.sourceFieldAPIName = sourceFieldAPIName;
             this.targetFieldAPIName = detail.targetFieldAPIName;
             this.dataImportObjectName = detail.dataImportObjectName;
+            this.targetObjectMappingRecordName = detail.targetObjectName;
             this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
             this.isRequired = 'No';
             this.isDeleted = false;
