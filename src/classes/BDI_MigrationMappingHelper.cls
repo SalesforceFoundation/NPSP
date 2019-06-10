@@ -262,10 +262,10 @@ public class BDI_MigrationMappingHelper {
             }
             fieldMappingsBySourceFieldName.put(
                 fieldMapping.Target_Object_Mapping__r.Object_API_Name__c
-                    + '.'
-                    + fieldMapping.Target_Object_Mapping__r.DeveloperName
-                    + '.'
-                    + fieldMapping.Source_Field_API_Name__c,
+                + '.'
+                + fieldMapping.Target_Object_Mapping__r.DeveloperName
+                + '.'
+                + fieldMapping.Source_Field_API_Name__c,
                 fieldMapping);
         }
 

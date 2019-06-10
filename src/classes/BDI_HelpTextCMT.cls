@@ -96,6 +96,7 @@ public class BDI_HelpTextCMT {
         public String targetFieldAPIName {get; set;}
         public String targetObjectMappingRecordName;
         public String targetObjectMappingLabel;
+        public String targetObjectAPIName;
         public String isRequired;
         public Boolean isDeleted;
         public String expectedHelpTextValue {get; set;}
@@ -109,7 +110,7 @@ public class BDI_HelpTextCMT {
             this.sourceFieldAPIName = sourceFieldAPIName;
             this.targetFieldAPIName = detail.targetFieldAPIName;
             this.dataImportObjectName = detail.dataImportObjectName;
-            this.targetObjectMappingRecordName = detail.targetObjectName;
+            this.targetObjectAPIName = detail.targetObjectName;
             this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
             this.isRequired = 'No';
             this.isDeleted = false;
@@ -122,6 +123,7 @@ public class BDI_HelpTextCMT {
             this.targetFieldAPIName = sourceFieldMapping.targetFieldAPIName;
             this.targetObjectMappingRecordName = sourceFieldMapping.targetObjectMappingRecordName;
             this.targetObjectMappingLabel = sourceFieldMapping.targetObjectMappingLabel;
+            this.targetObjectAPIName = sourceFieldMapping.targetObjectAPIName;
             this.dataImportObjectName = sourceFieldMapping.dataImportObjectName;
             this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
             this.isRequired = 'No';
@@ -135,7 +137,8 @@ public class BDI_HelpTextCMT {
             this.targetFieldAPIName = sourceFieldMapping.Target_Field_API_Name__c;
             this.targetObjectMappingRecordName = sourceFieldMapping.Target_Object_Mapping__r.DeveloperName;
             this.targetObjectMappingLabel = sourceFieldMapping.Target_Object_Mapping__r.MasterLabel;
-            this.dataImportObjectName = sourceFieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
+            this.dataImportObjectName = sourceFieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.targetObjectAPIName = sourceFieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
             this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
             this.isRequired = 'No';
             this.isDeleted = false;

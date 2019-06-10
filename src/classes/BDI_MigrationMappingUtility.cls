@@ -45,6 +45,7 @@ public with sharing class BDI_MigrationMappingUtility {
     /*
     * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
     */
+    @TestVisible
     private List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingMappings =
         new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
@@ -58,12 +59,14 @@ public with sharing class BDI_MigrationMappingUtility {
     /**
     * @description List of standard mappings
     */
+    @TestVisible
     private List<BDI_HelpTextCMT.DataImportFieldMapping> pendingStandardMappings =
         new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
     /**
     * @description List of special cased mappings (GAU and Opportunity)
     */
+    @TestVisible
     private List<BDI_HelpTextCMT.DataImportFieldMapping> pendingNonHelpTextMappings =
         new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
@@ -262,9 +265,6 @@ public with sharing class BDI_MigrationMappingUtility {
     * pendingMappings, conflictingMappings, pendingStandardMappings.
     */
     public void startMigration() {
-        List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
-        List<BDI_HelpTextCMT.DataImportFieldMapping> allMappings =
-            new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
         if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
             // Inspects help text mappings, compares against migrated field mapping set, and
@@ -398,7 +398,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
         for (BDI_HelpTextCMT.DataImportFieldMapping fieldMapping : fieldMappings) {
             Data_Import_Field_Mapping__mdt existingDefaultFieldMapping =
-                fieldMappingsByFieldMappingSetDeveloperName.get(fieldMapping.dataImportObjectName
+                fieldMappingsByFieldMappingSetDeveloperName.get(fieldMapping.targetObjectAPIName
                     + '.'
                     + fieldMapping.targetObjectMappingRecordName
                     + '.'
@@ -435,7 +435,7 @@ public with sharing class BDI_MigrationMappingUtility {
             BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = 
                 new BDI_HelpTextCMT.DataImportFieldMapping(key, mappingDetailsBySourceFieldName.get(key));
 
-            String fieldMappingKey = fieldMapping.targetObjectMappingRecordName
+            String fieldMappingKey = fieldMapping.targetObjectAPIName
                 + '.'
                 + fieldMapping.dataImportObjectName
                 + '.'
