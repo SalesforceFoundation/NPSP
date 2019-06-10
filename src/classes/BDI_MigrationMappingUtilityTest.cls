@@ -105,7 +105,7 @@ private class BDI_MigrationMappingUtilityTest {
         Test.startTest();
         String targetFieldAPIName;
         for (Metadata.CustomMetadataValue customMetadataValue : util.queuedMetadataTypesForDeploy[0].values) {
-            if (customMetadataValue.field == 'Target_Field_API_name__c') {
+            if (customMetadataValue.field.contains('Target_Field_API_Name')) {
                 targetFieldAPIName = String.valueOf(customMetadataValue.value);
             }
         }
