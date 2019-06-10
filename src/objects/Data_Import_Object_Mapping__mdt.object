@@ -2,6 +2,18 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Represents a a specific instance of an object to be used for data import, and how it is related to its predecessors.</description>
     <fields>
+        <fullName>Custom_Mapping_Logic_Class__c</fullName>
+        <description>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method.</inlineHelpText>
+        <label>Custom Mapping Logic Class</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Data_Import_Object_Mapping_Set__c</fullName>
         <description>The Data Import Object Mapping Set that this record is a part of.</description>
         <externalId>false</externalId>

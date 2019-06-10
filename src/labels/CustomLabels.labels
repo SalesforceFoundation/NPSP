@@ -1914,6 +1914,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Account Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</value>
     </labels>
     <labels>
+        <fullName>bdiAdditionalObjPredNotFound</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAdditionalObjPredNotFound</shortDescription>
+        <value>Error: record not created. This record is dependent on another record which couldn&apos;t be found.</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdditionalObjRequiredFieldsNull</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAdditionalObjRequiredFieldsNull</shortDescription>
+        <value>Error: record not created, missing required fields:</value>
+    </labels>
+    <labels>
         <fullName>bdiBatchException</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2554,6 +2570,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiTime</shortDescription>
         <value>Time:</value>
+    </labels>
+    <labels>
+        <fullName>bdiUpdated</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiUpdated</shortDescription>
+        <value>Updated</value>
     </labels>
     <labels>
         <fullName>bgeActionDelete</fullName>

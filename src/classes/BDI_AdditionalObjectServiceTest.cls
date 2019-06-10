@@ -1,0 +1,753 @@
+/*
+    Copyright (c) 2014 Salesforce.org
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
+* @description Unit tests to cover the creation of additional objects during batch data import.
+*/
+
+@isTest(isParallel=true)
+private class BDI_AdditionalObjectServiceTest {
+
+    @testSetup
+    static void setupTestData() {
+
+
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 1',
+                                                                        Active__c = true);
+
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 2',
+                                                                        Active__c = true);
+
+        General_Accounting_Unit__c[] testGAUs = new General_Accounting_Unit__c[]{gau1,gau2};
+        insert testGAUs;
+
+        Campaign testCampaign = new Campaign(Name = 'TestGroupA Campaign',
+                                             IsActive = true,
+                                             StartDate = Date.today().addDays(-10), 
+                                             EndDate = Date.today().addDays(10));
+        insert testCampaign;
+
+        DataImport__c testDataImportA = new DataImport__c(Account1_City__c = 'Faketown',
+                                                        Account1_Country__c = 'US',
+                                                        Account1_Name__c = 'TestGroupA Org 1',
+                                                        Account1_Phone__c = '555-123-0001',
+                                                        Account1_State_Province__c = 'CA',
+                                                        Account1_Street__c = '100 Fakeaccount St',  
+                                                        Account1_Website__c = 'www.fakeorgacct01.com',
+                                                        Account1_Zip_Postal_Code__c = '94607',
+                                                        Account2_City__c = 'Faketown',
+                                                        Account2_Country__c = 'US',
+                                                        Account2_Name__c = 'Org2TestGroupA',
+                                                        Account2_Phone__c = '555-234-0002',
+                                                        Account2_State_Province__c = 'CA',
+                                                        Account2_Street__c = '200 FakeOrgaccount St',   
+                                                        Account2_Website__c = 'www.fakeorgacct02.com',
+                                                        Account2_Zip_Postal_Code__c = '94100',
+                                                        Donation_Campaign_Name__c = 'TestGroupA Campaign',
+                                                        Contact1_Alternate_Email__c = 'testgroupAcontact01Alternate@fakedata.com',
+                                                        Contact1_Birthdate__c = Date.today().addDays(-1000),
+                                                        Contact1_Firstname__c = 'Susie',
+                                                        Contact1_Home_Phone__c = '555-321-0001',
+                                                        Contact1_Lastname__c = 'TestGroupA01',
+                                                        Contact1_Mobile_Phone__c ='555-231-0001',
+                                                        Contact1_Other_Phone__c = '555-456-0001',
+                                                        Contact1_Personal_Email__c = 'testgroupAcontact01Personal@fakedata.com',
+                                                        Contact1_Preferred_Email__c = 'testgroupAcontact01Preferred@fakedata.com',
+                                                        Contact1_Preferred_Phone__c = '555-567-0001',
+                                                        Contact1_Salutation__c = 'Ms.',
+                                                        Contact1_Title__c = 'President',
+                                                        Contact1_Work_Email__c = 'testgroupAcontact01Preferred@fakedata.com',
+                                                        Contact1_Work_Phone__c = '555-678-0001',
+                                                        Contact2_Alternate_Email__c = 'testgroupAcontact02Alternate@fakedata.com',
+                                                        Contact2_Birthdate__c = Date.today().addDays(-1000),
+                                                        Contact2_Firstname__c = 'John',
+                                                        Contact2_Home_Phone__c = '555-321-0002',
+                                                        Contact2_Lastname__c = 'TestGroupA02',
+                                                        Contact2_Mobile_Phone__c ='555-231-0002',
+                                                        Contact2_Other_Phone__c = '555-456-0002',
+                                                        Contact2_Personal_Email__c = 'testgroupAcontact02Personal@fakedata.com',
+                                                        Contact2_Preferred_Email__c = 'testgroupAcontact02Preferred@fakedata.com',
+                                                        Contact2_Preferred_Phone__c = '555-567-0002',
+                                                        Contact2_Salutation__c = 'Mr.',
+                                                        Contact2_Title__c = 'CEO',
+                                                        Contact2_Work_Email__c = 'testgroupAcontact02Preferred@fakedata.com',
+                                                        Contact2_Work_Phone__c = '555-678-0002',
+                                                        Donation_Amount__c = 1000,
+                                                        Donation_Date__c = Date.today(),
+                                                        Donation_Description__c = 'Most excellent donation',
+                                                        Donation_Donor__c = 'Contact1',
+                                                        Donation_Member_Level__c = 'Gold',
+                                                        Donation_Membership_End_Date__c = Date.today().addDays(200),
+                                                        Donation_Membership_Origin__c = 'Outer Space',
+                                                        Donation_Membership_Start_Date__c =  Date.today().addDays(-200),
+                                                        Donation_Name__c = 'TestGroupA',    
+                                                        Donation_Stage__c = 'Closed Won',
+                                                        Donation_Type__c = null,
+                                                        GAU_Allocation_1_Amount__c = 750,
+                                                        GAU_Allocation_1_GAU__c = gau1.Id,
+                                                        GAU_Allocation_1_Percent__c = .75,
+                                                        GAU_Allocation_2_Amount__c = 250,
+                                                        GAU_Allocation_2_GAU__c = gau2.Id,
+                                                        GAU_Allocation_2_Percent__c = .25,
+                                                        Home_City__c = 'Fakeville',
+                                                        Home_Country__c = 'US',
+                                                        Home_State_Province__c = 'CA',
+                                                        Home_Street__c = '500 Fake Blvd',
+                                                        Home_Zip_Postal_Code__c = '94105',
+                                                        Household_Phone__c = '555-789-0001',
+                                                        Opportunity_Contact_Role_1_Role__c = 'Soft Credit',
+                                                        Opportunity_Contact_Role_2_Role__c = 'Soft Credit',
+                                                        Payment_Check_Reference_Number__c = '453',
+                                                        Payment_Method__c = 'Check');
+
+        DataImport__c testDataImportB = new DataImport__c(Account1_City__c = 'Faketown',
+                                                        Account1_Country__c = 'US',
+                                                        Account1_Name__c = 'TestGroupB Org 1',
+                                                        Account1_Phone__c = '554-123-0001',
+                                                        Account1_State_Province__c = 'CA',
+                                                        Account1_Street__c = '954 Fakey St',    
+                                                        Account1_Website__c = 'www.groupBfakeorgacct01.com',
+                                                        Account1_Zip_Postal_Code__c = '20000',
+                                                        Account2_City__c = 'Faketown',
+                                                        Account2_Country__c = 'US',
+                                                        Account2_Name__c = 'Org2TestGroupB',
+                                                        Account2_Phone__c = '554-234-0002',
+                                                        Account2_State_Province__c = 'CA',
+                                                        Account2_Street__c = '546 Main St', 
+                                                        Account2_Website__c = 'www.groupbfakeorgacct02.com',
+                                                        Account2_Zip_Postal_Code__c = '10000',
+                                                        Donation_Campaign_Name__c = 'TestGroupB Campaign',
+                                                        Contact1_Alternate_Email__c = 'testgroupBcontact01Alternate@fakedata.com',
+                                                        Contact1_Birthdate__c = Date.today().addDays(-1000),
+                                                        Contact1_Firstname__c = 'Susie',
+                                                        Contact1_Home_Phone__c = '554-321-0001',
+                                                        Contact1_Lastname__c = 'TestGroupB01',
+                                                        Contact1_Mobile_Phone__c ='554-231-0001',
+                                                        Contact1_Other_Phone__c = '554-456-0001',
+                                                        Contact1_Personal_Email__c = 'testgroupBcontact01Personal@fakedata.com',
+                                                        Contact1_Preferred_Email__c = 'testgroupBcontact01Preferred@fakedata.com',
+                                                        Contact1_Preferred_Phone__c = '554-567-0001',
+                                                        Contact1_Salutation__c = 'Ms.',
+                                                        Contact1_Title__c = 'President',
+                                                        Contact1_Work_Email__c = 'testgroupBcontact01Preferred@fakedata.com',
+                                                        Contact1_Work_Phone__c = '554-678-0001',
+                                                        Contact2_Alternate_Email__c = 'testgroupBcontact02Alternate@fakedata.com',
+                                                        Contact2_Birthdate__c = Date.today().addDays(-1000),
+                                                        Contact2_Firstname__c = 'John',
+                                                        Contact2_Home_Phone__c = '554-321-0002',
+                                                        Contact2_Lastname__c = 'TestGroupB02',
+                                                        Contact2_Mobile_Phone__c ='554-231-0002',
+                                                        Contact2_Other_Phone__c = '554-456-0002',
+                                                        Contact2_Personal_Email__c = 'testgroupBcontact02Personal@fakedata.com',
+                                                        Contact2_Preferred_Email__c = 'testgroupBcontact02Preferred@fakedata.com',
+                                                        Contact2_Preferred_Phone__c = '554-567-0002',
+                                                        Contact2_Salutation__c = 'Mr.',
+                                                        Contact2_Title__c = 'CEO',
+                                                        Contact2_Work_Email__c = 'testgroupBcontact02Preferred@fakedata.com',
+                                                        Contact2_Work_Phone__c = '554-678-0002',
+                                                        Donation_Amount__c = 1000,
+                                                        Donation_Date__c = Date.today(),
+                                                        Donation_Description__c = 'Most excellent donation',
+                                                        Donation_Donor__c = 'Contact1',
+                                                        Donation_Member_Level__c = 'Gold',
+                                                        Donation_Membership_End_Date__c = Date.today().addDays(200),
+                                                        Donation_Membership_Origin__c = 'Outer Space',
+                                                        Donation_Membership_Start_Date__c =  Date.today().addDays(-200),
+                                                        Donation_Name__c = 'TestGroupB',    
+                                                        Donation_Stage__c = 'Closed Won',
+                                                        Donation_Type__c = null,
+                                                        GAU_Allocation_1_Amount__c = 750,
+                                                        GAU_Allocation_1_GAU__c = gau1.Id,
+                                                        GAU_Allocation_1_Percent__c = .75,
+                                                        GAU_Allocation_2_Amount__c = 250,
+                                                        GAU_Allocation_2_GAU__c = gau2.Id,
+                                                        GAU_Allocation_2_Percent__c = .25,
+                                                        Home_City__c = 'Fakopolis',
+                                                        Home_Country__c = 'US',
+                                                        Home_State_Province__c = 'CA',
+                                                        Home_Street__c = '333 Fakington Blvd',
+                                                        Home_Zip_Postal_Code__c = '94115',
+                                                        Household_Phone__c = '554-789-0001',
+                                                        Opportunity_Contact_Role_1_Role__c = 'Soft Credit',
+                                                        Opportunity_Contact_Role_2_Role__c = 'Soft Credit',
+                                                        Payment_Check_Reference_Number__c = '453',
+                                                        Payment_Method__c = 'Check');
+
+        insert new DataImport__c[]{testDataImportA,testDataImportB};
+
+    }
+
+
+    /*******************************************************************************************************
+    * @description Tests that GAU allocations and Opportunity contact roles will be created as additional objects
+    */
+
+    @isTest static void shouldCreateAdditionalGAUAllocationsAndOCRs() {
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        DataImport__c testDataImportAResult;
+        DataImport__c testDataImportBResult;
+
+        for (DataImport__c di : [SELECT Id,
+                                        Status__c,
+                                        FailureInformation__c,
+                                        Contact1_Lastname__c,
+                                        Account1ImportStatus__c,
+                                        Account1Imported__c, 
+                                        Account2ImportStatus__c,
+                                        Account2Imported__c,
+                                        Contact1ImportStatus__c,
+                                        Contact1Imported__c,
+                                        Contact2ImportStatus__c,
+                                        Contact2Imported__c,
+                                        DonationCampaignImportStatus__c,
+                                        DonationCampaignImported__c,
+                                        DonationImportStatus__c,
+                                        DonationImported__c,
+                                        GAU_Allocation_1_Import_Status__c,
+                                        GAU_Allocation_1_Imported__c,
+                                        GAU_Allocation_2_Import_Status__c,
+                                        GAU_Allocation_2_Imported__c,
+                                        HomeAddressImportStatus__c,
+                                        HomeAddressImported__c,
+                                        HouseholdAccountImported__c,
+                                        Opportunity_Contact_Role_1_Imported__c,
+                                        Opportunity_Contact_Role_1_ImportStatus__c,
+                                        Opportunity_Contact_Role_2_Imported__c,
+                                        Opportunity_Contact_Role_2_ImportStatus__c,
+                                        PaymentImportStatus__c,
+                                        PaymentImported__c
+                                    FROM DataImport__c]) {
+            System.debug('DataimportResult is: ' + di);
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                testDataImportAResult = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                testDataImportBResult = di;
+            }
+        }
+
+        System.assertEquals(null,testDataImportAResult.FailureInformation__c);
+        System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
+        System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Account2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account2ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Contact2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Contact2ImportStatus__c);
+
+        System.assertNotEquals(null,testDataImportAResult.DonationCampaignImported__c);
+        System.assertEquals(System.label.bdiMatched,testDataImportAResult.DonationCampaignImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.DonationImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDataImportAResult.GAU_Allocation_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.GAU_Allocation_1_Import_Status__c);
+        System.assertNotEquals(null,testDataImportAResult.GAU_Allocation_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.GAU_Allocation_2_Import_Status__c);
+        System.assertNotEquals(null,testDataImportAResult.Opportunity_Contact_Role_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_1_ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
+
+        System.assertEquals(null,testDataImportBResult.FailureInformation__c);
+        System.assertEquals(System.label.bdiImported,testDataImportBResult.Status__c);
+        System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Account2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account2ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Contact2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Contact2ImportStatus__c);
+
+        System.assertNotEquals(null,testDataImportBResult.DonationCampaignImported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.DonationCampaignImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.DonationImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDataImportBResult.GAU_Allocation_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.GAU_Allocation_1_Import_Status__c);
+        System.assertNotEquals(null,testDataImportBResult.GAU_Allocation_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.GAU_Allocation_2_Import_Status__c);
+        System.assertNotEquals(null,testDataImportBResult.Opportunity_Contact_Role_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Opportunity_Contact_Role_1_ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Opportunity_Contact_Role_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Opportunity_Contact_Role_2_ImportStatus__c);
+
+        OpportunityContactRole ocrA1;
+        OpportunityContactRole ocrA2;
+        OpportunityContactRole ocrB1;
+        OpportunityContactRole ocrB2;
+        OpportunityContactRole[] ocrAll = new OpportunityContactRole[]{};
+
+        for (OpportunityContactRole ocr : [SELECT Id, ContactId, OpportunityId, Role 
+                                            FROM OpportunityContactRole]) {
+
+            ocrAll.add(ocr);
+            if (ocr.Id == testDataImportAResult.Opportunity_Contact_Role_1_Imported__c ) {
+                ocrA1 = ocr;
+            } else if (ocr.Id == testDataImportAResult.Opportunity_Contact_Role_2_Imported__c ) {
+                ocrA2 = ocr;
+            } else if (ocr.Id == testDataImportBResult.Opportunity_Contact_Role_1_Imported__c ) {
+                ocrB1 = ocr;
+            } else if (ocr.Id == testDataImportBResult.Opportunity_Contact_Role_2_Imported__c ) {
+                ocrB2 = ocr;
+            }
+        }
+
+        // Confirm that the desired ocrs were created correctly
+        System.assertEquals(8,ocrAll.size()); // the number 8 includes the automatically created donor and household member OCRs
+        System.assertEquals('Soft Credit',ocrA1.Role);
+        System.assertEquals('Soft Credit',ocrA2.Role);
+        System.assertEquals('Soft Credit',ocrB1.Role);
+        System.assertEquals('Soft Credit',ocrB2.Role);
+
+        Allocation__c gauAlloA1;
+        Allocation__c gauAlloA2;
+        Allocation__c gauAlloB1;
+        Allocation__c gauAlloB2;
+        Allocation__c[] gauAlloAll = new Allocation__c[]{};
+
+        for (Allocation__c gauAllo : [SELECT Id, Opportunity__c, Payment__c, Percent__c, Amount__c
+                                            FROM Allocation__c]){
+            gauAlloAll.add(gauAllo);
+            if (gauAllo.Id == testDataImportAResult.GAU_Allocation_1_Imported__c ) {
+                gauAlloA1 = gauAllo;
+            } else if (gauAllo.Id == testDataImportAResult.GAU_Allocation_2_Imported__c ) {
+                gauAlloA2 = gauAllo;
+            } else if (gauAllo.Id == testDataImportBResult.GAU_Allocation_1_Imported__c ) {
+                gauAlloB1 = gauAllo;
+            } else if (gauAllo.Id == testDataImportBResult.GAU_Allocation_2_Imported__c ) {
+                gauAlloB2 = gauAllo;
+            }
+        }
+
+        // Confirm that the desired GAU Allocations were created correctly
+        System.assertEquals(4,gauAlloAll.size());
+        System.assertEquals(.75,gauAlloA1.Percent__c);
+        System.assertEquals(.25,gauAlloA2.Percent__c);
+        System.assertEquals(.75,gauAlloB1.Percent__c);
+        System.assertEquals(.25,gauAlloB2.Percent__c);
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that some of the GAU allocations should not be created due to missing required fields. 
+    * Also, some of the OCRs should not be created because all non-relationship fields are missing data..
+    */
+    @isTest static void shouldNotCreateGAUAllocationsOrOCRs() {
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        DataImport__c testDataImportA;
+        DataImport__c testDataImportB;
+
+        for (DataImport__c di : [SELECT Id,
+                                        Status__c,
+                                        Contact1_Lastname__c,
+                                        Account1ImportStatus__c,
+                                        Account1Imported__c, 
+                                        Account2ImportStatus__c,
+                                        Account2Imported__c,
+                                        Contact1ImportStatus__c,
+                                        Contact1Imported__c,
+                                        Contact2ImportStatus__c,
+                                        Contact2Imported__c,
+                                        DonationCampaignImportStatus__c,
+                                        DonationCampaignImported__c,
+                                        DonationImportStatus__c,
+                                        DonationImported__c,
+                                        GAU_Allocation_1_Import_Status__c,
+                                        GAU_Allocation_1_Imported__c,
+                                        GAU_Allocation_2_Import_Status__c,
+                                        GAU_Allocation_2_Imported__c,
+                                        HomeAddressImportStatus__c,
+                                        HomeAddressImported__c,
+                                        HouseholdAccountImported__c,
+                                        Opportunity_Contact_Role_1_Imported__c,
+                                        Opportunity_Contact_Role_1_ImportStatus__c,
+                                        Opportunity_Contact_Role_2_Imported__c,
+                                        Opportunity_Contact_Role_2_ImportStatus__c,
+                                        PaymentImportStatus__c,
+                                        PaymentImported__c
+                                    FROM DataImport__c]) {
+
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                testDataImportA = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                testDataImportB = di;
+            }
+        }
+
+        testDataImportA.Opportunity_Contact_Role_1_Role__c = null;
+        testDataImportB.GAU_Allocation_2_GAU__c = null;
+        update new DataImport__c[]{testDataImportA,testDataImportB};
+
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        DataImport__c testDataImportAResult;
+        DataImport__c testDataImportBResult;
+
+        for (DataImport__c di : [SELECT Id,
+                                        Status__c,
+                                        FailureInformation__c,
+                                        GAU_Allocation_1_Import_Status__c,
+                                        GAU_Allocation_1_Imported__c,
+                                        GAU_Allocation_2_Import_Status__c,
+                                        GAU_Allocation_2_Imported__c,
+                                        Opportunity_Contact_Role_1_Imported__c,
+                                        Opportunity_Contact_Role_1_ImportStatus__c,
+                                        Opportunity_Contact_Role_2_Imported__c,
+                                        Opportunity_Contact_Role_2_ImportStatus__c,
+                                        Contact1_Lastname__c,
+                                        Account1ImportStatus__c,
+                                        Account1Imported__c, 
+                                        Account2ImportStatus__c,
+                                        Account2Imported__c,
+                                        Contact1ImportStatus__c,
+                                        Contact1Imported__c,
+                                        Contact2ImportStatus__c,
+                                        Contact2Imported__c,
+                                        DonationCampaignImportStatus__c,
+                                        DonationCampaignImported__c,
+                                        DonationImportStatus__c,
+                                        DonationImported__c,
+                                        HomeAddressImportStatus__c,
+                                        HomeAddressImported__c,
+                                        HouseholdAccountImported__c,
+                                        PaymentImportStatus__c,
+                                        PaymentImported__c
+                                    FROM DataImport__c]) {
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                testDataImportAResult = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                testDataImportBResult = di;
+            }
+
+        }
+
+        System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
+        System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Account2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account2ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Contact2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Contact2ImportStatus__c);
+
+        System.assertNotEquals(null,testDataImportAResult.DonationCampaignImported__c);
+        System.assertEquals(System.label.bdiMatched,testDataImportAResult.DonationCampaignImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.DonationImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDataImportAResult.GAU_Allocation_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.GAU_Allocation_1_Import_Status__c);
+        System.assertNotEquals(null,testDataImportAResult.GAU_Allocation_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.GAU_Allocation_2_Import_Status__c);
+        System.assertEquals(null,testDataImportAResult.Opportunity_Contact_Role_1_Imported__c);
+        System.assertEquals(null,testDataImportAResult.Opportunity_Contact_Role_1_ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
+
+        System.assertEquals(System.label.bdiFailed,testDataImportBResult.Status__c);
+        System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Account2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account2ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Contact2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Contact2ImportStatus__c);
+
+        System.assertNotEquals(null,testDataImportBResult.DonationCampaignImported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.DonationCampaignImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.DonationImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDataImportBResult.GAU_Allocation_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.GAU_Allocation_1_Import_Status__c);
+        System.assertEquals(null,testDataImportBResult.GAU_Allocation_2_Imported__c);
+        System.assert(testDataImportBResult.GAU_Allocation_2_Import_Status__c.startsWith(System.label.bdiAdditionalObjRequiredFieldsNull));
+
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that GAU allocations and Opportunity contact roles will be updated via Batch Data Import. 
+    */
+
+    @isTest static void shouldUpdateAdditionalGAUAllocationsAndOCRs() {
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
+
+        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultFieldMapping());
+        bdiDIS.process(null, dis, diRecords);
+        
+        DataImport__c testDataImportAResult;
+        DataImport__c testDataImportBResult;
+
+        for (DataImport__c di : [SELECT Id,
+                                        Status__c,
+                                        FailureInformation__c,
+                                        GAU_Allocation_1_Import_Status__c,
+                                        GAU_Allocation_1_Imported__c,
+                                        GAU_Allocation_2_Import_Status__c,
+                                        GAU_Allocation_2_Imported__c,
+                                        Opportunity_Contact_Role_1_Imported__c,
+                                        Opportunity_Contact_Role_1_ImportStatus__c,
+                                        Opportunity_Contact_Role_2_Imported__c,
+                                        Opportunity_Contact_Role_2_ImportStatus__c,
+                                        Contact1_Lastname__c,
+                                        Account1ImportStatus__c,
+                                        Account1Imported__c, 
+                                        Account2ImportStatus__c,
+                                        Account2Imported__c,
+                                        Contact1ImportStatus__c,
+                                        Contact1Imported__c,
+                                        Contact2ImportStatus__c,
+                                        Contact2Imported__c,
+                                        DonationCampaignImportStatus__c,
+                                        DonationCampaignImported__c,
+                                        DonationImportStatus__c,
+                                        DonationImported__c,
+                                        HomeAddressImportStatus__c,
+                                        HomeAddressImported__c,
+                                        HouseholdAccountImported__c,
+                                        PaymentImportStatus__c,
+                                        PaymentImported__c
+                                    FROM DataImport__c]) {
+
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                testDataImportAResult = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01'){
+                testDataImportBResult = di;
+            }
+
+        }
+
+        System.debug('Test Data Import Result A is: ' + testDataImportAResult);
+
+        System.debug('Test Data Import Result B is: ' + testDataImportBResult);
+        System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
+        System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Account2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account2ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Contact2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Contact2ImportStatus__c);
+
+        System.assertNotEquals(null,testDataImportAResult.DonationCampaignImported__c);
+        System.assertEquals(System.label.bdiMatched,testDataImportAResult.DonationCampaignImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.DonationImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDataImportAResult.GAU_Allocation_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.GAU_Allocation_1_Import_Status__c);
+        System.assertNotEquals(null,testDataImportAResult.GAU_Allocation_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.GAU_Allocation_2_Import_Status__c);
+        System.assertNotEquals(null,testDataImportAResult.Opportunity_Contact_Role_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_1_ImportStatus__c);
+        System.assertNotEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
+
+        System.assertEquals(System.label.bdiImported,testDataImportBResult.Status__c);
+        System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Account2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account2ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Contact2Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Contact2ImportStatus__c);
+
+        System.assertNotEquals(null,testDataImportBResult.DonationCampaignImported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.DonationCampaignImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.DonationImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDataImportBResult.GAU_Allocation_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.GAU_Allocation_1_Import_Status__c);
+        System.assertNotEquals(null,testDataImportBResult.GAU_Allocation_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.GAU_Allocation_2_Import_Status__c);
+        System.assertNotEquals(null,testDataImportBResult.Opportunity_Contact_Role_1_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Opportunity_Contact_Role_1_ImportStatus__c);
+        System.assertNotEquals(null,testDataImportBResult.Opportunity_Contact_Role_2_Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDataImportBResult.Opportunity_Contact_Role_2_ImportStatus__c);
+
+        //Change values on the data import records and reset the status so it will be processed again.
+        testDataImportAResult.Status__c = null;
+        testDataImportAResult.GAU_Allocation_1_Percent__c = .65;
+        testDataImportAResult.GAU_Allocation_2_Percent__c = .35;
+        testDataImportAResult.Opportunity_Contact_Role_1_Role__c = 'Other';
+        testDataImportBResult.Status__c = null;
+        testDataImportBResult.GAU_Allocation_1_Percent__c = .65;
+        testDataImportBResult.GAU_Allocation_2_Percent__c = .35;
+        testDataImportBResult.Opportunity_Contact_Role_2_Role__c = 'Other';
+
+        System.debug('GAU ALLOCATION BEFORE UPDATE IS: ' + testDataImportAResult.GAU_Allocation_1_Imported__c);
+
+        update new DataImport__c[]{testDataImportAResult, testDataImportBResult};
+
+
+        Test.startTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        DataImport__c testDataImportAResult2;
+        DataImport__c testDataImportBResult2;
+
+        for (DataImport__c di : [SELECT Id,
+                                        Status__c,
+                                        FailureInformation__c,
+                                        GAU_Allocation_1_Import_Status__c,
+                                        GAU_Allocation_1_Imported__c,
+                                        GAU_Allocation_2_Import_Status__c,
+                                        GAU_Allocation_2_Imported__c,
+                                        Opportunity_Contact_Role_1_Imported__c,
+                                        Opportunity_Contact_Role_1_ImportStatus__c,
+                                        Opportunity_Contact_Role_2_Imported__c,
+                                        Opportunity_Contact_Role_2_ImportStatus__c,
+                                        Contact1_Lastname__c,
+                                        Account1ImportStatus__c,
+                                        Account1Imported__c, 
+                                        Account2ImportStatus__c,
+                                        Account2Imported__c,
+                                        Contact1ImportStatus__c,
+                                        Contact1Imported__c,
+                                        Contact2ImportStatus__c,
+                                        Contact2Imported__c,
+                                        DonationCampaignImportStatus__c,
+                                        DonationCampaignImported__c,
+                                        DonationImportStatus__c,
+                                        DonationImported__c,
+                                        HomeAddressImportStatus__c,
+                                        HomeAddressImported__c,
+                                        HouseholdAccountImported__c,
+                                        PaymentImportStatus__c,
+                                        PaymentImported__c
+                                    FROM DataImport__c]) {
+            System.debug('Found DI: ' + di);
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                testDataImportAResult2 = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01'){
+                testDataImportBResult2 = di;
+            }
+        }
+
+        System.assertEquals(System.label.bdiUpdated,testDataImportAResult2.GAU_Allocation_1_Import_Status__c);
+        System.assertEquals(System.label.bdiUpdated,testDataImportAResult2.GAU_Allocation_2_Import_Status__c);
+        System.assertEquals(System.label.bdiUpdated,testDataImportBResult2.GAU_Allocation_1_Import_Status__c);
+        System.assertEquals(System.label.bdiUpdated,testDataImportBResult2.GAU_Allocation_2_Import_Status__c);
+
+        System.assertEquals(System.label.bdiUpdated,testDataImportAResult2.Opportunity_Contact_Role_1_ImportStatus__c);
+        System.assertEquals(System.label.bdiUpdated,testDataImportAResult2.Opportunity_Contact_Role_2_ImportStatus__c);
+        System.assertEquals(System.label.bdiUpdated,testDataImportBResult2.Opportunity_Contact_Role_1_ImportStatus__c);
+        System.assertEquals(System.label.bdiUpdated,testDataImportBResult2.Opportunity_Contact_Role_2_ImportStatus__c);
+
+        OpportunityContactRole ocrA1;
+        OpportunityContactRole ocrA2;
+        OpportunityContactRole ocrB1;
+        OpportunityContactRole ocrB2;
+        OpportunityContactRole[] ocrAll = new OpportunityContactRole[]{};
+
+        for (OpportunityContactRole ocr : [SELECT Id, ContactId, OpportunityId, Role 
+                                            FROM OpportunityContactRole]){
+            System.debug('OCR at end: ' + ocr);
+            ocrAll.add(ocr);
+            if (ocr.Id == testDataImportAResult.Opportunity_Contact_Role_1_Imported__c ) {
+                ocrA1 = ocr;
+            } else if (ocr.Id == testDataImportAResult.Opportunity_Contact_Role_2_Imported__c ) {
+                ocrA2 = ocr;
+            } else if (ocr.Id == testDataImportBResult.Opportunity_Contact_Role_1_Imported__c ) {
+                ocrB1 = ocr;
+            } else if (ocr.Id == testDataImportBResult.Opportunity_Contact_Role_2_Imported__c ) {
+                ocrB2 = ocr;
+            }
+        }
+
+        // Confirm that only the appropriate opportunity contact roles were changed
+        System.assertEquals(8,ocrAll.size()); // the number 8 includes the automatically created donor and household member OCRs
+        System.assertEquals('Other',ocrA1.Role);
+        System.assertEquals('Soft Credit',ocrA2.Role);
+        System.assertEquals('Soft Credit',ocrB1.Role);
+        System.assertEquals('Other',ocrB2.Role);
+
+        Allocation__c gauAlloA1;
+        Allocation__c gauAlloA2;
+        Allocation__c gauAlloB1;
+        Allocation__c gauAlloB2;
+        Allocation__c[] gauAlloAll = new Allocation__c[]{};
+
+        for (Allocation__c gauAllo : [SELECT Id, Opportunity__c, Payment__c, Percent__c, Amount__c
+                                            FROM Allocation__c]){
+            gauAlloAll.add(gauAllo);
+            if (gauAllo.Id == testDataImportAResult.GAU_Allocation_1_Imported__c ) {
+                gauAlloA1 = gauAllo;
+            } else if (gauAllo.Id == testDataImportAResult.GAU_Allocation_2_Imported__c ) {
+                gauAlloA2 = gauAllo;
+            } else if (gauAllo.Id == testDataImportBResult.GAU_Allocation_1_Imported__c ) {
+                gauAlloB1 = gauAllo;
+            } else if (gauAllo.Id == testDataImportBResult.GAU_Allocation_2_Imported__c ) {
+                gauAlloB2 = gauAllo;
+            }
+        }
+
+        // Confirm that the new values for opportunity contact roles are in place.
+        System.assertEquals(4,gauAlloAll.size());
+        System.assertEquals(.65,gauAlloA1.Percent__c);
+        System.assertEquals(.35,gauAlloA2.Percent__c);
+        System.assertEquals(.65,gauAlloB1.Percent__c);
+        System.assertEquals(.35,gauAlloB2.Percent__c);
+    }
+}

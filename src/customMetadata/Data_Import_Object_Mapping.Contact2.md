@@ -3,6 +3,10 @@
     <label>Contact 2</label>
     <protected>false</protected>
     <values>
+        <field>Custom_Mapping_Logic_Class__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
         <field>Data_Import_Object_Mapping_Set__c</field>
         <value xsi:type="xsd:string">Default_Object_Mapping_Set</value>
     </values>
