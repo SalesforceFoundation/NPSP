@@ -12,12 +12,12 @@ ${task2}     Make a Phone Call2
 
 *** Keywords ***
 
- Capture Screenshot and Delete Records and Close Browser
+Capture Screenshot and Delete Records and Close Browser
     Capture Page Screenshot
     Close Browser
     Delete Session Records
     
- API Create Contact
+API Create Contact
     [Arguments]      &{fields}
     ${first_name} =  Generate Random String
     ${last_name} =   Generate Random String

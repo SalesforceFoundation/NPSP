@@ -20,10 +20,10 @@ from cumulusci.tasks.apex.anon import AnonymousApexTask
 from cumulusci.core.config import TaskConfig
 from cumulusci.tasks.apex.batch import BatchApexWait
 
-from locators_44 import npsp_lex_locators as locators_44
 from locators_45 import npsp_lex_locators as locators_45
+from locators_46 import npsp_lex_locators as locators_46
 locators_by_api_version = {
-    44.0: locators_44,  # Winter '19
+    46.0: locators_46,  # Summer '19
     45.0: locators_45,  # Spring '19
 }
 # will get populated in _init_locators
@@ -142,10 +142,18 @@ class NPSP(object):
         self.selenium.click_link(loc)   
         
     def click_dropdown(self, title):
+        """Click the dropdown to open it"""
         locator = npsp_lex_locators['record']['list'].format(title)
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
+        
+    def click_flexipage_dropdown(self, title):
+        """Click the lightning dropdown to open it"""
+        locator = npsp_lex_locators['record']['flexipage-list'].format(title)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()
+        self.wait_for_locator('flexipage-popup')    
 
     def open_date_picker(self, title):
         locator = npsp_lex_locators['record']['list'].format(title)
@@ -252,16 +260,31 @@ class NPSP(object):
         
         
     def confirm_value(self, field,value,status):
-        locator=npsp_lex_locators['check_status'].format(field)
-        actual_value=self.selenium.get_webelement(locator).text
-        if status.upper() == "Y":
-            assert value == actual_value, "Expected value to be {} but found {}".format(
-                value, actual_value
-            )
-        elif status.upper() == "N":
-             assert value != actual_value, "Expected value {} and actual value {} should not match".format(
-                value, actual_value
-            )   
+        list_found = False
+        locators = npsp_lex_locators["confirm"].values()
+        for i in locators:
+            locator = i.format(field)
+            if self.check_if_element_exists(locator):
+                actual_value=self.selenium.get_webelement(locator).text
+                if status.upper() == "Y":
+                    assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
+                elif status.upper() == "N":
+                    assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
+                list_found = True
+                break
+
+        assert list_found, "locator not found"  
+#         locator=npsp_lex_locators['check_status'].format(field)
+#         actual_value=self.selenium.get_webelement(locator).text
+#         print "status is {}".format(actual_value)
+#         if status.upper() == "Y":
+#             assert value == actual_value, "Expected value to be {} but found {}".format(
+#                 value, actual_value
+#             )
+#         elif status.upper() == "N":
+#              assert value != actual_value, "Expected value {} and actual value {} should not match".format(
+#                 value, actual_value
+#             )   
             
     def verify_field_value(self, field,value,status):
         locator=npsp_lex_locators['check_field'].format(field)
@@ -387,6 +410,7 @@ class NPSP(object):
     
     def select_lightning_checkbox(self,title):
         locator=npsp_lex_locators['checkbox'].format(title)
+        self.load_locator(locator)
         self.selenium.get_webelement(locator).click()
         
     def select_lightning_table_checkbox(self,title):
@@ -833,8 +857,9 @@ class NPSP(object):
     def click_bge_button(self,text):  
         """clicks on buttons for BGE"""      
         locator=npsp_lex_locators['bge']['button'].format(text)
-        #self.selenium.get_webelement(locator).click()
-        self.selenium.click_button(locator)     
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.click_button(locator)  
+           
     
     def verify_title(self,title,value):
         """"""
@@ -927,10 +952,9 @@ class NPSP(object):
             except Exception:
                 time.sleep(1)
                      
-    def load_locator(self, path, *args, **kwargs):
+    def load_locator(self, locator):
         """Scrolls down until the specified locator is found.
         """
-        locator = self.get_npsp_locator(path, *args, **kwargs)
         i = 0
         while True:
             i += 1
