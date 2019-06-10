@@ -543,7 +543,7 @@ public class ALLO_PaymentSync_SVC {
                         Allocation__c newAllocation = new Allocation__c(
                             Payment__c = payment.Id,
                             General_Accounting_Unit__c = gau,
-                            Amount__c = (newTotalPaymentAllocations * paymentScale) / (paymentRatio * context.scheduleRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            Amount__c = (newTotalPaymentAllocations * paymentScale) / (paymentRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
                         );
 
                         //only add the percent for non-default
