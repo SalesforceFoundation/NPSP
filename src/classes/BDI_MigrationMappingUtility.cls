@@ -204,11 +204,16 @@ public with sharing class BDI_MigrationMappingUtility {
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
         }
 
-        Map<String, String> statusMap = new Map<String, String>{
-            'Deployment Date' => String.valueOf(Datetime.now()),
-            'Status' => String.valueOf(status),
-            'Field Mapping Method' => fieldMappingMethod
-        };
+        Map<String, String> statusMap = new Map<String, String>();
+
+        if (fieldMappingMethod == DATA_IMPORT_FIELD_MAPPING) {
+            statusMap = new Map<String, String>{
+                'Deployment Date' => String.valueOf(Datetime.now()),
+                'Status' => String.valueOf(status),
+                'Field Mapping Method' => fieldMappingMethod};
+        } else {
+            statusMap = new Map<String, String>();
+        }
 
         dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
 

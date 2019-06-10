@@ -36,6 +36,11 @@
 */
 public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Panel {
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Data Import Advanced Mapping panel
+    */
+    public override String idPanel() { return 'idPanelDataImportAdvancedMapping'; }
+
     /*******************************************************************************************************
     * @description is the panel currently Polling for deployment results
     */
@@ -124,7 +129,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
-    * @description Action Method to enable CMDT mapping, save custom setting
+    * @description Action Method to enable Custom Metadata mapping and update data import custom settings
     * @return null
     */
     public PageReference enableDataImportFieldMapping() {
