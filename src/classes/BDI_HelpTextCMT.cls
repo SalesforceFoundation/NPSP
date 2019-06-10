@@ -69,7 +69,7 @@ public class BDI_HelpTextCMT {
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.label = this.label.left(40);
-            this.recordName = generateRecordName(this.label, false, '', '');
+            this.recordName = this.label;
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.protected_x = IS_PROTECTED;
 

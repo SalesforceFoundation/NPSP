@@ -163,8 +163,7 @@ private class BDI_MigrationMappingUtilityTest {
         Map<String,String> result =
             (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
-        System.assertNotEquals(null, result.get('Status'), result);
-        System.assertEquals(result.get('Field Mapping Method'), 'Help Text');
+        System.assertEquals(result, new Map<String, String>());
     }
 
     private class BDI_MigrationMappingHelperMock implements System.StubProvider {
@@ -185,7 +184,7 @@ private class BDI_MigrationMappingUtilityTest {
             if (stubbedMethodName == 'createNewFieldMappingSet') {
                 BDI_HelpTextCMT.DataImportFieldMappingSet fieldMappingSet =
                     new BDI_HelpTextCMT.DataImportFieldMappingSet(
-                        'Migrated Field Mapping Set',
+                        'Migrated Custom Field Mapping Set',
                         'Default_Object_Mapping_Set');
 
                 return fieldMappingSet.getMetadataRecord();

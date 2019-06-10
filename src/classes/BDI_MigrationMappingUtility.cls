@@ -82,7 +82,7 @@ public with sharing class BDI_MigrationMappingUtility {
     * Set as static because it's used in the static method updateCustomSettings
     */
     public static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME =
-        'Migrated_Custom_Mapping_Set';
+        'Migrated_Custom_Field_Mapping_Set';
 
     /**
     * @description Value for Data Import custom settings Field Mapping Method
