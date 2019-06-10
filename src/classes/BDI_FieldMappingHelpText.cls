@@ -82,7 +82,7 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
     public Map<String,String> getFieldMap(String dataImportObjectName, 
         String targetObjectName, List<String> dataImportFields) {
         
-        Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
+        Map<String, String> targetFieldByDataImportField = new Map<String, String>();
 
         for (String dataImportField : dataImportFields) {
 
@@ -109,23 +109,23 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
                         }
                     }
 
-                    dataImportFieldToTargetField.put(dataImportField, fieldName);
+                    targetFieldByDataImportField.put(dataImportField, fieldName);
                 }
             }
         }
 
         if (isCurrencyMapped(targetObjectName)) {
-            addCurrencyIsoCode(dataImportFieldToTargetField);
+            addCurrencyIsoCode(targetFieldByDataImportField);
         }
 
         if(additionalFieldMappings.containsKey(targetObjectName)) {
             for(String diField: additionalFieldMappings.get(targetObjectName).keySet()) {
-                dataImportFieldToTargetField.put(diField, 
+                targetFieldByDataImportField.put(diField, 
                     additionalFieldMappings.get(targetObjectName).get(diField));
             }
         }
 
-        return dataImportFieldToTargetField;
+        return targetFieldByDataImportField;
     }
 
     /*******************************************************************************************************

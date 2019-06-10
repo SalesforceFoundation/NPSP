@@ -3,6 +3,10 @@
     <label>GAU Allocation 1</label>
     <protected>false</protected>
     <values>
+        <field>Custom_Mapping_Logic_Class__c</field>
+        <value xsi:type="xsd:string">npsp.BDI_CustObjMappingGAUAllocation</value>
+    </values>
+    <values>
         <field>Data_Import_Object_Mapping_Set__c</field>
         <value xsi:type="xsd:string">Default_Object_Mapping_Set</value>
     </values>
@@ -20,7 +24,7 @@
     </values>
     <values>
         <field>Predecessor__c</field>
-        <value xsi:type="xsd:string">Donation</value>
+        <value xsi:type="xsd:string">Opportunity</value>
     </values>
     <values>
         <field>Relationship_Field__c</field>
