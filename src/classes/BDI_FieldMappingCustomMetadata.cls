@@ -39,6 +39,12 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
     public static final String DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME = 'Default_Field_Mapping_Set';
 
+    public Data_Import_Field_Mapping_Set__mdt diFieldMappingSet;
+    public String fieldMappingSetName;
+
+    public Map<String,Data_Import_Object_Mapping__mdt> objMappingsByDevName = new Map<String,Data_Import_Object_Mapping__mdt>();
+    public Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingDevName = new Map<String,Data_Import_Field_Mapping__mdt[]>();
+
     private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
 
 
@@ -48,6 +54,8 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     public static BDI_FieldMappingCustomMetadata getInstance() {
         if (fieldMappingInstance == null) {
             fieldMappingInstance = new BDI_FieldMappingCustomMetadata();
+            fieldMappingInstance.getFieldMappingSetName();
+            fieldMappingInstance.retrieveCustMetadata();
         }
         return fieldMappingInstance;
     }
@@ -66,55 +74,90 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
     public Map<String,String> getFieldMap(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
 
-        Map<String,String> dataImportFieldToTargetField = new Map<String,String>();
+        Map<String,String> targetFieldByDataImportField = new Map<String,String>();
+        
+        Data_Import_Field_Mapping__mdt[] diFieldMappings = fieldMappingsByObjMappingDevName.get(dataImportObjectName); 
 
-        String namespace = UTIL_Namespace.getNamespace();
-        //Retreive the Data Import Settings to determine the default field mapping set.
-        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        if (diFieldMappings != null) {
+            for (Data_Import_Field_Mapping__mdt difm : diFieldMappings) {
 
-        String fieldMappingSetName = dis.Default_Data_Import_Field_Mapping_Set__c;
-        Data_Import_Field_Mapping_Set__mdt diFieldMappingSet;
-        Data_Import_Field_Mapping__mdt[]  diFieldMappings;
-        Data_Import_Object_Mapping__mdt diObjectMapping;
-
-        if (fieldMappingSetName != null) {
-            diFieldMappingSet = [SELECT id, DeveloperName, 
-                                    Data_Import_Object_Mapping_Set__c,
-                                    Data_Import_Object_Mapping_Set__r.DeveloperName    
-                                FROM Data_Import_Field_Mapping_Set__mdt
-                                WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
-
-            if (diFieldMappingSet != null && diFieldMappingSet.Data_Import_Object_Mapping_Set__c != null) {
-                
-                diFieldMappings = [SELECT DeveloperName,
-                                        Data_Import_Field_Mapping_Set__c,
-                                        Required__c,
-                                        Source_Field_API_Name__c,
-                                        Target_Field_API_Name__c,
-                                        Target_Object_Mapping__c,
-                                        Target_Object_Mapping__r.Object_API_Name__c
-                            FROM Data_Import_Field_Mapping__mdt
-                            WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName
-                                AND Target_Object_Mapping__r.DeveloperName =: dataImportObjectName];
-
-                if (diFieldMappings != null) {
-                    for (Data_Import_Field_Mapping__mdt difm : diFieldMappings) {
-
-                        String sourceFieldName = difm.Source_Field_API_Name__c;
-                        String targetFieldName = difm.Target_Field_API_Name__c;
-
-                        //If we are not in the npsp namespace then remove the namespace from all relevant field references
-                        if (namespace != 'npsp') {
-                            sourceFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(sourceFieldName);
-                            targetFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(targetFieldName);
-                        }
-
-                        dataImportFieldToTargetField.put(sourceFieldName,targetFieldName);
-                    }
-                }
-            } 
+                targetFieldByDataImportField.put(difm.Source_Field_API_Name__c,difm.Target_Field_API_Name__c);
+            }
         }
 
-        return dataImportFieldToTargetField;
+        return targetFieldByDataImportField;
+    }
+
+    private String getFieldMappingSetName(){
+        if (fieldMappingSetName == null) {
+            //Retreive the Data Import Settings to determine the default field mapping set.
+            Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+
+            fieldMappingSetName = UTIL_Namespace.adjustNPSPNamespace(dis.Default_Data_Import_Field_Mapping_Set__c);
+        }
+
+        return fieldMappingSetName;
+    }
+
+    private void retrieveCustMetadata(){
+        //If the code is not in the npsp namespace, then the npsp field prefixes will need to be systematically removed.
+        Boolean removeNPSPNamespace = (UTIL_Namespace.getNamespace() != 'npsp');
+
+        diFieldMappingSet = [SELECT id, DeveloperName, 
+                        Data_Import_Object_Mapping_Set__c,
+                        Data_Import_Object_Mapping_Set__r.DeveloperName    
+                    FROM Data_Import_Field_Mapping_Set__mdt
+                    WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
+                    
+        for (Data_Import_Object_Mapping__mdt diom:[SELECT Custom_Mapping_Logic_Class__c,
+                                            DeveloperName, 
+                                            Data_Import_Object_Mapping_Set__c, 
+                                            Imported_Record_Field_Name__c,
+                                            Imported_Record_Status_Field_Name__c,
+                                            Object_API_Name__c,
+                                            Predecessor__c,
+                                            Relationship_Field__c,
+                                            Relationship_To_Predecessor__c
+                                    FROM Data_Import_Object_Mapping__mdt
+                                    WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c]) {
+
+            // Removing the npsp namespace since the code is not currently packaged.
+            if (removeNPSPNamespace) {
+               diom.Imported_Record_Field_Name__c = UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Field_Name__c);
+               diom.Imported_Record_Status_Field_Name__c = UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Status_Field_Name__c);
+               diom.Object_API_Name__c = UTIL_Namespace.adjustNPSPNamespace(diom.Object_API_Name__c);
+               diom.Relationship_Field__c = UTIL_Namespace.adjustNPSPNamespace(diom.Relationship_Field__c);
+            }
+
+            objMappingsByDevName.put(diom.DeveloperName, diom);
+        }
+
+        if (objMappingsByDevName != null && objMappingsByDevName.size() > 0) {
+            for (Data_Import_Field_Mapping__mdt difm:[SELECT DeveloperName,
+                                                    Data_Import_Field_Mapping_Set__c,
+                                                    Required__c,
+                                                    Source_Field_API_Name__c,
+                                                    Target_Field_API_Name__c,
+                                                    Target_Object_Mapping__c,
+                                                    Target_Object_Mapping__r.DeveloperName
+                                        FROM Data_Import_Field_Mapping__mdt
+                                        WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName]) {
+
+                // Removing the npsp namespace since the code is not currently packaged.
+                if (removeNPSPNamespace) {
+                   difm.Source_Field_API_Name__c = UTIL_Namespace.adjustNPSPNamespace(difm.Source_Field_API_Name__c);
+                   difm.Target_Field_API_Name__c = UTIL_Namespace.adjustNPSPNamespace(difm.Target_Field_API_Name__c);
+                }
+
+                Data_Import_Field_Mapping__mdt[] tempDifms = new Data_Import_Field_Mapping__mdt[]{};
+
+                if (fieldMappingsByObjMappingDevName.get(difm.Target_Object_Mapping__r.DeveloperName) != null) {
+                    tempDifms = fieldMappingsByObjMappingDevName.get(difm.Target_Object_Mapping__r.DeveloperName);
+                }
+
+                tempDifms.add(difm);
+                fieldMappingsByObjMappingDevName.put(difm.Target_Object_Mapping__r.DeveloperName,tempDifms);
+            }
+        }
     }
 }

@@ -41,16 +41,20 @@ global with sharing class BDI_DataImportService {
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
 
-    private BDI_FieldMapping fieldMapper;
+    public BDI_FieldMapping fieldMapper;
 
     /*******************************************************************************************************
     * @description constructor
     * @param isDryRun whether to run in Dry Run mode or commit records.
     */
     public BDI_DataImportService(Boolean isDryRun, BDI_FieldMapping fieldMapper) {
-        contactService = new BDI_ContactService(this);
         this.isDryRun = isDryRun;
         this.fieldMapper = fieldMapper;
+
+        contactService = new BDI_ContactService(this);
+        if (fieldMapper instanceof BDI_FieldMappingCustomMetadata){
+            additionalObjectService = new BDI_AdditionalObjectService(this);
+        }
     }
 
     /*******************************************************************************************************
@@ -338,6 +342,11 @@ global with sharing class BDI_DataImportService {
     private BDI_ContactService contactService { get; private set; }
 
     /*******************************************************************************************************
+    * @description holds the Additional Object Service class for use during processing
+    */
+    private BDI_AdditionalObjectService additionalObjectService { get; private set; }
+
+    /*******************************************************************************************************
     * @description whether the Account Custom Unique ID field is in our account matching rules
     */
     private Boolean isCustomIdInAccountMatchRules {
@@ -545,6 +554,12 @@ global with sharing class BDI_DataImportService {
             pl = perfLogger.newPerfLog('importCampaignMembers');
             importCampaignMembers();
             pl.stop();
+
+            if (additionalObjectService != null) {
+                pl = perfLogger.newPerfLog('importAdditionalObjects');
+                additionalObjectService.importAdditionalObjects();
+                pl.stop();
+            }
 
             pl = perfLogger.newPerfLog('updateDIStatuses');
             updateDIStatuses(apexJobId);
