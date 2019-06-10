@@ -139,7 +139,7 @@
                                                     value="{!$Label.c.bgeFormSelectedOpportunity}"/>
                                             <aura:set attribute="else">
                                                 <lightning:button
-                                                        value="{!donation}"
+                                                        value="{!opportunityWrapper.opportunity}"
                                                         label="{!$Label.c.bgeFormUpdateOpportunity}"
                                                         onclick="{!c.handleDonationSelection}"
                                                         variant="base"/>
@@ -157,7 +157,7 @@
                                                 value="{!$Label.c.bgeFormSelectedOpportunityApplyNewPayment}"/>
                                         <aura:set attribute="else">
                                             <lightning:button
-                                                    value="{!donation}"
+                                                    value="{!opportunityWrapper.opportunity}"
                                                     label="{!$Label.c.bdiMatchedApplyNewPayment}"
                                                     onclick="{!c.handleApplyPaymentSelection}"
                                                     variant="base"/>
