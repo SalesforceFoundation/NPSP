@@ -54,9 +54,12 @@
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
+        <members>BDI_AdditionalObjectService</members>
+        <members>BDI_AdditionalObjectServiceTest</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
+        <members>BDI_CustObjMappingGAUAllocation</members>
         <members>BDI_DataImportAPI_TEST</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
@@ -85,6 +88,8 @@
         <members>BDI_MigrationMappingHelper</members>
         <members>BDI_MigrationMappingUtility</members>
         <members>BDI_MigrationMappingUtilityTest</members>
+        <members>BDI_ObjectMappingLogic</members>
+        <members>BDI_ObjectWrapper</members>
         <members>BDI_PerfLogger</members>
         <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
@@ -1097,6 +1102,7 @@
         <members>Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c</members>
         <members>Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c</members>
         <members>Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Custom_Mapping_Logic_Class__c</members>
         <members>Data_Import_Object_Mapping__mdt.Data_Import_Object_Mapping_Set__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
@@ -1408,6 +1414,8 @@
         <members>alloTotals</members>
         <members>alloUnallocated</members>
         <members>bdiAccountCustomIdError</members>
+        <members>bdiAdditionalObjPredNotFound</members>
+        <members>bdiAdditionalObjRequiredFieldsNull</members>
         <members>bdiAdvancedMapping</members>
         <members>bdiBatchException</members>
         <members>bdiBehaviorBestMatchOrCreate</members>
@@ -1491,6 +1499,7 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>bdiUpdated</members>
         <members>bgeActionDelete</members>
         <members>bgeActionView</members>
         <members>bgeBatchAvailableFields</members>
@@ -2269,13 +2278,11 @@
         <members>Data_Import_Field_Mapping.Donation_Stage</members>
         <members>Data_Import_Field_Mapping.Donation_Type</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Amount</members>
-        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Campaign</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_GAU</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Percent</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Amount</members>
-        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Campaign</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_GAU</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Payment</members>
@@ -2287,10 +2294,8 @@
         <members>Data_Import_Field_Mapping.Home_Zip_Postal_Code</members>
         <members>Data_Import_Field_Mapping.Household_Phone</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Contact</members>
-        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Opportunity</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Role</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Contact</members>
-        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Opportunity</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Role</members>
         <members>Data_Import_Field_Mapping.Payment_Check_Reference_Number</members>
         <members>Data_Import_Field_Mapping.Payment_Method</members>
