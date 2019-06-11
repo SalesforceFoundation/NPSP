@@ -248,8 +248,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
-    * @description Checks to see if we have a saved custom metadata deployment id,
-    * inspects the deployment status, and sets the hasDeploymentInProgress boolean
+    * @description Checks to see if we have a saved custom metadata deployment id and sets deploymentStatus
     */
     private void setDeploymentStatus() {
         if (dataImportSettings.CMT_Deployment_ID__c != null) {
