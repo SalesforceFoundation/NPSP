@@ -434,6 +434,7 @@ public class ALLO_PaymentSync_SVC {
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
+            
             // Default Allocation will be handled outside of this loop
             if (gau == UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
                 continue;
@@ -539,11 +540,11 @@ public class ALLO_PaymentSync_SVC {
                     if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) { // Only process unpaid payments...
                         Decimal paymentRatio = context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
                         Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
-
+                        
                         Allocation__c newAllocation = new Allocation__c(
                             Payment__c = payment.Id,
                             General_Accounting_Unit__c = gau,
-                            Amount__c = (newTotalPaymentAllocations * paymentScale) / (paymentRatio * context.scheduleRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            Amount__c = (newTotalPaymentAllocations) / (paymentRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
                         );
 
                         //only add the percent for non-default
