@@ -121,7 +121,7 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
      * @description Batch job to count the number of Data Imports.
      */
     private void handleDataImportCounts() {
-        Integer cnt = Database.countQuery('SELECT Count() FROM npsp__DataImport__c LIMIT 1');
+        Integer cnt = Database.countQuery('SELECT Count() FROM DataImport__c LIMIT 1');
         if (cnt == 1) {
             Database.executeBatch(
                 new UTIL_OrgTelemetry_SObject_BATCH(
