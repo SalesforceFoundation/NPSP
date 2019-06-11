@@ -96,17 +96,17 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Custom metadata deployment result
     */
-    private Metadata.DeployResult deploymentResult { get; set; }
+    private Metadata.DeployStatus deploymentStatus { get; set; }
 
     /*******************************************************************************************************
     * @description Boolean that determines if the toggle should be disabled
     */
     public Boolean hasDeploymentInProgress {
         get {
-            if (hasDeploymentInProgress == null && deploymentResult != null) {
-                hasDeploymentInProgress = deploymentResult.status == Metadata.DeployStatus.INPROGRESS
-                    || deploymentResult.status == Metadata.DeployStatus.PENDING
-                    || deploymentResult.status == Metadata.DeployStatus.CANCELING;
+            if (hasDeploymentInProgress == null && deploymentStatus != null) {
+                hasDeploymentInProgress = deploymentStatus == Metadata.DeployStatus.INPROGRESS
+                    || deploymentStatus == Metadata.DeployStatus.PENDING
+                    || deploymentStatus == Metadata.DeployStatus.CANCELING;
                 return hasDeploymentInProgress;
             }
             return false;
@@ -124,8 +124,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     public STG_PanelDataImportAdvancedMapping_CTRL() {
         this.migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
-        this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        setDeploymentResult();
+        refreshCustomSettings();
+        setDeploymentStatus();
     }
 
     /*******************************************************************************************************
@@ -136,7 +136,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         // Check the deployment status and set hasDeploymentInProgress value
-        setDeploymentResult();
+        refreshCustomSettings();
+        setDeploymentStatus();
 
         if (hasDeploymentInProgress == true) {
             throwMessage(ApexPages.Severity.WARNING, Label.bdiDeploymentInProgress);
@@ -212,22 +213,23 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public PageReference startPolling() {
         timeoutCount++;
 
-        setDeploymentResult();
+        refreshCustomSettings();
+        setDeploymentStatus();
 
-        if (deploymentResult != null) {
+        if (deploymentStatus != null) {
             // We had a migration that contained CMT records to insert
-            Boolean isSuccess = deploymentResult.status == Metadata.DeployStatus.Succeeded
+            Boolean isSuccess = deploymentStatus == Metadata.DeployStatus.Succeeded
                 && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
 
             if (isSuccess) {
                 isPolling = false;
                 throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
-            } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
+            } else if (deploymentStatus == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
                 throwMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
             }
 
-        } else if (deploymentResult == null
+        } else if (deploymentStatus == null
                    && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING) {
             // We had a migration that didn't contain CMT records to insert
             // DeploymentContainer was empty which means we're using our standard field mapping set
@@ -249,20 +251,21 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * @description Checks to see if we have a saved custom metadata deployment id,
     * inspects the deployment status, and sets the hasDeploymentInProgress boolean
     */
-    private void setDeploymentResult() {
-        dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-
+    private void setDeploymentStatus() {
         if (dataImportSettings.CMT_Deployment_ID__c != null) {
-            String response = migrationMappingUtility.getDeploymentResult(dataImportSettings.CMT_Deployment_ID__c);
-            DeployResultWrapper responseWrapper =
-                (DeployResultWrapper)JSON.deserialize(response, DeployResultWrapper.class);
+            Metadata.DeployResult deploymentResult =
+                migrationMappingUtility.getDeploymentResult(dataImportSettings.CMT_Deployment_ID__c);
 
-            if (responseWrapper != null && responseWrapper.deployResult != null) {
-                Metadata.DeployStatus deploymentStatus = responseWrapper.deployResult.status;
-
-                deploymentResult = responseWrapper.deployResult;
-            }
+            deploymentStatus = deploymentResult.status;
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Checks to see if we have a saved custom metadata deployment id,
+    * inspects the deployment status, and sets the hasDeploymentInProgress boolean
+    */
+    private void refreshCustomSettings() {
+        dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
     }
 
     /*******************************************************************************************************
@@ -270,13 +273,5 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     private void throwMessage(ApexPages.Severity severity, String message) {
         ApexPages.addMessage(new ApexPages.Message(severity, message));
-    }
-
-    /*******************************************************************************************************
-    * @description Wrapper for Metadata.DeployResult
-    */
-    public class DeployResultWrapper {
-        public Id id { get; set; }
-        public Metadata.DeployResult deployResult { get; set; }
     }
 }

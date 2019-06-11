@@ -584,7 +584,7 @@ public with sharing class BDI_MigrationMappingUtility {
      * @description Check the status of custom metadata deployment
      * @return Metadata.DeployResult JSON
      */
-    public String getDeploymentResult(String deploymentId) {
+    public Metadata.DeployResult getDeploymentResult(String deploymentId) {
         Http h = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
@@ -594,8 +594,10 @@ public with sharing class BDI_MigrationMappingUtility {
         request.setMethod('GET');
         request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
         HttpResponse response = h.send(request);
+        Metadata.DeployResult deploymentResult =
+            (Metadata.DeployResult)JSON.deserialize(response.getBody(), Metadata.DeployResult.class);
 
-        return response.getBody();
+        return deploymentResult;
     }
 
     /**
