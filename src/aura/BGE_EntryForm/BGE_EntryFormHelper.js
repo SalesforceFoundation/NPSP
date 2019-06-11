@@ -98,7 +98,7 @@
         const donorType = component.get('v.donorType');
 
         let action = component.get('c.getOpportunitiesWithOppPayments');
-        action.setParams({donorId: recordId, donorType: donorType});
+        action.setParams({donorId: recordId});
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
