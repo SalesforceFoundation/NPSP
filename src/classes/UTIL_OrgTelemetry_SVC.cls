@@ -57,7 +57,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountRdOpps,
         Data_CountRecurringDonations,
         Data_CountRds,
-        Data_CountErrorLog
+        Data_CountErrorLog,
+        Data_CountBDIRows
     }
 
     /**
@@ -74,6 +75,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountRdOppsOpenEnded,
         Data_CountRdsWithDiffAmount,
         Data_CountRecurringDonationsAll,
+        Data_CountBDIRowsLast30Days,
         Data_MaxNumRelatedOpps,
         HasUserManagedTDTM,
         Org_CountNonEnglishLanguages,
@@ -158,6 +160,11 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
                 featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountRecurringDonationsAll.name(), -1);
                 featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), -1);
+            }
+
+            when Data_CountBDIRows {
+                // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
+                featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), -1);
             }
 
             when Data_CountErrorLog {

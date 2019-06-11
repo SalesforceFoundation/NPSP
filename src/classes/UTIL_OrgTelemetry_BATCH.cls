@@ -51,7 +51,8 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRdOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRecurringDonations,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog,
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows
         };
 
     /**
@@ -100,12 +101,21 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
                 UTIL_OrgTelemetry_SObject_BATCH.RECURRING_DONATIONS_BATCH_SIZE
             );
 
+            Database.executeBatch(
+                new UTIL_OrgTelemetry_SObject_BATCH(
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BDI_ROWS
+                ),
+                UTIL_OrgTelemetry_SObject_BATCH.BDI_ROWS_BATCH_SIZE
+            );
+
         } else {
             System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), 0);
             System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
 
             System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
             System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
+
+            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), 0);
         }
     }
 }
