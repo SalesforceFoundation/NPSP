@@ -475,17 +475,11 @@ public with sharing class BDI_MigrationMappingUtility {
                             existingDefaultFieldMapping);
 
                     if (invalidFieldMapping) {
-                        // If existing help text mapping doesn't match our packaged cmt record, park the mapping
-                        fieldMapping.expectedHelpTextValue =
-                            existingDefaultFieldMapping.Target_Object_Mapping__r.Object_API_Name__c
-                            + '.'
-                            + existingDefaultFieldMapping.Target_Field_API_Name__c;
-
                         conflictingMappings.add(fieldMapping);
-
                     } else {
                         pendingStandardMappings.add(fieldMapping);
                     }
+
                     fieldMappingsByFieldMappingSetDeveloperName.remove(fieldMappingKey);
                 }
             }

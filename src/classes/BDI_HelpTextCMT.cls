@@ -99,7 +99,6 @@ public class BDI_HelpTextCMT {
         public String targetObjectAPIName;
         public String isRequired;
         public Boolean isDeleted;
-        public String expectedHelpTextValue {get; set;}
 
         public DataImportFieldMapping(String label) {
             this.label = label.trim();
