@@ -2542,7 +2542,9 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>Data_CountBDIRowsLast30Days</members>
         <members>Data_CountErrorLog</members>
+        <members>Data_CountBGERowsLast30Days</members>
         <members>Data_CountRdOppsAll</members>
         <members>Data_CountRdOppsOpenEnded</members>
         <members>Data_CountRdsWithDiffAmount</members>
