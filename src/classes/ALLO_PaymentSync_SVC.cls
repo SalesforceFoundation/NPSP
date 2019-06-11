@@ -433,7 +433,9 @@ public class ALLO_PaymentSync_SVC {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
+            System.debug(loggingLevel.ERROR, 'total opportunity Allocations: ' + totalOpportunityAllocations);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
+            System.debug(loggingLevel.ERROR, 'new Total Payment Allocations: ' + newTotalPaymentAllocations);
             // Default Allocation will be handled outside of this loop
             if (gau == UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
                 continue;
@@ -537,13 +539,23 @@ public class ALLO_PaymentSync_SVC {
             } else if (context.totalUnpaidPayments > 0) {
                 for (npe01__OppPayment__c payment : context.payments.values()) {
                     if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) { // Only process unpaid payments...
+                        // context.scheduleRatio = totalPaymentsPaidUnpaid / opportunity.Amount;
+                        // newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
                         Decimal paymentRatio = context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
                         Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
-
+                        // Payment Scale - Total of all payment amounts divided by opportunity amount. 
+                            // If the total payment amount is greater than the opportunity amount, the scale will be greater than 1
+                            // If the total payment amount is less than the opportunity amount, the scale will be less than 1
+                        // paymentScale = totalPaidUnpaidPayments/opportunity.Amount
+                        System.debug(loggingLevel.ERROR, 'context.totalUnpaidPayments: ' + context.totalUnpaidPayments);
+                        System.debug(loggingLevel.ERROR, 'paymentRatio: ' + paymentRatio);
+                        System.debug(loggingLevel.ERROR, 'payment Scale: ' + paymentScale);
+                        System.debug(loggingLevel.ERROR, 'context schedule ratio: ' + context.scheduleRatio);
+                        System.debug(loggingLevel.ERROR, 'newTotalPaymentAllocations: ' + newTotalPaymentAllocations);
                         Allocation__c newAllocation = new Allocation__c(
                             Payment__c = payment.Id,
                             General_Accounting_Unit__c = gau,
-                            Amount__c = (newTotalPaymentAllocations * paymentScale) / (paymentRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            Amount__c = (newTotalPaymentAllocations) / (paymentRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
                         );
 
                         //only add the percent for non-default
