@@ -399,9 +399,9 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         System.assertEquals(dis[dis.size() - 1 ].Id, diBatch.lastProcessedId,
             'The lastProcessedId should be cached correctly');
 
-        System.assertEquals(2, allDis, 'The number of data imports in org is correct');
+        System.assertEquals(5, allDis, 'The number of data imports in org is correct');
 
-        System.assertEquals(1, diBatch.bdiRowsLast30DaysCount,
+        System.assertEquals(4, diBatch.bdiRowsLast30DaysCount,
             'The number of data imports should be tracked correctly');
     }
 
@@ -426,6 +426,55 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name()
             ),
             'setPackageIntegerValue should have been called with the feature Data_CountBDIRowsLast30Days and set correctly'
+        );
+    }
+
+    /**
+     * @description Confirms BGE row counts are calculated correctly
+     */
+    @IsTest
+    private static void shouldCalculateBGERows() {
+        UTIL_OrgTelemetry_SObject_BATCH diBatch =
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BGE_ROWS);
+
+        String diBatchQuery = diBatch.start(null).getQuery();
+        List<DataImport__c> dis = Database.query(diBatchQuery);
+        Integer allDis = [SELECT count() FROM DataImport__c];
+
+        Test.startTest();
+        diBatch.execute(null, dis);
+        Test.stopTest();
+
+        System.assertEquals(dis[dis.size() - 1 ].Id, diBatch.lastProcessedId,
+            'The lastProcessedId should be cached correctly');
+
+        System.assertEquals(5, allDis, 'The number of data imports in org is correct');
+
+        System.assertEquals(2, diBatch.BGERowsLast30DaysCount,
+            'The number of data imports should be tracked correctly');
+    }
+
+    /**
+     * @description Confirms BGE row metrics are captured in FeatureManagement at the end of the batch
+     */
+    @isTest
+    private static void shouldCaptureBGERowMetricsInFeatureManagement() {
+        UTIL_OrgTelemetry_SObject_BATCH diBatch =
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BGE_ROWS);
+        diBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        diBatch.BGERowsLast30DaysCount = 1;
+
+        Test.startTest();
+        diBatch.finish(null);
+        Test.stopTest();
+
+        System.assertEquals(
+            diBatch.BGERowsLast30DaysCount,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountBGERowsLast30Days and set correctly'
         );
     }
 
@@ -459,17 +508,25 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
      * @description Builds and inserts test data import records
      */
     private static void createDataImports() {
+        Integer recordsToCreate = 5;
         List<DataImport__c> dis = new List<DataImport__c>();
+        DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
 
-        for (Integer i = 0; i < 2; i++) {
-            dis.add(new DataImport__c());
+        insert diBatch;
+
+        for (Integer i = 0; i < recordsToCreate; i++) {
+            DataImport__c di = new DataImport__c();
+
+            if (i > 2) {
+                di.NPSP_Data_Import_Batch__c = diBatch.Id;
+            }
+            dis.add(di);
         }
 
         insert dis;
 
         Datetime sixtyDaysAgo = Datetime.now().addDays(-60);
-        Test.setCreatedDate(dis[0].Id, Datetime.now());
-        Test.setCreatedDate(dis[1].Id, sixtyDaysAgo);
+        Test.setCreatedDate(dis[0].Id, sixtyDaysAgo);
     }
 
     /**

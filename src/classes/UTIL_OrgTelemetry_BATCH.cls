@@ -85,7 +85,7 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
     */
     public void finish(Database.BatchableContext info) {
         handleRecurringDonationCounts();
-        handleBDICounts();
+        handleDataImportCounts();
     }
 
     /**
@@ -120,18 +120,26 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
     /**
      * @description Batch job to count the number of Data Imports.
      */
-    private void handleBDICounts() {
-        Integer cnt = Database.countQuery('SELECT Count() FROM DataImport__c LIMIT 1');
+    private void handleDataImportCounts() {
+        Integer cnt = Database.countQuery('SELECT Count() FROM npsp__DataImport__c LIMIT 1');
         if (cnt == 1) {
             Database.executeBatch(
                 new UTIL_OrgTelemetry_SObject_BATCH(
                     UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BDI_ROWS
                 ),
-                UTIL_OrgTelemetry_SObject_BATCH.BDI_ROWS_BATCH_SIZE
+                UTIL_OrgTelemetry_SObject_BATCH.DI_ROWS_BATCH_SIZE
+            );
+
+            Database.executeBatch(
+                new UTIL_OrgTelemetry_SObject_BATCH(
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BGE_ROWS
+                ),
+                UTIL_OrgTelemetry_SObject_BATCH.DI_ROWS_BATCH_SIZE
             );
 
         } else {
             System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), 0);
+            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name(), 0);
         }
     }
 }

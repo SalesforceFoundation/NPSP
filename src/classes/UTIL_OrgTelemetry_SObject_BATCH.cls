@@ -58,9 +58,9 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     public static final Integer RECURRING_DONATIONS_BATCH_SIZE = 200;
 
     /**
-     * @description Batch size for BDI_ROWS job mode
+     * @description Batch size for BDI_ROWS and BGE_ROWS job mode
      */
-    public static final Integer BDI_ROWS_BATCH_SIZE = 2000;
+    public static final Integer DI_ROWS_BATCH_SIZE = 2000;
 
     /**
      * @description BatchJobMode is to add support for other query types in this same batch job
@@ -69,7 +69,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     public enum TelemetryBatchJobMode {
         RECURRING_DONATIONS,
         OPPORTUNITIES,
-        BDI_ROWS
+        BDI_ROWS,
+        BGE_ROWS
     }
 
     /** @description Limit for query locator. Property is public to allow for QA testing via the Developer Console */
@@ -101,6 +102,9 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     @TestVisible
     private Integer bdiRowsLast30DaysCount = 0;
+
+    @TestVisible
+    private Integer bgeRowsLast30DaysCount = 0;
 
     private final String recurringDonationOpenStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
 
@@ -141,6 +145,10 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                 soqlQuery = 'SELECT Id FROM npsp__DataImport__c WHERE CreatedDate = Last_n_days:30';
             }
 
+            when BGE_ROWS {
+                soqlQuery = 'SELECT Id FROM npsp__DataImport__c WHERE CreatedDate = Last_n_days:30 AND npsp__NPSP_Data_Import_Batch__r.npsp__GiftBatch__c = true';
+            }
+
             when else {
                 // If no conditions are met, this returns an empty query to avoid an NPE
                 soqlQuery = 'SELECT Id FROM Account LIMIT 0';
@@ -178,6 +186,10 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
             when BDI_ROWS {
                 handleBDIRowsJobMode((List<DataImport__c>) scope);
+            }
+
+            when BGE_ROWS {
+                handleBGERowsJobMode((List<DataImport__c>) scope);
             }
         }
     }
@@ -246,6 +258,15 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
+     * @description Handles batch logic for BGE_ROWS job mode
+     */
+    private void handleBGERowsJobMode(List<DataImport__c> dis) {
+        for (DataImport__c di : dis) {
+            bgeRowsLast30DaysCount++;
+        }
+    }
+
+    /**
      * @description Builds a map of opportunities grouped by npe03__Recurring_Donation__c
      */
     private Map<Id, List<Opportunity>> getOppsByRecurringDonationId(List<npe03__Recurring_Donation__c> recurringDonations) {
@@ -302,6 +323,10 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
                 when BDI_ROWS {
                     featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), bdiRowsLast30DaysCount);
+                }
+
+                when BGE_ROWS {
+                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name(), bgeRowsLast30DaysCount);
                 }
             }
         }
