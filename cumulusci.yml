@@ -106,6 +106,23 @@ tasks:
                 - record_type: Opportunity.NPSP_Default
                   default: true
 
+    test_data_bdi:
+        description: 'Generate and load test data for BDI benchmarks into an org'
+        class_path: tasks.generate_bdi_data.GenerateBDIData
+        options:
+            mapping_yaml: 'datasets/bdi_benchmark/mapping.yml'
+            num_records: 5000
+            debug_db_path: /tmp/temp_db.db
+
+    performance_tests:
+        description: Runs Robot Framework performance tests
+        class_path: cumulusci.tasks.robotframework.Robot
+        group: Performance Tests
+        options:
+            suites: robot/Cumulus/perftests/
+            options:
+                outputdir: robot/Cumulus/results
+
     pmd:
         description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
         class_path: tasks.pmd.PMDTask
@@ -149,6 +166,7 @@ tasks:
                 - Allocation__c
                 - General_Accounting_Unit__c
                 - Campaign
+                - DataImport__c
 
     test_data_relationships:
         description: 'Runs execute anonymous to insert the default relationships'
@@ -193,6 +211,8 @@ tasks:
                 - npsp__Allocation__c
                 - npsp__General_Accounting_Unit__c
                 - Campaign
+                - npe01__OppPayment__c
+                - npsp__DataImport__c
 
     npsp_default_settings:
         description: Configure the default NPSP Settings including Membership RecordType
@@ -265,6 +285,16 @@ flows:
                 task: test_data_relationships
             9:
                 task: deploy_reports
+
+    qa_org_namespaced:
+        description: Execute the qa_org flow against a namespaced scratch org and patch help text.
+        steps:
+            1:
+                flow: qa_org
+            2:
+                task: deploy
+                options:
+                    path: unpackaged/config/qa_namespaced
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
@@ -362,7 +392,26 @@ flows:
         steps:
             3:
                 task: ensure_record_type
-    
+
+    test_performance:
+        description: 'Creates a BDI org and runs a performance test'
+        steps:
+            1:
+                flow: dev_org_namespaced
+            2:
+                task: deploy
+                options:
+                    unmanaged: False
+                    path: unpackaged/config/perf
+                    namespace_inject: $project_config.project__package__namespace
+            3:
+                task: update_admin_profile
+            4:
+                task: performance_tests
+                options:
+                    options:
+                        outputdir: .
+
     beta_dependencies:
         steps:
             3:

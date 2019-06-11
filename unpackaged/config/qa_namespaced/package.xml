@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>DataImport__c.new_lookup_campaign__c</members>
+        <members>DataImport__c.Custom_add_date__c</members>
+        <members>DataImport__c.custom_acc_text__c</members>
+        <members>DataImport__c.custom_cont_num__c</members>
+        <members>DataImport__c.custom_currency__c</members>
+        <members>DataImport__c.custom_date__c</members>
+        <members>DataImport__c.custom_email__c</members>
+        <members>DataImport__c.custom_multipick__c</members>
+        <members>DataImport__c.custom_number__c</members>
+        <members>DataImport__c.custom_phone__c</members>
+        <members>DataImport__c.custom_text__c</members>
+        <members>DataImport__c.custom_textarea__c</members>
+        <members>DataImport__c.custom_url__c</members>
+        <members>DataImport__c.custom_picklist__c</members>
+        <name>CustomField</name>
+    </types>
+    <version>40.0</version>
+</Package>
