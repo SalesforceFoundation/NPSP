@@ -188,9 +188,17 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return JSON string of all open Opportunities and related Payments for the given donor
     */
     @AuraEnabled
-    public static String getOpportunitiesWithOppPayments(Id donorId, String donorType) {
+    public static String getOpportunitiesWithOppPayments(Id donorId) {
+        Schema.SObjectType token = donorId.getSobjectType();
 
-        String relationshipField = donorType == 'Account1' ? 'AccountId' : 'Primary_Contact__c';
+        String relationshipField;
+        if (token == Account.SObjectType) {
+            relationshipField = 'AccountId';
+        } else if (token == Contact.SObjectType) {
+            relationshipField = 'Primary_Contact__c';
+        } else {
+            throw new AuraHandledException('SObjectType ' + token + ' is not supported.');
+        }
 
         String query = 'SELECT Id, ' +
                 'Name, ' +
