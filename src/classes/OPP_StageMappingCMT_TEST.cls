@@ -41,10 +41,13 @@ private with sharing class OPP_StageMappingCMT_TEST {
     @isTest
     private static void testFinalizedOppStageToStateRecordCreation() {
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
-        npe01__Contacts_And_Orgs_Settings__c configRecord = new npe01__Contacts_And_Orgs_Settings__c();
-        configRecord.Payments_Auto_Close_Stage_Name__c = closedWonStage;
 
-        npe01__Contacts_And_Orgs_Settings__c contactAndOrgSetting = UTIL_CustomSettingsFacade.getContactsSettingsForTests(configRecord);
+        npe01__Contacts_And_Orgs_Settings__c contactAndOrgSetting = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                                                                        new npe01__Contacts_And_Orgs_Settings__c(
+                                                                            Payments_Auto_Close_Stage_Name__c = closedWonStage
+                                                                        )
+                                                                    );
+
         UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
         
         Test.startTest();
@@ -69,10 +72,13 @@ private with sharing class OPP_StageMappingCMT_TEST {
     @isTest
     private static void testPledgedOppStageToStateRecordCreation() {
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
-        npe01__Contacts_And_Orgs_Settings__c configRecord = new npe01__Contacts_And_Orgs_Settings__c();
-        configRecord.Payments_Auto_Close_Stage_Name__c = closedWonStage;
 
-        npe01__Contacts_And_Orgs_Settings__c contactAndOrgSetting = UTIL_CustomSettingsFacade.getContactsSettingsForTests(configRecord);
+        npe01__Contacts_And_Orgs_Settings__c contactAndOrgSetting = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                                                                        new npe01__Contacts_And_Orgs_Settings__c(
+                                                                            Payments_Auto_Close_Stage_Name__c = closedWonStage
+                                                                        )
+                                                                    );
+
         UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
         
         Test.startTest();
