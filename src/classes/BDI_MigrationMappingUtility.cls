@@ -156,7 +156,6 @@ public with sharing class BDI_MigrationMappingUtility {
      * @return Metadata deployment id
      */
     public String deployCustomMetadata() {
-
         try {
             If (queuedMetadataTypesForDeploy.size() > 0) {
                 Metadata.DeployContainer deploymentContainer = new Metadata.DeployContainer();
@@ -171,16 +170,12 @@ public with sharing class BDI_MigrationMappingUtility {
                     deploymentId = Metadata.Operations.enqueueDeployment(deploymentContainer,
                         new DeploymentCallback());
                 }
-            } else {
-                BDI_MigrationMappingUtility.updateCustomSettings(DATA_IMPORT_FIELD_MAPPING,
-                    String.valueOf(Metadata.DeployStatus.SUCCEEDED));
             }
         } catch (Exception e) {
             throw new DeploymentException(Label.bdiErrorDeploymentFailed + ' ' + e.getMessage());
         }
 
         clearLists();
-
         return deploymentId;
     }
 
