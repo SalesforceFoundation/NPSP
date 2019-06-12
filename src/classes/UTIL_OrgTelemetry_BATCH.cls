@@ -52,7 +52,8 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRdOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRecurringDonations,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows,
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows
         };
 
     /**
