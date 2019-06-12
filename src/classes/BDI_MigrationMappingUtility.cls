@@ -588,10 +588,17 @@ public with sharing class BDI_MigrationMappingUtility {
         request.setMethod('GET');
         request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
         HttpResponse response = h.send(request);
-        Metadata.DeployResult deploymentResult =
-            (Metadata.DeployResult)JSON.deserialize(response.getBody(), Metadata.DeployResult.class);
+        DeploymentResponse deploymentResponse =
+            (DeploymentResponse)JSON.deserialize(response.getBody(), DeploymentResponse.class);
 
-        return deploymentResult;
+        return deploymentResponse.deployResult;
+    }
+
+    /**
+    * @description Wrapper object for the deployment request response
+    */
+    private class DeploymentResponse {
+        Metadata.DeployResult deployResult;
     }
 
     /**

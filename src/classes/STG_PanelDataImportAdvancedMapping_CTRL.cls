@@ -96,17 +96,17 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Custom metadata deployment result
     */
-    private Metadata.DeployStatus deploymentStatus { get; set; }
+    private Metadata.DeployResult deploymentResult { get; set; }
 
     /*******************************************************************************************************
     * @description Boolean that determines if the toggle should be disabled
     */
     public Boolean hasDeploymentInProgress {
         get {
-            if (hasDeploymentInProgress == null && deploymentStatus != null) {
-                hasDeploymentInProgress = deploymentStatus == Metadata.DeployStatus.INPROGRESS
-                    || deploymentStatus == Metadata.DeployStatus.PENDING
-                    || deploymentStatus == Metadata.DeployStatus.CANCELING;
+            if (deploymentResult != null) {
+                hasDeploymentInProgress = deploymentResult.status == Metadata.DeployStatus.INPROGRESS
+                    || deploymentResult.status == Metadata.DeployStatus.PENDING
+                    || deploymentResult.status == Metadata.DeployStatus.CANCELING;
                 return hasDeploymentInProgress;
             }
             return false;
@@ -211,25 +211,26 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * @return void
     */
     public PageReference startPolling() {
+        System.debug('***startPolling()');
         timeoutCount++;
 
         refreshCustomSettings();
         setDeploymentStatus();
 
-        if (deploymentStatus != null) {
+        if (deploymentResult != null) {
             // We had a migration that contained CMT records to insert
-            Boolean isSuccess = deploymentStatus == Metadata.DeployStatus.Succeeded
+            Boolean isSuccess = deploymentResult.status == Metadata.DeployStatus.Succeeded
                 && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
 
             if (isSuccess) {
                 isPolling = false;
                 throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
-            } else if (deploymentStatus == Metadata.DeployStatus.FAILED) {
+            } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
                 throwMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
             }
 
-        } else if (deploymentStatus == null
+        } else if (deploymentResult == null
                    && dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING) {
             // We had a migration that didn't contain CMT records to insert
             // DeploymentContainer was empty which means we're using our standard field mapping set
@@ -248,14 +249,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
-    * @description Checks to see if we have a saved custom metadata deployment id and sets deploymentStatus
+    * @description Checks to see if we have a saved custom metadata deployment id and sets deploymentResult
     */
     private void setDeploymentStatus() {
         if (dataImportSettings.CMT_Deployment_ID__c != null) {
-            Metadata.DeployResult deploymentResult =
+            deploymentResult =
                 migrationMappingUtility.getDeploymentResult(dataImportSettings.CMT_Deployment_ID__c);
-
-            deploymentStatus = deploymentResult.status;
         }
     }
 
