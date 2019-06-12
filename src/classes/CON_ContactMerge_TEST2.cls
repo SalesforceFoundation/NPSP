@@ -37,13 +37,15 @@
 @isTest
 private class CON_ContactMerge_TEST2 {
     
-    static testMethod void merge3OneToOneOne2One(){
+    @isTest
+    static void merge3OneToOneOne2One(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         merge3OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void merge3OneToOneHHAccount(){
+    @isTest
+    static void merge3OneToOneHHAccount(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -91,28 +93,8 @@ private class CON_ContactMerge_TEST2 {
         con2 = listCon[1];
         con3 = listCon[2];
         
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[3]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        fixedSearchResults[2]=con3.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
-        
-        controller.search();
-        
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-        controller.searchResults[2].selected = true;
-        
-        controller.nextStep();
-        
+        CON_ContactMerge_CTRL controller = setupPageController(new List<Contact> { con, con2, con3 }, 'test');
+
         CON_ContactMerge_TEST.selectMasterRecord(controller, con3.id);
         
         //merge them
@@ -151,13 +133,15 @@ private class CON_ContactMerge_TEST2 {
         
     }
     
-    static testMethod void merge2OneToOneInSameAccountOne2One(){
+    @isTest
+    static void merge2OneToOneInSameAccountOne2One(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         merge2OneToOneInSameAccount(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void merge2OneToOneInSameAccountHHAccount(){
+    @isTest
+    static void merge2OneToOneInSameAccountHHAccount(){
         merge2OneToOneInSameAccount(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two contacts that are both in the one-to-one account model
@@ -180,24 +164,7 @@ private class CON_ContactMerge_TEST2 {
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
         
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-        
-        controller.nextStep();
+        CON_ContactMerge_CTRL controller = setupPageController(new List<Contact> { con, con2 }, 'test');
         
         CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
         
@@ -222,10 +189,12 @@ private class CON_ContactMerge_TEST2 {
         system.assertEquals(con.AccountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
     
-    static testMethod void ghIssue6One2One(){
+    @isTest
+    static void ghIssue6One2One(){
         ghIssue6(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void ghIssue6HHAccount(){
+    @isTest
+    static void ghIssue6HHAccount(){
         ghIssue6(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void ghIssue6(string strProcessor){
@@ -242,44 +211,17 @@ private class CON_ContactMerge_TEST2 {
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         system.assertEquals(con.LastName, 'O\'Sullivan');
-                
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        
-        controller.searchText = 'O\'Sullivan';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        List<Id> fixedSearchResults=new List<Id>(); 
-        fixedSearchResults.add(con.Id);
-        fixedSearchResults.add(con2.Id);  
-        Test.setFixedSearchResults(fixedSearchResults); 
-        controller.search();
-        
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;        
-        
-        controller.nextStep();
+
+        CON_ContactMerge_CTRL controller = setupPageController(new List<Contact> { con, con2 }, 'O\'Sullivan');
         
         CON_ContactMerge_TEST.selectMasterRecord(controller, con2.id);
         
-        //merge them
         controller.mergeContacts();
-    /*    
-        //first and second contact should be deleted
-        system.assertEquals(1,[select count() from Contact where id=:con3.id]);
-        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(0,[select count() from Contact where id=:con.id]);
-        //first and second contact's account should be deleted
-        system.assertEquals(1,[select count() from Account where id=:con3.AccountId]);
-        system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
-        system.assertEquals(0,[select count() from Account where id=:con.AccountId]);
-        //Third contact's account id should not have changed
-        system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);*/
-        
         
     }
   
-    public static testmethod  void householdDifferentFromMaster() {
+    @isTest
+    public static  void householdDifferentFromMaster() {
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -336,7 +278,8 @@ private class CON_ContactMerge_TEST2 {
 
     
     //check a standard set controller passed into the page is handled correctly
-    static testMethod void testStandardSetSelected(){
+    @isTest
+    static void testStandardSetSelected(){
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -365,7 +308,8 @@ private class CON_ContactMerge_TEST2 {
     }
   
     //check a search term passed into the page is handled correctly
-    static testMethod void testSearchSpecPassed(){
+    @isTest
+    static void testSearchSpecPassed(){
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -393,7 +337,8 @@ private class CON_ContactMerge_TEST2 {
     }
     
     //check a comma separated list of Ids are handled correctly
-    static testMethod void testGoodIdsPassed(){
+    @isTest
+    static void testGoodIdsPassed(){
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -419,7 +364,8 @@ private class CON_ContactMerge_TEST2 {
     }
     
     //check invalid Ids are handled
-    static testMethod void testBadIdsPassed(){
+    @isTest
+    static void testBadIdsPassed(){
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -447,7 +393,8 @@ private class CON_ContactMerge_TEST2 {
         
     }
     
-    static testMethod void personAccountErrorDetection() {
+    @isTest
+    static void personAccountErrorDetection() {
         // detect PersonAccounts
         boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
         if (!isPAEnabled)
@@ -502,7 +449,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeHHToHH() {
+    @isTest
+    static void testNamesAndOppsMergeHHToHH() {
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -510,7 +458,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOne2OneToOne2One() {
+    @isTest
+    static void testNamesAndOppsMergeOne2OneToOne2One() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -521,7 +470,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOrgToHH() {
+    @isTest
+    static void testNamesAndOppsMergeOrgToHH() {
         testNamesAndOppsMerge(null, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -529,7 +479,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeHHToOrg() {
+    @isTest
+    static void testNamesAndOppsMergeHHToOrg() {
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, null);
     }
 
@@ -537,7 +488,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOrgToOne2One() {
+    @isTest
+    static void testNamesAndOppsMergeOrgToOne2One() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -548,7 +500,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOne2OneToOrg() {
+    @isTest
+    static void testNamesAndOppsMergeOne2OneToOrg() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -559,7 +512,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOrgToOrg() {
+    @isTest
+    static void testNamesAndOppsMergeOrgToOrg() {
         testNamesAndOppsMerge(null, null);
     }
 
@@ -567,7 +521,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOne2OneToHH() {
+    @isTest
+    static void testNamesAndOppsMergeOne2OneToHH() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -578,7 +533,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeHHToOne2One() {
+    @isTest
+    static void testNamesAndOppsMergeHHToOne2One() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -589,7 +545,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeBucketToHH() {
+    @isTest
+    static void testNamesAndOppsMergeBucketToHH() {
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
@@ -599,7 +556,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeHHToBucket() {
+    @isTest
+    static void testNamesAndOppsMergeHHToBucket() {
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);
@@ -609,7 +567,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeBucketToOne2One() {
+    @isTest
+    static void testNamesAndOppsMergeBucketToOne2One() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -622,7 +581,8 @@ private class CON_ContactMerge_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOne2OneToBucket() {
+    @isTest
+    static void testNamesAndOppsMergeOne2OneToBucket() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
@@ -679,37 +639,14 @@ private class CON_ContactMerge_TEST2 {
         Contact conWinner = listConAll[iConWinner];
         Contact conLoser = listConAll[iConLoser];        
 
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));        
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        CON_ContactMerge_CTRL controller = setupPageController(new List<Contact> { conWinner, conLoser }, 'test');
         
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=conLoser.Id; 
-        fixedSearchResults[1]=conWinner.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-        
-        //select the second as winner
-        controller.nextStep();        
         CON_ContactMerge_TEST.selectMasterRecord(controller, conWinner.id);
         
-        //list<OpportunityContactRole> listOCR = [select Opportunity.Name, Contact.Name, Role, IsPrimary from OpportunityContactRole];
-        //system.debug('****DJH listOCR before: ' + listOCR);
-
-        //merge them
         Test.startTest();
         controller.mergeContacts();
         Test.stopTest();
         
-        //listOCR = [select Opportunity.Name, Contact.Name, Role, IsPrimary from OpportunityContactRole];
-        //system.debug('****DJH listOCR after: ' + listOCR);
-
         // reload our contacts and accounts
         list<Account> listAcc = new list<Account>([select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
             npo02__NumberOfClosedOpps__c, 
@@ -880,4 +817,102 @@ private class CON_ContactMerge_TEST2 {
         }
         
     }
+
+        /*******************************************************************************************************
+        * @description Merge two Contacts where the master has no affiliations and the merged contact has a
+        ** primary affiliation.
+        **/
+        @isTest
+        static void mergeContactsWithAffiliation() {
+        
+            Account company = new Account(name = 'Foo Company');
+            insert company;
+
+            List<Contact> objectsToInsert = new List<Contact>();
+            Contact con = UTIL_UnitTestData_TEST.getContact();
+            con.LastName = '1Contact_forTests_Merge';
+            con.Description = 'First Contact';
+
+            Contact con2 = UTIL_UnitTestData_TEST.getContact();
+            con2.LastName = '2Contact_forTests_Merge';
+            con2.Description = 'Second Contact';
+            con2.Primary_Affiliation__c = company.Id;
+
+            objectsToInsert.add(con);
+            objectsToInsert.add(con2);
+
+            insert objectsToInsert;
+            
+            List<Contact> contactsToMerge = [
+                SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c
+                FROM Contact 
+                ORDER BY Id
+            ];
+            con = contactsToMerge[0];
+            con2 = contactsToMerge[1];
+
+            List<npe5__Affiliation__c> affiliations = [
+                SELECT Id, npe5__Contact__c, npe5__EndDate__c, npe5__Organization__c, 
+                    npe5__Primary__c, npe5__Role__c, npe5__StartDate__c, npe5__Status__c, npe5__Description__c
+                FROM npe5__Affiliation__c 
+                WHERE npe5__Contact__c IN :contactsToMerge
+            ];
+
+            System.assertEquals(1, affiliations.size(), 'Affiliations are created for the contact');
+            
+            CON_ContactMerge_CTRL controller = setupPageController(contactsToMerge, 'test');
+            CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
+
+            //Select the primary affiliation of the one that is not the one we selected as master
+            List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;  
+            for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+                if (row.fieldName == UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c')) {
+                    row.selectedValue = String.valueOf(con2.id);
+                    break;
+                }
+            }
+
+            Test.startTest();
+            controller.mergeContacts();
+            Test.stopTest();
+
+            Contact mergedContact = [
+                SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c
+                FROM Contact 
+                WHERE Id = :con.Id
+            ];
+
+            System.assertEquals('First Contact', mergedContact.Description, 'The merged contact has the correct description.');
+            System.assertEquals(company.Id, mergedContact.Primary_Affiliation__c, 'The merged contact has the correct primary affiliation.');
+
+        }
+
+        /*******************************************************************************************************
+        * @description Setup the page controller with the correct search and contacts
+        ** 
+        **/
+        private static CON_ContactMerge_CTRL setupPageController(List<Contact> contactsToMerge, String searchText) {
+            Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+
+            CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+            controller.searchText = searchText;
+            Integer contactSize = contactsToMerge.size();
+
+            //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+            List<Id> fixedSearchResults=new Id[contactSize]; 
+            
+            for (Integer i = 0; i < contactSize; i ++ ) {
+                fixedSearchResults[i] = contactsToMerge[i].Id;
+            }
+            
+            Test.setFixedSearchResults(fixedSearchResults); 
+            controller.search();
+
+            for (Integer i = 0; i < contactSize; i ++ ) {
+                controller.searchResults[i].selected = true;
+            }
+            controller.nextStep();
+
+            return controller;
+        }
 }
