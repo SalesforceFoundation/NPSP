@@ -196,8 +196,7 @@ public class ALLO_PaymentSync_SVC {
             Decimal totalPaymentsPaidUnpaid = 0;
 
             for (npe01__OppPayment__c payment : paymentsByOpportunityId.get(opportunity.id)) {
-                System.debug(loggingLevel.ERROR, 'processing payment by opportunity');
-                System.debug(loggingLevel.ERROR, 'this is payment: ' + payment);
+                
                 //ignore payments that have been written off
                 if (payment.npe01__Written_Off__c) {
                     continue;
@@ -214,9 +213,8 @@ public class ALLO_PaymentSync_SVC {
                 if (!payment.npe01__Paid__c) {
                     context.totalUnpaidPayments += payment.npe01__Payment_Amount__c;
                 }
-                System.debug(loggingLevel.ERROR, 'payment.Allocations__r; ' + payment.Allocations__r);
+                
                 for (Allocation__c pmtAllocation : payment.Allocations__r) {
-                    System.debug(loggingLevel.ERROR, 'pmt allocation: ' + pmtAllocation);
                     Id gau = pmtAllocation.General_Accounting_Unit__c;
 
                     if (context.paymentAllocationsByGAU.containsKey(gau)) {
@@ -245,11 +243,6 @@ public class ALLO_PaymentSync_SVC {
 
             if (opportunity.Amount != null && opportunity.Amount != 0) {
                 context.scheduleRatio = context.totalUnpaidPayments / opportunity.Amount;
-                System.debug(loggingLevel.ERROR, 'totalPaymentsPaidUnpaid: ' + totalPaymentsPaidUnpaid);
-                System.debug(loggingLevel.ERROR, 'total unpaid payments: ' + context.totalUnpaidPayments);
-                System.debug(loggingLevel.ERROR, 'opportunity amount: ' + opportunity.Amount);
-                System.debug(loggingLevel.ERROR, 'context schedule ratio being set to: ' + context.scheduleRatio);
-
             }
 
             // Need this value to accurately calculate the percentage used when recalculating allocations on the Opportunity (from the changes to
@@ -439,27 +432,21 @@ public class ALLO_PaymentSync_SVC {
     ********************************************************************************************************/
     public void syncOpportunityAllocationsToPayments(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
-        System.debug(loggingLevel.ERROR, 'here');
+        
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
-            System.debug(loggingLevel.ERROR, 'context.totalOpportunityAllocationsByGAU: ' + context.totalOpportunityAllocationsByGAU);
-            System.debug(loggingLevel.ERROR, 'context.totalPaidPaymentAllocationsByGAU: ' + context.totalPaidPaymentAllocationsByGAU);
-            System.debug(loggingLevel.ERROR, 'totalOpportunityAllocations: ' + totalOpportunityAllocations);
-            System.debug(loggingLevel.ERROR, 'context schedule ratio is: ' + context.ScheduleRatio);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
-            System.debug(loggingLevel.ERROR, 'here');
+            
             // Default Allocation will be handled outside of this loop
             if (gau == UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
-                System.debug(loggingLevel.ERROR, 'here');
                 continue;
             }
 
-            System.debug(loggingLevel.ERROR, 'context.paymentAllocationsByGAU: ' + context.paymentAllocationsByGAU);
             //if we have payment allocations for this GAU
             if (context.paymentAllocationsByGAU.containsKey(gau)) {
                 Decimal currentTotalPaymentAllocations = context.totalPaymentAllocationsByGAU.get(gau);
                 Decimal totalPaidPaymentAllocations = 0;
-                System.debug(loggingLevel.ERROR, 'here');
+                
                 if (context.totalPaidPaymentAllocationsByGAU.containsKey(gau)) {
                     totalPaidPaymentAllocations = context.totalPaidPaymentAllocationsByGAU.get(gau);
                 }
@@ -469,7 +456,6 @@ public class ALLO_PaymentSync_SVC {
                 if (totalPaidPaymentAllocations > newTotalPaymentAllocations ||
                     totalPaidPaymentAllocations > totalOpportunityAllocations) {
 
-                    System.debug(loggingLevel.ERROR, 'here');
                     if(context.triggerAllocationsByGAUId.containsKey(gau)) {
                         String gauName = context.triggerAllocationsByGAUId.get(gau).Name;
                         String gauId = context.triggerAllocationsByGAUId.get(gau).Id;
@@ -480,7 +466,6 @@ public class ALLO_PaymentSync_SVC {
 
                 //if existing paid payment allocations are equal to the new total, delete any unpaid payment allocations
                 if (totalPaidPaymentAllocations == newTotalPaymentAllocations) {
-                    System.debug(loggingLevel.ERROR, 'here');
                     for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
                         npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
                         if (!payment.npe01__Paid__c) {
@@ -490,18 +475,13 @@ public class ALLO_PaymentSync_SVC {
                     }
                 }
 
-                System.debug(loggingLevel.ERROR, 'current total payment allocations: ' + currentTotalPaymentAllocations);
-                System.debug(loggingLevel.ERROR, 'newTotalPaymentAllocations: ' + newTotalPaymentAllocations);
-
                 //if desired end amounts are out of sync, update them
                 // Recalculate and update the existing allocations for this GAU. 
                 if (currentTotalPaymentAllocations != newTotalPaymentAllocations) {
-                    System.debug(loggingLevel.ERROR, 'here');
                     Set<Id> paymentsWithExistingGAU = new Set<Id>();
+
                     for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
-                        System.debug(loggingLevel.ERROR, 'here');
                         npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
-                        System.debug(loggingLevel.ERROR, 'payment: ' + payment);
 
                         if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) {
                             paymentsWithExistingGAU.add(payment.Id);
@@ -509,21 +489,14 @@ public class ALLO_PaymentSync_SVC {
                             Decimal paymentRatio =  context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
                             Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
 
-                            System.debug(loggingLevel.ERROR, 'paymentAllocation: ' + paymentAllocation);
-                            System.debug(loggingLevel.ERROR, 'unpaidAllocationAmount: ' + unpaidAllocationAmount);
-                            System.debug(loggingLevel.ERROR, 'paymentRatio: ' + paymentRatio);                           
-
                             // Remove current allocation amount from total as it is changing
                             removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
 
                             paymentAllocation.Amount__c = (unpaidAllocationAmount) / (paymentRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
 
-                            System.debug(loggingLevel.ERROR, 'paymentAllocation.Amount__c: ' + paymentAllocation.Amount__c);
-
                              //only add the percent for non-default
                             if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
                                 paymentAllocation.Percent__c = paymentAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
-                                System.debug(loggingLevel.ERROR, 'paymentAllocation.Percent__c: ' + paymentAllocation.Percent__c);
                             }
 
                             // Add updated allocation amount to total
@@ -534,31 +507,14 @@ public class ALLO_PaymentSync_SVC {
                                 paymentAllocation.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
                             }
 
-                            System.debug(loggingLevel.ERROR, 'after updates, the payment allocation is: ' + paymentAllocation);
-
                             allocationsChanges.objectsToUpdate.add(paymentAllocation);
                         }
                     }
                     // Now do a second pass looking for ones that did not have this allocation...
                     for (npe01__OppPayment__c payment : context.payments.values()) {
-                        System.debug(loggingLevel.ERROR, 'here');
                         if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0 && !paymentsWithExistingGAU.contains(payment.Id)) {
-                            System.debug(loggingLevel.ERROR, 'here');
                             Decimal paymentRatio = context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
                             Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
-                            // newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
-                            // totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
-                            // context.scheduleRatio = totalPaymentsPaidUnpaid / opportunity.Amount;
-                            // Context.scheduleRatio should be totalUnpaidPayments/opportunity.amount. 
-                            // paymentScale = context.totalPaidUnpaidPayments/ opportunity.Amount
-                            // take out total paid payments and 
-                            System.debug(loggingLevel.ERROR, 'payment.npe01__Payment_Amount__c: ' +  payment.npe01__Payment_Amount__c);
-                            System.debug(loggingLevel.ERROR, 'payment ratio: ' + paymentRatio);
-                            System.debug(loggingLevel.ERROR, 'amount is ' + newTotalPaymentAllocations + ' / ' + paymentRatio);
-                            System.debug(loggingLevel.ERROR, 'new total payment allocations: ' + newTotalPaymentAllocations);
-                            System.debug(loggingLevel.ERROR, 'totalOpportunityAllocations: ' + totalOpportunityAllocations);
-                            System.debug(loggingLevel.ERROR, 'schedule ratio: '  + context.scheduleRatio);
-                            System.debug(loggingLevel.ERROR, 'payment scale: ' + paymentScale);
 
                             Allocation__c newAllocation = new Allocation__c(
                                 Payment__c = payment.Id,
@@ -585,9 +541,7 @@ public class ALLO_PaymentSync_SVC {
                 }
             //no payment allocations for this GAU; create them
             } else if (context.totalUnpaidPayments > 0) {
-                System.debug(loggingLevel.ERROR, 'here');
                 for (npe01__OppPayment__c payment : context.payments.values()) {
-                    System.debug(loggingLevel.ERROR, 'here');
                     if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) { // Only process unpaid payments...
                         Decimal paymentRatio = context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
                         Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
@@ -619,12 +573,9 @@ public class ALLO_PaymentSync_SVC {
 
         //handle payment allocations for deleted opportunity allocations
         for (Id gau : context.paymentAllocationsByGAU.keySet()) {
-            System.debug(loggingLevel.ERROR, 'here');
             if (!context.opportunityAllocationsByGAU.containsKey(gau) && gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
-                System.debug(loggingLevel.ERROR, 'here');
 
                  for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
-                     System.debug(loggingLevel.ERROR, 'here');
                     npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
 
                     //since we can't delete paid payment allocations
