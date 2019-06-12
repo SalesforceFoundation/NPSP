@@ -726,6 +726,10 @@ public with sharing class CON_ContactMerge_CTRL {
             try {
                 Database.DMLOptions dml = new Database.DMLOptions();
                 dml.DuplicateRuleHeader.AllowSave = true;
+                // We need to turn off Affiliation processing or there will be duplicate affiliates created
+                // after the merge.  As merge transactions do not fire child triggers
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, true);
+
                 Database.SaveResult sr = UTIL_DMLService.updateRecord(master, dml);
                 if (!sr.isSuccess()) {
                     string strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
@@ -737,6 +741,8 @@ public with sharing class CON_ContactMerge_CTRL {
                     return null;
                 }
                 
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
+
                 CON_ContactMerge.mergeContacts((Contact)master, losers);
                 // Update the master with the selected values
                 return new PageReference('/' + master.id);
