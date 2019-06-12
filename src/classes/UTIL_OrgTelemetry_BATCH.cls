@@ -126,16 +126,9 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
         if (cnt == 1) {
             Database.executeBatch(
                 new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BDI_ROWS
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS
                 ),
-                UTIL_OrgTelemetry_SObject_BATCH.DI_ROWS_BATCH_SIZE
-            );
-
-            Database.executeBatch(
-                new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BGE_ROWS
-                ),
-                UTIL_OrgTelemetry_SObject_BATCH.DI_ROWS_BATCH_SIZE
+                UTIL_OrgTelemetry_SObject_BATCH.DATA_IMPORTS_BATCH_SIZE
             );
 
         } else {

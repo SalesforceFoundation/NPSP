@@ -58,9 +58,9 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     public static final Integer RECURRING_DONATIONS_BATCH_SIZE = 200;
 
     /**
-     * @description Batch size for BDI_ROWS and BGE_ROWS job mode
+     * @description Batch size for DATA_IMPORTS job mode
      */
-    public static final Integer DI_ROWS_BATCH_SIZE = 2000;
+    public static final Integer DATA_IMPORTS_BATCH_SIZE = 2000;
 
     /**
      * @description BatchJobMode is to add support for other query types in this same batch job
@@ -69,8 +69,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     public enum TelemetryBatchJobMode {
         RECURRING_DONATIONS,
         OPPORTUNITIES,
-        BDI_ROWS,
-        BGE_ROWS
+        DATA_IMPORTS
     }
 
     /** @description Limit for query locator. Property is public to allow for QA testing via the Developer Console */
@@ -141,12 +140,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                 soqlQuery = 'SELECT npe03__Amount__c FROM npe03__Recurring_Donation__c WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
-            when BDI_ROWS {
-                soqlQuery = 'SELECT Id FROM DataImport__c WHERE CreatedDate = Last_n_days:30';
-            }
-
-            when BGE_ROWS {
-                soqlQuery = 'SELECT Id FROM DataImport__c WHERE CreatedDate = Last_n_days:30 AND NPSP_Data_Import_Batch__r.GiftBatch__c = true';
+            when DATA_IMPORTS {
+                soqlQuery = 'SELECT Id, NPSP_Data_Import_Batch__r.GiftBatch__c FROM DataImport__c WHERE CreatedDate = Last_n_days:30';
             }
 
             when else {
@@ -184,12 +179,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                 handleRecurringDonationsJobMode((List<npe03__Recurring_Donation__c>) scope);
             }
 
-            when BDI_ROWS {
-                handleBDIRowsJobMode((List<DataImport__c>) scope);
-            }
-
-            when BGE_ROWS {
-                handleBGERowsJobMode((List<DataImport__c>) scope);
+            when DATA_IMPORTS {
+                handleDIRowsJobMode((List<DataImport__c>) scope);
             }
         }
     }
@@ -249,20 +240,15 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
-     * @description Handles batch logic for BDI_ROWS job mode
+     * @description Handles batch logic for BDATA_IMPORTS job mode
      */
-    private void handleBDIRowsJobMode(List<DataImport__c> dis) {
+    private void handleDIRowsJobMode(List<DataImport__c> dis) {
         for (DataImport__c di : dis) {
             bdiRowsLast30DaysCount++;
-        }
-    }
 
-    /**
-     * @description Handles batch logic for BGE_ROWS job mode
-     */
-    private void handleBGERowsJobMode(List<DataImport__c> dis) {
-        for (DataImport__c di : dis) {
-            bgeRowsLast30DaysCount++;
+            if (di.NPSP_Data_Import_Batch__r.GiftBatch__c == true) {
+                bgeRowsLast30DaysCount++;
+            }
         }
     }
 
@@ -321,11 +307,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                     featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), rdDiffCount);
                 }
 
-                when BDI_ROWS {
+                when DATA_IMPORTS {
                     featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), bdiRowsLast30DaysCount);
-                }
-
-                when BGE_ROWS {
                     featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name(), bgeRowsLast30DaysCount);
                 }
             }

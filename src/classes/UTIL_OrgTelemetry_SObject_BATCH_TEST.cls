@@ -386,7 +386,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @IsTest
     private static void shouldCalculateBDIRows() {
         UTIL_OrgTelemetry_SObject_BATCH diBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BDI_ROWS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
 
         String diBatchQuery = diBatch.start(null).getQuery();
         List<DataImport__c> dis = Database.query(diBatchQuery);
@@ -411,7 +411,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @isTest
     private static void shouldCaptureBDIRowMetricsInFeatureManagement() {
         UTIL_OrgTelemetry_SObject_BATCH diBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BDI_ROWS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
         diBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         diBatch.bdiRowsLast30DaysCount = 1;
@@ -435,7 +435,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @IsTest
     private static void shouldCalculateBGERows() {
         UTIL_OrgTelemetry_SObject_BATCH diBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BGE_ROWS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
 
         String diBatchQuery = diBatch.start(null).getQuery();
         List<DataImport__c> dis = Database.query(diBatchQuery);
@@ -460,7 +460,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @isTest
     private static void shouldCaptureBGERowMetricsInFeatureManagement() {
         UTIL_OrgTelemetry_SObject_BATCH diBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.BGE_ROWS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
         diBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         diBatch.BGERowsLast30DaysCount = 1;
@@ -520,6 +520,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             if (i > 2) {
                 di.NPSP_Data_Import_Batch__c = diBatch.Id;
             }
+
             dis.add(di);
         }
 
