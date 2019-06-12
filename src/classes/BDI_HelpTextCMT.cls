@@ -143,6 +143,18 @@ public class BDI_HelpTextCMT {
             this.isDeleted = false;
         }
 
+        public void setParentRelationshipFields(Data_Import_Object_Mapping__mdt objectMapping,
+            String fieldMappingSetName) {
+
+            this.targetObjectMappingLabel = objectMapping.Label;
+            this.targetObjectMappingRecordName = objectMapping.DeveloperName;
+            this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
+        }
+
+        public void setRecordName(String recordName) {
+            this.recordName = recordName;
+        }
+
         public Metadata.CustomMetadata getMetadataRecord() {
             String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(BDI_HelpTextCMT.MetadataObject.Data_Import_Field_Mapping.Name() + '__mdt');
 

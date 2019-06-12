@@ -454,7 +454,9 @@ public with sharing class BDI_MigrationMappingUtility {
 
                 if (!hasDefaultFieldMapping) {
                     // New Field Mapping, not part of our initial config
-                    setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, null);
+                    fieldMapping.setParentRelationshipFields(
+                        existingDefaultObjectMapping,
+                        MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
                     // Add metadata record to queue for deployment
                     pendingMappings.add(fieldMapping);
@@ -465,11 +467,12 @@ public with sharing class BDI_MigrationMappingUtility {
                             existingDefaultFieldMapping, 
                             existingDefaultObjectMapping);
 
-                    setFieldMappingValues(fieldMapping,
-                            existingDefaultObjectMapping, 
-                            existingDefaultFieldMapping);
+                    fieldMapping.setParentRelationshipFields(
+                        existingDefaultObjectMapping,
+                        MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
                     if (invalidFieldMapping) {
+                        fieldMapping.setRecordName(existingDefaultFieldMapping.DeveloperName);
                         conflictingMappings.add(fieldMapping);
                     } else {
                         pendingStandardMappings.add(fieldMapping);
@@ -500,34 +503,6 @@ public with sharing class BDI_MigrationMappingUtility {
                 new BDI_HelpTextCMT.DataImportFieldMapping(
                     fieldMappingsByFieldMappingSetDeveloperName.get(key),
                     fieldMappingSetName));
-        }
-    }
-
-    /**
-     * @description Set the record and lookup names for the default object and field mappings
-     * @param fieldMapping Current instance of DataImportFieldMapping wrapper
-     * @param existingDefaultObjectMapping Corresponding Data_Import_Object_Mapping__mdt
-     * @param existingDefaultFieldMapping Corresponding Data_Import_Field_Mapping__mdt
-     */
-    private void setFieldMappingValues(
-        BDI_HelpTextCMT.DataImportFieldMapping fieldMapping,
-        Data_Import_Object_Mapping__mdt existingDefaultObjectMapping,
-        Data_Import_Field_Mapping__mdt existingDefaultFieldMapping) {
-
-        fieldMapping.targetObjectMappingLabel = existingDefaultObjectMapping.Label;
-        fieldMapping.targetObjectMappingRecordName = existingDefaultObjectMapping.DeveloperName;
-
-        if (fieldMapping.dataImportFieldMappingSetRecordName == null) {
-            fieldMapping.dataImportFieldMappingSetLabel = DEFAULT_FIELD_MAPPING_SET.Label;
-            fieldMapping.dataImportFieldMappingSetRecordName = DEFAULT_FIELD_MAPPING_SET.DeveloperName;
-        }
-
-        if (existingDefaultFieldMapping != null) {
-            fieldMapping.recordName = existingDefaultFieldMapping.DeveloperName;
-            fieldMapping.dataImportFieldMappingSetLabel =
-                existingDefaultFieldMapping.Data_Import_Field_Mapping_Set__r.label;
-            fieldMapping.dataImportFieldMappingSetRecordName =
-                existingDefaultFieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
         }
     }
 
