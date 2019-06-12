@@ -99,20 +99,21 @@ public class BDI_HelpTextCMT {
         public String targetObjectAPIName;
         public String isRequired;
         public Boolean isDeleted;
+        public String importedRecordField;
+        public String importedRecordStatusField;
 
         public DataImportFieldMapping(String label) {
             this.label = label.trim();
         }
 
-        public DataImportFieldMapping(String sourceFieldAPIName, MappingDetail detail) {
-            this.label = detail.dataImportFieldLabel;
+        public DataImportFieldMapping(String label, String sourceFieldAPIName, String dataImportObjectName, String targetFieldAPIName,
+            String targetObjectAPIName) {
+
+            this.label = label.trim();
             this.sourceFieldAPIName = sourceFieldAPIName;
-            this.targetFieldAPIName = detail.targetFieldAPIName;
-            this.dataImportObjectName = detail.dataImportObjectName;
-            this.targetObjectAPIName = detail.targetObjectName;
-            this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
-            this.isRequired = 'No';
-            this.isDeleted = false;
+            this.dataImportObjectName = dataImportObjectName;
+            this.targetFieldAPIName = targetFieldAPIName;
+            this.targetObjectAPIName = targetObjectAPIName;
         }
 
         public DataImportFieldMapping(DataImportFieldMapping sourceFieldMapping, String fieldMappingSet) {
@@ -141,6 +142,18 @@ public class BDI_HelpTextCMT {
             this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
             this.isRequired = 'No';
             this.isDeleted = false;
+        }
+
+        public void setParentRelationshipFields(Data_Import_Object_Mapping__mdt objectMapping,
+            String fieldMappingSetName) {
+
+            this.targetObjectMappingLabel = objectMapping.Label;
+            this.targetObjectMappingRecordName = objectMapping.DeveloperName;
+            this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
+        }
+
+        public void setRecordName(String recordName) {
+            this.recordName = recordName;
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
@@ -235,28 +248,6 @@ public class BDI_HelpTextCMT {
             if (String.isNotBlank(this.objectName)) {
                 this.objectAPIName = DI_OBJECT_MAP.get(this.objectName);
             }
-        }
-    }
-
-    /**
-     * @description Wrapper class for Data_Import_Field_Mapping__mdt;
-     */
-    public class MappingDetail {
-        public String dataImportObjectName;
-        public String targetObjectName;
-        public String dataImportFieldLabel;
-        public String targetFieldAPIName;
-        public String importedRecordField;
-        public String importedRecordStatusField;
-
-        public MappingDetail(String dataImportObjectName, String dataImportFieldLabel, String targetObjectName,
-                             String targetFieldAPIName, String importedRecordField, String importedRecordStatusField) {
-            this.dataImportObjectName = dataImportObjectName;
-            this.dataImportFieldLabel = dataImportFieldLabel;
-            this.targetObjectName = targetObjectName;
-            this.targetFieldAPIName = targetFieldAPIName;
-            this.importedRecordField = importedRecordField;
-            this.importedRecordStatusField = importedRecordStatusField;
         }
     }
 

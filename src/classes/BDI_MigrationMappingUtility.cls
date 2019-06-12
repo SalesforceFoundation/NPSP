@@ -265,15 +265,15 @@ public with sharing class BDI_MigrationMappingUtility {
     * pendingMappings, conflictingMappings, pendingStandardMappings.
     */
     public void startMigration() {
-
+        System.debug('***startMigration()');
         if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
             // Inspects help text mappings, compares against migrated field mapping set, and
             // parks cmt records in various lists (pendingMappings, pendingStandardMappings, etc)
-            buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+            sortFieldMappings(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
         } else {
             // Inspects help text mappings, compares against default field mapping set, and
             // parks cmt records in various lists (pendingMappings, pendingStandardMappings, etc)
-            buildCustomMetadataRecordsFromHelpText(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+            sortFieldMappings(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
 
             // Create migrated field mapping set
             Metadata.CustomMetadata fieldMappingSet =
@@ -414,15 +414,16 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /**
-     * @description Collect all Help Text field mappings and compare against default Field Mapping Metadata Type
-     * records reserve all non-standard NPSP Help Text mappings. Add new custom mappings to list pendingMappings
-     * and add conflicting existing mappings to list conflictingMappings
+     * @description Collect and inspect existing field mappings and mappings found from Help Text and
+     * add mappings to appropriate lists (pendingMappings, conflictingMappings, pendingStandardMappings,
+     * pendingNonHelpTextMappings)
      */
-    public void buildCustomMetadataRecordsFromHelpText(String fieldMappingSetName) {
+    public void sortFieldMappings(String fieldMappingSetName) {
 
         clearLists();
 
-        Map<String, BDI_HelpTextCMT.MappingDetail> mappingDetailsBySourceFieldName =
+        // Mappings found in Data Import Help Text
+        Map<String, BDI_HelpTextCMT.DataImportFieldMapping> mappingDetailsBySourceFieldName =
                 helper.getAllMappingDetailsBySourceFieldName();
 
         Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName =
@@ -433,7 +434,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
         for (String key : mappingDetailsBySourceFieldName.keySet()) {
             BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = 
-                new BDI_HelpTextCMT.DataImportFieldMapping(key, mappingDetailsBySourceFieldName.get(key));
+                mappingDetailsBySourceFieldName.get(key);
 
             String fieldMappingKey = fieldMapping.targetObjectAPIName
                 + '.'
@@ -454,7 +455,9 @@ public with sharing class BDI_MigrationMappingUtility {
 
                 if (!hasDefaultFieldMapping) {
                     // New Field Mapping, not part of our initial config
-                    setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, null);
+                    fieldMapping.setParentRelationshipFields(
+                        existingDefaultObjectMapping,
+                        MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
                     // Add metadata record to queue for deployment
                     pendingMappings.add(fieldMapping);
@@ -465,11 +468,12 @@ public with sharing class BDI_MigrationMappingUtility {
                             existingDefaultFieldMapping, 
                             existingDefaultObjectMapping);
 
-                    setFieldMappingValues(fieldMapping,
-                            existingDefaultObjectMapping, 
-                            existingDefaultFieldMapping);
+                    fieldMapping.setParentRelationshipFields(
+                        existingDefaultObjectMapping,
+                        MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
                     if (invalidFieldMapping) {
+                        fieldMapping.setRecordName(existingDefaultFieldMapping.DeveloperName);
                         conflictingMappings.add(fieldMapping);
                     } else {
                         pendingStandardMappings.add(fieldMapping);
