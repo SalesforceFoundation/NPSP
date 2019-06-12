@@ -186,7 +186,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     */
 
     @isTest
-    static void testGetOpenDonationsWithNoOpps() {
+    static void givenOpenOppWithUnpaidPmtsWhenCalledThenAssertReturnedInWrapper() {
 
         List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
         insert donorContacts;
@@ -201,7 +201,8 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         insert opp;
 
         Test.startTest();
-        String jsonModel = BGE_DataImportBatchEntry_CTRL.getOpenDonations(donorContacts[0].Id, 'Contact1');
+        String jsonOppsWithPmts =
+                BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
         Test.stopTest();
 
         npe01__OppPayment__c pmt = [
@@ -209,11 +210,15 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
                 FROM npe01__OppPayment__c
                 WHERE npe01__Opportunity__c = :opp.Id
         ];
-        OpenDonations openDonations = (OpenDonations)JSON.deserialize(jsonModel, openDonations.class);
+
+       List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
+                (List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>) JSON.deserialize(
+                        jsonOppsWithPmts,
+                        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>.class);
 
         System.assertEquals(false, pmt.npe01__Paid__c);
-        System.assertEquals(0, openDonations.openOpportunities.size(), 'Donor should have no open opportunities without payments.');
-        System.assertNotEquals(0, openDonations.unpaidPayments.size(), 'Donor should have unpaid payments.');
+        System.assertEquals(1, oppWrappers[0].unpaidPayments.size(), 'The unpaid Payment should be returned in the OpportunityWrapper.');
+        System.assertEquals(true, oppWrappers[0].hasPayments, 'The auto-created Payment should be reflected in the OpportunityWrapper.');
     }
 
     /*********************************************************************************************************

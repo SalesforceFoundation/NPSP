@@ -234,10 +234,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * any related Payments (hasPayments) to suppress the option to Update the Donation
     * in the Donation Selector component.
     */
+    @TestVisible
     private class OpportunityWrapper {
-        Opportunity opportunity {get; private set;}
-        List<npe01__OppPayment__c> unpaidPayments {get; private set;}
-        Boolean hasPayments {get; private set;}
+        @TestVisible Opportunity opportunity {get; private set;}
+        @TestVisible List<npe01__OppPayment__c> unpaidPayments {get; private set;}
+        @TestVisible Boolean hasPayments {get; private set;}
 
         private OpportunityWrapper(Opportunity opportunity){
             this.opportunity = opportunity;
