@@ -363,7 +363,7 @@ class NPSP(object):
                 self.salesforce._populate_field(locator, value)
      
          
-    def Verify_details_address(self,field,npsp_street, npsp_city, npsp_country):   
+    def verify_details_address(self,field,npsp_street, npsp_city, npsp_country):   
         """Validates if the details page address field has specified value"""   
         locator= npsp_lex_locators['detail_page']['address'].format(field)
         street, city, country = self.selenium.get_webelements(locator)
