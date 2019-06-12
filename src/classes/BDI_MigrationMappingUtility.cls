@@ -450,18 +450,18 @@ public with sharing class BDI_MigrationMappingUtility {
                 Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = 
                     fieldMappingsByFieldMappingSetDeveloperName.get(fieldMappingKey);
 
-                Boolean foundDefaultFieldMapping = (existingDefaultFieldMapping != null);
+                Boolean hasDefaultFieldMapping = (existingDefaultFieldMapping != null);
 
-                if (!foundDefaultFieldMapping) {
+                if (!hasDefaultFieldMapping) {
                     // New Field Mapping, not part of our initial config
                     setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, null);
 
                     // Add metadata record to queue for deployment
                     pendingMappings.add(fieldMapping);
 
-                } else if (foundDefaultFieldMapping) {
+                } else if (hasDefaultFieldMapping) {
                     // Existing Field Mapping, check if CMTs field values match Help Text field values
-                    Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, 
+                    Boolean invalidFieldMapping = hasDefaultFieldMappingMismatch(fieldMapping,
                             existingDefaultFieldMapping, 
                             existingDefaultObjectMapping);
 
@@ -535,7 +535,7 @@ public with sharing class BDI_MigrationMappingUtility {
      * @description Check if Field Mapping Metadata Type field values are out of sync with default values
      * @return Boolean
      */
-    private Boolean foundDefaultFieldMappingMismatch(
+    private Boolean hasDefaultFieldMappingMismatch(
         BDI_HelpTextCMT.DataImportFieldMapping newFieldMapping,
         Data_Import_Field_Mapping__mdt existingFieldMapping,
         Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
