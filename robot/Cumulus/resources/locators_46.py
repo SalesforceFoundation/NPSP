@@ -2,13 +2,14 @@
 
 npsp_lex_locators={
     'breadcrumb': "//li[contains(@class, 'slds-breadcrumb__item')]/span[text()='{}']",
+    'spl-breadcrumb':"//div[@class= 'slds-media__body']/p[text()='{}']",
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'placeholder': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
     },
     'object_dd':'//h1[contains(@class,"slds-page-header__title")]//a',
-    "header_text": "//h1/div/span",
+    "header_text": "//h1//lightning-formatted-text",
     "record": {
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//span[text()='{}']",
@@ -43,10 +44,15 @@ npsp_lex_locators={
     'button':'//input[contains(@value,"{}")]',
     'link-text':'//a[text()="{}"]',
     'link-title':'//a[@title="{}"]',
-    #'checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
-    'checkbox':'//label[@class="slds-checkbox__label"][./span[text()="{}"]]/span[contains(@class,"slds-checkbox_faux")]',
-    'table_checkbox':'//tbody/tr[./td[2]/a[text()="{}"]]/td/input[@type="checkbox"]',
-    'tab': "//div[@class='uiTabBar']/ul[@class='tabs__nav']/li[contains(@class,'uiTabItem')]/a[@class='tabHeader']/span[contains(text(), '{}')]",
+    'checkbox':{
+        'model-checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
+        'details-checkbox':'//label[@class="slds-checkbox__label"][./span[text()="{}"]]/span[contains(@class,"slds-checkbox_faux")]',
+        'table_checkbox':'//tbody/tr[./td[2]/a[text()="{}"]]/td/input[@type="checkbox"]',
+    }, 
+    'tabs':{   
+        'tab': "//div[@class='uiTabBar']/ul[@class='tabs__nav']/li[contains(@class,'uiTabItem')]/a[@class='tabHeader']/span[contains(text(), '{}')]",
+        'spl-tab':"//div[@class='slds-tabs_default']//ul[@class='slds-tabs_default__nav']/li[contains(@class,'slds-tabs_default__item')]/a[text()= '{}']",
+    },
     'desktop_rendered': 'css: div.desktop.container.oneOne.oneAppLayoutHost[data-aura-rendered-by]',
     'loading_box': 'css: div.auraLoadingBox.oneLoadingBox',
     'spinner': 'css: div.slds-spinner',
@@ -65,6 +71,7 @@ npsp_lex_locators={
     'confirm': {
         'check_value':'//div[contains(@class, "forcePageBlockItem")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/span',
         'check_status':'//div[contains(@class, "field-label-container")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/span//lightning-formatted-text',
+        'check_numbers':'//div[contains(@class, "field-label-container")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/span//lightning-formatted-number',
     },
     'check_field':'//div[contains(@class, "forcePageBlockItem")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/span/div//a',
     'account_list':'//tbody/tr/th[.//span[contains(@class, "slds-grid")]]/descendant::a[text()="{}"]',
@@ -84,7 +91,10 @@ npsp_lex_locators={
         'section_header':'//h3//span[text()="{}"]',
         'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a/div[contains(@class, "slds")]',
         'field':'//h3[contains(@class, "slds-section__title")][.//span[text()="{}"]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//span[text()="{}"]',
-        'verify_field_value':'//div[contains(@class, "forcePageBlockItem")]/div/div//span[text()="{}"]/../../div[2]/span/span[text() = "{}"]',
+        'field-value':{
+            'verify_field_value1':'//div[contains(@class, "forcePageBlockItem")]/div/div//span[text()="{}"]/../../div[2]/span/span[text() = "{}"]',
+            'verify_field_value2':'//force-record-layout-item/div/div/span[text()="{}"]/../../div[2]/span//lightning-formatted-text[text() = "{}"]',
+        },
         'edit_mode':{
             'section_header':'//div[contains(@class,"forcePageBlockSectionEdit")]/h3//span[text()="{}"]',
             },
