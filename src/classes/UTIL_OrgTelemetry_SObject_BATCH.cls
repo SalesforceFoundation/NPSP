@@ -146,7 +146,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
             }
 
             when BGE_ROWS {
-                soqlQuery = 'SELECT Id FROM DataImport__c WHERE CreatedDate = Last_n_days:30 AND NPSP_Data_Import_Batch__r.npsp__GiftBatch__c = true';
+                soqlQuery = 'SELECT Id FROM DataImport__c WHERE CreatedDate = Last_n_days:30 AND NPSP_Data_Import_Batch__r.GiftBatch__c = true';
             }
 
             when else {
