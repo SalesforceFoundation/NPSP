@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Relationship object to allow custom mappings for each Opportunity Stage to an accounting state.</description>
     <fields>
         <fullName>Opportunity_Stage__c</fullName>
-        <description>The name of the Opportunity Stage</description>
+        <description>API name of the Opportunity Stage that will be mapped to the state.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The name of the Opportunity Stage</inlineHelpText>
+        <inlineHelpText>API name of the Opportunity Stage that will be mapped to the state.</inlineHelpText>
         <label>Opportunity Stage</label>
         <length>255</length>
         <required>false</required>
@@ -14,10 +15,10 @@
     </fields>
     <fields>
         <fullName>Opportunity_State__c</fullName>
-        <description>The state the Opportunity Stage maps to</description>
+        <description>The state that the Opportunity Stage will be mapped to.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The state the Opportunity Stage maps to</inlineHelpText>
+        <inlineHelpText>Valid entries are “Uncommitted”, “Committed”, or “Finalized”.</inlineHelpText>
         <label>Opportunity State</label>
         <required>false</required>
         <type>Picklist</type>
