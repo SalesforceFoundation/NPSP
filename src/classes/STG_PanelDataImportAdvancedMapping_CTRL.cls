@@ -147,7 +147,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 isPolling = true;
 
                 // Start the migration, collect help text mappings, and compare against existing cmt mappings
-                migrationMappingUtility.startMigration();
+                migrationMappingUtility.migrateHelpTextToCustomMetadata();
 
                 Id deploymentId = migrationMappingUtility.deployCustomMetadata();
                 saveDeploymentId(deploymentId);

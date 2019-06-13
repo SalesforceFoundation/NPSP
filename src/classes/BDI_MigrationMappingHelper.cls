@@ -88,14 +88,12 @@ public class BDI_MigrationMappingHelper {
         Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
                 UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
 
-        Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importRelatedFieldsByObjectName =
-            new Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts>();
-
         for (String dataImportFieldName : describeFieldResultsByFieldName.keySet()) {
 
-            Boolean isImportRelated = checkIsImportRelated(dataImportFieldName, importRelatedFieldsByObjectName);
+            Boolean isImportStatus = dataImportFieldName.contains('importstatus');
+            Boolean isImportLookup = dataImportFieldName.contains('imported');
 
-            if (isImportRelated) {
+            if (isImportStatus || isImportLookup) {
                 continue;
             }
 
@@ -130,81 +128,7 @@ public class BDI_MigrationMappingHelper {
             }
         }
 
-        // Add import status and import lookup field values
-        for (String key : mappingDetailsBySourceFieldName.keySet()) {
-            BDI_HelpTextCMT.DataImportFieldMapping mappingDetail = mappingDetailsBySourceFieldName.get(key);
-            setImportStatusAndLookupFields(mappingDetail, importRelatedFieldsByObjectName);
-        }
-
         return mappingDetailsBySourceFieldName;
-    }
-
-    /**
-     * @description Set import lookup and import status fields on the MappingDetail instance
-     * @param  dataImportFieldName Name of the current Data Import field
-     * @param  importRelatedFieldsByObjectName Map of objects holding the imported status and import lookup values
-     */
-    private Boolean checkIsImportRelated(String dataImportFieldName,
-        Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importRelatedFieldsByObjectName) {
-
-        // check if field is importstatus or imported
-        Boolean isImportStatus = dataImportFieldName.contains('importstatus');
-        Boolean isImportLookup = dataImportFieldName.contains('imported');
-
-        if (isImportStatus || isImportLookup) {
-            // Pass help text values to a new instance of ImportStatusAndLookupParts wrapper class
-            BDI_HelpTextCMT.ImportStatusAndLookupParts importRelatedField =
-                    getImportStatusAndLookupParts(dataImportFieldName, importRelatedFieldsByObjectName);
-
-            importRelatedFieldsByObjectName.put(importRelatedField.objectName, importRelatedField);
-
-            // Found an import status or import lookup field, no help text value so continue
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @description Set import lookup and import status fields on the MappingDetail instance
-     * @param  mappingDetail Instance of MappingDetail where fields are to be set
-     * @param  importRelatedFieldsByObjectName Map of objects holding the imported status and import lookup values
-     */
-    private void setImportStatusAndLookupFields(BDI_HelpTextCMT.DataImportFieldMapping mappingDetail,
-            Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importRelatedFieldsByObjectName) {
-
-        BDI_HelpTextCMT.ImportStatusAndLookupParts importStatusAndLookupParts =
-                importRelatedFieldsByObjectName.get(mappingDetail.dataImportObjectName);
-
-        if (importStatusAndLookupParts != null) {
-            mappingDetail.importedRecordField = importStatusAndLookupParts.importLookupFieldName;
-            mappingDetail.importedRecordStatusField = importStatusAndLookupParts.importStatusFieldName;
-        }
-    }
-
-    /**
-     * @description Builds an instance of ImportStatusAndLookupParts which holds an object name,
-     *              ImportedLookup__c and ImportStatus__c field names
-     * @param dataImportFieldName Name of a Data Import field
-     * @param importRelatedFieldsByObjectName List of ImportStatusAndLookupParts instances
-     * @return instance of ImportStatusAndLookupParts
-     */
-    private BDI_HelpTextCMT.ImportStatusAndLookupParts getImportStatusAndLookupParts(String dataImportFieldName,
-            Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importRelatedFieldsByObjectName) {
-
-        // Create new instance of ImportStatusAndLookupParts
-        BDI_HelpTextCMT.ImportStatusAndLookupParts importRelatedField =
-                new BDI_HelpTextCMT.ImportStatusAndLookupParts(dataImportFieldName);
-
-        // Check if there is already an existing and matching instance of ImportStatusAndLookupParts
-        BDI_HelpTextCMT.ImportStatusAndLookupParts exists =
-                importRelatedFieldsByObjectName.get(importRelatedField.objectName);
-
-        // If one exists, reset instance with newly added field
-        if (exists != null) {
-            importRelatedField = new BDI_HelpTextCMT.ImportStatusAndLookupParts(exists, dataImportFieldName);
-        }
-
-        return importRelatedField;
     }
 
     /**

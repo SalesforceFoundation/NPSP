@@ -57,7 +57,7 @@ private class BDI_MigrationMappingUtilityTest {
         // Confirm that we can get custom metadata from "pendingMappings"
         Metadata.CustomMetadata cmt = util.pendingMappings[0].getMetadataRecord();
         System.assertEquals('Account 1 New Custom Field', cmt.label);
-    }*/
+    }
 
     @IsTest
     static void shouldContainMetadataRecordsForDeploy() {
@@ -252,7 +252,7 @@ private class BDI_MigrationMappingUtilityTest {
                     'npsp__Account1_City__c' => account1CityMappingDetail,
                     'npsp__Account2_City__c' => account2CityMappingDetail,
                     'New_Custom_Field__c' => newCustomFieldMappingDetail};
-            }*/
+            }
 
             if (stubbedMethodName == 'getFieldMappingsByFieldMappingSetDeveloperName') {
                 Data_Import_Field_Mapping_Set__mdt fieldMappingSet =
@@ -309,7 +309,7 @@ private class BDI_MigrationMappingUtilityTest {
 
             return null;
         }
-    }
+    }*/
 
     // DeployCallbackContext subclass for testing that returns jobId
     public class TestingDeployCallbackContext extends Metadata.DeployCallbackContext {

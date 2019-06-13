@@ -29,8 +29,7 @@
 * @date 2019
 * @group Rollups
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Wrapper classes for the Help Text CustomMetadataType objects used to create the
-* default Custom Metadata records
+* @description Wrapper classes for the Help Text mappings used to create Custom Metadata records
 */
 public class BDI_HelpTextCMT {
 
@@ -39,9 +38,7 @@ public class BDI_HelpTextCMT {
      */
     public enum MetadataObject {
         Data_Import_Field_Mapping,
-        Data_Import_Field_Mapping_Set,
-        Data_Import_Object_Mapping,
-        Data_Import_Object_Mapping_set
+        Data_Import_Field_Mapping_Set
     }
 
     /**
@@ -106,8 +103,8 @@ public class BDI_HelpTextCMT {
             this.label = label.trim();
         }
 
-        public DataImportFieldMapping(String label, String sourceFieldAPIName, String dataImportObjectName, String targetFieldAPIName,
-            String targetObjectAPIName) {
+        public DataImportFieldMapping(String label, String sourceFieldAPIName, String dataImportObjectName,
+            String targetFieldAPIName, String targetObjectAPIName) {
 
             this.label = label.trim();
             this.sourceFieldAPIName = sourceFieldAPIName;
@@ -139,12 +136,12 @@ public class BDI_HelpTextCMT {
             this.targetObjectMappingLabel = sourceFieldMapping.Target_Object_Mapping__r.MasterLabel;
             this.dataImportObjectName = sourceFieldMapping.Target_Object_Mapping__r.DeveloperName;
             this.targetObjectAPIName = sourceFieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
-            this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
+            this.recordName = sourceFieldMapping.DeveloperName;
             this.isRequired = 'No';
             this.isDeleted = false;
         }
 
-        public void setParentRelationshipFields(Data_Import_Object_Mapping__mdt objectMapping,
+        public void setInstance(Data_Import_Object_Mapping__mdt objectMapping,
             String fieldMappingSetName) {
 
             this.targetObjectMappingLabel = objectMapping.Label;
@@ -152,8 +149,22 @@ public class BDI_HelpTextCMT {
             this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
         }
 
-        public void setRecordName(String recordName) {
-            this.recordName = recordName;
+        public void setInstance(Data_Import_Object_Mapping__mdt objectMapping,
+            String fieldMappingSetName,
+            String targetFieldAPIName) {
+
+            this.targetObjectMappingLabel = objectMapping.Label;
+            this.targetObjectMappingRecordName = objectMapping.DeveloperName;
+            this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
+            this.targetFieldAPIName = targetFieldAPIName;
+        }
+
+        public void setRecordName(String recordName, Boolean isUnique) {
+            if (isUnique) {
+                this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
+            } else {
+                this.recordName = recordName;
+            }
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
@@ -162,7 +173,9 @@ public class BDI_HelpTextCMT {
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.label = this.label.replace(this.dataImportObjectName, this.targetObjectMappingLabel).left(40);
-            this.recordName = generateRecordName(this.label, true, this.targetObjectMappingLabel, this.dataImportObjectName);
+            if (this.recordName == null) {
+                this.recordName = generateRecordName(this.label, true, this.targetObjectMappingLabel, this.dataImportObjectName);
+            }
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.protected_x = IS_PROTECTED;
 
@@ -192,42 +205,6 @@ public class BDI_HelpTextCMT {
             customMd = addFieldsToMetadataObject(customMd, fieldValues);
 
             return customMd;
-        }
-    }
-
-    /**
-     * @description Wrapper class for import status and lookup fields
-     */
-    public class ImportStatusAndLookupParts {
-        public String objectName;
-        public String importStatusFieldName;
-        public String importLookupFieldName;
-
-        public ImportStatusAndLookupParts(String field) {
-            setFields(field);
-        }
-
-        public ImportStatusAndLookupParts(ImportStatusAndLookupParts self, String field) {
-            this.objectName = self.objectName;
-            this.importLookupFieldName = self.importLookupFieldName;
-            this.importStatusFieldName = self.importStatusFieldName;
-
-            setFields(field);
-        }
-
-        public void setFields(String field) {
-            List<String> dataImportObjectNames = new List<String>(DI_OBJECT_MAP.keySet());
-
-            for (String dataImportObjectName : dataImportObjectNames) {
-                if (field.contains(dataImportObjectName.toLowerCase())) {
-                    this.objectName = dataImportObjectName;
-                    if (field.contains('importstatus')) {
-                        this.importStatusFieldName = field;
-                    } else {
-                        this.importLookupFieldName = field;
-                    }
-                }
-            }
         }
     }
 
@@ -305,7 +282,7 @@ public class BDI_HelpTextCMT {
     }
 
     /**
-    * @description Map of object names from the data import help text field to actual object names
+    * @description Map of legacy help text field data import object names to object api names
     */
     private static final Map<String, String> DI_OBJECT_MAP = new Map<String, String>{
         'Account1' => 'Account',
