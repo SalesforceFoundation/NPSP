@@ -492,7 +492,8 @@ public class ALLO_PaymentSync_SVC {
                             // Remove current allocation amount from total as it is changing
                             removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
 
-                            paymentAllocation.Amount__c = (unpaidAllocationAmount) / (paymentRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            // paymentAllocation.Amount__c = (unpaidAllocationAmount) / (paymentRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            paymentAllocation.Amount__c = (newTotalPaymentAllocations) / (paymentRatio);
 
                              //only add the percent for non-default
                             if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
