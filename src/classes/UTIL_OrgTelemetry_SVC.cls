@@ -86,6 +86,11 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private Set<String> completedBatchStatuses = new Set<String>{ 'Aborted', 'Completed', 'Failed' };
     private Set<String> npspNamespaces = new Set<String> {'npsp', 'npe01', 'npo02', 'npe03', 'npe4', 'npe5'};
 
+    /**
+     * @description Field mapping method value in Data Import custom settings when Advanced Mapping is enabled
+     */
+    private final String DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
+
     @TestVisible
     private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
 
@@ -187,7 +192,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_CustomizableRollups.name(),
                 (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_BDICMT.name(),
-                (stgSvc.stgDI.Field_Mapping_Method__c == 'Data Import Field Mapping' ? true : false));
+                (stgSvc.stgDI.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false));
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
