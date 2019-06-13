@@ -9,7 +9,8 @@ npsp_lex_locators={
         'select-option':'//span/mark[text()="{}"]',
     },
     'object_dd':'//h1[contains(@class,"slds-page-header__title")]//a',
-    "header_text": "//h1//lightning-formatted-text",
+    "header_text": "//h1/div/span",
+#     "header_text": "//h1//lightning-formatted-text",
     "record": {
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//span[text()='{}']",
