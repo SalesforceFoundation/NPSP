@@ -76,14 +76,11 @@ public with sharing class BDI_MigrationMappingUtility {
     */
     public static Boolean customFieldMappingSetExists {
         get {
-            if (customFieldMappingSetExists == null) {
-                Integer migratedFieldMappingSetCount = [SELECT count()
-                    FROM Data_Import_Field_Mapping_Set__mdt
-                    WHERE DeveloperName = :MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
+            Integer migratedFieldMappingSetCount = [SELECT count()
+                FROM Data_Import_Field_Mapping_Set__mdt
+                WHERE DeveloperName = :MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
 
-                return migratedFieldMappingSetCount > 0 ? true : false;
-            }
-            return customFieldMappingSetExists;
+            return migratedFieldMappingSetCount > 0 ? true : false;
         }
     }
 
@@ -104,13 +101,10 @@ public with sharing class BDI_MigrationMappingUtility {
 
     private String fieldMappingSetName {
         get {
-            if (fieldMappingSetName == null) {
-                if (customFieldMappingSetExists) {
-                    return MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
-                }
-                return DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
+            if (customFieldMappingSetExists) {
+                return MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
             }
-            return fieldMappingSetName;
+            return DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
         }
     }
 
@@ -123,8 +117,6 @@ public with sharing class BDI_MigrationMappingUtility {
         this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         this.objectMappingsByDeveloperName =
             helper.getObjectMappingsByDeveloperName(helper.getDefaultObjectMappingSet().Id);
-        this.fieldMappingsByFieldMappingSetDeveloperName =
-            helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
     }
 
     /*******************************************************************************************************
@@ -250,6 +242,9 @@ public with sharing class BDI_MigrationMappingUtility {
         Map<String, BDI_HelpTextCMT.DataImportFieldMapping> mappingDetailsBySourceFieldName =
                 helper.getAllMappingDetailsBySourceFieldName();
 
+        fieldMappingsByFieldMappingSetDeveloperName =
+            helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
+
         for (String key : mappingDetailsBySourceFieldName.keySet()) {
             BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = 
                 mappingDetailsBySourceFieldName.get(key);
@@ -281,16 +276,16 @@ public with sharing class BDI_MigrationMappingUtility {
 
                 } else if (existingDefaultFieldMapping != null) {
                     // Existing Field Mapping, check if CMTs field values match Help Text field values
-                    Boolean conflictingMapping = hasDefaultFieldMappingMismatch(fieldMapping,
+                    Boolean isConflictingMapping = hasDefaultFieldMappingMismatch(fieldMapping,
                             existingDefaultFieldMapping, 
                             existingDefaultObjectMapping);
 
-                    if (conflictingMapping) {
+                    if (isConflictingMapping) {
                         fieldMapping.setInstance(
                             existingDefaultObjectMapping,
                             MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
                             fieldMapping.targetFieldAPIName);
-                        fieldMapping.setRecordName(existingDefaultFieldMapping.DeveloperName, true);
+                        fieldMapping.setRecordName(existingDefaultFieldMapping.DeveloperName, false);
                         System.debug('>>>CONFLICT');
                         System.debug(fieldMapping.recordName + ' *** ' + fieldMapping.targetFieldAPIName + ' *** ' + fieldMapping.sourceFieldAPIName);
                         queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
@@ -309,7 +304,7 @@ public with sharing class BDI_MigrationMappingUtility {
             }
         }
 
-        handleNonHelpTextMappings(fieldMappingsByFieldMappingSetDeveloperName);
+        handleNonHelpTextMappings();
 
         if (customFieldMappingSetExists == false) {
             // Create migrated field mapping set
@@ -325,11 +320,11 @@ public with sharing class BDI_MigrationMappingUtility {
     * @description Method for converting non help text mapped standard field mappings to
     * instances of BDI_HelpTextCMT.DataImportFieldMapping so that we can update field values
     * and add to the deployment with the other custom metadata records
-    * @param fieldMappingsByFieldMappingSetDeveloperName List of non help text mapped
     * standard field mappings
+    *
     * @param fieldMappingSetName String Name of the parent Data Import Field Mapping Set
     */
-    private void handleNonHelpTextMappings(Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName) {
+    private void handleNonHelpTextMappings() {
 
         for (String key : fieldMappingsByFieldMappingSetDeveloperName.keySet()) {
             
