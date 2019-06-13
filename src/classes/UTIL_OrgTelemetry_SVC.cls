@@ -67,6 +67,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_HouseholdAcctModel,
         IsEnabled_AddressVerification,
         IsEnabled_AutomaticPayments,
+        IsEnabled_BDICMT,
         IsEnabled_CustomizableRollups,
         IsEnabled_DefaultGAU,
         Data_CountErrorLog,
@@ -185,6 +186,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 (addrVerifSettings.Enable_Automatic_Verification__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_CustomizableRollups.name(),
                 (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_BDICMT.name(),
+                (stgSvc.stgDI.Field_Mapping_Method__c == 'Data Import Field Mapping' ? true : false));
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
