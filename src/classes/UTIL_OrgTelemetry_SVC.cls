@@ -165,13 +165,11 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             }
 
             when Data_CountBDIRows {
-                // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
-                featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), -1);
+                handleBDICount();
             }
 
             when Data_CountBGERows {
-                // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
-                featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), -1);
+                handleBGECount();
             }
 
             when Data_CountErrorLog {
@@ -327,6 +325,30 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             }
         }
         featureManager.setPackageBooleanValue(TelemetryParameterName.HasUserManagedTDTM.name(), hasUserManagedTrigger);
+    }
+
+    /**
+     * @description Total number of BDI records created in the last 30 days
+     */
+    private void handleBDICount() {
+        try {
+            Integer bdiCount = Database.countQuery('SELECT count() FROM DataImport__c WHERE CreatedDate = Last_n_days:30');
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), bdiCount);
+        } catch (Exception ex) {
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), -1);
+        }
+    }
+
+    /**
+     * @description Total number of BGE records created in the last 30 days
+     */
+    private void handleBGECount() {
+        try {
+            Integer bgeCount = Database.countQuery('SELECT count() FROM DataImport__c WHERE CreatedDate = Last_n_days:30 AND NPSP_Data_Import_Batch__r.GiftBatch__c = true');
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), bgeCount);
+        } catch (Exception ex) {
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), -1);
+        }
     }
 
     /**
