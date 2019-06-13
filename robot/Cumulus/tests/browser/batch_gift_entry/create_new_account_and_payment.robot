@@ -53,7 +53,7 @@ Create a new account and enter payment information
     # Click Link    ${value}
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    5
-    ${opp_name}    Return Locator Value    check_field    Opportunity
+    ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     ${opp_id} =           Get Current Record Id
     Store Session Record      Opportunity  ${opp_id}

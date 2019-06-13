@@ -874,10 +874,14 @@ class NPSP(object):
         self.selenium.get_webelement(locator).click()  
         
     def click_bge_button(self,text):  
-        """clicks on buttons for BGE"""      
+        """clicks on buttons for BGE"""  
+        self.builtin.log("This test is using javascript to click on button as regular click wouldn't work with Summer19", "WARN")    
         locator=npsp_lex_locators['bge']['button'].format(text)
         self.selenium.set_focus_to_element(locator)
-        self.selenium.click_button(locator)  
+        time.sleep(1)
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+  
            
     
     def verify_title(self,title,value):
