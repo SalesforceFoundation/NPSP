@@ -383,7 +383,7 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     /**
-     * @description Confirms BDI row counts are calculated correctly
+     * @description Confirms BGE row counts are calculated correctly
      */
     @IsTest
     private static void validateCountOfBGERowsTelemetry() {

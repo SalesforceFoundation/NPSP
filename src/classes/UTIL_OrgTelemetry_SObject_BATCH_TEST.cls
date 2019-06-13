@@ -187,7 +187,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         oppBatch.execute(null, opps);
         Test.stopTest();
 
-        System.assertEquals(opps[opps.size() - 1].Id, oppBatch.lastProcessedId,
+        System.assertEquals(opps[opps.size() - 1 ].Id, oppBatch.lastProcessedId,
             'The lastProcessedId should be cached correctly');
 
         System.assertEquals(13, oppBatch.rdAllOppsCount,
@@ -211,7 +211,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         rdBatch.execute(null, recurringDonations);
         Test.stopTest();
 
-        System.assertEquals(recurringDonations[recurringDonations.size() - 1].Id, rdBatch.lastProcessedId,
+        System.assertEquals(recurringDonations[recurringDonations.size() - 1 ].Id, rdBatch.lastProcessedId,
             'The lastProcessedId should be cached correctly'
         );
 
