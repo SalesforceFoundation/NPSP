@@ -39,6 +39,27 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
 
     /**
+     * @description Number of BGE related Data Import records created within the last 30 days
+     */
+    private static final Integer NUM_BGE_ROWS_30_DAYS_AGO = 2;
+
+    /**
+     * @description Number of BDI related Data Import records created within the last 30 days
+     */
+    private static final Integer NUM_BDI_ROWS_30_DAYS_AGO = 3;
+
+    /**
+     * @description Number of BDI related Data Import records created within the last 60 days
+     */
+    private static final Integer NUM_DI_ROWS_60_DAYS_AGO = 2;
+
+    /**
+     * @description Number of all Data Import records to be created
+     */
+    private static final Integer ALL_DIS_COUNT =
+        NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO + NUM_DI_ROWS_60_DAYS_AGO;
+
+    /**
      * @description Create test data needed for the unit tests in this class
      */
     @TestSetup
@@ -71,8 +92,22 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         insert opps;
 
-        // Build data import records
-        createDataImports();
+        DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
+
+        insert diBatch;
+
+        List<DataImport__c> bdiRows = buildDataImports(NUM_BDI_ROWS_30_DAYS_AGO, null);
+        List<DataImport__c> bgeRows = buildDataImports(NUM_BGE_ROWS_30_DAYS_AGO, diBatch.Id);
+        List<DataImport__c> bdiRows60DaysAgo = buildDataImports(NUM_DI_ROWS_60_DAYS_AGO, null);
+
+        insert bdiRows;
+        insert bgeRows;
+        insert bdiRows60DaysAgo;
+
+        Datetime sixtyDaysAgo = Datetime.now().addDays(-60);
+        for (DataImport__c di : bdiRows60DaysAgo) {
+            Test.setCreatedDate(di.Id, sixtyDaysAgo);
+        }
     }
 
     /**
@@ -190,7 +225,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         oppBatch.execute(null, opps);
         Test.stopTest();
 
-        System.assertEquals(opps[opps.size() - 1 ].Id, oppBatch.lastProcessedId,
+        System.assertEquals(opps[opps.size() - 1].Id, oppBatch.lastProcessedId,
             'The lastProcessedId should be cached correctly');
 
         System.assertEquals(13, oppBatch.rdAllOppsCount,
@@ -214,7 +249,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         rdBatch.execute(null, recurringDonations);
         Test.stopTest();
 
-        System.assertEquals(recurringDonations[recurringDonations.size() - 1 ].Id, rdBatch.lastProcessedId,
+        System.assertEquals(recurringDonations[recurringDonations.size() - 1].Id, rdBatch.lastProcessedId,
             'The lastProcessedId should be cached correctly'
         );
 
@@ -389,19 +424,21 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
 
         String diBatchQuery = diBatch.start(null).getQuery();
+        System.debug(diBatchQuery);
         List<DataImport__c> dis = Database.query(diBatchQuery);
+        System.debug(dis);
         Integer allDis = [SELECT count() FROM DataImport__c];
 
         Test.startTest();
         diBatch.execute(null, dis);
         Test.stopTest();
 
-        System.assertEquals(dis[dis.size() - 1 ].Id, diBatch.lastProcessedId,
+        System.assertEquals(dis[dis.size() - 1].Id, diBatch.lastProcessedId,
             'The lastProcessedId should be cached correctly');
 
-        System.assertEquals(5, allDis, 'The number of data imports in org is correct');
+        System.assertEquals(ALL_DIS_COUNT, allDis, 'The number of data imports in org is correct');
 
-        System.assertEquals(4, diBatch.bdiRowsLast30DaysCount,
+        System.assertEquals(NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO, diBatch.bdiRowsLast30DaysCount,
             'The number of data imports should be tracked correctly');
     }
 
@@ -445,12 +482,12 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         diBatch.execute(null, dis);
         Test.stopTest();
 
-        System.assertEquals(dis[dis.size() - 1 ].Id, diBatch.lastProcessedId,
+        System.assertEquals(dis[dis.size() - 1].Id, diBatch.lastProcessedId,
             'The lastProcessedId should be cached correctly');
 
-        System.assertEquals(5, allDis, 'The number of data imports in org is correct');
+        System.assertEquals(ALL_DIS_COUNT, allDis, 'The number of data imports in org is correct');
 
-        System.assertEquals(2, diBatch.BGERowsLast30DaysCount,
+        System.assertEquals(NUM_BGE_ROWS_30_DAYS_AGO, diBatch.BGERowsLast30DaysCount,
             'The number of data imports should be tracked correctly');
     }
 
@@ -505,29 +542,22 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Builds and inserts test data import records
+     * @description Builds test data import records
      */
-    private static void createDataImports() {
-        Integer recordsToCreate = 5;
+    private static List<DataImport__c> buildDataImports(Integer numDataImports, Id diBatchId) {
         List<DataImport__c> dis = new List<DataImport__c>();
-        DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
 
-        insert diBatch;
+        for (Integer i = 0; i < numDataImports; i++) {
+             DataImport__c di = new DataImport__c();
 
-        for (Integer i = 0; i < recordsToCreate; i++) {
-            DataImport__c di = new DataImport__c();
-
-            if (i > 2) {
-                di.NPSP_Data_Import_Batch__c = diBatch.Id;
+            if (diBatchId != null) {
+                di.NPSP_Data_Import_Batch__c = diBatchId;
             }
 
             dis.add(di);
         }
 
-        insert dis;
-
-        Datetime sixtyDaysAgo = Datetime.now().addDays(-60);
-        Test.setCreatedDate(dis[0].Id, sixtyDaysAgo);
+        return dis;
     }
 
     /**
