@@ -60,6 +60,7 @@
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
         <members>BDI_CustObjMappingGAUAllocation</members>
+        <members>BDI_CustomMetadataService</members>
         <members>BDI_DataImportAPI_TEST</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
@@ -1817,8 +1818,6 @@
         <members>pmtModifyCurrency</members>
         <members>pmtPaidPaymentDateRequired</members>
         <members>pmtUnpaidPaymentScheduledDateRequired</members>
-        <members>pmtWriteOffPaidPayment</members>
-        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -1854,6 +1853,7 @@
         <members>pmtWizardWriteoffNoAccessMessage</members>
         <members>pmtWizardYear</members>
         <members>pmtWriteOffPaidPayment</members>
+        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
