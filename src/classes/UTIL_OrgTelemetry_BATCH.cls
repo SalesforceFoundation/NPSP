@@ -51,9 +51,7 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRdOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRecurringDonations,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog
         };
 
     /**
@@ -82,17 +80,10 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
     }
 
     /**
-    * @description When the main batch job is done, kick off the secondary batch jobs.
+    * @description When the main batch job is done, kick off the secondary batch job to count the
+    * number of RecurringDonation Installment Opportunities.
     */
     public void finish(Database.BatchableContext info) {
-        handleRecurringDonationCounts();
-        handleDataImportCounts();
-    }
-
-    /**
-     * @description Batch job to count the number of RecurringDonation Installment Opportunities.
-     */
-    private void handleRecurringDonationCounts() {
         Integer cnt = Database.countQuery('SELECT Count() FROM npe03__Recurring_Donation__c LIMIT 1');
         if (cnt == 1) {
             Database.executeBatch(
@@ -115,25 +106,6 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
 
             System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
             System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
-        }
-    }
-
-    /**
-     * @description Batch job to count the number of Data Imports.
-     */
-    private void handleDataImportCounts() {
-        Integer cnt = Database.countQuery('SELECT Count() FROM DataImport__c LIMIT 1');
-        if (cnt == 1) {
-            Database.executeBatch(
-                new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS
-                ),
-                UTIL_OrgTelemetry_SObject_BATCH.DATA_IMPORTS_BATCH_SIZE
-            );
-
-        } else {
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), 0);
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name(), 0);
         }
     }
 }
