@@ -39,27 +39,6 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
 
     /**
-     * @description Number of BGE related Data Import records created within the last 30 days
-     */
-    private static final Integer NUM_BGE_ROWS_30_DAYS_AGO = 2;
-
-    /**
-     * @description Number of BDI related Data Import records created within the last 30 days
-     */
-    private static final Integer NUM_BDI_ROWS_30_DAYS_AGO = 3;
-
-    /**
-     * @description Number of BDI related Data Import records created within the last 60 days
-     */
-    private static final Integer NUM_DI_ROWS_60_DAYS_AGO = 2;
-
-    /**
-     * @description Number of all Data Import records to be created
-     */
-    private static final Integer ALL_DIS_COUNT =
-        NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO + NUM_DI_ROWS_60_DAYS_AGO;
-
-    /**
      * @description Create test data needed for the unit tests in this class
      */
     @TestSetup
@@ -91,23 +70,6 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         opps.addAll(buildOpps(12, fieldValues));
 
         insert opps;
-
-        DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
-
-        insert diBatch;
-
-        List<DataImport__c> bdiRows = buildDataImports(NUM_BDI_ROWS_30_DAYS_AGO, null);
-        List<DataImport__c> bgeRows = buildDataImports(NUM_BGE_ROWS_30_DAYS_AGO, diBatch.Id);
-        List<DataImport__c> bdiRows60DaysAgo = buildDataImports(NUM_DI_ROWS_60_DAYS_AGO, null);
-
-        insert bdiRows;
-        insert bgeRows;
-        insert bdiRows60DaysAgo;
-
-        Datetime sixtyDaysAgo = Datetime.now().addDays(-60);
-        for (DataImport__c di : bdiRows60DaysAgo) {
-            Test.setCreatedDate(di.Id, sixtyDaysAgo);
-        }
     }
 
     /**
@@ -416,106 +378,6 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms BDI row counts are calculated correctly
-     */
-    @IsTest
-    private static void shouldCalculateBDIRows() {
-        UTIL_OrgTelemetry_SObject_BATCH diBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
-
-        String diBatchQuery = diBatch.start(null).getQuery();
-        System.debug(diBatchQuery);
-        List<DataImport__c> dis = Database.query(diBatchQuery);
-        System.debug(dis);
-        Integer allDis = [SELECT count() FROM DataImport__c];
-
-        Test.startTest();
-        diBatch.execute(null, dis);
-        Test.stopTest();
-
-        System.assertEquals(dis[dis.size() - 1].Id, diBatch.lastProcessedId,
-            'The lastProcessedId should be cached correctly');
-
-        System.assertEquals(ALL_DIS_COUNT, allDis, 'The number of data imports in org is correct');
-
-        System.assertEquals(NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO, diBatch.bdiRowsLast30DaysCount,
-            'The number of data imports should be tracked correctly');
-    }
-
-    /**
-     * @description Confirms BDI row metrics are captured in FeatureManagement at the end of the batch
-     */
-    @isTest
-    private static void shouldCaptureBDIRowMetricsInFeatureManagement() {
-        UTIL_OrgTelemetry_SObject_BATCH diBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
-        diBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
-
-        diBatch.bdiRowsLast30DaysCount = 1;
-
-        Test.startTest();
-        diBatch.finish(null);
-        Test.stopTest();
-
-        System.assertEquals(
-            diBatch.bdiRowsLast30DaysCount,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_CountBDIRowsLast30Days and set correctly'
-        );
-    }
-
-    /**
-     * @description Confirms BGE row counts are calculated correctly
-     */
-    @IsTest
-    private static void shouldCalculateBGERows() {
-        UTIL_OrgTelemetry_SObject_BATCH diBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
-
-        String diBatchQuery = diBatch.start(null).getQuery();
-        List<DataImport__c> dis = Database.query(diBatchQuery);
-        Integer allDis = [SELECT count() FROM DataImport__c];
-
-        Test.startTest();
-        diBatch.execute(null, dis);
-        Test.stopTest();
-
-        System.assertEquals(dis[dis.size() - 1].Id, diBatch.lastProcessedId,
-            'The lastProcessedId should be cached correctly');
-
-        System.assertEquals(ALL_DIS_COUNT, allDis, 'The number of data imports in org is correct');
-
-        System.assertEquals(NUM_BGE_ROWS_30_DAYS_AGO, diBatch.BGERowsLast30DaysCount,
-            'The number of data imports should be tracked correctly');
-    }
-
-    /**
-     * @description Confirms BGE row metrics are captured in FeatureManagement at the end of the batch
-     */
-    @isTest
-    private static void shouldCaptureBGERowMetricsInFeatureManagement() {
-        UTIL_OrgTelemetry_SObject_BATCH diBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
-        diBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
-
-        diBatch.BGERowsLast30DaysCount = 1;
-
-        Test.startTest();
-        diBatch.finish(null);
-        Test.stopTest();
-
-        System.assertEquals(
-            diBatch.BGERowsLast30DaysCount,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_CountBGERowsLast30Days and set correctly'
-        );
-    }
-
-    /**
      * @description Builds test opportunity records with the given field values
      * @param numOpps: number of opportunities to build
      * @param fieldValues: map of values by SObjectField to set on the opportunities
@@ -539,25 +401,6 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         }
 
         return opps;
-    }
-
-    /**
-     * @description Builds test data import records
-     */
-    private static List<DataImport__c> buildDataImports(Integer numDataImports, Id diBatchId) {
-        List<DataImport__c> dis = new List<DataImport__c>();
-
-        for (Integer i = 0; i < numDataImports; i++) {
-             DataImport__c di = new DataImport__c();
-
-            if (diBatchId != null) {
-                di.NPSP_Data_Import_Batch__c = diBatchId;
-            }
-
-            dis.add(di);
-        }
-
-        return dis;
     }
 
     /**
