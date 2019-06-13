@@ -467,9 +467,16 @@ class NPSP(object):
         return date 
         
     def get_main_header(self):
-        locator = npsp_lex_locators['header_text']
-        header = self.selenium.get_webelement(locator).text
-        return header
+        header_found = False
+        locators = npsp_lex_locators["main-header"].values()
+
+        for locator in locators:
+            if self.check_if_element_exists(locator):
+                header = self.selenium.get_webelement(locator).text
+                header_found = True
+                return header
+
+        assert header_found, "Header with the provided locator not found"
     
     def verify_contact_role(self,name,role):
         """verifies the contact role on opportunity page"""

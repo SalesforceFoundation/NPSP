@@ -4,7 +4,9 @@ from locators_46 import *
 
 npsp_lex_locators = npsp_lex_locators.copy()
 npsp_lex_locators.update({
-    "header_text": "//h1/div/span",
+    'header':{
+        "header_text": "//h1/div/span",
+    },
     'checkbox':{
         'model-checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
         'table_checkbox':'//tbody/tr[./td[2]/a[text()="{}"]]/td/input[@type="checkbox"]',
