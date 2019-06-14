@@ -33,23 +33,38 @@
 */
 public class BDI_HelpTextCMT {
 
-    /**
-     * @description Enum of the supported MetadataType objects (without the __mdt suffix)
-     */
+    /*******************************************************************************************************
+    * @description Enum of the supported MetadataType objects (without the __mdt suffix)
+    */
     public enum MetadataObject {
         Data_Import_Field_Mapping,
         Data_Import_Field_Mapping_Set
     }
 
-    /**
-     * @description Default value for the Protected_x property when inserting new Custom Metadata Type records
-     */
+    /*******************************************************************************************************
+    * @description Map of legacy help text field data import object names to object api names
+    */
+    private static final Map<String, String> DI_OBJECT_MAP = new Map<String, String>{
+        'Account1' => 'Account',
+        'Account2' => 'Account',
+        'Address' => UTIL_Namespace.StrTokenNSPrefix('Address__c'),
+        'Contact1' => 'Contact',
+        'Contact2' => 'Contact',
+        'Household' => 'Account',
+        'Opportunity' => 'Opportunity',
+        'Donation' => 'Opportunity',
+        'Payment' => 'npe01__OppPayment__c'
+    };
+
+    /*******************************************************************************************************
+    * @description Default value for the Protected_x property when inserting new Custom Metadata Type records
+    */
     private static final Boolean IS_PROTECTED = false;
 
-    /**
-     * @description Wrapper class for Data_Import_Field_Mapping_Set__mdt used to create
-     * the custom CMT data as well as for use in the Custom UI.
-     */
+    /*******************************************************************************************************
+    * @description Wrapper class for Data_Import_Field_Mapping_Set__mdt used to create
+    * the custom CMT data as well as for use in the Custom UI.
+    */
     public class DataImportFieldMappingSet {
         public String recordName;
         public String label;
@@ -79,10 +94,10 @@ public class BDI_HelpTextCMT {
         }
     }
 
-    /**
-     * @description Wrapper class for Data_Import_Field_Mapping__mdt used to create
-     * the default CMT data as well as for use in the Custom UI.
-     */
+    /*******************************************************************************************************
+    * @description Wrapper class for Data_Import_Field_Mapping__mdt used to create
+    * the default CMT data as well as for use in the Custom UI.
+    */
     public class DataImportFieldMapping {
         public String recordName;
         public String label {get; set;}
@@ -98,10 +113,6 @@ public class BDI_HelpTextCMT {
         public Boolean isDeleted;
         public String importedRecordField;
         public String importedRecordStatusField;
-
-        public DataImportFieldMapping(String label) {
-            this.label = label.trim();
-        }
 
         public DataImportFieldMapping(String label, String sourceFieldAPIName, String dataImportObjectName,
             String targetFieldAPIName, String targetObjectAPIName) {
@@ -194,9 +205,9 @@ public class BDI_HelpTextCMT {
         }
     }
 
-    /**
-     * @description Wrapper class for help text field
-     */
+    /*******************************************************************************************************
+    * @description Wrapper class for help text field
+    */
     public class HelpTextParts {
         public String objectName;
         public String fieldName;
@@ -214,12 +225,13 @@ public class BDI_HelpTextCMT {
         }
     }
 
-    /**
-     * @description Set field values on the specified Custom Metadata Type record
-     * @param customMetadata CustomMetadata instance
-     * @param fieldValues Key-Value pair map of fields/values
-     * @return Updated CustomMetadata object instance with the fields added to the values collection
-     */
+    /*******************************************************************************************************
+    * @description Set field values on the specified Custom Metadata Type record
+    *
+    * @param customMetadata CustomMetadata instance
+    * @param fieldValues Key-Value pair map of fields/values
+    * @return Updated CustomMetadata object instance with the fields added to the values collection
+    */
     private static Metadata.CustomMetadata addFieldsToMetadataObject(Metadata.CustomMetadata customMetadata,
         Map<String, Object> fieldValues) {
 
@@ -233,13 +245,14 @@ public class BDI_HelpTextCMT {
         return customMetadata;
     }
 
-    /**
-     * @description Utility to convert a name into a valid 'DeveloperName' quality value (or unique GUID)
-     * for the CMT record
-     * @param name String
-     * @param makeUnique Boolean
-     * @return DeveloperName format string
-     */
+    /*******************************************************************************************************
+    * @description Utility to convert a name into a valid 'DeveloperName' quality value (or unique GUID)
+    * for the CMT record
+    *
+    * @param name String
+    * @param makeUnique Boolean
+    * @return DeveloperName format string
+    */
     private static String generateRecordName(String name, Boolean makeUnique, String objectLabel, String objectAPIName) {
         name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');
 
@@ -266,19 +279,4 @@ public class BDI_HelpTextCMT {
 
         return name;
     }
-
-    /**
-    * @description Map of legacy help text field data import object names to object api names
-    */
-    private static final Map<String, String> DI_OBJECT_MAP = new Map<String, String>{
-        'Account1' => 'Account',
-        'Account2' => 'Account',
-        'Address' => UTIL_Namespace.StrTokenNSPrefix('Address__c'),
-        'Contact1' => 'Contact',
-        'Contact2' => 'Contact',
-        'Household' => 'Account',
-        'Opportunity' => 'Opportunity',
-        'Donation' => 'Opportunity',
-        'Payment' => 'npe01__OppPayment__c'
-    };
 }

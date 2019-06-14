@@ -139,10 +139,10 @@ public class CMT_MetadataAPI {
         return mdContainer;
     }
 
-    /*******************************************************************************************************
-    * @description Check the status of custom metadata deployment
-    * @return Metadata.DeployResult JSON
-    */
+    /**
+     * @description Check the status of metadata deployment
+     * @return Metadata.DeployResult JSON
+     */
     public static Metadata.DeployResult getDeploymentResult(Id deploymentId) {
         Http h = new Http();
         HttpRequest request = new HttpRequest();
@@ -159,11 +159,10 @@ public class CMT_MetadataAPI {
         return deploymentResponse.deployResult;
     }
 
-    /*******************************************************************************************************
-    * @description Wrapper used to deserialize the deployment request response
-    */
+    /**
+     * @description Wrapper used to deserialize the deployment request response
+     */
     private class DeploymentResponse {
-        Id id;
         Metadata.DeployResult deployResult;
     }
 

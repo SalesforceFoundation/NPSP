@@ -242,7 +242,7 @@ public with sharing class BDI_MigrationMappingUtility {
         if (customFieldMappingSetExists == false) {
             // Create migrated field mapping set
             Metadata.CustomMetadata fieldMappingSet =
-                helper.createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
             // Add custom field mapping set to list queuedMetadataTypesForDeploy
             queuedMetadataTypesForDeploy.add(fieldMappingSet);
@@ -295,6 +295,18 @@ public with sharing class BDI_MigrationMappingUtility {
             || badTargetObjectMappingId;
 
         return foundMismatch;
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a new Field Mapping Set to be used as the new set when migration utility
+    * encounters a help text mapping customization and user opts to keep their customization
+    * @return Data_Import_Field_Mapping_Set__mdt
+    */
+    public Metadata.CustomMetadata createNewFieldMappingSet(String fieldMappingName) {
+        BDI_HelpTextCMT.DataImportFieldMappingSet fieldMappingSet =
+            new BDI_HelpTextCMT.DataImportFieldMappingSet(fieldMappingName, DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
+
+        return fieldMappingSet.getMetadataRecord();
     }
 
     /*******************************************************************************************************

@@ -53,24 +53,9 @@ public class BDI_MigrationMappingHelper {
     * @description Default packaged Object Mapping Set metadata record
     */
     public Data_Import_Object_Mapping_Set__mdt getDefaultObjectMappingSet() {
-        return [SELECT
-                Id,
-                DeveloperName,
-                Label
-        FROM Data_Import_Object_Mapping_Set__mdt
-        WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
-    }
-
-    /**
-     * @description Creates a new Field Mapping Set to be used as the new set when migration utility
-     * encounters a help text mapping customization and user opts to keep their customization
-     * @return Data_Import_Field_Mapping_Set__mdt
-     */
-    public Metadata.CustomMetadata createNewFieldMappingSet(String fieldMappingName) {
-        BDI_HelpTextCMT.DataImportFieldMappingSet fieldMappingSet =
-            new BDI_HelpTextCMT.DataImportFieldMappingSet(fieldMappingName, DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
-
-        return fieldMappingSet.getMetadataRecord();
+        return [SELECT Id, DeveloperName, Label
+            FROM Data_Import_Object_Mapping_Set__mdt
+            WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
     }
 
     /**

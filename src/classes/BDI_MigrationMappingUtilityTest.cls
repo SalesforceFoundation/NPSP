@@ -181,15 +181,6 @@ private class BDI_MigrationMappingUtilityTest {
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName, Type returnType,
             List<Type> listOfParamTypes, List<String> listOfParamNames, List<Object> listOfArgs) {
 
-            if (stubbedMethodName == 'createNewFieldMappingSet') {
-                BDI_HelpTextCMT.DataImportFieldMappingSet fieldMappingSet =
-                    new BDI_HelpTextCMT.DataImportFieldMappingSet(
-                        'Migrated Custom Field Mapping Set',
-                        'Default_Object_Mapping_Set');
-
-                return fieldMappingSet.getMetadataRecord();
-            }
-
             if (stubbedMethodName == 'getDefaultObjectMappingSet') {
                 Data_Import_Object_Mapping_Set__mdt objectMappingSet =
                     new Data_Import_Object_Mapping_Set__mdt(
