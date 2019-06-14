@@ -234,7 +234,6 @@ public with sharing class BDI_MigrationMappingUtility {
     * pendingNonHelpTextMappings)
     */
     public void migrateHelpTextToCustomMetadata() {
-        System.debug('***migrateHelpTextToCustomMetadata');
 
         queuedMetadataTypesForDeploy.clear();
 
@@ -270,18 +269,14 @@ public with sharing class BDI_MigrationMappingUtility {
                         MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
                     fieldMapping.setRecordName('', true);
                     // Add metadata record to queue for deployment
-                    System.debug('>>>NEW');
-                    System.debug(fieldMapping.recordName + ' *** ' + fieldMapping.targetFieldAPIName + ' *** ' + fieldMapping.sourceFieldAPIName);
-                    queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
 
+                    queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
                 } else if (existingDefaultFieldMapping != null) {
                     if (customFieldMappingSetExists) {
                         BDI_HelpTextCMT.DataImportFieldMapping overwrittenMapping =
                             new BDI_HelpTextCMT.DataImportFieldMapping(existingDefaultFieldMapping, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-
                         overwrittenMapping.setInstance(existingDefaultObjectMapping, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME, fieldMapping.targetFieldAPIName);
-                        System.debug('>>>OVERWRITTEN');
-                        System.debug(overwrittenMapping.recordName + ' *** ' + overwrittenMapping.targetFieldAPIName + ' *** ' + overwrittenMapping.sourceFieldAPIName);
+
                         queuedMetadataTypesForDeploy.add(overwrittenMapping.getMetadataRecord());
                     } else {
                         // Existing Field Mapping, check if CMTs field values match Help Text field values
@@ -295,18 +290,12 @@ public with sharing class BDI_MigrationMappingUtility {
                                 MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
                                 fieldMapping.targetFieldAPIName);
 
-                            //fieldMapping.setRecordName(existingDefaultFieldMapping.DeveloperName, true);
-
-                            System.debug('>>>CONFLICT');
-                            System.debug(fieldMapping.recordName + ' *** ' + fieldMapping.targetFieldAPIName + ' *** ' + fieldMapping.sourceFieldAPIName);
                             queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
                         } else {
-                            System.debug('>>>STANDARD');
                             fieldMapping.setInstance(
                                 existingDefaultObjectMapping,
                                 MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                            //fieldMapping.setRecordName('', true);
-                            System.debug(fieldMapping.recordName + ' *** ' + fieldMapping.targetFieldAPIName + ' *** ' + fieldMapping.sourceFieldAPIName);
+
                             queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
                         }
                     }
