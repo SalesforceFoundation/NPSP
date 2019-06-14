@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <fullName>custom_campaign__c</fullName>
+        <fullName>Custom_add_date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Address.Custom_add_date__c</inlineHelpText>
+        <label>Custom_add_date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>custom_acc_text__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Account1.custom_acc_text__c</inlineHelpText>
+        <label>custom_acc_text</label>
+        <length>10</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>custom_cont_num__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact2.custom_cont_num__c</inlineHelpText>
+        <label>custom_cont_num</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>new_lookup_campaign__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.custom_lookup__c</inlineHelpText>
-        <label>custom_campaign</label>
+        <label>new_lookup_campaign</label>
         <referenceTo>Campaign</referenceTo>
         <relationshipLabel>NPSP Data Imports (custom_campaign)</relationshipLabel>
         <relationshipName>NPSP_Data_Imports</relationshipName>

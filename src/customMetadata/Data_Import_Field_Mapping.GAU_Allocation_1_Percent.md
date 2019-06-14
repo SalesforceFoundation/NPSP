@@ -8,7 +8,7 @@
     </values>
     <values>
         <field>Required__c</field>
-        <value xsi:type="xsd:string">Yes</value>
+        <value xsi:type="xsd:string">No</value>
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
