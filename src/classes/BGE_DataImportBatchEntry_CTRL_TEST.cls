@@ -173,7 +173,6 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         Opportunity closedOppWithPaidAndUnpaidPmts = createOpportunity('MyClosedOpp', null);
         closedOppWithPaidAndUnpaidPmts.AccountId = account.Id;
         closedOppWithPaidAndUnpaidPmts.StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
-
         insert new List<Opportunity>{
                 oppWithPmt, oppWithoutPmt, oppWithPaidAndUnpaidPmts, closedOppWithPaidAndUnpaidPmts
         };
@@ -258,11 +257,13 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
         System.assertEquals(2, oppWrappers.size(),
                 'Both of this Donors Opportunities should be returned in the list of Opp Wrappers.');
+
         System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
         System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payments in the Opp Wrapper.');
         System.assertEquals(true, oppWrappers[0].hasPayments,
                 'This Opportunity should have a Payment in the Opp Wrapper.');
+
         System.assertEquals(oppWithoutPmt.Id, oppWrappers[1].opportunity.Id);
         System.assertEquals(0, oppWrappers[1].unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
@@ -321,8 +322,10 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
                 createOppWrappers(oppWrappersJSON);
 
         System.assertEquals(false, pmt.npe01__Paid__c);
-        System.assertEquals(1, oppWrappers[0].unpaidPayments.size(), 'The unpaid Payment should be returned in the OpportunityWrapper.');
-        System.assertEquals(true, oppWrappers[0].hasPayments, 'The auto-created Payment should be reflected in the OpportunityWrapper.');
+        System.assertEquals(1, oppWrappers[0].unpaidPayments.size(),
+                'The unpaid Payment should be returned in the OpportunityWrapper.');
+        System.assertEquals(true, oppWrappers[0].hasPayments,
+                'The auto-created Payment should be reflected in the OpportunityWrapper.');
     }
 
     @isTest
@@ -370,8 +373,10 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
                 createOppWrappers(oppWrappersJSON);
 
-        System.assertEquals(0, oppWrappers[0].unpaidPayments.size(), 'This Opportunity should not have any unpaid payments.');
-        System.assertEquals(false, oppWrappers[0].hasPayments, 'This Opportunity should not have any payments.');
+        System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
+                'This Opportunity should not have any unpaid payments.');
+        System.assertEquals(false, oppWrappers[0].hasPayments,
+                'This Opportunity should not have any payments.');
     }
 
     @isTest
@@ -393,8 +398,8 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         }
         Test.stopTest();
 
-        System.assertEquals(true, exceptionThrown, 'The getOpportunitiesWithOppPayments method' +
-                'only supports Account and Contact Ids.');
+        System.assertEquals(true, exceptionThrown,
+                'The getOpportunitiesWithOppPayments method only supports Account and Contact Ids.');
     }
 
     /******************************** Helper Methods *****************************/
