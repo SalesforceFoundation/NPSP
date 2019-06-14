@@ -1842,12 +1842,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
     </labels>
     <labels>
+        <fullName>alloPaidPmtsExceedsOpp</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaidPmtsExceedsOpp</shortDescription>
+        <value>The total allocation of paid payments cannot exceed the opportunity allocation for a GAU.</value>
+    </labels>
+    <labels>
         <fullName>alloPaymentNotEnabled</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Payment-level allocations are not enabled.</shortDescription>
         <value>Payment-level Allocations aren't enabled for your organization. Try allocating at the Opportunity level instead.</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentOverallocatedError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaymentOverallocatedError</shortDescription>
+        <value>The amount allocated is more than the amount of the Payment. Please update the Payment Allocation amount(s) so the total equals the Payment Amount. See Opportunity “{0}, Id: {1}”</value>
     </labels>
     <labels>
         <fullName>alloPercentExceed100</fullName>
@@ -1858,12 +1874,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Percent-based Allocations cannot exceed 100%.</value>
     </labels>
     <labels>
+        <fullName>alloPmtOppSingleTransaction</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPmtOppSingleTransaction</shortDescription>
+        <value>Opportunity and Payment Allocations for the same Opportunity record cannot be created or modified at the same time.</value>
+    </labels>
+    <labels>
         <fullName>alloRemainder</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloRemainder</shortDescription>
         <value>Remainder:</value>
+    </labels>
+        <labels>
+        <fullName>alloRemoveOppWithPmt</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloRemoveOppWithPmt</shortDescription>
+        <value>You cannot remove an opportunity allocation for a GAU that has paid payment allocations.</value>
     </labels>
     <labels>
         <fullName>alloSignMistmatch</fullName>
