@@ -189,46 +189,6 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-    * @description Inserting or Updating CMT's through the Apex Metadata API is an asynchronous process. This callback
-    * class is used to handle the async response from the call to Metadata.Operations.enqueueDeployment().
-    */
-    public class DeploymentCallback implements Metadata.DeployCallback {
-
-        /*******************************************************************************************************
-        * @description Method called by salesforce with the result of the Metadata deployment operation status.
-        * This will write the status of the deployment to Data Import custom settings
-        */
-        public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
-
-            if (result != null && result.status == Metadata.DeployStatus.SUCCEEDED) {
-                // Deployment was successful
-                BDI_MigrationMappingUtility.updateCustomSettings(DATA_IMPORT_FIELD_MAPPING,
-                    String.valueOf(result.status));
-
-            } else if (result != null && result.status != Metadata.DeployStatus.SUCCEEDED) {
-                // Deployment was not successful
-                String errMsg = '';
-                for (Integer n=0; n < result.details.componentFailures.size(); n++) {
-                    errMsg += (n > 0 ? '\n' : '') + '* ' + result.details.componentFailures[n].fullName +
-                            '> ' + result.details.componentFailures[n].problem;
-                }
-
-                BDI_MigrationMappingUtility.updateCustomSettings(HELP_TEXT, errMsg);
-                if (!Test.isRunningTest()) {
-                    throw new DeploymentException(Label.bdiErrorDeploymentFailed);
-                }
-
-            } else {
-                // Deployment was not successful and result is null
-                BDI_MigrationMappingUtility.updateCustomSettings(HELP_TEXT, 'Unknown error');
-                if (!Test.isRunningTest()) {
-                    throw new DeploymentException(Label.bdiErrorDeploymentFailed);
-                }
-            }
-        }
-    }
-
-    /*******************************************************************************************************
     * @description Collect and inspect existing field mappings and mappings found from Help Text and
     * add mappings to appropriate lists (pendingMappings, conflictingMappings, pendingStandardMappings,
     * pendingNonHelpTextMappings)
@@ -366,30 +326,43 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-    * @description Check the status of custom metadata deployment
-    * @return Metadata.DeployResult JSON
+    * @description Inserting or Updating CMT's through the Apex Metadata API is an asynchronous process. This callback
+    * class is used to handle the async response from the call to Metadata.Operations.enqueueDeployment().
     */
-    public Metadata.DeployResult getDeploymentResult(String deploymentId) {
-        Http h = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
-            '/services/data/v44.0/metadata/deployRequest/' +
-            deploymentId +
-            '?includeDetails=true');
-        request.setMethod('GET');
-        request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
-        HttpResponse response = h.send(request);
-        DeploymentResponse deploymentResponse =
-            (DeploymentResponse)JSON.deserialize(response.getBody(), DeploymentResponse.class);
+    public class DeploymentCallback implements Metadata.DeployCallback {
 
-        return deploymentResponse.deployResult;
-    }
+        /*******************************************************************************************************
+        * @description Method called by salesforce with the result of the Metadata deployment operation status.
+        * This will write the status of the deployment to Data Import custom settings
+        */
+        public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
 
-    /*******************************************************************************************************
-    * @description Wrapper object for the deployment request response
-    */
-    private class DeploymentResponse {
-        Metadata.DeployResult deployResult;
+            if (result != null && result.status == Metadata.DeployStatus.SUCCEEDED) {
+                // Deployment was successful
+                BDI_MigrationMappingUtility.updateCustomSettings(DATA_IMPORT_FIELD_MAPPING,
+                    String.valueOf(result.status));
+
+            } else if (result != null && result.status != Metadata.DeployStatus.SUCCEEDED) {
+                // Deployment was not successful
+                String errMsg = '';
+                for (Integer n=0; n < result.details.componentFailures.size(); n++) {
+                    errMsg += (n > 0 ? '\n' : '') + '* ' + result.details.componentFailures[n].fullName +
+                            '> ' + result.details.componentFailures[n].problem;
+                }
+
+                BDI_MigrationMappingUtility.updateCustomSettings(HELP_TEXT, errMsg);
+                if (!Test.isRunningTest()) {
+                    throw new DeploymentException(Label.bdiErrorDeploymentFailed);
+                }
+
+            } else {
+                // Deployment was not successful and result is null
+                BDI_MigrationMappingUtility.updateCustomSettings(HELP_TEXT, 'Unknown error');
+                if (!Test.isRunningTest()) {
+                    throw new DeploymentException(Label.bdiErrorDeploymentFailed);
+                }
+            }
+        }
     }
 
     /*******************************************************************************************************

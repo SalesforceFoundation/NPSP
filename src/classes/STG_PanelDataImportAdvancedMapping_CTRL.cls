@@ -149,7 +149,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 // Start the migration, collect help text mappings, and compare against existing cmt mappings
                 migrationMappingUtility.migrateHelpTextToCustomMetadata();
 
-                Id deploymentId = migrationMappingUtility.deployCustomMetadata();
+                Id deploymentId = CMT_MetadataAPI.deployMetadata(
+                    migrationMappingUtility.queuedMetadataTypesForDeploy,
+                    new BDI_MigrationMappingUtility.DeploymentCallback());
+
                 saveDeploymentId(deploymentId);
 
             } catch (Exception e) {
@@ -254,7 +257,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     private void setDeploymentStatus() {
         if (dataImportSettings.CMT_Deployment_ID__c != null) {
             deploymentResult =
-                migrationMappingUtility.getDeploymentResult(dataImportSettings.CMT_Deployment_ID__c);
+                CMT_MetadataAPI.getDeploymentResult(dataImportSettings.CMT_Deployment_ID__c);
         }
     }
 
