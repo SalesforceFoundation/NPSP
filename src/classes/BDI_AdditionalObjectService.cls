@@ -190,6 +190,9 @@ public with sharing class BDI_AdditionalObjectService {
     private void importObjectWrappers (Map<String,BDI_ObjectWrapper[]> objAPINameToObjWraps) {
         //If there are any records to create, then combine them into lists for update
         if (objAPINameToObjWraps.size() > 0) {
+
+            BDI_ObjectWrapper[] objWrapsForChildPredecessorUpdate = new BDI_ObjectWrapper[]{};
+
             for (String objApiName : objAPINameToObjWraps.keySet()) {
 
                 BDI_ObjectWrapper[] objWraps = objAPINameToObjWraps.get(objApiName);
@@ -247,6 +250,12 @@ public with sharing class BDI_AdditionalObjectService {
                                 System.Label.bdiCreated);
                             objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Field_Name__c,
                                 objWrap.sObj.Id);
+
+                            // If the newly created sobject is a parent to its predecesssor, then
+                            // add it to a list for updating child predcessors.
+                            if (objWrap.objMapping.Relationship_To_Predecessor__c == 'Parent') { 
+                                objWrapsForChildPredecessorUpdate.add(objWrap);
+                            }
                         } else { 
                             dataImportService.LogBDIError(objWrap.dataImport, 
                                 result.getErrors()[0].getMessage(),
@@ -254,6 +263,9 @@ public with sharing class BDI_AdditionalObjectService {
                         }
                     }
                 }
+            }
+            if (objWrapsForChildPredecessorUpdate.size() > 0) {
+                updateChildPredecessorRecords(objWrapsForChildPredecessorUpdate);
             }
         }
     }
@@ -279,7 +291,90 @@ public with sharing class BDI_AdditionalObjectService {
 
 
     /*******************************************************************************************************
-    * @description Determines if the predecessor to this Data Import Object Mapping exists
+    * @description For newly created parent sobjects, this method updates the appropriate child predecessor
+    * record's lookup field to the id of the newly created object.
+    * @param objWrapsForChildPredecessorUpdate list of object wraps that were successfully created
+    * and need to update their child predecessors.
+    */
+    private void updateChildPredecessorRecords(BDI_ObjectWrapper[] objWrapsForChildPredecessorUpdate){
+
+        Map<String,Map<Id,SObject>> childSObjectMapByObjectAPIName = new Map<String,Map<Id,SObject>>();
+        Map<Id,BDI_ObjectWrapper[]> successorObjWrapsByPredecessorId = new Map<Id,BDI_ObjectWrapper[]>();
+
+        for (BDI_ObjectWrapper objWrap : objWrapsForChildPredecessorUpdate) {
+
+            Id predecessorId = (Id)objWrap.dataImport.get(objWrap.predecessorObjMapping.Imported_Record_Field_Name__c);
+            SObject sObjForUpdate;
+
+            Map<Id,SObject> tempSObjMap = new Map<Id,SObject>();
+
+            if (childSObjectMapByObjectAPIName.get(objWrap.predecessorObjMapping.Object_API_Name__c) != null) {
+                tempSObjMap = childSObjectMapByObjectAPIName.get(objWrap.predecessorObjMapping.Object_API_Name__c);
+            }
+
+            // Attempt to find if the predecessor sobject if it is already in the map for update and update 
+            // the existing SObject if possible.  Otherwise initialize a new SObject for update.
+            if (tempSObjMap.size() > 0 && tempSObjMap.get(predecessorId) != null) {
+                sObjForUpdate = tempSObjMap.get(predecessorId);
+            } else {
+                sObjForUpdate = UTIL_Describe.getPrototypeObject(objWrap.predecessorObjMapping.Object_API_Name__c);
+            }
+
+            // Set the id of the sobject to the predecessors record id
+            sObjForUpdate.put('Id',predecessorId);
+
+            // Place the Id of the newly created SObject into the appropriate relationship field on the child.
+            sObjForUpdate.put(objWrap.objMapping.Relationship_Field__c,objWrap.sObj.Id);
+
+            // Put the SObject back into the enclosing maps.
+            tempSObjMap.put(predecessorId, sObjForUpdate);
+            childSObjectMapByObjectAPIName.put(objWrap.predecessorObjMapping.Object_API_Name__c,tempSObjMap);
+
+            // Store the successor object wraps by their predecessor id for later use in recording errors.
+            if (successorObjWrapsByPredecessorId.get(predecessorId) != null) {
+                successorObjWrapsByPredecessorId.get(predecessorId).add(objWrap);
+            } else {
+                successorObjWrapsByPredecessorId.put(predecessorId, new BDI_ObjectWrapper[]{objWrap});
+            }
+        }
+
+        if (childSObjectMapByObjectAPIName.size() > 0) {
+            for (String objAPIName : childSObjectMapByObjectAPIName.keySet()) {
+
+                SObject[] sObjsForUpdate = childSObjectMapByObjectAPIName.get(objAPIName).values();
+
+                if (sObjsForUpdate.size() > 0) {
+
+                    Database.SaveResult[] updateSaveResults = UTIL_DMLService.updateRecords(sObjsForUpdate,false);
+                    
+                    // Cycle through all the upsert results and update the data import records with status 
+                    // appropriately.
+                    for (Integer i = 0; i < updateSaveResults.size(); i++) {
+                        Database.SaveResult result = updateSaveResults[i];
+
+                        BDI_ObjectWrapper[] successorObjWraps = successorObjWrapsByPredecessorId.get(result.getId());
+
+                        // If the update of the child object fails then record an error in the status field
+                        // for all successor objects.
+                        if (!result.isSuccess()) {
+                            for (BDI_ObjectWrapper objWrap : successorObjWraps) {
+                            
+                                String errorMessage = System.label.bdiAdditionalObjChildNotUpdated + 
+                                                        result.getErrors()[0].getMessage();
+                                dataImportService.LogBDIError(objWrap.dataImport, 
+                                    errorMessage,
+                                    objWrap.objMapping.Imported_Record_Status_Field_Name__c);
+                            }
+                        }
+                    }
+                }                
+            }
+        }
+    }
+
+
+    /*******************************************************************************************************
+    * @description 
     * @param predecessor The Data Import Object Mapping for which the imported field can be checked to see 
     *  if it exists.
     */

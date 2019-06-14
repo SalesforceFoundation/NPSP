@@ -1914,6 +1914,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Account Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</value>
     </labels>
     <labels>
+        <fullName>bdiAdditionalObjChildNotUpdated</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAdditionalObjChildNotUpdated</shortDescription>
+        <value>Error when updating child record lookup field(s) with new parent record id. Error message is:</value>
+    </labels>
+    <labels>
         <fullName>bdiAdditionalObjPredNotFound</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
