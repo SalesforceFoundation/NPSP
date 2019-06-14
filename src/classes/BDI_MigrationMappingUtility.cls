@@ -120,34 +120,6 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-    * @description Initiate a deployment of custom metadata type records
-    *
-    * @return Metadata deployment id
-    */
-    public String deployCustomMetadata() {
-        String deploymentId;
-
-        try {
-            If (queuedMetadataTypesForDeploy.size() > 0) {
-            Metadata.DeployContainer deploymentContainer = new Metadata.DeployContainer();
-            for (Metadata.CustomMetadata customMetadataRecord : queuedMetadataTypesForDeploy) {
-                deploymentContainer.addMetadata(customMetadataRecord);
-            }
-
-            if (Test.isRunningTest()) {
-                deploymentId = '123';
-            } else {
-                deploymentId = Metadata.Operations.enqueueDeployment(deploymentContainer, new DeploymentCallback());
-            }
-        }
-        } catch (Exception e) {
-            throw new DeploymentException(Label.bdiErrorDeploymentFailed + ' ' + e.getMessage());
-        }
-
-        return deploymentId;
-    }
-
-    /*******************************************************************************************************
     * @description Updates Data Import custom settings.
     * Static because it's used in static inner class DeploymentCallback and in STG_PanelDataImportAdvancedMapping_CTRL
     *
