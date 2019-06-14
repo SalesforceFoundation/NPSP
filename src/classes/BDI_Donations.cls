@@ -106,10 +106,10 @@ public class BDI_Donations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Opportunity Fields
     */
-    public static Map<String, String> dataImportFieldToOpportunityField {
+    public Map<String, String> dataImportFieldToOpportunityField {
         get {
             if (dataImportFieldToOpportunityField == null) {
-                dataImportFieldToOpportunityField = BDI_DataImportService.mapFieldsForDIObject(
+                dataImportFieldToOpportunityField = bdi.mapDataImportFields(
                     'Opportunity', 'Opportunity',
                     BDI_DataImportService.listStrDataImportFields
                 );
@@ -122,10 +122,10 @@ public class BDI_Donations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Payment Fields
     */
-    public static Map<String, String> dataImportFieldToPaymentField {
+    public Map<String, String> dataImportFieldToPaymentField {
         get {
             if (dataImportFieldToPaymentField == null) {
-                dataImportFieldToPaymentField = BDI_DataImportService.mapFieldsForDIObject(
+                dataImportFieldToPaymentField = bdi.mapDataImportFields(
                     'Payment', 'npe01__OppPayment__c',
                     BDI_DataImportService.listStrDataImportFields);
             }
@@ -464,7 +464,10 @@ public class BDI_Donations {
             if (dataImportField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
                 continue;
             }
-            BDI_DataImportService.isCopiedDIField(dataImport, dataImportField, opp, dataImportFieldToOpportunityField);
+            BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, 
+                    dataImportField, 
+                    opp, 
+                    dataImportFieldToOpportunityField);
         }
 
         // the Opp is ready!
@@ -624,7 +627,7 @@ public class BDI_Donations {
                 if (payment != null) {
                     Integer numberOfCopiedFields = 0;
                     for (String dataImportField : dataImportFieldToPaymentField.keySet()) {
-                        if (BDI_DataImportService.isCopiedDIField(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {
+                        if (BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {
                             numberOfCopiedFields++;
                         }
                     }

@@ -905,6 +905,126 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
+        <fullName>GAU_Allocation_1_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>GAU Allocation 1: Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>GAU_Allocation_1_GAU__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The salesforce id of the GAU to be used for the first allocation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The salesforce id of the GAU to be used for the first allocation.</inlineHelpText>
+        <label>GAU Allocation 1: GAU</label>
+        <referenceTo>General_Accounting_Unit__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports (GAU 1)</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports_GAU1</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>GAU_Allocation_1_Import_Status__c</fullName>
+        <description>The status from attempting to insert the first GAU Allocation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The status from attempting to insert the first GAU Allocation.</inlineHelpText>
+        <label>GAU Allocation 1: Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>GAU_Allocation_1_Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>A lookup to the first GAU Allocation if it was successfully created.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A lookup to the first GAU Allocation if it was successfully created.</inlineHelpText>
+        <label>GAU Allocation 1: Imported</label>
+        <referenceTo>Allocation__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports (GAU 1)</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports_GAU1</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>GAU_Allocation_1_Percent__c</fullName>
+        <externalId>false</externalId>
+        <label>GAU Allocation 1: Percent</label>
+        <precision>9</precision>
+        <required>false</required>
+        <scale>6</scale>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>GAU_Allocation_2_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>GAU Allocation 2: Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>GAU_Allocation_2_GAU__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The salesforce id of the GAU to be used for the second GAU allocation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The salesforce id of the GAU to be used for the second GAU allocation.</inlineHelpText>
+        <label>GAU Allocation 2: GAU</label>
+        <referenceTo>General_Accounting_Unit__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports (GAU 2)</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports_GAU2</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>GAU_Allocation_2_Import_Status__c</fullName>
+        <description>The status from attempting to insert the second GAU Allocation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The status from attempting to insert the second GAU Allocation.</inlineHelpText>
+        <label>GAU Allocation 2: Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>GAU_Allocation_2_Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>A lookup to the first GAU Allocation if it was successfully created.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A lookup to the first GAU Allocation if it was successfully created.</inlineHelpText>
+        <label>GAU Allocation 2: Imported</label>
+        <referenceTo>Allocation__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports (GAU 2)</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports_GAU2</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>GAU_Allocation_2_Percent__c</fullName>
+        <externalId>false</externalId>
+        <label>GAU Allocation 2: Percent</label>
+        <precision>9</precision>
+        <required>false</required>
+        <scale>6</scale>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
         <fullName>HomeAddressImportStatus__c</fullName>
         <externalId>false</externalId>
         <label>Home Address Import Status</label>
@@ -1022,6 +1142,78 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Contact_Role_1_ImportStatus__c</fullName>
+        <description>The status from attempting to insert the first Opportunity Contact Role.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The status from attempting to insert the first Opportunity Contact Role.</inlineHelpText>
+        <label>Opportunity Contact Role 1: ImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Contact_Role_1_Imported__c</fullName>
+        <description>The salesforce id of the imported opportunity contact role.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The salesforce id of the imported opportunity contact role.</inlineHelpText>
+        <label>Opportunity Contact Role 1: Imported</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Contact_Role_1_Role__c</fullName>
+        <description>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</inlineHelpText>
+        <label>Opportunity Contact Role 1: Role</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Contact_Role_2_ImportStatus__c</fullName>
+        <description>The status from attempting to insert the second Opportunity Contact Role.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The status from attempting to insert the second Opportunity Contact Role.</inlineHelpText>
+        <label>Opportunity Contact Role 2: ImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Contact_Role_2_Imported__c</fullName>
+        <description>The salesforce id of the imported opportunity contact role.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The salesforce id of the imported opportunity contact role.</inlineHelpText>
+        <label>Opportunity Contact Role 2: Imported</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Contact_Role_2_Role__c</fullName>
+        <description>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</inlineHelpText>
+        <label>Opportunity Contact Role 2: Role</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>PaymentImportStatus__c</fullName>
