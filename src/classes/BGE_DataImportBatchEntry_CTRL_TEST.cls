@@ -181,23 +181,167 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         System.assertEquals(0, openDonations.unpaidPayments.size(), 'Donor should have no unpaid payments.');
     }
 
-    /*********************************************************************************************************
-    * @description Tests getOpenDonations() for donor with only unpaid payments and no opps without unpaid payments
-    */
+    @isTest
+    static void givenAccountHasMultipleOppsWhenCalledThenAssertReturnedInWrapper() {
+
+        Account account = new Account(Name='TestAccount');
+        insert account;
+
+        Opportunity oppWithPmt = createOpportunity('MyOpenOpp1', null);
+        oppWithPmt.AccountId = account.Id;
+        
+        Opportunity oppWithoutPmt = createOpportunity('MyOpenOpp2', null);
+        oppWithoutPmt.AccountId = account.Id;
+        oppWithoutPmt.npe01__Do_Not_Automatically_Create_Payment__c = true;
+        
+        Opportunity oppWithPaidAndUnpaidPmts = createOpportunity('MyOpenOpp3', null);
+        oppWithPaidAndUnpaidPmts.AccountId = account.Id;
+        
+        Opportunity closedOppWithPaidAndUnpaidPmts = createOpportunity('MyClosedOpp', null);
+        closedOppWithPaidAndUnpaidPmts.AccountId = account.Id;
+        closedOppWithPaidAndUnpaidPmts.StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
+
+        insert new List<Opportunity>{
+                oppWithPmt, oppWithoutPmt, oppWithPaidAndUnpaidPmts, closedOppWithPaidAndUnpaidPmts
+        };
+
+        //Set the appropriate Payments to Paid
+        npe01__OppPayment__c pmt1 = getOppPayments(oppWithPmt.Id)[0];
+        pmt1.npe01__Paid__c = true;
+
+        npe01__OppPayment__c pmt2 = getOppPayments(oppWithPaidAndUnpaidPmts.Id)[0];
+        pmt2.npe01__Paid__c = true;
+
+        update new List<npe01__OppPayment__c>{
+                pmt1, pmt2
+        };
+
+        //Insert additional open Payments
+        npe01__OppPayment__c pmt3 = createPayment(oppWithPaidAndUnpaidPmts.Id);
+
+        npe01__OppPayment__c pmt4 = createPayment(closedOppWithPaidAndUnpaidPmts.Id);
+
+        insert new List<npe01__OppPayment__c>{
+                pmt3, pmt4
+        };
+
+        Test.startTest();
+        String jsonOppsWithPmts =
+                BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(account.Id);
+        Test.stopTest();
+
+        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
+                createOppWrappers(jsonOppsWithPmts);
+        
+        System.assertEquals(3, oppWrappers.size(),
+                'The three open Opportunities should be returned in the list of Opp Wrappers.');
+
+        //Assert closed Opp not included
+        Set<Id> returnedOppIds = new Set<Id>();
+        for (BGE_DataImportBatchEntry_CTRL.OpportunityWrapper opportunityWrapper : oppWrappers) {
+            returnedOppIds.add(opportunityWrapper.opportunity.Id);
+        }
+        System.assertNotEquals(true, returnedOppIds.contains(closedOppWithPaidAndUnpaidPmts.Id),
+                'The closed Opportunity should not be returned in the Opp Wrappers.');
+
+        System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
+        System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
+                'This Opportunity should not have any unpaid Payments in the Opp Wrapper.');
+        System.assertEquals(true, oppWrappers[0].hasPayments,
+                'This Opportunity should have a Payment in the Opp Wrapper.');
+
+        System.assertEquals(oppWithoutPmt.Id, oppWrappers[1].opportunity.Id);
+        System.assertEquals(0, oppWrappers[1].unpaidPayments.size(),
+                'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
+        System.assertEquals(false, oppWrappers[1].hasPayments,
+                'This Opportunity should not have a Payment in the Opp Wrapper.');
+
+        System.assertEquals(oppWithPaidAndUnpaidPmts.Id, oppWrappers[2].opportunity.Id);
+        System.assertEquals(1, oppWrappers[2].unpaidPayments.size(),
+                'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
+        System.assertEquals(true, oppWrappers[2].hasPayments,
+                'This Opportunity should not have a Payment in the Opp Wrapper.');
+    }
 
     @isTest
-    static void givenOpenOppWithUnpaidPmtsWhenCalledThenAssertReturnedInWrapper() {
+    static void givenContactHasMultipleOppsWhenCalledThenAssertReturnedInWrapper() {
 
         List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
         insert donorContacts;
 
-        Opportunity opp = new Opportunity(name='MyOpenOpp',
-                Primary_Contact__c=donorContacts[0].Id,
-                Amount=100,
-                CloseDate=System.today(),
-                StageName=UTIL_UnitTestData_TEST.getOpenStage(),
-                npe01__Do_Not_Automatically_Create_Payment__c=false
-        );
+        Opportunity oppWithPmt = createOpportunity('MyOpenOpp1', donorContacts[0].Id);
+        Opportunity oppWithoutPmt = createOpportunity('MyOpenOpp2', donorContacts[0].Id);
+        oppWithoutPmt.npe01__Do_Not_Automatically_Create_Payment__c = true;
+        insert new List<Opportunity>{
+                oppWithPmt, oppWithoutPmt
+        };
+
+        //Mark the auto-created Payment as Paid
+        npe01__OppPayment__c pmt = getOppPayments(oppWithPmt.Id)[0];
+        pmt.npe01__Paid__c = true;
+        update pmt;
+
+        Test.startTest();
+        String jsonOppsWithPmts =
+                BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
+        Test.stopTest();
+
+        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
+                createOppWrappers(jsonOppsWithPmts);
+
+        System.assertEquals(2, oppWrappers.size(),
+                'Both of this Donors Opportunities should be returned in the list of Opp Wrappers.');
+        System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
+        System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
+                'This Opportunity should not have any unpaid Payments in the Opp Wrapper.');
+        System.assertEquals(true, oppWrappers[0].hasPayments,
+                'This Opportunity should have a Payment in the Opp Wrapper.');
+        System.assertEquals(oppWithoutPmt.Id, oppWrappers[1].opportunity.Id);
+        System.assertEquals(0, oppWrappers[1].unpaidPayments.size(),
+                'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
+        System.assertEquals(false, oppWrappers[1].hasPayments,
+                'This Opportunity should not have a Payment in the Opp Wrapper.');
+    }
+
+    @isTest
+    static void givenOpenOppHasPaidAndUnpaidPmtsWhenCalledThenAssertReturnedInWrapper() {
+        List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
+        insert donorContacts;
+
+        Opportunity oppWithPmts = createOpportunity('MyOpenOpp1', donorContacts[0].Id);
+        insert oppWithPmts;
+
+        //Mark the auto-created Payment as Paid
+        npe01__OppPayment__c pmt = getOppPayments(oppWithPmts.Id)[0];
+        pmt.npe01__Paid__c = true;
+        update pmt;
+
+        //Insert a new unpaid Payment on the Opp
+        npe01__OppPayment__c openPmt = createPayment(oppWithPmts.Id);
+        insert openPmt;
+
+        Test.startTest();
+        String jsonOppsWithPmts =
+                BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
+        Test.stopTest();
+
+        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
+                createOppWrappers(jsonOppsWithPmts);
+
+        System.assertEquals(oppWithPmts.Id, oppWrappers[0].opportunity.Id);
+        System.assertEquals(1, oppWrappers[0].unpaidPayments.size(),
+                'This Opportunity should have an unpaid Payments in the Opp Wrapper.');
+        System.assertEquals(true, oppWrappers[0].hasPayments,
+                'This Opportunity should have a Payment in the Opp Wrapper.');
+    }
+
+    @isTest
+    static void givenOpenOppHasUnpaidPmtsWhenCalledThenAssertReturnedInWrapper() {
+
+        List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
+        insert donorContacts;
+
+        Opportunity opp = createOpportunity('MyOpenOpp', donorContacts[0].Id);
         insert opp;
 
         Test.startTest();
@@ -205,20 +349,86 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
                 BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
         Test.stopTest();
 
-        npe01__OppPayment__c pmt = [
-                SELECT Id, npe01__Opportunity__c, npe01__Paid__c
-                FROM npe01__OppPayment__c
-                WHERE npe01__Opportunity__c = :opp.Id
-        ];
+        npe01__OppPayment__c pmt = getOppPayments(opp.Id)[0];
 
        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
-                (List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>) JSON.deserialize(
-                        jsonOppsWithPmts,
-                        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>.class);
+                createOppWrappers(jsonOppsWithPmts);
 
         System.assertEquals(false, pmt.npe01__Paid__c);
         System.assertEquals(1, oppWrappers[0].unpaidPayments.size(), 'The unpaid Payment should be returned in the OpportunityWrapper.');
         System.assertEquals(true, oppWrappers[0].hasPayments, 'The auto-created Payment should be reflected in the OpportunityWrapper.');
+    }
+
+    @isTest
+    static void givenOpenOppHasPaidPmtsWhenCalledThenAssertReturnedInWrapper() {
+        List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
+        insert donorContacts;
+
+        Opportunity oppWithPmt = createOpportunity('MyOpenOpp1', donorContacts[0].Id);
+        insert oppWithPmt;
+
+        //Mark the auto-created Payment as Paid
+        npe01__OppPayment__c pmt = getOppPayments(oppWithPmt.Id)[0];
+        pmt.npe01__Paid__c = true;
+        update pmt;
+
+        Test.startTest();
+        String jsonOppsWithPmts =
+                BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
+        Test.stopTest();
+
+        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
+                createOppWrappers(jsonOppsWithPmts);
+
+        System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
+        System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
+                'This Opportunity should not have any unpaid Payments in the Opp Wrapper.');
+        System.assertEquals(true, oppWrappers[0].hasPayments,
+                'This Opportunity should have a Payment in the Opp Wrapper.');
+    }
+
+    @isTest
+    static void givenOpenOppHasNoPmtsWhenCalledThenAssertReturnedInWrapper() {
+        List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
+        insert donorContacts;
+
+        Opportunity opp = createOpportunity('MyOpenOpp', donorContacts[0].Id);
+        opp.npe01__Do_Not_Automatically_Create_Payment__c = true;
+        insert opp;
+
+        Test.startTest();
+        String jsonOppsWithoutPmts =
+                BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
+        Test.stopTest();
+
+        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
+                createOppWrappers(jsonOppsWithoutPmts);
+
+        System.assertEquals(0, oppWrappers[0].unpaidPayments.size(), 'This Opportunity should not have any unpaid payments.');
+        System.assertEquals(false, oppWrappers[0].hasPayments, 'This Opportunity should not have any payments.');
+    }
+
+    @isTest
+    static void givenUnsupportedIdWhenCalledThenAssertExceptionThrown() {
+        List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
+        insert donorContacts;
+
+        Opportunity opp = createOpportunity('MyOpenOpp', donorContacts[0].Id);
+        insert opp;
+
+        Boolean exceptionThrown = false;
+        Test.startTest();
+        try {
+            //Pass an Opportunity Id as param
+            String jsonOppsWithoutPmts =
+                    BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(opp.Id);
+        } catch (AuraHandledException ahe) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'The getOpportunitiesWithOppPayments method' +
+                'only supports Account and Contact Ids.');
     }
 
     /*********************************************************************************************************
@@ -328,4 +538,42 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         System.assertEquals(0, openDonations.unpaidPayments.size(), 'Donor should not have unpaid payments.');
     }
 
+    /******************************** Helper Methods *****************************/
+
+    private static Opportunity createOpportunity(String oppName, Id primaryContactId) {
+        Opportunity opp = new Opportunity(
+                Name = oppName,
+                Primary_Contact__c = primaryContactId,
+                Amount = 100,
+                CloseDate = System.today(),
+                StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+                npe01__Do_Not_Automatically_Create_Payment__c = false
+        );
+        return opp;
+    }
+
+    private static npe01__OppPayment__c createPayment(Id oppId){
+        npe01__OppPayment__c openPmt = new npe01__OppPayment__c(
+                npe01__Opportunity__c = oppId,
+                npe01__Payment_Amount__c = 5,
+                npe01__Scheduled_Date__c = Date.today().addDays(1),
+                npe01__Paid__c = false
+        );
+        return openPmt;
+    }
+
+    private static List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> createOppWrappers(
+            String jsonOppsWithPayments) {
+        return (List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>) JSON.deserialize(
+                jsonOppsWithPayments,
+                List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>.class);
+    }
+
+    private static List<npe01__OppPayment__c> getOppPayments(Id oppId) {
+        return [
+                SELECT Id, npe01__Opportunity__c, npe01__Paid__c
+                FROM npe01__OppPayment__c
+                WHERE npe01__Opportunity__c = :oppId
+        ];
+    }
 }
