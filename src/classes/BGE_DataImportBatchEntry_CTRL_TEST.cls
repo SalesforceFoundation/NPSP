@@ -357,6 +357,34 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     }
 
     @isTest
+    static void givenOpenOppHasWrittenOffPmtsWhenCalledThenAssertReturnedInWrapper() {
+        List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
+        insert donorContacts;
+
+        Opportunity oppWithPmt = createOpportunity('MyOpenOpp1', donorContacts[0].Id);
+        insert oppWithPmt;
+
+        //Mark the auto-created Payment as Paid
+        npe01__OppPayment__c pmt = getOppPayments(oppWithPmt.Id)[0];
+        pmt.npe01__Written_Off__c = true;
+        update pmt;
+
+        Test.startTest();
+        String oppWrappersJSON =
+                BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
+        Test.stopTest();
+
+        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
+                createOppWrappers(oppWrappersJSON);
+
+        System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
+        System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
+                'The written off Payment should not be included in unpaid Payments in the Opp Wrapper.');
+        System.assertEquals(true, oppWrappers[0].hasPayments,
+                'hasPayments should be true for this Opportunity since it has a related Payment.');
+    }
+
+    @isTest
     static void givenOpenOppHasNoPmtsWhenCalledThenAssertReturnedInWrapper() {
         List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
         insert donorContacts;
