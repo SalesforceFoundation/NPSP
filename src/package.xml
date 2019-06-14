@@ -60,7 +60,6 @@
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
         <members>BDI_CustObjMappingGAUAllocation</members>
-        <members>BDI_CustomMetadataService</members>
         <members>BDI_DataImportAPI_TEST</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
