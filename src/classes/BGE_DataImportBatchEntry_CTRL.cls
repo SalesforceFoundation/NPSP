@@ -194,6 +194,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             if (unpaidPayments == null) {
                 unpaidPayments = new List<npe01__OppPayment__c>();
             }
+
             for (npe01__OppPayment__c oppPayment : opportunity.npe01__OppPayment__r) {
                 if (isAvailableForUpdate(oppPayment)) {
                     unpaidPayments.add(oppPayment);
