@@ -113,20 +113,6 @@ public class BDI_HelpTextCMT {
             this.targetObjectAPIName = targetObjectAPIName;
         }
 
-        public DataImportFieldMapping(DataImportFieldMapping sourceFieldMapping, String fieldMappingSet) {
-            this.dataImportFieldMappingSetRecordName = fieldMappingSet;
-            this.label = sourceFieldMapping.label;
-            this.sourceFieldAPIName = sourceFieldMapping.sourceFieldAPIName;
-            this.targetFieldAPIName = sourceFieldMapping.targetFieldAPIName;
-            this.targetObjectMappingRecordName = sourceFieldMapping.targetObjectMappingRecordName;
-            this.targetObjectMappingLabel = sourceFieldMapping.targetObjectMappingLabel;
-            this.targetObjectAPIName = sourceFieldMapping.targetObjectAPIName;
-            this.dataImportObjectName = sourceFieldMapping.dataImportObjectName;
-            this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
-            this.isRequired = 'No';
-            this.isDeleted = false;
-        }
-
         public DataImportFieldMapping(Data_Import_Field_Mapping__mdt sourceFieldMapping, String fieldMappingSet) {
             this.dataImportFieldMappingSetRecordName = fieldMappingSet;
             this.label = sourceFieldMapping.MasterLabel;
@@ -161,7 +147,7 @@ public class BDI_HelpTextCMT {
 
         public void setRecordName(String recordName, Boolean isUnique) {
             if (isUnique) {
-                this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
+                this.recordName = generateRecordName(this.label, true, this.targetObjectMappingLabel, this.dataImportObjectName);
             } else {
                 this.recordName = recordName;
             }

@@ -275,28 +275,40 @@ public with sharing class BDI_MigrationMappingUtility {
                     queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
 
                 } else if (existingDefaultFieldMapping != null) {
-                    // Existing Field Mapping, check if CMTs field values match Help Text field values
-                    Boolean isConflictingMapping = hasDefaultFieldMappingMismatch(fieldMapping,
-                            existingDefaultFieldMapping, 
-                            existingDefaultObjectMapping);
+                    if (customFieldMappingSetExists) {
+                        BDI_HelpTextCMT.DataImportFieldMapping overwrittenMapping =
+                            new BDI_HelpTextCMT.DataImportFieldMapping(existingDefaultFieldMapping, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
-                    if (isConflictingMapping) {
-                        fieldMapping.setInstance(
-                            existingDefaultObjectMapping,
-                            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
-                            fieldMapping.targetFieldAPIName);
-                        fieldMapping.setRecordName(existingDefaultFieldMapping.DeveloperName, false);
-                        System.debug('>>>CONFLICT');
-                        System.debug(fieldMapping.recordName + ' *** ' + fieldMapping.targetFieldAPIName + ' *** ' + fieldMapping.sourceFieldAPIName);
-                        queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                        overwrittenMapping.setInstance(existingDefaultObjectMapping, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME, fieldMapping.targetFieldAPIName);
+                        System.debug('>>>OVERWRITTEN');
+                        System.debug(overwrittenMapping.recordName + ' *** ' + overwrittenMapping.targetFieldAPIName + ' *** ' + overwrittenMapping.sourceFieldAPIName);
+                        queuedMetadataTypesForDeploy.add(overwrittenMapping.getMetadataRecord());
                     } else {
-                        System.debug('>>>STANDARD');
-                        fieldMapping.setInstance(
-                            existingDefaultObjectMapping,
-                            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                        fieldMapping.setRecordName('', true);
-                        System.debug(fieldMapping.recordName + ' *** ' + fieldMapping.targetFieldAPIName + ' *** ' + fieldMapping.sourceFieldAPIName);
-                        queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                        // Existing Field Mapping, check if CMTs field values match Help Text field values
+                        Boolean hasConflictingValues = compareFieldMappings(fieldMapping,
+                                existingDefaultFieldMapping,
+                                existingDefaultObjectMapping);
+
+                        if (hasConflictingValues) {
+                            fieldMapping.setInstance(
+                                existingDefaultObjectMapping,
+                                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
+                                fieldMapping.targetFieldAPIName);
+
+                            //fieldMapping.setRecordName(existingDefaultFieldMapping.DeveloperName, true);
+
+                            System.debug('>>>CONFLICT');
+                            System.debug(fieldMapping.recordName + ' *** ' + fieldMapping.targetFieldAPIName + ' *** ' + fieldMapping.sourceFieldAPIName);
+                            queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                        } else {
+                            System.debug('>>>STANDARD');
+                            fieldMapping.setInstance(
+                                existingDefaultObjectMapping,
+                                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                            //fieldMapping.setRecordName('', true);
+                            System.debug(fieldMapping.recordName + ' *** ' + fieldMapping.targetFieldAPIName + ' *** ' + fieldMapping.sourceFieldAPIName);
+                            queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                        }
                     }
 
                     fieldMappingsByFieldMappingSetDeveloperName.remove(fieldMappingKey);
@@ -338,27 +350,18 @@ public with sharing class BDI_MigrationMappingUtility {
             Boolean isUnique = customFieldMappingSetExists ? false : true;
             fieldMapping.setRecordName(existingFieldMapping.DeveloperName, isUnique);
 
-            System.debug(fieldMapping.recordName + ' *** ' + fieldMapping.targetFieldAPIName + ' *** ' + fieldMapping.sourceFieldAPIName);
             queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
         }
-
-        System.debug(queuedMetadataTypesForDeploy.size());
-        /*for (Metadata.CustomMetadata cmt : queuedMetadataTypesForDeploy) {
-            System.debug(cmt.fullName + ' *** ' + cmt.label);
-        }*/
     }
 
     /*******************************************************************************************************
     * @description Check if Field Mapping Metadata Type field values are out of sync with default values
     * @return Boolean
     */
-    private Boolean hasDefaultFieldMappingMismatch(
-        BDI_HelpTextCMT.DataImportFieldMapping newFieldMapping,
+    private Boolean compareFieldMappings(BDI_HelpTextCMT.DataImportFieldMapping newFieldMapping,
         Data_Import_Field_Mapping__mdt existingFieldMapping,
         Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
 
-        Boolean badRequiredField = (existingFieldMapping.Required__c != 'No');
-        Boolean badIsDeletedField = (existingFieldMapping.Is_Deleted__c == true);
         Boolean badSourceFieldAPIName =
             (existingFieldMapping.Source_Field_API_Name__c != newFieldMapping.sourceFieldAPIName);
         Boolean badTargetFieldAPIName =
@@ -366,11 +369,9 @@ public with sharing class BDI_MigrationMappingUtility {
         Boolean badTargetObjectMappingId =
             (existingFieldMapping.Target_Object_Mapping__c != existingDefaultObjectMapping.Id);
 
-        Boolean foundMismatch = badRequiredField
-            || badSourceFieldAPIName
+        Boolean foundMismatch = badSourceFieldAPIName
             || badTargetFieldAPIName
-            || badTargetObjectMappingId
-            || badIsDeletedField;
+            || badTargetObjectMappingId;
 
         return foundMismatch;
     }
