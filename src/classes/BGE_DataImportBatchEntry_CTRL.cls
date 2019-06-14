@@ -153,7 +153,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     'npe01__Opportunity__r.Name, ' +
                     'npe01__Opportunity__c, ' +
                     'npe01__Payment_Amount__c,' +
-                    'npe01__Paid__c ' +
+                    'npe01__Paid__c, ' +
+                    'npe01__Written_Off__c ' +
                     'FROM npe01__OppPayment__r) ' +
                 'FROM Opportunity ' +
                 'WHERE ' + relationshipField + ' = :donorId ' +
@@ -194,11 +195,19 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 unpaidPayments = new List<npe01__OppPayment__c>();
             }
             for (npe01__OppPayment__c oppPayment : opportunity.npe01__OppPayment__r) {
-                if (oppPayment.npe01__Paid__c) {
-                    continue;
-                } else {
+                if (isAvailableForUpdate(oppPayment)) {
                     unpaidPayments.add(oppPayment);
+                } else {
+                    continue;
                 }
+            }
+        }
+
+        private Boolean isAvailableForUpdate(npe01__OppPayment__c oppPayment) {
+            if (oppPayment.npe01__Paid__c || oppPayment.npe01__Written_Off__c) {
+                return false;
+            } else {
+                return true;
             }
         }
     }
