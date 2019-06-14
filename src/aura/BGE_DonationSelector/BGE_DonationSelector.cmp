@@ -127,7 +127,7 @@
                     <aura:set attribute="footer">
                         <div class="selectedDonationBody">
                             <lightning:layout multipleRows="true">
-                                <aura:if isTrue="{!not(opportunityWrapper.hasPayments)}">
+                                <aura:if isTrue="{!not(opportunityWrapper.hasNonWrittenOffPayments)}">
                                     <lightning:layoutItem size="12" padding="around_xx-small"
                                                           class="slds-border_bottom slds-p-bottom_x-small slds-m-bottom_x-small">
                                         <aura:if isTrue="{!and(equals(opportunityWrapper.opportunity.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
