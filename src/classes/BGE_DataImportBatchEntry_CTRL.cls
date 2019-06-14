@@ -174,33 +174,50 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     /**
     * @description Wrapper class used to hold only the information needed in the
     * component for each Opportunity.  The component does not need to store any of
-    * the paid Payments for a donor, but it does need to know if the Donation has
-    * any related Payments (hasPayments) to suppress the option to Update the Donation
-    * in the Donation Selector component.
+    * the paid or written-off Payments for a donor, but it does need to know if the Donation
+    * has related Payments that have not been written-off. In that case the User should not
+    * be able to update the Opportunity in the BGE Donation Selector.
     */
     @TestVisible
     private class OpportunityWrapper {
         @TestVisible Opportunity opportunity {get; private set;}
         @TestVisible List<npe01__OppPayment__c> unpaidPayments {get; private set;}
-        @TestVisible Boolean hasPayments {get; private set;}
+        @TestVisible Boolean hasNonWrittenOffPayments {get; private set;}
 
-        private OpportunityWrapper(Opportunity opportunity){
+        private OpportunityWrapper(Opportunity opportunity) {
             this.opportunity = opportunity;
-            this.hasPayments = opportunity.npe01__OppPayment__r.size() > 0;
-            setUnpaidPayments(opportunity);
+            initialize();
         }
 
-        private void setUnpaidPayments(Opportunity opportunity) {
+        private void initialize() {
             if (unpaidPayments == null) {
                 unpaidPayments = new List<npe01__OppPayment__c>();
             }
 
+            if (opportunity.npe01__OppPayment__r.isEmpty()) {
+                hasNonWrittenOffPayments = false;
+                return;
+            }
+
             for (npe01__OppPayment__c oppPayment : opportunity.npe01__OppPayment__r) {
+                if (hasNonWrittenOffPayments == null
+                        && oppPayment.npe01__Written_Off__c == false) {
+                    hasNonWrittenOffPayments = true;
+                }
+
                 if (isAvailableForUpdate(oppPayment)) {
                     unpaidPayments.add(oppPayment);
                 } else {
                     continue;
                 }
+            }
+
+            //If hasNonWrittenOffPayments is null after looping all of the Payments,
+            //then all of the Opp's Payments are written-off, and hasNonWrittenOffPayments can
+            //be set to false, as this Opp should be treated in the BGE Donation Selector UI
+            //as if it has 0 Payments.
+            if (hasNonWrittenOffPayments == null) {
+                hasNonWrittenOffPayments = false;
             }
         }
 

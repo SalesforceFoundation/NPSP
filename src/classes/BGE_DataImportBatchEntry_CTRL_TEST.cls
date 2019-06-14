@@ -214,19 +214,19 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
         System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payments in the Opp Wrapper.');
-        System.assertEquals(true, oppWrappers[0].hasPayments,
+        System.assertEquals(true, oppWrappers[0].hasNonWrittenOffPayments,
                 'This Opportunity should have a Payment in the Opp Wrapper.');
 
         System.assertEquals(oppWithoutPmt.Id, oppWrappers[1].opportunity.Id);
         System.assertEquals(0, oppWrappers[1].unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
-        System.assertEquals(false, oppWrappers[1].hasPayments,
+        System.assertEquals(false, oppWrappers[1].hasNonWrittenOffPayments,
                 'This Opportunity should not have a Payment in the Opp Wrapper.');
 
         System.assertEquals(oppWithPaidAndUnpaidPmts.Id, oppWrappers[2].opportunity.Id);
         System.assertEquals(1, oppWrappers[2].unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
-        System.assertEquals(true, oppWrappers[2].hasPayments,
+        System.assertEquals(true, oppWrappers[2].hasNonWrittenOffPayments,
                 'This Opportunity should not have a Payment in the Opp Wrapper.');
     }
 
@@ -261,13 +261,13 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
         System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payments in the Opp Wrapper.');
-        System.assertEquals(true, oppWrappers[0].hasPayments,
+        System.assertEquals(true, oppWrappers[0].hasNonWrittenOffPayments,
                 'This Opportunity should have a Payment in the Opp Wrapper.');
 
         System.assertEquals(oppWithoutPmt.Id, oppWrappers[1].opportunity.Id);
         System.assertEquals(0, oppWrappers[1].unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
-        System.assertEquals(false, oppWrappers[1].hasPayments,
+        System.assertEquals(false, oppWrappers[1].hasNonWrittenOffPayments,
                 'This Opportunity should not have a Payment in the Opp Wrapper.');
     }
 
@@ -299,7 +299,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         System.assertEquals(oppWithPmts.Id, oppWrappers[0].opportunity.Id);
         System.assertEquals(1, oppWrappers[0].unpaidPayments.size(),
                 'This Opportunity should have an unpaid Payments in the Opp Wrapper.');
-        System.assertEquals(true, oppWrappers[0].hasPayments,
+        System.assertEquals(true, oppWrappers[0].hasNonWrittenOffPayments,
                 'This Opportunity should have a Payment in the Opp Wrapper.');
     }
 
@@ -324,7 +324,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         System.assertEquals(false, pmt.npe01__Paid__c);
         System.assertEquals(1, oppWrappers[0].unpaidPayments.size(),
                 'The unpaid Payment should be returned in the OpportunityWrapper.');
-        System.assertEquals(true, oppWrappers[0].hasPayments,
+        System.assertEquals(true, oppWrappers[0].hasNonWrittenOffPayments,
                 'The auto-created Payment should be reflected in the OpportunityWrapper.');
     }
 
@@ -352,7 +352,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
         System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payments in the Opp Wrapper.');
-        System.assertEquals(true, oppWrappers[0].hasPayments,
+        System.assertEquals(true, oppWrappers[0].hasNonWrittenOffPayments,
                 'This Opportunity should have a Payment in the Opp Wrapper.');
     }
 
@@ -380,8 +380,8 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
         System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
                 'The written off Payment should not be included in unpaid Payments in the Opp Wrapper.');
-        System.assertEquals(false, oppWrappers[0].hasPayments,
-                'This Opp should return false for hasPayments, since it only has written off Payments.');
+        System.assertEquals(false, oppWrappers[0].hasNonWrittenOffPayments,
+                'hasPayments should be true for this Opportunity since it has a related Payment.');
     }
 
     @isTest
@@ -403,7 +403,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
         System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
                 'This Opportunity should not have any unpaid payments.');
-        System.assertEquals(false, oppWrappers[0].hasPayments,
+        System.assertEquals(false, oppWrappers[0].hasNonWrittenOffPayments,
                 'This Opportunity should not have any payments.');
     }
 
