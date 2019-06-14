@@ -162,7 +162,6 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
     @isTest
     static void givenAccountHasMultipleOppsWhenCalledThenAssertReturnedInWrapper() {
-
         Account account = new Account(Name='TestAccount');
         insert account;
 
@@ -187,35 +186,30 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         //Set the appropriate Payments to Paid
         npe01__OppPayment__c pmt1 = getOppPayments(oppWithPmt.Id)[0];
         pmt1.npe01__Paid__c = true;
-
         npe01__OppPayment__c pmt2 = getOppPayments(oppWithPaidAndUnpaidPmts.Id)[0];
         pmt2.npe01__Paid__c = true;
-
         update new List<npe01__OppPayment__c>{
                 pmt1, pmt2
         };
 
         //Insert additional open Payments
         npe01__OppPayment__c pmt3 = createPayment(oppWithPaidAndUnpaidPmts.Id);
-
         npe01__OppPayment__c pmt4 = createPayment(closedOppWithPaidAndUnpaidPmts.Id);
-
         insert new List<npe01__OppPayment__c>{
                 pmt3, pmt4
         };
 
         Test.startTest();
-        String jsonOppsWithPmts =
+        String oppWrappersJSON =
                 BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(account.Id);
         Test.stopTest();
 
         List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
-                createOppWrappers(jsonOppsWithPmts);
-        
-        System.assertEquals(3, oppWrappers.size(),
-                'The three open Opportunities should be returned in the list of Opp Wrappers.');
+                createOppWrappers(oppWrappersJSON);
 
         //Assert closed Opp not included
+        System.assertEquals(3, oppWrappers.size(),
+                'The three open Opportunities should be returned in the list of Opp Wrappers.');
         Set<Id> returnedOppIds = new Set<Id>();
         for (BGE_DataImportBatchEntry_CTRL.OpportunityWrapper opportunityWrapper : oppWrappers) {
             returnedOppIds.add(opportunityWrapper.opportunity.Id);
@@ -244,7 +238,6 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
     @isTest
     static void givenContactHasMultipleOppsWhenCalledThenAssertReturnedInWrapper() {
-
         List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
         insert donorContacts;
 
@@ -255,18 +248,18 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
                 oppWithPmt, oppWithoutPmt
         };
 
-        //Mark the auto-created Payment as Paid
+        //Set the auto-created Payment as Paid
         npe01__OppPayment__c pmt = getOppPayments(oppWithPmt.Id)[0];
         pmt.npe01__Paid__c = true;
         update pmt;
 
         Test.startTest();
-        String jsonOppsWithPmts =
+        String oppWrappersJSON =
                 BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
         Test.stopTest();
 
         List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
-                createOppWrappers(jsonOppsWithPmts);
+                createOppWrappers(oppWrappersJSON);
 
         System.assertEquals(2, oppWrappers.size(),
                 'Both of this Donors Opportunities should be returned in the list of Opp Wrappers.');
@@ -300,12 +293,12 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         insert openPmt;
 
         Test.startTest();
-        String jsonOppsWithPmts =
+        String oppWrappersJSON =
                 BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
         Test.stopTest();
 
         List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
-                createOppWrappers(jsonOppsWithPmts);
+                createOppWrappers(oppWrappersJSON);
 
         System.assertEquals(oppWithPmts.Id, oppWrappers[0].opportunity.Id);
         System.assertEquals(1, oppWrappers[0].unpaidPayments.size(),
@@ -316,7 +309,6 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
     @isTest
     static void givenOpenOppHasUnpaidPmtsWhenCalledThenAssertReturnedInWrapper() {
-
         List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
         insert donorContacts;
 
@@ -324,14 +316,14 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         insert opp;
 
         Test.startTest();
-        String jsonOppsWithPmts =
+        String oppWrappersJSON =
                 BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
         Test.stopTest();
 
         npe01__OppPayment__c pmt = getOppPayments(opp.Id)[0];
 
        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
-                createOppWrappers(jsonOppsWithPmts);
+                createOppWrappers(oppWrappersJSON);
 
         System.assertEquals(false, pmt.npe01__Paid__c);
         System.assertEquals(1, oppWrappers[0].unpaidPayments.size(), 'The unpaid Payment should be returned in the OpportunityWrapper.');
@@ -352,12 +344,12 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         update pmt;
 
         Test.startTest();
-        String jsonOppsWithPmts =
+        String oppWrappersJSON =
                 BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
         Test.stopTest();
 
         List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
-                createOppWrappers(jsonOppsWithPmts);
+                createOppWrappers(oppWrappersJSON);
 
         System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
         System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
@@ -376,12 +368,12 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         insert opp;
 
         Test.startTest();
-        String jsonOppsWithoutPmts =
+        String oppWrappersJSON =
                 BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(donorContacts[0].Id);
         Test.stopTest();
 
         List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
-                createOppWrappers(jsonOppsWithoutPmts);
+                createOppWrappers(oppWrappersJSON);
 
         System.assertEquals(0, oppWrappers[0].unpaidPayments.size(), 'This Opportunity should not have any unpaid payments.');
         System.assertEquals(false, oppWrappers[0].hasPayments, 'This Opportunity should not have any payments.');
@@ -399,7 +391,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         Test.startTest();
         try {
             //Pass an Opportunity Id as param
-            String jsonOppsWithoutPmts =
+            String oppWrappersJSON =
                     BGE_DataImportBatchEntry_CTRL.getOpportunitiesWithOppPayments(opp.Id);
         } catch (AuraHandledException ahe) {
             exceptionThrown = true;
