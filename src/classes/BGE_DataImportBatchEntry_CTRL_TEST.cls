@@ -162,14 +162,14 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
         Opportunity oppWithPmt = createOpportunity('MyOpenOpp1', null);
         oppWithPmt.AccountId = account.Id;
-        
+
         Opportunity oppWithoutPmt = createOpportunity('MyOpenOpp2', null);
         oppWithoutPmt.AccountId = account.Id;
         oppWithoutPmt.npe01__Do_Not_Automatically_Create_Payment__c = true;
-        
+
         Opportunity oppWithPaidAndUnpaidPmts = createOpportunity('MyOpenOpp3', null);
         oppWithPaidAndUnpaidPmts.AccountId = account.Id;
-        
+
         Opportunity closedOppWithPaidAndUnpaidPmts = createOpportunity('MyClosedOpp', null);
         closedOppWithPaidAndUnpaidPmts.AccountId = account.Id;
         closedOppWithPaidAndUnpaidPmts.StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
