@@ -127,63 +127,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves all open Opportunities and unpaid Payments for the selected Donor (Account or Contact)
-    * @return JSON stringified Map<String, List<SObject>> of all openOpportunities and unpaidPayments for the given donor
-    */
-    @AuraEnabled
-    public static String getOpenDonations(Id donorId, String donorType) {
-        String relationshipField;
-        if (donorType == 'Account1') {
-            relationshipField = 'AccountId';
-        } else if (donorType == 'Contact1') {
-            relationshipField = 'Primary_Contact__c';
-        }
-
-        String opportunitySOQL = 'SELECT Id, ' +
-                                'Name, ' +
-                                'StageName, ' +
-                                'Amount ' +
-                                'FROM Opportunity ' +
-                                'WHERE ' + relationshipField + ' = :donorId ' +
-                                'AND IsClosed = false';
-
-        String paymentSOQL = 'SELECT Id, ' +
-                                'Name, ' +
-                                'npe01__Scheduled_Date__c, ' +
-                                'npe01__Opportunity__r.Name, ' +
-                                'npe01__Opportunity__c, ' +
-                                'npe01__Payment_Amount__c ' +
-                                'FROM npe01__OppPayment__c ' +
-                                'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
-                                'AND npe01__Opportunity__r.IsClosed = false ' +
-                                'AND npe01__Written_Off__c = false ' +
-                                'AND npe01__Paid__c = false';
-
-        try {
-            List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
-            List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
-
-            Map<Id, Opportunity> openOpportunitiesById = new Map<Id, Opportunity>(openOpportunities);
-
-            // openOpportunities should only include opps with NO UNPAID PAYMENTS for BDI to process donations correctly
-            for (npe01__OppPayment__c payment : unpaidPayments) {
-                Id idOfCurrentOpportunity = payment.npe01__Opportunity__c;
-                if (openOpportunitiesById.containsKey(idOfCurrentOpportunity)) {
-                    openOpportunitiesById.remove(idOfCurrentOpportunity);
-                }
-            }
-
-            Map<String, List<SObject>> response = new Map<String, List<SObject>>{
-                'openOpportunities' => openOpportunitiesById.values(),
-                'unpaidPayments' => unpaidPayments
-            };
-            return JSON.serialize(response);
-        } catch (Exception ex){
-            throw new AuraHandledException('ERROR: ' + ex.getMessage());
-        }
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves all open Opportunities and related Payments for the selected Donor (Account or Contact)
     * @return JSON string of all open Opportunities and related Payments for the given donor
     */
