@@ -51,7 +51,8 @@ class NPSP(object):
             response = client._call_salesforce(
                 'GET', 'https://{}/services/data'.format(client.sf_instance))
             latest_api_version = float(response.json()[-1]['version'])
-        except RobotNotRunningError:
+            assert latest_api_version  in locators_by_api_version
+        except (RobotNotRunningError, AssertionError):
             # We aren't part of a running test, likely because we are
             # generating keyword documentation. If that's the case, assume
             # the latest supported version
