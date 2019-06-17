@@ -37,19 +37,40 @@
 */
 public class BDI_MigrationMappingHelper {
 
-    /**
+    /*******************************************************************************************************
     * @description Name of default packaged Object Mapping Set
     */
     private static final String DATA_IMPORT_OBJECT_NAME =
         'DataImport__c';
 
-    /**
+    /*******************************************************************************************************
     * @description Name of default packaged Object Mapping Set
     */
     private static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME =
         'Default_Object_Mapping_Set';
 
-    /**
+    /*******************************************************************************************************
+    * @description Name of custom Field Mapping Set
+    * Set as static because it's used in the static method updateCustomSettings
+    */
+    public static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME =
+        'Migrated_Custom_Field_Mapping_Set';
+
+    /*******************************************************************************************************
+    * @description Boolean flag to determine if a custom field mapping set exists
+    * Set as static because it's used in the static method updateCustomSettings
+    */
+    public Boolean customFieldMappingSetExists {
+        get {
+            Integer migratedFieldMappingSetCount = [SELECT count()
+                FROM Data_Import_Field_Mapping_Set__mdt
+                WHERE DeveloperName = :MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
+
+            return migratedFieldMappingSetCount > 0 ? true : false;
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Default packaged Object Mapping Set metadata record
     */
     public Data_Import_Object_Mapping_Set__mdt getDefaultObjectMappingSet() {
@@ -58,7 +79,7 @@ public class BDI_MigrationMappingHelper {
             WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Go through all fields in Data Import object and collect relevant help text mappings
      *
      * @return A collection of help text field names mapped to an instance of DataImportFieldMapping
@@ -114,7 +135,7 @@ public class BDI_MigrationMappingHelper {
         return mappingDetailsBySourceFieldName;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Queries for default Object Mappings and builds a map of DeveloperName to Object Mapping record
      * Used to check for existance of Object Mapping record without loop
      * @param objectMappingSetId Id of the default Object Mapping Set
@@ -145,7 +166,7 @@ public class BDI_MigrationMappingHelper {
         return objectMappingsByDeveloperName;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Queries for default Field Mappings and builds a map of DeveloperName to Field Mapping record
      * Used to check for existance of Field Mapping record without loop
      * @param fieldMappingSetId Id of the default Field Mapping Set

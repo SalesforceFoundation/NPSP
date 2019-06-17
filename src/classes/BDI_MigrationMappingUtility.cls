@@ -43,6 +43,12 @@ public with sharing class BDI_MigrationMappingUtility {
         new List<Metadata.CustomMetadata>();
 
     /*******************************************************************************************************
+    * @description Name of default packaged Object Mapping Set
+    */
+    private static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME =
+        'Default_Object_Mapping_Set';
+
+    /*******************************************************************************************************
     * @description Name of default packaged Field Mapping Set
     * Set as static because it's used in the static method updateCustomSettings
     */
@@ -71,20 +77,6 @@ public with sharing class BDI_MigrationMappingUtility {
         'Help Text';
 
     /*******************************************************************************************************
-    * @description Boolean flag to determine if a custom field mapping set exists 
-    * Set as static because it's used in the static method updateCustomSettings
-    */
-    public static Boolean customFieldMappingSetExists {
-        get {
-            Integer migratedFieldMappingSetCount = [SELECT count()
-                FROM Data_Import_Field_Mapping_Set__mdt
-                WHERE DeveloperName = :MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
-
-            return migratedFieldMappingSetCount > 0 ? true : false;
-        }
-    }
-
-    /*******************************************************************************************************
     * @description Helper class that supports BDI_MigrationMappingUtility and enables mocking of test data.
     */
     private BDI_MigrationMappingHelper helper;
@@ -101,7 +93,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
     private String fieldMappingSetName {
         get {
-            if (customFieldMappingSetExists) {
+            if (helper.customFieldMappingSetExists) {
                 return MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
             }
             return DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
@@ -132,8 +124,9 @@ public with sharing class BDI_MigrationMappingUtility {
 
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         dataImportSettings.Field_Mapping_Method__c = fieldMappingMethod;
+        BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
 
-        if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
+        if (helper.customFieldMappingSetExists == true) {
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
         } else {
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
@@ -200,11 +193,12 @@ public with sharing class BDI_MigrationMappingUtility {
                         existingDefaultObjectMapping,
                         MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
                     fieldMapping.setRecordName('', true);
-                    // Add metadata record to queue for deployment
 
                     queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
                 } else if (existingDefaultFieldMapping != null) {
-                    if (customFieldMappingSetExists) {
+                    if (helper.customFieldMappingSetExists) {
+                        // Migrated custom field mapping set exists, overwrite all existing field mappings
+                        // with values from help text
                         BDI_HelpTextCMT.DataImportFieldMapping overwrittenMapping =
                             new BDI_HelpTextCMT.DataImportFieldMapping(existingDefaultFieldMapping, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
                         overwrittenMapping.setInstance(existingDefaultObjectMapping, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME, fieldMapping.targetFieldAPIName);
@@ -231,15 +225,15 @@ public with sharing class BDI_MigrationMappingUtility {
                             queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
                         }
                     }
-
-                    fieldMappingsByFieldMappingSetDeveloperName.remove(fieldMappingKey);
                 }
+
+                fieldMappingsByFieldMappingSetDeveloperName.remove(fieldMappingKey);
             }
         }
 
         handleNonHelpTextMappings();
 
-        if (customFieldMappingSetExists == false) {
+        if (helper.customFieldMappingSetExists == false) {
             // Create migrated field mapping set
             Metadata.CustomMetadata fieldMappingSet =
                 createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
@@ -260,7 +254,6 @@ public with sharing class BDI_MigrationMappingUtility {
     private void handleNonHelpTextMappings() {
 
         for (String key : fieldMappingsByFieldMappingSetDeveloperName.keySet()) {
-            
             Data_Import_Field_Mapping__mdt existingFieldMapping =
                 fieldMappingsByFieldMappingSetDeveloperName.get(key);
 
@@ -268,8 +261,7 @@ public with sharing class BDI_MigrationMappingUtility {
                 new BDI_HelpTextCMT.DataImportFieldMapping(existingFieldMapping,
                     MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
-            Boolean isUnique = customFieldMappingSetExists ? false : true;
-            fieldMapping.setRecordName(existingFieldMapping.DeveloperName, isUnique);
+            fieldMapping.setRecordName(existingFieldMapping.DeveloperName, helper.customFieldMappingSetExists);
 
             queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
         }

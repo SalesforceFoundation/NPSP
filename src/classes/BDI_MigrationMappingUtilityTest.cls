@@ -38,7 +38,7 @@
 @IsTest
 private class BDI_MigrationMappingUtilityTest {
 
-    /*@isTest
+    @isTest
     static void shouldCreateCustomMetadataRecordsFromHelpText() {
         // Create a mock version of the BDI_MigrationUtilityHelper class
         BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
@@ -48,70 +48,22 @@ private class BDI_MigrationMappingUtilityTest {
 
         // Call build method
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
-        util.sortFieldMappings('Default_Field_Mapping_Set');
+        BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
+        util.migrateHelpTextToCustomMetadata();
 
-        // Confirm that we have a new pending data import field mapping waiting to be deployed
-        System.assertEquals(1, util.pendingMappings.size(), 'We have one new field mapping');
-        System.assertEquals(2, util.pendingStandardMappings.size(), 'We have two standard field mappings');
+        if (helper.customFieldMappingSetExists == true) {
+            System.assertEquals(5,
+                util.queuedMetadataTypesForDeploy.size(),
+                'We have 5 metadata records queued for deployment.');
+        } else {
+            System.assertEquals(6,
+                util.queuedMetadataTypesForDeploy.size(),
+                'We have 6 metadata records queued for deployment including the custom field mapping set.');
+        }
 
         // Confirm that we can get custom metadata from "pendingMappings"
-        Metadata.CustomMetadata cmt = util.pendingMappings[0].getMetadataRecord();
-        System.assertEquals('Account 1 New Custom Field', cmt.label);
-    }
-
-    @IsTest
-    static void shouldContainMetadataRecordsForDeploy() {
-        // Create a mock version of the BDI_MigrationUtilityHelper class
-        BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
-            (BDI_MigrationMappingHelper) Test.createStub(
-                BDI_MigrationMappingHelper.class,
-                new BDI_MigrationMappingHelperMock());
-
-        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
-        util.startMigration();
-
-        Test.startTest();
-
-        // Convert mappings to Custom Metadata and start deployment
-        if (BDI_MigrationMappingUtility.customFieldMappingSetExists == true) {
-            System.assertEquals(1, util.queuedMetadataTypesForDeploy.size());
-        } else {
-            System.assertEquals(4, util.queuedMetadataTypesForDeploy.size());
-        }
-
-        Test.stopTest();
-    }
-
-    @IsTest
-    static void shouldContainConflictingMetadataRecordsForDeploy() {
-        // Create a mock version of the BDI_MigrationUtilityHelper class
-        BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
-            (BDI_MigrationMappingHelper) Test.createStub(
-                BDI_MigrationMappingHelper.class,
-                new BDI_MigrationMappingHelperMock());
-
-        // Call the method
-        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
-        util.sortFieldMappings('Default_Field_Mapping_Set');
-
-        // Force mapping conflict
-        BDI_HelpTextCMT.DataImportFieldMapping conflictingMapping = util.pendingStandardMappings.remove(0);
-        conflictingMapping.targetFieldAPIName='Some_Custom_Field__c';
-        util.conflictingMappings.add(conflictingMapping);
-
-        // Add conflicting mappings to list queuedMetadataTypesForDeploy
-        util.handleConflictingMappings(util.conflictingMappings);
-
-        Test.startTest();
-        String targetFieldAPIName;
-        for (Metadata.CustomMetadataValue customMetadataValue : util.queuedMetadataTypesForDeploy[0].values) {
-            if (customMetadataValue.field.contains('Target_Field_API_Name')) {
-                targetFieldAPIName = String.valueOf(customMetadataValue.value);
-            }
-        }
-        System.assertEquals(1, util.queuedMetadataTypesForDeploy.size());
-        System.assertEquals('Some_Custom_Field__c', targetFieldAPIName);
-        Test.stopTest();
+        Metadata.CustomMetadata cmt = util.queuedMetadataTypesForDeploy[3];
+        System.assertEquals('Account 1 Custom Field', cmt.label);
     }
 
     @IsTest
@@ -122,12 +74,7 @@ private class BDI_MigrationMappingUtilityTest {
                 BDI_MigrationMappingHelper.class,
                 new BDI_MigrationMappingHelperMock());
 
-        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
-        util.startMigration();
-
         Test.startTest();
-
-        util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
         BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback();
@@ -177,6 +124,7 @@ private class BDI_MigrationMappingUtilityTest {
 
         private String account1ObjectMappingId = getFakeId(Schema.Data_Import_Object_Mapping__mdt.SObjectType);
         private String account2ObjectMappingId = getFakeId(Schema.Data_Import_Object_Mapping__mdt.SObjectType);
+        private String gauObjectMappingId = getFakeId(Schema.Data_Import_Object_Mapping__mdt.SObjectType);
 
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName, Type returnType,
             List<Type> listOfParamTypes, List<String> listOfParamNames, List<Object> listOfArgs) {
@@ -214,44 +162,62 @@ private class BDI_MigrationMappingUtilityTest {
                     'Account2' => objectMapping2};
             }
 
-            /*if (stubbedMethodName == 'getAllMappingDetailsBySourceFieldName') {
-                BDI_HelpTextCMT.MappingDetail account1CityMappingDetail = new BDI_HelpTextCMT.MappingDetail(
-                    'Account1',
-                    'Account1 City',
-                    'Account',
-                    'BillingCity',
-                    'Account1Imported__c',
-                    'Account1ImportStatus__c');
+            if (stubbedMethodName == 'getAllMappingDetailsBySourceFieldName') {
+                BDI_HelpTextCMT.DataImportFieldMapping account1NameHelpText =
+                    new BDI_HelpTextCMT.DataImportFieldMapping(
+                        'Account 1 Name',
+                        'npsp__Account1_Name__c',
+                        'Account1',
+                        'Custom_Name__c',
+                        'Account');
 
-                BDI_HelpTextCMT.MappingDetail account2CityMappingDetail = new BDI_HelpTextCMT.MappingDetail(
-                    'Account2',
-                    'Account2 City',
-                    'Account',
-                    'BillingCity',
-                    'Account2Imported__c',
-                    'Account2ImportStatus__c');
+                BDI_HelpTextCMT.DataImportFieldMapping account1CityHelpText =
+                    new BDI_HelpTextCMT.DataImportFieldMapping(
+                        'Account 1 City',
+                        'npsp__Account1_City__c',
+                        'Account1',
+                        'BillingCity',
+                        'Account');
 
-                BDI_HelpTextCMT.MappingDetail newCustomFieldMappingDetail = new BDI_HelpTextCMT.MappingDetail(
-                    'Account1',
-                    'Account1 New Custom Field',
-                    'Account',
-                    'New_Custom_Field__c',
-                    'Account1Imported__c',
-                    'Account1ImportStatus__c');
+                BDI_HelpTextCMT.DataImportFieldMapping account2CityHelpText =
+                    new BDI_HelpTextCMT.DataImportFieldMapping(
+                        'Account 2 City',
+                        'npsp__Account2_City__c',
+                        'Account2',
+                        'BillingCity',
+                        'Account');
 
-                return new Map<String, BDI_HelpTextCMT.MappingDetail>{
-                    'npsp__Account1_City__c' => account1CityMappingDetail,
-                    'npsp__Account2_City__c' => account2CityMappingDetail,
-                    'New_Custom_Field__c' => newCustomFieldMappingDetail};
+                BDI_HelpTextCMT.DataImportFieldMapping newCustomFieldHelpText =
+                    new BDI_HelpTextCMT.DataImportFieldMapping(
+                        'Account 1 Custom Field',
+                        'Account1_Custom_Field__c',
+                        'Account1',
+                        'Custom_Field__c',
+                        'Account');
+
+                return new Map<String, BDI_HelpTextCMT.DataImportFieldMapping>{
+                    'npsp__Account_1_Name__c' => account1NameHelpText,
+                    'npsp__Account_1_City__c' => account1CityHelpText,
+                    'npsp__Account_2_City__c' => account2CityHelpText,
+                    'New_Custom_Field__c' => newCustomFieldHelpText};
             }
 
             if (stubbedMethodName == 'getFieldMappingsByFieldMappingSetDeveloperName') {
-                Data_Import_Field_Mapping_Set__mdt fieldMappingSet =
-                    new Data_Import_Field_Mapping_Set__mdt(
+                Data_Import_Field_Mapping_Set__mdt fieldMappingSet;
+
+                if (listOfArgs.contains('Migrated_Custom_Field_Mapping_Set')) {
+                    fieldMappingSet = new Data_Import_Field_Mapping_Set__mdt(
+                        Id=getFakeId(Schema.Data_Import_Field_Mapping_Set__mdt.SObjectType),
+                        DeveloperName='Migrated_Custom_Field_Mapping_Set',
+                        MasterLabel='Migrated Custom Field Mapping Set',
+                        Label='Migrated Custom Field Mapping Set');
+                } else {
+                    fieldMappingSet = new Data_Import_Field_Mapping_Set__mdt(
                         Id=getFakeId(Schema.Data_Import_Field_Mapping_Set__mdt.SObjectType),
                         DeveloperName='Default_Field_Mapping_Set',
                         MasterLabel='Default Field Mapping Set',
                         Label='Default Field Mapping Set');
+                }
 
                 Data_Import_Object_Mapping__mdt account1ObjectMapping =
                     new Data_Import_Object_Mapping__mdt(
@@ -273,34 +239,82 @@ private class BDI_MigrationMappingUtilityTest {
                         Imported_Record_Field_Name__c='npsp__Account2Imported__c',
                         Imported_Record_Status_Field_Name__c='npsp__Account2ImportStatus__c');
 
+                Data_Import_Object_Mapping__mdt gauObjectMapping =
+                    new Data_Import_Object_Mapping__mdt(
+                        Id=gauObjectMappingId,
+                        DeveloperName='GAU_Allocation_1',
+                        MasterLabel='GAU Allocation 1',
+                        Label='GAU Allocation 1',
+                        Object_API_Name__c='npsp__Allocation__c',
+                        Imported_Record_Field_Name__c='npsp__GAU_Allocation_1_Imported__c',
+                        Imported_Record_Status_Field_Name__c='npsp__GAU_Allocation_1_Import_Status__c');
+
+                Data_Import_Field_Mapping__mdt fieldMapping =
+                    (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                        '{"Id":"' + getFakeId(Schema.Data_Import_Field_Mapping__mdt.SObjectType) + '",' +
+                        '"MasterLabel":"Account 1 Name",' +
+                        '"DeveloperName":"npsp__Account1_Name",' +
+                        '"Source_Field_API_Name__c":"npsp__Account1_Name__c",' +
+                        '"Target_Field_API_Name__c":"Name",' +
+                        '"Required__c":"No",' +
+                        '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
+                        '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
+                            '","Target_Object_Mapping__r":{"Id":"' +
+                            account1ObjectMapping.Id + '","DeveloperName":"Account1"}}',
+                        Data_Import_Field_Mapping__mdt.class);
+
                 Data_Import_Field_Mapping__mdt fieldMapping1 =
-                    new Data_Import_Field_Mapping__mdt(
-                        MasterLabel='Account 1 City',
-                        DeveloperName='Account_1_City',
-                        Source_Field_API_Name__c='npsp__Account1_City__c',
-                        Target_Field_API_Name__c='BillingCity',
-                        Data_Import_Field_Mapping_Set__c=fieldMappingSet.Id,
-                        Target_Object_Mapping__c=account1ObjectMapping.Id,
-                        Required__c='No');
+                    (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                        '{"Id":"' + getFakeId(Schema.Data_Import_Field_Mapping__mdt.SObjectType) + '",' +
+                        '"MasterLabel":"Account 1 City",' +
+                        '"DeveloperName":"npsp__Account1_City",' +
+                        '"Source_Field_API_Name__c":"npsp__Account1_City__c",' +
+                        '"Target_Field_API_Name__c":"BillingCity",' +
+                        '"Required__c":"No",' +
+                        '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
+                        '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
+                            '","Target_Object_Mapping__r":{"Id":"'
+                            + account1ObjectMapping.Id + '","DeveloperName":"Account1"}}',
+                        Data_Import_Field_Mapping__mdt.class);
 
                 Data_Import_Field_Mapping__mdt fieldMapping2 =
-                    new Data_Import_Field_Mapping__mdt(
-                        MasterLabel='Account 2 City',
-                        DeveloperName='Account_2_City',
-                        Source_Field_API_Name__c='npsp__Account2_City__c',
-                        Target_Field_API_Name__c='BillingCity',
-                        Data_Import_Field_Mapping_Set__c=fieldMappingSet.Id,
-                        Target_Object_Mapping__c=account2ObjectMapping.Id,
-                        Required__c='No');
+                    (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                        '{"Id":"' + getFakeId(Schema.Data_Import_Field_Mapping__mdt.SObjectType) + '",' +
+                        '"MasterLabel":"Account 2 City",' +
+                        '"DeveloperName":"npsp__Account2_City",' +
+                        '"Source_Field_API_Name__c":"npsp__Account2_City__c",' +
+                        '"Target_Field_API_Name__c":"BillingCity",' +
+                        '"Required__c":"No",' +
+                        '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
+                        '"Target_Object_Mapping__c":"' + account2ObjectMapping.Id +
+                            '","Target_Object_Mapping__r":{"Id":"'
+                            + account2ObjectMapping.Id + '","DeveloperName":"Account2"}}',
+                        Data_Import_Field_Mapping__mdt.class);
+
+                Data_Import_Field_Mapping__mdt fieldMapping3 =
+                    (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                        '{"Id":"' + getFakeId(Schema.Data_Import_Field_Mapping__mdt.SObjectType) + '",' +
+                        '"MasterLabel":"GAU Allocation 1: Amount",' +
+                        '"DeveloperName":"GAU_Allocation_1_Amount",' +
+                        '"Source_Field_API_Name__c":"npsp__GAU_Allocation_1_Amount__c",' +
+                        '"Target_Field_API_Name__c":"npsp__Amount__c",' +
+                        '"Required__c":"No",' +
+                        '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
+                        '"Target_Object_Mapping__c":"' + gauObjectMapping.Id +
+                            '","Target_Object_Mapping__r":{"Id":"' + gauObjectMapping.Id +
+                            '","DeveloperName":"GAU_Allocation_1","MasterLabel":"GAU Allocation 1"}}',
+                        Data_Import_Field_Mapping__mdt.class);
 
                 return new Map<String, Data_Import_Field_Mapping__mdt>{
+                    'Account.Account1.npsp__Account1_Name__c' => fieldMapping,
                     'Account.Account1.npsp__Account1_City__c' => fieldMapping1,
-                    'Account.Account2.npsp__Account2_City__c' => fieldMapping2};
+                    'Account.Account2.npsp__Account2_City__c' => fieldMapping2,
+                    'npsp__Allocation__c.GAU_Allocation_1.npsp__GAU_Allocation_1_Amount__c' => fieldMapping3};
             }
 
             return null;
         }
-    }*/
+    }
 
     // DeployCallbackContext subclass for testing that returns jobId
     public class TestingDeployCallbackContext extends Metadata.DeployCallbackContext {
