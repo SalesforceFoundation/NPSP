@@ -28,11 +28,11 @@ Find Matching Gifts
     Click Link    link=Find Matched Gifts
     Choose Frame    vfFrameId
     Page Should Contain Link    &{Contact1}[FirstName] $50 donation    limit=1
-    Select Lightning Table Checkbox     &{Contact1}[FirstName] $50 donation
+    Select Lightning Checkbox     &{Contact1}[FirstName] $50 donation
     Click Link    link=Find More Gifts
     Populate Modal Field    Primary Contact    &{Contact2}[FirstName] &{Contact2}[LastName]
     Click Button With Value    Search
-    Select Lightning Table Checkbox     &{Contact2}[FirstName] $25 donation
+    Select Lightning Checkbox     &{Contact2}[FirstName] $25 donation
     Click Button With Value    Save 
     Reload Page
     Select Tab    Related  
