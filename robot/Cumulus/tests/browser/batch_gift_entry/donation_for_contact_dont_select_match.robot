@@ -44,7 +44,7 @@ Dont select match for contact new donation with grid changes
     Click BGE Edit Button    Donation Amount 
     Wait For Locator    bge.edit_field  
     Populate BGE Edit Field    Donation Amount    20
-    Click Managehh Button    Donation Date
+    Click Element With Locator    span    Donation Date
     Wait Until Element Is Not Visible    //span[contains(@class,'toastMessage')]
     Page Should Not Contain Link    &{opportunity}[Name]
     Click BGE Button       Process Batch
@@ -58,7 +58,8 @@ Dont select match for contact new donation with grid changes
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
-    ${opp_name}    Return Locator Value    check_field    Opportunity
+    Select Window    ${value} | Salesforce    5
+    ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     ${newopp_id}    Get Current Record ID
     Store Session Record      Opportunity    ${newopp_id}
