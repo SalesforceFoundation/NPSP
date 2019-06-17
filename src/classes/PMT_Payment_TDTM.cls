@@ -280,7 +280,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     private void handleOppPaymentWithAdvancedCurrency(Opportunity opp, String closedStageName, DmlWrapper dmlWrapper) {
         Decimal paidAmount = PMT_PaymentCreator.getPaymentsMade(opp);
 
-        if (opp.Amount > 0 && paidAmount == opp.Amount && !opp.isClosed && !opp.IsWon) {
+        if (opp.Amount > 0 && paidAmount >= opp.Amount && !opp.isClosed && !opp.IsWon) {
             opp.StageName = closedStageName;
             dmlWrapper.objectsToUpdate.add(opp);
         }

@@ -31,7 +31,7 @@ Select an opportunity for an account make grid changes and process it
     Select Value From BGE DD    Donor Type    Account
     Populate Field By Placeholder    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
-    Click Link    Review Donations
+    Click Link With Text    Review Donations
     Click BGE Button    Update this Opportunity
     Fill BGE Form
     ...                       Donation Amount=20

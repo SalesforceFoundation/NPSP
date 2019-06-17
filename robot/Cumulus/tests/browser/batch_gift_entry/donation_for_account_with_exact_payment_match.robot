@@ -36,7 +36,7 @@ Enter a donation for an account with exact payment match
     Select Value From BGE DD    Donor Type    Account
     Populate Field By Placeholder    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
-    Click Link    Review Donations
+    Click Link With Text    Review Donations
     ${pay_no}    Get BGE Card Header    &{opportunity}[Name]
     Log To Console    ${pay_no}
     Page Should Contain    &{opportunity}[Name]
@@ -59,6 +59,7 @@ Enter a donation for an account with exact payment match
     ${value}    Return Locator Value    bge.value    Donation
     #Click Link    ${value}
     Click Link With Text    ${value}
+    Select Window    ${value} | Salesforce    5
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
