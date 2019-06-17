@@ -19,9 +19,9 @@ Create Secondary Affiliation for Contact
     # scroll to the one below it
     Scroll Element Into View  text:Primary
     Click Button  title:Edit Primary
-    Wait For Locator  checkbox  Primary
+    Wait For Locator  checkbox.details-checkbox  Primary
     Select Lightning Checkbox    Primary
-    Click Record Button    Save
+    Click Button    Save
     #Sleep    5
     Go To Object Home    Contact
     Click link    link=&{contact}[FirstName] &{contact}[LastName]
