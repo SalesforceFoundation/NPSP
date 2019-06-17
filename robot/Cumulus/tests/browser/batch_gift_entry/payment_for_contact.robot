@@ -34,7 +34,7 @@ Select a payment for a contact make grid changes and process it
     Wait For Locator    bge.title    Batch Gift Entry
     Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
-    Click Link    Review Donations
+    Click Link With Text    Review Donations
     ${pay_no}    Get BGE Card Header    &{opportunity}[Name]
     Log To Console    ${pay_no}
     Click BGE Button    Update this Payment
@@ -57,6 +57,7 @@ Select a payment for a contact make grid changes and process it
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
+    Select Window    ${value} | Salesforce    5
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}

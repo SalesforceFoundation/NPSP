@@ -12,12 +12,12 @@ ${task2}     Make a Phone Call2
 
 *** Keywords ***
 
- Capture Screenshot and Delete Records and Close Browser
+Capture Screenshot and Delete Records and Close Browser
     Capture Page Screenshot
     Close Browser
     Delete Session Records
     
- API Create Contact
+API Create Contact
     [Arguments]      &{fields}
     ${first_name} =  Generate Random String
     ${last_name} =   Generate Random String
@@ -304,7 +304,7 @@ Create Level
     Set Focus To Element   xpath: //input[@value='Save']
     Click Button  Save
     Unselect Frame
-    Wait For Locator  breadcrumb  Level
+    Wait For Locator  spl-breadcrumb  Level
     ${level_id} =            Get Current Record Id
     Store Session Record  Level__c  ${level_id}
     [Return]    ${level_id}  ${level_name}
