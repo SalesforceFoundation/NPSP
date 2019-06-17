@@ -73,7 +73,7 @@ Create New gift and process batch and validate
     Select Value From BGE DD    custom_picklist    2
     Select Multiple Values From Duellist    bge.duellist2    custom_multipick    Available    1    2    3
     Click Duellist Button    custom_multipick    Move selection to Chosen
-    Click BGE Button       Save
+    Click BGE Button    Save
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
@@ -86,6 +86,7 @@ Verify Custom Fields on Payment and Donation
     ${date} =     Get Current Date    result_format=%Y-%m-%d       
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
+    Select Window    ${value} | Salesforce    5
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     ${org_ns} =  Get Org Namespace Prefix
