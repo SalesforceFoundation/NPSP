@@ -52,6 +52,7 @@ class NPSP(object):
                 'GET', 'https://{}/services/data'.format(client.sf_instance))
             latest_api_version = float(response.json()[-1]['version'])
             if not latest_api_version in locators_by_api_version:
+                self.builtin.log("Could not find locator library for API %d" % latest_api_version)
                 latest_api_version = max(locators_by_api_version.keys())
         except RobotNotRunningError:
             # We aren't part of a running test, likely because we are
