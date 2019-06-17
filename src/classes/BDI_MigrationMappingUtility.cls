@@ -261,7 +261,7 @@ public with sharing class BDI_MigrationMappingUtility {
                 new BDI_HelpTextCMT.DataImportFieldMapping(existingFieldMapping,
                     MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
-            fieldMapping.setRecordName(existingFieldMapping.DeveloperName, helper.customFieldMappingSetExists);
+            fieldMapping.setRecordName(existingFieldMapping.DeveloperName, !helper.customFieldMappingSetExists);
 
             queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
         }
