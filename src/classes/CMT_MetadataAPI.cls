@@ -101,10 +101,7 @@ public class CMT_MetadataAPI {
     public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
 
         // Add all queued up metadata updates to the deployment container
-        Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
-        for (Metadata.CustomMetadata md: mtToDeploy) {
-            mdContainer.addMetadata(md);
-        }
+        Metadata.DeployContainer mdContainer = getDeployContainer(mtToDeploy);
 
         // Setup deploy callback
         MetadataCallBack callback = new MetadataCallBack(jobId);
@@ -113,6 +110,60 @@ public class CMT_MetadataAPI {
         if (!Test.isRunningTest()) {
             Metadata.Operations.enqueueDeployment(mdContainer, callback);
         }
+    }
+
+    /**
+     * @description Initiate a deployment of custom metadata type records.
+     * @param mtToDeploy: List of CustomMetadata objects to deploy
+     * @param callback: Instance of Metadata.DeployCallback defined by the caller
+     * @return Id: Deployment Id
+     */
+    public static Id deployMetadata(List<Metadata.CustomMetadata> mtToDeploy, Metadata.DeployCallback callback) {
+        // Add all queued up metadata updates to the deployment container
+        Metadata.DeployContainer mdContainer = getDeployContainer(mtToDeploy);
+
+        // Enqueue custom metadata deployment and return the Deployment Id
+        if (!Test.isRunningTest()) {
+            return Metadata.Operations.enqueueDeployment(mdContainer, callback);
+        }
+        return null;
+    }
+
+    private static Metadata.DeployContainer getDeployContainer(List<Metadata.CustomMetadata> mtToDeploy) {
+        // Add all queued up metadata updates to the deployment container
+        Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
+        for (Metadata.CustomMetadata md: mtToDeploy) {
+            mdContainer.addMetadata(md);
+        }
+
+        return mdContainer;
+    }
+
+    /**
+     * @description Check the status of metadata deployment
+     * @return Metadata.DeployResult JSON
+     */
+    public static Metadata.DeployResult getDeploymentResult(Id deploymentId) {
+        Http h = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
+            '/services/data/v44.0/metadata/deployRequest/' +
+            deploymentId +
+            '?includeDetails=true');
+        request.setMethod('GET');
+        request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
+        HttpResponse response = h.send(request);
+        DeploymentResponse deploymentResponse =
+            (DeploymentResponse)JSON.deserialize(response.getBody(), DeploymentResponse.class);
+
+        return deploymentResponse.deployResult;
+    }
+
+    /**
+     * @description Wrapper used to deserialize the deployment request response
+     */
+    private class DeploymentResponse {
+        Metadata.DeployResult deployResult;
     }
 
     /**
