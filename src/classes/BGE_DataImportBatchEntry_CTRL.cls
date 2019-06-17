@@ -155,7 +155,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     'npe01__Payment_Amount__c,' +
                     'npe01__Paid__c, ' +
                     'npe01__Written_Off__c ' +
-                    'FROM npe01__OppPayment__r) ' +
+                    'FROM npe01__OppPayment__r ' +
+                    'WHERE npe01__Written_Off__c = false) ' +
                 'FROM Opportunity ' +
                 'WHERE ' + relationshipField + ' = :donorId ' +
                 'AND IsClosed = false';
