@@ -117,7 +117,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
     */
-    private BDI_MigrationMappingUtility migrationMappingUtility { get; set; }
+    public BDI_MigrationMappingUtility migrationMappingUtility { get; set; }
 
     /*******************************************************************************************************
     * @description Constructor for STG_PanelDataImportAdvancedMapping_CTRL class

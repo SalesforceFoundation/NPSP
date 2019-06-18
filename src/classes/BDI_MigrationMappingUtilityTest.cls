@@ -162,7 +162,7 @@ private class BDI_MigrationMappingUtilityTest {
                     'Account2' => objectMapping2};
             }
 
-            if (stubbedMethodName == 'getAllMappingDetailsBySourceFieldName') {
+            if (stubbedMethodName == 'getHelpTextMappingDetailsBySourceFieldName') {
                 BDI_HelpTextCMT.DataImportFieldMapping account1NameHelpText =
                     new BDI_HelpTextCMT.DataImportFieldMapping(
                         'Account 1 Name',

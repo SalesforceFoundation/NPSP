@@ -91,6 +91,18 @@ public with sharing class BDI_MigrationMappingUtility {
 
     private Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName;
 
+    /*******************************************************************************************************
+    * @description List of bad/malformed help text mappings
+    */
+    public List<BDI_HelpTextCMT.HelpTextParts> badHelpTextFieldDescribeResultsByFieldName {
+        get {
+            if (badHelpTextFieldDescribeResultsByFieldName == null) {
+                return new List<BDI_HelpTextCMT.HelpTextParts>();
+            }
+            return badHelpTextFieldDescribeResultsByFieldName;
+        } set;
+    }
+
     private String fieldMappingSetName {
         get {
             if (helper.customFieldMappingSetExists) {
@@ -161,10 +173,11 @@ public with sharing class BDI_MigrationMappingUtility {
     public void migrateHelpTextToCustomMetadata() {
 
         queuedMetadataTypesForDeploy.clear();
+        badHelpTextFieldDescribeResultsByFieldName.clear();
 
         // Mappings found in Data Import Help Text
         Map<String, BDI_HelpTextCMT.DataImportFieldMapping> mappingDetailsBySourceFieldName =
-                helper.getAllMappingDetailsBySourceFieldName();
+                helper.getHelpTextMappingDetailsBySourceFieldName();
 
         fieldMappingsByFieldMappingSetDeveloperName =
             helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
@@ -242,6 +255,8 @@ public with sharing class BDI_MigrationMappingUtility {
             // Add custom field mapping set to list queuedMetadataTypesForDeploy
             queuedMetadataTypesForDeploy.add(fieldMappingSet);
         }
+
+        badHelpTextFieldDescribeResultsByFieldName = helper.badHelpTextFieldDescribeResultsByFieldName;
     }
 
     /*******************************************************************************************************

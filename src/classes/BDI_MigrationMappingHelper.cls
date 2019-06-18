@@ -80,17 +80,17 @@ public class BDI_MigrationMappingHelper {
     }
 
     /*******************************************************************************************************
-    * @description Map of unusable help text field mappings
+    * @description List of bad/malformed help text mappings
     */
-    public Map<String, Schema.DescribeFieldResult> unusableHelpTextFieldDescribeResultsByDataImportFieldName =
-        new Map<String, Schema.DescribeFieldResult>();
+    public List<BDI_HelpTextCMT.HelpTextParts > badHelpTextFieldDescribeResultsByFieldName =
+        new List<BDI_HelpTextCMT.HelpTextParts >();
 
     /*******************************************************************************************************
      * @description Go through all fields in Data Import object and collect relevant help text mappings
      *
      * @return A collection of help text field names mapped to an instance of DataImportFieldMapping
      */
-    public Map<String, BDI_HelpTextCMT.DataImportFieldMapping> getAllMappingDetailsBySourceFieldName() {
+    public Map<String, BDI_HelpTextCMT.DataImportFieldMapping> getHelpTextMappingDetailsBySourceFieldName() {
 
         Map<String, BDI_HelpTextCMT.DataImportFieldMapping> mappingDetailsBySourceFieldName =
                 new Map<String, BDI_HelpTextCMT.DataImportFieldMapping>();
@@ -112,10 +112,10 @@ public class BDI_MigrationMappingHelper {
             Boolean helpTextIsUsable = String.isNotBlank(helpText) && !helpText.contains(' ');
 
             if (helpTextIsUsable) {
-                BDI_HelpTextCMT.HelpTextParts helpTextParts = new BDI_HelpTextCMT.HelpTextParts(helpText);
-                Boolean fieldNameIsUsable = String.isNotBlank(helpTextParts.fieldName);
-                Boolean objectNameIsUsable = String.isNotBlank(helpTextParts.objectName);
-                Boolean objectAPINameIsUsable = String.isNotBlank(helpTextParts.objectAPIName);
+                BDI_HelpTextCMT.HelpTextParts helpTextParts = new BDI_HelpTextCMT.HelpTextParts(sourceField);
+                Boolean fieldNameIsUsable = String.isNotBlank(helpTextParts.targetFieldAPIName);
+                Boolean objectNameIsUsable = String.isNotBlank(helpTextParts.dataImportObjectName);
+                Boolean objectAPINameIsUsable = String.isNotBlank(helpTextParts.targetObjectAPIName);
 
                 // We may need to collect help text mapping with false objectAPINameIsUsable (bad mappings)
                 // so we can potentially display it in the UI at some point
@@ -127,15 +127,17 @@ public class BDI_MigrationMappingHelper {
                         new BDI_HelpTextCMT.DataImportFieldMapping(
                             sourceField.Label,
                             sourceField.Name,
-                            helpTextParts.objectName,
-                            helpTextParts.fieldName,
-                            helpTextParts.objectAPIName);
+                            helpTextParts.dataImportObjectName,
+                            helpTextParts.targetFieldAPIName,
+                            helpTextParts.targetObjectAPIName);
 
                     mappingDetailsBySourceFieldName.put(sourceField.Name, newDataImportFieldMapping);
                     // Remove from map once mapped
                     describeFieldResultsByFieldName.remove(dataImportFieldName);
                 } else {
-                    unusableHelpTextFieldDescribeResultsByDataImportFieldName.put(dataImportFieldName, sourceField);
+                    // Park bad help text mappings
+                    BDI_HelpTextCMT.HelpTextParts badHelpTextMapping = new BDI_HelpTextCMT.HelpTextParts(sourceField);
+                    badHelpTextFieldDescribeResultsByFieldName.add(badHelpTextMapping);
                 }
             }
         }

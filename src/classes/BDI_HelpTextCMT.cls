@@ -209,18 +209,25 @@ public class BDI_HelpTextCMT {
     * @description Wrapper class for help text field
     */
     public class HelpTextParts {
-        public String objectName;
-        public String fieldName;
-        public String objectAPIName;
+        public String dataImportObjectName;
+        public String targetObjectAPIName;
+        public String targetFieldAPIName;
+        public String dataImportFieldName { get;set; }
+        public String dataImportFieldAPIName { get;set; }
+        public String helpText { get;set; }
 
-        public HelpTextParts(String helpText) {
+        public HelpTextParts(Schema.DescribeFieldResult dfr) {
+
+            this.dataImportFieldName = dfr.Label;
+            this.dataImportFieldAPIName = dfr.Name;
+            this.helpText = dfr.getInlineHelpText();
             List<String> parts = helpText.split('\\.', 2);
 
-            this.objectName = String.isNotBlank(parts[0]) ? parts[0] : null;
-            this.fieldName = String.isNotBlank(parts[1]) ? parts[1] : null;
+            this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
+            this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
 
-            if (String.isNotBlank(this.objectName)) {
-                this.objectAPIName = DI_OBJECT_MAP.get(this.objectName);
+            if (String.isNotBlank(this.dataImportObjectName)) {
+                this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
             }
         }
     }
