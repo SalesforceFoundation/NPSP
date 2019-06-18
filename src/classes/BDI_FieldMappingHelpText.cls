@@ -46,6 +46,11 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
     private Map<String,Map<String,String>> additionalFieldMappings = new Map<String,Map<String,String>>();
 
     /*******************************************************************************************************
+    * @description Default value for the Protected_x property when inserting new Custom Metadata Type records
+    */
+    private static final Boolean IS_PROTECTED = false;
+
+    /*******************************************************************************************************
     * @description return singleton instance of the class
     */
     public static BDI_FieldMappingHelpText getInstance() {
@@ -149,5 +154,184 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
     */
     public Boolean isCurrencyMapped(String objectName) {
         return objectName.equalsIgnoreCase('Opportunity');
+    }
+
+    /*******************************************************************************************************
+    * @description Wrapper class for Data_Import_Field_Mapping_Set__mdt used to create
+    * the custom CMT data as well as for use in the Custom UI.
+    */
+    public class DataImportFieldMappingSet {
+        public String recordName;
+        public String label;
+        public String dataImportObjectMappingSetRecordName;
+
+        public DataImportFieldMappingSet(String label, String dataImportObjectMappingSetRecordName) {
+            this.label = label.trim();
+            this.dataImportObjectMappingSetRecordName = dataImportObjectMappingSetRecordName;
+        }
+
+        public Metadata.CustomMetadata getMetadataRecord() {
+            String mdTypeName = UTIL_Namespace.StrTokenNSPrefix('Data_Import_Field_Mapping_Set__mdt');
+
+            // Setup custom metadata to be created or updated in the subscriber org.
+            Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
+            customMd.label = this.label.left(40);
+            this.recordName = this.label;
+            customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
+            customMd.protected_x = IS_PROTECTED;
+
+            Map<String, Object> fieldValues = new Map<String, Object>{
+                'Data_Import_Object_Mapping_Set__c' => this.dataImportObjectMappingSetRecordName
+            };
+            customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
+
+            return customMd;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Wrapper class for Data_Import_Field_Mapping__mdt used to create
+    * the default CMT data as well as for use in the Custom UI.
+    */
+    public class DataImportFieldMapping {
+        public String recordName;
+        public String label {get; set;}
+        public String dataImportObjectName {get; set;}
+        public String dataImportFieldMappingSetRecordName;
+        public String dataImportFieldMappingSetLabel;
+        public String sourceFieldAPIName;
+        public String targetFieldAPIName {get; set;}
+        public String targetObjectMappingRecordName;
+        public String targetObjectMappingLabel;
+        public String targetObjectAPIName;
+        public String isRequired;
+        public Boolean isDeleted;
+        public String importedRecordField;
+        public String importedRecordStatusField;
+
+        public DataImportFieldMapping(String label, String sourceFieldAPIName, String dataImportObjectName,
+            String targetFieldAPIName, String targetObjectAPIName) {
+
+            this.label = label.trim();
+            this.sourceFieldAPIName = sourceFieldAPIName;
+            this.dataImportObjectName = dataImportObjectName;
+            this.targetFieldAPIName = targetFieldAPIName;
+            this.targetObjectAPIName = targetObjectAPIName;
+        }
+
+        public DataImportFieldMapping(Data_Import_Field_Mapping__mdt sourceFieldMapping, String fieldMappingSet) {
+            this.dataImportFieldMappingSetRecordName = fieldMappingSet;
+            this.label = sourceFieldMapping.MasterLabel;
+            this.sourceFieldAPIName = sourceFieldMapping.Source_Field_API_Name__c;
+            this.targetFieldAPIName = sourceFieldMapping.Target_Field_API_Name__c;
+            this.targetObjectMappingRecordName = sourceFieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.targetObjectMappingLabel = sourceFieldMapping.Target_Object_Mapping__r.MasterLabel;
+            this.dataImportObjectName = sourceFieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.targetObjectAPIName = sourceFieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
+            this.recordName = sourceFieldMapping.DeveloperName;
+            this.isRequired = 'No';
+            this.isDeleted = false;
+        }
+
+        public void setInstance(Data_Import_Object_Mapping__mdt objectMapping,
+            String fieldMappingSetName) {
+
+            this.targetObjectMappingLabel = objectMapping.Label;
+            this.targetObjectMappingRecordName = objectMapping.DeveloperName;
+            this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
+        }
+
+        public void setInstance(Data_Import_Object_Mapping__mdt objectMapping,
+            String fieldMappingSetName,
+            String targetFieldAPIName) {
+
+            this.targetObjectMappingLabel = objectMapping.Label;
+            this.targetObjectMappingRecordName = objectMapping.DeveloperName;
+            this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
+            this.targetFieldAPIName = targetFieldAPIName;
+        }
+
+        public void setRecordName(String recordName, Boolean isUnique) {
+            if (isUnique) {
+                this.recordName = generateRecordName(this.label, true, this.targetObjectMappingLabel, this.dataImportObjectName);
+            } else {
+                this.recordName = recordName;
+            }
+        }
+
+        public Metadata.CustomMetadata getMetadataRecord() {
+            String mdTypeName = UTIL_Namespace.StrTokenNSPrefix('Data_Import_Field_Mapping__mdt');
+
+            // Setup custom metadata to be created or updated in the subscriber org.
+            Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
+            customMd.label = this.label.replace(this.dataImportObjectName, this.targetObjectMappingLabel).left(40);
+            if (this.recordName == null) {
+                this.recordName = generateRecordName(this.label, true, this.targetObjectMappingLabel, this.dataImportObjectName);
+            }
+            customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
+            customMd.protected_x = IS_PROTECTED;
+
+            // Convert an empty string ('') value into null for the entity reference to save properly.
+            if (String.isEmpty(this.dataImportFieldMappingSetRecordName)) {
+                this.dataImportFieldMappingSetRecordName = null;
+            }
+
+            // Convert an empty string ('') value into null for the entity reference to save properly.
+            if (String.isEmpty(this.targetObjectMappingRecordName)) {
+                this.targetObjectMappingRecordName = null;
+            }
+
+            Map<String, Object> fieldValues;
+            if (this.isDeleted != true) {
+                fieldValues = new Map<String, Object>{
+                    'Data_Import_Field_Mapping_Set__c' => dataImportFieldMappingSetRecordName == null ? 'Default_Field_Mapping_Set' : dataImportFieldMappingSetRecordName,
+                    'Required__c' => isRequired,
+                    'Source_Field_API_Name__c' => sourceFieldAPIName,
+                    'Target_Field_API_Name__c' => targetFieldAPIName,
+                    'Target_Object_Mapping__c' => targetObjectMappingRecordName,
+                    'Is_Deleted__c' => isDeleted
+                };
+            } else {
+                fieldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
+            }
+            customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
+
+            return customMd;
+        }
+
+        /*******************************************************************************************************
+        * @description Utility to convert a name into a valid 'DeveloperName' quality value (or unique GUID)
+        * for the CMT record
+        *
+        * @param name String
+        * @param makeUnique Boolean
+        * @return DeveloperName format string
+        */
+        private String generateRecordName(String name, Boolean makeUnique, String objectLabel, String objectAPIName) {
+            name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');
+
+            if (String.isNotBlank(objectLabel)) {
+                objectLabel = objectLabel.replace(' ', '_');
+                name = name.replace(objectAPIName, objectLabel);
+            }
+
+            if (name.length() > 30) {
+                String firstFifteen = name.substring(0, 15);
+                String lastFifteen = name.substring(name.length() - 15, name.length());
+                name = firstFifteen + lastFifteen;
+            }
+
+            if (makeUnique == true) {
+                // Create a GUID format unique string
+                Blob b = Crypto.GenerateAESKey(128);
+                String h = EncodingUtil.ConvertTohex(b);
+                // force everything to have a 9-char random string at the end
+                name = name.left(30).removeEnd('_') + '_' + h.left(9);
+            } else {
+                name = name.left(40);
+            }
+
+            return name;
+        }
     }
 }

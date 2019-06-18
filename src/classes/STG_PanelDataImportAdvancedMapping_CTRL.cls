@@ -227,7 +227,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
             if (isSuccess) {
                 isPolling = false;
-                throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
+                throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled + ' ' +
+                    migrationMappingUtility.queuedMetadataTypesForDeploy.size() + ' custom metadata records were deployed.');
             } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
                 throwMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);

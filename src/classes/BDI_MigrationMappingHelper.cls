@@ -82,18 +82,18 @@ public class BDI_MigrationMappingHelper {
     /*******************************************************************************************************
     * @description List of bad/malformed help text mappings
     */
-    public List<BDI_HelpTextCMT.HelpTextParts > badHelpTextFieldDescribeResultsByFieldName =
-        new List<BDI_HelpTextCMT.HelpTextParts >();
+    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping > badHelpTextFieldDescribeResultsByFieldName =
+        new List<BDI_MigrationMappingUtility.HelpTextFieldMapping >();
 
     /*******************************************************************************************************
      * @description Go through all fields in Data Import object and collect relevant help text mappings
      *
      * @return A collection of help text field names mapped to an instance of DataImportFieldMapping
      */
-    public Map<String, BDI_HelpTextCMT.DataImportFieldMapping> getHelpTextMappingDetailsBySourceFieldName() {
+    public Map<String, BDI_FieldMappingHelpText.DataImportFieldMapping> getHelpTextMappingDetailsBySourceFieldName() {
 
-        Map<String, BDI_HelpTextCMT.DataImportFieldMapping> mappingDetailsBySourceFieldName =
-                new Map<String, BDI_HelpTextCMT.DataImportFieldMapping>();
+        Map<String, BDI_FieldMappingHelpText.DataImportFieldMapping> mappingDetailsBySourceFieldName =
+                new Map<String, BDI_FieldMappingHelpText.DataImportFieldMapping>();
 
         Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
                 UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
@@ -112,7 +112,7 @@ public class BDI_MigrationMappingHelper {
             Boolean helpTextIsUsable = String.isNotBlank(helpText) && !helpText.contains(' ');
 
             if (helpTextIsUsable) {
-                BDI_HelpTextCMT.HelpTextParts helpTextParts = new BDI_HelpTextCMT.HelpTextParts(sourceField);
+                BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextParts = new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
                 Boolean fieldNameIsUsable = String.isNotBlank(helpTextParts.targetFieldAPIName);
                 Boolean objectNameIsUsable = String.isNotBlank(helpTextParts.dataImportObjectName);
                 Boolean objectAPINameIsUsable = String.isNotBlank(helpTextParts.targetObjectAPIName);
@@ -123,8 +123,8 @@ public class BDI_MigrationMappingHelper {
                 if (fieldNameIsUsable && objectNameIsUsable && objectAPINameIsUsable) {
 
                     // Pass help text values to a new instance of MappingDetail wrapper class
-                    BDI_HelpTextCMT.DataImportFieldMapping newDataImportFieldMapping =
-                        new BDI_HelpTextCMT.DataImportFieldMapping(
+                    BDI_FieldMappingHelpText.DataImportFieldMapping newDataImportFieldMapping =
+                        new BDI_FieldMappingHelpText.DataImportFieldMapping(
                             sourceField.Label,
                             sourceField.Name,
                             helpTextParts.dataImportObjectName,
@@ -136,7 +136,7 @@ public class BDI_MigrationMappingHelper {
                     describeFieldResultsByFieldName.remove(dataImportFieldName);
                 } else {
                     // Park suspected help text mappings
-                    BDI_HelpTextCMT.HelpTextParts badHelpTextMapping = new BDI_HelpTextCMT.HelpTextParts(sourceField);
+                    BDI_MigrationMappingUtility.HelpTextFieldMapping badHelpTextMapping = new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
                     badHelpTextFieldDescribeResultsByFieldName.add(badHelpTextMapping);
                 }
             }
