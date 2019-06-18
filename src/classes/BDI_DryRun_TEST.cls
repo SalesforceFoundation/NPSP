@@ -983,6 +983,80 @@ public with sharing class BDI_DryRun_TEST {
         System.assertEquals(System.Label.bdiDryRunNoMatch, dataImports[1].DonationCampaignImportStatus__c, 'DonationCampaignImportStatus__c should show no match');
     }
 
+    @isTest
+    static void givenOppHasWrittenOffPmtWhenDryRunExecutesThenWrittenOffPmtShouldNotBeMatched() {
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        existingContacts.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        insert existingContacts;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
+
+        List<Opportunity> existingOpps = UTIL_UnitTestData_TEST.OppsForContactList(existingContacts, null,
+                UTIL_unitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
+        insert existingOpps;
+
+        //Write-off the auto-created Payments
+        List<npe01__OppPayment__c> oppPayments = [
+                SELECT
+                        Id, Name, npe01__Opportunity__r.Name, npe01__Written_Off__c,
+                        npe01__Paid__c, npe01__Payment_Amount__c
+                FROM npe01__OppPayment__c
+        ];
+        oppPayments[0].npe01__Written_Off__c = true;
+        oppPayments[1].npe01__Written_Off__c = true;
+        update oppPayments;
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+        dataImports[0].DonationImported__c = existingOpps[0].Id;
+
+        dataImports.add(BDI_DataImport_TEST.newDI('c2', 'C2', 200));
+        dataImports[1].DonationImported__c = existingOpps[1].Id;
+        insert dataImports;
+
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(null, true);
+        Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(2, contacts.size());
+        List<Opportunity> opps = [SELECT Id, Name FROM Opportunity];
+        System.assertEquals(2, opps.size());
+
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.Contact1Imported__c);
+            System.assertNotEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Contact1ImportStatus__c);
+
+            System.assertNotEquals(null, dataImport.DonationImported__c);
+            System.assertEquals(null, dataImport.Donation_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunMatchedId, dataImport.DonationImportStatus__c);
+
+            System.assertEquals(null, dataImport.Payment_Possible_Matches__c,
+                    'These Opps each have a single written-off Payment. ' +
+                            'There should not be any possible Payment matches.');
+            System.assertEquals(null, dataImport.PaymentImported__c,
+                    'These Opps only have written-off Payments and should not match ' +
+                            'to an existing Payment during dry run.');
+            System.assertEquals(null, dataImport.PaymentImportStatus__c,
+                    'These Opps only have written-off Payments and should not match ' +
+                            'to an existing Payment during dry run.');
+        }
+    }
+
     /*********************************************************************************************************
     * @description operation:
     *    Retrieves data import records in the order they were created during the test.
