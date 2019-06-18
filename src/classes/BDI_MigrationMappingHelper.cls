@@ -80,6 +80,12 @@ public class BDI_MigrationMappingHelper {
     }
 
     /*******************************************************************************************************
+    * @description Map of unusable help text field mappings
+    */
+    public Map<String, Schema.DescribeFieldResult> unusableHelpTextFieldDescribeResultsByDataImportFieldName =
+        new Map<String, Schema.DescribeFieldResult>();
+
+    /*******************************************************************************************************
      * @description Go through all fields in Data Import object and collect relevant help text mappings
      *
      * @return A collection of help text field names mapped to an instance of DataImportFieldMapping
@@ -128,6 +134,8 @@ public class BDI_MigrationMappingHelper {
                     mappingDetailsBySourceFieldName.put(sourceField.Name, newDataImportFieldMapping);
                     // Remove from map once mapped
                     describeFieldResultsByFieldName.remove(dataImportFieldName);
+                } else {
+                    unusableHelpTextFieldDescribeResultsByDataImportFieldName.put(dataImportFieldName, sourceField);
                 }
             }
         }
