@@ -540,7 +540,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
                 // Always copy the Contact's Mailing & Others address to the new Account's
                 // Billing & Shipping address.
-//                if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
                 if (contactRecord.is_Address_Override__c != true) {
                     ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
                     ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');

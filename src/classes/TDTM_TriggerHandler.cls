@@ -40,9 +40,9 @@ public class TDTM_TriggerHandler {
     
     private static Boolean defaultRecordsInserted = false;
     
-    public static boolean suppressDebugAssertAfterErrorLogging = false;
+    public static Boolean suppressDebugAssertAfterErrorLogging = false;
 
-    public static boolean disableTDTM = false;
+    public static Boolean disableTDTM = false;
     
     /*******************************************************************************************************
     * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
@@ -73,7 +73,7 @@ public class TDTM_TriggerHandler {
 
         TDTM_Runnable.Action thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore,
                                                       isAfter, isInsert, isUpdate, isDelete, isUnDelete);
-        UTIL_Debug.debug(LoggingLevel.ERROR, '****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
+        UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 

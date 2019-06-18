@@ -79,7 +79,7 @@ private class TDTM_DMLgt200_TEST {
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
-        System.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
+        System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
         // Create Affiliation records for every Contact, setting the IsPrimary field to true
@@ -96,9 +96,9 @@ private class TDTM_DMLgt200_TEST {
         }
         Database.insert(affls);
         Test.stopTest();
-        System.AssertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
+        System.assertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
             'There should be exactly ' + insertCnt.format() + ' Affiliations records');
-        System.AssertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
+        System.assertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
             'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affilition');
     }
 
@@ -137,11 +137,11 @@ private class TDTM_DMLgt200_TEST {
         Database.insert(contacts, dml);
         Test.stopTest();
 
-        System.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
+        System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
             'There should be exactly ' + insertCnt.format() + ' Household Account records');
-        System.AssertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
+        System.assertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
             'There should be exactly ' + insertCnt.format() + ' Affiliations records');
-        System.AssertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
+        System.assertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
             'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affilition');
     }
 
@@ -168,7 +168,7 @@ private class TDTM_DMLgt200_TEST {
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
-        System.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
+        System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
         // Create Relationships between the Contacts
@@ -187,7 +187,7 @@ private class TDTM_DMLgt200_TEST {
         Database.insert(rels);
         Test.stopTest();
 
-        System.AssertEquals(insertCnt*2, [SELECT Count() FROM npe4__Relationship__c
+        System.assertEquals(insertCnt*2, [SELECT Count() FROM npe4__Relationship__c
             WHERE npe4__Contact__c IN :contacts AND npe4__Type__c = 'Spouse'],
             'There should be exactly ' + (insertCnt*2).format() + ' Relationships');
     }
@@ -250,7 +250,7 @@ private class TDTM_DMLgt200_TEST {
         }
         Database.insert(opps);
 
-        System.AssertEquals(0, [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps],
+        System.assertEquals(0, [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps],
             'There should be exactly zero Allocations for Opportunities without Amount');
 
         // Populate the Amount field on the Opportunity to allow the allocations to be applied
@@ -261,13 +261,13 @@ private class TDTM_DMLgt200_TEST {
 
         Test.stopTest();
 
-        System.AssertEquals(
+        System.assertEquals(
             insertCnt,
             [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps AND General_Accounting_Unit__c = :campaignGau.Id],
             'There should be exactly ' + insertCnt.format() + ' Campaign related Allocations'
         );
 
-        System.AssertEquals(
+        System.assertEquals(
             0,
             [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps AND General_Accounting_Unit__c = :defaultGau.Id],
             'There should be exactly zero Default Settings Allocations'
@@ -316,7 +316,7 @@ private class TDTM_DMLgt200_TEST {
         Database.insert(rds);
         Test.stopTest();
 
-        System.AssertEquals(insertCnt*2, [SELECT Count() FROM Opportunity
+        System.assertEquals(insertCnt*2, [SELECT Count() FROM Opportunity
             WHERE npe03__Recurring_Donation__c IN :rds],
             'There should be exactly ' + (insertCnt*2).format() + ' Installment Opps');
     }

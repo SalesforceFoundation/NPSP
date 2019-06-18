@@ -288,7 +288,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            if (ADDR_Addresses_TDTM.doesAddressNeedUpdate(con, addr)) {
+            if (ADDR_Addresses_TDTM.shouldUpdateAddress(con, addr)) {
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
 
                 // deal with any address coming from a different account,
