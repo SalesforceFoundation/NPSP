@@ -114,7 +114,7 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
     }
 
     private void handleOpportunityPaymentsBatchExecution() {
-        Integer oppsWithMulitplePayments = [
+        Integer oppsWithMultiplePayments = [
             SELECT npe01__Opportunity__c
             FROM npe01__OppPayment__c
             GROUP BY npe01__Opportunity__c
@@ -122,7 +122,7 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
             LIMIT 1
         ].size();
 
-        if (oppsWithMulitplePayments == 1) {
+        if (oppsWithMultiplePayments == 1) {
             executeTelemetrySObjectBatch(
                 UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS,
                 UTIL_OrgTelemetry_SObject_BATCH.OPPORTUNITIES_BATCH_SIZE

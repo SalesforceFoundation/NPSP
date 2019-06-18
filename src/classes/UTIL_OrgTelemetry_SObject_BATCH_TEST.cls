@@ -37,7 +37,7 @@
 private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
-    private static Integer NUM_OPPS_WITH_MULITPLE_PAYMENTS = 10;
+    private static Integer NUM_OPPS_WITH_MULTIPLE_PAYMENTS = 10;
     private static Integer NUM_OPPS_WITH_SINGLE_PAYMENT = 5;
 
     /**
@@ -83,7 +83,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         List<Opportunity> opps = new List<Opportunity>();
 
-        List<Opportunity> oppsWithMultiplePayments = buildOpps(NUM_OPPS_WITH_MULITPLE_PAYMENTS, fieldValues);
+        List<Opportunity> oppsWithMultiplePayments = buildOpps(NUM_OPPS_WITH_MULTIPLE_PAYMENTS, fieldValues);
         opps.addAll(oppsWithMultiplePayments);
 
         List<Opportunity> oppsWithSinglePayment = buildOpps(NUM_OPPS_WITH_SINGLE_PAYMENT, fieldValues);
@@ -311,8 +311,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             'The lastProcessedId should be cached correctly'
         );
 
-        System.assertEquals(NUM_OPPS_WITH_MULITPLE_PAYMENTS, paymentBatch.oppsWithMultiplePaymentsCount,
-            'The number of Opportunities with mulitple payments should be tracked correctly');
+        System.assertEquals(NUM_OPPS_WITH_MULTIPLE_PAYMENTS, paymentBatch.oppsWithMultiplePaymentsCount,
+            'The number of Opportunities with multiple payments should be tracked correctly');
     }
 
     /**
@@ -402,14 +402,14 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS);
         paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
-        paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULITPLE_PAYMENTS;
+        paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;
 
         Test.startTest();
         paymentBatch.finish(null);
         Test.stopTest();
 
         System.assertEquals(
-            NUM_OPPS_WITH_MULITPLE_PAYMENTS,
+            NUM_OPPS_WITH_MULTIPLE_PAYMENTS,
             featureManagementMock.packageIntegerValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()
             ),
@@ -439,15 +439,15 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS);
         paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
-        paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULITPLE_PAYMENTS;
-        paymentBatch.oppsWithPayments = NUM_OPPS_WITH_MULITPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT;
+        paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;
+        paymentBatch.oppsWithPayments = NUM_OPPS_WITH_MULTIPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT;
 
         Test.startTest();
         paymentBatch.finish(null);
         Test.stopTest();
 
         System.assertEquals(
-            NUM_OPPS_WITH_MULITPLE_PAYMENTS,
+            NUM_OPPS_WITH_MULTIPLE_PAYMENTS,
             featureManagementMock.packageIntegerValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()
             ),
@@ -455,7 +455,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         );
 
         System.assertEquals(
-            NUM_OPPS_WITH_MULITPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT,
+            NUM_OPPS_WITH_MULTIPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT,
             featureManagementMock.packageIntegerValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()
             ),
