@@ -193,28 +193,66 @@ public with sharing class BDI_AdditionalObjectService {
 
             BDI_ObjectWrapper[] objWrapsForChildPredecessorUpdate = new BDI_ObjectWrapper[]{};
 
+            List<BDI_ObjectWrapper[]> objWrapsForUpdateList = new List<BDI_ObjectWrapper[]>();
+            BDI_ObjectWrapper[] currentObjWrapsForUpdate = new BDI_ObjectWrapper[]{};
+
+            List<BDI_ObjectWrapper[]> objWrapsForInsertList = new List<BDI_ObjectWrapper[]>();
+            BDI_ObjectWrapper[] currentObjWrapsForInsert = new BDI_ObjectWrapper[]{};
+
+            List<SObject[]> sObjsForUpdateLists = new List<SObject[]>();
+            SObject[] currentSObjectForUpdateList = new SObject[]{};
+
+            List<SObject[]> sObjsForInsertLists = new List<SObject[]>();
+            SObject[] currentSObjectForInsertList = new SObject[]{};
+
+            Integer objTypeCount = 1;
             for (String objApiName : objAPINameToObjWraps.keySet()) {
 
                 BDI_ObjectWrapper[] objWraps = objAPINameToObjWraps.get(objApiName);
-                
-                SObject[] sObjsForUpdate = new SObject[]{};
-                SObject[] sObjsForInsert = new SObject[]{};
-
-                BDI_ObjectWrapper[] objWrapsForUpdate = new BDI_ObjectWrapper[]{};
-                BDI_ObjectWrapper[] objWrapsForInsert = new BDI_ObjectWrapper[]{};
 
                 for (BDI_ObjectWrapper objWrap : objWraps) {
                     if (objWrap.sObj.Id != null) {
-                        sObjsForUpdate.add(objWrap.sObj);
-                        objWrapsForUpdate.add(objWrap);
+                        currentSObjectForUpdateList.add(objWrap.sObj);
+                        currentObjWrapsForUpdate.add(objWrap);
                     } else {
-                        sObjsForInsert.add(objWrap.sObj);
-                        objWrapsForInsert.add(objWrap);
+                        currentSObjectForInsertList.add(objWrap.sObj);
+                        currentObjWrapsForInsert.add(objWrap);
                     }
                 }
 
-                if (sObjsForUpdate.size() > 0) {
+                //If the loop is on its 10th run then add the lists to the array 
+                // and start a new list and reset the counter.
+                if (objTypeCount == 10) {
+                    sObjsForUpdateLists.add(currentSObjectForUpdateList);
+                    currentSObjectForUpdateList = new SObject[]{};
 
+                    objWrapsForUpdateList.add(currentObjWrapsForUpdate);
+                    currentObjWrapsForUpdate = new BDI_ObjectWrapper[]{};
+
+                    sObjsForInsertLists.add(currentSObjectForInsertList);
+                    currentSObjectForInsertList = new SObject[]{};
+
+                    objWrapsForInsertList.add(currentObjWrapsForInsert);
+                    currentObjWrapsForInsert = new BDI_ObjectWrapper[]{};
+
+                    objTypeCount = 1;
+                } else {
+                    objTypeCount++;
+                }
+            }
+
+            sObjsForUpdateLists.add(currentSObjectForUpdateList);
+            objWrapsForUpdateList.add(currentObjWrapsForUpdate);
+
+            sObjsForInsertLists.add(currentSObjectForInsertList);
+            objWrapsForInsertList.add(currentObjWrapsForInsert);
+
+            for (Integer i = 0; i < sObjsForUpdateLists.size(); i++) {
+
+                SObject[] sObjsForUpdate = sObjsForUpdateLists[i];
+                BDI_ObjectWrapper[] objWrapsForUpdate = objWrapsForUpdateList[i];
+
+                if (sObjsForUpdate.size() > 0) {
                     Database.SaveResult[] updateSaveResults = UTIL_DMLService.updateRecords(sObjsForUpdate,false);
                     
                     // Cycle through all the upsert results and update the data import records with status 
@@ -233,11 +271,18 @@ public with sharing class BDI_AdditionalObjectService {
                                 objWrap.objMapping.Imported_Record_Status_Field_Name__c);
                         }
                     }
-                }
+                }        
+            }
+
+
+            for (Integer i = 0; i < sObjsForInsertLists.size(); i++) {
+
+                SObject[] sObjsForInsert = sObjsForInsertLists[i];
+                BDI_ObjectWrapper[] objWrapsForInsert = objWrapsForInsertList[i];
 
                 if (sObjsForInsert.size() > 0) {
-
                     Database.SaveResult[] insertSaveResults = UTIL_DMLService.insertRecords(sObjsForInsert,false);
+
                     // Cycle through all the upsert results and update the data import records with status 
                     // appropriately.
                     for (Integer t = 0; t < insertSaveResults.size(); t++) {
@@ -264,6 +309,7 @@ public with sharing class BDI_AdditionalObjectService {
                     }
                 }
             }
+
             if (objWrapsForChildPredecessorUpdate.size() > 0) {
                 updateChildPredecessorRecords(objWrapsForChildPredecessorUpdate);
             }
@@ -306,16 +352,16 @@ public with sharing class BDI_AdditionalObjectService {
             Id predecessorId = (Id)objWrap.dataImport.get(objWrap.predecessorObjMapping.Imported_Record_Field_Name__c);
             SObject sObjForUpdate;
 
-            Map<Id,SObject> tempSObjMap = new Map<Id,SObject>();
+            Map<Id,SObject> sObjectById = new Map<Id,SObject>();
 
             if (childSObjectMapByObjectAPIName.get(objWrap.predecessorObjMapping.Object_API_Name__c) != null) {
-                tempSObjMap = childSObjectMapByObjectAPIName.get(objWrap.predecessorObjMapping.Object_API_Name__c);
+                sObjectById = childSObjectMapByObjectAPIName.get(objWrap.predecessorObjMapping.Object_API_Name__c);
             }
 
             // Attempt to find if the predecessor sobject if it is already in the map for update and update 
             // the existing SObject if possible.  Otherwise initialize a new SObject for update.
-            if (tempSObjMap.size() > 0 && tempSObjMap.get(predecessorId) != null) {
-                sObjForUpdate = tempSObjMap.get(predecessorId);
+            if (sObjectById.size() > 0 && sObjectById.get(predecessorId) != null) {
+                sObjForUpdate = sObjectById.get(predecessorId);
             } else {
                 sObjForUpdate = UTIL_Describe.getPrototypeObject(objWrap.predecessorObjMapping.Object_API_Name__c);
             }
@@ -327,8 +373,8 @@ public with sharing class BDI_AdditionalObjectService {
             sObjForUpdate.put(objWrap.objMapping.Relationship_Field__c,objWrap.sObj.Id);
 
             // Put the SObject back into the enclosing maps.
-            tempSObjMap.put(predecessorId, sObjForUpdate);
-            childSObjectMapByObjectAPIName.put(objWrap.predecessorObjMapping.Object_API_Name__c,tempSObjMap);
+            sObjectById.put(predecessorId, sObjForUpdate);
+            childSObjectMapByObjectAPIName.put(objWrap.predecessorObjMapping.Object_API_Name__c,sObjectById);
 
             // Store the successor object wraps by their predecessor id for later use in recording errors.
             if (successorObjWrapsByPredecessorId.get(predecessorId) != null) {
@@ -338,36 +384,55 @@ public with sharing class BDI_AdditionalObjectService {
             }
         }
 
-        if (childSObjectMapByObjectAPIName.size() > 0) {
-            for (String objAPIName : childSObjectMapByObjectAPIName.keySet()) {
+        List<SObject[]> sObjForUpdateLists = new List<SObject[]>();
 
-                SObject[] sObjsForUpdate = childSObjectMapByObjectAPIName.get(objAPIName).values();
+        SObject[] currentSObjectForUpdateList = new SObject[]{};
 
-                if (sObjsForUpdate.size() > 0) {
+        // If the number of different sObject types being updated exceeds 10 then split into separate lists to avoid
+        // the limit on the number of sObject types per dml operation.
+        Integer n = 1;
+        for (String objAPIName : childSObjectMapByObjectAPIName.keySet()) {
 
-                    Database.SaveResult[] updateSaveResults = UTIL_DMLService.updateRecords(sObjsForUpdate,false);
+            currentSObjectForUpdateList.addAll(childSObjectMapByObjectAPIName.get(objAPIName).values());
+
+            //If the loop is on its 10th run then add the list to the array and start a new one and reset the counter.
+            if (n == 10) {
+                sObjForUpdateLists.add(currentSObjectForUpdateList);
+                currentSObjectForUpdateList = new SObject[]{};
+                n = 1;
+            } else {
+                n++;
+            }
+        }
+
+        if (currentSObjectForUpdateList.size() > 0) {
+            sObjForUpdateLists.add(currentSObjectForUpdateList);
+        }
+
+        for (Integer t = 0; t < sObjForUpdateLists.size(); t++) {
+            SObject[] sObjsForUpdate = sObjForUpdateLists[t];
+
+            Database.SaveResult[] updateSaveResults = UTIL_DMLService.updateRecords(sObjsForUpdate,false);
+            
+            // Cycle through all the update results and update the data import records with status 
+            // appropriately.
+            for (Integer i = 0; i < updateSaveResults.size(); i++) {
+                Database.SaveResult result = updateSaveResults[i];
+
+                BDI_ObjectWrapper[] successorObjWraps = successorObjWrapsByPredecessorId.get(result.getId());
+
+                // If the update of the child object fails then record an error in the status field
+                // for all successor objects.
+                if (!result.isSuccess()) {
+                    for (BDI_ObjectWrapper objWrap : successorObjWraps) {
                     
-                    // Cycle through all the upsert results and update the data import records with status 
-                    // appropriately.
-                    for (Integer i = 0; i < updateSaveResults.size(); i++) {
-                        Database.SaveResult result = updateSaveResults[i];
-
-                        BDI_ObjectWrapper[] successorObjWraps = successorObjWrapsByPredecessorId.get(result.getId());
-
-                        // If the update of the child object fails then record an error in the status field
-                        // for all successor objects.
-                        if (!result.isSuccess()) {
-                            for (BDI_ObjectWrapper objWrap : successorObjWraps) {
-                            
-                                String errorMessage = System.label.bdiAdditionalObjChildNotUpdated + 
-                                                        result.getErrors()[0].getMessage();
-                                dataImportService.LogBDIError(objWrap.dataImport, 
-                                    errorMessage,
-                                    objWrap.objMapping.Imported_Record_Status_Field_Name__c);
-                            }
-                        }
+                        String errorMessage = System.label.bdiAdditionalObjChildNotUpdated + 
+                                                result.getErrors()[0].getMessage();
+                        dataImportService.LogBDIError(objWrap.dataImport, 
+                            errorMessage,
+                            objWrap.objMapping.Imported_Record_Status_Field_Name__c);
                     }
-                }                
+                }
             }
         }
     }
