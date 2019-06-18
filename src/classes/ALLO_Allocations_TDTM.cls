@@ -432,10 +432,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (!setPmtIds.isEmpty()) {
                 for (npe01__OppPayment__c pmt : listPmts) {
 
-                    if (pmt.npe01__Written_Off__c) {
-                        continue;
-                    }
-
                     //we have allocations for this payment
                     if (setPmtIds.contains(pmt.Id)) {
                         //this pmt has allocations, check for default cases
