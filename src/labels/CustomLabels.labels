@@ -1918,7 +1918,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiAdditionalObjChildNotUpdated</shortDescription>
-        <value>Error when updating child record lookup field(s) with new parent record id. Error message is:</value>
+        <value>Unable to update the child record's lookup field with new parent record's ID. It was unable to update because of this system error:</value>
     </labels>
     <labels>
         <fullName>bdiAdditionalObjPredNotFound</fullName>
