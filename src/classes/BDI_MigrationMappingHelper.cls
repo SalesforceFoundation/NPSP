@@ -135,7 +135,7 @@ public class BDI_MigrationMappingHelper {
                     // Remove from map once mapped
                     describeFieldResultsByFieldName.remove(dataImportFieldName);
                 } else {
-                    // Park bad help text mappings
+                    // Park suspected help text mappings
                     BDI_HelpTextCMT.HelpTextParts badHelpTextMapping = new BDI_HelpTextCMT.HelpTextParts(sourceField);
                     badHelpTextFieldDescribeResultsByFieldName.add(badHelpTextMapping);
                 }

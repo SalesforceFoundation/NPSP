@@ -87,9 +87,10 @@ public with sharing class BDI_MigrationMappingUtility {
     */
     private Data_Import_Settings__c dataImportSettings;
 
+    /*******************************************************************************************************
+    * @description List of standard data import object mappings
+    */
     private Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName;
-
-    private Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName;
 
     /*******************************************************************************************************
     * @description List of bad/malformed help text mappings
@@ -179,7 +180,7 @@ public with sharing class BDI_MigrationMappingUtility {
         Map<String, BDI_HelpTextCMT.DataImportFieldMapping> mappingDetailsBySourceFieldName =
                 helper.getHelpTextMappingDetailsBySourceFieldName();
 
-        fieldMappingsByFieldMappingSetDeveloperName =
+        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName =
             helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
 
         for (String key : mappingDetailsBySourceFieldName.keySet()) {
@@ -245,7 +246,7 @@ public with sharing class BDI_MigrationMappingUtility {
             }
         }
 
-        handleNonHelpTextMappings();
+        handleNonHelpTextMappings(fieldMappingsByFieldMappingSetDeveloperName);
 
         if (helper.customFieldMappingSetExists == false) {
             // Create migrated field mapping set
@@ -267,11 +268,11 @@ public with sharing class BDI_MigrationMappingUtility {
     *
     * @param fieldMappingSetName String Name of the parent Data Import Field Mapping Set
     */
-    private void handleNonHelpTextMappings() {
+    private void handleNonHelpTextMappings(Map<String, Data_Import_Field_Mapping__mdt> fieldMappings) {
 
-        for (String key : fieldMappingsByFieldMappingSetDeveloperName.keySet()) {
+        for (String key : fieldMappings.keySet()) {
             Data_Import_Field_Mapping__mdt existingFieldMapping =
-                fieldMappingsByFieldMappingSetDeveloperName.get(key);
+                fieldMappings.get(key);
 
             BDI_HelpTextCMT.DataImportFieldMapping fieldMapping =
                 new BDI_HelpTextCMT.DataImportFieldMapping(existingFieldMapping,
