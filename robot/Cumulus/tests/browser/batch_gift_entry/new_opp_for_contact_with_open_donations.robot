@@ -33,13 +33,13 @@ Create a new opportunity for a contact with open donations
     Select Value From BGE DD    Donor Type    Account
     Populate Field By Placeholder    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
-    Click Link    Review Donations
+    Click Link With Text    Review Donations
     Click BGE Button    Update this Opportunity
     Select Value From BGE DD    Donor Type    Contact
     Page Should Not Contain Link    Review Donations
     Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
-    Click Link    Review Donations
+    Click Link With Text    Review Donations
     Click Link    Alternatively, create a new Opportunity.
     Fill BGE Form
     ...                       Donation Amount=20
@@ -52,7 +52,7 @@ Create a new opportunity for a contact with open donations
     Click BGE Edit Button    Donation Amount  
     Wait For Locator    bge.edit_field   
     Populate BGE Edit Field    Donation Amount    100
-    Click Managehh Button    Donation Date
+    Click Element With Locator    span    Donation Date
     Page Should Not Contain Link    &{opportunity2}[Name]
     Scroll Page To Location    0    0
     Click BGE Button       Process Batch
@@ -69,8 +69,8 @@ Create a new opportunity for a contact with open donations
     ${value}    Return Locator Value    bge.value    Donation
     #Click Link    text:${value}
     Click Link With Text    ${value}
-    #Select Window     New
-    ${opp_name}    Return Locator Value    check_field    Opportunity
+    Select Window    ${value} | Salesforce    5
+    ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     ${newopp_id}    Get Current Record ID
     Store Session Record    Opportunity    ${newopp_id}
