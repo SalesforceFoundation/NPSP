@@ -74,7 +74,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // will require visiting all the HH Accounts, and deciding whether we are propagating the change
         // to all related objects, or just to Contacts who are using the Address as their override.
         //
-        //UTIL_Debug.debug('DJH**** ADDR_Addresses_TDTM ' + triggerAction + ' hasRun: ' + cHasRunAddrTrigger);
 
         // prevent recursion
         if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
@@ -372,15 +371,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
 
         if (listAccUpdate.size() > 0) {
-            //UTIL_Debug.debug('DJH**** listAccUpdate: ' + listAccUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
         }
         if (listAddrUpdate.size() > 0) {
-            //UTIL_Debug.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
         }
         if (listConUpdate.size() > 0) {
-            //UTIL_Debug.debug('DJH**** listConUpdate: ' + listConUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
         }
 
@@ -1101,7 +1097,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
             sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
         }
-        //UTIL_Debug.debug('****DJH: copyAddressStdSObj: ' + sobjSrc + ' ' + sobjDst);
     }
 
     /*******************************************************************************************************
@@ -1258,7 +1253,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (strFieldAddrType != null)
             sobjDst.put(strFieldAddrType, addr.Address_Type__c);
 
-        //UTIL_Debug.debug('****DJH: copyAddressAddrSObj: ' + addr + ' ' + sobjDst);
     }
 
     /*******************************************************************************************************

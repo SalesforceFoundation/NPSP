@@ -47,8 +47,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        //UTIL_Debug.debug('DJH**** ADDR_Account_TDTM ' + triggerAction + ' hasRun: ' + ADDR_Addresses_TDTM.cHasRunAddrTrigger);
-
         DmlWrapper dmlWrapper = new DmlWrapper();
         list<Account> listAccCreateAddr = new list<Account>();      
        

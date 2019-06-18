@@ -61,8 +61,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         boolean acctHasAddress = false;
         boolean acctChanged = false;
 
-        //UTIL_Debug.debug('DJH**** ADDR_Contact_TDTM ' + triggerAction + ' hasRun: ' + ADDR_Addresses_TDTM.cHasRunAddrTrigger);
-
 		// bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
@@ -163,7 +161,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             	
 	                // highest priority. if they are changing to a new Current Address, refill from it.
 	            	if (con.Current_Address__c != conOld.Current_Address__c && con.Current_Address__c != null) {
-                        //UTIL_Debug.debug('****DJH: current address changed');
 	                    listConAddrSet.add(con);
 	                    if (con.is_Address_Override__c)
 	                        // track which address's need their dates updated
@@ -284,8 +281,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             WHERE Id IN :setAddrId]
         );
             
-        //UTIL_Debug.debug('****DJH: setConAddrFromLookup mapAddrIdAddr: ' + mapAddrIdAddr);
-            
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             if (ADDR_Addresses_TDTM.shouldUpdateAddress(con, addr)) {
@@ -294,7 +289,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 // deal with any address coming from a different account,
                 // which we need to treat as a creation instead.
                 if (addr.Household_Account__c != con.AccountId) {
-                    //UTIL_Debug.debug('****DJH address not on same account, so add to create list: con' + con);
                     listConCreateAddr.add(con);
                 }
             }
@@ -357,8 +351,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             (con1.MailingCountry == null || ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) &&
             // only test StateCode if picklists enabled.
             (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled || con1.get('MailingStateCode') == null);
-        //UTIL_Debug.debug('****DJH: isContactAddressEmpty:' + isEmpty + ' ' + con1);
-        return isEmpty;   
+        return isEmpty;
            
     }
        
@@ -373,8 +366,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
     * @return void  
     ********************************************************************************************************/
     private static void createAddrFromCon(list<Contact> listConAll, DmlWrapper dmlWrapper,  TDTM_Runnable.Action triggerAction) {
-    	
-    	//UTIL_Debug.debug('****DJH: createAddrFromCon listConAll: ' + listConAll);
     	
     	// Strategy:
     	// create a new (unsaved) address for each contact.
