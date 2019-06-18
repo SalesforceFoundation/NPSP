@@ -41,6 +41,9 @@
 */
 public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> {
 
+    @TestVisible
+    private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
+
     /**
      * @description List of High Level Telemetry Data Types to be processed asynchronously by this batch job.
      */
@@ -101,11 +104,36 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
             );
 
         } else {
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), 0);
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
 
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
         }
+        handleOpportunityPaymentsBatchExecution();
+    }
+
+    private void handleOpportunityPaymentsBatchExecution() {
+        Integer oppsWithMulitplePayments = [
+            SELECT npe01__Opportunity__c
+            FROM npe01__OppPayment__c
+            GROUP BY npe01__Opportunity__c
+            HAVING count(Id) > 1
+            LIMIT 1
+        ].size();
+
+        if (oppsWithMulitplePayments == 1) {
+            executeTelemetrySObjectBatch(
+                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS,
+                UTIL_OrgTelemetry_SObject_BATCH.OPPORTUNITIES_BATCH_SIZE
+            );
+        } else {
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
+        }
+    }
+
+    private void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+        Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(mode), batchSize);
     }
 }

@@ -35,6 +35,7 @@
 */
 @IsTest(IsParallel=false)
 private class UTIL_OrgTelemetry_Batch_TEST {
+    private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
 
     /**
      * @description Submits the telemetry batch job to execute. This will only execute a single child iteration
@@ -48,5 +49,83 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         Test.startTest();
         UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
         Test.stopTest();
+    }
+
+    /**
+     * @description Confirms that when there are no Recurring Donations, the finish method sets
+     * Data_CountRdOppsAll and Data_CountRdOppsOpenEnded to 0 and does not queue up the batch job. Can only test this negative
+     * case as running the batch will cause internal error to be thrown when
+     * testing along side other methods that call the same featureParameter value used by this test.
+     */
+    @isTest
+    private static void shouldHandleNoRecurringDonationsToCount() {
+        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        Integer batchCount =  [
+            SELECT COUNT()
+            FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+                AND ApexClass.Name = 'UTIL_OrgTelemetry_SObject_BATCH'
+        ];
+
+        System.assertEquals(0, batchCount, 'A batch should not be queued');
+
+        System.assertEquals(
+            0,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRdOppsAll and set to 0'
+        );
+
+        System.assertEquals(
+            0,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRdOppsOpenEnded and set to 0'
+        );
+    }
+
+    /**
+     * @description Confirms that when there are no Recurring Donations, the finish method sets
+     * Data_CountOppsWithMultiplePayments and Data_OppPaymentsWithoutPaymentsEnabled to 0 and does not queue up the
+     * batch job. Can only test this negative case as running the batch will cause internal error to be thrown when
+     * testing along side other methods that call the same featureParameter value used by this test.
+     */
+    @isTest
+    private static void shouldHandleNoOpportunitiesWithMultiplePayments() {
+        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        Integer batchCount =  [
+            SELECT COUNT()
+            FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+                AND ApexClass.Name = 'UTIL_OrgTelemetry_SObject_BATCH'
+        ];
+
+        System.assertEquals(0, batchCount, 'A batch should not be queued');
+
+        System.assertEquals(
+            0,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and set to 0'
+        );
+
+        System.assertEquals(
+            0,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set to 0'
+        );
     }
 }

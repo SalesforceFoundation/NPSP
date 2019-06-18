@@ -62,7 +62,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      */
     public enum TelemetryBatchJobMode {
         RECURRING_DONATIONS,
-        OPPORTUNITIES
+        OPPORTUNITIES,
+        PAYMENTS
     }
 
     /** @description Limit for query locator. Property is public to allow for QA testing via the Developer Console */
@@ -91,6 +92,12 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     @TestVisible
     private Integer rdDiffCount = 0;
+
+    @TestVisible
+    private Integer oppsWithMultiplePaymentsCount = 0;
+
+    @TestVisible
+    private Integer oppsWithPayments = 0;
 
     private final String recurringDonationOpenStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
 
@@ -127,6 +134,10 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                 soqlQuery = 'SELECT npe03__Amount__c FROM npe03__Recurring_Donation__c WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
+            when PAYMENTS {
+                soqlQuery = 'SELECT Id FROM Opportunity WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
+            }
+
             when else {
                 // If no conditions are met, this returns an empty query to avoid an NPE
                 soqlQuery = 'SELECT Id FROM Account LIMIT 0';
@@ -160,6 +171,10 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
             when RECURRING_DONATIONS {
                 handleRecurringDonationsJobMode((List<npe03__Recurring_Donation__c>) scope);
+            }
+
+            when PAYMENTS {
+                handlePaymentsJobMode((List<Opportunity>) scope);
             }
         }
     }
@@ -246,6 +261,51 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
+     * @description Builds a map of opportunities grouped by npe03__Recurring_Donation__c
+     */
+    private Map<Id, List<Opportunity>> getPaymentsByRecurringDonationId(List<npe03__Recurring_Donation__c> recurringDonations) {
+        List<Opportunity> opps = [
+            SELECT Amount, npe03__Recurring_Donation__c
+            FROM Opportunity
+            WHERE npe03__Recurring_Donation__c IN :recurringDonations
+        ];
+
+        Map<Id, List<Opportunity>> oppsByRecurringDonationId = new Map<Id, List<Opportunity>>();
+
+        for (Opportunity opp : opps) {
+            if (opp.npe03__Recurring_Donation__c == null) {
+                continue;
+            }
+
+            if (!oppsByRecurringDonationId.containsKey(opp.npe03__Recurring_Donation__c)) {
+                oppsByRecurringDonationId.put(opp.npe03__Recurring_Donation__c, new List<Opportunity>());
+            }
+
+            oppsByRecurringDonationId.get(opp.npe03__Recurring_Donation__c).add(opp);
+        }
+
+        return oppsByRecurringDonationId;
+    }
+
+    /**
+     * @description Handles batch logic for PAYMENTS job mode
+     */
+    private void handlePaymentsJobMode(List<Opportunity> opps) {
+        for(Opportunity opp : [
+            SELECT
+                (SELECT Id FROM npe01__OppPayment__r LIMIT 2)
+            FROM Opportunity
+            WHERE Id IN :opps
+        ]) {
+            if (opp.npe01__OppPayment__r.size() > 1) {
+                oppsWithMultiplePaymentsCount++;
+            } else if (opp.npe01__OppPayment__r.size() > 0) {
+                oppsWithPayments++;
+            }
+        }
+    }
+
+    /**
      * @description When the entire batch job is done, submit the final count variables to the LMO
      */
     public void finish(Database.BatchableContext context) {
@@ -264,15 +324,47 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         } else {
             switch on (jobMode) {
                 when OPPORTUNITIES {
-                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), rdOpenStatusOppsCount);
-                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), rdAllOppsCount);
+                    setRecurringDonationOppsCounts();
                 }
 
                 when RECURRING_DONATIONS {
-                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), rdAllCount);
-                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), rdDiffCount);
+                    setRecurringDonationsCounts();
+                }
+
+                when PAYMENTS {
+                    setPaymentCounts();
                 }
             }
+        }
+    }
+
+    /**
+     * @description Sets counts related to recurring donation opportunities in LMO
+     */
+    private void setRecurringDonationOppsCounts() {
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), rdOpenStatusOppsCount);
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), rdAllOppsCount);
+    }
+
+    /**
+     * @description Sets counts related to recurring donations in LMO
+     */
+    private void setRecurringDonationsCounts() {
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), rdAllCount);
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), rdDiffCount);
+    }
+
+    /**
+     * @description Sets counts related to payments in LMO
+     */
+    private void setPaymentCounts() {
+        STG_SettingsService stgSvc = new STG_SettingsService();
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), oppsWithMultiplePaymentsCount);
+
+        if (stgSvc.stgCon.npe01__Payments_Enabled__c) {
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
+        } else {
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), oppsWithPayments);
         }
     }
 

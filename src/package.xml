@@ -1759,8 +1759,6 @@
         <members>pmtModifyCurrency</members>
         <members>pmtPaidPaymentDateRequired</members>
         <members>pmtUnpaidPaymentScheduledDateRequired</members>
-        <members>pmtWriteOffPaidPayment</members>
-        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -1789,12 +1787,14 @@
         <members>pmtWizardToBeCreated</members>
         <members>pmtWizardWarning</members>
         <members>pmtWizardWeek</members>
+        <members>pmtWizardWriteOffInvalidRecords</members>
+        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
-        <members>pmtWizardWriteOffInvalidRecords</members>
-        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardYear</members>
+        <members>pmtWriteOffPaidPayment</members>
+        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
@@ -2543,11 +2543,13 @@
     </types>
     <types>
         <members>Data_CountErrorLog</members>
+        <members>Data_CountOppsWithMultiplePayments</members>
         <members>Data_CountRdOppsAll</members>
         <members>Data_CountRdOppsOpenEnded</members>
         <members>Data_CountRdsWithDiffAmount</members>
         <members>Data_CountRecurringDonationsAll</members>
         <members>Data_MaxNumRelatedOpps</members>
+        <members>Data_OppPaymentsWithoutPaymentsEnabled</members>
         <members>Org_CountNonEnglishLanguages</members>
         <members>Org_CountTimedOutBatchJobsLast7Days</members>
         <members>Org_LongestRunningBatchLast7Days</members>

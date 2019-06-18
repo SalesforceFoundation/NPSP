@@ -132,7 +132,43 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageBooleanValue should have been called with the feature IsEnabled_CustomizableRollups'
         );
+    }
 
+    /**
+     * @description Confirms that the payment opportunities count settings telemetry data is defaulted correctly
+     */
+    @IsTest
+    private static void validateCountOfPaymentsOppsTelemetry() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(
+                npe01__Payments_Enabled__c = true
+            )
+        );
+
+        Test.startTest();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps);
+
+        Test.stopTest();
+
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and defaulted to -1'
+        );
+
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and defaulted to -1'
+        );
     }
 
     /**
