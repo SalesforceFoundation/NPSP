@@ -69,6 +69,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_AddressVerification,
         IsEnabled_AutomaticPayments,
         IsEnabled_CustomizableRollups,
+        IsEnabled_CustomRDSchedules,
         IsEnabled_DefaultGAU,
         Data_CountErrorLog,
         Data_CountOppsWithMultiplePayments,
@@ -136,6 +137,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             // operation.
             when NPSP_Settings {
                 handleNPSPSettings();
+                handleCustomInstallmentSettings();
             }
 
             // Simple FeatureParameters based on the current organization configuration that can be processed
@@ -197,6 +199,23 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
+    }
+
+    /**
+     * @description Checks if custom installments are enabled and sets feature parameter. Enabled defined as having
+     * custom installment settings and having at least one recurring donation that has one of those custom installments
+     */
+    private void handleCustomInstallmentSettings() {
+        Set<String> customInstallments = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings().keySet();
+
+        Boolean hasCustomInstallments =
+            !customInstallments.isEmpty()
+            && ![SELECT Id FROM npe03__Recurring_Donation__c WHERE npe03__Installment_Period__c IN :customInstallments].isEmpty();
+
+        featureManager.setPackageBooleanValue(
+            UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomRDSchedules.name(),
+            hasCustomInstallments
+        );
     }
 
     /**

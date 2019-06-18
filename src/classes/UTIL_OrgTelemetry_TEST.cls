@@ -71,7 +71,6 @@ private class UTIL_OrgTelemetry_TEST {
 
     /**
      * @description Test that the NPSP_Settings telemetry data is retrieved.
-     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
     private static void validateNPSPSettingsTelemetry() {
@@ -133,6 +132,73 @@ private class UTIL_OrgTelemetry_TEST {
             'setPackageBooleanValue should have been called with the feature IsEnabled_CustomizableRollups'
         );
     }
+
+    /**
+     * @description Confirms IsEnabled_CustomRDSchedules feature parameter is set to true when custom
+     * installments are enabled
+     */
+    @IsTest
+    private static void validateCustomInstallmentSettingsTelemetryWhenEnabled() {
+        final String CUSTOM_INSTALLMENT_PERIOD = 'Bi-Weekly';
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
+            npe03__Increment__c = 'Weeks',
+            npe03__Value__c = 2,
+            Name = CUSTOM_INSTALLMENT_PERIOD
+        );
+        insert customInstallment;
+
+        Account donorAccount = new Account(Name = 'foo');
+        insert donorAccount;
+
+        insert new npe03__Recurring_Donation__c(
+            Name = 'foo',
+            npe03__Installment_Period__c = CUSTOM_INSTALLMENT_PERIOD,
+            npe03__Date_Established__c= System.today(),
+            npe03__Organization__c = donorAccount.Id,
+            npe03__Amount__c = 20,
+            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
+            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
+        );
+
+        Test.startTest();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
+        Test.stopTest();
+
+        System.assertEquals(
+            true,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomRDSchedules.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_HouseholdAcctModel'
+        );
+    }
+
+    /**
+     * @description Confirms IsEnabled_CustomRDSchedules feature parameter is set to true when custom
+     * installments are enabled
+     */
+    @IsTest
+    private static void validateCustomInstallmentSettingsTelemetryWhenDisabled() {
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        Test.startTest();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
+        Test.stopTest();
+
+        System.assertEquals(
+            false,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomRDSchedules.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_HouseholdAcctModel'
+        );
+    }
+
 
     /**
      * @description Confirms that the payment opportunities count settings telemetry data is defaulted correctly
