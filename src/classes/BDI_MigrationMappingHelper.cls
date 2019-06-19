@@ -82,21 +82,21 @@ public class BDI_MigrationMappingHelper {
     /*******************************************************************************************************
     * @description List of bad/malformed help text mappings
     */
-    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping > badhelpTextMappings =
+    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping > badHelpTextFieldMappings =
         new List<BDI_MigrationMappingUtility.HelpTextFieldMapping >();
 
     /*******************************************************************************************************
     * @description List of BDI_FieldMappingHelpText.DataImportFieldMappings built from good help text mappings
     */
-    public List<BDI_FieldMappingHelpText.DataImportFieldMapping > dataImportFieldMappings =
-        new List<BDI_FieldMappingHelpText.DataImportFieldMapping >();
+    public List<BDI_MigrationMappingUtility.DataImportFieldMapping> dataImportFieldMappings =
+        new List<BDI_MigrationMappingUtility.DataImportFieldMapping>();
 
     /*******************************************************************************************************
      * @description Go through all fields in Data Import object and populate relevant lists from help text mappings
      */
     public void populateListsFromHelpTextMappings() {
 
-        badhelpTextMappings.clear();
+        badHelpTextFieldMappings.clear();
         dataImportFieldMappings.clear();
 
         Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
@@ -117,8 +117,8 @@ public class BDI_MigrationMappingHelper {
 
             if (helpTextFieldMapping.isUsable) {
                 // Pass help text values to a new instance of MappingDetail wrapper class
-                BDI_FieldMappingHelpText.DataImportFieldMapping newDataImportFieldMapping =
-                    new BDI_FieldMappingHelpText.DataImportFieldMapping(
+                BDI_MigrationMappingUtility.DataImportFieldMapping newDataImportFieldMapping =
+                    new BDI_MigrationMappingUtility.DataImportFieldMapping(
                         sourceField.Label,
                         sourceField.Name,
                         helpTextFieldMapping.dataImportObjectName,
@@ -129,7 +129,7 @@ public class BDI_MigrationMappingHelper {
             } else if (helpTextFieldMapping.isPotentialMapping) {
                 // Park suspected help text mappings
                 BDI_MigrationMappingUtility.HelpTextFieldMapping badHelpTextMapping = new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
-                badhelpTextMappings.add(badHelpTextMapping);
+                badHelpTextFieldMappings.add(badHelpTextMapping);
             }
         }
     }
@@ -140,7 +140,7 @@ public class BDI_MigrationMappingHelper {
     *
     * @return List of DataImportFieldMappings
     */
-    public List<BDI_FieldMappingHelpText.DataImportFieldMapping> getDataImportFieldMappingsFromHelpText() {
+    public List<BDI_MigrationMappingUtility.DataImportFieldMapping> getDataImportFieldMappingsFromHelpText() {
         return dataImportFieldMappings;
     }
 
@@ -151,7 +151,7 @@ public class BDI_MigrationMappingHelper {
     * @return List of HelpTextFieldMappings
     */
     public List<BDI_MigrationMappingUtility.HelpTextFieldMapping> getBadHelpTextMappings() {
-        return badhelpTextMappings;
+        return badHelpTextFieldMappings;
     }
 
     /*******************************************************************************************************

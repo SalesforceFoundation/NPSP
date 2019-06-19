@@ -163,39 +163,39 @@ private class BDI_MigrationMappingUtilityTest {
             }
 
             if (stubbedMethodName == 'getHelpTextMappingDetailsBySourceFieldName') {
-                BDI_FieldMappingHelpText.DataImportFieldMapping account1NameHelpText =
-                    new BDI_FieldMappingHelpText.DataImportFieldMapping(
+                BDI_MigrationMappingUtility.DataImportFieldMapping account1NameHelpText =
+                    new BDI_MigrationMappingUtility.DataImportFieldMapping(
                         'Account 1 Name',
                         'npsp__Account1_Name__c',
                         'Account1',
                         'Custom_Name__c',
                         'Account');
 
-                BDI_FieldMappingHelpText.DataImportFieldMapping account1CityHelpText =
-                    new BDI_FieldMappingHelpText.DataImportFieldMapping(
+                BDI_MigrationMappingUtility.DataImportFieldMapping account1CityHelpText =
+                    new BDI_MigrationMappingUtility.DataImportFieldMapping(
                         'Account 1 City',
                         'npsp__Account1_City__c',
                         'Account1',
                         'BillingCity',
                         'Account');
 
-                BDI_FieldMappingHelpText.DataImportFieldMapping account2CityHelpText =
-                    new BDI_FieldMappingHelpText.DataImportFieldMapping(
+                BDI_MigrationMappingUtility.DataImportFieldMapping account2CityHelpText =
+                    new BDI_MigrationMappingUtility.DataImportFieldMapping(
                         'Account 2 City',
                         'npsp__Account2_City__c',
                         'Account2',
                         'BillingCity',
                         'Account');
 
-                BDI_FieldMappingHelpText.DataImportFieldMapping newCustomFieldHelpText =
-                    new BDI_FieldMappingHelpText.DataImportFieldMapping(
+                BDI_MigrationMappingUtility.DataImportFieldMapping newCustomFieldHelpText =
+                    new BDI_MigrationMappingUtility.DataImportFieldMapping(
                         'Account 1 Custom Field',
                         'Account1_Custom_Field__c',
                         'Account1',
                         'Custom_Field__c',
                         'Account');
 
-                return new Map<String, BDI_FieldMappingHelpText.DataImportFieldMapping>{
+                return new Map<String, BDI_MigrationMappingUtility.DataImportFieldMapping>{
                     'npsp__Account_1_Name__c' => account1NameHelpText,
                     'npsp__Account_1_City__c' => account1CityHelpText,
                     'npsp__Account_2_City__c' => account2CityHelpText,
