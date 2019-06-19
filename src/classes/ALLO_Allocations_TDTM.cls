@@ -517,8 +517,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     if (mapWrapper.containsKey(opp.Id)){
                         alloWrapper oppWrap = mapWrapper.get(opp.Id);
                         dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.listAllo);
-                        if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo!=null)
+                        if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo!=null) {
                             dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
+                        }
                     }
                 }
 
