@@ -128,7 +128,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
 
     /**
      * @description Confirms that when there are Opportunities with a mulitple payments and auto payments are enabled,
-     * the batch job is queued. Using shouldExecuteTelemetrySObjectBatch to test instead of finish to prevent internal
+     * the batch job is queued. Using shouldExecutePaymentsTelemetryBatch to test instead of finish to prevent internal
      * error that gets thrown when multiple tests in the same class set a FeatureParameter
      */
     @isTest
@@ -141,7 +141,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
 
         UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
 
-        System.assertEquals(true, batch.shouldExecuteTelemetrySObjectBatch(), 'Should queue up batch');
+        System.assertEquals(true, batch.shouldExecutePaymentsTelemetryBatch(), 'Should queue up batch');
     }
 
     /**
@@ -176,7 +176,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
 
     /**
      * @description Confirms that when there are only Opportunities with a single payment and auto payments are disabled,
-     * the batch job is queued. Using shouldExecuteTelemetrySObjectBatch to test instead of finish to prevent internal
+     * the batch job is queued. Using shouldExecutePaymentsTelemetryBatch to test instead of finish to prevent internal
      * error that gets thrown when multiple tests in the same class set a FeatureParameter
      */
     @isTest
@@ -188,7 +188,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         );
 
         UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
-        System.assertEquals(true, batch.shouldExecuteTelemetrySObjectBatch(), 'Should queue up batch');
+        System.assertEquals(true, batch.shouldExecutePaymentsTelemetryBatch(), 'Should queue up batch');
     }
 
     /**

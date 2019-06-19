@@ -113,8 +113,11 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
         handleOpportunityPaymentsBatchExecution();
     }
 
+    /**
+    * @description Handles execute batch job for counts
+    */
     private void handleOpportunityPaymentsBatchExecution() {
-        if (shouldExecuteTelemetrySObjectBatch()) {
+        if (shouldExecutePaymentsTelemetryBatch()) {
             executeTelemetrySObjectBatch(
                 UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS,
                 UTIL_OrgTelemetry_SObject_BATCH.PAYMENTS_BATCH_SIZE
@@ -125,8 +128,13 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
         }
     }
 
+    /**
+    * @description Determines if payments telemetry batch should run. Is test visible so this can be tested outside of
+    * the finish method without executing UTIL_OrgTelemetry_SObject_BATCH. Executing batch can cause internal errors
+    * to get thrown when tests in the same class set the same Feature Parameters
+    */
     @TestVisible
-    private Boolean shouldExecuteTelemetrySObjectBatch() {
+    private Boolean shouldExecutePaymentsTelemetryBatch() {
         List<AggregateResult> results = [
             SELECT count(Id) numPayments
             FROM npe01__OppPayment__c
@@ -149,6 +157,9 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
         }
     }
 
+    /**
+    * @description Executes Telemetry SObject Batch with given mode and size
+    */
     private void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
         Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(mode), batchSize);
     }
