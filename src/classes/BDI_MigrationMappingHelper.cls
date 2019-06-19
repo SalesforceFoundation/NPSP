@@ -82,18 +82,22 @@ public class BDI_MigrationMappingHelper {
     /*******************************************************************************************************
     * @description List of bad/malformed help text mappings
     */
-    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping > badHelpTextFieldDescribeResultsByFieldName =
+    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping > badhelpTextMappings =
         new List<BDI_MigrationMappingUtility.HelpTextFieldMapping >();
 
     /*******************************************************************************************************
-     * @description Go through all fields in Data Import object and collect relevant help text mappings
-     *
-     * @return A collection of help text field names mapped to an instance of DataImportFieldMapping
-     */
-    public Map<String, BDI_FieldMappingHelpText.DataImportFieldMapping> getHelpTextMappingDetailsBySourceFieldName() {
+    * @description List of BDI_FieldMappingHelpText.DataImportFieldMappings built from good help text mappings
+    */
+    public List<BDI_FieldMappingHelpText.DataImportFieldMapping > dataImportFieldMappings =
+        new List<BDI_FieldMappingHelpText.DataImportFieldMapping >();
 
-        Map<String, BDI_FieldMappingHelpText.DataImportFieldMapping> mappingDetailsBySourceFieldName =
-                new Map<String, BDI_FieldMappingHelpText.DataImportFieldMapping>();
+    /*******************************************************************************************************
+     * @description Go through all fields in Data Import object and populate relevant lists from help text mappings
+     */
+    public void populateListsFromHelpTextMappings() {
+
+        badhelpTextMappings.clear();
+        dataImportFieldMappings.clear();
 
         Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
                 UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
@@ -108,41 +112,46 @@ public class BDI_MigrationMappingHelper {
             }
 
             DescribeFieldResult sourceField = describeFieldResultsByFieldName.get(dataImportFieldName);
-            String helpText = sourceField.getInlineHelpText();
-            Boolean helpTextIsUsable = String.isNotBlank(helpText) && !helpText.contains(' ');
+            BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping =
+                    new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
 
-            if (helpTextIsUsable) {
-                BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextParts = new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
-                Boolean fieldNameIsUsable = String.isNotBlank(helpTextParts.targetFieldAPIName);
-                Boolean objectNameIsUsable = String.isNotBlank(helpTextParts.dataImportObjectName);
-                Boolean objectAPINameIsUsable = String.isNotBlank(helpTextParts.targetObjectAPIName);
+            if (helpTextFieldMapping.isUsable) {
+                // Pass help text values to a new instance of MappingDetail wrapper class
+                BDI_FieldMappingHelpText.DataImportFieldMapping newDataImportFieldMapping =
+                    new BDI_FieldMappingHelpText.DataImportFieldMapping(
+                        sourceField.Label,
+                        sourceField.Name,
+                        helpTextFieldMapping.dataImportObjectName,
+                        helpTextFieldMapping.targetFieldAPIName,
+                        helpTextFieldMapping.targetObjectAPIName);
 
-                // We may need to collect help text mapping with false objectAPINameIsUsable (bad mappings)
-                // so we can potentially display it in the UI at some point
-                // Check if the current help text mapping's object and field name are usable
-                if (fieldNameIsUsable && objectNameIsUsable && objectAPINameIsUsable) {
-
-                    // Pass help text values to a new instance of MappingDetail wrapper class
-                    BDI_FieldMappingHelpText.DataImportFieldMapping newDataImportFieldMapping =
-                        new BDI_FieldMappingHelpText.DataImportFieldMapping(
-                            sourceField.Label,
-                            sourceField.Name,
-                            helpTextParts.dataImportObjectName,
-                            helpTextParts.targetFieldAPIName,
-                            helpTextParts.targetObjectAPIName);
-
-                    mappingDetailsBySourceFieldName.put(sourceField.Name, newDataImportFieldMapping);
-                    // Remove from map once mapped
-                    describeFieldResultsByFieldName.remove(dataImportFieldName);
-                } else {
-                    // Park suspected help text mappings
-                    BDI_MigrationMappingUtility.HelpTextFieldMapping badHelpTextMapping = new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
-                    badHelpTextFieldDescribeResultsByFieldName.add(badHelpTextMapping);
-                }
+                dataImportFieldMappings.add(newDataImportFieldMapping);
+            } else if (helpTextFieldMapping.isPotentialMapping) {
+                // Park suspected help text mappings
+                BDI_MigrationMappingUtility.HelpTextFieldMapping badHelpTextMapping = new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
+                badhelpTextMappings.add(badHelpTextMapping);
             }
         }
+    }
 
-        return mappingDetailsBySourceFieldName;
+    /*******************************************************************************************************
+    * @description Method to get list of good help text mappings. Used in conjuction with
+    * populateListsFromHelpTextMappings()
+    *
+    * @return List of DataImportFieldMappings
+    */
+    public List<BDI_FieldMappingHelpText.DataImportFieldMapping> getDataImportFieldMappingsFromHelpText() {
+        return dataImportFieldMappings;
+    }
+
+    /*******************************************************************************************************
+    * @description Method to get list of bad help text mappings. Used in conjuction with
+    * populateListsFromHelpTextMappings()
+    *
+    * @return List of HelpTextFieldMappings
+    */
+    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping> getBadHelpTextMappings() {
+        return badhelpTextMappings;
     }
 
     /*******************************************************************************************************

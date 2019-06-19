@@ -233,22 +233,16 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
             this.isDeleted = false;
         }
 
-        public void setInstance(Data_Import_Object_Mapping__mdt objectMapping,
-            String fieldMappingSetName) {
-
-            this.targetObjectMappingLabel = objectMapping.Label;
-            this.targetObjectMappingRecordName = objectMapping.DeveloperName;
-            this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
-        }
-
-        public void setInstance(Data_Import_Object_Mapping__mdt objectMapping,
+        public void setLookupsAndTargetField(Data_Import_Object_Mapping__mdt objectMapping,
             String fieldMappingSetName,
             String targetFieldAPIName) {
 
             this.targetObjectMappingLabel = objectMapping.Label;
             this.targetObjectMappingRecordName = objectMapping.DeveloperName;
             this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
-            this.targetFieldAPIName = targetFieldAPIName;
+            if (targetFieldAPIName != null) {
+                this.targetFieldAPIName = targetFieldAPIName;
+            }
         }
 
         public void setRecordName(String recordName, Boolean isUnique) {
@@ -264,9 +258,14 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
-            customMd.label = this.label.replace(this.dataImportObjectName, this.targetObjectMappingLabel).left(40);
+            if (this.targetObjectMappingLabel != null) {
+                customMd.label = this.label.replace(this.dataImportObjectName, this.targetObjectMappingLabel).left(40);
+            }
             if (this.recordName == null) {
-                this.recordName = generateRecordName(this.label, true, this.targetObjectMappingLabel, this.dataImportObjectName);
+                this.recordName = generateRecordName(this.label,
+                    true,
+                    this.targetObjectMappingLabel,
+                    this.dataImportObjectName);
             }
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.protected_x = IS_PROTECTED;

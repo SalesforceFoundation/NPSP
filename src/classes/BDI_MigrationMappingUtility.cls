@@ -95,12 +95,12 @@ public with sharing class BDI_MigrationMappingUtility {
     /*******************************************************************************************************
     * @description List of bad/malformed help text mappings
     */
-    public List<HelpTextFieldMapping> badHelpTextFieldDescribeResultsByFieldName {
+    public List<HelpTextFieldMapping> badHelpTextMappings {
         get {
-            if (badHelpTextFieldDescribeResultsByFieldName == null) {
+            if (badHelpTextMappings == null) {
                 return new List<HelpTextFieldMapping>();
             }
-            return badHelpTextFieldDescribeResultsByFieldName;
+            return badHelpTextMappings;
         } set;
     }
 
@@ -174,83 +174,127 @@ public with sharing class BDI_MigrationMappingUtility {
     public void migrateHelpTextToCustomMetadata() {
 
         queuedMetadataTypesForDeploy.clear();
-        badHelpTextFieldDescribeResultsByFieldName.clear();
+        badHelpTextMappings.clear();
 
-        // Mappings found in Data Import Help Text
-        Map<String, BDI_FieldMappingHelpText.DataImportFieldMapping> mappingDetailsBySourceFieldName =
-                helper.getHelpTextMappingDetailsBySourceFieldName();
+        helper.populateListsFromHelpTextMappings();
+
+        List<BDI_FieldMappingHelpText.DataImportFieldMapping> helpTextFieldMappings =
+                helper.getDataImportFieldMappingsFromHelpText();
 
         Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName =
             helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
 
-        for (String key : mappingDetailsBySourceFieldName.keySet()) {
-            BDI_FieldMappingHelpText.DataImportFieldMapping fieldMapping =
-                mappingDetailsBySourceFieldName.get(key);
+        for (BDI_FieldMappingHelpText.DataImportFieldMapping fieldMapping : helpTextFieldMappings) {
 
-            String fieldMappingKey = fieldMapping.targetObjectAPIName
-                + '.'
-                + fieldMapping.dataImportObjectName
-                + '.'
-                + fieldMapping.sourceFieldAPIName;
+            String fieldMappingKey = fieldMapping.targetObjectAPIName +
+                '.' + fieldMapping.dataImportObjectName +
+                '.' + fieldMapping.sourceFieldAPIName;
 
             Data_Import_Object_Mapping__mdt existingDefaultObjectMapping =
                 objectMappingsByDeveloperName.get(fieldMapping.dataImportObjectName);
+            Data_Import_Field_Mapping__mdt existingDefaultFieldMapping =
+                fieldMappingsByFieldMappingSetDeveloperName.get(fieldMappingKey);
 
-            if (existingDefaultObjectMapping != null) {
+            if (existingDefaultFieldMapping == null) {
+                enqueueNewFieldMapping(fieldMapping, existingDefaultObjectMapping);
+            } else if (existingDefaultFieldMapping != null) {
 
-                Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = 
-                    fieldMappingsByFieldMappingSetDeveloperName.get(fieldMappingKey);
-
-                if (existingDefaultFieldMapping == null) {
-                    // New Field Mapping, not part of our initial config
-
-                    fieldMapping.setInstance(
-                        existingDefaultObjectMapping,
-                        MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                    fieldMapping.setRecordName('', true);
-
-                    queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
-                } else if (existingDefaultFieldMapping != null) {
-                    if (helper.customFieldMappingSetExists) {
-                        // Migrated custom field mapping set exists, overwrite all existing field mappings
-                        // with values from help text
-                        BDI_FieldMappingHelpText.DataImportFieldMapping overwrittenMapping =
-                            new BDI_FieldMappingHelpText.DataImportFieldMapping(existingDefaultFieldMapping, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                        overwrittenMapping.setInstance(
-                            existingDefaultObjectMapping,
-                            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
-                            fieldMapping.targetFieldAPIName);
-
-                        queuedMetadataTypesForDeploy.add(overwrittenMapping.getMetadataRecord());
-                    } else {
-                        // Existing Field Mapping, check if CMTs field values match Help Text field values
-                        Boolean hasConflictingValues = compareFieldMappings(fieldMapping,
-                                existingDefaultFieldMapping,
-                                existingDefaultObjectMapping);
-
-                        if (hasConflictingValues) {
-                            fieldMapping.setInstance(
-                                existingDefaultObjectMapping,
-                                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
-                                fieldMapping.targetFieldAPIName);
-
-                            queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
-                        } else {
-                            fieldMapping.setInstance(
-                                existingDefaultObjectMapping,
-                                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-
-                            queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
-                        }
-                    }
+                if (helper.customFieldMappingSetExists) {
+                    enqueueOverwrittenFieldMapping(fieldMapping, existingDefaultFieldMapping, existingDefaultObjectMapping);
+                } else {
+                    enqueueFieldMapping(fieldMapping, existingDefaultFieldMapping, existingDefaultObjectMapping);
                 }
-
-                fieldMappingsByFieldMappingSetDeveloperName.remove(fieldMappingKey);
             }
+
+            fieldMappingsByFieldMappingSetDeveloperName.remove(fieldMappingKey);
         }
 
-        handleNonHelpTextMappings(fieldMappingsByFieldMappingSetDeveloperName);
+        enqueueNonHelpTextMappings(fieldMappingsByFieldMappingSetDeveloperName);
+        enqueueMigratedCustomFieldMappingSet();
+        badHelpTextMappings = helper.badhelpTextMappings;
+    }
 
+    /*******************************************************************************************************
+    * @description Converts DataImportFieldMapping into a Custom Metadata record and called when we have
+    * a conflict and need to carryover values from the help text mapping or a standard field mapping and
+    * need to carryover values from the existingDefaultFieldMapping
+    *
+    * @param fieldMapping: DataImportFieldMapping that will be converted to a Custom Metadata Record
+    * @param existingDefaultFieldMapping: Corresponding standard Data_Import_Field_Mapping__mdt
+    * @param existingDefaultObjectMapping: Corresponding standard Data_Import_Object_Mapping__mdt
+    */
+    private void enqueueFieldMapping(BDI_FieldMappingHelpText.DataImportFieldMapping fieldMapping,
+        Data_Import_Field_Mapping__mdt existingDefaultFieldMapping,
+        Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
+        // Existing Field Mapping, check if CMTs field values match Help Text field values
+        Boolean hasConflictingValues = isConflictingWithStandardFieldMapping(fieldMapping,
+                existingDefaultFieldMapping,
+                existingDefaultObjectMapping);
+
+        if (hasConflictingValues) {
+            fieldMapping.setLookupsAndTargetField(
+                existingDefaultObjectMapping,
+                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
+                fieldMapping.targetFieldAPIName);
+        } else {
+            System.debug('Existing Mapping + Standard');
+            fieldMapping.setLookupsAndTargetField(
+                existingDefaultObjectMapping,
+                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
+                null);
+        }
+
+        queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+    }
+
+    /*******************************************************************************************************
+    * @description Converts DataImportFieldMapping into a Custom Metadata record and called when we have
+    * an existing Migrated Custom Field Mapping Set and need DataImportFieldMapping to overwrite the
+    * existingDefaultFieldMapping
+    *
+    * @param fieldMapping: DataImportFieldMapping that will be converted to a Custom Metadata Record
+    * and overwrite the existingDefaultFieldMapping
+    * @param existingDefaultFieldMapping: Corresponding standard Data_Import_Field_Mapping__mdt
+    * @param existingDefaultObjectMapping: Corresponding standard Data_Import_Object_Mapping__mdt
+    */
+    private void enqueueOverwrittenFieldMapping(BDI_FieldMappingHelpText.DataImportFieldMapping fieldMapping,
+        Data_Import_Field_Mapping__mdt existingDefaultFieldMapping,
+        Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
+        // Migrated custom field mapping set exists, overwrite all existing field mappings
+        // with values from help text
+        BDI_FieldMappingHelpText.DataImportFieldMapping overwrittenMapping =
+            new BDI_FieldMappingHelpText.DataImportFieldMapping(existingDefaultFieldMapping, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+        overwrittenMapping.setLookupsAndTargetField(
+            existingDefaultObjectMapping,
+            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
+            fieldMapping.targetFieldAPIName);
+
+        queuedMetadataTypesForDeploy.add(overwrittenMapping.getMetadataRecord());
+    }
+
+    /*******************************************************************************************************
+    * @description Converts DataImportFieldMapping into a Custom Metadata record and called when we
+    * encounter a new field mapping from help text and need a new record
+    *
+    * @param fieldMapping: DataImportFieldMapping that will be converted to a Custom Metadata Record
+    * @param existingDefaultFieldMapping: Corresponding standard Data_Import_Field_Mapping__mdt
+    * @param existingDefaultObjectMapping: Corresponding standard Data_Import_Object_Mapping__mdt
+    */
+    private void enqueueNewFieldMapping(BDI_FieldMappingHelpText.DataImportFieldMapping fieldMapping,
+        Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
+        fieldMapping.setLookupsAndTargetField(existingDefaultObjectMapping,
+            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
+            null);
+        // Setting name to null will force field mapping to generate a unique name
+        fieldMapping.setRecordName(null, false);
+
+        queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+    }
+
+    /*******************************************************************************************************
+    * @description Creates the Migrated Custom Field Mapping Set
+    */
+    private void enqueueMigratedCustomFieldMappingSet() {
         if (helper.customFieldMappingSetExists == false) {
             // Create migrated field mapping set
             Metadata.CustomMetadata fieldMappingSet =
@@ -259,8 +303,6 @@ public with sharing class BDI_MigrationMappingUtility {
             // Add custom field mapping set to list queuedMetadataTypesForDeploy
             queuedMetadataTypesForDeploy.add(fieldMappingSet);
         }
-
-        badHelpTextFieldDescribeResultsByFieldName = helper.badHelpTextFieldDescribeResultsByFieldName;
     }
 
     /*******************************************************************************************************
@@ -271,7 +313,7 @@ public with sharing class BDI_MigrationMappingUtility {
     *
     * @param fieldMappingSetName String Name of the parent Data Import Field Mapping Set
     */
-    private void handleNonHelpTextMappings(Map<String, Data_Import_Field_Mapping__mdt> fieldMappings) {
+    private void enqueueNonHelpTextMappings(Map<String, Data_Import_Field_Mapping__mdt> fieldMappings) {
 
         for (String key : fieldMappings.keySet()) {
             Data_Import_Field_Mapping__mdt existingFieldMapping =
@@ -281,17 +323,19 @@ public with sharing class BDI_MigrationMappingUtility {
                 new BDI_FieldMappingHelpText.DataImportFieldMapping(existingFieldMapping,
                     MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
-            fieldMapping.setRecordName(existingFieldMapping.DeveloperName, !helper.customFieldMappingSetExists);
+            fieldMapping.setRecordName(existingFieldMapping.DeveloperName, !helper.customFieldMappingSetExists); 
 
             queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
         }
     }
 
     /*******************************************************************************************************
-    * @description Check if Field Mapping Metadata Type field values are out of sync with default values
+    * @description Check if Field Mapping Metadata Type field values are out of sync with standard data import
+    * field mapping values
+    *
     * @return Boolean
     */
-    private Boolean compareFieldMappings(BDI_FieldMappingHelpText.DataImportFieldMapping newFieldMapping,
+    private Boolean isConflictingWithStandardFieldMapping(BDI_FieldMappingHelpText.DataImportFieldMapping newFieldMapping,
         Data_Import_Field_Mapping__mdt existingFieldMapping,
         Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
 
@@ -365,6 +409,8 @@ public with sharing class BDI_MigrationMappingUtility {
     * @description Wrapper class for help text field
     */
     public class HelpTextFieldMapping {
+        public Boolean isUsable = false;
+        public Boolean isPotentialMapping = false;
         public String dataImportObjectName;
         public String targetObjectAPIName;
         public String targetFieldAPIName;
@@ -377,13 +423,24 @@ public with sharing class BDI_MigrationMappingUtility {
             this.dataImportFieldName = dfr.Label;
             this.dataImportFieldAPIName = dfr.Name;
             this.helpText = dfr.getInlineHelpText();
-            List<String> parts = helpText.split('\\.', 2);
+            if (this.helpText != null) {
+                List<String> parts = helpText.split('\\.', 2);
+                this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
+                this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
 
-            this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
-            this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
+                if (String.isNotBlank(this.dataImportObjectName)) {
+                    this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
+                }
 
-            if (String.isNotBlank(this.dataImportObjectName)) {
-                this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
+                Boolean fieldNameIsUsable = String.isNotBlank(targetFieldAPIName);
+                Boolean objectNameIsUsable = String.isNotBlank(dataImportObjectName);
+                Boolean objectAPINameIsUsable = String.isNotBlank(targetObjectAPIName);
+
+                if (fieldNameIsUsable && objectNameIsUsable && objectAPINameIsUsable) {
+                    this.isUsable = true;
+                } else if (fieldNameIsUsable && objectNameIsUsable && !objectAPINameIsUsable) {
+                    this.isPotentialMapping = true;
+                }
             }
         }
 
