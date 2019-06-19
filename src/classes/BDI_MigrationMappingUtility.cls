@@ -45,7 +45,13 @@ public with sharing class BDI_MigrationMappingUtility {
     /*******************************************************************************************************
     * @description Name of default packaged Object Mapping Set
     */
-    private static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME =
+    public static final String DATA_IMPORT_OBJECT_NAME =
+        'DataImport__c';
+
+    /*******************************************************************************************************
+    * @description Name of default packaged Object Mapping Set
+    */
+    public static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME =
         'Default_Object_Mapping_Set';
 
     /*******************************************************************************************************
@@ -98,10 +104,11 @@ public with sharing class BDI_MigrationMappingUtility {
     public List<HelpTextFieldMapping> badHelpTextMappings {
         get {
             if (badHelpTextMappings == null) {
-                return new List<HelpTextFieldMapping>();
+                badHelpTextMappings = new List<HelpTextFieldMapping>();
             }
             return badHelpTextMappings;
-        } set;
+        }
+        private set;
     }
 
     private String fieldMappingSetName {

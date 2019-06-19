@@ -140,7 +140,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         setDeploymentStatus();
 
         if (hasDeploymentInProgress == true) {
-            throwMessage(ApexPages.Severity.WARNING, Label.bdiDeploymentInProgress);
+            addPageMessage(ApexPages.Severity.WARNING, Label.bdiDeploymentInProgress);
         } else {
             Savepoint sp = Database.setSavepoint();
             try {
@@ -158,7 +158,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             } catch (Exception e) {
                 Database.rollback(sp);
                 ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-                throwMessage(ApexPages.Severity.ERROR, Label.bdiErrorDeploymentFailed + ' ' + e.getMessage());
+                addPageMessage(ApexPages.Severity.ERROR, Label.bdiErrorDeploymentFailed + ' ' + e.getMessage());
 
                 isPolling = false;
                 BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
@@ -179,10 +179,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             dataImportSettings =
                 BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
                     String.valueOf(Metadata.DeployStatus.Succeeded));
-            throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
+            addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            throwMessage(ApexPages.Severity.ERROR, Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage());
+            addPageMessage(ApexPages.Severity.ERROR, Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage());
 
             isPolling = false;
             BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
@@ -214,7 +214,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * @return void
     */
     public PageReference startPolling() {
-        System.debug('***startPolling()');
         timeoutCount++;
 
         refreshCustomSettings();
@@ -227,11 +226,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
             if (isSuccess) {
                 isPolling = false;
-                throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled + ' ' +
-                    migrationMappingUtility.queuedMetadataTypesForDeploy.size() + ' custom metadata records were deployed.');
+                addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled + ' ' +
+                    migrationMappingUtility.queuedMetadataTypesForDeploy.size() +
+                    ' custom metadata records were deployed.');
             } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
-                throwMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
+                addPageMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
             }
 
         } else if (deploymentResult == null
@@ -240,12 +240,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             // DeploymentContainer was empty which means we're using our standard field mapping set
             // Org had no conflicting field mappings nor any net new field mappings in their Data Import help text
             isPolling = false;
-            throwMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
+            addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
         }
 
         if (timeoutCount > MAX_TIME_OUT) {
             isPolling = false;
-            throwMessage(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
+            addPageMessage(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
             return null;
         }
 
@@ -271,9 +271,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
-    * @description Wrapper for Metadata.DeployResult
+    * @description Adds a message to the Page
+    *
+    * @param severity: Severity level of message
+    * @param message: Text to be displayed
     */
-    private void throwMessage(ApexPages.Severity severity, String message) {
+    private void addPageMessage(ApexPages.Severity severity, String message) {
         ApexPages.addMessage(new ApexPages.Message(severity, message));
     }
 }

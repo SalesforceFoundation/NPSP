@@ -38,25 +38,6 @@
 public class BDI_MigrationMappingHelper {
 
     /*******************************************************************************************************
-    * @description Name of default packaged Object Mapping Set
-    */
-    private static final String DATA_IMPORT_OBJECT_NAME =
-        'DataImport__c';
-
-    /*******************************************************************************************************
-    * @description Name of default packaged Object Mapping Set
-    */
-    private static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME =
-        'Default_Object_Mapping_Set';
-
-    /*******************************************************************************************************
-    * @description Name of custom Field Mapping Set
-    * Set as static because it's used in the static method updateCustomSettings
-    */
-    public static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME =
-        'Migrated_Custom_Field_Mapping_Set';
-
-    /*******************************************************************************************************
     * @description Boolean flag to determine if a custom field mapping set exists
     * Set as static because it's used in the static method updateCustomSettings
     */
@@ -64,7 +45,7 @@ public class BDI_MigrationMappingHelper {
         get {
             Integer migratedFieldMappingSetCount = [SELECT count()
                 FROM Data_Import_Field_Mapping_Set__mdt
-                WHERE DeveloperName = :MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
+                WHERE DeveloperName = :BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
 
             return migratedFieldMappingSetCount > 0 ? true : false;
         }
@@ -76,7 +57,7 @@ public class BDI_MigrationMappingHelper {
     public Data_Import_Object_Mapping_Set__mdt getDefaultObjectMappingSet() {
         return [SELECT Id, DeveloperName, Label
             FROM Data_Import_Object_Mapping_Set__mdt
-            WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
+            WHERE DeveloperName = :BDI_MigrationMappingUtility.DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
     }
 
     /*******************************************************************************************************
@@ -100,7 +81,8 @@ public class BDI_MigrationMappingHelper {
         dataImportFieldMappings.clear();
 
         Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
-            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
+            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(
+                BDI_MigrationMappingUtility.DATA_IMPORT_OBJECT_NAME));
 
         for (String dataImportFieldName : describeFieldResultsByFieldName.keySet()) {
 
