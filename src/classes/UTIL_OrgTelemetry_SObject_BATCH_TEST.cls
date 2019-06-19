@@ -293,7 +293,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms Opps with Payments counts are calculated correctly when Automatic Payments are enabled
+     * @description Confirms Opps with Payments counts are calculated correctly
      */
     @IsTest
     private static void shouldCalculateOppPaymentMetrics() {
@@ -313,6 +313,12 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         System.assertEquals(NUM_OPPS_WITH_MULTIPLE_PAYMENTS, paymentBatch.oppsWithMultiplePaymentsCount,
             'The number of Opportunities with multiple payments should be tracked correctly');
+
+        System.assertEquals(
+            NUM_OPPS_WITH_MULTIPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT,
+            paymentBatch.oppsWithPayments,
+            'The number of Opportunities with payments should be tracked correctly'
+        );
     }
 
     /**

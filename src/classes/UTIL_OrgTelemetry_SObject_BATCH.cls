@@ -299,6 +299,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         ]) {
             if (opp.npe01__OppPayment__r.size() > 1) {
                 oppsWithMultiplePaymentsCount++;
+                oppsWithPayments++;
+
             } else if (opp.npe01__OppPayment__r.size() > 0) {
                 oppsWithPayments++;
             }
