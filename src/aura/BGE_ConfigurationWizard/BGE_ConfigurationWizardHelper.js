@@ -477,7 +477,9 @@
         activeFields.forEach(function(currentField) {
             if (currentField.defaultValue && currentField.type == 'reference') {
                 // lookups in recordeditform store as an array of IDs; need to flatten
-                currentField.defaultValue = currentField.defaultValue[0];
+                if (Array.isArray(currentField.defaultValue)) {
+                    currentField.defaultValue = currentField.defaultValue[0];
+                }
             }
         });
 
