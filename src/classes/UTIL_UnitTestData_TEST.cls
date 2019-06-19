@@ -163,7 +163,7 @@ public class UTIL_UnitTestData_TEST {
 
         for (Integer i=0; i<n; i++) {
             Contact newCon = getContact();
-            newCon.FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i;
+            newCon.FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + getUniqueString();
             newCon.LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS;
             if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
                 newCon.put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
@@ -304,12 +304,12 @@ public class UTIL_UnitTestData_TEST {
      * @param n The number of Engagement Plan Templates to be created
      * @return List of Engagement Plan Templates
      */
-    public static List<Engagement_Plan_Template__c> createEPTemplates (integer n) {
+    public static List<Engagement_Plan_Template__c> createEPTemplates (Integer n) {
         // Holds the list of EP Templates to be returned
-        List<Engagement_Plan_Template__c> EPTemplatesToAdd = New List<Engagement_Plan_Template__c>();
+        List<Engagement_Plan_Template__c> EPTemplatesToAdd = new List<Engagement_Plan_Template__c>();
         
-        for (integer i=0 ;i<n; i++) {
-            EPTemplatesToAdd.add(new Engagement_Plan_Template__c(Name = 'Test ' + i));
+        for (Integer i=0 ;i<n; i++) {
+            EPTemplatesToAdd.add(new Engagement_Plan_Template__c(Name = 'Test ' + getUniqueString()));
         }
         
         return EPTemplatesToAdd;
@@ -321,12 +321,12 @@ public class UTIL_UnitTestData_TEST {
      * @param listEPTemplates The templates the EP Tasks will belong to
      * @return List of Engagement Plan Templates
      */
-    public static List<Engagement_Plan_Task__c> createEPTasksForTemplates (integer n, List<Engagement_Plan_Template__c> listEPTemplates) {
+    public static List<Engagement_Plan_Task__c> createEPTasksForTemplates (Integer n, List<Engagement_Plan_Template__c> listEPTemplates) {
         // Holds the list of EP Tasks to be returned
-        List<Engagement_Plan_Task__c> EPTasksToAdd = New List<Engagement_Plan_Task__c>();
+        List<Engagement_Plan_Task__c> EPTasksToAdd = new List<Engagement_Plan_Task__c>();
         
         for (Engagement_Plan_Template__c epTemplate : listEPTemplates) {
-            for (integer i=0 ;i<n; i++) {
+            for (Integer i=0 ;i<n; i++) {
                 EPTasksToAdd.add(
                     new Engagement_Plan_Task__c(
                     Engagement_Plan_Template__c = epTemplate.Id,
@@ -551,11 +551,13 @@ public class UTIL_UnitTestData_TEST {
         for (Integer i = 0; i < cAcc; i++) {
             for (Integer j = 0; j < cCon; j++) {
                 Integer iCon = (i * cCon) + j;
+                String unique = getUniqueString();
+
                 Contact con = listConT[iCon];
-                con.FirstName = 'TestFirstname' + iUnique + iCon;
-                con.LastName = 'TestLastname' + iUnique + iCon;
+                con.FirstName = 'TestFirstName' + iUnique + iCon;
+                con.LastName = 'TestLastName' + iUnique + iCon + unique;
                 con.AccountId = listAccT[i].Id;
-                con.MailingStreet = 'Street' + iUnique + iCon;
+                con.MailingStreet = 'Street' + iUnique + iCon + unique;
                 con.MailingCity = 'City' + iUnique + iCon;
             }
         }        
