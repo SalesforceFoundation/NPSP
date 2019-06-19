@@ -174,9 +174,8 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-    * @description Collect and inspect existing field mappings and mappings found from Help Text and
-    * add mappings to appropriate lists (pendingMappings, conflictingMappings, pendingStandardMappings,
-    * pendingNonHelpTextMappings)
+    * @description Starts the migration from help text to custom metadata records and adds created custom
+    * metadata records to list queuedMetadataTypesForDeploy.
     */
     public void migrateHelpTextToCustomMetadata() {
 
