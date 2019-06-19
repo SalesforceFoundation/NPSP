@@ -269,33 +269,6 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
-     * @description Builds a map of opportunities grouped by npe03__Recurring_Donation__c
-     */
-    private Map<Id, List<Opportunity>> getPaymentsByRecurringDonationId(List<npe03__Recurring_Donation__c> recurringDonations) {
-        List<Opportunity> opps = [
-            SELECT Amount, npe03__Recurring_Donation__c
-            FROM Opportunity
-            WHERE npe03__Recurring_Donation__c IN :recurringDonations
-        ];
-
-        Map<Id, List<Opportunity>> oppsByRecurringDonationId = new Map<Id, List<Opportunity>>();
-
-        for (Opportunity opp : opps) {
-            if (opp.npe03__Recurring_Donation__c == null) {
-                continue;
-            }
-
-            if (!oppsByRecurringDonationId.containsKey(opp.npe03__Recurring_Donation__c)) {
-                oppsByRecurringDonationId.put(opp.npe03__Recurring_Donation__c, new List<Opportunity>());
-            }
-
-            oppsByRecurringDonationId.get(opp.npe03__Recurring_Donation__c).add(opp);
-        }
-
-        return oppsByRecurringDonationId;
-    }
-
-    /**
      * @description Handles batch logic for PAYMENTS job mode
      */
     private void handlePaymentsJobMode(List<Opportunity> opps) {

@@ -110,11 +110,13 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
         }
+
         handleOpportunityPaymentsBatchExecution();
+
     }
 
     /**
-    * @description Handles execute batch job for counts
+    * @description Handles execute batch job for payments counts
     */
     private void handleOpportunityPaymentsBatchExecution() {
         if (shouldExecutePaymentsTelemetryBatch()) {
@@ -122,6 +124,7 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
                 UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS,
                 UTIL_OrgTelemetry_SObject_BATCH.PAYMENTS_BATCH_SIZE
             );
+
         } else {
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), 0);
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);

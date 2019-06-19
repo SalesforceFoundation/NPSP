@@ -76,6 +76,9 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         setupOppsWithPayments();
     }
 
+    /**
+     * @description Creates opportunities with single and multiple payments
+     */
     private static void setupOppsWithPayments() {
         Map<Schema.SObjectField, Object> fieldValues = new Map<Schema.SObjectField, Object> {
             Opportunity.Amount => 100
