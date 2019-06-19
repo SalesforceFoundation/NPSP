@@ -114,22 +114,38 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
     }
 
     private void handleOpportunityPaymentsBatchExecution() {
-        Integer oppsWithMultiplePayments = [
-            SELECT npe01__Opportunity__c
-            FROM npe01__OppPayment__c
-            GROUP BY npe01__Opportunity__c
-            HAVING count(Id) > 1
-            LIMIT 1
-        ].size();
-
-        if (oppsWithMultiplePayments == 1) {
+        if (shouldExecuteTelemetrySObjectBatch()) {
             executeTelemetrySObjectBatch(
                 UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS,
-                UTIL_OrgTelemetry_SObject_BATCH.OPPORTUNITIES_BATCH_SIZE
+                UTIL_OrgTelemetry_SObject_BATCH.PAYMENTS_BATCH_SIZE
             );
         } else {
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), 0);
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
+        }
+    }
+
+    @TestVisible
+    private Boolean shouldExecuteTelemetrySObjectBatch() {
+        List<AggregateResult> results = [
+            SELECT count(Id) numPayments
+            FROM npe01__OppPayment__c
+            GROUP BY npe01__Opportunity__c
+            ORDER BY count(Id) DESC LIMIT 1
+        ];
+
+        Boolean noPaymentsExist = results.isEmpty();
+        Integer maxPaymentsForSingleOpp = noPaymentsExist ? 0 : (Integer) results[0].get('numPayments');
+        Boolean autoPaymentsDisabled = new STG_SettingsService().stgCon.npe01__Payments_Enabled__c == false;
+
+        if (noPaymentsExist) {
+            return false;
+        } else if (maxPaymentsForSingleOpp > 1) {
+            return true;
+        } else if (maxPaymentsForSingleOpp == 1 && autoPaymentsDisabled) {
+            return true;
+        } else {
+            return false;
         }
     }
 

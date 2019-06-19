@@ -56,6 +56,14 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * A batch size of 200 allows each Recurring Donation to have 250 opportunities (i.e. 50,000 records SOQL limit)
      */
     public static final Integer RECURRING_DONATIONS_BATCH_SIZE = 200;
+
+    /**
+     * @description Batch size for PAYMENTS job mode. Limited to 200 as job needs to query related
+     * payments during the execute method as sub-queries in a query locator can cause timeouts in large orgs.
+     * A batch size of 200 allows each Opportunity to have 250 Payments (i.e. 50,000 records SOQL limit)
+     */
+    public static final Integer PAYMENTS_BATCH_SIZE = 200;
+    
     /**
      * @description BatchJobMode is to add support for other query types in this same batch job
      * that aren't yet needed, but may be in the future

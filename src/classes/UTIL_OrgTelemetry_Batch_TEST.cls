@@ -38,24 +38,8 @@ private class UTIL_OrgTelemetry_Batch_TEST {
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
 
     /**
-     * @description Submits the telemetry batch job to execute. This will only execute a single child iteration
-     * and not the entire set of data. It's not possible to determine if the job actually completed.
-     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
-     * This specific test needs to be in a separate test class to avoid an internal error that is thrown when
-     * testing along side other methods that call the same featureParameter value used by this test.
-     */
-    @IsTest
-    static void validateTelemetryBatchJob() {
-        Test.startTest();
-        UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
-        Test.stopTest();
-    }
-
-    /**
      * @description Confirms that when there are no Recurring Donations, the finish method sets
-     * Data_CountRdOppsAll and Data_CountRdOppsOpenEnded to 0 and does not queue up the batch job. Can only test this negative
-     * case as running the batch will cause internal error to be thrown when
-     * testing along side other methods that call the same featureParameter value used by this test.
+     * telemetry and does not queue up the batch job
      */
     @isTest
     private static void shouldHandleNoRecurringDonationsToCount() {
@@ -73,28 +57,54 @@ private class UTIL_OrgTelemetry_Batch_TEST {
 
         System.assertEquals(0, batchCount, 'A batch should not be queued');
 
-        System.assertEquals(
-            0,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_CountRdOppsAll and set to 0'
-        );
-
-        System.assertEquals(
-            0,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_CountRdOppsOpenEnded and set to 0'
-        );
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, 0);
     }
 
     /**
-     * @description Confirms that when there are no Recurring Donations, the finish method sets
-     * Data_CountOppsWithMultiplePayments and Data_OppPaymentsWithoutPaymentsEnabled to 0 and does not queue up the
-     * batch job. Can only test this negative case as running the batch will cause internal error to be thrown when
-     * testing along side other methods that call the same featureParameter value used by this test.
+     * @description Confirms that when there are Recurring Donations, the finish method does not set
+     * telemetry and does queue up the batch job
+     */
+    @isTest
+    private static void shouldHandleRecurringDonationsToCount() {
+        Account donorAccount = new Account(Name = 'foo');
+        insert donorAccount;
+
+        insert new npe03__Recurring_Donation__c(
+            Name = 'foo',
+            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
+            npe03__Date_Established__c= System.today(),
+            npe03__Organization__c = donorAccount.Id,
+            npe03__Amount__c = 20,
+            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
+            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
+        );
+
+        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        Integer batchCount =  [
+            SELECT COUNT()
+            FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+                AND ApexClass.Name = 'UTIL_OrgTelemetry_SObject_BATCH'
+        ];
+
+        System.assertEquals(2, batchCount, 'The correct number of batches should be queued');
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, null);
+    }
+
+    /**
+     * @description Confirms that when there are no Payments, the finish method sets
+     * telemetry and does not queue up the batch job
      */
     @isTest
     private static void shouldHandleNoOpportunitiesWithMultiplePayments() {
@@ -112,20 +122,103 @@ private class UTIL_OrgTelemetry_Batch_TEST {
 
         System.assertEquals(0, batchCount, 'A batch should not be queued');
 
-        System.assertEquals(
-            0,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and set to 0'
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, 0);
+    }
+
+    /**
+     * @description Confirms that when there are Opportunities with a mulitple payments and auto payments are enabled,
+     * the batch job is queued. Using shouldExecuteTelemetrySObjectBatch to test instead of finish to prevent internal
+     * error that gets thrown when multiple tests in the same class set a FeatureParameter
+     */
+    @isTest
+    private static void shouldHandleOpportunitiesWithMultipleOpporutnitiesAndAutoPaymentsEnabled() {
+        setupOppWithPayments(2);
+
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)
         );
 
-        System.assertEquals(
-            0,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set to 0'
+        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+
+        System.assertEquals(true, batch.shouldExecuteTelemetrySObjectBatch(), 'Should queue up batch');
+    }
+
+    /**
+     * @description Confirms that when there are only Opportunities with a single payment and auto payments are enabled,
+     * the batch job is not queued.
+     */
+    @isTest
+    private static void shouldHandleOpportunitiesWithOnlySinglePaymentAndAutoPaymentsEnabled() {
+        setupOppWithPayments(1);
+
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)
         );
+
+        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        Integer batchCount =  [
+            SELECT COUNT()
+            FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+                AND ApexClass.Name = 'UTIL_OrgTelemetry_SObject_BATCH'
+        ];
+
+        System.assertEquals(0, batchCount, 'A batch should not be queued');
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, 0);
+    }
+
+    /**
+     * @description Confirms that when there are only Opportunities with a single payment and auto payments are disabled,
+     * the batch job is queued. Using shouldExecuteTelemetrySObjectBatch to test instead of finish to prevent internal
+     * error that gets thrown when multiple tests in the same class set a FeatureParameter
+     */
+    @isTest
+    private static void shouldHandleOpportunitiesOnlySinglePaymentAndAutoPaymentsDisabled() {
+        setupOppWithPayments(1);
+
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false)
+        );
+
+        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+        System.assertEquals(true, batch.shouldExecuteTelemetrySObjectBatch(), 'Should queue up batch');
+    }
+
+    /**
+     * @description Asserts on provide telemetry integer metric
+     */
+    private static void assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName metric, Integer expectedValue) {
+        String metricName = metric.name();
+        System.assertEquals(
+            expectedValue,
+            featureManagementMock.packageIntegerValuesByName.get(metricName),
+            'The feature paraemter metric ' + metricName + ' should be set correctly'
+        );
+    }
+
+    /**
+     * @description Creates an opportunity with specified number of payments
+     */
+    private static void setupOppWithPayments(Integer numPayments) {
+        Opportunity opp = new Opportunity(
+            Name = 'Test Opp ',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today()
+        );
+
+        insert opp;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
+        for (Integer i = 0; i < numPayments; i++) {
+            payments.add(new npe01__OppPayment__c(npe01__Payment_Amount__c = 100, npe01__Opportunity__c = opp.Id));
+        }
+        insert payments;
     }
 }
