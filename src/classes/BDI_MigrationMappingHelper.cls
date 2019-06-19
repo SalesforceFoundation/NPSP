@@ -100,7 +100,7 @@ public class BDI_MigrationMappingHelper {
         dataImportFieldMappings.clear();
 
         Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
-                UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
+            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
 
         for (String dataImportFieldName : describeFieldResultsByFieldName.keySet()) {
 
@@ -113,7 +113,7 @@ public class BDI_MigrationMappingHelper {
 
             DescribeFieldResult sourceField = describeFieldResultsByFieldName.get(dataImportFieldName);
             BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping =
-                    new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
+                new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
 
             if (helpTextFieldMapping.isUsable) {
                 // Pass help text values to a new instance of MappingDetail wrapper class
@@ -128,7 +128,8 @@ public class BDI_MigrationMappingHelper {
                 dataImportFieldMappings.add(newDataImportFieldMapping);
             } else if (helpTextFieldMapping.isPotentialMapping) {
                 // Park suspected help text mappings
-                BDI_MigrationMappingUtility.HelpTextFieldMapping badHelpTextMapping = new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
+                BDI_MigrationMappingUtility.HelpTextFieldMapping badHelpTextMapping =
+                    new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
                 badHelpTextFieldMappings.add(badHelpTextMapping);
             }
         }

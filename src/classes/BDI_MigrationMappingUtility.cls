@@ -178,8 +178,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
         helper.populateListsFromHelpTextMappings();
 
-        List<DataImportFieldMapping> helpTextFieldMappings =
-                helper.getDataImportFieldMappingsFromHelpText();
+        List<DataImportFieldMapping> helpTextFieldMappings = helper.getDataImportFieldMappingsFromHelpText();
 
         Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName =
             helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
@@ -211,7 +210,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
         enqueueNonHelpTextMappings(fieldMappingsByFieldMappingSetDeveloperName);
         enqueueMigratedCustomFieldMappingSet();
-        badHelpTextMappings = helper.badHelpTextFieldMappings;
+        badHelpTextMappings = helper.getBadHelpTextMappings();
     }
 
     /*******************************************************************************************************
