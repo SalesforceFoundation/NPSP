@@ -385,7 +385,6 @@
         var detailObjects = cmp.get("v.detailObjects");
         cmp.set("v.activeRollup.amountObjectLabel", this.retrieveFieldLabel(amountObjectName, detailObjects));
 
-        //reset date fields
         this.resetDateFields(cmp, rollupTypeObject);
 
         //set date object label and api name based on the selected detail object then reset fields + selected value
