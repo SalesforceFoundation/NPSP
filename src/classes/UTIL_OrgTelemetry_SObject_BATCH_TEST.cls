@@ -116,14 +116,9 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
         rdBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
-        UTIL_OrgTelemetry_SObject_BATCH paymentBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS);
-        paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
-
         Test.startTest();
         Database.executeBatch(oppBatch);
         Database.executeBatch(rdBatch);
-        Database.executeBatch(paymentBatch);
         Test.stopTest();
     }
 
@@ -165,24 +160,6 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms PAYMENTS job mode queries for the correct SObject type with the correct limit
-     */
-    @IsTest
-    private static void paymentsJobModeShouldReturnCorrectQueryWhenThereIsNoLastProcessedId() {
-        UTIL_OrgTelemetry_SObject_BATCH paymentBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS);
-
-        String paymentBatchQuery = paymentBatch.start(null).getQuery();
-        System.assert(paymentBatchQuery.endsWith('LIMIT 10000000'), 'The query should be limited with the default chunk size');
-
-        List<SObject> actualRecords = Database.query(paymentBatchQuery);
-        System.assert(actualRecords instanceof List<Opportunity>,
-            'PAYMENTS job mode should query Opportunities');
-
-        assertOnOrderedSObjects(queryOpportunitiesInIdOrder(), actualRecords);
-    }
-
-    /**
      * @description Confirms OPPORTUNITIES job modes query for the correct SObject type with the correct Id offset
      */
     @IsTest
@@ -220,27 +197,6 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         String rdBatchQuery = rdBatch.start(null).getQuery();
 
         List<SObject> actualRecords = Database.query(rdBatchQuery);
-
-        assertOnOrderedSObjects(expectedRecords, actualRecords);
-    }
-
-    /**
-     * @description Confirms PAYMENTS job modes query for the correct SObject type with the correct Id offset
-     */
-    @IsTest
-    private static void paymentsJobModeShouldReturnCorrectQueryWhenThereIsALastProcessedId() {
-        List<SObject> expectedRecords = queryOpportunitiesInIdOrder();
-
-        UTIL_OrgTelemetry_SObject_BATCH paymentBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS);
-
-        //offset the first Id
-        paymentBatch.lastProcessedId = expectedRecords[0].Id;
-        expectedRecords.remove(0);
-
-        String paymentBatchQuery = paymentBatch.start(null).getQuery();
-
-        List<SObject> actualRecords = Database.query(paymentBatchQuery);
 
         assertOnOrderedSObjects(expectedRecords, actualRecords);
     }
@@ -301,7 +257,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @IsTest
     private static void shouldCalculateOppPaymentMetrics() {
         UTIL_OrgTelemetry_SObject_BATCH paymentBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
 
         String paymentBatchQuery = paymentBatch.start(null).getQuery();
         List<Opportunity> opps = Database.query(paymentBatchQuery);
@@ -408,7 +364,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         );
 
         UTIL_OrgTelemetry_SObject_BATCH paymentBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
         paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;
@@ -445,7 +401,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         );
 
         UTIL_OrgTelemetry_SObject_BATCH paymentBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
         paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;

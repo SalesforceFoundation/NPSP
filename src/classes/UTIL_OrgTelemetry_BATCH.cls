@@ -38,8 +38,9 @@
 * one query were to fail, which is theoretically possible in a huge organization where there may be other jobs
 * executing or other factors at play, the rest of this job will continue. That ensures that our LMO collects as much
 * data as possible. In addition, it can help us identify which specific telemetry data processes are failing.
+* Class if virtual so executeTelemetrySObjectBatch can be overridden during tests
 */
-public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> {
+public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> {
 
     @TestVisible
     private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
@@ -87,83 +88,49 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
     * number of RecurringDonation Installment Opportunities.
     */
     public void finish(Database.BatchableContext info) {
-        Integer cnt = Database.countQuery('SELECT Count() FROM npe03__Recurring_Donation__c LIMIT 1');
-        if (cnt == 1) {
-            Database.executeBatch(
-                new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES
-                ),
+        handleOpportunityBatchExecution();
+        handleRecurringDonationExecution();
+    }
+
+    /**
+    * @description Handles execution of batch job for opportunity counts
+    */
+    private void handleOpportunityBatchExecution() {
+        Boolean hasRecurringDonations = [SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty() == false;
+        Boolean hasPayments = [SELECT Id FROM npe01__OppPayment__c LIMIT 1].isEmpty() == false;
+
+        if(hasRecurringDonations || hasPayments) {
+            executeTelemetrySObjectBatch(
+                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES,
                 UTIL_OrgTelemetry_SObject_BATCH.OPPORTUNITIES_BATCH_SIZE
             );
-
-            Database.executeBatch(
-                new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS
-                ),
-                UTIL_OrgTelemetry_SObject_BATCH.RECURRING_DONATIONS_BATCH_SIZE
-            );
-
         } else {
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), 0);
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
 
-            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
-            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
-        }
-
-        handleOpportunityPaymentsBatchExecution();
-
-    }
-
-    /**
-    * @description Handles execute batch job for payments counts
-    */
-    private void handleOpportunityPaymentsBatchExecution() {
-        if (shouldExecutePaymentsTelemetryBatch()) {
-            executeTelemetrySObjectBatch(
-                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.PAYMENTS,
-                UTIL_OrgTelemetry_SObject_BATCH.PAYMENTS_BATCH_SIZE
-            );
-
-        } else {
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), 0);
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
         }
     }
 
-    /**
-    * @description Determines if payments telemetry batch should run. Is test visible so this can be tested outside of
-    * the finish method without executing UTIL_OrgTelemetry_SObject_BATCH. Executing batch can cause internal errors
-    * to get thrown when tests in the same class set the same Feature Parameters
-    */
-    @TestVisible
-    private Boolean shouldExecutePaymentsTelemetryBatch() {
-        List<AggregateResult> results = [
-            SELECT count(Id) numPayments
-            FROM npe01__OppPayment__c
-            GROUP BY npe01__Opportunity__c
-            ORDER BY count(Id) DESC LIMIT 1
-        ];
+    private void handleRecurringDonationExecution() {
+        Boolean hasRecurringDonations = [SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty() == false;
 
-        Boolean noPaymentsExist = results.isEmpty();
-        Integer maxPaymentsForSingleOpp = noPaymentsExist ? 0 : (Integer) results[0].get('numPayments');
-        Boolean autoPaymentsDisabled = new STG_SettingsService().stgCon.npe01__Payments_Enabled__c == false;
-
-        if (noPaymentsExist) {
-            return false;
-        } else if (maxPaymentsForSingleOpp > 1) {
-            return true;
-        } else if (maxPaymentsForSingleOpp == 1 && autoPaymentsDisabled) {
-            return true;
+        if (hasRecurringDonations) {
+            executeTelemetrySObjectBatch(
+                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS,
+                UTIL_OrgTelemetry_SObject_BATCH.RECURRING_DONATIONS_BATCH_SIZE
+            );
         } else {
-            return false;
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
         }
     }
 
     /**
     * @description Executes Telemetry SObject Batch with given mode and size
     */
-    private void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+    private virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
         Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(mode), batchSize);
     }
 }

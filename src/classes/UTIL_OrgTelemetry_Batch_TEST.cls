@@ -43,19 +43,13 @@ private class UTIL_OrgTelemetry_Batch_TEST {
      */
     @isTest
     private static void shouldHandleNoRecurringDonationsToCount() {
-        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+        MockTelemetryBatch batch = new MockTelemetryBatch();
         batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         batch.finish(null);
 
-        Integer batchCount =  [
-            SELECT COUNT()
-            FROM AsyncApexJob
-            WHERE JobType = 'BatchApex'
-                AND ApexClass.Name = 'UTIL_OrgTelemetry_SObject_BATCH'
-        ];
-
-        System.assertEquals(0, batchCount, 'A batch should not be queued');
+        System.assertEquals(null, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS),
+            'The RECURRING_DONATIONS should not be executed');
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, 0);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, 0);
@@ -82,22 +76,23 @@ private class UTIL_OrgTelemetry_Batch_TEST {
             npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
         );
 
-        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+        MockTelemetryBatch batch = new MockTelemetryBatch();
         batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         batch.finish(null);
 
-        Integer batchCount =  [
-            SELECT COUNT()
-            FROM AsyncApexJob
-            WHERE JobType = 'BatchApex'
-                AND ApexClass.Name = 'UTIL_OrgTelemetry_SObject_BATCH'
-        ];
+        System.assertEquals(1, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS),
+            'The RECURRING_DONATIONS should be executed');
 
-        System.assertEquals(2, batchCount, 'The correct number of batches should be queued');
+        System.assertEquals(1, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
+            'The OPPORTUNITIES should be executed');
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, null);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, null);
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, null);
+
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, null);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, null);
     }
@@ -107,20 +102,14 @@ private class UTIL_OrgTelemetry_Batch_TEST {
      * telemetry and does not queue up the batch job
      */
     @isTest
-    private static void shouldHandleNoOpportunitiesWithMultiplePayments() {
-        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+    private static void shouldHandleNoPayments() {
+        MockTelemetryBatch batch = new MockTelemetryBatch();
         batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         batch.finish(null);
 
-        Integer batchCount =  [
-            SELECT COUNT()
-            FROM AsyncApexJob
-            WHERE JobType = 'BatchApex'
-                AND ApexClass.Name = 'UTIL_OrgTelemetry_SObject_BATCH'
-        ];
-
-        System.assertEquals(0, batchCount, 'A batch should not be queued');
+        System.assertEquals(null, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
+            'The OPPORTUNITIES should not be executed');
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, 0);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, 0);
@@ -132,63 +121,19 @@ private class UTIL_OrgTelemetry_Batch_TEST {
      * error that gets thrown when multiple tests in the same class set a FeatureParameter
      */
     @isTest
-    private static void shouldHandleOpportunitiesWithMultipleOpporutnitiesAndAutoPaymentsEnabled() {
+    private static void shouldHandlePaymentsToCount() {
         setupOppWithPayments(2);
 
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)
-        );
-
-        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
-
-        System.assertEquals(true, batch.shouldExecutePaymentsTelemetryBatch(), 'Should queue up batch');
-    }
-
-    /**
-     * @description Confirms that when there are only Opportunities with a single payment and auto payments are enabled,
-     * the batch job is not queued.
-     */
-    @isTest
-    private static void shouldHandleOpportunitiesWithOnlySinglePaymentAndAutoPaymentsEnabled() {
-        setupOppWithPayments(1);
-
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)
-        );
-
-        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
+        MockTelemetryBatch batch = new MockTelemetryBatch();
         batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         batch.finish(null);
 
-        Integer batchCount =  [
-            SELECT COUNT()
-            FROM AsyncApexJob
-            WHERE JobType = 'BatchApex'
-                AND ApexClass.Name = 'UTIL_OrgTelemetry_SObject_BATCH'
-        ];
+        System.assertEquals(1, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
+            'The OPPORTUNITIES should be executed');
 
-        System.assertEquals(0, batchCount, 'A batch should not be queued');
-
-        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, 0);
-        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, 0);
-    }
-
-    /**
-     * @description Confirms that when there are only Opportunities with a single payment and auto payments are disabled,
-     * the batch job is queued. Using shouldExecutePaymentsTelemetryBatch to test instead of finish to prevent internal
-     * error that gets thrown when multiple tests in the same class set a FeatureParameter
-     */
-    @isTest
-    private static void shouldHandleOpportunitiesOnlySinglePaymentAndAutoPaymentsDisabled() {
-        setupOppWithPayments(1);
-
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false)
-        );
-
-        UTIL_OrgTelemetry_Batch batch = new UTIL_OrgTelemetry_Batch();
-        System.assertEquals(true, batch.shouldExecutePaymentsTelemetryBatch(), 'Should queue up batch');
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, null);
     }
 
     /**
@@ -196,10 +141,14 @@ private class UTIL_OrgTelemetry_Batch_TEST {
      */
     private static void assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName metric, Integer expectedValue) {
         String metricName = metric.name();
+        String messsage = expectedValue == null ?
+            'The feature paraemter metric ' + metricName + ' should not be set'
+            : 'The feature paraemter metric ' + metricName + ' should be set correctly';
+
         System.assertEquals(
             expectedValue,
             featureManagementMock.packageIntegerValuesByName.get(metricName),
-            'The feature paraemter metric ' + metricName + ' should be set correctly'
+            messsage
         );
     }
 
@@ -220,5 +169,24 @@ private class UTIL_OrgTelemetry_Batch_TEST {
             payments.add(new npe01__OppPayment__c(npe01__Payment_Amount__c = 100, npe01__Opportunity__c = opp.Id));
         }
         insert payments;
+    }
+
+    /**
+     * @description Mock implementation of UTIL_OrgTelemetry_BATCH that overrides executeTelemetrySObjectBatch
+     * to prevent UTIL_OrgTelemetry_SObject_BATCH from running. Running the UTIL_OrgTelemetry_SObject_BATCH 
+     * batch can can cause an internal error to get thrown due to tests in the same class both trying 
+     * to set the same FeatureParameter.
+     */
+    private class MockTelemetryBatch extends UTIL_OrgTelemetry_BATCH {
+        private Map<UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode, Integer> countByBatchMode = 
+            new Map<UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode, Integer>();
+
+        private virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+            if (!countByBatchMode.containsKey(mode)) {
+                countByBatchMode.put(mode, 0);
+            }
+            Integer currentCount = countByBatchMode.get(mode);
+            countByBatchMode.put(mode, currentCount + 1);
+        }
     }
 }

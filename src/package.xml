@@ -448,6 +448,7 @@
         <members>UTIL_OrgTelemetry_SObject_BATCH</members>
         <members>UTIL_OrgTelemetry_SObject_BATCH_TEST</members>
         <members>UTIL_OrgTelemetry_SVC</members>
+        <members>UTIL_OrgTelemetry_SVC_TEST</members>
         <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PerfLogger</members>

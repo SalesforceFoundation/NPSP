@@ -48,7 +48,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     /**
      * @description Batch size for OPPORTUNITY job mode
      */
-    public static final Integer OPPORTUNITIES_BATCH_SIZE = 2000;
+    public static final Integer OPPORTUNITIES_BATCH_SIZE = 200;
 
     /**
      * @description Batch size for RECURRING_DONATIONS job mode. Limited to 200 as job needs to query related
@@ -58,20 +58,12 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     public static final Integer RECURRING_DONATIONS_BATCH_SIZE = 200;
 
     /**
-     * @description Batch size for PAYMENTS job mode. Limited to 200 as job needs to query related
-     * payments during the execute method as sub-queries in a query locator can cause timeouts in large orgs.
-     * A batch size of 200 allows each Opportunity to have 250 Payments (i.e. 50,000 records SOQL limit)
-     */
-    public static final Integer PAYMENTS_BATCH_SIZE = 200;
-    
-    /**
      * @description BatchJobMode is to add support for other query types in this same batch job
      * that aren't yet needed, but may be in the future
      */
     public enum TelemetryBatchJobMode {
         RECURRING_DONATIONS,
-        OPPORTUNITIES,
-        PAYMENTS
+        OPPORTUNITIES
     }
 
     /** @description Limit for query locator. Property is public to allow for QA testing via the Developer Console */
@@ -142,10 +134,6 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                 soqlQuery = 'SELECT npe03__Amount__c FROM npe03__Recurring_Donation__c WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
-            when PAYMENTS {
-                soqlQuery = 'SELECT Id FROM Opportunity WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
-            }
-
             when else {
                 // If no conditions are met, this returns an empty query to avoid an NPE
                 soqlQuery = 'SELECT Id FROM Account LIMIT 0';
@@ -180,10 +168,6 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
             when RECURRING_DONATIONS {
                 handleRecurringDonationsJobMode((List<npe03__Recurring_Donation__c>) scope);
             }
-
-            when PAYMENTS {
-                handlePaymentsJobMode((List<Opportunity>) scope);
-            }
         }
     }
 
@@ -194,6 +178,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         for (Opportunity opp : opps) {
             getOppRecurringDonationsCounts(opp);
         }
+
+        countOppPayments(opps);
     }
 
     /**
@@ -269,9 +255,9 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
-     * @description Handles batch logic for PAYMENTS job mode
+     * @description Handles payment counts
      */
-    private void handlePaymentsJobMode(List<Opportunity> opps) {
+    private void countOppPayments(List<Opportunity> opps) {
         for(Opportunity opp : [
             SELECT
                 (SELECT Id FROM npe01__OppPayment__r LIMIT 2)
@@ -308,14 +294,11 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
             switch on (jobMode) {
                 when OPPORTUNITIES {
                     setRecurringDonationOppsCounts();
+                    setPaymentCounts();
                 }
 
                 when RECURRING_DONATIONS {
                     setRecurringDonationsCounts();
-                }
-
-                when PAYMENTS {
-                    setPaymentCounts();
                 }
             }
         }
