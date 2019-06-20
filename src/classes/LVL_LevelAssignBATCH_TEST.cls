@@ -699,13 +699,13 @@ private class LVL_LevelAssignBATCH_TEST {
 
         Contact[] contacts = new Contact[] {
             new Contact(
-                LastName = 'PreviousLevelIsPopulated',
+                LastName = 'PreviousLevelIsPopulated' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = levels[0].id,
                 npo02__LastMembershipOrigin__c = levels[1].id,
                 npo02__TotalOppAmount__c = 10
             ),
             new Contact(
-                LastName = 'PreviousLevelIsBlank',
+                LastName = 'PreviousLevelIsBlank' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = levels[1].id,
                 npo02__LastMembershipOrigin__c = null,
                 npo02__TotalOppAmount__c = 2000
@@ -764,19 +764,19 @@ private class LVL_LevelAssignBATCH_TEST {
 
         Contact[] contacts = new Contact[] {
             new Contact(
-                LastName = 'PreviousLevelIsPopulated',
+                LastName = 'PreviousLevelIsPopulated' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = null,
                 npo02__LastMembershipOrigin__c = levels[0].id,
                 npo02__TotalOppAmount__c = 10
             ),
             new Contact(
-                LastName = 'PreviousLevelIsBlank',
+                LastName = 'PreviousLevelIsBlank' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = null,
                 npo02__LastMembershipOrigin__c = null,
                 npo02__TotalOppAmount__c = 2000
             ),
             new Contact(
-                LastName = 'BothLevelsAreProvided',
+                LastName = 'BothLevelsAreProvided' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = levels[0].id,
                 npo02__LastMembershipOrigin__c = levels[1].id,
                 npo02__TotalOppAmount__c = 50
