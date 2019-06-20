@@ -56,7 +56,8 @@ private with sharing class OPP_OpportunityNaming_NEW_BATCH_TEST {
         Database.executeBatch(batch);
         Test.stopTest();
 
-
+        // Record count for test is small enough for only one execution
+        // LDV Chunking etc. tested for base class
         List<AsyncApexJob> jobsApexBatch = queryOppNamingBatchJobs();
         System.assertEquals(1, jobsApexBatch.size(), 'Batch should run for each chunk of opportunities');
 
@@ -64,6 +65,11 @@ private with sharing class OPP_OpportunityNaming_NEW_BATCH_TEST {
             System.assertEquals(false, opp.Name.startsWith('Test Opp'),
                 'The opportunity should have been renamed: ' + opp.Name);
         }
+    }
+
+    private static void constructBatchWithDifferentBatchSize() {
+        OPP_OpportunityNaming_NEW_BATCH batch = new OPP_OpportunityNaming_NEW_BATCH(10);
+
     }
 
     /**

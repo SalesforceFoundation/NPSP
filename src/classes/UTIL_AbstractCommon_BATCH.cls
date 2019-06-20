@@ -38,6 +38,20 @@
 * provide an order to the records returned because it has to execute in a specific order
 * when running in LDV Chunking Mode.
 *
+* Due to the fact that constructors are not inherited by default, any constructors that
+* are desired need to be created using the signature as desired, and then in the constructor
+* body providing a super method and any params, e.g. super(batchSize);
+*
+* Where clause can be added by overriding getWhereClause() method
+*
+* Additional Where Clause can be configured by passing to constructor
+*
+* If Additional Where Clause is added, it can be validated by executing validateQuery().  If
+* it returns null, it is syntactically correct.  If it returns an Exception object, something about the
+* query is invalid.  The Additional Where and/or Where clause will be applied to the inner query for
+* each batch, if executing in LDV Chunking Mode, and the main batch query if executing in non LDV
+* Chunking mode.
+*
 * Future: Add exception handling, and logging support so implementing clases can inherit.
 * Recommend registering a default handler using an interface that can be switched out/overriden
 * as desired for specific use cases.
@@ -46,7 +60,6 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
 
     private static final Integer MAX_LDV_CHUNK_SIZE = 99999;
     private static final Integer DEFAULT_BATCH_SIZE = 500;
-    private String additionalWhereClause;
     private Id startId;
     private Id endId;
     private Id currentEndId;
@@ -54,73 +67,74 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     private Integer batchSize;
     private Integer chunkIteration;
     private Boolean ldvMode = null;
+    private String additionalWhereClause;
 
     /**
-     * @description No argument constructor that assumes no additional where clause, default batch size of 500, and that ldvMode will be
+     * @description No argument constructor that assumes default batch size of 500, and that ldvMode will be
      * determined by record distance between min and max Id for main object of batch
      */
     public UTIL_AbstractCommon_BATCH() {
-        // additionalWhereClause, batchSize
-        this('', DEFAULT_BATCH_SIZE, null);
+        // batchSize, ldvMode, additionalWhereClause
+        this(DEFAULT_BATCH_SIZE, null,'');
     }
 
     /**
-     * @description Constructor with default batch size of 500, and that ldvMode will be
-     * determined by record distance between min and max Id for main object of batch
-     * @param additionalWhereClause constraint to apply to child records for filtering purposes
-     */
-    public UTIL_AbstractCommon_BATCH(String additionalWhereClause) {
-        // additionalWhereClause, batchSize, ldvMode
-        this(additionalWhereClause, DEFAULT_BATCH_SIZE, false);
-    }
-
-    /**
-     * @description Constructor with default batch size of 500, if ldvMode is false/null it will
-     * use the default logic to determine whether to run in LDV Chunking mode, calculating record distance between the min and
-     * max Id for the object
-     * @param additionalWhereClause constraint to apply to child records for filtering purposes
-     * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
-     */
-    public UTIL_AbstractCommon_BATCH(String additionalWhereClause, Boolean ldvMode) {
-        // additionalWhereClause, batchSize, ldvMode
-        this(additionalWhereClause, DEFAULT_BATCH_SIZE, ldvMode);
-    }
-
-    /**
-     * @description Constructor that assumes no additional where clause, and that ldvMode will be
+     * @description Constructor that assumes  that ldvMode will be
      * determined by record distance between min and max Id for main object of batch
      * @param batchSize Integer Size of each batch
      */
     public UTIL_AbstractCommon_BATCH(Integer batchSize) {
-        // additionalWhereClause, batchSize, ldvMode
-        this('', batchSize, false);
+        // batchSize, ldvMode, additionalWhereClause
+        this(batchSize, false, '');
     }
 
     /**
-     * @description Constructor that assumes no additional where clause, if ldvMode is false/null it will
+     * @description Constructor that assumes  that ldvMode will be
+     * determined by record distance between min and max Id for main object of batch
+     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.  If a main where clause is also present both will be encapsulated in () and anded.
+     * @param batchSize Integer Size of each batch
+     */
+    public UTIL_AbstractCommon_BATCH(Integer batchSize, String additionalWhereClause) {
+        // batchSize, ldvMode, additionalWhereClause
+        this(batchSize, false, additionalWhereClause);
+    }
+
+    /**
+     * @description Constructor that assumes default batch size of 500, if ldvMode is false/null it will
      * use the default logic to determine whether to run in LDV Chunking mode, calculating record distance between the min and
      * max Id for the object
-     * @param batchSize Integer Size of each batch
      * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
      */
-    public UTIL_AbstractCommon_BATCH(Integer batchSize, Boolean ldvMode) {
-        this('', batchSize, ldvMode);
+    public UTIL_AbstractCommon_BATCH(Boolean ldvMode) {
+        // batchSize, ldvMode
+        this(DEFAULT_BATCH_SIZE, ldvMode, '');
+    }
+
+   /**
+     * @description Constructor that assumes default batch size of 500, if ldvMode is false/null it will
+     * use the default logic to determine whether to run in LDV Chunking mode, calculating record distance between the min and
+     * max Id for the object
+     * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
+     */
+    public UTIL_AbstractCommon_BATCH(Boolean ldvMode, String additionalWhereClause) {
+        // batchSize, ldvMode
+        this(DEFAULT_BATCH_SIZE, ldvMode, additionalWhereClause);
     }
 
     /**
      * @description Constructor, if ldvMode is false/null it will
      * use the default logic to determine whether to run in LDV Chunking mode, calculating record distance between the min and
      * max Id for the object
-     * @param additionalWhereClause constraint to apply to child records for filtering purposes
      * @param batchSize Integer Size of each batch
      * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
+     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.  If a main where clause is also present both will be encapsulated in () and anded.
      */
-    public UTIL_AbstractCommon_BATCH(String additionalWhereClause, Integer batchSize, boolean ldvMode) {
-        this.additionalWhereClause = additionalWhereClause;
+    public UTIL_AbstractCommon_BATCH(Integer batchSize, boolean ldvMode, String additionalWhereClause) {
         this.endReached = false;
         this.batchSize = batchSize;
         this.chunkIteration = 0;
         this.ldvMode = ldvMode;
+        this.additionalWhereClause = additionalWhereClause;
     }
 
     /**
@@ -174,7 +188,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description SOQL Query Fragment: Part of the query between the SELECT and FROM, returning either the ID if in LDV Chunking mode or Subquery is present, or fields to return for the batch Query
+     * @description SOQL Query Fragment: Part of the query between the SELECT and FROM, returning either the ID if in LDV
+     * Chunking mode or Subquery is present, or fields to return for the batch Query
      * @return String part of query between the SELECT and the outer FROM
      */
     @testVisible private String getQueryFieldList() {
@@ -182,7 +197,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description SOQL Query Fragment: ORDER BY and LIMIT CLAUSE.  If LDV/Chunking, it will return a default order by ID with a limit of the Chunk Size for the Batch so the query does not time out
+     * @description SOQL Query Fragment: ORDER BY and LIMIT CLAUSE.  If LDV/Chunking, it will return a default order by ID
+     * with a limit of the Chunk Size for the Batch so the query does not time out
      * @return String SQOL Query Fragment for the ORDER BY and LIMIT fragment if needed
      */
     @testVisible private String getQueryOrderByANDLimitClause() {
@@ -195,13 +211,38 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      */
     @testVisible private String getQueryWhereClause() {
         String ldvWhere = isFirstChunk() ? ' WHERE Id >= \'' + startId + '\'' : ' WHERE Id > \'' + startId + '\'';
-        String nonLdvWhere =  ((this.additionalWhereClause != null) && (this.additionalWhereClause.trim().length() > 0)) ? ' WHERE (' + this.additionalWhereClause + ')' : '';
+        String whereClause = getQueryNonLDVWhereClause();
+
+        String nonLdvWhere =  ((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '';
 
         return (ldvMode) ? ldvWhere : nonLdvWhere;
     }
 
     /**
-     * @description Indicates whether or not this is the first chunk when running in LDV Chunking mode.  Needed for LDV Chunking mode execution, as the first query differs from the rest
+     * @description SOQL Query Fragment: Calculates the where clause for the inner or non LDV execution of the records
+     * @return String Where clause fragment
+     */
+    @testVisible private String getQueryNonLDVWhereClause() {
+        String fullWhereClause = '';
+
+        String whereClause = getWhereClause();
+
+        Boolean mainWhere = (whereClause != null && whereClause.trim().length() > 0);
+        Boolean addtlWhere = (additionalWhereClause != null && additionalWhereClause.trim().length() > 0);
+        if (mainWhere && addtlWhere) {
+            return '(' + whereClause.trim() + ') AND (' + additionalWhereClause.trim() + ')';
+        } else if (mainWhere && !addtlWhere) {
+            return whereClause.trim();
+        } else if (!mainWhere && addtlWhere) {
+            return additionalWhereClause.trim();
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * @description Indicates whether or not this is the first chunk when running in LDV Chunking mode.  Needed for LDV Chunking
+     * mode execution, as the first query differs from the rest
      * @return Boolean true if the first chunk and false otherwise
      */
     @testVisible private Boolean isFirstChunk() {
@@ -209,8 +250,17 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description execute method for the batch, overloaded to do an inner query when necessary and call doExecute with results of either the inner query (if necessary, or the original records returned).
-     * doExecute will be the implementing batch classes method instead of execute.
+     * @description returns the Batch Size the Job was configured with
+     * @return Integer Size of each batch of records for the job
+     */
+    public Integer getBatchSize() {
+        return this.batchSize;
+    }
+
+    /**
+     * @description execute method for the batch, overloaded to do an inner query when necessary and call doExecute with results of
+     * either the inner query (if necessary, or the original records returned). doExecute will be the implementing batch
+     * classes method instead of execute.
      * @param bc BatchableContext supplied by Salesforce
      * @param records Records returned by salesforce for each batch
      */
@@ -229,15 +279,16 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description Either returns the records as is, if not executing in LDV Chunking mode, and no subquery was present in the field list, or uses the records passed to
-     * execute the "inner query" with all the fields, any additional where clause, etc.
+     * @description Either returns the records as is, if not executing in LDV Chunking mode, and no subquery was present in the field list,
+     * or uses the records passed to execute the "inner query" with all the fields, any additional where clause, etc.
      * @param records Records returned by salesforce for each batch
      * @return List of records to pass to implementing "doExecute" method
      */
    @testVisible private List<SObject> getInnerRecords(List<SObject> records) {
         if (ldvMode || isSubQueryPresent()) {
-            String query = 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSOQLObjectName() + ' WHERE Id in :records ' +
-                        (((this.additionalWhereClause != null) && (this.additionalWhereClause.trim().length() > 0)) ? ' AND (' + this.additionalWhereClause + ')' : '');
+            String whereClause = getQueryNonLdvWhereClause();
+            String query = 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSOQLObjectName() + ' WHERE (Id in :records) ' +
+                        (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' AND (' + whereClause + ')' : '');
 
             return Database.query(query);
         } else { // No need to requery if not LDV Chunking mode
@@ -246,8 +297,39 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description Apex Batch "finish" method called by Salesforce.  Overloaded to call doFinish, passing an indicated to doFinish as to whether it is completely finished (isComplete == true),
-     * or needs to execute the batch for additional chunks (isComplete == false).  It will also move the startId to the next chunk and re-execute the batch if needed.
+     * @description Assembles a query using the object, fields, and parameters, where clause and additional where clause parameters,
+     * with a limit of 1 record returned.  This will be used to allow the code to pre validate an additional where clause does not
+     * break the batch without executing it, if needed.
+     * @return String query to use for validation of batch query
+     */
+    @testVisible private String getQueryForValidate() {
+            String whereClause = getQueryNonLdvWhereClause();
+            return 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSOQLObjectName() +
+                    (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '') +
+                    ' LIMIT 1';
+    }
+
+
+    /**
+     * @description Executes a query built with the fragments used by the batch to confirm there are no syntactical issues with either
+     * the fields/subqueries, etc., the where clause, and the additional where clause if present.  If no errors are found will return ''.
+     * If, however, executing the query causes an error, the text of error message will be returned to the caller.
+     * @return Exception null, if successfully executed, or the exception that occurred.
+     */
+    public Exception validateQuery() {
+        String query = getQueryForValidate();
+        try {
+            Database.query(query);
+            return null;
+        } catch(Exception e) {
+            return e;
+        }
+    }
+
+    /**
+     * @description Apex Batch "finish" method called by Salesforce.  Overloaded to call doFinish, passing a boolean indicator to doFinish as
+     * to whether it is completely finished (isComplete == true), or needs to execute the batch for additional chunks (isComplete == false).
+     * It will also move the startId to the next chunk and re-execute the batch if needed.
      * @param bc BatchableContext supplied by Salesforce
      */
     public void finish(Database.BatchableContext bc) {
@@ -351,6 +433,14 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @param records the records returned for that batch
      */
     public abstract void doExecute(Database.BatchableContext bc, List<SObject> records);
+
+    /**
+      * Overridable Where Clause to add to the inner query, or non LDV query, if not running in LDV/Chunking mode
+      * @return String '' by default, can be overriden with a Where clause, excluding the word "Where"
+      */
+    public virtual String getWhereClause() {
+        return '';
+    }
 
     /**
      * A do nothing equivalent to the finish method of a standard batch class.  Can be overriden by the implementing class.

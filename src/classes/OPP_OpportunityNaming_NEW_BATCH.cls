@@ -37,18 +37,14 @@
  */
 public class OPP_OpportunityNaming_NEW_BATCH extends UTIL_AbstractCommon_BATCH implements Schedulable {
 
-   /** @description The batch process constructor; creates opportunity query for all opportunities.*/
+    /** @description Default No argument constructor */
     public OPP_OpportunityNaming_NEW_BATCH() {
         super();
-
-        //query = 'SELECT Id, Name FROM Opportunity ORDER BY Id LIMIT ' + defaultQueryLimit;
     }
 
-    /** @description The batch process constructor; creates opportunity query for all opportunities.*/
+    /** @description Constructor to allow specifying batch size.*/
     public OPP_OpportunityNaming_NEW_BATCH(Integer batchSize) {
         super(batchSize);
-
-        //query = 'SELECT Id, Name FROM Opportunity ORDER BY Id LIMIT ' + defaultQueryLimit;
     }
 
     /** @description Schedulable execute method.*/

@@ -42,6 +42,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
     private Integer expectedResult;
     private Integer testChunkSize = 1;
+    private String testWhereClause = '';
 
     /*******************************************************************************************************************
     * @description Test Batch Execution with inner test batch class to test non chunking conditions
@@ -64,6 +65,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_BATCH_TEST(10);
         tab.setTestChunkSize(10);
+        System.assertEquals (10, tab.getBatchSize(), 'Batch Size');
         tab.setExpectedResult(TEST_ACCOUNT_CNT);
         Database.executeBatch(tab, 10);
         Test.stopTest();
@@ -92,7 +94,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
         Test.startTest();
 
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_BATCH_TEST(1, true);
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_BATCH_TEST(1, true, '');
         tab.setExpectedResult(TEST_ACCOUNT_CNT);
         Database.executeBatch(tab, 1);
         Test.stopTest();
@@ -108,29 +110,228 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     @isTest
     public static void addtlBatchConstructors() {
         UTIL_AbstractCommon_BATCH_TEST tabNoParam = new UTIL_AbstractCommon_BATCH_TEST();
-        UTIL_AbstractCommon_BATCH_TEST tabAddtlWhere = new UTIL_AbstractCommon_BATCH_TEST('Name = \'Test Account #1\'');
-        UTIL_AbstractCommon_BATCH_TEST tabAddtlWhereLDV = new UTIL_AbstractCommon_BATCH_TEST('Name = \'Test Account #1\'', true);
+        UTIL_AbstractCommon_BATCH_TEST tabLDV = new UTIL_AbstractCommon_BATCH_TEST(false);
+        UTIL_AbstractCommon_BATCH_TEST tabLDVAddtlWhere = new UTIL_AbstractCommon_BATCH_TEST(false, 'Name = \'test\'');
+        UTIL_AbstractCommon_BATCH_TEST tabBatchSizeAddtlWhere = new UTIL_AbstractCommon_BATCH_TEST(5, 'Name = \'test\'');
         UTIL_AbstractCommon_BATCH_TEST tabBatchSize = new UTIL_AbstractCommon_BATCH_TEST(5);
-        UTIL_AbstractCommon_BATCH_TEST tabBatchSizeLDV = new UTIL_AbstractCommon_BATCH_TEST(5, true);
-        UTIL_AbstractCommon_BATCH_TEST tabAddtlWhereBatchSize = new UTIL_AbstractCommon_BATCH_TEST('Name = \'Test Account #1\'', 5, true);
+        UTIL_AbstractCommon_BATCH_TEST tabAll = new UTIL_AbstractCommon_BATCH_TEST(5, true, 'Name = \'test\'');
+
     }
 
+    /*******************************************************************************************************************
+    * @description Test Batch Execution when additional where clause is present (LDV)
+    */
+    @isTest
+    public static void executeAddtlWhereClauseLDV() {
+        List<Account> accs = new List<Account>();
+
+        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
+            accs.add(
+                new Account(
+                    Name = 'Test Account #' + i
+                )
+            );
+        }
+        insert accs;
+
+        Test.startTest();
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #0\'');
+        tab.setExpectedResult(1);
+
+        Database.executeBatch(tab, 1);
+        Test.stopTest();
+
+        List<AsyncApexJob> aaJobs = queryBatchJobs();
+        // 7 jobs present because it ran in LDV Chunking mode.
+        System.assertEquals (7, aajobs.size(), '# of jobs present');
+    }
+
+    /*******************************************************************************************************************
+    * @description Test Batch Execution when additional where clause is present (non LDV)
+    */
+    @isTest
+    public static void executeAddtlWhereClause() {
+        List<Account> accs = new List<Account>();
+
+        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
+            accs.add(
+                new Account(
+                    Name = 'Test Account #' + i
+                )
+            );
+        }
+        insert accs;
+
+        Test.startTest();
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #0\'');
+        tab.setTestChunkSize(10);
+        tab.setExpectedResult(1);
+
+        Database.executeBatch(tab, 1);
+        Test.stopTest();
+
+        List<AsyncApexJob> aaJobs = queryBatchJobs();
+        // 1 jobs present because it ran in non LDV Chunking mode.
+        System.assertEquals (1, aajobs.size(), '# of jobs present');
+    }
+
+    /*******************************************************************************************************************
+    * @description Test Batch Execution when where clause is present (LDV)
+    */
+    @isTest
+    public static void executeWhereClauseLDV() {
+        List<Account> accs = new List<Account>();
+
+        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
+            accs.add(
+                new Account(
+                    Name = 'Test Account #' + i
+                )
+            );
+        }
+        insert accs;
+
+        Test.startTest();
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
+        tab.setTestWhereClause('Name = \'Test Account #0\'');
+        tab.setExpectedResult(1);
+
+        Database.executeBatch(tab, 1);
+        Test.stopTest();
+
+        List<AsyncApexJob> aaJobs = queryBatchJobs();
+        // 7 jobs present because it ran in LDV Chunking mode.
+        System.assertEquals (7, aajobs.size(), '# of jobs present');
+    }
+
+    /*******************************************************************************************************************
+    * @description Test Batch Execution when where clause is present (non LDV)
+    */
+    @isTest
+    public static void executeWhereClause() {
+        List<Account> accs = new List<Account>();
+
+        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
+            accs.add(
+                new Account(
+                    Name = 'Test Account #' + i
+                )
+            );
+        }
+        insert accs;
+
+        Test.startTest();
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
+        tab.setTestWhereClause('Name = \'Test Account #0\'');
+        tab.setTestChunkSize(10);
+        tab.setExpectedResult(1);
+
+        Database.executeBatch(tab, 1);
+        Test.stopTest();
+
+        List<AsyncApexJob> aaJobs = queryBatchJobs();
+        // 1 jobs present because it ran in non LDV Chunking mode.
+        System.assertEquals (1, aajobs.size(), '# of jobs present');
+    }
+
+    /*******************************************************************************************************************
+    * @description Test Batch Execution when where and additional clause is present (LDV)
+    */
+    @isTest
+    public static void executeWhereAndAdditionalClauseLDV() {
+        List<Account> accs = new List<Account>();
+
+        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
+            accs.add(
+                new Account(
+                    Name = 'Test Account #' + i
+                )
+            );
+        }
+        insert accs;
+
+        Test.startTest();
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
+        tab.setTestWhereClause('Name = \'Test Account #0\' or Name=\'Test Account #1\' or Name=\'Test Account #2\'');
+        tab.setExpectedResult(2);
+
+        Database.executeBatch(tab, 1);
+        Test.stopTest();
+
+        List<AsyncApexJob> aaJobs = queryBatchJobs();
+        // 7 jobs present because it ran in LDV Chunking mode.
+        System.assertEquals (7, aajobs.size(), '# of jobs present');
+    }
+
+    /*******************************************************************************************************************
+    * @description Test Batch Execution when where  and additional clause is present (non LDV)
+    */
+    @isTest
+    public static void executeWhereAndAdditionalClause() {
+        List<Account> accs = new List<Account>();
+
+        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
+            accs.add(
+                new Account(
+                    Name = 'Test Account #' + i
+                )
+            );
+        }
+        insert accs;
+
+        Test.startTest();
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
+        tab.setTestWhereClause('Name = \'Test Account #0\' or Name=\'Test Account #1\' or Name=\'Test Account #2\'');
+        tab.setTestChunkSize(10);
+        tab.setExpectedResult(2);
+
+        Database.executeBatch(tab, 10);
+        Test.stopTest();
+
+        List<AsyncApexJob> aaJobs = queryBatchJobs();
+        // 1 jobs present because it ran in non LDV Chunking mode.
+        System.assertEquals (1, aajobs.size(), '# of jobs present');
+    }
     /*******************************************************************************************************************
     * @description Test Batch Execution when no records are returned
     */
     @isTest
     public static void noRecordsReturned() {
 
-            Test.startTest();
-            UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
-            tab.setExpectedResult(0);
+        Test.startTest();
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
+        tab.setExpectedResult(0);
 
-            Database.executeBatch(tab, 1);
-            Test.stopTest();
+        Database.executeBatch(tab, 1);
+        Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
         System.assertEquals (1, aajobs.size(), '# of jobs present');
 
+    }
+
+    /*******************************************************************************************************************
+    * @description Test Validate Method valid Query
+    */
+    @isTest
+    public static void validateValidQuery() {
+
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
+        tab.setTestWhereClause('Name = \'Test Account #0\' or Name=\'Test Account #1\' or Name=\'Test Account #2\'');
+
+        System.assertEquals(null, tab.validateQuery(), 'No Exception expected');
+    }
+
+    /*******************************************************************************************************************
+    * @description Test Validate Method invalid Query
+    */
+    @isTest
+    public static void validateInvalidQuery() {
+
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
+        tab.setTestWhereClause('Name equals \'Test Account #0\' or Name equals \'Test Account #1\' or Name equals \'Test Account #2\'');
+
+        System.assertNotEquals(null, tab.validateQuery(), 'Exception expected');
     }
 
     /* Test Harness for Batch Implementation Here... */
@@ -164,38 +365,38 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     /**
      * @description Constructor
      * @param batchSize How many records should be in each batch
+     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
+     */
+    public UTIL_AbstractCommon_BATCH_TEST(Integer batchSize, String additionalWhereClause) {
+        super(batchSize, additionalWhereClause);
+    }
+
+    /**
+     * @description Constructor
      * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
      */
-    public UTIL_AbstractCommon_BATCH_TEST(Integer batchSize, Boolean ldvMode) {
-        super(batchSize, ldvMode);
+    public UTIL_AbstractCommon_BATCH_TEST(Boolean ldvMode) {
+        super(ldvMode);
     }
 
     /**
      * @description Constructor
-     * @param addtionalWhereClause Additional Where Clause added to the query used to retrieve the detailed records
-     */
-    public UTIL_AbstractCommon_BATCH_TEST(String additionalWhereClause) {
-        super(additionalWhereClause);
-    }
-
-    /**
-     * @description Constructor
-     * @param addtionalWhereClause Additional Where Clause added to the query used to retrieve the detailed records
      * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
+     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
      */
-    public UTIL_AbstractCommon_BATCH_TEST(String additionalWhereClause, Boolean ldvMode) {
-        super(additionalWhereClause, ldvMode);
+    public UTIL_AbstractCommon_BATCH_TEST(Boolean ldvMode, String additionalWhereClause) {
+        super(ldvMode, additionalWhereClause);
     }
 
 
     /**
      * @description Constructor
-     * @param addtionalWhereClause Additional Where Clause added to the query used to retrieve the detailed records
      * @param batchSize How many records should be in each batch
      * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
+     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
      */
-    public UTIL_AbstractCommon_BATCH_TEST(String additionalWhereClause, Integer batchSize, Boolean ldvMode) {
-        super(additionalWhereClause, batchSize, ldvMode);
+    public UTIL_AbstractCommon_BATCH_TEST(Integer batchSize, Boolean ldvMode, String additionalWhereClause) {
+        super(batchSize, ldvMode, additionalWhereClause);
     }
 
     /**
@@ -221,6 +422,21 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         return 'Account';
     }
 
+    /**
+      * Setter for testWhereClause Field
+      * @param testWhereClause new value for testWhereClause
+      */
+    public void setTestWhereClause(String testWhereClause) {
+        this.testWhereClause = testWhereClause;
+    }
+
+    /**
+      * Overridable test Where Clause to add to the inner query, or non LDV query, if not running in LDV/Chunking mode
+      * @return String ''
+      */
+    public override String getWhereClause() {
+        return this.testWhereClause;
+    }
     /**
      * @description Called on completion of the batch job.  If this is running LDV Mode it may be called more than once.  All but the last invocation will
      * have an isComplete value of false.  This method isd similar in nature/roughly equivalent to the finish method of a standard Apex Batch job
