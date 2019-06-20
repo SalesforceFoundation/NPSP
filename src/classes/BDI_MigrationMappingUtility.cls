@@ -45,21 +45,23 @@ public with sharing class BDI_MigrationMappingUtility {
     /*******************************************************************************************************
     * @description Name of default packaged Object Mapping Set
     */
-    public static final String DATA_IMPORT_OBJECT_NAME =
-        'DataImport__c';
+    public static final String NAMESPACE = UTIL_Namespace.getNamespace();
 
     /*******************************************************************************************************
     * @description Name of default packaged Object Mapping Set
     */
-    public static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME =
-        'Default_Object_Mapping_Set';
+    public static final String DATA_IMPORT_OBJECT_NAME = 'DataImport__c';
+
+    /*******************************************************************************************************
+    * @description Name of default packaged Object Mapping Set
+    */
+    public static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME = 'Default_Object_Mapping_Set';
 
     /*******************************************************************************************************
     * @description Name of default packaged Field Mapping Set
     * Set as static because it's used in the static method updateCustomSettings
     */
-    public static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME =
-        'Default_Field_Mapping_Set';
+    public static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME = 'Default_Field_Mapping_Set';
 
     /*******************************************************************************************************
     * @description Name of custom Field Mapping Set
@@ -72,15 +74,13 @@ public with sharing class BDI_MigrationMappingUtility {
     * @description Value for Data Import custom settings Field Mapping Method
     * Set as static because it's used in the static method updateCustomSettings
     */
-    public static final String DATA_IMPORT_FIELD_MAPPING =
-        'Data Import Field Mapping';
+    public static final String DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
 
     /*******************************************************************************************************
     * @description Value for Data Import Custom Setting's Field Mapping Method.
     * Set as static because it's used in the static method updateCustomSettings
     */
-    public static final String HELP_TEXT =
-        'Help Text';
+    public static final String HELP_TEXT = 'Help Text';
 
     /*******************************************************************************************************
     * @description These fields are used to hold information, import status and lookup id, on the newly
@@ -131,6 +131,11 @@ public with sharing class BDI_MigrationMappingUtility {
     private Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName;
 
     /*******************************************************************************************************
+    * @description Name of the Data Import Field Mapping Set to use
+    */
+    private String fieldMappingSetName = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
+
+    /*******************************************************************************************************
     * @description List of bad/malformed help text mappings
     */
     public List<HelpTextFieldMapping > badHelpTextMappings {
@@ -140,7 +145,7 @@ public with sharing class BDI_MigrationMappingUtility {
             }
             return badHelpTextMappings;
         }
-        private set;
+        set;
     }
 
     /*******************************************************************************************************
@@ -231,18 +236,20 @@ public with sharing class BDI_MigrationMappingUtility {
     public void migrateHelpTextToCustomMetadata() {
 
         queuedMetadataTypesForDeploy.clear();
-        badHelpTextMappings.clear();
 
-        populateListsFromHelpTextMappings();
+        if (!Test.isRunningTest()) {
+            badHelpTextMappings.clear();
+            populateListsFromHelpTextMappings();
+        }
 
-        List<DataImportFieldMapping> helpTextFieldMappings = dataImportFieldMappings;
+        if (customFieldMappingSetExists) {
+            fieldMappingSetName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
+        }
 
-        String fieldMappingSetName =
-            customFieldMappingSetExists ? MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME : DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
         Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName =
             helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
 
-        for (DataImportFieldMapping fieldMapping : helpTextFieldMappings) {
+        for (DataImportFieldMapping fieldMapping : dataImportFieldMappings) {
 
             String fieldMappingKey = fieldMapping.targetObjectAPIName +
                 '.' + fieldMapping.dataImportObjectName +
@@ -644,12 +651,17 @@ public with sharing class BDI_MigrationMappingUtility {
                 this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
                 this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
 
+                if (NAMESPACE != 'npsp') {
+                    this.targetFieldAPIName =
+                        UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                }
+
                 if (String.isNotBlank(this.dataImportObjectName)) {
                     this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
                 }
 
-                Boolean fieldNameIsUsable = String.isNotBlank(targetFieldAPIName);
-                Boolean objectNameIsUsable = String.isNotBlank(dataImportObjectName);
+                Boolean fieldNameIsUsable = String.isNotBlank(this.targetFieldAPIName);
+                Boolean objectNameIsUsable = String.isNotBlank(this.dataImportObjectName);
                 Boolean objectAPINameIsUsable = String.isNotBlank(targetObjectAPIName);
 
                 if (fieldNameIsUsable && objectNameIsUsable && objectAPINameIsUsable) {

@@ -44,9 +44,7 @@ public class BDI_MigrationMappingHelper {
     * @return List<Data_Import_Field_Mapping_Set__mdt>
     */
     public List<Data_Import_Field_Mapping_Set__mdt> getFieldMappingSet(String developerName) {
-        System.debug('getFieldMappingSet: ' + developerName);
         List<Data_Import_Field_Mapping_Set__mdt> sets = [SELECT Id FROM Data_Import_Field_Mapping_Set__mdt WHERE DeveloperName = :developerName];
-        System.debug('Sets: ' + sets);
         return sets;
     }
 
@@ -60,8 +58,9 @@ public class BDI_MigrationMappingHelper {
     }
 
     /*******************************************************************************************************
-     * @description Queries for default Object Mappings and builds a map of DeveloperName to Object Mapping record
-     * Used to check for existance of Object Mapping record without loop
+     * @description Queries for default Object Mappings and builds a map of DeveloperName to Object Mapping
+     * record used to check for existance of Object Mapping record without loop
+     *
      * @param objectMappingSetId Id of the default Object Mapping Set
      * @return Collection of Object Mapping DeveloperName to Object Mapping record
      */
