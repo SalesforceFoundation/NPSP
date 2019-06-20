@@ -254,28 +254,48 @@ public with sharing class BDI_MigrationMappingUtility {
                 fieldMappingsByFieldMappingSetDeveloperName.get(fieldMappingKey);
 
             if (existingDefaultFieldMapping == null) {
-                enqueueNewFieldMapping(fieldMapping, existingDefaultObjectMapping);
+                // Is a new field mapping
+                fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                fieldMapping.setObjectMapping(existingDefaultObjectMapping);
+                // Setting name to null will force field mapping to generate a unique name
+                fieldMapping.setRecordName(null, false);
+
+                queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+
             } else if (existingDefaultFieldMapping != null) {
 
                 if (customFieldMappingSetExists) {
-                    enqueueOverwrittenFieldMapping(
-                        fieldMapping,
-                        existingDefaultFieldMapping,
-                        existingDefaultObjectMapping);
+                    // Migrated Custom Field Mapping Set exists
+                    DataImportFieldMapping overwrittenMapping =
+                        new DataImportFieldMapping(
+                            existingDefaultFieldMapping,
+                            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
+                    overwrittenMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                    overwrittenMapping.setObjectMapping(existingDefaultObjectMapping);
+                    overwrittenMapping.setTargetField(fieldMapping.targetFieldAPIName);
+
+                    queuedMetadataTypesForDeploy.add(overwrittenMapping.getMetadataRecord());
                 } else {
-                    enqueueFieldMapping(
-                        fieldMapping,
-                        existingDefaultFieldMapping,
-                        existingDefaultObjectMapping);
+                    // Check if we have a conflict and update the target field based on the help text mapping
+                    if (fieldMapping.hasBadDefaultValues(existingDefaultFieldMapping)) {
+                        fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                        fieldMapping.setObjectMapping(existingDefaultObjectMapping);
+                        fieldMapping.setTargetField(fieldMapping.targetFieldAPIName);
+                    } else {
+                        fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                        fieldMapping.setObjectMapping(existingDefaultObjectMapping);
+                    }
+
+                    queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
                 }
             }
 
             fieldMappingsByFieldMappingSetDeveloperName.remove(fieldMappingKey);
         }
 
-        enqueueNonHelpTextMappings(fieldMappingsByFieldMappingSetDeveloperName);
-        enqueueMigratedCustomFieldMappingSet();
-        //badHelpTextMappings = helper.getBadHelpTextMappings();
+        createAndEnqueueNonHelpTextMappings(fieldMappingsByFieldMappingSetDeveloperName);
+        createAndEnqueueMigratedCustomFieldMappingSet();
     }
 
     /*******************************************************************************************************
@@ -317,97 +337,18 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-    * @description Converts DataImportFieldMapping into a Custom Metadata record. Called when we have
-    * a conflict and need to carry over values from the help text mapping or a standard field mapping and
-    * need to carry over values from the existingDefaultFieldMapping. Adds Custom Metadata record to
-    * queuedMetadataTypesForDeploy
-    *
-    * @param fieldMapping: DataImportFieldMapping that will be converted to a Custom Metadata Record
-    * @param existingDefaultFieldMapping: Corresponding standard Data_Import_Field_Mapping__mdt
-    * @param existingDefaultObjectMapping: Corresponding standard Data_Import_Object_Mapping__mdt
-    */
-    private void enqueueFieldMapping(DataImportFieldMapping fieldMapping,
-        Data_Import_Field_Mapping__mdt existingDefaultFieldMapping,
-        Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
-        // Existing Field Mapping, check if CMTs field values match Help Text field values
-        Boolean hasConflictingValues = isConflictingWithStandardFieldMapping(fieldMapping,
-                existingDefaultFieldMapping,
-                existingDefaultObjectMapping);
-
-        if (hasConflictingValues) {
-            fieldMapping.setLookupsAndTargetField(
-                existingDefaultObjectMapping,
-                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
-                fieldMapping.targetFieldAPIName);
-        } else {
-            fieldMapping.setLookupsAndTargetField(
-                existingDefaultObjectMapping,
-                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
-                null);
-        }
-
-        queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
-    }
-
-    /*******************************************************************************************************
-    * @description Converts DataImportFieldMapping into a Custom Metadata record. Called when we have
-    * an existing Migrated Custom Field Mapping Set and adds to list queuedMetadataTypesForDeploy
-    *
-    * @param fieldMapping: DataImportFieldMapping that will be converted to a Custom Metadata Record
-    * and overwrite the existingDefaultFieldMapping
-    * @param existingDefaultFieldMapping: Corresponding standard Data_Import_Field_Mapping__mdt
-    * @param existingDefaultObjectMapping: Corresponding standard Data_Import_Object_Mapping__mdt
-    */
-    private void enqueueOverwrittenFieldMapping(DataImportFieldMapping fieldMapping,
-        Data_Import_Field_Mapping__mdt existingDefaultFieldMapping,
-        Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
-        // Migrated custom field mapping set exists, overwrite all existing field mappings
-        // with values from help text
-        DataImportFieldMapping overwrittenMapping =
-            new DataImportFieldMapping(
-                existingDefaultFieldMapping,
-                MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-
-        overwrittenMapping.setLookupsAndTargetField(
-            existingDefaultObjectMapping,
-            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
-            fieldMapping.targetFieldAPIName);
-
-        queuedMetadataTypesForDeploy.add(overwrittenMapping.getMetadataRecord());
-    }
-
-    /*******************************************************************************************************
-    * @description Converts DataImportFieldMapping into a Custom Metadata record. Called when we
-    * encounter a new field mapping from help text and adds to list queuedMetadataTypesForDeploy
-    *
-    * @param fieldMapping: DataImportFieldMapping that will be converted to a Custom Metadata Record
-    * @param existingDefaultFieldMapping: Corresponding standard Data_Import_Field_Mapping__mdt
-    * @param existingDefaultObjectMapping: Corresponding standard Data_Import_Object_Mapping__mdt
-    */
-    private void enqueueNewFieldMapping(DataImportFieldMapping fieldMapping,
-        Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
-
-        fieldMapping.setLookupsAndTargetField(
-            existingDefaultObjectMapping,
-            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
-            null);
-        // Setting name to null will force field mapping to generate a unique name
-        fieldMapping.setRecordName(null, false);
-
-        queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
-    }
-
-    /*******************************************************************************************************
     * @description Creates the Migrated Custom Field Mapping Set and adds to queuedMetadataTypesForDeploy
     */
-    private void enqueueMigratedCustomFieldMappingSet() {
+    private void createAndEnqueueMigratedCustomFieldMappingSet() {
         if (customFieldMappingSetExists == false) {
-            // Create migrated field mapping set
-            Metadata.CustomMetadata fieldMappingSet =
-                createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
+            DataImportFieldMappingSet fieldMappingSet =
+                new DataImportFieldMappingSet(
+                    MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
+                    DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
 
             // Add custom field mapping set to list queuedMetadataTypesForDeploy
-            queuedMetadataTypesForDeploy.add(fieldMappingSet);
+            queuedMetadataTypesForDeploy.add(fieldMappingSet.getMetadataRecord());
         }
     }
 
@@ -417,7 +358,7 @@ public with sharing class BDI_MigrationMappingUtility {
     *
     * @param fieldMappingSetName String Name of the parent Data Import Field Mapping Set
     */
-    private void enqueueNonHelpTextMappings(Map<String, Data_Import_Field_Mapping__mdt> fieldMappings) {
+    private void createAndEnqueueNonHelpTextMappings(Map<String, Data_Import_Field_Mapping__mdt> fieldMappings) {
 
         for (String key : fieldMappings.keySet()) {
             Data_Import_Field_Mapping__mdt existingFieldMapping =
@@ -434,42 +375,6 @@ public with sharing class BDI_MigrationMappingUtility {
 
             queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
         }
-    }
-
-    /*******************************************************************************************************
-    * @description Check if Field Mapping Metadata Type field values are out of sync with standard data import
-    * field mapping values
-    *
-    * @return Boolean
-    */
-    private Boolean isConflictingWithStandardFieldMapping(DataImportFieldMapping newFieldMapping,
-        Data_Import_Field_Mapping__mdt existingFieldMapping,
-        Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
-
-        Boolean badSourceFieldAPIName =
-            (existingFieldMapping.Source_Field_API_Name__c != newFieldMapping.sourceFieldAPIName);
-        Boolean badTargetFieldAPIName =
-            (existingFieldMapping.Target_Field_API_Name__c != newFieldMapping.targetFieldAPIName);
-        Boolean badTargetObjectMappingId =
-            (existingFieldMapping.Target_Object_Mapping__c != existingDefaultObjectMapping.Id);
-
-        Boolean foundMismatch = badSourceFieldAPIName
-            || badTargetFieldAPIName
-            || badTargetObjectMappingId;
-
-        return foundMismatch;
-    }
-
-    /*******************************************************************************************************
-    * @description Creates a new Field Mapping Set to be used as the new set when migration utility
-    * encounters a help text mapping customization and user opts to keep their customization
-    * @return Data_Import_Field_Mapping_Set__mdt
-    */
-    public Metadata.CustomMetadata createNewFieldMappingSet(String fieldMappingName) {
-        DataImportFieldMappingSet fieldMappingSet =
-            new DataImportFieldMappingSet(fieldMappingName, DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
-
-        return fieldMappingSet.getMetadataRecord();
     }
 
     /*******************************************************************************************************
@@ -593,17 +498,17 @@ public with sharing class BDI_MigrationMappingUtility {
             this.isDeleted = false;
         }
 
-        public void setLookupsAndTargetField(
-            Data_Import_Object_Mapping__mdt objectMapping,
-            String fieldMappingSetName,
-            String targetFieldAPIName) {
+        public void setFieldMappingSet(String fieldMappingSetName) {
+            this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
+        }
 
+        public void setObjectMapping(Data_Import_Object_Mapping__mdt objectMapping) {
             this.targetObjectMappingLabel = objectMapping.Label;
             this.targetObjectMappingRecordName = objectMapping.DeveloperName;
-            this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
-            if (targetFieldAPIName != null) {
-                this.targetFieldAPIName = targetFieldAPIName;
-            }
+        }
+
+        public void setTargetField(String targetFieldAPIName) {
+            this.targetFieldAPIName = targetFieldAPIName;
         }
 
         public void setRecordName(String recordName, Boolean isUnique) {
@@ -616,6 +521,18 @@ public with sharing class BDI_MigrationMappingUtility {
             } else {
                 this.recordName = recordName;
             }
+        }
+
+        public Boolean hasBadDefaultValues(Data_Import_Field_Mapping__mdt existingFieldMapping) {
+            Boolean badSourceFieldAPIName =
+                (existingFieldMapping.Source_Field_API_Name__c != this.sourceFieldAPIName);
+            Boolean badTargetFieldAPIName =
+                (existingFieldMapping.Target_Field_API_Name__c != this.targetFieldAPIName);
+            Boolean badTargetObjectMapping =
+                (existingFieldMapping.Target_Object_Mapping__r.DeveloperName !=
+                    this.targetObjectMappingRecordName);
+
+            return badSourceFieldAPIName || badTargetFieldAPIName || badTargetObjectMapping;
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
