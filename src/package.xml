@@ -48,6 +48,9 @@
         <members>ALLO_ManageAllocations_TEST</members>
         <members>ALLO_Multicurrency_TDTM</members>
         <members>ALLO_Multicurrency_TEST</members>
+        <members>ALLO_PaymentSync_SVC</members>
+        <members>ALLO_PaymentSync_TDTM</members>
+        <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
         <members>BDE_BatchDataEntry</members>
@@ -1357,9 +1360,13 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
+        <members>alloPaidPmtsExceedsOpp</members>
         <members>alloPaymentNotEnabled</members>
+        <members>alloPaymentOverallocatedError</members>
         <members>alloPercentExceed100</members>
+        <members>alloPmtOppSingleTransaction</members>
         <members>alloRemainder</members>
+        <members>alloRemoveOppWithPmt</members>
         <members>alloSignMistmatch</members>
         <members>alloSingleParent</members>
         <members>alloTotalExceedsOppAmt</members>
@@ -1762,7 +1769,6 @@
         <members>pmtModifyCurrency</members>
         <members>pmtPaidPaymentDateRequired</members>
         <members>pmtUnpaidPaymentScheduledDateRequired</members>
-        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -1798,6 +1804,7 @@
         <members>pmtWizardWriteoffNoAccessMessage</members>
         <members>pmtWizardYear</members>
         <members>pmtWriteOffPaidPayment</members>
+        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
