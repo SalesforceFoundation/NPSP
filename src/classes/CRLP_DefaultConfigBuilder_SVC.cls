@@ -47,8 +47,10 @@ public class CRLP_DefaultConfigBuilder_SVC {
      */
     public static String convertLegacyRollupsIntoCustomizableRollups() {
 
-        List<CRLP_RollupCMT.FilterGroup> filterGroups = buildDefaultFilterGroups();
+        List<CRLP_RollupCMT.Rollup> allChangedRollups = new List<CRLP_RollupCMT.Rollup>();
+        List<CRLP_RollupCMT.FilterGroup> allChangedFilterGroups = new List<CRLP_RollupCMT.FilterGroup>();
 
+        List<CRLP_RollupCMT.FilterGroup> filterGroups = buildDefaultFilterGroups();
         List<CRLP_RollupCMT.FilterRule> filterRulesToSoftDelete = softDeleteExtraFilterRulesInNPSPFilterGroups(filterGroups);
         List<CRLP_RollupCMT.FilterGroup> filterGroupsToSoftDelete = softDeleteExtraFilterGroupsAndRules(filterGroups);
 
@@ -61,18 +63,25 @@ public class CRLP_DefaultConfigBuilder_SVC {
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
 
-        if(!filterRulesToSoftDelete.isEmpty()){
+        if (!filterRulesToSoftDelete.isEmpty()){
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterRulesToSoftDelete);
         }
-        if(!filterGroupsToSoftDelete.isEmpty()){
+        if (!filterGroupsToSoftDelete.isEmpty()){
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroupsToSoftDelete);
+            allChangedFilterGroups.addAll(filterGroupsToSoftDelete);
         }
-        if(!rollupsToSoftDelete.isEmpty()){
+        if (!rollupsToSoftDelete.isEmpty()){
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollupsToSoftDelete);
+            allChangedRollups.addAll(rollupsToSoftDelete);
         }
+ 
+        allChangedFilterGroups.addAll(filterGroups);
+        allChangedRollups.addAll(rollups);
 
-        String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
-        return jobId;
+        // send change event check
+        CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(allChangedRollups, allChangedFilterGroups);
+
+        return CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
     }
 
     /*************************************************************************************************************
