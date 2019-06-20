@@ -77,6 +77,18 @@ public class CRLP_RollupCMT {
             } catch (Exception ex) {}
         }
 
+
+        /******************************************************************************************************************
+        * @description Adds rules to the Filter Group
+        ******************************************************************************************************************/
+        public FilterGroup withRules(List<Filter_Rule__mdt> ruleMdts) {
+            for (Filter_Rule__mdt ruleMdt : ruleMdts) {
+                FilterRule rule = new FilterRule(ruleMdt);
+                this.rules.add(rule);
+            }
+            return this;
+        }
+
         /**
          * @description Convert the wrapper class instance into a valid Metadata.CustomMetadata
          * instance for the Filter_Group.
@@ -121,6 +133,36 @@ public class CRLP_RollupCMT {
                 rulesMDT.add(fr.getMetadataRecord());
             }
             return rulesMDT;
+        }
+
+        /**************************************************************************************************************
+        * @description Determines if a Filter Group is computationally different from another Filter Group
+        * changes in name or label or description are not considered different
+        * filter rules are hashed because the sort order of the list is not guaranteed
+        * @param other FilterGroup to compare against
+        * @return boolean to indicate of the filter group is different 
+        **************************************************************************************************************/
+        public Boolean isDifferent(FilterGroup other) {
+            if (this.rules.size() != other.rules.size()) {
+                return true;
+            }
+
+            Map<String, FilterRule> rulesByHash = new Map<String, FilterRule>();
+
+            for (Integer i = 0; i < other.rules.size(); i++) {
+                FilterRule otherRule = other.rules[i];
+                rulesByHash.put(otherRule.generateHash(), other.rules[i]);
+            }
+
+            for (Integer i = 0; i < this.rules.size(); i++) {
+                FilterRule currentRule = this.rules[i];
+                if (!rulesByHash.containsKey(currentRule.generateHash())) {
+                    return true;
+                }
+            }
+
+            
+            return false;
         }
     }
 
@@ -246,6 +288,19 @@ public class CRLP_RollupCMT {
 
             return md;
         }
+
+    /******************************************************************************************************************
+     * @description Generates a string as the concatenation of the important fields of the rule
+     * @return string generated hash
+     *****************************************************************************************************************/
+        private String generateHash() {
+            return this.isDeleted + '__' +
+                + this.objectName + '__' 
+                + this.fieldName + '__' + 
+                + this.operationName + '__' + 
+                + this.value;
+        }
+
     }
 
     /** ***************************************************************************************************
@@ -275,10 +330,10 @@ public class CRLP_RollupCMT {
         public String dateObjectLabel;
         public String dateFieldLabel;
         public String dateField;
-        public Boolean isActive;
-        public Boolean isDeleted;
         public Boolean useFiscalYear;
         public Integer intValue;
+        public Boolean isActive;
+        public Boolean isDeleted;
 
         public Rollup(String label) {
             //check to see if UDR; these need a unique name
@@ -407,6 +462,114 @@ public class CRLP_RollupCMT {
             md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
             return md;
+        }
+
+        /**************************************************************************************************************
+        * @description Determines if a Rollup is computationally different from another Rollup
+        * changes in name or label or description are not considered different
+        * @param otherRollupMdt Rollup Mdt to compare against
+        * @return boolean to indicate of the rollup is different 
+        **************************************************************************************************************/
+        public Boolean isDifferent(Rollup__mdt otherRollupMdt) {
+            CRLP_RollupCMT.Rollup otherRollup = new CRLP_RollupCMT.Rollup(otherRollupMdt);
+            return isDifferent(otherRollup);
+        }
+
+
+        /**************************************************************************************************************
+        * @description Determines if a Rollup is computationally different from another Rollup
+        * changes in name or label or description are not considered different
+        * @param other Rollup to compare against
+        * @return boolean to indicate of the rollup is different 
+        **************************************************************************************************************/
+        public Boolean isDifferent(CRLP_RollupCMT.Rollup other) {
+
+            return other.filterGroupRecordName != this.filterGroupRecordName
+            || other.operation != this.operation
+            || ( (String.isBlank(other.timeBoundOperationType) ? null : other.timeBoundOperationType) != 
+                 (String.isBlank(this.timeBoundOperationType) ? null : this.timeBoundOperationType) )
+            || other.summaryObject != this.summaryObject
+            || other.summaryField != this.summaryField
+            || other.detailObject != this.detailObject
+            || other.detailField != this.detailField
+            || other.amountObject != this.amountObject
+            || other.amountField != this.amountField
+            || other.dateObject != this.dateObject
+            || other.dateField != this.dateField
+            || other.isActive != this.isActive
+            || other.isDeleted != this.isDeleted
+            || other.useFiscalYear != this.useFiscalYear 
+            || other.intValue != this.intValue;
+        
+        }
+
+
+        /*******************************************************************************************************
+        * @description Determines if the target rollup is a duplicate
+        */
+        public Boolean isDuplicate() {
+            for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
+                if (rlp.DeveloperName != this.recordName
+                    && rlp.Active__c
+                    && this.summaryObject == rlp.Summary_Object__r.QualifiedApiName
+                    && this.summaryField == rlp.Summary_Field__r.QualifiedApiName
+                    && !Test.isRunningTest()
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /**************************************************************************************************************
+        * @description Return the rollup type for a given rollup definition
+        * @param Rollup__mdt CMT Record
+        * @return CRLP_RollupProcessingOptions.RollupType
+        **************************************************************************************************************/
+        public CRLP_RollupProcessingOptions.RollupType getRollupType() {
+
+            String accountApiName = String.valueOf(Account.getSObjectType());
+            String contactApiName = String.valueOf(Contact.getSObjectType());
+            String opportunityApiName = String.valueOf(Opportunity.getSObjectType());
+            String paymentApiName = 'npe01__OppPayment__c';
+            String recurringDonationsApiName = 'npe03__Recurring_Donation__c';
+            String gauApiName = UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c');
+            String partialSoftCreditApiName = UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c');
+            String accountSoftCreditApiName = UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c');
+
+            // work down from most specific
+            if (this.summaryObject == recurringDonationsApiName) {
+                return CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+            }
+
+            if (this.summaryObject == gauApiName) {
+                return CRLP_RollupProcessingOptions.RollupType.GAU;
+            }
+
+            if (this.detailObject == partialSoftCreditApiName || this.amountObject == partialSoftCreditApiName) {
+                if (this.summaryObject == accountApiName) {
+                    return CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit;
+                }
+                if (this.summaryObject == contactApiName) {
+                    return CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+                }
+            }
+
+            if (this.detailObject == accountSoftCreditApiName ||  this.amountObject == accountSoftCreditApiName) {
+                return CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
+            }
+
+            if (this.detailObject == opportunityApiName || this.detailObject == paymentApiName) {
+                if (this.summaryObject == accountApiName) {
+                    return CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+                }
+                if (this.summaryObject == contactApiName) {
+                    return CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+                }
+            }
+
+            return null;
         }
     }
 

@@ -34,7 +34,9 @@
 * @description Unit Tests for the Customizable Rollups Api Service classes
 */
 @IsTest(IsParallel=true)
-private class CRLP_ApiService_TEST {
+public class CRLP_ApiService_TEST {
+    private static UTIL_IntegrationConfig_TEST.MockPackage mockPackage;
+    private static MockCallable callableMock;
 
     /**
     * @description Validate the getRollupDefinitions returns the expected collection of CRLP_Rollup instances.
@@ -83,6 +85,7 @@ private class CRLP_ApiService_TEST {
                 'An exception should be thrown for invalid param: ' + param);
             System.assert(actualException.getMessage().containsIgnoreCase(CallableApiParameters.PARAM_ROLLUP_TYPE),
                 'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_TYPE + '" param: ' + actualException.getMessage());
+
         }
     }
 
@@ -96,6 +99,238 @@ private class CRLP_ApiService_TEST {
         System.assert(service.getRollupDefinitions(null).isEmpty(),
             'When CRLP is disabled, then call to getRollupDefinitions should return an empty list');
     }
+
+    /**
+     * @description Confirms that isRollupStateEnabled returns true if the bridge is installed
+     */
+    @isTest
+    private static void shouldReturnTrueWhenRollupStateIsEnabled() {
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        Test.startTest();
+        Boolean isRollupStateEnabled = service.isRollupStateEnabled();
+        Test.stopTest();
+
+        System.assert(isRollupStateEnabled, 'API should indicate that rollup state is enabled');
+    }
+
+    /**
+     * @description Confirms that isRollupStateEnabled returns false if the bridge is not installed
+     */
+    @isTest
+    private static void shouldReturnFalseWhenRollupStateIsNotEnabled() {
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+        mockPackage.isInstalled = false;
+
+        Test.startTest();
+        Boolean isRollupStateEnabled = service.isRollupStateEnabled();
+        Test.stopTest();
+
+        System.assertEquals(false, isRollupStateEnabled, 'API should indicate that rollup state is not enabled');
+    }
+
+    /**
+     * @description Confirms that getBaseRollupStateForRecords calls Bridge callable with correct action and params
+     */
+    @isTest
+    private static void getBaseRollupStateForRecordsShouldCallArchiveBridgeCallable() {
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        String expectedRollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name();
+        Set<Id> expectedReferenceIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Account.SObjectType, 3));
+
+        Test.startTest();
+
+        service.getBaseRollupStateForRecords(
+            expectedReferenceIds,
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+        );
+
+        Test.stopTest();
+
+        System.assertEquals(CRLP_ApiService.ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE, callableMock.actionCalled,
+            'The correct action should be called');
+
+        System.assert(callableMock.providedParams.containsKey('RecordIds'),
+            'The RecordIds param should be included');
+
+        Object recordIds = callableMock.providedParams.get('RecordIds');
+
+        System.assert(recordIds instanceof Set<Id>, 'The RecordIds param value should be a Set<Id>');
+        System.assert(expectedReferenceIds.equals((Set<Id>) recordIds),
+            'The correct Ids should be passed as the RecordIds param value');
+
+        System.assert(callableMock.providedParams.containsKey('RollupType'),
+            'The RollupType param should be included');
+
+        Object actualRollupType = callableMock.providedParams.get('RollupType');
+
+        System.assert(actualRollupType instanceof String, 'The RollupType param value should be a String');
+        System.assertEquals(expectedRollupType, actualRollupType,
+            'The correct RollupType should be passed as the RollupType param value');
+    }
+
+    /**
+     * @description Confirms that getBaseRollupStateForRecords returns an empty map if not installed
+     */
+    @isTest
+    private static void baseRollupStateForRecordsShouldBeEmptyWhenArchiveBridgeIsNotInstalled() {
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+        mockPackage.isInstalled = false;
+
+        Test.startTest();
+        Map<Id, List<CRLP_Rollup>> actualRollupsByReferenceId =
+            service.getBaseRollupStateForRecords(
+                new Set<Id>(),
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+            );
+        Test.stopTest();
+
+        System.assertEquals(null, callableMock.actionCalled, 'The callabled action should not be called');
+        System.assert(actualRollupsByReferenceId.isEmpty(), 'An empty map should be returned');
+    }
+
+    /**
+     * @description Confirms that getBaseRollupStateForRecords returns a CRLPRollupMap with the requested data
+     */
+    @isTest
+    private static void getBaseRollupStateForRecordsShouldBuildCRLPRollupMap() {
+        final String MOCK_ROLLUP_DEFINITIONS = '[{"mockRollupDefinition":"randomData"}]';
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        Map<Id, String> expectedRollupsByReferenceId = new Map<Id, String>();
+        Set<Id> expectedReferenceIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Account.SObjectType, 3));
+        for (Id referenceId : expectedReferenceIds) {
+            expectedRollupsByReferenceId.put(referenceId, MOCK_ROLLUP_DEFINITIONS);
+        }
+
+        callableMock.withReturnValue(expectedRollupsByReferenceId);
+
+        Test.startTest();
+        Map<Id, List<CRLP_Rollup>> actualRollupsByReferenceId =
+            service.getBaseRollupStateForRecords(
+                expectedReferenceIds,
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+            );
+        Test.stopTest();
+
+        System.assertEquals(expectedReferenceIds, actualRollupsByReferenceId.keySet(),
+            'The requested Ids should be keys in the CRLP rollup map');
+
+        for (Id referenceId : actualRollupsByReferenceId.keySet()) {
+            System.assertEquals(1, actualRollupsByReferenceId.get(referenceId).size(),
+                'The correct number of rollups should be returned for each reference Id');
+        }
+    }
+
+
+     /**
+     * @description Confirms that mark records as stale calls Bridge callable with correct action and params
+     */
+    @isTest
+    private static void markRollupStateAsStaleShouldCallArchiveBridgeCallable() {
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        Set<String> expectedRollupTypes = new Set<String> { 
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name(),
+            CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name()
+        };
+
+        Test.startTest();
+        service.setRollupStateAsStale(expectedRollupTypes);
+        Test.stopTest();
+
+        System.assertNotEquals(
+            null, 
+            callableMock.actionCalled, 
+            'The callable action should be called'
+        );
+    }
+
+     /**
+     * @description Confirms that mark records as stale does not thrown an exception when the 
+     * bridge is not installed
+     */
+    @isTest
+    private static void markRollupStateAsStaleShouldNotThrowExceptionWhenArchiveBridgeIsNotInstalled() {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+        mockPackage.isInstalled = false;
+        
+        Set<String> expectedRollupTypes = new Set<String> { 
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name(),
+            CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name()
+        };
+
+        Exception actualException = null;
+        Test.startTest();
+        try {
+            service.setRollupStateAsStale(expectedRollupTypes);
+        } catch (Exception ex) {
+            actualException = ex;
+        }
+        Test.stopTest();
+        System.assertEquals(null, actualException, 'Should get rollup state successfully.');
+    }
+
+    /**
+    * @description changed rollups should generate a callback
+    */
+
+    @isTest
+    private static void changedRollupsShouldGenerateCallback() {
+         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        CRLP_RollupCMT.Rollup rollup1 = CRLP_RollupCMT_Test.generateRollup('1');
+        rollup1.recordName = null;
+        Test.startTest();
+        CRLP_ApiService.RollupMetadataHandler callback = service.sendChangeEvent(new List<CRLP_RollupCMT.Rollup> { rollup1} );
+        Test.stopTest();
+
+        System.assertNotEquals(null, callback, 'Should get a callback handler for new rollups');
+    }
+
+
+    /**
+    * @description unchanged filter groups should generate a callback
+    */
+
+    @isTest
+    private static void unChangedFilterGroupsShouldGenerateCallback() {
+         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        CRLP_RollupCMT.FilterGroup newFilterGroup = CRLP_RollupCMT_Test.generateFilterGroup('1');
+        CRLP_RollupCMT.FilterGroup existingFilterGroup = CRLP_RollupCMT_Test.generateFilterGroup('2');
+
+        Test.startTest();
+        CRLP_ApiService.RollupMetadataHandler callback = service.sendChangeEvent(
+            new List<CRLP_RollupCMT.FilterGroup> { newFilterGroup, existingFilterGroup } 
+        );
+        Test.stopTest();
+
+        System.assertNotEquals(null, callback, 'Should get a Callback handler for unmodified filter groups');
+    }
+
 
     /**
     * @description Validate that the ExecuteRollups() call throws an exception if the RollupType
@@ -129,6 +364,7 @@ private class CRLP_ApiService_TEST {
         System.assert(service.executeRollups(parentId, rollupType, null, null, false).isEmpty(),
             'The call should have succeeded, even with missing data, but returned an empty collection because there are no active rollups for this type.');
     }
+
 
     /**
     * @description Validate that the ExecuteRollups() call throws an exception if the RollupData
@@ -288,4 +524,82 @@ private class CRLP_ApiService_TEST {
             ' LIMIT 1';
         return Database.query(soql);
     }
+
+    /**
+     * @description Sets up mock package and callable api on the provided CRLP_ApiService instance
+     * so tests can run without the Bridge being installed
+     */
+    private static void setupMockIntegration(CRLP_ApiService service) {
+        mockPackage = new UTIL_IntegrationConfig_TEST.MockPackage();
+        mockPackage.isInstalled = true;
+
+        callableMock = new MockCallable();
+        mockPackage.callableApi = callableMock;
+
+        service.archiveBridgeConfig = mockPackage;
+    }
+
+    /**
+     * @description Mock Callable class that takes place of the Bridge callable class
+     */
+    private class MockCallable implements System.Callable {
+        Object returnValue;
+        Map<String, Object> providedParams;
+        String actionCalled;
+
+        /**
+         * @description Sets return value for callable
+         */
+        private MockCallable withReturnValue(Object returnValue) {
+            this.returnValue = returnValue;
+            return this;
+        }
+
+        /**
+         * @description Mocks the call method, tracks the action called, the provided params
+         */
+        public Object call(String action, Map<String, Object> params) {
+            providedParams = params;
+            actionCalled = action;
+            return returnValue == null ? new Map<Id, String>() : returnValue;
+        }
+    }
+
+     /**********************************************************************************************************
+    * @description Stub for CRLP_ApiService
+    */
+    public class Stub implements System.StubProvider {
+        public Set<String> calledMethods = new Set<String>();
+        public Map<String, List<Object>> argsByMethodName = new Map<String, List<Object>>();
+
+        private Map<String, Object> returnValueByMethodName = new Map<String, Object>{
+            'getBaseRollupStateForRecords' => new Map<Id, List<CRLP_Rollup>>(),
+            'isRollupStateEnabled' => true
+        };
+
+        public Stub withReturnValue(String methodName, Object returnValue) {
+            returnValueByMethodName.put(methodName, returnValue);
+            return this;
+        }
+
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> paramTypes,
+            List<String> paramNames,
+            List<Object> args
+        ) {
+            calledMethods.add(stubbedMethodName);
+
+            if (!argsByMethodName.containsKey(stubbedMethodName)) {
+                argsByMethodName.put(stubbedMethodName, new List<Object>());
+            }
+
+            argsByMethodName.get(stubbedMethodName).add(args);
+
+            return returnValueByMethodName.get(stubbedMethodName);
+        }
+    }
+
 }
