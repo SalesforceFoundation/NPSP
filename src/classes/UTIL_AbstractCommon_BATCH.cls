@@ -31,7 +31,16 @@
 * @date 2019
 * @group Utilities
 * @description This class is meant to be extended by batch jobs requiring enhanced batch
-* functionality, including LDV Support
+* functionality, including LDV Chunking Support, and support for automatically retrieving
+* subqueries for batches properly.  It is meant to switch between LDV Chunking mode or
+* non LDV Chunking mode, depending on the # of records in the object the batch is iterating
+* over.  The main limitation of this implementation is that it will not be possible to
+* provide an order to the records returned because it has to execute in a specific order
+* when running in LDV Chunking Mode.
+*
+* Future: Add exception handling, and logging support so implementing clases can inherit.
+* Recommend registering a default handler using an interface that can be switched out/overriden
+* as desired for specific use cases.
 */
 public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
@@ -115,13 +124,13 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description start method for the Database batch.  Overloaded to run in ldv or regular mode depending on parameters supplied, and/or
-     * record distance between min and max id for object.  If in chunking mode will be the querylocator for the current chunk of records
+     * @description start method for the Database batch.  Overloaded to run in LDV Chunking or regular batch mode depending on parameters supplied, and/or
+     * record distance between minimum and maximum Id for the main object of the batch.  If in LDV/Chunking mode it will be the querylocator for the
+     * current chunk of records
      * @param bc BatchableContext passed from Salesforce
-     * @return Database.QueryLocator querylocator for batch
+     * @return Database.QueryLocator Querylocator for batch
      */
-    public Database.Querylocator start(Database.BatchableContext bc) {
-
+    public Database.QueryLocator start(Database.BatchableContext bc) {
         if (startId == null) {
             this.startId = determineStartId();
             this.endId = determineEndId();
@@ -131,11 +140,14 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
         Database.QueryLocator ql = null;
         Database.QueryLocatorIterator qli = null;
 
+        // If startId is null, there were no records present in the object
         if (startId != null) {
             ql = Database.getQueryLocator(getQuery(startId));
             qli = (ql != null) ? ql.iterator() : null;
         }
 
+        // If no records were present/returned, it will execute a limited query with a LIMIT 0 in order to avoid
+        // Iterable errors
         if ((qli == null) || (!qli.hasNext())) {
             ql = Database.getQueryLocator(getQueryLimitZero());
             this.endReached = true;
@@ -149,36 +161,36 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return String queryString to execute for Object, limited to 0 records
      */
     @testVisible private String getQueryLimitZero() {
-        return 'SELECT ID FROM ' + getSOQLObjectName() + ' LIMIT 0';
+        return 'SELECT Id FROM ' + getSOQLObjectName() + ' LIMIT 0';
     }
 
     /**
-     * @description determines the query to execute factoring all the different params for where clause, ldv versus non ldv, etc.
+     * @description Determines the query to execute factoring all the different params for where clause, ldv versus non ldv, etc.
      * @param startId starting id of the chunk
-     * @return String queryString to execute for Object
+     * @return String queryString to execute for Batch
      */
     @testVisible private String getQuery(Id startId) {
         return 'SELECT ' + getQueryFieldList() + ' FROM ' + getSOQLObjectName() + getQueryWhereClause() + getQueryOrderByAndLimitClause();
     }
 
     /**
-     * @description returns either the ID for the LDV Chunking mode/if Subquery is present, and or fields to return for the batch Query
-     * @return String part of query between select and from
+     * @description SOQL Query Fragment: Part of the query between the SELECT and FROM, returning either the ID if in LDV Chunking mode or Subquery is present, or fields to return for the batch Query
+     * @return String part of query between the SELECT and the outer FROM
      */
     @testVisible private String getQueryFieldList() {
-        return this.ldvMode || isSubQueryPresent() ? 'ID' : getSOQLFullQueryFieldList();
+        return this.ldvMode || isSubQueryPresent() ? 'Id' : getSOQLFullQueryFieldList();
     }
 
     /**
-     * @description if LDV, will return a default order by ID with a limit of the Chunk Size for the Batch so the query does not time out
-     * @return String Order By and Limit fragment if needed
+     * @description SOQL Query Fragment: ORDER BY and LIMIT CLAUSE.  If LDV/Chunking, it will return a default order by ID with a limit of the Chunk Size for the Batch so the query does not time out
+     * @return String SQOL Query Fragment for the ORDER BY and LIMIT fragment if needed
      */
     @testVisible private String getQueryOrderByANDLimitClause() {
-        return this.ldvMode ? ' ORDER BY ID ASC LIMIT ' + getValidLDVChunkSize() : '';
+        return this.ldvMode ? ' ORDER BY Id ASC LIMIT ' + getValidLDVChunkSize() : '';
     }
 
     /**
-     * @description Calculates the where clause for the batch driver in LDV and non LDV mode
+     * @description SOQL Query Fragment: Calculates the where clause for the batch driver in LDV Chunking and non LDV mode
      * @return String Where clause fragment
      */
     @testVisible private String getQueryWhereClause() {
@@ -189,7 +201,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description Indicates whether or not this is the first chunk when running in ldv mode.  Needed for LDV mode execution
+     * @description Indicates whether or not this is the first chunk when running in LDV Chunking mode.  Needed for LDV Chunking mode execution, as the first query differs from the rest
      * @return Boolean true if the first chunk and false otherwise
      */
     @testVisible private Boolean isFirstChunk() {
@@ -197,8 +209,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description execute method for batch, overloaded to do inner query when necessary and call doExecute with results of inner query.  doExecute will be the implementing
-     * batch classes method instead of execute.
+     * @description execute method for the batch, overloaded to do an inner query when necessary and call doExecute with results of either the inner query (if necessary, or the original records returned).
+     * doExecute will be the implementing batch classes method instead of execute.
      * @param bc BatchableContext supplied by Salesforce
      * @param records Records returned by salesforce for each batch
      */
@@ -217,7 +229,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description Either returns the records as is, if not LDVMode, and no subquery was present in the field list, or uses the records passed to
+     * @description Either returns the records as is, if not executing in LDV Chunking mode, and no subquery was present in the field list, or uses the records passed to
      * execute the "inner query" with all the fields, any additional where clause, etc.
      * @param records Records returned by salesforce for each batch
      * @return List of records to pass to implementing "doExecute" method
@@ -225,17 +237,17 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
    @testVisible private List<SObject> getInnerRecords(List<SObject> records) {
         if (ldvMode || isSubQueryPresent()) {
             String query = 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSOQLObjectName() + ' WHERE Id in :records ' +
-                        (((this.additionalWhereClause != null) && (this.additionalWhereClause.trim().length() > 0)) ? 'and (' + this.additionalWhereClause + ')' : '');
+                        (((this.additionalWhereClause != null) && (this.additionalWhereClause.trim().length() > 0)) ? ' AND (' + this.additionalWhereClause + ')' : '');
 
             return Database.query(query);
-        } else { // No need to requery if not LDV Mode
+        } else { // No need to requery if not LDV Chunking mode
             return records;
         }
     }
 
     /**
-     * @description Apex Batch "finish" method, called by Salesforce.  Will call doFinish method and reExecute batch if LDV mode, moving to the next chunk and not at
-     * the end chunk, or will call doExecute in final mode, indicating that all processing is done.
+     * @description Apex Batch "finish" method called by Salesforce.  Overloaded to call doFinish, passing an indicated to doFinish as to whether it is completely finished (isComplete == true),
+     * or needs to execute the batch for additional chunks (isComplete == false).  It will also move the startId to the next chunk and re-execute the batch if needed.
      * @param bc BatchableContext supplied by Salesforce
      */
     public void finish(Database.BatchableContext bc) {
@@ -259,14 +271,10 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return Id of first record found in System for object, sorting ids ascending
      */
     private Id determineStartId() {
-        Id startId = null;
 
-        String queryString = 'SELECT ID FROM ' + getSOQLObjectName() + ' ORDER BY ID ASC LIMIT 1';
-        List<SObject> recs = Database.query (queryString);
-        if ((recs != null) && (recs.size() > 0)) {
-            startId = recs[0].Id;
-        }
-        return startId;
+        List<SObject> recs = Database.query ('SELECT Id FROM ' + getSOQLObjectName() + ' ORDER BY Id ASC LIMIT 1');
+
+        return ((recs != null) && (recs.size() > 0)) ? recs[0].Id : null;
     }
 
     /**
@@ -275,25 +283,20 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return Id of last record found in System for object, sorting ids descending
      */
      private Id determineEndId() {
-        Id endId = null;
+        List<SObject> recs = Database.query ('SELECT Id FROM ' + getSOQLObjectName() + ' ORDER BY Id DESC LIMIT 1');
 
-        String queryString = 'SELECT ID FROM ' + getSOQLObjectName() + ' ORDER BY ID DESC LIMIT 1';
-        List<SObject> recs = Database.query (queryString);
-        if ((recs != null) && (recs.size() > 0)) {
-        endId = recs[0].Id;
-        }
-        return endId;
+        return ((recs != null) && (recs.size() > 0)) ? recs[0].Id : null;
     }
 
     /**
-     * @description Returns an indicator indicating whether or not a batch should execute in LDV mode.  Basically, if the theoretical record distance
-     * exceeds the LDV Chunk Size, it will return true, and false otherwise.  If the ids are null, meaning there are no records present,
+     * @description Returns an indicator indicating whether or not a batch should execute in LDV Chunking mode.  Basically, if the theoretical record distance
+     * exceeds the LDV Chunk Size, it will return true, and false otherwise.  If the Ids are null, meaning there are no records present,
      * computeRecordDistance returns a negative number.  In all other cases, the record distance is a positive number.
      * @param startId Starting Id of the all records present in the object
      * @param endId Ending Id of the records in the object
-     * @return Boolean true, if it appears to be an ldv/chunking/subquery circumstance, and false otherwise
+     * @return Boolean true, if it appears to be an LDV Chunking circumstance, and false otherwise
      */
-    @testVisible private boolean isLDVCircumstance(ID startId, ID endId) {
+    @testVisible private boolean isLDVCircumstance(Id startId, Id endId) {
         Long recordDistance = UTIL_SalesforceID.computeRecordDistance(startId, endId);
 
         return recordDistance > getValidLDVChunkSize();
@@ -306,13 +309,13 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     @testVisible private boolean isSubQueryPresent() {
         String soqlFields = getSOQLFullQueryFieldList();
 
-        return  (soqlFields != null) ? soqlFields.containsIgnoreCase(' from ') : false;
+        return  (soqlFields != null) ? soqlFields.containsIgnoreCase(' FROM ') : false;
     }
 
     /**
-     * @description If implementing class specifies an invalid chunk size that is either too large (> 100,000) or too small (<= 0) the default
+     * @description If the implementing class specifies an invalid chunk size (either too large (> 100,000) or too small (<= 0)) the default
      * chunk size of 100,000 will be returned and used instead
-     * @return Integer chunk size to use when running in LDV mode
+     * @return Integer Chunk size to use when running in LDV Chunking mode
      */
     @testVisible private Integer getValidLDVChunkSize() {
         Integer ldvChunkSize = getLDVChunkSize();
@@ -322,7 +325,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
 
     /**
      * @description Returns 100,000 by default for chunk size, but can be overriden by implementing class to return a different value
-     * @return Integer chunk size to use when running in LDV mode
+     * @return Integer chunk size to use when running in LDV Chunking mode
      */
     public virtual Integer getLDVChunkSize() {
         return MAX_LDV_CHUNK_SIZE;
@@ -333,7 +336,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return String SOQL Query fragment consisting of fields and subqueries to retrieve, part between outer select and from
      */
     public virtual String getSOQLFullQueryFieldList() {
-        return 'ID';
+        return 'Id';
     }
 
     /**

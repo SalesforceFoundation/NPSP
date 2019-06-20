@@ -41,6 +41,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     private static final Integer TEST_ACCOUNT_CNT = 7;
 
     private Integer expectedResult;
+    private Integer testChunkSize = 1;
 
     /*******************************************************************************************************************
     * @description Test Batch Execution with inner test batch class to test non chunking conditions
@@ -62,9 +63,13 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         Test.startTest();
 
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_BATCH_TEST(10);
+        tab.setTestChunkSize(10);
         tab.setExpectedResult(TEST_ACCOUNT_CNT);
         Database.executeBatch(tab, 10);
         Test.stopTest();
+
+        List<AsyncApexJob> aaJobs = queryBatchJobs();
+        System.assertEquals (1, aajobs.size(), '# of jobs present');
     }
 
     /*******************************************************************************************************************
@@ -87,10 +92,13 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
         Test.startTest();
 
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_BATCH_TEST(10, true);
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_BATCH_TEST(1, true);
         tab.setExpectedResult(TEST_ACCOUNT_CNT);
-        Database.executeBatch(tab, 10);
+        Database.executeBatch(tab, 1);
         Test.stopTest();
+
+        List<AsyncApexJob> aaJobs = queryBatchJobs();
+        System.assertEquals (7, aajobs.size(), '# of jobs present');
     }
 
 
@@ -117,8 +125,12 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
             UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
             tab.setExpectedResult(0);
 
-            Database.executeBatch(tab, 10);
+            Database.executeBatch(tab, 1);
             Test.stopTest();
+
+        List<AsyncApexJob> aaJobs = queryBatchJobs();
+        System.assertEquals (1, aajobs.size(), '# of jobs present');
+
     }
 
     /* Test Harness for Batch Implementation Here... */
@@ -199,7 +211,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      * @description Primarily here to allow overriding of LDVChunk size for specific requirements, E.g. if a specific batch needs a lower threshold for running in LDV mode
      */
     public override Integer getLDVChunkSize() {
-        return 20;
+        return this.testChunkSize;
     }
 
     /**
@@ -219,9 +231,21 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         if (isComplete) {
             System.debug('# of Account Records Found: ' + recCnt);
             System.assertEquals (expectedResult, recCnt, 'Account Count Mismatch');
-        } else {
-            throw new System.AssertException ('Failed to indicate it was complete to doFinish. Test failed.');
         }
     }
 
+    public void setTestChunkSize(Integer testChunkSize) {
+        this.testChunkSize = testChunkSize;
+    }
+
+    /**
+     * @description Retrieves List of batch jobs for most recent executions in test
+     */
+    private static List<AsyncApexJob> queryBatchJobs() {
+        return [
+            SELECT Id FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+            AND ApexClass.Name = 'UTIL_AbstractCommon_BATCH_TEST'
+        ];
+    }
 }

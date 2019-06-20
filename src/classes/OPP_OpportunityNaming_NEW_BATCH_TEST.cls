@@ -56,10 +56,10 @@ private with sharing class OPP_OpportunityNaming_NEW_BATCH_TEST {
         Database.executeBatch(batch);
         Test.stopTest();
 
-        /*
+
         List<AsyncApexJob> jobsApexBatch = queryOppNamingBatchJobs();
-        System.assertEquals(2, jobsApexBatch.size(), 'Batch should run for each chunk of opportunities');
-        */
+        System.assertEquals(1, jobsApexBatch.size(), 'Batch should run for each chunk of opportunities');
+
         for (Opportunity opp : [SELECT Name FROM Opportunity]) {
             System.assertEquals(false, opp.Name.startsWith('Test Opp'),
                 'The opportunity should have been renamed: ' + opp.Name);
