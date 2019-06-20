@@ -34,7 +34,7 @@
 * @description Unit Tests for the Customizable Rollups Api Service classes
 */
 @IsTest(IsParallel=true)
-private class CRLP_ApiService_TEST {
+public class CRLP_ApiService_TEST {
     private static UTIL_IntegrationConfig_TEST.MockPackage mockPackage;
     private static MockCallable callableMock;
 
@@ -562,6 +562,43 @@ private class CRLP_ApiService_TEST {
             providedParams = params;
             actionCalled = action;
             return returnValue == null ? new Map<Id, String>() : returnValue;
+        }
+    }
+
+     /**********************************************************************************************************
+    * @description Stub for CRLP_ApiService
+    */
+    public class Stub implements System.StubProvider {
+        public Set<String> calledMethods = new Set<String>();
+        public Map<String, List<Object>> argsByMethodName = new Map<String, List<Object>>();
+
+        private Map<String, Object> returnValueByMethodName = new Map<String, Object>{
+            'getBaseRollupStateForRecords' => new Map<Id, List<CRLP_Rollup>>(),
+            'isRollupStateEnabled' => true
+        };
+
+        public Stub withReturnValue(String methodName, Object returnValue) {
+            returnValueByMethodName.put(methodName, returnValue);
+            return this;
+        }
+
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> paramTypes,
+            List<String> paramNames,
+            List<Object> args
+        ) {
+            calledMethods.add(stubbedMethodName);
+
+            if (!argsByMethodName.containsKey(stubbedMethodName)) {
+                argsByMethodName.put(stubbedMethodName, new List<Object>());
+            }
+
+            argsByMethodName.get(stubbedMethodName).add(args);
+
+            return returnValueByMethodName.get(stubbedMethodName);
         }
     }
 
