@@ -49,10 +49,10 @@ private class CRLP_RollupProcessor_TEST {
         Test.startTest();
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
-                .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
-                .withSummaryRecord(account)
-                .withDetailRecords(opps);
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps);
 
         System.assertEquals(Opportunity.SObjectType, processor.detailObjectType);
         System.assertEquals('AccountId', processor.parentKeyField);
@@ -141,9 +141,9 @@ private class CRLP_RollupProcessor_TEST {
         Contact updatedContact = (Contact)processor.completeRollupForSingleSummaryRecord(contact);
 
         System.assertEquals(1, updatedContact.Number_of_Soft_Credits__c,
-                'The number of closed opportunities for this Account should be 1');
+            'The number of closed opportunities for this Account should be 1');
         System.assertEquals(100, updatedContact.npo02__Soft_Credit_Total__c,
-                'The total of closed opportunities for this Account should be 100');
+            'The total of closed opportunities for this Account should be 100');
     }
 
     /**
@@ -223,8 +223,8 @@ private class CRLP_RollupProcessor_TEST {
         Test.startTest();
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
-                .withSummaryRecords(new List<Account>{ account });
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withSummaryRecords(new List<Account>{ account });
 
         // Test with a missing Rollup Type
         try {
@@ -232,7 +232,7 @@ private class CRLP_RollupProcessor_TEST {
             System.assert(false, 'An exception should not have been thrown');
         } catch (Exception ex) {
             System.assert(ex.getMessage().containsIgnoreCase('RollupType'),
-                    'A CRLP_RollupException exception should have been thrown: ' + ex.getMessage());
+                'A CRLP_RollupException exception should have been thrown: ' + ex.getMessage());
         }
 
         // Test with a missing Parent (Summary) record
@@ -243,7 +243,7 @@ private class CRLP_RollupProcessor_TEST {
             System.assert(false, 'An exception should not have been thrown');
         } catch (Exception ex) {
             System.assert(ex.getMessage().containsIgnoreCase('Summary'),
-                    'A CRLP_RollupException exception should have been thrown: ' + ex.getMessage());
+                'A CRLP_RollupException exception should have been thrown: ' + ex.getMessage());
         }
 
         // Test with both required parameters provided.
@@ -302,7 +302,231 @@ private class CRLP_RollupProcessor_TEST {
         }
     }
 
+    /**
+     * @description Confirms external rollup data is retrieved by default
+     */
+    @isTest
+    private static void shouldRetrieveExternalRollups() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps);
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        processor.startRollupProcessing();
+        Test.stopTest();
+
+        System.assert(apiServiceStub.calledMethods.contains('getBaseRollupStateForRecords'),
+            'Should have attempted to get external rollups'
+        );
+    }
+
+    /**
+     * @description Confirms external rollup data is not retrieved when processor is built
+     * using withoutRetrieveExternalRollupStateData()
+     */
+    @isTest
+    private static void shouldNotRetrieveExternalRollupsWhenExcluded() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withoutRetrieveExternalRollupStateData()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps);
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        processor.startRollupProcessing();
+        Test.stopTest();
+
+        System.assert(!apiServiceStub.calledMethods.contains('getBaseRollupStateForRecords'),
+            'Should NOT have attempted to get external rollups'
+        );
+    }
+
+    /**
+     * @description Confirms external rollup data is retrieved when empty stateful rollups are injected
+     * into the processor
+     */
+    @isTest
+    private static void shouldRetrieveExternalRollupsWhenStatefulRollupsAreEmpty() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps)
+            .withRollupDefinitions(new List<CRLP_Rollup>());
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        processor.startRollupProcessing();
+        Test.stopTest();
+
+        System.assert(apiServiceStub.calledMethods.contains('getBaseRollupStateForRecords'),
+            'Should have attempted to get external rollups'
+        );
+    }
+
+    /**
+     * @description Confirms external rollup data is not retrieved when stateful rollups are injected into the processor
+     */
+    @isTest
+    private static void shouldNotRetrieveExternalRollupsWhenThereAreStatefulRollups() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        List<CRLP_Rollup> mockExistingRollups = buildMockCRLPRollup(account, opps );
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps)
+            .withRollupDefinitions(mockExistingRollups);
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        processor.startRollupProcessing();
+        Test.stopTest();
+
+        System.assert(!apiServiceStub.calledMethods.contains('getBaseRollupStateForRecords'),
+            'Should NOT have attempted to get external rollups'
+        );
+    }
+
+    /**
+     * @description Confirms external rollup data is only retrieved when stateful rollups are injected into the processor
+     * for parent Ids that do not have existing rollup data
+     */
+    @isTest
+    private static void shouldRetrieveExternalRollupOnlyForRecordsWithoutStatefulRollups() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account accountWithStatefulRollups = buildMockAccount();
+        Account accountWithoutStatefulRollups = buildMockAccount();
+
+        List<SObject> opps = new List<SObject>{
+            buildMockOpportunity(accountWithStatefulRollups.Id, 100),
+            buildMockOpportunity(accountWithoutStatefulRollups.Id, 200)
+        };
+
+        List<CRLP_Rollup> mockExistingRollups =
+            buildMockCRLPRollup(accountWithStatefulRollups, new List<SObject>{opps[0]} );
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecords(new List<Account>{accountWithStatefulRollups, accountWithoutStatefulRollups})
+            .withDetailRecords(opps)
+            .withRollupDefinitions(mockExistingRollups);
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        processor.startRollupProcessing();
+        Test.stopTest();
+
+        System.assert(apiServiceStub.calledMethods.contains('getBaseRollupStateForRecords'),
+            'Should have attempted to get external rollups'
+        );
+
+        List<Object> arguments = (List<Object>) apiServiceStub.argsByMethodName.get('getBaseRollupStateForRecords')[0];
+        Set<Id> recordIdsParam = (Set<Id>) arguments[0];
+
+        System.assert(recordIdsParam.contains(accountWithoutStatefulRollups.Id),
+            'Should have attempted to get external rollups for the account without stateful rollups ');
+        System.assertEquals(1, recordIdsParam.size(),
+            'Should have attempted to get external rollups for only the account without stateful rollups ');
+    }
+
+    /**
+     * @description Confirms external rollup data is included in calculations
+     */
+    @isTest
+    private static void shouldIncludeExternalRollupDataInCalculations() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        List<CRLP_Rollup> mockRollups = buildMockCRLPRollup(account, opps);
+        mockRollups[0].theSum = 1000;
+        mockRollups[0].theCount = 10;
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps);
+
+        Map<Id, List<CRLP_Rollup>> mockRollupsByParentId = new Map<Id, List<CRLP_Rollup>>{
+            account.Id => mockRollups
+        };
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        apiServiceStub.withReturnValue('getBaseRollupStateForRecords', mockRollupsByParentId);
+
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        Account updatedAcct = (Account)processor.startRollupProcessing()[0];
+        Test.stopTest();
+
+        System.assertEquals(11, updatedAcct.npo02__NumberOfClosedOpps__c,
+            'The number of closed opportunities for this Account should be 11, which includes the 10 from external data');
+        System.assertEquals(1100, updatedAcct.npo02__TotalOppAmount__c,
+            'The total of closed opportunities for this Account should be 1100, which includes the 1000 from external data');
+    }
+
     // **************************** HELPER METHODS ****************************
+
+    /**
+     * @description Builds a mock List<CRLP_Rollup> for the given summary and detail records
+     * to be used as mock external rollup data
+     */
+    private static List<CRLP_Rollup> buildMockCRLPRollup(SObject summaryRecord, List<SObject> detailRecords) {
+        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        options.useRollupDefsByParentIdMap = true;
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(summaryRecord)
+            .withDetailRecords(detailRecords)
+            .withJobOptions(options);
+
+        processor.startRollupProcessing();
+
+        return processor.getRollupDefsForParent(summaryRecord.Id);
+    }
 
     /**
      * @description Instantiate a single mock account that will not be inserted
