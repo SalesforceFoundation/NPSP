@@ -320,7 +320,7 @@ public with sharing class BDI_MigrationMappingUtility {
         // used by this utility class on line 238
         // i.e. List<DataImportFieldMapping> helpTextFieldMappings = helper.getDataImportFieldMappingsFromHelpText();
         Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
-            UTIL_Describe.getAllFieldsDescribe(DATA_IMPORT_OBJECT_NAME);
+            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
 
         for (String dataImportFieldName : describeFieldResultsByFieldName.keySet()) {
 
@@ -547,11 +547,13 @@ public with sharing class BDI_MigrationMappingUtility {
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
-            if (this.targetObjectMappingLabel != null) {
+
+            if (this.targetObjectMappingLabel != null && this.dataImportObjectName != null) {
                 customMd.label = this.label.replace(
                     this.dataImportObjectName,
                     this.targetObjectMappingLabel).left(40);
             }
+
             if (this.recordName == null) {
                 this.recordName = generateRecordName(
                     this.label,
@@ -559,6 +561,7 @@ public with sharing class BDI_MigrationMappingUtility {
                     this.targetObjectMappingLabel,
                     this.dataImportObjectName);
             }
+
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.protected_x = false;
 
