@@ -165,7 +165,7 @@ private class UTIL_OrgTelemetry_TEST {
         );
 
         Test.startTest();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
         Test.stopTest();
 
         System.assertEquals(
@@ -173,7 +173,7 @@ private class UTIL_OrgTelemetry_TEST {
             featureManagementMock.packageBooleanValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomRDSchedules.name()
             ),
-            'setPackageBooleanValue should have been called with the feature IsEnabled_HouseholdAcctModel'
+            'setPackageBooleanValue should have been called with the feature IsEnabled_CustomRDSchedules'
         );
     }
 
@@ -187,7 +187,7 @@ private class UTIL_OrgTelemetry_TEST {
         telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         Test.startTest();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
         Test.stopTest();
 
         System.assertEquals(
@@ -195,7 +195,7 @@ private class UTIL_OrgTelemetry_TEST {
             featureManagementMock.packageBooleanValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomRDSchedules.name()
             ),
-            'setPackageBooleanValue should have been called with the feature IsEnabled_HouseholdAcctModel'
+            'setPackageBooleanValue should have been called with the feature IsEnabled_CustomRDSchedules'
         );
     }
 

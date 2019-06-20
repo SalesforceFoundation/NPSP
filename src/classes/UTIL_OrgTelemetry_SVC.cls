@@ -51,12 +51,12 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * against a table (such as a really huge Opportunity object) were to fail.
      */
     public enum TelemetryBatchCategory {
+        CustomInstallment_Settings,
         NPSP_Settings,
         Org_Environment,
         Data_MaxNumRelatedOpps,
         Data_CountRdOpps,
         Data_CountRecurringDonations,
-        Data_CountRds,
         Data_CountErrorLog,
         Data_CountPaymentOpps
     }
@@ -132,12 +132,14 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     public void processTelemetryType(TelemetryBatchCategory telemetryCategory) {
 
         switch on (telemetryCategory) {
+            when CustomInstallment_Settings {
+                handleCustomInstallmentSettings();
+            }
 
             // Simple Boolean FeatureParameters based strictly on NPSP Settings that can be processed in a single
             // operation.
             when NPSP_Settings {
                 handleNPSPSettings();
-                handleCustomInstallmentSettings();
             }
 
             // Simple FeatureParameters based on the current organization configuration that can be processed
@@ -210,7 +212,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
 
         Boolean hasCustomInstallments =
             !customInstallments.isEmpty()
-            && ![SELECT Id FROM npe03__Recurring_Donation__c WHERE npe03__Installment_Period__c IN :customInstallments].isEmpty();
+            && ![SELECT Id FROM npe03__Recurring_Donation__c WHERE npe03__Installment_Period__c IN :customInstallments LIMIT 1].isEmpty();
 
         featureManager.setPackageBooleanValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomRDSchedules.name(),
