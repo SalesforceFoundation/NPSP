@@ -889,7 +889,7 @@
         }
 
         var action = cmp.get("c.saveRollup");
-        action.setParams({rollupCMT: JSON.stringify(rollupCMT)});
+        action.setParams({jsonRollup: JSON.stringify(rollupCMT)});
         action.setCallback(this, function (response) {
             var state = response.getState();
 
