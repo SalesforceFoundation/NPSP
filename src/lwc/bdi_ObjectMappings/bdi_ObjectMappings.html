@@ -1,0 +1,16 @@
+<template>
+    <div class="slds-m-around_medium">
+        <template if:true={objectMappings.data}>
+            <lightning-datatable
+                key-field="Id"
+                columns={columns}
+                data={objectMappings.data}
+                hide-checkbox-column=true>
+            </lightning-datatable>
+        </template>
+        <template if:true={objectMappings.error}>
+            <!-- handle Apex error -->
+        </template>
+    </div>
+
+</template>

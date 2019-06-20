@@ -84,6 +84,7 @@
         <members>BDI_HelpTextCMT</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
+        <members>BDI_ManageAdvancedMappingCtrl</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_MigrationMappingHelper</members>
         <members>BDI_MigrationMappingUtility</members>
@@ -518,6 +519,7 @@
         <members>BDI_BatchOverride</members>
         <members>BDI_DataImport</members>
         <members>BDI_DataImportDeleteBTN</members>
+        <members>BDI_ManageAdvancedMapping</members>
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
@@ -608,6 +610,8 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>BDI_ManageAdvancedMappingContainer</members>
+        <members>BDI_ObjectMappingsContainer</members>
         <members>BGE_BatchGiftEntryTab</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
@@ -2773,6 +2777,10 @@
     <types>
         <members>NPSP_Sample_Letterhead</members>
         <name>Letterhead</name>
+    </types>
+    <types>
+        <members>bdi_ObjectMappings</members>
+        <name>LightningComponentBundle</name>
     </types>
     <types>
         <members>Batch__c.All</members>
