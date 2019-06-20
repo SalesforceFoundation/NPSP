@@ -67,9 +67,25 @@ private with sharing class OPP_OpportunityNaming_NEW_BATCH_TEST {
         }
     }
 
+    /**
+     * @description Constructs Batch with a different Batch Size
+     */
+    @isTest
     private static void constructBatchWithDifferentBatchSize() {
         OPP_OpportunityNaming_NEW_BATCH batch = new OPP_OpportunityNaming_NEW_BATCH(10);
+        System.assertEquals (10, batch.getBatchSize(), 'Batch Size');
+    }
 
+    /**
+     * @description Coverage of Schedulable Method
+     */
+    static testMethod void testSchedulable() {
+        OPP_OpportunityNaming_NEW_BATCH batch = new OPP_OpportunityNaming_NEW_BATCH();
+
+        Test.startTest();
+        String chron = '0 0 23 * * ?';
+        System.schedule('Test Sched', chron, batch);
+        Test.stopTest();
     }
 
     /**
