@@ -112,6 +112,31 @@ public class CRLP_ConfigBuilder_SVC {
         return jobId;
     }
 
+    /******************************************************************************************************************
+     * @description Pass the List<CustomMetadata>> to the CMT_MetadataAPI for deployment with a metadata handler
+     * and a parameter list
+     * @param metadataHandler is a callback to handle the success or failure of the deployment
+     * @param params is a map of objects that the callback handler uses
+     * @return A unique jobId. This value is used when writing the final status to the Customizable_Rollup_Settings__c
+     * object and is needed to ensure that the status retrieved from that custom settings object is for this
+     * particular deployment and not a previous one.
+    ******************************************************************************************************************/
+    public static String deployedQueuedMetadataTypes(
+        CMT_MetadataAPI.MetadataCallbackHandler metadataHandler, 
+        Map<String, Object> params) {
+
+        String jobId = getUniqueJobId();
+
+        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId);
+        if (metadataHandler != null) {
+            callback.callbackHandler = metadataHandler;
+            callback.callbackParams = params;
+        }
+
+        CMT_MetadataAPI.deployMetadata(queuedMetadataTypes.clone(), callback);
+        return jobId;
+    }
+
     /**
      * @return A 10 character unique 'jobId' to use for
      */
