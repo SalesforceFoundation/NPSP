@@ -38,103 +38,25 @@
 public class BDI_MigrationMappingHelper {
 
     /*******************************************************************************************************
-    * @description Boolean flag to determine if a custom field mapping set exists
-    * Set as static because it's used in the static method updateCustomSettings
+    * @description Get a list of by Data Import Field Mapping Set by Developer Name
+    *
+    * @param developerName: String name of the Data Import Field Mapping Set
+    * @return List<Data_Import_Field_Mapping_Set__mdt>
     */
-    public Boolean customFieldMappingSetExists {
-        get {
-            Integer migratedFieldMappingSetCount = [SELECT count()
-                FROM Data_Import_Field_Mapping_Set__mdt
-                WHERE DeveloperName = :BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME];
-
-            return migratedFieldMappingSetCount > 0 ? true : false;
-        }
+    public List<Data_Import_Field_Mapping_Set__mdt> getFieldMappingSet(String developerName) {
+        System.debug('getFieldMappingSet: ' + developerName);
+        List<Data_Import_Field_Mapping_Set__mdt> sets = [SELECT Id FROM Data_Import_Field_Mapping_Set__mdt WHERE DeveloperName = :developerName];
+        System.debug('Sets: ' + sets);
+        return sets;
     }
 
     /*******************************************************************************************************
     * @description Default packaged Object Mapping Set metadata record
     */
-    public Data_Import_Object_Mapping_Set__mdt getDefaultObjectMappingSet() {
+    public Data_Import_Object_Mapping_Set__mdt getDefaultObjectMappingSet(String developerName) {
         return [SELECT Id, DeveloperName, Label
             FROM Data_Import_Object_Mapping_Set__mdt
-            WHERE DeveloperName = :BDI_MigrationMappingUtility.DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
-    }
-
-    /*******************************************************************************************************
-    * @description List of bad/malformed help text mappings
-    */
-    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping > badHelpTextFieldMappings =
-        new List<BDI_MigrationMappingUtility.HelpTextFieldMapping >();
-
-    /*******************************************************************************************************
-    * @description List of BDI_FieldMappingHelpText.DataImportFieldMappings built from good help text mappings
-    */
-    public List<BDI_MigrationMappingUtility.DataImportFieldMapping> dataImportFieldMappings =
-        new List<BDI_MigrationMappingUtility.DataImportFieldMapping>();
-
-    /*******************************************************************************************************
-     * @description Go through all fields in Data Import object and populate relevant lists from help text mappings
-     */
-    public void populateListsFromHelpTextMappings() {
-
-        badHelpTextFieldMappings.clear();
-        dataImportFieldMappings.clear();
-
-        Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
-            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(
-                BDI_MigrationMappingUtility.DATA_IMPORT_OBJECT_NAME));
-
-        for (String dataImportFieldName : describeFieldResultsByFieldName.keySet()) {
-
-            Boolean isImportStatus = dataImportFieldName.contains('importstatus');
-            Boolean isImportLookup = dataImportFieldName.contains('imported');
-
-            if (isImportStatus || isImportLookup) {
-                continue;
-            }
-
-            DescribeFieldResult sourceField = describeFieldResultsByFieldName.get(dataImportFieldName);
-            BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping =
-                new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
-
-            if (helpTextFieldMapping.isUsable) {
-                // Pass help text values to a new instance of MappingDetail wrapper class
-                BDI_MigrationMappingUtility.DataImportFieldMapping newDataImportFieldMapping =
-                    new BDI_MigrationMappingUtility.DataImportFieldMapping(
-                        sourceField.Label,
-                        sourceField.Name,
-                        helpTextFieldMapping.dataImportObjectName,
-                        helpTextFieldMapping.targetFieldAPIName,
-                        helpTextFieldMapping.targetObjectAPIName);
-
-                dataImportFieldMappings.add(newDataImportFieldMapping);
-            } else if (helpTextFieldMapping.isPotentialMapping) {
-                // Park suspected help text mappings
-                BDI_MigrationMappingUtility.HelpTextFieldMapping badHelpTextMapping =
-                    new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
-                badHelpTextFieldMappings.add(badHelpTextMapping);
-            }
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Method to get list of good help text mappings. Used in conjuction with
-    * populateListsFromHelpTextMappings()
-    *
-    * @return List of DataImportFieldMappings
-    */
-    public List<BDI_MigrationMappingUtility.DataImportFieldMapping> getDataImportFieldMappingsFromHelpText() {
-        return dataImportFieldMappings;
-    }
-
-    /*******************************************************************************************************
-    * @description Method to get list of bad help text mappings. Used in conjuction with
-    * populateListsFromHelpTextMappings()
-    *
-    * @return List of HelpTextFieldMappings
-    */
-    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping> getBadHelpTextMappings() {
-        return badHelpTextFieldMappings;
+            WHERE DeveloperName = :developerName];
     }
 
     /*******************************************************************************************************
@@ -143,7 +65,7 @@ public class BDI_MigrationMappingHelper {
      * @param objectMappingSetId Id of the default Object Mapping Set
      * @return Collection of Object Mapping DeveloperName to Object Mapping record
      */
-    public Map<String, Data_Import_Object_Mapping__mdt> getObjectMappingsByDeveloperName(Id objectMappingSetId) {
+    public Map<String, Data_Import_Object_Mapping__mdt> getObjectMappingsByDeveloperName(String developerName) {
         List<Data_Import_Object_Mapping__mdt> existingObjectMappings = [SELECT 
                     Id, 
                     Label, 
@@ -156,7 +78,7 @@ public class BDI_MigrationMappingHelper {
                     Relationship_To_Predecessor__c, 
                     Is_Deleted__c
             FROM Data_Import_Object_Mapping__mdt
-            WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSetId];
+            WHERE Data_Import_Object_Mapping_Set__r.DeveloperName = :developerName];
 
         Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName = 
             new Map<String, Data_Import_Object_Mapping__mdt>();
