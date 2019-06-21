@@ -50,15 +50,6 @@ public class BDI_MigrationMappingHelper {
     }
 
     /*******************************************************************************************************
-    * @description Default packaged Object Mapping Set metadata record
-    */
-    public Data_Import_Object_Mapping_Set__mdt getDefaultObjectMappingSet(String developerName) {
-        return [SELECT Id, DeveloperName, Label
-            FROM Data_Import_Object_Mapping_Set__mdt
-            WHERE DeveloperName = :developerName];
-    }
-
-    /*******************************************************************************************************
      * @description Queries for default Object Mappings and builds a map of DeveloperName to Object Mapping
      * record used to check for existance of Object Mapping record without loop
      *

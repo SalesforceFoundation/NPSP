@@ -243,9 +243,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
         for (DataImportFieldMapping fieldMapping : dataImportFieldMappings) {
 
-            String fieldMappingKey = fieldMapping.targetObjectAPIName +
-                '.' + fieldMapping.dataImportObjectName +
-                '.' + fieldMapping.sourceFieldAPIName;
+            String fieldMappingKey = fieldMapping.getKey();
 
             Data_Import_Object_Mapping__mdt existingDefaultObjectMapping =
                 objectMappingsByDeveloperName.get(fieldMapping.dataImportObjectName);
@@ -274,14 +272,13 @@ public with sharing class BDI_MigrationMappingUtility {
 
                     queuedMetadataTypesForDeploy.add(overwrittenMapping.getMetadataRecord());
                 } else {
+
+                    fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                    fieldMapping.setObjectMapping(existingDefaultObjectMapping);
+
                     // Check if we have a conflict and update the target field based on the help text mapping
                     if (fieldMapping.hasBadDefaultValues(existingDefaultFieldMapping)) {
-                        fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                        fieldMapping.setObjectMapping(existingDefaultObjectMapping);
                         fieldMapping.setTargetField(fieldMapping.targetFieldAPIName);
-                    } else {
-                        fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                        fieldMapping.setObjectMapping(existingDefaultObjectMapping);
                     }
 
                     queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
@@ -296,19 +293,15 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-     * @description Go through all fields in Data Import object and populate relevant lists from help text
-     * mappings
-     */
-    public void populateListsFromHelpTextMappings() {
+    * @description Go through all fields in Data Import object and populate relevant lists from help text
+    * mappings
+    */
+    @TestVisible
+    private void populateListsFromHelpTextMappings() {
 
         badHelpTextMappings.clear();
         dataImportFieldMappings.clear();
 
-        // TODO: Need to move this into the helper so we can mock the result
-        // Replace stubbedMethod getDataImportFieldMappingsFromHelpText
-        // When this method was in the helper, we had another get method
-        // used by this utility class on line 238
-        // i.e. List<DataImportFieldMapping> helpTextFieldMappings = helper.getDataImportFieldMappingsFromHelpText();
         Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
             UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
 
@@ -355,7 +348,8 @@ public with sharing class BDI_MigrationMappingUtility {
     *
     * @param fieldMappingSetName String Name of the parent Data Import Field Mapping Set
     */
-    private void createAndEnqueueNonHelpTextMappings(Map<String, Data_Import_Field_Mapping__mdt> fieldMappings) {
+    private void createAndEnqueueNonHelpTextMappings(
+        Map<String, Data_Import_Field_Mapping__mdt> fieldMappings) {
 
         for (String key : fieldMappings.keySet()) {
             Data_Import_Field_Mapping__mdt existingFieldMapping =
@@ -496,6 +490,12 @@ public with sharing class BDI_MigrationMappingUtility {
             this.recordName = sourceFieldMapping.DeveloperName;
             this.isRequired = 'No';
             this.isDeleted = false;
+        }
+
+        public String getKey() {
+            return this.targetObjectAPIName + '.' +
+                this.dataImportObjectName + '.' +
+                this.sourceFieldAPIName;
         }
 
         public void setFieldMappingSet(String fieldMappingSetName) {
