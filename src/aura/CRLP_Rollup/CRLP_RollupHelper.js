@@ -27,7 +27,7 @@
         //update filter group list to contain null as a first option
         //note: unshift can't be used here due to an issue with bound values
         var filterGroups = cmp.get("v.filterGroups");
-        var tempList = [{"name": "", "label": cmp.get("v.labels.noFilterGroupSelect")}];
+        var tempList = [{ "name": "", "label": cmp.get("v.labels.noFilterGroupSelect") }];
         tempList = tempList.concat(filterGroups);
         cmp.set("v.filterGroups", tempList);
     },
@@ -71,7 +71,7 @@
      * @description: applies the correct labels for all underlying API values and resets allowed values
      * this is run when the page is first loaded or when a cancel event resets the page
      */
-    fieldSetup: function(cmp) {
+    fieldSetup: function (cmp) {
         this.resetAllFields(cmp);
         this.updateAllowedOperations(cmp);
         this.onChangeOperation(cmp, cmp.get("v.activeRollup.operation"));
@@ -108,7 +108,7 @@
                                 newFields.push(field);
                             } else if (((type === 'PICKLIST' || type === 'MULTIPICKLIST') && field.type === 'STRING') ||
                                 (type === 'STRING' && (field.type === 'PICKLIST' || field.type === 'MULTIPICKLIST')) ||
-                                ((type ===  'PICKLIST' || type === 'MULTIPICKLIST') && (field.type === 'PICKLIST' || field.type === 'MULTIPICKLIST'))) {
+                                ((type === 'PICKLIST' || type === 'MULTIPICKLIST') && (field.type === 'PICKLIST' || field.type === 'MULTIPICKLIST'))) {
                                 // matching picklists and multipicklists as strings because strings and picklists are interchangeable for rolling up
                                 newFields.push(field);
                             }
@@ -158,9 +158,9 @@
         //if type is undefined, return all fields
         if (type === undefined || allFields === undefined) {
             newFields = allFields;
-        //allow rolling up of text area fields to string fields and vice versa
+            //allow rolling up of text area fields to string fields and vice versa
         } else if (type === 'TEXTAREA' || type === 'STRING') {
-            newFields = this.filterFieldsByType(cmp, ['TEXTAREA','STRING'], allFields, summaryFieldReferenceTo);
+            newFields = this.filterFieldsByType(cmp, ['TEXTAREA', 'STRING'], allFields, summaryFieldReferenceTo);
         } else {
             newFields = this.filterFieldsByType(cmp, [type], allFields, summaryFieldReferenceTo);
         }
@@ -938,7 +938,7 @@
         }
 
         var action = cmp.get("c.saveRollup");
-        action.setParams({ rollupCMT: JSON.stringify(rollupCMT) });
+        action.setParams({ jsonRollup: JSON.stringify(rollupCMT) });
         action.setCallback(this, function (response) {
             var state = response.getState();
 
