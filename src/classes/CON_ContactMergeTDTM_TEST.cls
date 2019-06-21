@@ -33,8 +33,7 @@
 * @description Tests Contact Merge when done through the API
 * @group ContactMerge
 */
-
-@IsTest(IsParallel=true)
+@IsTest
 private with sharing class CON_ContactMergeTDTM_TEST {
     private static final Integer MOCK_IDS_SIZE = 5;
     private static final Integer ADDR_OVERRIDE_INDEX = 3;
