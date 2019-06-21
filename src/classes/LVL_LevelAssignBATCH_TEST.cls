@@ -124,8 +124,8 @@ private class LVL_LevelAssignBATCH_TEST {
         insert template;
 
         Engagement_Plan_Task__c epTask = new Engagement_Plan_Task__c(
-            Name = 'Call',
-            Engagement_Plan_Template__c = template.id,
+            Name = 'Call' + UTIL_UnitTestData_TEST.getUniqueString(),
+            Engagement_Plan_Template__c = template.Id,
             Assigned_To__c = UserInfo.getUserId(),
             Comments__c = 'This comment should be copied correctly to the Task.',
             Reminder__c = true,
@@ -137,9 +137,9 @@ private class LVL_LevelAssignBATCH_TEST {
         insert epTask;
 
         Engagement_Plan_Task__c dependentEpTask = new Engagement_Plan_Task__c(
-            Name = 'Email',
-            Engagement_Plan_Template__c = template.id,
-            Parent_Task__c = epTask.id,
+            Name = 'Email' + UTIL_UnitTestData_TEST.getUniqueString(),
+            Engagement_Plan_Template__c = template.Id,
+            Parent_Task__c = epTask.Id,
             Comments__c = 'This comment should also be copied correctly to the Task.',
             Reminder__c = true,
             Send_Email__c = true,
@@ -159,9 +159,13 @@ private class LVL_LevelAssignBATCH_TEST {
     */
     private static List<Contact> contacts { get; set; }
     private static DateTime dtCon6Modified { get; set;  }
-    private static void createTestContacts() {
-        // create & insert contact
-        contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
+
+    private static void createTestContacts(String uniqueCounter) {
+        contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(8);
+        for (Contact c : contacts) {
+            c.LastName += uniqueCounter;
+        }
+
         contacts[0].npo02__TotalOppAmount__c = null;
         contacts[0].npo02__LastMembershipLevel__c = lvlTin.Id;
 
@@ -186,7 +190,7 @@ private class LVL_LevelAssignBATCH_TEST {
         // we need to see what the LastModifiedDate is after the insert completes, in case any
         // workflow rules in the org may have ran during the insert and thus LastModifiedDate <> CreatedDate.
         // dtCon6Modified will be used in one of our asserts that this contact wasn't modified by our level batch.
-         Contact c6 = [select LastModifiedDate from Contact where Id = :contacts[6].Id];
+         Contact c6 = [SELECT LastModifiedDate FROM Contact WHERE Id = :contacts[6].Id];
          dtCon6Modified = c6.LastModifiedDate;
     }
 
@@ -194,9 +198,12 @@ private class LVL_LevelAssignBATCH_TEST {
     * @description creates a list of Accounts with various donation totals for test code to use.
     */
     private static List<Account> accounts { get; set; }
-    private static void createTestAccounts() {
-        // create & insert contact
-        accounts = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null);
+    private static void createTestAccounts(String uniqueCounter) {
+        accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(2, null);
+        for (Account a : accounts) {
+            a.Name += uniqueCounter;
+        }
+
         accounts[0].npo02__TotalOppAmount__c = 10;
         accounts[1].npo02__TotalOppAmount__c = 150;
         insert accounts;
@@ -214,7 +221,7 @@ private class LVL_LevelAssignBATCH_TEST {
         createLevelEngagementPlan(lvlSilver);
 
         // create test Contacts
-        createTestContacts();
+        createTestContacts('testContactLevels');
 
         String query = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
         LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(query, 'Contact');
@@ -242,7 +249,7 @@ private class LVL_LevelAssignBATCH_TEST {
         createTestLevels();
 
         // create test Contacts
-        createTestContacts();
+        createTestContacts('testContactLevelsChange');
 
         // modify lvl Tin
         lvlTin.Minimum_Amount__c = 10; // Contact 0 will no longer meet this criteria
@@ -265,13 +272,13 @@ private class LVL_LevelAssignBATCH_TEST {
     @isTest
     private static void testLevelAssignScheduling() {
         // create Levels
-        createtestLevels();
+        createTestLevels();
 
         // add an Engagement Plan Template to Silver
         createLevelEngagementPlan(lvlSilver);
 
         // create test Contacts
-        createTestContacts();
+        createTestContacts('testLevelAssignScheduling');
 
         LVL_LevelAssign_SCHED sched = new LVL_LevelAssign_SCHED();
         Test.startTest();
@@ -342,7 +349,7 @@ private class LVL_LevelAssignBATCH_TEST {
         createLevelEngagementPlan(lvlAcctZinc);
 
         // create test Accounts
-        createTestAccounts();
+        createTestAccounts('testAccountLevels');
 
         String query = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, ' +
             'npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Account where npe01__SYSTEMIsIndividual__c = false ';
@@ -699,13 +706,13 @@ private class LVL_LevelAssignBATCH_TEST {
 
         Contact[] contacts = new Contact[] {
             new Contact(
-                LastName = 'PreviousLevelIsPopulated',
+                LastName = 'PreviousLevelIsPopulated' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = levels[0].id,
                 npo02__LastMembershipOrigin__c = levels[1].id,
                 npo02__TotalOppAmount__c = 10
             ),
             new Contact(
-                LastName = 'PreviousLevelIsBlank',
+                LastName = 'PreviousLevelIsBlank' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = levels[1].id,
                 npo02__LastMembershipOrigin__c = null,
                 npo02__TotalOppAmount__c = 2000
@@ -764,19 +771,19 @@ private class LVL_LevelAssignBATCH_TEST {
 
         Contact[] contacts = new Contact[] {
             new Contact(
-                LastName = 'PreviousLevelIsPopulated',
+                LastName = 'PreviousLevelIsPopulated' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = null,
                 npo02__LastMembershipOrigin__c = levels[0].id,
                 npo02__TotalOppAmount__c = 10
             ),
             new Contact(
-                LastName = 'PreviousLevelIsBlank',
+                LastName = 'PreviousLevelIsBlank' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = null,
                 npo02__LastMembershipOrigin__c = null,
                 npo02__TotalOppAmount__c = 2000
             ),
             new Contact(
-                LastName = 'BothLevelsAreProvided',
+                LastName = 'BothLevelsAreProvided' + UTIL_UnitTestData_TEST.getUniqueString(),
                 npo02__LastMembershipLevel__c = levels[0].id,
                 npo02__LastMembershipOrigin__c = levels[1].id,
                 npo02__TotalOppAmount__c = 50
