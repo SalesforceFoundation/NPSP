@@ -32,7 +32,7 @@
 * @group Utilities
 * @description Tests for UTIL_AbstractCommon_BATCH class
 */
-@isTest
+@isTest(isParallel=true)
 public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
     /*******************************************************************************************************************
@@ -55,7 +55,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
             accs.add(
                 new Account(
-                    Name = 'Test Account #' + i
+                    Name = '1-Test Account #' + i
                 )
             );
         }
@@ -86,7 +86,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
             accs.add(
                 new Account(
-                    Name = 'Test Account #' + i
+                    Name = '2-Test Account #' + i
                 )
             );
         }
@@ -128,14 +128,14 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
             accs.add(
                 new Account(
-                    Name = 'Test Account #' + i
+                    Name = '3-Test Account #' + i
                 )
             );
         }
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #0\'');
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'3-Test Account #0\'');
         tab.setExpectedResult(1);
 
         Database.executeBatch(tab, 1);
@@ -156,14 +156,14 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
             accs.add(
                 new Account(
-                    Name = 'Test Account #' + i
+                    Name = '4-Test Account #' + i
                 )
             );
         }
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #0\'');
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'4-Test Account #0\'');
         tab.setTestChunkSize(10);
         tab.setExpectedResult(1);
 
@@ -185,7 +185,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
             accs.add(
                 new Account(
-                    Name = 'Test Account #' + i
+                    Name = '5-Test Account #' + i
                 )
             );
         }
@@ -193,7 +193,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
         Test.startTest();
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
-        tab.setTestWhereClause('Name = \'Test Account #0\'');
+        tab.setTestWhereClause('Name = \'5-Test Account #0\'');
         tab.setExpectedResult(1);
 
         Database.executeBatch(tab, 1);
@@ -214,7 +214,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
             accs.add(
                 new Account(
-                    Name = 'Test Account #' + i
+                    Name = '6-Test Account #' + i
                 )
             );
         }
@@ -222,7 +222,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
         Test.startTest();
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
-        tab.setTestWhereClause('Name = \'Test Account #0\'');
+        tab.setTestWhereClause('Name = \'6-Test Account #0\'');
         tab.setTestChunkSize(10);
         tab.setExpectedResult(1);
 
@@ -244,15 +244,15 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
             accs.add(
                 new Account(
-                    Name = 'Test Account #' + i
+                    Name = '7-Test Account #' + i
                 )
             );
         }
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
-        tab.setTestWhereClause('Name = \'Test Account #0\' or Name=\'Test Account #1\' or Name=\'Test Account #2\'');
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'7-Test Account #1\' or Name=\'7-Test Account #2\' or Name=\'7-Test Account #3\'');
+        tab.setTestWhereClause('Name = \'7-Test Account #0\' or Name=\'7-Test Account #1\' or Name=\'7-Test Account #2\'');
         tab.setExpectedResult(2);
 
         Database.executeBatch(tab, 1);
@@ -273,15 +273,15 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
             accs.add(
                 new Account(
-                    Name = 'Test Account #' + i
+                    Name = '8-Test Account #' + i
                 )
             );
         }
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
-        tab.setTestWhereClause('Name = \'Test Account #0\' or Name=\'Test Account #1\' or Name=\'Test Account #2\'');
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'8-Test Account #1\' or Name=\'8-Test Account #2\' or Name=\'8-Test Account #3\'');
+        tab.setTestWhereClause('Name = \'8-Test Account #0\' or Name=\'8-Test Account #1\' or Name=\'8-Test Account #2\'');
         tab.setTestChunkSize(10);
         tab.setExpectedResult(2);
 
