@@ -88,7 +88,7 @@ public with sharing class BDI_MigrationMappingUtility {
     * don't need Data Import Field Mappings for these fields because they're now stored in their corresponding
     * Data Import Object Mapping Custom Metadata Type.
     */
-    public final Set<String> DATA_IMPORT_IMPORT_FIELDS = new Set<String>{
+    private final Set<String> DATA_IMPORT_IMPORT_FIELDS = new Set<String>{
         'account1imported__c',
         'account2imported__c',
         'account1importstatus__c',
@@ -112,6 +112,14 @@ public with sharing class BDI_MigrationMappingUtility {
         'opportunity_contact_role_2_imported__c',
         'paymentimported__c',
         'paymentimportstatus__c'
+    };
+
+    /*******************************************************************************************************
+    * @description These are known standard Help Text mappings that could be picked up by the migration
+    * utility as bad help text mappings and need to be skipped
+    */
+    private final Set<String> HELP_TEXT_EXCEPTIONS = new Set<String>{
+        'The role that the Opportunity Contact Role should be created with.  For example enter \'Soft Credit\' to create a soft credit opportunity contact role.'
     };
 
     /*******************************************************************************************************
@@ -308,8 +316,9 @@ public with sharing class BDI_MigrationMappingUtility {
 
             Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(
                 helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
+            Boolean isException = HELP_TEXT_EXCEPTIONS.contains(helpTextFieldMapping.helpText);
 
-            if (isSkippable) {
+            if (isSkippable || isException) {
                 continue;
             }
 
