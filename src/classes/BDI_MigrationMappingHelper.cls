@@ -50,6 +50,32 @@ public class BDI_MigrationMappingHelper {
     }
 
     /*******************************************************************************************************
+    * @description Get a list of Help Text Field Mappings from Data Import Help Text Field Describes
+    *
+    * @return List<Data_Import_Field_Mapping_Set__mdt>
+    */
+    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping> getAllHelpTextFieldMappings() {
+
+        Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
+            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(
+                BDI_MigrationMappingUtility.DATA_IMPORT_OBJECT_NAME));
+
+        List<BDI_MigrationMappingUtility.HelpTextFieldMapping> helpTextFieldMappings =
+            new List<BDI_MigrationMappingUtility.HelpTextFieldMapping>();
+
+        for (String dataImportFieldName : describeFieldResultsByFieldName.keySet()) {
+
+            DescribeFieldResult sourceField = describeFieldResultsByFieldName.get(dataImportFieldName);
+            BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping =
+                new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
+
+            helpTextFieldMappings.add(helpTextFieldMapping);
+        }
+
+        return helpTextFieldMappings;
+    }
+
+    /*******************************************************************************************************
      * @description Queries for default Object Mappings and builds a map of DeveloperName to Object Mapping
      * record used to check for existance of Object Mapping record without loop
      *

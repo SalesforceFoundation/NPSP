@@ -302,18 +302,16 @@ public with sharing class BDI_MigrationMappingUtility {
         badHelpTextMappings.clear();
         dataImportFieldMappings.clear();
 
-        Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
-            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
+        List<HelpTextFieldMapping> helpTextFieldMappings = helper.getAllHelpTextFieldMappings();
 
-        for (String dataImportFieldName : describeFieldResultsByFieldName.keySet()) {
+        for (HelpTextFieldMapping helpTextFieldMapping : helpTextFieldMappings) {
 
-            Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(dataImportFieldName.toLowerCase());
+            Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(
+                helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
+
             if (isSkippable) {
                 continue;
             }
-
-            DescribeFieldResult sourceField = describeFieldResultsByFieldName.get(dataImportFieldName);
-            HelpTextFieldMapping helpTextFieldMapping = new HelpTextFieldMapping(sourceField);
 
             if (helpTextFieldMapping.isUsable) {
                 DataImportFieldMapping newDataImportFieldMapping =
