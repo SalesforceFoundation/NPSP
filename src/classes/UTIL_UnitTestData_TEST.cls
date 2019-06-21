@@ -31,31 +31,43 @@
 * @author Salesforce.org
 * @date 2011 (1.x)
 * @group Utilities
-* @description Provides automated generation of unit test data for tests throughout the org 
+* @description Contains methods to create test data in various configurations as well to to retrieve specific settings,
+* Disable TDTM triggers by function, check org configurations, etc.
 */
 
 @isTest
 public class UTIL_UnitTestData_TEST { 
+
     /** @description A mock Account Id .*/
-    public static final String MOCK_ACCOUNT_ID = Account.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+    public static final String MOCK_ACCOUNT_ID = Account.SObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
     
     public static final String PROFILE_STANDARD_USER = 'Standard User';
     public static final String PROFILE_READONLY_USER = 'Read Only';
 
-// create data for use in unit tests
-// should not be referenced by production code
-    public static string closedWonStage;
-    public static string closedLostStage;
-    public static string openStage;
-    public static string closedTaskStatus;
-    public static string openTaskStatus;
-    
-    public static String getClosedWonStage(){
-        if (closedWonStage == null){
-            List<OpportunityStage> closedWonStages = [select masterlabel from opportunitystage where isActive = true and iswon = true];
+    // =====================================================================================================
+    // Methods to retrieve configured Stage/Status labels for the Opportunity and Task objects
+    // =====================================================================================================
+
+    public static String closedWonStage;
+    public static String closedLostStage;
+    public static String openStage;
+    public static String closedTaskStatus;
+    public static String openTaskStatus;
+
+    /**
+     * @description Retrieve the MasterLabel for the defined ClosedWon stage in the org for tests
+     */
+    public static String getClosedWonStage() {
+        if (closedWonStage == null) {
+            List<OpportunityStage> closedWonStages = [
+                SELECT MasterLabel
+                FROM OpportunityStage
+                WHERE IsActive = TRUE
+                AND IsWon = TRUE
+            ];
             
-            if(closedWonStages.size()>0){
-                closedWonStage = closedWonStages[0].masterlabel;
+            if (closedWonStages.size()>0) {
+                closedWonStage = closedWonStages[0].MasterLabel;
             } else {
                 closedWonStage = '';
             }
@@ -63,13 +75,22 @@ public class UTIL_UnitTestData_TEST {
         
         return closedWonStage;
     }
-    
-    public static String getClosedLostStage(){
-        if (closedLostStage == null){
-            List<OpportunityStage> closedLostStages = [select masterlabel from opportunitystage where isActive = true and iswon = false and isClosed = true];
-            
-            if(closedLostStages.size()>0){
-                closedLostStage = closedLostStages[0].masterlabel;
+
+    /**
+     * @description Retrieve the MasterLabel for the defined ClosedLost stage in the org for tests
+     */
+    public static String getClosedLostStage() {
+        if (closedLostStage == null) {
+            List<OpportunityStage> closedLostStages = [
+                SELECT MasterLabel
+                FROM OpportunityStage
+                WHERE IsActive = TRUE
+                AND IsWon = FALSE
+                AND IsClosed = TRUE
+            ];
+
+            if (closedLostStages.size()>0) {
+                closedLostStage = closedLostStages[0].MasterLabel;
             } else {
                 closedLostStage = '';
             }
@@ -78,12 +99,20 @@ public class UTIL_UnitTestData_TEST {
         return closedLostStage;
     }
 
-    public static String getOpenStage(){
-        if (openStage == null){
-            List<OpportunityStage> openStages = [select masterlabel from opportunitystage where isActive = true and iswon = false];
-            
-            if(openStages.size()>0){
-                openStage = openStages[0].masterlabel;
+    /**
+     * @description Retrieve the MasterLabel for the first open stage in the org for tests
+     */
+    public static String getOpenStage() {
+        if (openStage == null) {
+            List<OpportunityStage> openStages = [
+                SELECT MasterLabel
+                FROM OpportunityStage
+                WHERE IsActive = TRUE
+                AND IsWon = FALSE
+            ];
+
+            if (openStages.size()>0) {
+                openStage = openStages[0].MasterLabel;
             } else {
                 openStage = '';
             }
@@ -92,12 +121,15 @@ public class UTIL_UnitTestData_TEST {
         return openStage;
     }
 
-    public static String getClosedTaskStatus(){
-        if (closedTaskStatus == null){
-            List<TaskStatus> closedTaskStatuses = [SELECT masterlabel FROM TaskStatus WHERE isClosed = true];
+    /**
+     * @description Retrieve the MasterLabel for the defined Closed Task Status in the org for tests
+     */
+    public static String getClosedTaskStatus() {
+        if (closedTaskStatus == null) {
+            List<TaskStatus> closedTaskStatuses = [SELECT MasterLabel FROM TaskStatus WHERE IsClosed = true];
             
-            if(closedTaskStatuses.size()>0){
-                closedTaskStatus = closedTaskStatuses[0].masterlabel;
+            if (closedTaskStatuses.size()>0) {
+                closedTaskStatus = closedTaskStatuses[0].MasterLabel;
             } else {
                 closedTaskStatus = '';
             }
@@ -106,12 +138,15 @@ public class UTIL_UnitTestData_TEST {
         return closedTaskStatus;
     }
 
-    public static String getOpenTaskStatus(){
-        if (openTaskStatus == null){
-            List<TaskStatus> openTaskStatuses = [SELECT masterlabel FROM TaskStatus WHERE isClosed = false];
+    /**
+     * @description Retrieve the MasterLabel for the first defined Open Task Status in the org for tests
+     */
+    public static String getOpenTaskStatus() {
+        if (openTaskStatus == null) {
+            List<TaskStatus> openTaskStatuses = [SELECT MasterLabel FROM TaskStatus WHERE IsClosed = false];
             
-            if(openTaskStatuses.size()>0){
-                openTaskStatus = openTaskStatuses[0].masterlabel;
+            if (openTaskStatuses.size()>0) {
+                openTaskStatus = openTaskStatuses[0].MasterLabel;
             } else {
                 openTaskStatus = '';
             }
@@ -119,169 +154,269 @@ public class UTIL_UnitTestData_TEST {
         
         return openTaskStatus;
     }
-    
+
+    // =====================================================================================================
+    // Data Factory Methods - Contact, Account, Opportunity, Engagement Plan
+    // =====================================================================================================
+
+    /**
+     * @description Return a single Contact SObject for tests with a unique last name
+     * @return Contact
+     */
     public static Contact getContact() {
-    	return new Contact (
-                FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-                npe01__Private__c = false,
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-                OtherCity = 'Seattle'
-            );
+        return new Contact (
+            FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + getUniqueString(),
+            npe01__Private__c = false,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            OtherCity = 'Seattle'
+        );
     }
-    
-    public static List<Contact> CreateMultipleTestContacts (integer n) {
+
+    /**
+     * @description Return a list of Contact SObjects for tests with a unique first and last name
+     * @param n The number of Contact records to create
+     * @return List<Contact>
+     */
+    public static List<Contact> createMultipleTestContacts(Integer n) {
         
-        List<contact> ContactsToAdd = New List<contact> ();
-        
-        for (integer i=0;i<n;i++) {
-            Contact newCon = New Contact (
-                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
-                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-                npe01__Private__c=false,
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-                OtherCity = 'Seattle'
-            );
-            //since we're running rollup code on a manually created contacts in RLLP_OppRollup_TEST, we have to manually set currency field in multicurrency
+        List<Contact> contactsToAdd = new List<Contact> ();
+
+        for (Integer i=0; i<n; i++) {
+            Contact newCon = getContact();
+            newCon.FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + getUniqueString();
+            newCon.LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS;
             if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
                 newCon.put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'), RLLP_OppRollup_UTIL.currCorporate);
             }
 
-            ContactsToAdd.add (newCon);
+            contactsToAdd.add (newCon);
         }
-        
 
-        // testing doing the insert in the calling code - will maybe reinstate this
-        //insert ContactsToAdd;
-        
-        return ContactsToAdd;
+        return contactsToAdd;
     }
 
-    public static List<Opportunity> OppsForContactList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
-        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,rectype);
-        return OppsForContactListByRecTypeId(Cons, CampId, Stage, Close, Amt, rtid, oppType);
+    /**
+     * @description Create an Opportunity for each Contact, but does not specify the AccountId on the Opportunity
+     * @param contact List of Contacts to create Opps for
+     * @param campaignId The CampaignId to use (or null)
+     * @param stage The StageName to use (required)
+     * @param closeDate The Closedate to use (required)
+     * @param amt The Opp Amount (required)
+     * @param recordTypeName The RecordType Label for the Opportunity (or null)
+     * @param oppType The Opportunity.Type for the Opportunity (or null)
+     * @return List<Opportunity>
+     */
+    public static List<Opportunity> oppsForContactList(List<Contact> contacts, Id campaignId,
+            String stage, Date closeDate, Double amt, String recordTypeName, String oppType
+    ) {
+        Id rtId = UTIL_RecordTypes.getRecordTypeId (Opportunity.SObjectType, recordTypeName);
+        return oppsForContactListByRecTypeId(contacts, campaignId, stage, closeDate, amt, rtId, oppType);
     }
 
-    public static List<Opportunity> OppsForContactListByRecTypeId (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, Id rtid, string oppType) {
+    /**
+     * @description Create an Opportunity for each Contact, but does not specify the AccountId on the Opportunity
+     * @param contact List of Contacts to create Opps for
+     * @param campaignId The CampaignId to use (or null)
+     * @param stage The StageName to use (required)
+     * @param closeDate The Closedate to use (required)
+     * @param amt The Opp Amount (required)
+     * @param rtId The RecordTypeId for the Opportunity (or null)
+     * @param oppType The Opportunity.Type for the Opportunity (or null)
+     * @return List<Opportunity>
+     */
+    public static List<Opportunity> oppsForContactListByRecTypeId(List<Contact> contacts, Id campaignId,
+        String stage, Date closeDate, Double amt, Id rtId, String oppType
+    ) {
      
-        // given a List of Contacts,
-        // add one Opp per contact w/ the specified data
-        // TBD should allow specifying rectype (optional)
-    
-        List<Opportunity> OppsToAdd = new List<Opportunity> ();
-        UTIL_Debug.debug('recordtypeintest: ' + rtid);
+        List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
-        for ( Contact thisCon : Cons ) {
-            Opportunity newOpp = New Opportunity (
+        for ( Contact thisCon : contacts ) {
+            Opportunity newOpp = new Opportunity (
                 Name = 'Test Opp ' + thisCon.FirstName + thisCon.LastName,
-                Amount = Amt,
-                CloseDate = Close,
-                StageName = Stage,
-                CampaignId = CampId,
+                Amount = amt,
+                CloseDate = closeDate,
+                StageName = stage,
+                CampaignId = campaignId,
                 Primary_Contact__c = thisCon.Id,
-                type = oppType
+                Type = oppType
             );
-            if(rtid != null){
-                newOpp.put('RecordTypeId',rtid);
+            if (rtId != null) {
+                newOpp.put('RecordTypeId', rtId);
             }
             oppsToAdd.add (newOpp);
         }
         return oppsToAdd;
     }
 
-    /*******************************************************************************************************
-    * @description Create an Opportunity for each Contact, using their Account as the Opportunity's Account.
-    */
-    public static List<Opportunity> OppsForContactWithAccountList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
-        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,rectype);
-        return OppsForContactWithAccountListByRecTypeId(Cons, CampId, Stage, Close, Amt, rtid, oppType);
+    /**
+     * @description Create an Opportunity for each Contact, using their Account as the Opportunity's Account.
+     * @param contact List of Contacts to create Opps for
+     * @param campaignId The CampaignId to use (or null)
+     * @param stage The StageName to use (required)
+     * @param closeDate The Closedate to use (required)
+     * @param amt The Opp Amount (required)
+     * @param recordTypeName The RecordType Label for the Opportunity (or null)
+     * @param oppType The Opportunity.Type for the Opportunity (or null)
+     * @return List<Opportunity>
+     */
+    public static List<Opportunity> oppsForContactWithAccountList(List<Contact> contacts, Id campaignId,
+            String stage, Date closeDate, Double amt, String recordTypeName, String oppType
+    ) {
+        Id rtId = UTIL_RecordTypes.getRecordTypeId (Opportunity.SObjectType,recordTypeName);
+        return oppsForContactWithAccountListByRecTypeId(contacts, campaignId, stage, closeDate, amt, rtId, oppType);
     }
 
-    /*******************************************************************************************************
-    * @description Create an Opportunity for each Contact, using their Account as the Opportunity's Account.
-    */
-    public static List<Opportunity> OppsForContactWithAccountListByRecTypeId (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, Id rtid, string oppType) {
+    /**
+     * @description Create an Opportunity for each Contact, using their Account as the Opportunity's Account.
+     * @param contact List of Contacts to create Opps for
+     * @param campaignId The CampaignId to use (or null)
+     * @param stage The StageName to use (required)
+     * @param closeDate The Closedate to use (required)
+     * @param amt The Opp Amount (required)
+     * @param rtId The RecordTypeId for the Opportunity (or null)
+     * @param oppType The Opportunity.Type for the Opportunity (or null)
+     * @return List<Opportunity>
+     */
+    public static List<Opportunity> oppsForContactWithAccountListByRecTypeId (List<Contact> contacts, Id campaignId,
+            String stage, Date closeDate, Double amt, Id rtId, String oppType
+    ) {
      
-        // given a List of Contacts,
-        // add one Opp per contact w/ the specified data
-    
-        List<Opportunity> OppsToAdd = new List<Opportunity> ();
-        UTIL_Debug.debug('recordtypeintest: ' + rtid);
+        List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
-        for ( Contact thisCon : Cons ) {
-            Opportunity newOpp = New Opportunity (
+        for (Contact thisCon : contacts) {
+            Opportunity newOpp = new Opportunity (
                 Name = 'Test Opp ' + thisCon.FirstName + thisCon.LastName,
-                Amount = Amt,
-                CloseDate = Close,
-                StageName = Stage,
-                CampaignId = CampId,
+                Amount = amt,
+                CloseDate = closeDate,
+                StageName = stage,
+                CampaignId = campaignId,
                 AccountId = thisCon.AccountId,
                 Primary_Contact__c = thisCon.Id,
-                type = oppType
+                Type = oppType
             );
-            if(rtid != null){
-                newOpp.put('RecordTypeId',rtid);
+            if (rtId != null) {
+                newOpp.put('RecordTypeId', rtId);
             }
             oppsToAdd.add (newOpp);
         }
         return oppsToAdd;
     }
 
-    public static List<Opportunity> OppsForAccountList (List<Account> listAcc, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
-        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,rectype);
-        return OppsForAccountListByRecTypeId(listAcc, CampId, Stage, Close, Amt, rtid, oppType);
+    /**
+     * @description Create one Opportunity per Account for a provided list of Accounts
+     * @param accounts List of Accounts to create Opps for
+     * @param campaignId The CampaignId to use (or null)
+     * @param stage The StageName to use (required)
+     * @param closeDate The Closedate to use (required)
+     * @param amt The Opp Amount (required)
+     * @param recordTypeName The RecordType Label for the Opportunity (or null)
+     * @param oppType The Opportunity.Type for the Opportunity (or null)
+     * @return List<Opportunity>
+     */
+    public static List<Opportunity> oppsForAccountList (List<Account> accounts, Id campId, String stage,
+            Date closeDate, Double amt, String recordTypeName, String oppType) {
+        Id rtId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, recordTypeName);
+        return oppsForAccountListByRecTypeId(accounts, campId, stage, closeDate, amt, rtId, oppType);
     }
 
-    public static List<Opportunity> OppsForAccountListByRecTypeId (List<Account> listAcc, id CampId, string Stage, date Close, double Amt, Id rtid, string oppType) {
+    /**
+     * @description Create one Opportunity per Account for a provided list of Accounts
+     * @param accounts List of Accounts to create Opps for
+     * @param campaignId The CampaignId to use (or null)
+     * @param stage The StageName to use (required)
+     * @param closeDate The Closedate to use (required)
+     * @param amt The Opp Amount (required)
+     * @param rtId The RecordTypeId for the Opportunity (or null)
+     * @param oppType The Opportunity.Type for the Opportunity (or null)
+     * @return List<Opportunity>
+     */
+    public static List<Opportunity> oppsForAccountListByRecTypeId (List<Account> accounts, Id campaignId,
+            String stage, Date closeDate, Double amt, Id rtId, String oppType
+    ) {
      
-        // given a List of Accounts,
-        // add one Opp per Account w/ the specified data
-    
-        List<Opportunity> OppsToAdd = new List<Opportunity> ();
-        UTIL_Debug.debug('recordtypeintest: ' + rtid);
+        List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
-        for (Account acc : listAcc) {
+        for (Account acc : accounts) {
             Opportunity newOpp = New Opportunity (
                 Name = 'Test Opp ' + acc.Name,
                 AccountId = acc.Id,
-                Amount = Amt,
-                CloseDate = Close,
-                StageName = Stage,
-                CampaignId = CampId,
-                type = oppType
+                Amount = amt,
+                CloseDate = closeDate,
+                StageName = stage,
+                CampaignId = campaignId,
+                Type = oppType
             );
-            if (rtid != null){
-                newOpp.put('RecordTypeId',rtid);
+            if (rtId != null) {
+                newOpp.put('RecordTypeId', rtId);
             }
             oppsToAdd.add (newOpp);
         }
         return oppsToAdd;
     }
 
-    public static List<Account> createMultipleTestAccounts (integer n, string strType) {
+    /**
+     * @description Creates a defined number of Test Account records of the specified "Type"
+     * @param n Number of Accounts to create
+     * @param strType CAO_Constants.BUCKET_ORGANIZATION_TYPE, ONE_TO_ONE_ORGANIZATION_TYPE
+     * @return List<Account>
+     */
+    public static List<Account> createMultipleTestAccounts (Integer n, String strType) {
         
-        List<Account> AcctsToAdd = New List<Account> ();
+        List<Account> accountsToAdd = new List<Account> ();
         
-        for (integer i=0;i<n;i++) {
-            Account newAcct = New Account (
-                Name = 'Yet Another Org ' + i,
+        for (Integer i=0; i<n; i++) {
+            Account newAcct = new Account (
+                Name = 'Test Account ' + getUniqueString(),
                 npe01__SYSTEM_AccountType__c = strType
             );
             if (strType != null) {
-            	newAcct.npe01__SYSTEMIsIndividual__c = true;
-            	if (strType == CAO_Constants.BUCKET_ORGANIZATION_TYPE)
-            	   newAcct.name = CAO_Constants.BUCKET_ACCOUNT_NAME;
+                newAcct.npe01__SYSTEMIsIndividual__c = true;
+                if (strType == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
+                    newAcct.Name = CAO_Constants.BUCKET_ACCOUNT_NAME;
+                }
             }
-            AcctsToAdd.add (newAcct);
+            accountsToAdd.add (newAcct);
         }
         
-        return AcctsToAdd;
+        return accountsToAdd;
+    }
+
+    public static List<Account> listAccT;
+    public static List<Contact> listConT;
+
+    /*********************************************************************************************************
+    * @description Creates x accounts of the given type, each with y Contacts each with a unique name
+    * and mailing address
+    * @param accType The Account Type to create (CAO_Constants.HH_ACCOUNT_TYPE, etc.)
+    * @param cAcc the number of Accounts to create
+    * @param cCon the number of Contacts to create per Account
+    * @param iUnique the number to start with when naming the contacts and addresses
+    * @return  void
+    **********************************************************************************************************/
+    public static void createAccountContactTestData(String accType, Integer cAcc, Integer cCon, Integer iUnique) {
+
+        listConT = UTIL_UnitTestData_TEST.createMultipleTestContacts(cAcc * cCon);
+        listAccT = UTIL_UnitTestData_TEST.createMultipleTestAccounts(cAcc, accType);
+        insert listAccT;
+
+        for (Integer i = 0; i < cAcc; i++) {
+            for (Integer j = 0; j < cCon; j++) {
+                Integer iCon = (i * cCon) + j;
+                String unique = getUniqueString();
+
+                Contact con = listConT[iCon];
+                con.FirstName = 'TestFirstName' + iUnique + iCon;
+                con.LastName = 'TestLastName' + iUnique + iCon + unique;
+                con.AccountId = listAccT[i].Id;
+                con.MailingStreet = 'Street' + iUnique + iCon + unique;
+                con.MailingCity = 'City' + iUnique + iCon;
+            }
+        }
+        insert listConT;
     }
 
     /**
@@ -289,12 +424,11 @@ public class UTIL_UnitTestData_TEST {
      * @param n The number of Engagement Plan Templates to be created
      * @return List of Engagement Plan Templates
      */
-    public static List<Engagement_Plan_Template__c> createEPTemplates (integer n) {
-        // Holds the list of EP Templates to be returned
-        List<Engagement_Plan_Template__c> EPTemplatesToAdd = New List<Engagement_Plan_Template__c>();
+    public static List<Engagement_Plan_Template__c> createEPTemplates (Integer n) {
+        List<Engagement_Plan_Template__c> EPTemplatesToAdd = new List<Engagement_Plan_Template__c>();
         
-        for (integer i=0 ;i<n; i++) {
-            EPTemplatesToAdd.add(new Engagement_Plan_Template__c(Name = 'Test ' + i));
+        for (Integer i=0 ;i<n; i++) {
+            EPTemplatesToAdd.add(new Engagement_Plan_Template__c(Name = 'Test ' + getUniqueString()));
         }
         
         return EPTemplatesToAdd;
@@ -306,12 +440,11 @@ public class UTIL_UnitTestData_TEST {
      * @param listEPTemplates The templates the EP Tasks will belong to
      * @return List of Engagement Plan Templates
      */
-    public static List<Engagement_Plan_Task__c> createEPTasksForTemplates (integer n, List<Engagement_Plan_Template__c> listEPTemplates) {
-        // Holds the list of EP Tasks to be returned
-        List<Engagement_Plan_Task__c> EPTasksToAdd = New List<Engagement_Plan_Task__c>();
+    public static List<Engagement_Plan_Task__c> createEPTasksForTemplates (Integer n, List<Engagement_Plan_Template__c> listEPTemplates) {
+        List<Engagement_Plan_Task__c> EPTasksToAdd = new List<Engagement_Plan_Task__c>();
         
         for (Engagement_Plan_Template__c epTemplate : listEPTemplates) {
-            for (integer i=0 ;i<n; i++) {
+            for (Integer i=0 ;i<n; i++) {
                 EPTasksToAdd.add(
                     new Engagement_Plan_Task__c(
                     Engagement_Plan_Template__c = epTemplate.Id,
@@ -323,6 +456,10 @@ public class UTIL_UnitTestData_TEST {
         
         return EPTasksToAdd;
     }
+
+    // =====================================================================================================
+    // Methods to Create Test Users
+    // =====================================================================================================
 
     /**
      * @description Create a new user for unit testing.
@@ -398,7 +535,7 @@ public class UTIL_UnitTestData_TEST {
         User u = createNewUserForTests(strUsername);
 
         System.runAs(new User(Id = UserInfo.getUserId())) {
-            u.isActive = false;
+            u.IsActive = false;
             update u;
         }
 
@@ -437,13 +574,20 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+      * @description Generate a unique string to append to indexed fields to make them unique
+      */
+    public static String getUniqueString() {
+        return String.valueOf(Math.abs(Crypto.getRandomLong()));
+    }
+
+    /**
      * @description Construct a unique last name to be assigned to a User
      * @return String
      */
-    static String buildUniqueLastName() {
+    private static String buildUniqueLastName() {
         return UserInfo.getOrganizationId() +
-            String.valueof(Datetime.now()).replace(' ','').replace(':','').replace('-','') +
-            Integer.valueOf(math.rint(math.random()*2000000));
+            String.valueOf(Datetime.now()).replace(' ','').replace(':','').replace('-','') +
+            Integer.valueOf(Math.rint(Math.random()*2000000));
     }
 
     /**
@@ -452,16 +596,16 @@ public class UTIL_UnitTestData_TEST {
      * @param profileName Profile Name
      * @return User
      */
-    static User buildUser(String lastName, String profileName) {
-        Profile p = [SELECT Id FROM Profile WHERE name = :profileName];
+    private static User buildUser(String lastName, String profileName) {
+        Profile p = [SELECT Id FROM Profile WHERE Name = :profileName];
         String alias = lastName.replaceAll(' ', '').leftPad(8, '0').right(8);
         String email = lastName.left(70) + '@email.npsp';
 
         return new User(
             LastName = lastName, 
             Email = email, 
-            ProfileId = p.id,
-            UserName = email,
+            ProfileId = p.Id,
+            Username = email,
             Alias = alias, 
             TimeZoneSidKey = 'America/Los_Angeles',
             LocaleSidKey = 'en_US', 
@@ -470,128 +614,10 @@ public class UTIL_UnitTestData_TEST {
         );
     }
 
-    /**
-     * @description Assert a Visualforce page has an error message displayed
-     * @param expectedMsg Expected error message
-     * @return void
-     */
-    public static void assertPageHasError(String expectedMsg) {
-        assertPageHasMessage(expectedMsg, ApexPages.Severity.ERROR);
-    }
+    // =====================================================================================================
+    // Methods to configure Household Naming Settings
+    // =====================================================================================================
 
-    /**
-     * @description Assert a Visualforce page has a message displayed
-     * @param expectedMsg Expected error message
-     * @param expectedSeverity Expected severity level
-     * @return void
-     */
-    public static void assertPageHasMessage(String expectedMsg, ApexPages.Severity expectedSeverity) {
-        ApexPages.Message[] msgs = ApexPages.getMessages();
-
-        System.assert(
-            ApexPages.hasMessages(expectedSeverity), 
-            'Expected page to contain at least one error message. Messages: ' + msgs
-        );
- 
-        for (ApexPages.Message msg : msgs) {
-            if (msg.getSummary().contains(expectedMsg) && msg.getSeverity() == expectedSeverity) {
-                return;       
-            }
-        }
-
-        System.assert(false, 
-            String.format(
-                'Cannot find "{0}" in the page messages: ' + msgs,
-                new String[] { expectedMsg }
-            )
-        );
-    }
-
-    public static list<Account> listAccT;
-    public static list<Contact> listConT;
-    
-    /*********************************************************************************************************
-    * @description Creates x accounts of the given type, each with y Contacts.
-    * @param accType The Account Type to create (CAO_Constants.HH_ACCOUNT_TYPE, etc.)
-    * @param cAcc the number of Accounts to create
-    * @param cCon the number of Contacts to create per Account
-    * @param iUnique the number to start with when naming the contacts and addresses
-    * @return  void
-    **********************************************************************************************************/
-    public static void createAccountContactTestData(string accType, integer cAcc, integer cCon, integer iUnique) {
-        
-        //npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
-            
-        listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cAcc * cCon);
-        listAccT = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cAcc, accType);
-        insert listAccT;
-        
-        // set each contact's account, and give them a unique name and mailing address
-        for (integer i = 0; i < cAcc; i++) {
-            for (integer j = 0; j < cCon; j++) {
-            	integer iCon = (i * cCon) + j;
-            	Contact con = listConT[iCon]; 
-            	con.Firstname = 'TestFirstname' + iUnique + iCon;
-                con.Lastname = 'TestLastname' + iUnique + iCon;
-                con.AccountId = listAccT[i].Id;
-                con.MailingStreet = 'Street' + iUnique + iCon;
-                con.MailingCity = 'City' + iUnique + iCon;
-            }
-        }        
-        insert listConT;
-    }
-
-    private static testMethod void testCreateNewUserWithDefaultRole() {
-        String randomUsername = 'test@test.com.' + Math.random();
-
-        User returnedUser = createNewUserForTests(randomUsername);
-        User queriedUser = [
-            SELECT
-                Username,
-                UserRole.Name
-            FROM User
-            WHERE Id = :returnedUser.Id
-        ];
-
-        System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
-        System.assertEquals('COO', queriedUser.UserRole.Name);
-    }
-
-    private static testMethod void testCreateNewUserWithRandomRole() {
-        String randomUsername = 'test@test.com.' + Math.random();
-        String randomRolename = 'RoleName' + Math.random();
-
-        User returnedUser = createNewUserWithRoleForTests(
-            randomUsername,
-            randomRolename
-        );
-
-        User queriedUser = [
-            SELECT
-                Username,
-                UserRole.Name
-            FROM User
-            WHERE Id = :returnedUser.Id
-        ];
-
-        System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
-        System.assert(randomRoleName.equalsIgnoreCase(queriedUser.UserRole.Name));
-    }
-
-    private static testMethod void testCreateNewInactiveUserForTests() {
-        String randomUsername = 'test@test.com.' + Math.random();
-
-        User returnedUser = createNewInactiveUserForTests(randomUsername);
-
-        User queriedUser = [
-            SELECT IsActive
-            FROM User
-            WHERE Id = :returnedUser.Id
-        ];
-
-        System.assertEquals(false, returnedUser.IsActive);
-        System.assertEquals(false, queriedUser.IsActive);
-    }
 
     /*********************************************************************************************************
     * @description Turns on Automatic Household Naming
@@ -660,8 +686,8 @@ public class UTIL_UnitTestData_TEST {
                 Household_Name_Format__c = hhNameFormat,
                 Formal_Greeting_Format__c = formalGreetingFormat,
                 Informal_Greeting_Format__c = informalGreetingFormat,
-                Name_Connector__c = label.npo02.HouseholdNameConnector,
-                Name_Overrun__c = label.npo02.HouseholdNameOverrun,
+                Name_Connector__c = System.Label.npo02.HouseholdNameConnector,
+                Name_Overrun__c = System.Label.npo02.HouseholdNameOverrun,
                 Contact_Overrun_Count__c = 9,
                 Implementing_Class__c = 'HH_NameSpec'
             )
@@ -724,6 +750,31 @@ public class UTIL_UnitTestData_TEST {
         TDTM_ProcessControl.toggleTriggerState('Contact', 'HH_Households_TDTM', false);
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
     }
+    /* @description Disable all HH Naming related trigger handlers and setting when not needed to improve performance */
+    public static void disableAddressTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'ADDR_Contact_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Addresses_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Validator_TDTM', false);
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+    }
+
+    /**
+     * @description Create the default trigger handler records if they haven't already been created
+     */
+    private static Boolean haveTriggerRecordsBeenCreated = false;
+    private static void createDefaultTDTMHandlers() {
+        if (!haveTriggerRecordsBeenCreated && TDTM_Config_API.getCachedRecords().size() == 0) {
+            insert TDTM_DefaultConfig.getDefaultRecords();
+            TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
+            haveTriggerRecordsBeenCreated = true;
+        }
+    }
+
+    // =====================================================================================================
+    // Miscellaneous Utility Methods specifically for ue in Unit Tests
+    // =====================================================================================================
 
     /*********************************************************************************************************
     * @description Extracts Ids of sObjects
@@ -743,18 +794,6 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
-     * @description Create the default trigger handler records if they haven't already been created
-     */
-    private static Boolean haveTriggerRecordsBeenCreated = false;
-    private static void createDefaultTDTMHandlers() {
-        if (!haveTriggerRecordsBeenCreated && TDTM_Config_API.getCachedRecords().size() == 0) {
-            insert TDTM_DefaultConfig.getDefaultRecords();
-            TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
-            haveTriggerRecordsBeenCreated = true;
-        }
-    }
-
-    /**
      * @description Returns True if the Account.Name is encrypted.
      * It is mainly used in test methods with Individual Account model which is not supported when the Account.Name is encrypted.
      */
@@ -770,7 +809,6 @@ public class UTIL_UnitTestData_TEST {
     private static UTIL_CurrencyCache.CurrencyData nonDefaultCurrencyType {
         get {
             if (nonDefaultCurrencyType == null) {
-                // get a valid ISO code
                 List<SObject> nonDefaultCurrency = Database.query(
                     'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = false LIMIT 1'
                 );
@@ -827,5 +865,110 @@ public class UTIL_UnitTestData_TEST {
         for (SObject record : records) {
             record.Id = mockId(record.getSObjectType());
         }
+    }
+
+    /**
+     * @description Assert a Visualforce page has an error message displayed
+     * @param expectedMsg Expected error message
+     * @return void
+     */
+    public static void assertPageHasError(String expectedMsg) {
+        assertPageHasMessage(expectedMsg, ApexPages.Severity.ERROR);
+    }
+
+    /**
+     * @description Assert a Visualforce page has a message displayed
+     * @param expectedMsg Expected error message
+     * @param expectedSeverity Expected severity level
+     * @return void
+     */
+    public static void assertPageHasMessage(String expectedMsg, ApexPages.Severity expectedSeverity) {
+        ApexPages.Message[] msgs = ApexPages.getMessages();
+
+        System.assert(
+            ApexPages.hasMessages(expectedSeverity),
+            'Expected page to contain at least one error message. Messages: ' + msgs
+        );
+
+        for (ApexPages.Message msg : msgs) {
+            if (msg.getSummary().contains(expectedMsg) && msg.getSeverity() == expectedSeverity) {
+                return;
+            }
+        }
+
+        System.assert(false,
+            String.format(
+                'Cannot find "{0}" in the page messages: ' + msgs,
+                new String[] { expectedMsg }
+            )
+        );
+    }
+
+    // =====================================================================================================
+    // Test Methods for this Class
+    // =====================================================================================================
+
+    /**
+     * @description Verify that a new User is inserted with the specified Username
+     */
+    @IsTest
+    private static void shouldCreateNewUserWithDefaultRole() {
+        String randomUsername = 'test@test.com.' + getUniqueString();
+
+        User returnedUser = createNewUserForTests(randomUsername);
+        User queriedUser = [
+            SELECT
+                Username,
+                UserRole.Name
+            FROM User
+            WHERE Id = :returnedUser.Id
+        ];
+
+        System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
+        System.assertEquals('COO', queriedUser.UserRole.Name);
+    }
+
+    /**
+     * @description Verify that a new User is inserted with the specified Username and a random Role Name
+     */
+    @IsTest
+    private static void shouldCreateNewUserWithRandomRole() {
+        String randomUsername = 'test@test.com.' + getUniqueString();
+        String randomRolename = 'RoleName' + getUniqueString();
+
+        User returnedUser = createNewUserWithRoleForTests(
+            randomUsername,
+            randomRolename
+        );
+
+        User queriedUser = [
+            SELECT
+                Username,
+                UserRole.Name
+            FROM User
+            WHERE Id = :returnedUser.Id
+        ];
+
+        System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
+        System.assert(randomRoleName.equalsIgnoreCase(queriedUser.UserRole.Name));
+    }
+
+    /**
+     * @description Verify that a new Inactive User is inserted with the specified Username
+     */
+    @IsTest
+    private static void shouldCreateNewInactiveUserForTests() {
+        String randomUsername = 'test@test.com.' + getUniqueString();
+
+        User returnedUser = createNewInactiveUserForTests(randomUsername);
+
+        User queriedUser = [
+            SELECT IsActive
+            FROM User
+            WHERE Id = :returnedUser.Id
+        ];
+
+        System.assertEquals(false, returnedUser.IsActive);
+        System.assertEquals(false, queriedUser.IsActive);
     }
 }
