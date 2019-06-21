@@ -38,6 +38,9 @@
 @IsTest
 private class BDI_MigrationMappingUtilityTest {
 
+    /*******************************************************************************************************
+    * @description Test that the migration utility will only create and enqueue usable help text mappings
+    */
     @isTest
     static void shouldCreateCustomMetadataRecordsFromHelpText() {
         // Create a mock version of the BDI_MigrationUtilityHelper class
@@ -66,6 +69,9 @@ private class BDI_MigrationMappingUtilityTest {
             'We have 2 bad help text field mappings.');
     }
 
+    /*******************************************************************************************************
+    * @description Test that the migration utility handles 'npsp' namespaced custom and standard fields
+    */
     @isTest
     static void shouldCreateCustomMetadataRecordsFromHelpTextWithNamespaces() {
         // Create a mock version of the BDI_MigrationUtilityHelper class
@@ -75,7 +81,6 @@ private class BDI_MigrationMappingUtilityTest {
                 new BDI_MigrationMappingHelperMock());
 
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
-        BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
 
         BDI_MigrationMappingUtility.DataImportFieldMapping namespacedCustomHelpTextMapping =
             buildDataImportFieldMapping(
@@ -111,6 +116,10 @@ private class BDI_MigrationMappingUtilityTest {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Test that the migration utility will overwrite a preexisting data import field mapping
+    * and not create a new custom metadata record
+    */
     @isTest
     static void shouldOverwriteExistingCustomMetadataRecordsFromHelpText() {
         // Create a mock version of the BDI_MigrationUtilityHelper class
@@ -120,7 +129,6 @@ private class BDI_MigrationMappingUtilityTest {
                 new BDI_MigrationMappingHelperMock());
 
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
-        BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
 
         util.dataImportFieldMappings = buildDataImportFieldMappingsFromHelpText();
         util.badHelpTextMappings = buildBadHelpTextMappings();
@@ -135,6 +143,10 @@ private class BDI_MigrationMappingUtilityTest {
             'We have 2 bad help text field mappings.');
     }
 
+    /*******************************************************************************************************
+    * @description Test that the migration utility will not create a duplicate record when the target
+    * mapping exists and the help text mapping equivalent has the 'npsp' prefix
+    */
     @isTest
     static void shouldNotCreateDuplicateCustomMetadataRecordsFromHelpTextWithNamespaces() {
         // Create a mock version of the BDI_MigrationUtilityHelper class
@@ -167,6 +179,10 @@ private class BDI_MigrationMappingUtilityTest {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Test that the migration utility populates the dataImportFieldMappings and
+    * badHelpTextMappings respectively with the appropriate records
+    */
     @IsTest
     static void shouldPopulateListsFromHelpText() {
         // Create a mock version of the BDI_MigrationUtilityHelper class
@@ -185,14 +201,12 @@ private class BDI_MigrationMappingUtilityTest {
             'We have 5 good help text mappings.');
     }
 
+    /*******************************************************************************************************
+    * @description Test that the migration utility updates the Data Import Custom Settings when Advanced
+    * Mapping is turned on
+    */
     @IsTest
     static void shouldUpdateCustomSettingsForDataImportFieldMapping() {
-        // Create a mock version of the BDI_MigrationUtilityHelper class
-        BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
-            (BDI_MigrationMappingHelper) Test.createStub(
-                BDI_MigrationMappingHelper.class,
-                new BDI_MigrationMappingHelperMock());
-
         Test.startTest();
 
         // Confirm custom settings updated accordingly
@@ -218,6 +232,10 @@ private class BDI_MigrationMappingUtilityTest {
         System.assertEquals(result.get('Field Mapping Method'), 'Data Import Field Mapping');
     }
 
+    /*******************************************************************************************************
+    * @description Test that the migration utility updates the Data Import Custom Settings when Advanced
+    * Mapping is turned off
+    */
     @IsTest
     static void shouldUpdateCustomSettingsForHelpText() {
         BDI_MigrationMappingUtility.updateCustomSettings(
@@ -232,6 +250,17 @@ private class BDI_MigrationMappingUtilityTest {
         System.assertEquals(result, new Map<String, String>());
     }
 
+    /*******************************************************************************************************
+    * @description Method builds an instance of the BDI_MigrationMappingUtility.DataImportFieldMapping
+    *
+    * @param label: Label of the Data Import field
+    * @param sourceFieldAPIName: API name of the Data Import Field
+    * @param dataImportObjectName: Object name of the target object in the Data Import help text
+    * (i.e. Account1)
+    * @param targetFieldAPIName: API name of the target field in the Data Import help text
+    * @param targetObjectAPIName: API Name of the target object in the Data Import help text
+    * (i.e. Account)
+    */
     private static BDI_MigrationMappingUtility.DataImportFieldMapping buildDataImportFieldMapping(
         String label, String sourceFieldAPIName, String dataImportObjectName,
         String targetFieldAPIName, String targetObjectAPIName) {
@@ -247,6 +276,16 @@ private class BDI_MigrationMappingUtilityTest {
         return difm;
     }
 
+    /*******************************************************************************************************
+    * @description Method builds an instance of the BDI_MigrationMappingUtility.HelpTextFieldMapping
+    *
+    * @param sourceFieldLabel: Label of the Data Import field
+    * @param sourceFieldAPIName: API name of the Data Import Field
+    * @param dataImportObjectName: Object name of the target object in the Data Import help text
+    * (i.e. Account1)
+    * @param targetFieldAPIName: API name of the target field in the Data Import help text
+    * @param helpText: Value of Data Import help text field (i.e. Account1.BillingCity)
+    */
     private static BDI_MigrationMappingUtility.HelpTextFieldMapping buildHelpTextFieldMapping(
         String sourceFieldLabel, String sourceFieldAPIName, String dataImportObjectName,
         String targetFieldAPIName, String helpText) {
@@ -262,6 +301,9 @@ private class BDI_MigrationMappingUtilityTest {
         return htfm;
     }
 
+    /*******************************************************************************************************
+    * @description Builds a list of test DataImportFieldMappings
+    */
     private static List<BDI_MigrationMappingUtility.DataImportFieldMapping> buildDataImportFieldMappingsFromHelpText() {
         BDI_MigrationMappingUtility.DataImportFieldMapping account1NameHelpText =
             buildDataImportFieldMapping(
@@ -311,6 +353,9 @@ private class BDI_MigrationMappingUtilityTest {
             account1CustomFieldHelpText2};
     }
 
+    /*******************************************************************************************************
+    * @description Builds a list of test good HelpTextFieldMapping
+    */
     private static List<BDI_MigrationMappingUtility.HelpTextFieldMapping> buildHelpTextMappings() {
         BDI_MigrationMappingUtility.HelpTextFieldMapping account1NameHelpText =
             buildHelpTextFieldMapping(
@@ -360,6 +405,9 @@ private class BDI_MigrationMappingUtilityTest {
             account1CustomFieldHelpText2};
     }
 
+    /*******************************************************************************************************
+    * @description Builds a list of test bad HelpTextFieldMapping
+    */
     private static List<BDI_MigrationMappingUtility.HelpTextFieldMapping> buildBadHelpTextMappings() {
         BDI_MigrationMappingUtility.HelpTextFieldMapping badAccount1Mapping =
             buildHelpTextFieldMapping(
@@ -401,7 +449,7 @@ private class BDI_MigrationMappingUtilityTest {
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName, Type returnType,
             List<Type> listOfParamTypes, List<String> listOfParamNames, List<Object> listOfArgs) {
 
-            if (stubbedMethodName == 'getObjectMappingsByDeveloperName') {
+            if (stubbedMethodName == 'getObjectMappingsBySetDeveloperName') {
                 Data_Import_Object_Mapping__mdt objectMapping1 =
                     new Data_Import_Object_Mapping__mdt(
                         Id=account1ObjectMappingId,

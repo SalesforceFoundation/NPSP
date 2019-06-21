@@ -82,7 +82,7 @@ public class BDI_MigrationMappingHelper {
      * @param objectMappingSetId Id of the default Object Mapping Set
      * @return Collection of Object Mapping DeveloperName to Object Mapping record
      */
-    public Map<String, Data_Import_Object_Mapping__mdt> getObjectMappingsByDeveloperName(String developerName) {
+    public Map<String, Data_Import_Object_Mapping__mdt> getObjectMappingsBySetDeveloperName(String developerName) {
         List<Data_Import_Object_Mapping__mdt> existingObjectMappings = [SELECT 
                     Id, 
                     Label, 

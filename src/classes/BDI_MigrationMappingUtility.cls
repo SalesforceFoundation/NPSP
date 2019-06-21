@@ -183,7 +183,7 @@ public with sharing class BDI_MigrationMappingUtility {
         this.helper = helper;
         this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         this.objectMappingsByDeveloperName =
-            helper.getObjectMappingsByDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
+            helper.getObjectMappingsBySetDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
     }
 
     /*******************************************************************************************************
