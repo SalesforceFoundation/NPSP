@@ -48,7 +48,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     /**
      * @description Batch size for OPPORTUNITY job mode
      */
-    public static final Integer OPPORTUNITIES_BATCH_SIZE = 200;
+    public static final Integer OPPORTUNITIES_BATCH_SIZE = 2000;
 
     /**
      * @description Batch size for RECURRING_DONATIONS job mode. Limited to 200 as job needs to query related

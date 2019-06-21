@@ -38,7 +38,7 @@
 * one query were to fail, which is theoretically possible in a huge organization where there may be other jobs
 * executing or other factors at play, the rest of this job will continue. That ensures that our LMO collects as much
 * data as possible. In addition, it can help us identify which specific telemetry data processes are failing.
-* Class if virtual so executeTelemetrySObjectBatch can be overridden during tests
+* Class is virtual so executeTelemetrySObjectBatch can be overridden during tests
 */
 public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> {
 

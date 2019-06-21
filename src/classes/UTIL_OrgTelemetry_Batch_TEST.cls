@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Unit Tests related to the org telemetry class
 */
-@IsTest(IsParallel=false)
+@IsTest
 private class UTIL_OrgTelemetry_Batch_TEST {
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
 
@@ -82,10 +82,10 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         batch.finish(null);
 
         System.assertEquals(1, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS),
-            'The RECURRING_DONATIONS should be executed');
+            'The RECURRING_DONATIONS batch should be executed');
 
         System.assertEquals(1, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
-            'The OPPORTUNITIES should be executed');
+            'The OPPORTUNITIES batch should be executed');
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, null);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, null);
@@ -109,7 +109,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         batch.finish(null);
 
         System.assertEquals(null, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
-            'The OPPORTUNITIES should not be executed');
+            'The OPPORTUNITIES batch batch should not be executed');
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, 0);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, 0);
@@ -133,7 +133,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         batch.finish(null);
 
         System.assertEquals(1, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
-            'The OPPORTUNITIES should be executed');
+            'The OPPORTUNITIES batch should be executed');
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, null);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, null);
@@ -143,13 +143,13 @@ private class UTIL_OrgTelemetry_Batch_TEST {
     }
 
     /**
-     * @description Asserts on provide telemetry integer metric
+     * @description Asserts on the provided telemetry integer metric
      */
     private static void assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName metric, Integer expectedValue) {
         String metricName = metric.name();
         String messsage = expectedValue == null ?
-            'The feature paraemter metric ' + metricName + ' should not be set'
-            : 'The feature paraemter metric ' + metricName + ' should be set correctly';
+            'The feature parameter metric ' + metricName + ' should not be set'
+            : 'The feature parameter metric ' + metricName + ' should be set correctly';
 
         System.assertEquals(
             expectedValue,
