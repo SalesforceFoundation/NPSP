@@ -378,16 +378,20 @@ public with sharing class BDI_DataImport_TEST {
         // existing 1x1 contact
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 1, 0);   
         List<Contact> listConExisting = getContacts();
+
+        Contact matched00Contact = listConExisting[0];
+
         System.assertEquals(1, listConExisting.size());
         System.assertEquals(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, listConExisting[0].Account.npe01__System_AccountType__c);
-        System.assertEquals('TestFirstname00 TestLastname00', listConExisting[0].Name);
-        listConExisting[0].email = 'foo@bar.com';
+        System.assert(matched00Contact.Name.startsWith('TestFirstName00'),
+            'The name of the First Contact retrieved does not start with "TestFirstName00"');
+        listConExisting[0].Email = 'foo@bar.com';
         update listConExisting;
 
         UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
-        
+
         List<DataImport__c> dataImports = new List<DataImport__c>();
-        dataImports.add(newDI('TestFirstname00', 'TestLastname00', 'c2', 'C2', new Address__c(MailingCity__c='Seattle')));
+        dataImports.add(newDI(matched00Contact.FirstName, matched00Contact.LastName, 'c2', 'C2', new Address__c(MailingCity__c='Seattle')));
         dataImports[0].Contact1_Personal_Email__c = 'foo@bar.com';
         insert dataImports;
           
@@ -401,7 +405,7 @@ public with sharing class BDI_DataImport_TEST {
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(1, listCon.size());
-        System.assertEquals('TestFirstname00 TestLastname00', listCon[0].Name);
+        System.assertEquals(matched00Contact.Name, listCon[0].Name);
 
         dataImports = getDataImports();
         System.assertEquals(1, dataImports.size());
