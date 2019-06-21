@@ -44,7 +44,8 @@ public class BDI_MigrationMappingHelper {
     * @return List<Data_Import_Field_Mapping_Set__mdt>
     */
     public List<Data_Import_Field_Mapping_Set__mdt> getFieldMappingSet(String developerName) {
-        List<Data_Import_Field_Mapping_Set__mdt> sets = [SELECT Id FROM Data_Import_Field_Mapping_Set__mdt WHERE DeveloperName = :developerName];
+        List<Data_Import_Field_Mapping_Set__mdt> sets =
+            [SELECT Id FROM Data_Import_Field_Mapping_Set__mdt WHERE DeveloperName = :developerName];
         return sets;
     }
 

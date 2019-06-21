@@ -131,11 +131,6 @@ public with sharing class BDI_MigrationMappingUtility {
     private Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName;
 
     /*******************************************************************************************************
-    * @description Name of the Data Import Field Mapping Set to use
-    */
-    private String fieldMappingSetName = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
-
-    /*******************************************************************************************************
     * @description List of bad/malformed help text mappings
     */
     public List<HelpTextFieldMapping > badHelpTextMappings {
@@ -154,21 +149,22 @@ public with sharing class BDI_MigrationMappingUtility {
     public List<DataImportFieldMapping> dataImportFieldMappings = new List<DataImportFieldMapping>();
 
     /*******************************************************************************************************
-    * @description Boolean flag to determine if a custom field mapping set exists
-    * Set as static because it's used in the static method updateCustomSettings
+    * @description Name of the Data Import Field Mapping Set to use
     */
-    public Boolean customFieldMappingSetExists {
+    public String fieldMappingSetName {
         get {
-            List<Data_Import_Field_mapping_Set__mdt> fieldMappingSet =
-                helper.getFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+            if (fieldMappingSetName == null) {
+                List<Data_Import_Field_mapping_Set__mdt> fieldMappingSet =
+                    helper.getFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
-            if (fieldMappingSet != null) {
-                if (fieldMappingSet.size() > 0) {
-                    return true;
+                if (fieldMappingSet != null && fieldMappingSet.size() > 0) {
+                    return MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
                 }
+                return DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
             }
-            return false;
+            return fieldMappingSetName;
         }
+        set;
     }
 
     /*******************************************************************************************************
@@ -242,10 +238,6 @@ public with sharing class BDI_MigrationMappingUtility {
             populateListsFromHelpTextMappings();
         }
 
-        if (customFieldMappingSetExists) {
-            fieldMappingSetName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME;
-        }
-
         Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName =
             helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
 
@@ -261,7 +253,6 @@ public with sharing class BDI_MigrationMappingUtility {
                 fieldMappingsByFieldMappingSetDeveloperName.get(fieldMappingKey);
 
             if (existingDefaultFieldMapping == null) {
-                // Is a new field mapping
                 fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
                 fieldMapping.setObjectMapping(existingDefaultObjectMapping);
                 // Setting name to null will force field mapping to generate a unique name
@@ -270,8 +261,7 @@ public with sharing class BDI_MigrationMappingUtility {
                 queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
 
             } else if (existingDefaultFieldMapping != null) {
-
-                if (customFieldMappingSetExists) {
+                if (fieldMappingSetName == MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME) {
                     // Migrated Custom Field Mapping Set exists
                     DataImportFieldMapping overwrittenMapping =
                         new DataImportFieldMapping(
@@ -347,7 +337,7 @@ public with sharing class BDI_MigrationMappingUtility {
     * @description Creates the Migrated Custom Field Mapping Set and adds to queuedMetadataTypesForDeploy
     */
     private void createAndEnqueueMigratedCustomFieldMappingSet() {
-        if (customFieldMappingSetExists == false) {
+        if (fieldMappingSetName == DEFAULT_FIELD_MAPPING_SET_RECORD_NAME) {
 
             DataImportFieldMappingSet fieldMappingSet =
                 new DataImportFieldMappingSet(
@@ -376,9 +366,12 @@ public with sharing class BDI_MigrationMappingUtility {
                     existingFieldMapping,
                     MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
+            Boolean isUnique =
+                fieldMappingSetName == DEFAULT_FIELD_MAPPING_SET_RECORD_NAME ? true : false;
+
             fieldMapping.setRecordName(
                 existingFieldMapping.DeveloperName,
-                !customFieldMappingSetExists);
+                isUnique);
 
             queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
         }
@@ -577,6 +570,12 @@ public with sharing class BDI_MigrationMappingUtility {
 
             Map<String, Object> fieldValues;
             if (this.isDeleted != true) {
+
+                if (NAMESPACE != 'npsp') {
+                    this.targetFieldAPIName =
+                        UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                }
+
                 fieldValues = new Map<String, Object>{
                     'Data_Import_Field_Mapping_Set__c' => dataImportFieldMappingSetRecordName == null ? 'Default_Field_Mapping_Set' : dataImportFieldMappingSetRecordName,
                     'Required__c' => isRequired,
