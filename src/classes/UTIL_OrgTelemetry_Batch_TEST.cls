@@ -109,7 +109,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         batch.finish(null);
 
         System.assertEquals(null, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
-            'The OPPORTUNITIES batch batch should not be executed');
+            'The OPPORTUNITIES batch should not be executed');
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, 0);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, 0);
