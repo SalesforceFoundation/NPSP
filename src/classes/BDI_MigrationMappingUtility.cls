@@ -316,7 +316,11 @@ public with sharing class BDI_MigrationMappingUtility {
 
             Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(
                 helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
-            Boolean isException = HELP_TEXT_EXCEPTIONS.contains(helpTextFieldMapping.helpText);
+
+            Boolean isException = false;
+            if (helpTextFieldMapping.helpText != null) {
+                isException = HELP_TEXT_EXCEPTIONS.contains(helpTextFieldMapping.helpText);
+            }
 
             if (isSkippable || isException) {
                 continue;
@@ -642,15 +646,15 @@ public with sharing class BDI_MigrationMappingUtility {
     public class HelpTextFieldMapping {
         public Boolean isUsable = false;
         public Boolean isPotentialMapping = false;
+        private Boolean isFieldNameUsable = false;
+        private Boolean isObjectNameUsable = false;
+        private Boolean isObjectAPINameUsable = false;
         public String dataImportObjectName;
         public String targetObjectAPIName;
         public String targetFieldAPIName;
         public String dataImportFieldName { get;set; }
         public String dataImportFieldAPIName { get;set; }
         public String helpText { get;set; }
-        Boolean fieldNameIsUsable;
-        Boolean objectNameIsUsable;
-        Boolean objectAPINameIsUsable;
 
         public HelpTextFieldMapping() {}
 
@@ -674,26 +678,26 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         private void checkRequiredFields() {
-            this.fieldNameIsUsable = String.isNotBlank(this.targetFieldAPIName);
-            this.objectNameIsUsable = String.isNotBlank(this.dataImportObjectName);
+            this.isFieldNameUsable = String.isNotBlank(this.targetFieldAPIName);
+            this.isObjectNameUsable = String.isNotBlank(this.dataImportObjectName);
             if (String.isNotBlank(this.dataImportObjectName)) {
                 this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
             }
-            this.objectAPINameIsUsable = String.isNotBlank(this.targetObjectAPIName);
+            this.isObjectAPINameUsable = String.isNotBlank(this.targetObjectAPIName);
         }
 
         private Boolean isUsable() {
             if (Test.isRunningTest()) {
                 checkRequiredFields();
             }
-            return this.fieldNameIsUsable && this.objectNameIsUsable && this.objectAPINameIsUsable;
+            return this.isFieldNameUsable && this.isObjectNameUsable && this.isObjectAPINameUsable;
         }
 
         private Boolean isPotentialMapping() {
             if (Test.isRunningTest()) {
                 checkRequiredFields();
             }
-            return this.fieldNameIsUsable && this.objectNameIsUsable && !this.objectAPINameIsUsable;
+            return this.isFieldNameUsable && this.isObjectNameUsable && !this.isObjectAPINameUsable;
         }
 
         /****************************************************************************************************
