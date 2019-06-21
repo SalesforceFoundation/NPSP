@@ -258,7 +258,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * @description Handles payment counts
      */
     private void countOppPayments(List<Opportunity> opps) {
-        for(Opportunity opp : [
+        for (Opportunity opp : [
             SELECT
                 (SELECT Id FROM npe01__OppPayment__r LIMIT 2)
             FROM Opportunity

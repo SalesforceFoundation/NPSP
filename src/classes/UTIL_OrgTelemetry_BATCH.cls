@@ -101,7 +101,7 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
         Boolean hasRecurringDonations = [SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty() == false;
         Boolean hasPayments = [SELECT Id FROM npe01__OppPayment__c LIMIT 1].isEmpty() == false;
 
-        if(hasRecurringDonations || hasPayments) {
+        if (hasRecurringDonations || hasPayments) {
             executeTelemetrySObjectBatch(
                 UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES,
                 UTIL_OrgTelemetry_SObject_BATCH.OPPORTUNITIES_BATCH_SIZE
@@ -115,6 +115,9 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
         }
     }
 
+    /**
+    * @description Handles execution of batch job for recurring donations counts
+    */
     private void handleRecurringDonationExecution() {
         Boolean hasRecurringDonations = [SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty() == false;
 
