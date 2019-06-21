@@ -182,7 +182,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            addPageMessage(ApexPages.Severity.ERROR, Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage());
+            addPageMessage(ApexPages.Severity.ERROR,
+                Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage());
 
             isPolling = false;
             BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
@@ -226,9 +227,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
             if (isSuccess) {
                 isPolling = false;
-                addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled + ' ' +
-                    migrationMappingUtility.queuedMetadataTypesForDeploy.size() +
-                    ' custom metadata records were deployed.');
+                addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
             } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
                 addPageMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
@@ -245,7 +244,8 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
         if (timeoutCount > MAX_TIME_OUT) {
             isPolling = false;
-            addPageMessage(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
+            addPageMessage(ApexPages.Severity.WARNING,
+                Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
             return null;
         }
 
