@@ -133,6 +133,13 @@ private class UTIL_OrgTelemetry_TEST {
             'setPackageBooleanValue should have been called with the feature IsEnabled_CustomizableRollups'
         );
 
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_BDICMT.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_BDICMT'
+        );
     }
 
     /**
