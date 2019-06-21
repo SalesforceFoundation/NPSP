@@ -35,7 +35,7 @@
 * @description Unit Tests for the Opportunity Naming batch job
 */
 
-@isTest(isParallel=true)
+@isTest
 private with sharing class OPP_OpportunityNaming_NEW_BATCH_TEST {
     private static final Integer NUM_OPPS = 10;
 
