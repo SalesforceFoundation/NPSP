@@ -179,8 +179,10 @@ private class BDI_MigrationMappingUtilityTest {
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
         util.populateListsFromHelpTextMappings();
 
-        System.assertNotEquals(util.badHelpTextMappings, null);
-        System.assertNotEquals(util.dataImportFieldMappings, null);
+        System.assertEquals(2, util.badHelpTextMappings.size(),
+            'We have 2 bad help text mappings.');
+        System.assertEquals(5, util.dataImportFieldMappings.size(),
+            'We have 5 good help text mappings.');
     }
 
     @IsTest
@@ -245,6 +247,21 @@ private class BDI_MigrationMappingUtilityTest {
         return difm;
     }
 
+    private static BDI_MigrationMappingUtility.HelpTextFieldMapping buildHelpTextFieldMapping(
+        String sourceFieldLabel, String sourceFieldAPIName, String dataImportObjectName,
+        String targetFieldAPIName, String helpText) {
+
+        BDI_MigrationMappingUtility.HelpTextFieldMapping htfm =
+            new BDI_MigrationMappingUtility.HelpTextFieldMapping();
+        htfm.dataImportObjectName = dataImportObjectName;
+        htfm.targetFieldAPIName = targetFieldAPIName;
+        htfm.dataImportFieldName = sourceFieldLabel;
+        htfm.dataImportFieldAPIName = sourceFieldAPIName;
+        htfm.helpText = helpText;
+
+        return htfm;
+    }
+
     private static List<BDI_MigrationMappingUtility.DataImportFieldMapping> buildDataImportFieldMappingsFromHelpText() {
         BDI_MigrationMappingUtility.DataImportFieldMapping account1NameHelpText =
             buildDataImportFieldMapping(
@@ -294,18 +311,71 @@ private class BDI_MigrationMappingUtilityTest {
             account1CustomFieldHelpText2};
     }
 
+    private static List<BDI_MigrationMappingUtility.HelpTextFieldMapping> buildHelpTextMappings() {
+        BDI_MigrationMappingUtility.HelpTextFieldMapping account1NameHelpText =
+            buildHelpTextFieldMapping(
+                'Account 1 Name',
+                'npsp__Account1_Name__c',
+                'Account1',
+                'Custom_Name__c',
+                'Account1.Custom_Name__c');
+
+        BDI_MigrationMappingUtility.HelpTextFieldMapping account1CityHelpText =
+            buildHelpTextFieldMapping(
+                'Account 1 City',
+                'npsp__Account1_City__c',
+                'Account1',
+                'BillingCity',
+                'Account1.BillingCity');
+
+        BDI_MigrationMappingUtility.HelpTextFieldMapping account1CustomFieldHelpText =
+            buildHelpTextFieldMapping(
+                'Account 1 Custom Field',
+                'npsp__Account1_Custom_Field__c',
+                'Account1',
+                'Custom_Field__c',
+                'Account1.Custom_Field__c');
+
+        BDI_MigrationMappingUtility.HelpTextFieldMapping account1CustomFieldHelpText2 =
+            buildHelpTextFieldMapping(
+                'Account 1 Long Custom Field',
+                'npsp__Account1_Long_Custom_Field__c',
+                'Account1',
+                'Custom_Field_Long_Name_xxxxxxxxxxxxxxxxxxxx__c',
+                'Account1.Custom_Field_Long_Name_xxxxxxxxxxxxxxxxxxxx__c');
+
+        BDI_MigrationMappingUtility.HelpTextFieldMapping account2CityHelpText =
+            buildHelpTextFieldMapping(
+                'Account 2 Name',
+                'npsp__Account2_City__c',
+                'Account2',
+                'BillingCity',
+                'Account2.BillingCity');
+
+        return new List<BDI_MigrationMappingUtility.HelpTextFieldMapping>{
+            account1NameHelpText,
+            account1CityHelpText,
+            account2CityHelpText,
+            account1CustomFieldHelpText,
+            account1CustomFieldHelpText2};
+    }
+
     private static List<BDI_MigrationMappingUtility.HelpTextFieldMapping> buildBadHelpTextMappings() {
         BDI_MigrationMappingUtility.HelpTextFieldMapping badAccount1Mapping =
-            (BDI_MigrationMappingUtility.HelpTextFieldMapping)JSON.deserialize(
-                '{"targetObjectAPIName":"AcCount1","targetFieldAPIName":"BillingCity",' +
-                    '"isUsable":false,"isPotentialMapping":true,"helpText":"AcCount1.BillingCity"}',
-                BDI_MigrationMappingUtility.HelpTextFieldMapping.class);
+            buildHelpTextFieldMapping(
+                'Account 1 Country',
+                'npsp__Account1_Country__c',
+                'AcCount1',
+                'BillingCountry',
+                'AcCount1.BillingCountry');
 
         BDI_MigrationMappingUtility.HelpTextFieldMapping badAccount3Mapping =
-            (BDI_MigrationMappingUtility.HelpTextFieldMapping)JSON.deserialize(
-                '{"targetObjectAPIName":"Account3","targetFieldAPIName":"BillingCity",' +
-                    '"isUsable":false,"isPotentialMapping":true,"helpText":"Account3.BillingCity"}',
-                BDI_MigrationMappingUtility.HelpTextFieldMapping.class);
+            buildHelpTextFieldMapping(
+                'Account 3 Name',
+                'npsp__Account3_Name__c',
+                'Account3',
+                'Name',
+                'Account3.Name');
 
         return new List<BDI_MigrationMappingUtility.HelpTextFieldMapping>{
             badAccount1Mapping,
@@ -353,6 +423,15 @@ private class BDI_MigrationMappingUtilityTest {
                 return new Map<String, Data_Import_Object_Mapping__mdt>{
                     'Account1' => objectMapping1,
                     'Account2' => objectMapping2};
+            }
+
+            if (stubbedMethodName == 'getAllHelpTextFieldMappings') {
+                List<BDI_MigrationMappingUtility.HelpTextFieldMapping> helpTextFieldMappings =
+                    new List<BDI_MigrationMappingUtility.HelpTextFieldMapping>();
+                helpTextFieldMappings.addAll(buildHelpTextMappings());
+                helpTextFieldMappings.addAll(buildBadHelpTextMappings());
+
+                return helpTextFieldMappings;
             }
 
             if (stubbedMethodName == 'getFieldMappingsByFieldMappingSetDeveloperName') {

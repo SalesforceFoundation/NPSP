@@ -322,12 +322,13 @@ public with sharing class BDI_MigrationMappingUtility {
                 continue;
             }
 
-            if (helpTextFieldMapping.isUsable) {
+            if (helpTextFieldMapping.isUsable()) {
                 DataImportFieldMapping newDataImportFieldMapping =
                     new DataImportFieldMapping(helpTextFieldMapping);
 
                 dataImportFieldMappings.add(newDataImportFieldMapping);
-            } else if (helpTextFieldMapping.isPotentialMapping) {
+
+            } else if (helpTextFieldMapping.isPotentialMapping()) {
                 badHelpTextMappings.add(helpTextFieldMapping);
             }
         }
@@ -647,6 +648,9 @@ public with sharing class BDI_MigrationMappingUtility {
         public String dataImportFieldName { get;set; }
         public String dataImportFieldAPIName { get;set; }
         public String helpText { get;set; }
+        Boolean fieldNameIsUsable;
+        Boolean objectNameIsUsable;
+        Boolean objectAPINameIsUsable;
 
         public HelpTextFieldMapping() {}
 
@@ -665,20 +669,31 @@ public with sharing class BDI_MigrationMappingUtility {
                         UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
                 }
 
-                if (String.isNotBlank(this.dataImportObjectName)) {
-                    this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
-                }
-
-                Boolean fieldNameIsUsable = String.isNotBlank(this.targetFieldAPIName);
-                Boolean objectNameIsUsable = String.isNotBlank(this.dataImportObjectName);
-                Boolean objectAPINameIsUsable = String.isNotBlank(targetObjectAPIName);
-
-                if (fieldNameIsUsable && objectNameIsUsable && objectAPINameIsUsable) {
-                    this.isUsable = true;
-                } else if (fieldNameIsUsable && objectNameIsUsable && !objectAPINameIsUsable) {
-                    this.isPotentialMapping = true;
-                }
+                checkRequiredFields();
             }
+        }
+
+        private void checkRequiredFields() {
+            this.fieldNameIsUsable = String.isNotBlank(this.targetFieldAPIName);
+            this.objectNameIsUsable = String.isNotBlank(this.dataImportObjectName);
+            if (String.isNotBlank(this.dataImportObjectName)) {
+                this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
+            }
+            this.objectAPINameIsUsable = String.isNotBlank(this.targetObjectAPIName);
+        }
+
+        private Boolean isUsable() {
+            if (Test.isRunningTest()) {
+                checkRequiredFields();
+            }
+            return this.fieldNameIsUsable && this.objectNameIsUsable && this.objectAPINameIsUsable;
+        }
+
+        private Boolean isPotentialMapping() {
+            if (Test.isRunningTest()) {
+                checkRequiredFields();
+            }
+            return this.fieldNameIsUsable && this.objectNameIsUsable && !this.objectAPINameIsUsable;
         }
 
         /****************************************************************************************************
