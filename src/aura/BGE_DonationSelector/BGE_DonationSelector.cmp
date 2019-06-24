@@ -156,11 +156,11 @@
                                                             alternativeText="{!$Label.c.stgCheckboxTrue}"
                                                             title="{!$Label.c.stgCheckboxTrue}"/>
                                             <lightning:formattedText
-                                                    value="{!$Label.c.bgeFormSelectedOpportunity}"/>
+                                                    value="{!v.labelForOppSelectedForUpdate}"/>
                                             <aura:set attribute="else">
                                                 <lightning:button
                                                         value="{!opportunityWrapper.opportunity}"
-                                                        label="{!$Label.c.bgeFormUpdateOpportunity}"
+                                                        label="{!v.labelForSelectOppForUpdate}"
                                                         onclick="{!c.handleDonationSelection}"
                                                         variant="base"/>
                                             </aura:set>
@@ -169,26 +169,6 @@
                                 </aura:if>
                                 <lightning:layoutItem size="12" padding="around_xx-small">
                                     <aura:if isTrue="{!and(equals(opportunityWrapper.opportunity.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
-                                <lightning:layoutItem size="12" padding="around_xx-small">
-                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
-                                        <lightning:icon iconName="utility:check" size="small"
-                                                        class="slds-p-right_small selectedCheckmark"
-                                                        alternativeText="{!$Label.c.stgCheckboxTrue}"
-                                                        title="{!$Label.c.stgCheckboxTrue}"/>
-                                        <lightning:formattedText
-                                                value="{!v.labelForOppSelectedForUpdate}"/>
-                                        <aura:set attribute="else">
-                                            <lightning:button
-                                                    value="{!donation}"
-                                                    label="{!v.labelForSelectOppForUpdate}"
-                                                    onclick="{!c.handleDonationSelection}"
-                                                    variant="base"/>
-                                        </aura:set>
-                                    </aura:if>
-                                </lightning:layoutItem>
-                                <lightning:layoutItem size="12" padding="around_xx-small"
-                                                      class="slds-border_top slds-p-top_x-small slds-m-top_x-small">
-                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
                                         <lightning:icon iconName="utility:check" size="small"
                                                         class="slds-p-right_small selectedCheckmark"
                                                         alternativeText="{!$Label.c.stgCheckboxTrue}"
@@ -198,8 +178,6 @@
                                         <aura:set attribute="else">
                                             <lightning:button
                                                     value="{!opportunityWrapper.opportunity}"
-                                                    label="{!$Label.c.bdiMatchedApplyNewPayment}"
-                                                    value="{!donation}"
                                                     label="{!v.labelForSelectOppForApplyNewPmt}"
                                                     onclick="{!c.handleApplyPaymentSelection}"
                                                     variant="base"/>
