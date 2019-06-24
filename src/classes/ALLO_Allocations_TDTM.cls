@@ -432,11 +432,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //if we have any Payment allocations and default handling is enabled, adjust the payments' default allocation
             if (!setPmtIds.isEmpty()) {
                 for (npe01__OppPayment__c pmt : listPmts) {
-                    
-                    if (pmt.npe01__Written_Off__c) {	
-                        continue;	
+
+                    if (pmt.npe01__Written_Off__c) {
+                        continue;
                     }
-                                        
+
                     //we have allocations for this payment
                     if (setPmtIds.contains(pmt.Id)) {
                         //this pmt has allocations, check for default cases
@@ -547,6 +547,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //if we have recurring donation or campaign allocations
             if ((sObj instanceof npe01__OppPayment__c && mapWrapper.containsKey((Id)sObj.get('npe01__Opportunity__c'))) || !(sObj instanceof npe01__OppPayment__c) && ((sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c'))) ||
                 (sObj.get('CampaignId') != null && mapWrapper.containsKey((Id)sObj.get('CampaignId'))))) {
+
                 alloWrapper wrap;
                 //get wrapper for parent Payment.
                 if (sObj instanceof npe01__OppPayment__c)
@@ -558,6 +559,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     wrap = mapWrapper.get((Id)sObj.get('CampaignId'));
 
                 List<Allocation__c> listAlloForInsert = new List<Allocation__c>();
+
                 //add only allocations to active GAUs
                 for (Allocation__c allo : wrap.listAllo.deepclone())
                     if (allo.General_Accounting_Unit__r.Active__c)
@@ -605,6 +607,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 //if our remainder is negative, only create percentage based allocations
                 if ((amount >= 0 && remainder < 0)||(amount < 0 && remainder > 0)) {
                     remainder = amount;
+
                     //TODO: log error: not able to create allocations. chatter post?
                     for (Allocation__c allo : listAlloForInsert) {
                         if (allo.Percent__c!=null) {
@@ -813,6 +816,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         Set<Id> setParentId = new Set<Id>();
         Set<Id> setExistingAlloId = new Set<Id>();
+
         //build a list of related object Ids to fill wrapper with data
         for (Allocation__c allo : alloList) {
             setParentId.add(getParentId(allo));
