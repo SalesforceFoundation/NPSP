@@ -65,7 +65,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     private Id endId;
     private Id currentEndId;
     private Boolean endReached;
-    private Integer batchSize;
+    private Integer batchSize = DEFAULT_BATCH_SIZE;
     private Integer chunkIteration;
     private Boolean ldvMode = null;
     private String additionalWhereClause;
@@ -130,12 +130,27 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
      * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.  If a main where clause is also present both will be encapsulated in () and anded.
      */
-    public UTIL_AbstractCommon_BATCH(Integer batchSize, boolean ldvMode, String additionalWhereClause) {
+    public UTIL_AbstractCommon_BATCH(Integer batchSize, Boolean ldvMode, String additionalWhereClause) {
         this.endReached = false;
         this.batchSize = batchSize;
         this.chunkIteration = 0;
         this.ldvMode = ldvMode;
         this.additionalWhereClause = additionalWhereClause;
+    }
+
+    public Object withBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
+        return this;
+    }
+
+    public Object withLDVMode(Boolean ldvMode) {
+        this.ldvMode = ldvMode;
+        return this;
+    }
+
+    public Object withAdditionalWhereClause(String additionalWhereClause) {
+        this.additionalWhereClause = additionalWhereClause;
+        return this;
     }
 
     /**
@@ -176,7 +191,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return String queryString to execute for Object, limited to 0 records
      */
     @testVisible private String getQueryLimitZero() {
-        return 'SELECT Id FROM ' + getSOQLObjectName() + ' LIMIT 0';
+        return 'SELECT Id FROM ' + getSObjectName() + ' LIMIT 0';
     }
 
     /**
@@ -185,7 +200,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return String queryString to execute for Batch
      */
     @testVisible private String getQuery(Id startId) {
-        return 'SELECT ' + getQueryFieldList() + ' FROM ' + getSOQLObjectName() + getQueryWhereClause() + getQueryOrderByAndLimitClause();
+        return 'SELECT ' + getQueryFieldList() + ' FROM ' + getSObjectName() + getQueryWhereClause() + getQueryOrderByAndLimitClause();
     }
 
     /**
@@ -288,7 +303,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
    @testVisible private List<SObject> getInnerRecords(List<SObject> records) {
         if (ldvMode || isSubQueryPresent()) {
             String whereClause = getQueryNonLdvWhereClause();
-            String query = 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSOQLObjectName() + ' WHERE (Id in :records) ' +
+            String query = 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSObjectName() + ' WHERE (Id in :records) ' +
                         (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' AND (' + whereClause + ')' : '');
 
             return Database.query(query);
@@ -305,7 +320,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      */
     @testVisible private String getQueryForValidate() {
             String whereClause = getQueryNonLdvWhereClause();
-            return 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSOQLObjectName() +
+            return 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSObjectName() +
                     (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '') +
                     ' LIMIT 1';
     }
@@ -355,7 +370,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      */
     private Id determineStartId() {
 
-        List<SObject> recs = Database.query ('SELECT Id FROM ' + getSOQLObjectName() + ' ORDER BY Id ASC LIMIT 1');
+        List<SObject> recs = Database.query ('SELECT Id FROM ' + getSObjectName() + ' ORDER BY Id ASC LIMIT 1');
 
         return ((recs != null) && (recs.size() > 0)) ? recs[0].Id : null;
     }
@@ -366,7 +381,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return Id of last record found in System for object, sorting ids descending
      */
      private Id determineEndId() {
-        List<SObject> recs = Database.query ('SELECT Id FROM ' + getSOQLObjectName() + ' ORDER BY Id DESC LIMIT 1');
+        List<SObject> recs = Database.query ('SELECT Id FROM ' + getSObjectName() + ' ORDER BY Id DESC LIMIT 1');
 
         return ((recs != null) && (recs.size() > 0)) ? recs[0].Id : null;
     }
@@ -383,6 +398,16 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
         Long recordDistance = UTIL_SalesforceID.computeRecordDistance(startId, endId);
 
         return recordDistance > getValidLDVChunkSize();
+    }
+
+    /**
+     * @description Returns a String name for the main object associated with this batch job
+     * @return String name of the SOBject, or null
+     */
+    @testVisible private String getSObjectName() {
+        SOBjectType sOT = this.getSOBjectType();
+
+        return (sOT != null) ? sOT.getDescribe().getName() : null;
     }
 
     /**
@@ -407,7 +432,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
-     * @description Returns 100,000 by default for chunk size, but can be overriden by implementing class to return a different value
+     * @description Returns 1,000,000 by default for chunk size, but can be overriden by implementing class to return a different value
      * @return Integer chunk size to use when running in LDV Chunking mode
      */
     public virtual Integer getLDVChunkSize() {
@@ -424,9 +449,9 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
 
     /**
      * Indicates the main object to query/retrieve data from.  A valid value must be supplied by the implementing class
-     * @return String SOQL Object Name
+     * @return SObjectType of main object to drive query
      */
-    public abstract String getSOQLObjectName();
+    public abstract SObjectType getSOBjectType();
 
     /**
      * Equivalent to the execute method of a standard batch class.

@@ -418,8 +418,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     /**
      * @description Required to set the main object the batch executes against
      */
-    public override String getSOQLObjectName() {
-        return 'Account';
+    public override SObjectType getSObjectType() {
+        return Account.getSObjectType();
     }
 
     /**
