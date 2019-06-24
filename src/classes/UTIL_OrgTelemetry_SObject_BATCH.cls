@@ -127,7 +127,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         String soqlQuery = 'SELECT Id FROM Account LIMIT 0';
         switch on (jobMode) {
             when OPPORTUNITIES {
-                soqlQuery = 'SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c FROM Opportunity WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
+                soqlQuery = 'SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c, npe01__Number_of_Payments__c FROM Opportunity WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
             when RECURRING_DONATIONS {
@@ -177,9 +177,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private void handleOpportunityJobMode(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             getOppRecurringDonationsCounts(opp);
+            countOppsWithPayments(opp);
         }
-
-        countOppPayments(opps);
     }
 
     /**
@@ -257,20 +256,13 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     /**
      * @description Handles payment counts
      */
-    private void countOppPayments(List<Opportunity> opps) {
-        for (Opportunity opp : [
-            SELECT
-                (SELECT Id FROM npe01__OppPayment__r LIMIT 2)
-            FROM Opportunity
-            WHERE Id IN :opps
-        ]) {
-            if (opp.npe01__OppPayment__r.size() > 1) {
-                oppsWithMultiplePaymentsCount++;
-                oppsWithPayments++;
+    private void countOppsWithPayments(Opportunity opp) {
+        if (opp.npe01__Number_of_Payments__c > 1) {
+            oppsWithMultiplePaymentsCount++;
+            oppsWithPayments++;
 
-            } else if (opp.npe01__OppPayment__r.size() > 0) {
-                oppsWithPayments++;
-            }
+        } else if (opp.npe01__Number_of_Payments__c > 0) {
+            oppsWithPayments++;
         }
     }
 
