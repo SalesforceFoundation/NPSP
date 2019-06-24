@@ -36,8 +36,8 @@
 public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
     /*******************************************************************************************************************
-    * @description The number of Accounts to create for test conditions
-    */
+     * @description The number of Accounts to create for test conditions
+     */
     private static final Integer TEST_ACCOUNT_CNT = 7;
 
     private Integer expectedResult;
@@ -45,8 +45,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     private String testWhereClause = '';
 
     /*******************************************************************************************************************
-    * @description Test Batch Execution with inner test batch class to test non chunking conditions
-    */
+     * @description Test Batch Execution with inner test batch class to test non chunking conditions
+     */
     @isTest
     public static void executeTestBatch() {
 
@@ -75,11 +75,11 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /*******************************************************************************************************************
-    * @description Test Batch Execution with inner test batch class to iterate over and count Accounts while simulating
-    * chunking conditions
-    */
+     * @description Test Batch Execution with inner test batch class to iterate over and count Accounts while simulating
+     * chunking conditions
+     */
     @isTest
-   public static void executeTestBatchLDV() {
+    public static void executeTestBatchLDV() {
 
         List<Account> accs = new List<Account>();
 
@@ -105,8 +105,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
 
     /*******************************************************************************************************************
-    * @description Test Additional Constructors for Abstract Batch
-    */
+     * @description Test Additional Constructors for Abstract Batch
+     */
     @isTest
     public static void addtlBatchConstructors() {
         UTIL_AbstractCommon_BATCH_TEST tabNoParam = new UTIL_AbstractCommon_BATCH_TEST();
@@ -119,8 +119,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /*******************************************************************************************************************
-    * @description Test Batch Execution when additional where clause is present (LDV)
-    */
+     * @description Test Batch Execution when additional where clause is present (LDV)
+     */
     @isTest
     public static void executeAddtlWhereClauseLDV() {
         List<Account> accs = new List<Account>();
@@ -147,8 +147,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /*******************************************************************************************************************
-    * @description Test Batch Execution when additional where clause is present (non LDV)
-    */
+     * @description Test Batch Execution when additional where clause is present (non LDV)
+     */
     @isTest
     public static void executeAddtlWhereClause() {
         List<Account> accs = new List<Account>();
@@ -176,8 +176,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /*******************************************************************************************************************
-    * @description Test Batch Execution when where clause is present (LDV)
-    */
+     * @description Test Batch Execution when where clause is present (LDV)
+     */
     @isTest
     public static void executeWhereClauseLDV() {
         List<Account> accs = new List<Account>();
@@ -205,8 +205,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /*******************************************************************************************************************
-    * @description Test Batch Execution when where clause is present (non LDV)
-    */
+     * @description Test Batch Execution when where clause is present (non LDV)
+     */
     @isTest
     public static void executeWhereClause() {
         List<Account> accs = new List<Account>();
@@ -235,8 +235,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /*******************************************************************************************************************
-    * @description Test Batch Execution when where and additional clause is present (LDV)
-    */
+     * @description Test Batch Execution when where and additional clause is present (LDV)
+     */
     @isTest
     public static void executeWhereAndAdditionalClauseLDV() {
         List<Account> accs = new List<Account>();
@@ -264,8 +264,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /*******************************************************************************************************************
-    * @description Test Batch Execution when where  and additional clause is present (non LDV)
-    */
+     * @description Test Batch Execution when where  and additional clause is present (non LDV)
+     */
     @isTest
     public static void executeWhereAndAdditionalClause() {
         List<Account> accs = new List<Account>();
@@ -293,8 +293,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         System.assertEquals (1, aajobs.size(), '# of jobs present');
     }
     /*******************************************************************************************************************
-    * @description Test Batch Execution when no records are returned
-    */
+     * @description Test Batch Execution when no records are returned
+     */
     @isTest
     public static void noRecordsReturned() {
 
@@ -311,8 +311,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /*******************************************************************************************************************
-    * @description Test Validate Method valid Query
-    */
+     * @description Test Validate Method valid Query
+     */
     @isTest
     public static void validateValidQuery() {
 
@@ -323,8 +323,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /*******************************************************************************************************************
-    * @description Test Validate Method invalid Query
-    */
+     * @description Test Validate Method invalid Query
+     */
     @isTest
     public static void validateInvalidQuery() {
 
@@ -431,12 +431,13 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     }
 
     /**
-      * Overridable test Where Clause to add to the inner query, or non LDV query, if not running in LDV/Chunking mode
-      * @return String ''
-      */
+     * Overridable test Where Clause to add to the inner query, or non LDV query, if not running in LDV/Chunking mode
+     * @return String ''
+     */
     public override String getWhereClause() {
         return this.testWhereClause;
     }
+
     /**
      * @description Called on completion of the batch job.  If this is running LDV Mode it may be called more than once.  All but the last invocation will
      * have an isComplete value of false.  This method isd similar in nature/roughly equivalent to the finish method of a standard Apex Batch job
@@ -450,6 +451,10 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         }
     }
 
+    /**
+     * @description Allows the test batches chunk size to be updated
+     * @param Integer testChunkSize Size to set the chunk size for the test batch to
+     */
     public void setTestChunkSize(Integer testChunkSize) {
         this.testChunkSize = testChunkSize;
     }

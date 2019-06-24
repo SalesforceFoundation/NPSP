@@ -226,12 +226,30 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return String Where clause fragment
      */
     @testVisible private String getQueryWhereClause() {
-        String ldvWhere = isFirstChunk() ? ' WHERE Id >= \'' + startId + '\'' : ' WHERE Id > \'' + startId + '\'';
+        String ldvWhere = isFirstChunk() ? getLdvWhereFirstChunk() : getLdvWhereAfterFirstChunk();
         String whereClause = getQueryNonLDVWhereClause();
 
         String nonLdvWhere =  ((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '';
 
         return (ldvMode) ? ldvWhere : nonLdvWhere;
+    }
+
+    /**
+     * @description SOQL Query Fragment: Where LDV Where Clause for first chunk must include the Start Id
+     * so it is processed
+     * @return String Where clause fragment
+     */
+    @testVisible private String getLdvWhereFirstChunk() {
+        return ' WHERE Id >= \'' + startId + '\'';
+    }
+
+    /**
+     * @description SOQL Query Fragment: Where LDV Where Clause for all chunks beyond the first should not
+     * include the startId of the chunk, as it was already processed
+     * @return String Where clause fragment
+     */
+    @testVisible private String getLdvWhereAfterFirstChunk() {
+        return ' WHERE Id > \'' + startId + '\'';
     }
 
     /**
