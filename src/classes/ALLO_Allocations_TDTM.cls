@@ -84,6 +84,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
         //if default allocations are enabled, verify that we have an ID value for the default fund
         if (settings.Default_Allocations_Enabled__c && settings.Default__c == null) {
             SObject obj = newList.isEmpty() ? oldList[0] : newList[0];
@@ -93,14 +94,18 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         // dispatch to the correct handler
         if (objResult.getSObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
+
             runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
         } else if (objResult.getSObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
+
             runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
             //setting before to true for afterDelete case, to avoid running triggers on DML wrapper objects
         } else if (objResult.getSObjectType() == Opportunity.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
+
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
         } else if (objResult.getSObjectType() == npe01__OppPayment__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
+
             runPaymentTriggerHandler(newlist, oldlist, triggerAction, objResult);
         }
 
@@ -427,7 +432,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //if we have any Payment allocations and default handling is enabled, adjust the payments' default allocation
             if (!setPmtIds.isEmpty()) {
                 for (npe01__OppPayment__c pmt : listPmts) {
-
+                    
+                    if (pmt.npe01__Written_Off__c) {	
+                        continue;	
+                    }
+                                        
                     //we have allocations for this payment
                     if (setPmtIds.contains(pmt.Id)) {
                         //this pmt has allocations, check for default cases
