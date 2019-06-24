@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2015
+* @date 2019
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
 * @description Batch class creates names all Opportunities per the naming spec. Batch job chunks Opportunities
