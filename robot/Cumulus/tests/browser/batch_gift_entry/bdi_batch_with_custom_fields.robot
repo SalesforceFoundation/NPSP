@@ -55,6 +55,7 @@ Create Data Import Via API
     Click Button With Value   Close
 
 Verify Custom Fields on Account Contact and Address Objects
+    [tags]  unstable
     ${ns} =  Get NPSP Namespace Prefix
     &{data_import_new} =     Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Verify Expected Values    nonns    Account    &{data_import_new}[Account1Imported__c]
