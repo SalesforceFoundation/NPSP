@@ -84,7 +84,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        System.debug(loggingLevel.ERROR, 'dmlWrapper first: ' + dmlWrapper);
         //if default allocations are enabled, verify that we have an ID value for the default fund
         if (settings.Default_Allocations_Enabled__c && settings.Default__c == null) {
             SObject obj = newList.isEmpty() ? oldList[0] : newList[0];
@@ -94,27 +93,17 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         // dispatch to the correct handler
         if (objResult.getSObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
-            System.debug(loggingLevel.ERROR, 'here');
             runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
         } else if (objResult.getSObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
-            System.debug(loggingLevel.ERROR, 'here');
             runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
             //setting before to true for afterDelete case, to avoid running triggers on DML wrapper objects
         } else if (objResult.getSObjectType() == Opportunity.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
-            System.debug(loggingLevel.ERROR, 'here');
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
         } else if (objResult.getSObjectType() == npe01__OppPayment__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
-            System.debug(loggingLevel.ERROR, 'here');
-            System.debug(loggingLevel.ERROR, '2nd dmlWrapper: ' + dmlWrapper);
             runPaymentTriggerHandler(newlist, oldlist, triggerAction, objResult);
-            System.debug(loggingLevel.ERROR, '3rd dmlWrapper: ' + dmlWrapper);
         }
 
-        System.debug(loggingLevel.ERROR, 'objResult.getSObjectType(): ' + objResult.getSObjectType());
-        System.debug(loggingLevel.ERROR, 'setting recursion flag for alloc');
-        System.debug(loggingLevel.ERROR, 'triggerAction: ' + triggerAction);
-        System.debug(loggingLevel.ERROR, 'dmlWrapper: ' + dmlWrapper);
         // Increment the recursion flag, process the DML, and then decrement the recursion flag
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, true);
         TDTM_TriggerHandler.processDML(dmlWrapper);
@@ -263,14 +252,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             }
         }
 
-        System.debug(loggingLevel.ERROR, 'pmtsNeedingAllocations: ' + pmtsNeedingAllocations);
 
         if (pmtsNeedingAllocations.size() > 0) {
-            System.debug(loggingLevel.ERROR, '4th dmlwrapper: ' + dmlWrapper);
             fillMapWrapper(pmtsNeedingAllocations);
-            System.debug(loggingLevel.ERROR, '5th dmlwrapper: ' + dmlWrapper);
             copyRecurringDonationCampaignAllocations(pmtsNeedingAllocations);
-            System.debug(loggingLevel.ERROR, '6th dmlwrapper: ' + dmlWrapper);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
@@ -553,7 +538,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //if we have recurring donation or campaign allocations
             if ((sObj instanceof npe01__OppPayment__c && mapWrapper.containsKey((Id)sObj.get('npe01__Opportunity__c'))) || !(sObj instanceof npe01__OppPayment__c) && ((sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c'))) ||
                 (sObj.get('CampaignId') != null && mapWrapper.containsKey((Id)sObj.get('CampaignId'))))) {
-                System.debug(loggingLevel.ERROR, 'inside if statement');
                 alloWrapper wrap;
                 //get wrapper for parent Payment.
                 if (sObj instanceof npe01__OppPayment__c)
@@ -565,13 +549,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     wrap = mapWrapper.get((Id)sObj.get('CampaignId'));
 
                 List<Allocation__c> listAlloForInsert = new List<Allocation__c>();
-                System.debug(loggingLevel.ERROR, 'wrap: ' + wrap);
                 //add only allocations to active GAUs
                 for (Allocation__c allo : wrap.listAllo.deepclone())
                     if (allo.General_Accounting_Unit__r.Active__c)
                         listAlloForInsert.add(allo);
 
-                System.debug(loggingLevel.ERROR, 'listAlloForInsert: ' + listAlloForInsert);
                 Decimal amount = (Decimal)(sObj instanceof Opportunity ? sObj.get('Amount') : sObj.get('npe01__Payment_Amount__c'));
                 Decimal remainder = amount;
 
@@ -610,12 +592,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                     remainder -= allo.Amount__c;
                 }
-                System.debug(loggingLevel.ERROR, 'remainder is: ' + remainder);
 
                 //if our remainder is negative, only create percentage based allocations
                 if ((amount >= 0 && remainder < 0)||(amount < 0 && remainder > 0)) {
                     remainder = amount;
-                    System.debug(loggingLevel.ERROR, 'remainder is negative');
                     //TODO: log error: not able to create allocations. chatter post?
                     for (Allocation__c allo : listAlloForInsert) {
                         if (allo.Percent__c!=null) {
@@ -631,16 +611,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                 //create default allocation if needed
                 } else if (settings.Default_Allocations_Enabled__c && ((amount >= 0 && remainder > 0)||(amount < 0 && remainder < 0))) {
-                    System.debug(loggingLevel.ERROR, 'adding object to insert');
-                    System.debug(loggingLevel.ERROR, 'listAlloForInsert: ' + listAlloForInsert);
                     Allocation__c defaultAllo = makeDefaultAllocation(sObj);
                     defaultAllo.Amount__c = remainder;
                     dmlWrapper.objectsToInsert.add(defaultAllo);
                     dmlWrapper.objectsToInsert.addAll((List<SObject>)listAlloForInsert);
                 //add objects to DML wrapper in all other cases (no remainder, or positive remainder without default allocations enabled)
                 } else {
-                    System.debug(loggingLevel.ERROR, 'adding object to insert');
-                    System.debug(loggingLevel.ERROR, 'listAlloForInsert: ' + listAlloForInsert);
                     dmlWrapper.objectsToInsert.addAll((List<SObject>)listAlloForInsert);
                 }
             //if we have no campaign or recurring donation allocations and defaults are enabled, create them for each payment/opportunity
@@ -828,10 +804,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         Set<Id> setParentId = new Set<Id>();
         Set<Id> setExistingAlloId = new Set<Id>();
-        System.debug(loggingLevel.ERROR, 'inside fill map wrapper');
         //build a list of related object Ids to fill wrapper with data
         for (Allocation__c allo : alloList) {
-            System.debug(loggingLevel.ERROR, 'allo is: ' + allo);
             setParentId.add(getParentId(allo));
 
             //create wrapper object and add to map
@@ -966,8 +940,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
     private void fillMapWrapper (List<SObject> parentList) {
-        System.debug(loggingLevel.ERROR, 'inside fill map wrapper');
-        System.debug(loggingLevel.ERROR, 'mapWrapper: ' + mapWrapper);
         if (parentList == null || parentList.isEmpty()) {
             return;
         }
@@ -994,7 +966,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
         alloQueryString += ' FROM Allocation__c WHERE (Payment__c IN :setParentId OR Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId)';
         //alloQueryString += ' AND General_Accounting_Unit__r.Active__c = TRUE';
-        System.debug(loggingLevel.ERROR, 'alloQueryString: ' + alloQueryString);
 
         // Take the list of allocations
         // Consolidate the records that are on the same parent and same GAU into one
@@ -1037,16 +1008,13 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             consolidatedAllocationList.addAll(gauToAllo.values());
         }
 
-        System.debug(loggingLevel.ERROR, 'consolidatedAllocationList: ' + consolidatedAllocationList);
         for (Allocation__c allo : consolidatedAllocationList) {
 
-            System.debug(loggingLevel.ERROR, 'allo is: ' + allo);
             //create wrapper if it doesn't exist yet
             if (!mapWrapper.containsKey(getParentId(allo)))
                 mapWrapper.put(getParentId(allo), new alloWrapper());
 
             alloWrapper wrap = mapWrapper.get(getParentId(allo));
-            System.debug(loggingLevel.ERROR, 'wrap is: ' + wrap);
             //add opportunity amount and allocation totals
             if (allo.Opportunity__c != null) {
                 wrap.parentAmount = allo.Opportunity__r.Amount;
