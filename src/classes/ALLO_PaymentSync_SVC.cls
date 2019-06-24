@@ -242,6 +242,10 @@ public class ALLO_PaymentSync_SVC {
             }
 
             if (opportunity.Amount != null && opportunity.Amount != 0) {
+
+                // The schedule ratio should only take into account the unpaid payments that are left. 
+                // We aren't currently taking into account the paid amount as well currently, 
+                // but this may change in the future. 
                 context.scheduleRatio = context.totalUnpaidPayments / opportunity.Amount;
             }
 
