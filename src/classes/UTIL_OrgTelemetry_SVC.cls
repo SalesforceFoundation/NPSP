@@ -70,7 +70,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_AddressVerification,
         IsEnabled_AutomaticPayments,
         IsEnabled_CustomizableRollups,
-        IsEnabled_CustomRDSchedules,
         IsEnabled_DefaultGAU,
         Data_CountErrorLog,
         Data_CountOppsWithMultiplePayments,
@@ -80,6 +79,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountRdsWithDiffAmount,
         Data_CountRecurringDonationsAll,
         Data_MaxNumRelatedOpps,
+        DataCount_ONETIME_Use,
         HasUserManagedTDTM,
         Org_CountNonEnglishLanguages,
         Org_IsEnabled_AdvancedMultiCurrency,
@@ -215,9 +215,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             !customInstallments.isEmpty()
             && ![SELECT Id FROM npe03__Recurring_Donation__c WHERE npe03__Installment_Period__c IN :customInstallments LIMIT 1].isEmpty();
 
-        featureManager.setPackageBooleanValue(
-            UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomRDSchedules.name(),
-            hasCustomInstallments
+        featureManager.setPackageIntegerValue(
+            UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(),
+            hasCustomInstallments ? 1 : 0
         );
     }
 

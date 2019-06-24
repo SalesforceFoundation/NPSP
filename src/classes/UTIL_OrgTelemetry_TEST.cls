@@ -134,7 +134,7 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     /**
-     * @description Confirms IsEnabled_CustomRDSchedules feature parameter is set to true when custom
+     * @description Confirms DataCount_ONETIME_Use feature parameter is set to true when custom
      * installments are enabled
      */
     @IsTest
@@ -169,16 +169,16 @@ private class UTIL_OrgTelemetry_TEST {
         Test.stopTest();
 
         System.assertEquals(
-            true,
-            featureManagementMock.packageBooleanValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomRDSchedules.name()
+            1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
             ),
-            'setPackageBooleanValue should have been called with the feature IsEnabled_CustomRDSchedules'
+            'setPackageBooleanValue should have been called with the feature DataCount_ONETIME_Use'
         );
     }
 
     /**
-     * @description Confirms IsEnabled_CustomRDSchedules feature parameter is set to true when custom
+     * @description Confirms DataCount_ONETIME_Use feature parameter is set to true when custom
      * installments are enabled
      */
     @IsTest
@@ -191,11 +191,11 @@ private class UTIL_OrgTelemetry_TEST {
         Test.stopTest();
 
         System.assertEquals(
-            false,
-            featureManagementMock.packageBooleanValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomRDSchedules.name()
+            0,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
             ),
-            'setPackageBooleanValue should have been called with the feature IsEnabled_CustomRDSchedules'
+            'setPackageBooleanValue should have been called with the feature DataCount_ONETIME_Use'
         );
     }
 
