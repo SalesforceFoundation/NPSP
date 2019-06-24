@@ -1946,6 +1946,13 @@
         <members>stgErrorInvalidNameFormat</members>
         <members>stgHHNameRefreshTitle</members>
         <members>stgHelpAccountModel</members>
+        <members>stgHelpAdvancedMapping1</members>
+        <members>stgHelpAdvancedMapping2</members>
+        <members>stgHelpAdvancedMapping3</members>
+        <members>stgHelpAdvancedMapping4</members>
+        <members>stgHelpAdvancedMappingInvalidHelpText</members>
+        <members>stgHelpAdvancedMappingTableHeader1</members>
+        <members>stgHelpAdvancedMappingTableHeader2</members>
         <members>stgHelpAlloFiscalYearRollups</members>
         <members>stgHelpAlloNDayValue</members>
         <members>stgHelpAllocationLevel</members>
@@ -1956,7 +1963,6 @@
         <members>stgHelpAutoRelType</members>
         <members>stgHelpBDEAllowBlankOppNames</members>
         <members>stgHelpBDEOppNaming</members>
-        <members>stgHelpBDICustomObjectMappingEnable</members>
         <members>stgHelpBatchAlloRollup</members>
         <members>stgHelpBatchCreateDefault</members>
         <members>stgHelpBatchOppRollup</members>

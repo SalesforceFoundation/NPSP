@@ -11,7 +11,7 @@
 
     <div class="slds-scope">
         <apex:form id="form" styleClass="slds-m-around_x-large">
-            <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.bdiAdvancedMapping}" />
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.bdiAdvancedMapping}" />
 
             <c:UTIL_PageMessages allowClose="false" id="messages" />
             <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
@@ -22,13 +22,27 @@
                     <apex:outputPanel>
                         <div class="slds-m-vertical_medium">
                             <c:UTIL_HtmlOutput
-                                html="{!$Label.stgHelpBDICustomObjectMappingEnable}"
+                                html="{!$Label.stgHelpAdvancedMapping1}"
+                                hasLink="true"
+                                styleClass="slds-text-body_small" />
+                        </div>
+                        <div class="slds-m-vertical_medium">
+                            <i>
+                                <c:UTIL_HtmlOutput
+                                    html="{!$Label.stgHelpAdvancedMapping2}"
+                                    hasLink="true"
+                                    styleClass="slds-text-body_small" />
+                            </i>
+                        </div>
+                        <div class="slds-m-vertical_medium">
+                            <c:UTIL_HtmlOutput
+                                html="{!$Label.stgHelpAdvancedMapping3}"
                                 hasLink="true"
                                 styleClass="slds-text-body_small" />
                         </div>
 
-                        <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small" style="width: fit-content;">
-                            <span class="slds-form-element__label slds-m-bottom_none">{!$Label.bdiAdvancedMapping}</span>
+                        <label class="slds-checkbox_toggle slds-grid slds-m-vertical_large" style="width: fit-content;">
+                            <span class="slds-form-element__label slds-m-bottom_none">Advanced Mapping</span>
                             <apex:inputCheckbox onClick="toggle(); return false;"
                                                 id="enableDIFMToggle"
                                                 html-name="checkbox-toggle-2"
@@ -50,20 +64,25 @@
             <div class="slds-grid slds-wrap slds-m-top_large {!IF(isPolling,'slds-hide','')}">
                 <div class="slds-size_1-of-1 {!IF(migrationMappingUtility.badHelpTextMappings.size > 0,'','slds-hide')}">
                     <div class="slds-text-heading_medium slds-text-heading_medium__extension slds-p-bottom_medium">
-                        Bad Bad Help Text Mappings
+                        {!$Label.stgHelpAdvancedMappingInvalidHelpText}
                     </div>
-
+                    <div class="slds-m-bottom_medium">
+                        <c:UTIL_HtmlOutput
+                            html="{!$Label.stgHelpAdvancedMapping4}"
+                            hasLink="true"
+                            styleClass="slds-text-body_small" />
+                    </div>
                     <table class="slds-table slds-table_cell-buffer slds-table_bordered">
                         <thead>
                             <tr class="slds-line-height_reset">
                                 <th class="" scope="col">
                                     <div class="slds-truncate" title="Data Import Field">
-                                        Data Import Field
+                                        {!$Label.stgHelpAdvancedMappingTableHeader1}
                                     </div>
                                 </th>
                                 <th class="" scope="col">
                                     <div class="slds-truncate" title="Help Text">
-                                        Help Text
+                                        {!$Label.stgHelpAdvancedMappingTableHeader2}
                                     </div>
                                 </th>
                             </tr>
