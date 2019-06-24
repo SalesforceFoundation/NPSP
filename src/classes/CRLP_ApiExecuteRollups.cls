@@ -124,12 +124,13 @@ public without sharing class CRLP_ApiExecuteRollups {
         options.useRollupDefsByParentIdMap = true;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withRollupType(rollupType)
-                .withSummaryRecord(summaryRecord)
-                .withRollupDefinitions(rollupDefs)
-                .withDetailRecords(detailRecords)
-                .withRelatedRecords(relatedRecords)
-                .withJobOptions(options);
+            .withoutRetrieveExternalRollupStateData()
+            .withRollupType(rollupType)
+            .withSummaryRecord(summaryRecord)
+            .withRollupDefinitions(rollupDefs)
+            .withDetailRecords(detailRecords)
+            .withRelatedRecords(relatedRecords)
+            .withJobOptions(options);
 
         List<SObject> updatedRecords = processor.startRollupProcessing();
 

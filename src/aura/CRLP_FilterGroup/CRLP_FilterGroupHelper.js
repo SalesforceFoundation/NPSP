@@ -540,7 +540,7 @@
         }
 
         var action = cmp.get("c.saveFilterGroupAndRules");
-        action.setParams({filterGroupCMT: JSON.stringify(filterGroupCMT)});
+        action.setParams({jsonFilterGroup: JSON.stringify(filterGroupCMT)});
         action.setCallback(this, function (response) {
             var state = response.getState();
 
