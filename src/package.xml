@@ -281,8 +281,6 @@
         <members>OPP_OpportunityNamingBTN_CTRL</members>
         <members>OPP_OpportunityNaming_BATCH</members>
         <members>OPP_OpportunityNaming_BATCH_TEST</members>
-        <members>OPP_OpportunityNaming_NEW_BATCH</members>
-        <members>OPP_OpportunityNaming_NEW_BATCH_TEST</members>
         <members>OPP_OpportunityNaming_TEST</members>
         <members>OPP_PrimaryContactRoleMerge</members>
         <members>OPP_PrimaryContactRoleMerge_BATCH</members>
