@@ -34,7 +34,7 @@
 * @description Unit Test for UTIL_OrgTelemetry_SVC
 */
 
-@isTest
+@IsTest(IsParallel=true)
 private with sharing class UTIL_OrgTelemetry_SVC_TEST {
     /**
      * @description Submits the telemetry batch job to execute. This will only execute a single child iteration
@@ -43,7 +43,6 @@ private with sharing class UTIL_OrgTelemetry_SVC_TEST {
      * This specific test needs to be in a separate test class to avoid an internal error that is thrown when
      * testing along side other methods that call the same featureParameter value used by this test.
      */
-    @IsTest
     static void validateTelemetryBatchJob() {
         Test.startTest();
         UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
