@@ -257,7 +257,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             }
         }
 
-
         if (pmtsNeedingAllocations.size() > 0) {
             fillMapWrapper(pmtsNeedingAllocations);
             copyRecurringDonationCampaignAllocations(pmtsNeedingAllocations);
@@ -1028,6 +1027,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 mapWrapper.put(getParentId(allo), new alloWrapper());
 
             alloWrapper wrap = mapWrapper.get(getParentId(allo));
+
             //add opportunity amount and allocation totals
             if (allo.Opportunity__c != null) {
                 wrap.parentAmount = allo.Opportunity__r.Amount;
