@@ -1,9 +1,49 @@
 <template>
-
     <template if:true={displayFieldMappings}>
-        <div>
-                <lightning-button variant="base" label="Go to Object Mappings" onclick={handleNavButton}></lightning-button>
+        <div class="slds-grid slds-wrap">
+            <div class="nav slds-size_1-of-1 slds-m-bottom_small">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size_1-of-2">
+                        <lightning-button variant="base" label="Go to Object Mappings" onclick={handleNavButton}>
+                        </lightning-button>
+                    </div>
+                    <div class="slds-size_1-of-2">
+                        <lightning-button label="Create New Field Mapping" title="Create New Field Mapping"
+                            onclick={handleNewFieldMapping} class="slds-m-left_x-small slds-float_right">
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
+            <div class="header slds-size_1-of-1 slds-m-bottom_large">
+                <!--<h1 class="slds-text-heading_small slds-m-bottom_xx-small">{objectMapping.MasterLabel} Group</h1>-->
+                <h2 class="slds-text-heading_x-small slds-m-bottom_small">Field Mappings</h2>
+
+                <p class="slds-text-body_small slds-m-bottom_small">
+                    Connect the field you created on the NPSP Data Import object to the field on your target object in
+                    the grid below.
+                    You can find fields by Field Label or the Field API Name.
+                    Fields on the NPSP Data Import object must map to compatible field types on your target object.
+                    When you select an NPSP Data Import field, only the compatible target fields will be available.
+                </p>
+
+                <p class="slds-text-body_small">Find complete Advanced Mapping setup documentation here.</p>
+            </div>
+            <div class="table slds-size_1-of-1 slds-m-vertical_small">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size_2-of-7">
+                        <p class="slds-text-heading_x-small">Source (NPSP Data Import Object)</p>
+                    </div>
+                    <div class="slds-size_2-of-7"></div>
+                    <div class="slds-size_3-of-7">
+                        <!--<p class="slds-text-heading_x-small">Target ({objectMapping.MasterLabel})</p>-->
+                    </div>
+                    <div class="slds-size_1-of-1 slds-m-top_x-small">
+                        <lightning-datatable key-field="id" data={fieldMappings} columns={columns} hide-checkbox-column
+                            onrowaction={handleRowAction}>
+                        </lightning-datatable>
+                    </div>
+                </div>
+            </div>
         </div>
-        Field mappings stuff for {selectedObjectMapping}
     </template>
 </template>

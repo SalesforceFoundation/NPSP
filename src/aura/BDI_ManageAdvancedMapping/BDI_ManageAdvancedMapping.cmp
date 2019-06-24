@@ -1,4 +1,8 @@
-<aura:component>
-    <c:bdi_ObjectMappings/>
-    <c:bdi_FieldMappings/>
+<aura:component implements="lightning:isUrlAddressable">
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size_1-of-1 slds-card slds-p-around_small">
+            <c:bdi_ObjectMappings/>
+            <c:bdi_FieldMappings/>
+        </div>
+    </div>
 </aura:component>	

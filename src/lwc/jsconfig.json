@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "c/bdi_FieldMappings": [
+                "bdi_FieldMappings/bdi_FieldMappings.js"
+            ],
+            "c/bdi_ObjectMappings": [
+                "bdi_ObjectMappings/bdi_ObjectMappings.js"
+            ],
+            "c/pubsubNoPageRef": [
+                "pubsubNoPageRef/pubsubNoPageRef.js"
+            ]
+        },
+        "experimentalDecorators": true
+    },
+    "include": [
+        "**/*",
+        "../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}

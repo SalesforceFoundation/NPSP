@@ -10,7 +10,8 @@
                         key-field="Id"
                         columns={columns}
                         data={objectMappings.data}
-                        hide-checkbox-column=true>
+                        hide-checkbox-column=true
+                        onrowaction={handleRowAction}>
                     </lightning-datatable>
                 </template>
                 <template if:true={objectMappings.error}>

@@ -8,12 +8,18 @@ import {
     fireEvent
 } from 'c/pubsubNoPageRef';
 
+const actions = [
+    { label: 'Field Mappings', name: 'goToFieldMappings' },
+    { label: 'Delete', name: 'delete' }
+];
+
 const columns = [
     {label: 'Object Mapping Name', fieldName: 'MasterLabel', type: 'text'},
     {label: 'Object API Name', fieldName: 'Object_API_Name__c', type: 'text'},
     {label: 'Is Child/Parent', fieldName: 'Relationship_To_Predecessor__c', type: 'text'},
     {label: 'Of This Object Mapping', fieldName: 'Predecessor__c', type: 'text'},
-    {label: 'Through This Field', fieldName: 'Relationship_Field__c', type: 'text'}
+    {label: 'Through This Field', fieldName: 'Relationship_Field__c', type: 'text'},
+    { type: 'action', typeAttributes: { rowActions: actions }}
 ];
 
 export default class Bdi_ObjectMappings extends LightningElement {
@@ -56,5 +62,27 @@ export default class Bdi_ObjectMappings extends LightningElement {
         console.log('In handleShowFieldMappings for objectmappings cmp' + event.objectMapping);
         console.log(event);
         this.displayObjectMappings = false;
+    }
+
+    handleRowAction(event) {
+        console.log('bdi_FieldMappings | handleRowAction()');
+        const actionName = event.detail.action.name;
+        const row = event.detail.row;
+        console.log({actionName, row});
+        switch (actionName) {
+
+            case 'goToFieldMappings':
+                console.log('GOTOFIELDMAPPING ACTION');
+                fireEvent(this.pageRef,'showfieldmappings', {objectMapping:row});
+                break;
+
+            case 'delete':
+                alert('Row deleted from datatable in UI, send delete event');
+                this.dispatchMessage('deletefieldmapping', row);
+                this.deleteRowFromDatatable(row);
+                break;
+
+            default:
+        }
     }
 }
