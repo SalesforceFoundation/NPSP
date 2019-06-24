@@ -1,0 +1,4 @@
+<aura:component>
+    <c:bdi_ObjectMappings/>
+    <c:bdi_FieldMappings/>
+</aura:component>	

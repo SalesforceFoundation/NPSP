@@ -35,5 +35,5 @@
   @description Harness app for the BDI Advanced Mapping components.
 -->
 <aura:application access="GLOBAL" extends="ltng:outApp">
-    <aura:dependency resource="c:BDI_ObjectMappingsContainer"/>
+    <aura:dependency resource="c:BDI_ManageAdvancedMapping"/>
 </aura:application>

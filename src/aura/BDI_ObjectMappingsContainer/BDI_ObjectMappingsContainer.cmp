@@ -1,3 +1,0 @@
-<aura:component>
-        <c:bdi_ObjectMappings name="Test" />
-</aura:component>	

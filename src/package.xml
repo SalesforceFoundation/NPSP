@@ -611,7 +611,7 @@
     </types>
     <types>
         <members>BDI_ManageAdvancedMappingContainer</members>
-        <members>BDI_ObjectMappingsContainer</members>
+        <members>BDI_ManageAdvancedMapping</members>
         <members>BGE_BatchGiftEntryTab</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
@@ -2780,6 +2780,8 @@
     </types>
     <types>
         <members>bdi_ObjectMappings</members>
+        <members>bdi_FieldMappings</members>
+        <members>pubsubNoPageRef</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>

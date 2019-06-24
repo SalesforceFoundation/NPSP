@@ -55,7 +55,7 @@
             ns = 'c';
         }
         $Lightning.use(ns + ":BDI_ManageAdvancedMappingContainer", function() {
-            $Lightning.createComponent(ns + ":BDI_ObjectMappingsContainer",
+            $Lightning.createComponent(ns + ":BDI_ManageAdvancedMapping",
                 {},
                 "gridWrapperCmp",
                 function() { }

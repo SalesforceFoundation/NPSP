@@ -1,5 +1,13 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import getObjectMappings from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectMappings';
+import { CurrentPageReference } from 'lightning/navigation';
+import {
+    registerListener,
+    unregisterListener,
+    unregisterAllListeners,
+    fireEvent
+} from 'c/pubsubNoPageRef';
+
 const columns = [
     {label: 'Object Mapping Name', fieldName: 'MasterLabel', type: 'text'},
     {label: 'Object API Name', fieldName: 'Object_API_Name__c', type: 'text'},
@@ -9,9 +17,44 @@ const columns = [
 ];
 
 export default class Bdi_ObjectMappings extends LightningElement {
-    @api name;
     @track error;
     @track columns = columns;
+    @track displayObjectMappings = true;
+
     @wire(getObjectMappings) objectMappings;
 
+    /*
+    handleNavButton(event) {
+        const showFieldMappings = new CustomEvent('showFieldMappings', {
+            detail: 'Opportunity',
+        });
+        this.dispatchEvent(showFieldMappings);
+    }
+    */
+
+    handleNavButton(event) {
+        console.log('In handleNavButton');
+        fireEvent(this.pageRef,'showfieldmappings',{objectMapping:'Contact1'});
+    }
+
+    connectedCallback() {
+        registerListener('showobjectmappings', this.handleShowObjectMappings, this);
+        registerListener('showfieldmappings', this.handleShowFieldMappings, this);
+    }
+
+    disconnectedCallback() {
+        unregisterAllListeners(this);
+    }
+
+    handleShowObjectMappings(event) {
+        console.log('In handleShowObjectMappings for objectmappings cmp');
+        this.displayObjectMappings = true;
+    }
+
+    handleShowFieldMappings(event) {
+
+        console.log('In handleShowFieldMappings for objectmappings cmp' + event.objectMapping);
+        console.log(event);
+        this.displayObjectMappings = false;
+    }
 }
