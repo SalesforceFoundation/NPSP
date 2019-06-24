@@ -42,6 +42,26 @@
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="global" />
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="global" />
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="global"/>
+    <aura:attribute name="labelForSelectorSectionDescription" type="String"
+                    default="{!$Label.c.bgeDonationSelectorHelp}"
+                    description="Text located above the donation and payment selection section."
+                    access="global"/>
+    <aura:attribute name="labelForOppSelectedForUpdate" type="String"
+                    default="{!$Label.c.bgeFormSelectedOpportunity}"
+                    description="Text indicating that an Opportunity is selected for update."
+                    access="global"/>
+    <aura:attribute name="labelForSelectOppForUpdate" type="String"
+                    default="{!$Label.c.bgeFormUpdateOpportunity}"
+                    description="Text indicating that an Opportunity can be selected for update."
+                    access="global"/>
+    <aura:attribute name="labelForOppSelectedForApplyNewPmt" type="String"
+                    default="{!$Label.c.bgeFormSelectedOpportunityApplyNewPayment}"
+                    description="Text indicating that an Opportunity is selected for applying a new Payment."
+                    access="global"/>
+    <aura:attribute name="labelForSelectOppForApplyNewPmt" type="String"
+                    default="{!$Label.c.bdiMatchedApplyNewPayment}"
+                    description="Text indicating that an Opportunity can be selected for applying a new Payment."
+                    access="global"/>
 
     <!--Markup-->
     <lightning:overlayLibrary aura:id="overlayLibSelector"/>
@@ -55,7 +75,7 @@
 
         <!--Contextual help to explain which records will appear-->
         <lightning:layoutItem size="12" padding="horizontal-small">
-            {!$Label.c.bgeDonationSelectorHelp}
+            {!v.labelForSelectorSectionDescription}
         </lightning:layoutItem>
 
         <!--START UNPAID PAYMENTS CARDS-->
@@ -149,16 +169,38 @@
                                 </aura:if>
                                 <lightning:layoutItem size="12" padding="around_xx-small">
                                     <aura:if isTrue="{!and(equals(opportunityWrapper.opportunity.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
+                                <lightning:layoutItem size="12" padding="around_xx-small">
+                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
                                         <lightning:icon iconName="utility:check" size="small"
                                                         class="slds-p-right_small selectedCheckmark"
                                                         alternativeText="{!$Label.c.stgCheckboxTrue}"
                                                         title="{!$Label.c.stgCheckboxTrue}"/>
                                         <lightning:formattedText
-                                                value="{!$Label.c.bgeFormSelectedOpportunityApplyNewPayment}"/>
+                                                value="{!v.labelForOppSelectedForUpdate}"/>
+                                        <aura:set attribute="else">
+                                            <lightning:button
+                                                    value="{!donation}"
+                                                    label="{!v.labelForSelectOppForUpdate}"
+                                                    onclick="{!c.handleDonationSelection}"
+                                                    variant="base"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="12" padding="around_xx-small"
+                                                      class="slds-border_top slds-p-top_x-small slds-m-top_x-small">
+                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
+                                        <lightning:icon iconName="utility:check" size="small"
+                                                        class="slds-p-right_small selectedCheckmark"
+                                                        alternativeText="{!$Label.c.stgCheckboxTrue}"
+                                                        title="{!$Label.c.stgCheckboxTrue}"/>
+                                        <lightning:formattedText
+                                                value="{!v.labelForOppSelectedForApplyNewPmt}"/>
                                         <aura:set attribute="else">
                                             <lightning:button
                                                     value="{!opportunityWrapper.opportunity}"
                                                     label="{!$Label.c.bdiMatchedApplyNewPayment}"
+                                                    value="{!donation}"
+                                                    label="{!v.labelForSelectOppForApplyNewPmt}"
                                                     onclick="{!c.handleApplyPaymentSelection}"
                                                     variant="base"/>
                                         </aura:set>
