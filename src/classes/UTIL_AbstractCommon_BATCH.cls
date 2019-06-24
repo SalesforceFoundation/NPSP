@@ -58,8 +58,8 @@
 */
 public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
-    private static final Integer MAX_LDV_CHUNK_SIZE = 249999;
-    private static final Integer DEFAULT_LDV_CHUNK_SIZE = 99999;
+    private static final Integer MAX_LDV_CHUNK_SIZE = 10000000;
+    private static final Integer DEFAULT_LDV_CHUNK_SIZE = 1000000;
     private static final Integer DEFAULT_BATCH_SIZE = 500;
     private Id startId;
     private Id endId;
