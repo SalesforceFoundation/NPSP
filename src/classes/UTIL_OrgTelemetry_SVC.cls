@@ -41,7 +41,7 @@
 * consistent return of telemetry data even if the process is called by different users with different permissions.
 * Specific PII info is never queried or returned by this class.
 */
-@IsTest(IsParallel=false)
+@IsTest(IsParallel=true)
 public without sharing class UTIL_OrgTelemetry_SVC {
 
     /**
