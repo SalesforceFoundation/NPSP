@@ -161,6 +161,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return Database.QueryLocator Querylocator for batch
      */
     public Database.QueryLocator start(Database.BatchableContext bc) {
+        onStart(bc, isFirstChunk());
+
         if (startId == null) {
             this.startId = determineStartId();
             this.endId = determineEndId();
@@ -470,6 +472,17 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return SObjectType of main object to drive query
      */
     public abstract SObjectType getSOBjectType();
+
+    /**
+     * Overridable method called from the start method for any implementing classes logic just prior to execution of start.  firstChunk will be true
+     * if running in non LDV mode, or if it is the first chunk of the batch.  This can be used to trigger logic at the start of the batch, including
+     * recording a timestamp for last executed to use in future batches
+     * @param bc BatchableContext provided by Salesforce
+     * @param firstChunk Boolean indicating this is the first execution of the start method.
+     */
+    public virtual void onStart(Database.BatchableContext bc, Boolean firstChunk) {
+
+    }
 
     /**
      * Equivalent to the execute method of a standard batch class.
