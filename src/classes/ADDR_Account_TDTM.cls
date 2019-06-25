@@ -47,8 +47,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        //UTIL_Debug.debug('DJH**** ADDR_Account_TDTM ' + triggerAction + ' hasRun: ' + ADDR_Addresses_TDTM.cHasRunAddrTrigger);
-
         DmlWrapper dmlWrapper = new DmlWrapper();
         list<Account> listAccCreateAddr = new list<Account>();      
        
@@ -83,7 +81,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
                 if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
-                    //UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Account_TDTM');
+                    UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Account_TDTM');
                     continue;
                     
                 }
