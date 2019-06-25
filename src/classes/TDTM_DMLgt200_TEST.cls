@@ -73,12 +73,13 @@ private class TDTM_DMLgt200_TEST {
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
         for (Contact c : contacts) {
             c.OtherCity = null;
+            c.LastName = c.LastName;
             c.Title = 'TestTitle';
         }
         Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.AllowSave = true;
+        dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
+        System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
         // Create Affiliation records for every Contact, setting the IsPrimary field to true
@@ -86,19 +87,19 @@ private class TDTM_DMLgt200_TEST {
         List<npe5__Affiliation__c> affls = new List<npe5__Affiliation__c>();
         for (Contact c : contacts) {
             npe5__Affiliation__c affl = new npe5__Affiliation__c(
-                    npe5__Organization__c = orgAcct.Id,
-                    npe5__Contact__c = c.Id,
-                    npe5__Primary__c = True,
-                    npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS
+                npe5__Organization__c = orgAcct.Id,
+                npe5__Contact__c = c.Id,
+                npe5__Primary__c = True,
+                npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS
             );
             affls.add(affl);
         }
-        database.insert(affls);
+        Database.insert(affls);
         Test.stopTest();
-        system.AssertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
-                'There should be exactly ' + insertCnt.format() + ' Affiliations records');
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
-                'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affilition');
+        System.assertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
+            'There should be exactly ' + insertCnt.format() + ' Affiliations records');
+        System.assertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
+            'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affilition');
     }
 
 
@@ -127,19 +128,21 @@ private class TDTM_DMLgt200_TEST {
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
         for (Contact c : contacts) {
             c.OtherCity = null;
+            c.LastName = c.LastName;
             c.Title = 'TestTitle';
             c.Primary_Affiliation__c = orgAcct.Id;
         }
         Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.AllowSave = true;
+        dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
         Test.stopTest();
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
-                'There should be exactly ' + insertCnt.format() + ' Household Account records');
-        system.AssertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
-                'There should be exactly ' + insertCnt.format() + ' Affiliations records');
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
-                'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affilition');
+
+        System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
+            'There should be exactly ' + insertCnt.format() + ' Household Account records');
+        System.assertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
+            'There should be exactly ' + insertCnt.format() + ' Affiliations records');
+        System.assertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
+            'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affilition');
     }
 
     /*********************************************************************************************************
@@ -163,9 +166,9 @@ private class TDTM_DMLgt200_TEST {
             c.Title = 'TestTitle';
         }
         Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.AllowSave = true;
+        dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
+        System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
         // Create Relationships between the Contacts
@@ -174,18 +177,19 @@ private class TDTM_DMLgt200_TEST {
             Contact c1 = contacts[n];
             Contact c2 = contacts[insertCnt - n - 1];
             npe4__Relationship__c rel = new npe4__Relationship__c(
-                    npe4__Contact__c = c1.Id,
-                    npe4__RelatedContact__c = c2.Id,
-                    npe4__Type__c = 'Spouse',
-                    npe4__Description__c = 'InsertTest'
+                npe4__Contact__c = c1.Id,
+                npe4__RelatedContact__c = c2.Id,
+                npe4__Type__c = 'Spouse',
+                npe4__Description__c = 'InsertTest'
             );
             rels.add(rel);
         }
-        database.insert(rels);
+        Database.insert(rels);
         Test.stopTest();
-        system.AssertEquals(insertCnt*2, [SELECT Count() FROM npe4__Relationship__c
-        WHERE npe4__Contact__c IN :contacts AND npe4__Type__c = 'Spouse'],
-                'There should be exactly ' + (insertCnt*2).format() + ' Relationships');
+
+        System.assertEquals(insertCnt*2, [SELECT Count() FROM npe4__Relationship__c
+            WHERE npe4__Contact__c IN :contacts AND npe4__Type__c = 'Spouse'],
+            'There should be exactly ' + (insertCnt*2).format() + ' Relationships');
     }
 
     /*********************************************************************************************************
@@ -244,26 +248,26 @@ private class TDTM_DMLgt200_TEST {
                 StageName = closedWonStage
             ));
         }
-        database.insert(opps);
+        Database.insert(opps);
 
-        system.AssertEquals(0, [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps],
+        System.assertEquals(0, [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps],
             'There should be exactly zero Allocations for Opportunities without Amount');
 
         // Populate the Amount field on the Opportunity to allow the allocations to be applied
         for (Opportunity o : opps) {
             o.Amount = 100;
         }
-        database.update(opps);
+        Database.update(opps);
 
         Test.stopTest();
 
-        system.AssertEquals(
+        System.assertEquals(
             insertCnt,
             [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps AND General_Accounting_Unit__c = :campaignGau.Id],
             'There should be exactly ' + insertCnt.format() + ' Campaign related Allocations'
         );
 
-        system.AssertEquals(
+        System.assertEquals(
             0,
             [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :opps AND General_Accounting_Unit__c = :defaultGau.Id],
             'There should be exactly zero Default Settings Allocations'
@@ -287,11 +291,11 @@ private class TDTM_DMLgt200_TEST {
         insert c;
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-                new npe03__Recurring_Donations_Settings__c(
-                        npe03__Opportunity_Forecast_Months__c = 6,
-                        npe03__Maximum_Donations__c = 2,
-                        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
-                ));
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Opportunity_Forecast_Months__c = 6,
+                npe03__Maximum_Donations__c = 2,
+                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+            ));
 
         Test.startTest();
 
@@ -299,32 +303,36 @@ private class TDTM_DMLgt200_TEST {
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
         for (Integer n=0; n<insertCnt; n++) {
             rds.add(new npe03__Recurring_Donation__c(
-                    Name = 'MASS INSERT TEST ' + n,
-                    npe03__Installments__c = 2,
-                    npe03__Contact__c = c.Id,
-                    npe03__Amount__c = 100,
-                    npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly,
-                    npe03__Date_Established__c = date.newinstance(1970,6,12),
-                    npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-                    npe03__Open_Ended_Status__c = 'None'
+                Name = 'MASS INSERT TEST ' + n,
+                npe03__Installments__c = 2,
+                npe03__Contact__c = c.Id,
+                npe03__Amount__c = 100,
+                npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly,
+                npe03__Date_Established__c = date.newinstance(1970,6,12),
+                npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
+                npe03__Open_Ended_Status__c = 'None'
             ));
         }
-        database.insert(rds);
+        Database.insert(rds);
         Test.stopTest();
 
-        system.AssertEquals(insertCnt*2, [SELECT Count() FROM Opportunity
-                WHERE npe03__Recurring_Donation__c IN :rds],
-                'There should be exactly ' + (insertCnt*2).format() + ' Installment Opps');
+        System.assertEquals(insertCnt*2, [SELECT Count() FROM Opportunity
+            WHERE npe03__Recurring_Donation__c IN :rds],
+            'There should be exactly ' + (insertCnt*2).format() + ' Installment Opps');
     }
 
     /*********************************************************************************************************
     * @description Test creating 200+ new Contacts with a full address
     *   NOTE: THIS WILL FAIL IN AN ORG WITHOUT THE STATIC FLAG CHANGES
     */
-    @isTest
-    static void test_addresses() {
+    @IsTest
+    static void shouldInsertMoreThan200ContactsWithAddresses() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(
+            new Error_Settings__c(Respect_Duplicate_Rule_Settings__c = true)
+        );
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
@@ -337,6 +345,7 @@ private class TDTM_DMLgt200_TEST {
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
         for (Contact c : contacts) {
+            c.LastName = c.LastName;
             c.OtherCity = null;
             c.MailingStreet = '1313 Mockingbird Lane';
             c.MailingCity = 'Munsterville';
@@ -345,15 +354,16 @@ private class TDTM_DMLgt200_TEST {
             c.MailingCountry = 'United States';
         }
         Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.AllowSave = true;
+        dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
         Test.stopTest();
 
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
-                'There should be exactly ' + insertCnt.format() + ' Household Account records');
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE MailingPostalCode__c = '06123'],
-                'There should be exactly ' + insertCnt.format() + ' Address Records');
-
+        System.assertEquals(insertCnt, [SELECT Count() FROM Contact],
+            'There should be exactly ' + insertCnt.format() + ' Contact records');
+        System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
+            'There should be exactly ' + insertCnt.format() + ' Household Account records');
+        System.assertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE MailingPostalCode__c = '06123'],
+            'There should be exactly ' + insertCnt.format() + ' Address Records');
     }
 
     /*********************************************************************************************************
@@ -365,7 +375,7 @@ private class TDTM_DMLgt200_TEST {
 
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
+
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
@@ -376,10 +386,10 @@ private class TDTM_DMLgt200_TEST {
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
         Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.AllowSave = true;
+        dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
 
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
+        System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Accounts');
 
         // rename all the Contacts
@@ -387,7 +397,7 @@ private class TDTM_DMLgt200_TEST {
         for (Contact c : contacts) {
             c.LastName = 'ChangedLastName#' + (n++);
         }
-        database.update(contacts);
+        Database.update(contacts);
 
         Test.stopTest();
 
@@ -400,10 +410,14 @@ private class TDTM_DMLgt200_TEST {
     * @description Create more than 200 Contact records and then validate that all of the Addresses were verified
     *   NOTE: THIS WILL FAIL IN AN ORG WITHOUT THE STATIC FLAG CHANGES
     */
-    @isTest
-    static void test_address_validation() {
+    @IsTest
+    static void shouldValidateMoreThan200AddressRecords() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(
+            new Error_Settings__c(Respect_Duplicate_Rule_Settings__c = true)
+        );
 
         ADDR_Validator_TEST.createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
@@ -417,6 +431,7 @@ private class TDTM_DMLgt200_TEST {
         // Create more than 200 Contact records and then validate that all of the Addresses were verified
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
         for (Contact c : contacts) {
+            c.LastName = c.LastName;
             c.OtherCity = null;
             c.MailingStreet = 'multiple-address';
             c.MailingCity = 'Cupertino';
@@ -424,19 +439,19 @@ private class TDTM_DMLgt200_TEST {
             c.MailingPostalCode = '95014';
             c.MailingCountry = 'United States';
         }
-        Test.StartTest();
+        Test.startTest();
         Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.AllowSave = true;
+        dml.duplicateRuleHeader.allowSave = true;
         Database.insert(contacts, dml);
-        Test.StopTest();
+        Test.stopTest();
 
         // check household created for contacts
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
-                'There should be exactly ' + insertCnt.format() + ' Household Account records');
+        System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
+            'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
         // validate that all address records were validated
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE Verification_Status__c = :Label.Addr_Verified],
-                'There should be exactly ' + insertCnt.format() + ' Validated Address records');
+        System.assertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE Verification_Status__c = :Label.Addr_Verified],
+            'There should be exactly ' + insertCnt.format() + ' Validated Address records');
 
         // validate that all contact addresses were fixed
         for (Contact record : [SELECT MailingPostalCode FROM Contact WHERE Id IN :contacts]) {
@@ -458,27 +473,27 @@ private class TDTM_DMLgt200_TEST {
         insert c;
 
         npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-                new npe03__Recurring_Donations_Settings__c(
-                        npe03__Opportunity_Forecast_Months__c = 1,
-                        npe03__Maximum_Donations__c = 12,
-                        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
-                ));
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Opportunity_Forecast_Months__c = 1,
+                npe03__Maximum_Donations__c = 12,
+                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+            ));
 
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(
-                Name = 'Test GAU'
+            Name = 'Test GAU'
         );
         insert defaultGau;
 
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
-                Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
+            Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
         for (Integer i = 0; i < 20; i++) {
             rds.add(new npe03__Recurring_Donation__c(
-                    npe03__Contact__c = c.Id,
-                    npe03__Amount__c = 100.0,
-                    npe03__Installment_Period__c = 'Monthly',
-                    npe03__Open_Ended_Status__c = 'Open'
+                npe03__Contact__c = c.Id,
+                npe03__Amount__c = 100.0,
+                npe03__Installment_Period__c = 'Monthly',
+                npe03__Open_Ended_Status__c = 'Open'
             ));
         }
 
@@ -501,7 +516,7 @@ private class TDTM_DMLgt200_TEST {
             'There should be 240 generated payment records');
 
         System.assertEquals(240, [SELECT Count() FROM Allocation__c WHERE Opportunity__c IN :createdOpportunities],
-                'There should be 240 generated default allocations records');
+            'There should be 240 generated default allocations records');
     }
 
 }
