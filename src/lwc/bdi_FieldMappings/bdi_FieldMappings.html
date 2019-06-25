@@ -3,16 +3,18 @@
 
         <div class="slds-grid slds-wrap slds-m-bottom_small">
             <div class="slds-size_1-of-2">
-                <lightning-button variant="base"
-                                    label="Go to Object Mappings"
-                                    onclick={handleNavButton}>
+                <lightning-button
+                    variant="base"
+                    label="Go to Object Mappings"
+                    onclick={handleNavButton}>
                 </lightning-button>
             </div>
             <div class="slds-size_1-of-2">
-                <lightning-button label="Create New Field Mapping"
-                                    title="Create New Field Mapping"
-                                    onclick={handleNewFieldMapping}
-                                    class="slds-m-left_x-small slds-float_right">
+                <lightning-button
+                    label="Create New Field Mapping"
+                    title="Create New Field Mapping"
+                    onclick={handleNewFieldMapping}
+                    class="slds-m-left_x-small slds-float_right">
                 </lightning-button>
             </div>
             <div class="slds-size_1-of-1 slds-m-bottom_large">
@@ -39,11 +41,12 @@
                         <!--<p class="slds-text-heading_x-small">Target ({objectMapping.MasterLabel})</p>-->
                     </div>
                     <div class="slds-size_1-of-1 slds-m-top_x-small">
-                        <lightning-datatable key-field="id"
-                                             data={fieldMappings}
-                                             columns={columns}
-                                             hide-checkbox-column
-                                             onrowaction={handleRowAction}>
+                        <lightning-datatable
+                            key-field="id"
+                            data={fieldMappings}
+                            columns={columns}
+                            hide-checkbox-column
+                            onrowaction={handleRowAction}>
                         </lightning-datatable>
                     </div>
                 </div>
