@@ -1059,6 +1059,12 @@ class NPSP(object):
             locator=npsp_lex_locators["field-value"].format(key)
             res=self.selenium.get_webelement(locator).text
             assert value == res, "Expected {} value to be {} but found {}".format(key,value,res)
+            
+    def checkbox_status(self,cbx_name,status):
+        """verifies if the specified checkbox is with expected status in readonly mode"""
+        locator=npsp_lex_locators["custom_settings"]["cbx_status"].format(cbx_name,status)
+        self.selenium.page_should_contain_element(locator)
+                
 
     def batch_data_import(self, batchsize):
         """"Do a BDI import using the API and wait for it to complete"""
