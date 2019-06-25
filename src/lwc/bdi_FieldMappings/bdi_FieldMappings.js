@@ -86,13 +86,7 @@ export default class Bdi_FieldMappings extends LightningElement {
             });
     }
 
-    /*******************************************************************************
-    * @description Adds icon property to each row (field mapping) for the
-    * 'Maps To' column in the datatable
-    *
-    * @param fieldMappings: List of field mappings
-    * @return list: List of field mappings with added mapsToIcon attribute
-    */
+    // TODO: Clear this out and use wrapper in apex
     addMapsToIconProperty = function (fieldMappings) {
         let list = [];
         fieldMappings.forEach((mapping) => {
@@ -163,6 +157,7 @@ export default class Bdi_FieldMappings extends LightningElement {
         alert('Send create new field mapping event to parent container');
     }
 
+    // TODO: Delete later
     /*******************************************************************************
     * @description Parse proxy objects for debugging, mutating, etc
     *

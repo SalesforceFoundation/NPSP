@@ -1,20 +1,21 @@
 <template>
     <template if:true={displayFieldMappings}>
-        <div class="slds-grid slds-wrap">
-            <div class="nav slds-size_1-of-1 slds-m-bottom_small">
-                <div class="slds-grid slds-wrap">
-                    <div class="slds-size_1-of-2">
-                        <lightning-button variant="base" label="Go to Object Mappings" onclick={handleNavButton}>
-                        </lightning-button>
-                    </div>
-                    <div class="slds-size_1-of-2">
-                        <lightning-button label="Create New Field Mapping" title="Create New Field Mapping"
-                            onclick={handleNewFieldMapping} class="slds-m-left_x-small slds-float_right">
-                        </lightning-button>
-                    </div>
-                </div>
+
+        <div class="slds-grid slds-wrap slds-m-bottom_small">
+            <div class="slds-size_1-of-2">
+                <lightning-button variant="base"
+                                    label="Go to Object Mappings"
+                                    onclick={handleNavButton}>
+                </lightning-button>
             </div>
-            <div class="header slds-size_1-of-1 slds-m-bottom_large">
+            <div class="slds-size_1-of-2">
+                <lightning-button label="Create New Field Mapping"
+                                    title="Create New Field Mapping"
+                                    onclick={handleNewFieldMapping}
+                                    class="slds-m-left_x-small slds-float_right">
+                </lightning-button>
+            </div>
+            <div class="slds-size_1-of-1 slds-m-bottom_large">
                 <!--<h1 class="slds-text-heading_small slds-m-bottom_xx-small">{objectMapping.MasterLabel} Group</h1>-->
                 <h2 class="slds-text-heading_x-small slds-m-bottom_small">Field Mappings</h2>
 
@@ -28,7 +29,7 @@
 
                 <p class="slds-text-body_small">Find complete Advanced Mapping setup documentation here.</p>
             </div>
-            <div class="table slds-size_1-of-1 slds-m-vertical_small">
+            <div class="slds-size_1-of-1 slds-m-vertical_small">
                 <div class="slds-grid slds-wrap">
                     <div class="slds-size_2-of-7">
                         <p class="slds-text-heading_x-small">Source (NPSP Data Import Object)</p>
@@ -48,5 +49,6 @@
                 </div>
             </div>
         </div>
+
     </template>
 </template>
