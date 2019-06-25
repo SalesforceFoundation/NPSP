@@ -128,10 +128,9 @@ API Create DataImportBatch
     [return]         &{batch}
     
 API Create DataImport   
-    [Arguments]     ${batch}     &{fields}
+    [Arguments]      &{fields}
     ${ns} =  Get NPSP Namespace Prefix
     ${dataimport_id} =  Salesforce Insert  ${ns}DataImport__c
-    ...                  ${ns}NPSP_Data_Import_Batch__c=${batch}
     ...                  &{fields}
     &{data_import} =     Salesforce Get  ${ns}DataImport__c  ${dataimport_id}
     [return]         &{data_import} 
