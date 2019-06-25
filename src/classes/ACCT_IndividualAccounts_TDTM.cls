@@ -538,12 +538,12 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     accountRecord.put('CurrencyIsoCode', (String) contactRecord.get('CurrencyIsoCode'));
                 }
 
-                // only set account's billing address if address management is off.
-                // otherwise, we'll let ADDR_Contact_TDTM push the new address into the account.
-                if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+                // Always copy the Contact's Mailing & Others address to the new Account's
+                // Billing & Shipping address.
+                if (contactRecord.is_Address_Override__c != true) {
                     ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
+                    ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
                 }
-                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
 
                 accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 if (individualRecordTypeId != null) {
