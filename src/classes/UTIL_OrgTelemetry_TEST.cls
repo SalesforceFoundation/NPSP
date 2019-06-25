@@ -37,6 +37,22 @@
 private class UTIL_OrgTelemetry_TEST {
 
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
+
+    /**
+     * @description Number of BGE related Data Import records created within the last 30 days
+     */
+    private static final Integer NUM_BGE_ROWS_30_DAYS_AGO = 2;
+
+    /**
+     * @description Number of BDI related Data Import records created within the last 30 days
+     */
+    private static final Integer NUM_BDI_ROWS_30_DAYS_AGO = 3;
+
+    /**
+     * @description Number of BDI related Data Import records created within the last 60 days
+     */
+    private static final Integer NUM_DI_ROWS_60_DAYS_AGO = 2;
+
     /**
      * @description Create a single Account, Contact and Opportunity to use for the telemetry test data
      **/
@@ -67,6 +83,23 @@ private class UTIL_OrgTelemetry_TEST {
                 npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus
         );
         insert rd;
+
+        DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
+
+        insert diBatch;
+
+        List<DataImport__c> bdiRows = buildDataImports(NUM_BDI_ROWS_30_DAYS_AGO, null);
+        List<DataImport__c> bgeRows = buildDataImports(NUM_BGE_ROWS_30_DAYS_AGO, diBatch.Id);
+        List<DataImport__c> bdiRows60DaysAgo = buildDataImports(NUM_DI_ROWS_60_DAYS_AGO, null);
+
+        insert bdiRows;
+        insert bgeRows;
+        insert bdiRows60DaysAgo;
+
+        Datetime sixtyDaysAgo = Datetime.now().addDays(-60);
+        for (DataImport__c di : bdiRows60DaysAgo) {
+            Test.setCreatedDate(di.Id, sixtyDaysAgo);
+        }
     }
 
     /**
@@ -322,5 +355,74 @@ private class UTIL_OrgTelemetry_TEST {
 
         System.assertEquals(660, service.getMinutesBetween(startDate, endDate),
             'The minutes between the two dates should be calculated correctly: ' + startDate + ' -> ' + endDate);
+    }
+
+    /**
+     * @description Confirms BDI row counts are calculated correctly
+     */
+    @IsTest
+    private static void validateCountOfBDIRowsTelemetry() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows);
+
+        System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
+        Test.stopTest();
+
+        System.assertEquals(
+            NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountBDIRowsLast30Days and set correctly'
+        );
+    }
+
+    /**
+     * @description Confirms BGE row counts are calculated correctly
+     */
+    @IsTest
+    private static void validateCountOfBGERowsTelemetry() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows);
+
+        System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
+        Test.stopTest();
+
+        System.assertEquals(
+            NUM_BGE_ROWS_30_DAYS_AGO,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountBGERowsLast30Days and set correctly'
+        );
+    }
+
+    /**
+     * @description Builds test data import records
+     */
+    private static List<DataImport__c> buildDataImports(Integer numDataImports, Id diBatchId) {
+        List<DataImport__c> dis = new List<DataImport__c>();
+
+        for (Integer i = 0; i < numDataImports; i++) {
+             DataImport__c di = new DataImport__c();
+
+            if (diBatchId != null) {
+                di.NPSP_Data_Import_Batch__c = diBatchId;
+            }
+
+            dis.add(di);
+        }
+
+        return dis;
     }
 }
