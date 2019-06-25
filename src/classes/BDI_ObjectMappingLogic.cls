@@ -48,7 +48,7 @@ public with sharing virtual class BDI_ObjectMappingLogic {
         for (BDI_ObjectWrapper objWrap : objWraps) {
             Map<String, Schema.DescribeFieldResult> targetFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
 
-            objWrap.sObj = Schema.getGlobalDescribe().get(objWrap.objMapping.Object_API_Name__c).newSObject();
+            objWrap.sObj = UTIL_Describe.getPrototypeObject(objWrap.objMapping.Object_API_Name__c);
 
             // If the object already has an existing SObject Id, then set it in the sObj
             if (objWrap.existingSObjectId != null) {
