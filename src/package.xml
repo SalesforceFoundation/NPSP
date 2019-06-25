@@ -2553,6 +2553,9 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>DataCount_ONETIME_Use</members>
+        <members>Data_CountBDIRowsLast30Days</members>
+        <members>Data_CountBGERowsLast30Days</members>
         <members>Data_CountErrorLog</members>
         <members>Data_CountOppsWithMultiplePayments</members>
         <members>Data_CountRdOppsAll</members>
@@ -2561,7 +2564,6 @@
         <members>Data_CountRecurringDonationsAll</members>
         <members>Data_MaxNumRelatedOpps</members>
         <members>Data_OppPaymentsWithoutPaymentsEnabled</members>
-        <members>DataCount_ONETIME_Use</members>
         <members>Org_CountNonEnglishLanguages</members>
         <members>Org_CountTimedOutBatchJobsLast7Days</members>
         <members>Org_LongestRunningBatchLast7Days</members>
