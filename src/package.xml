@@ -1414,6 +1414,7 @@
         <members>alloTotals</members>
         <members>alloUnallocated</members>
         <members>bdiAccountCustomIdError</members>
+        <members>bdiAdditionalObjChildNotUpdated</members>
         <members>bdiAdditionalObjPredNotFound</members>
         <members>bdiAdditionalObjRequiredFieldsNull</members>
         <members>bdiAdvancedMapping</members>
