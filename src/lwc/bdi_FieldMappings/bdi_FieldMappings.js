@@ -76,8 +76,8 @@ export default class Bdi_FieldMappings extends LightningElement {
         getFieldMappingsByObjectMappingName({ name: this.objectMapping.DeveloperName })
             .then((data) => {
                 this.fieldMappings = this.addMapsToIconProperty(data);
-                console.log('received data: ', this.parse(data));
-                console.log('fieldMappings: ', this.parse(this.fieldMappings));
+                console.log('received data: ', this.log(data));
+                console.log('fieldMappings: ', this.log(this.fieldMappings));
             })
             .catch((error) => {
                 this.message = 'Error received: code' + error.errorCode + ', ' +
@@ -96,7 +96,7 @@ export default class Bdi_FieldMappings extends LightningElement {
     addMapsToIconProperty = function (fieldMappings) {
         let list = [];
         fieldMappings.forEach((mapping) => {
-            mapping = this.parse(mapping);
+            mapping = this.log(mapping);
             mapping.dataImportFieldMapping.mapsToIcon = 'utility:forward';
             mapping.dataImportFieldMapping.sourceFieldLabel = mapping.sourceFieldLabel;
             mapping.dataImportFieldMapping.sourceFieldDataType = mapping.sourceFieldDataType;
@@ -118,8 +118,6 @@ export default class Bdi_FieldMappings extends LightningElement {
         switch (actionName) {
             case 'delete':
                 console.log('DELETE ACTION');
-                console.log('Row: ', this.parse(row));
-                this.dispatchMessage('deletefieldmapping', row);
                 this.deleteRowFromDatatable(row);
                 alert('Row deleted from datatable in UI, send delete event');
                 // TODO: Add logic to mark field mapping's field isDeleted = true
@@ -129,7 +127,7 @@ export default class Bdi_FieldMappings extends LightningElement {
                 break;
             case 'edit':
                 console.log('EDIT ACTION');
-                console.log('Row: ', this.parse(row));
+                console.log('Row: ', this.log(row));
                 alert('Send edit field mapping event to parent container');
                 // TODO: Add logic to send event to parent container / edit component containing
                 // data on the row (field mapping) to be editted.
@@ -170,7 +168,7 @@ export default class Bdi_FieldMappings extends LightningElement {
     *
     * @param object: Object to be parsed
     */
-    parse(object) {
+    log(object) {
         return JSON.parse(JSON.stringify(object));
     }
 }
