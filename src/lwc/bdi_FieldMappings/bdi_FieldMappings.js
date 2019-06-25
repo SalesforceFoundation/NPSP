@@ -1,6 +1,6 @@
 import { LightningElement, track, wire, api } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
-import getFieldMappingsByObjectMappingName from '@salesforce/apex/BDI_FieldMappingsCtrl.getFieldMappingsByObjectMappingName';
+import getFieldMappingsByObjectMappingName from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectMappingName';
 import {
     registerListener,
     unregisterListener,
@@ -14,15 +14,15 @@ const actions = [
 ];
 
 const columns = [
-    { label: 'Field Label', fieldName: 'sourceFieldLabel', type: 'text', sortable: true },
-    { label: 'Field API Name', fieldName: 'Source_Field_API_Name__c', type: 'text' },
-    { label: 'Data Type', fieldName: 'sourceFieldDataType', type: 'text' },
+    { label: 'Field Label', fieldName: 'Source_Field_Label', type: 'text', sortable: true },
+    { label: 'Field API Name', fieldName: 'Source_Field_API_Name', type: 'text' },
+    { label: 'Data Type', fieldName: 'Source_Field_Data_Type', type: 'text' },
         {
             label: 'Maps To', fieldName: '', type: 'text',
-            cellAttributes: { iconName: { fieldName: 'mapsToIcon' }, iconPosition: 'right' }
+            cellAttributes: { iconName: { fieldName: 'Maps_To_Icon' }, iconPosition: 'right' }
         },
     { label: 'Field Label', fieldName: 'MasterLabel', type: 'text' },
-    { label: 'Field API Name', fieldName: 'Target_Field_API_Name__c', type: 'text' },
+    { label: 'Field API Name', fieldName: 'Target_Field_API_Name', type: 'text' },
     { label: 'Data Type', fieldName: '', type: 'text' },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
@@ -31,11 +31,12 @@ export default class Bdi_FieldMappings extends LightningElement {
 
     @track displayFieldMappings = false;
     @track selectedObjectMapping = 'Opportunity';
+    @track isLoading = true;
     @api objectMapping;
     @track fieldMappings;
     @track columns = columns;
     @api forceRefresh() {
-        this.getFieldMappings();
+        this.handleFieldMappings();
     }
 
     handleNavButton(event) {
@@ -46,6 +47,11 @@ export default class Bdi_FieldMappings extends LightningElement {
         console.log('bdi_FieldMappings | connectedCallback()');
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
+
+        // TODO: delete later, using so I can hop directly into the field mappings
+        // component via a url addressable harness aura component
+        this.handleFieldMappings();
+        this.displayFieldMappings = true;
     }
 
     disconnectedCallback() {
@@ -71,33 +77,17 @@ export default class Bdi_FieldMappings extends LightningElement {
     *
     * @param name: Name of the object mapping received from parent component 
     */
-    getFieldMappings = function () {
+    handleFieldMappings = function () {
         console.log('getFieldMappings()');
-        getFieldMappingsByObjectMappingName({ name: this.objectMapping.DeveloperName })
+        getFieldMappingsByObjectMappingName({ name: 'Account1' })
             .then((data) => {
-                this.fieldMappings = this.addMapsToIconProperty(data);
-                console.log('received data: ', this.log(data));
-                console.log('fieldMappings: ', this.log(this.fieldMappings));
+                this.fieldMappings = data;
+                this.isLoading = false;
             })
             .catch((error) => {
-                this.message = 'Error received: code' + error.errorCode + ', ' +
-                    'message ' + error.body.message;
-                console.log(this.message);
+                console.log(error);
+                this.isLoading = false;
             });
-    }
-
-    // TODO: Clear this out and use wrapper in apex
-    addMapsToIconProperty = function (fieldMappings) {
-        let list = [];
-        fieldMappings.forEach((mapping) => {
-            mapping = this.log(mapping);
-            mapping.dataImportFieldMapping.mapsToIcon = 'utility:forward';
-            mapping.dataImportFieldMapping.sourceFieldLabel = mapping.sourceFieldLabel;
-            mapping.dataImportFieldMapping.sourceFieldDataType = mapping.sourceFieldDataType;
-            mapping = mapping.dataImportFieldMapping;
-            list.push(mapping);
-        });
-        return list;
     }
 
     /*******************************************************************************
