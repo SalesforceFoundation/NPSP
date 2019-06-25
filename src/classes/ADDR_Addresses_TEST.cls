@@ -1895,6 +1895,8 @@ public with sharing class ADDR_Addresses_TEST {
         for (Integer i = 0; i < cHHT; i++) {
             for (Integer j = 0; j < cConT; j++) {
                 listConT[(i * cConT) + j].AccountId = listAccT[i].Id;
+                listConT[(i * cConT) + j].LastName =  listConT[(i * cConT) + j].LastName + j;
+                listConT[(i * cConT) + j].OtherCity = null;
             }
         }
         insert listConT;
