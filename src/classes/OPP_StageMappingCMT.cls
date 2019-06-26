@@ -46,12 +46,15 @@ public with sharing class OPP_StageMappingCMT {
     /*******************************************************************************************************
     * @description Creates the finalized state record if there are no finalized records. It utilizes the 
     * "Opportunity Stage when Fully Paid" field as the Opportunity stage for the finalized state. 
+    * @params List<Metadata.CustomMetadata> metadataToInsert A running list of custom metadata that is going to be inserted,
+    * the created record will be added into this list. 
+    * @returns List<Metadata.CustomMetadata> A running list of custom metadata to be inserted. 
     ********************************************************************************************************/
     public static List<Metadata.CustomMetadata> createFinalizedOppStageToStateRecord(List<Metadata.CustomMetadata> metadataToInsert) {
         npe01__Contacts_And_Orgs_Settings__c contactAndOrgCustomSetting = UTIL_CustomSEttingsFacade.getOrgContactsSettings();
 
         // Only create the finalized opp stage to state record if there's no existing finalized record. 
-        Integer finalizedCount = [SELECT Count() FROM Opportunity_Stage_To_State_Mapping__mdt Where Opportunity_State__c =: FINALIZED_STATE_VAL];
+        Integer finalizedCount = [SELECT Count() FROM Opportunity_Stage_To_State_Mapping__mdt Where Opportunity_State__c =: FINALIZED_STATE_VAL LIMIT 1];
         
         // Take the value, if there is one, and create a finalized Opp Stage to State custom metadata type record. 
         if (finalizedCount == 0 && 
@@ -68,12 +71,19 @@ public with sharing class OPP_StageMappingCMT {
     * @description Creates the initial Opportunity Stage to State record if there are no existing records. 
     * When there are no existing records, it will create a new "Committed" state record for a "Pledged" stage
     * if there is one. 
+    * @params List<Metadata.CustomMetadata> metadataToInsert A running list of custom metadata that is going to be inserted,
+    * the created record will be added into this list. 
+    * @returns List<Metadata.CustomMetadata> A running list of custom metadata to be inserted. 
     ********************************************************************************************************/
     public static List<Metadata.CustomMetadata> createPledgedOppStageToStateRecord(List<Metadata.CustomMetadata> metadataToInsert) {
         npe01__Contacts_And_Orgs_Settings__c contactAndOrgCustomSetting = UTIL_CustomSEttingsFacade.getOrgContactsSettings();
 
         
-        Integer overallCount = [SELECT Count() FROM Opportunity_Stage_To_State_Mapping__mdt];
+        Integer overallCount = [SELECT Count() FROM Opportunity_Stage_To_State_Mapping__mdt LIMIT 1];
+
+        if (overallCount == 1) {
+            return metadataToInsert;
+        }
 
         // Get all opportunity stages to see if there is a pledged stage
         Schema.DescribeFieldResult fieldResult = Opportunity.StageName.getDescribe();
@@ -89,7 +99,7 @@ public with sharing class OPP_StageMappingCMT {
             }
         }       
         
-        // Take the value, if there is one, and create a finalized Opp Stage to State custom metadata type record. 
+        // Take the value, if there is one, and create a Committed Opp Stage to State custom metadata type record. 
         // Only create the pledged opp stage to state record if there's no existing opportunity stage to state records at all. 
         if (overallCount == 0 && hasPledgedValue) {
             metadataToInsert.add(createCustomMetadata(normalPledgeValue, COMMITTED_STATE_VAL));
@@ -100,6 +110,9 @@ public with sharing class OPP_StageMappingCMT {
 
     /*******************************************************************************************************
     * @description Creates a custom metadata record based on the parameters provided to the method. 
+    * @params String oppStage The opportunity stage that will be mapped in the custom metadata record. 
+    * @params String oppState The opportunity state that will be mapped in the custom metadata record. 
+    * @returns Metadata.CustomMetadata The created custom metadata record with the mapped Opportunity stage and state
     ********************************************************************************************************/
     public static Metadata.CustomMetadata createCustomMetadata(String oppStage, String oppState) {        
         Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
@@ -121,6 +134,8 @@ public with sharing class OPP_StageMappingCMT {
 
     /*******************************************************************************************************
     * @description Deploys the Custom metadata records using the OppStageToStateMetadataHandler as the handler
+    * @param List<Metadata.CustomMetadata> listOfMetadataToInsert A list of custom metadata that will be inserted
+    * @param Map<String, Object> params A mapping of params for the callback to use. 
     ********************************************************************************************************/
     public static void deployOppStageToStateMetadata(List<Metadata.CustomMetadata> listOfMetadataToInsert, Map<String, Object> params) {
         // Deploy the metadata 
@@ -133,6 +148,10 @@ public with sharing class OPP_StageMappingCMT {
         CMT_MetadataAPI.deployMetadata(listOfMetadataToInsert, callback);
     }
 
+    /******************************************************************************************************************
+     * @description Interface implementation of the Metadata Callback Handler
+     * This is needed so that NPSP's implementation of the result handlers are not executed. 
+     *****************************************************************************************************************/
     public class OppStageToStateMetadataHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
 
         public Map<String, Object> params;
@@ -140,6 +159,8 @@ public with sharing class OPP_StageMappingCMT {
 
         /**************************************************************************************************************
         * @description success handler - No implementation as of right now, will be implemented later as needed. 
+        * @param Map<String, Object> params Parameters for the handler to use. 
+        * @param String status The status of the metadata callback for the handler to use. 
         /*************************************************************************************************************/
         public void performSuccessHandler(Map<String, Object> params, String status) {
             if (params == null || params.isEmpty()) {
@@ -150,12 +171,14 @@ public with sharing class OPP_StageMappingCMT {
                 // TODO: Implement if needed. 
                 // Process a successful 
             } catch (Exception ex) {
-                logError(ex);
+                
             }
         }
 
         /**************************************************************************************************************
         * @description error handler - No implementation as of right now, will be implemented later as needed. 
+        * @param Map<String, Object> params Parameters for the handler to use. 
+        * @param String status The status of the metadata callback for the handler to use. 
         /*************************************************************************************************************/
         public void performErrorHandler(Map<String, Object> params, String status) {
             if (params == null || params.isEmpty()) {
@@ -166,28 +189,8 @@ public with sharing class OPP_StageMappingCMT {
                 // TODO: Implement if needed. 
                 // Handle error 
             } catch (Exception ex) {
-                logError(ex);
+                
             }
-        }
-
-
-        /**
-        * @description Inserts an error log into the Error table
-        * @param ex Exception object that is to be logged
-        */
-        private void logError(Exception ex) {
-
-            // TODO: Currently not in use, if we decide to use this in the future,
-            // We will need to convert this into a custom label. 
-            Error__c oppStageToStateHandlerError = new Error__c(
-                Error_Type__c = 'Opportunity Stage to State Metadata Handler Error',
-                Object_Type__c = 'CustomMetadata',
-                Context_Type__c = ERR_Handler_API.Context.OPP.name(),
-                Datetime__c = System.now(), 
-                Full_Message__c = ex.getMessage()
-            );
-
-            Database.insert(oppStageToStateHandlerError, true);
         }
     }
 }

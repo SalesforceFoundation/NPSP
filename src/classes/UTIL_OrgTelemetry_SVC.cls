@@ -121,7 +121,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     public static void asyncProcessCMTChange(Set<String> customMetadataTypeSet) {
 
         // We need to parse and check so that only NPSP specific actions will have telemetry execution.
-        // We don't want this to run for Abacus. 
+        // We don't want the telemetry logic to run for Abacus. 
         // Currently, we will only call NPSP if it is an NPSP/Custom Rollup action. 
         for (String customMetadataTypeName : customMetadataTypeSet) {
             if (customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Rollup.name().toLowerCase()) ||

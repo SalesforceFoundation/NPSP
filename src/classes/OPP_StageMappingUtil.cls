@@ -45,6 +45,10 @@ public with sharing class OPP_StageMappingUtil {
     @testVisible private static final String UNCOMMITTED_STATE_VAL = 'UNCOMMITTED';
     @testVisible private static final String COMMITTED_STATE_VAL = 'COMMITTED';
     @testVisible private static final String FINALIZED_STATE_VAL = 'FINALIZED';
+    @testVisible private static final String TEST_FINALIZED_STAGE = 'Closed Won';
+    @testVisible private static final String TEST_COMMITTED_STAGE = 'Pledged';
+    
+
 
     /******************************************************************************************************
     * @description Used to Cache Set of Opportunity Stages that mean Opportunity is in a Committed State.
@@ -125,11 +129,11 @@ public with sharing class OPP_StageMappingUtil {
             
             // If it's a test running, return artificial records. This ensures consistency in the testing. 
             Opportunity_Stage_To_State_Mapping__mdt finalizedRecord = new Opportunity_Stage_To_State_Mapping__mdt();
-            finalizedRecord.Opportunity_Stage__c = 'Closed Won';
+            finalizedRecord.Opportunity_Stage__c = TEST_FINALIZED_STAGE;
             finalizedRecord.Opportunity_State__c = FINALIZED_STATE_VAL;
 
             Opportunity_Stage_To_State_Mapping__mdt pledgedRecord = new Opportunity_Stage_To_State_Mapping__mdt();
-            pledgedRecord.Opportunity_Stage__c = 'Pledged';
+            pledgedRecord.Opportunity_Stage__c = TEST_COMMITTED_STAGE;
             pledgedRecord.Opportunity_State__c = COMMITTED_STATE_VAL;
 
             metadataRecordList.add(finalizedRecord);
