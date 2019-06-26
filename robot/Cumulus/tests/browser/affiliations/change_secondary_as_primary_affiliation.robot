@@ -2,7 +2,8 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown    Capture Screenshot and Delete Records and Close Browser
+# Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
@@ -19,6 +20,7 @@ Create Secondary Affiliation for Contact
     # scroll to the one below it
     Scroll Element Into View  text:Primary
     Click Button  title:Edit Primary
+    Wait Until Loading Is Complete
     Wait For Locator  checkbox.details-checkbox  Primary
     Select Lightning Checkbox    Primary
     Click Button    Save
