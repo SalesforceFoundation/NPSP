@@ -45,7 +45,7 @@ public with sharing class OPP_StageMappingCMT {
 
     /*******************************************************************************************************
     * @description Creates the finalized state record if there are no finalized records. It utilizes the 
-    * "Opportunity Stage when Fully Paid" field as the Opportunity stage for the finalized state. 
+    * "Opportunity Stage when Fully Paid" field (If it's populated) as the Opportunity stage for the finalized state. 
     * @params List<Metadata.CustomMetadata> metadataToInsert A running list of custom metadata that is going to be inserted,
     * the created record will be added into this list. 
     * @returns List<Metadata.CustomMetadata> A running list of custom metadata to be inserted. 
