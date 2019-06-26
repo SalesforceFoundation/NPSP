@@ -1,8 +1,12 @@
 <template>
 
-    <c-bdi-mapping-modal></c-bdi-mapping-modal>
-
     <template if:true={displayFieldMappings}>
+
+        <c-bdi-mapping-modal
+            object-mapping={objectMapping}
+            is-modal-open={isModalOpen}>
+        </c-bdi-mapping-modal>
+
         <div class="slds-grid slds-wrap slds-m-bottom_small">
             <div class="slds-size_1-of-2">
                 <lightning-button

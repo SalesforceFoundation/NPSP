@@ -19,6 +19,7 @@ const columns = [
     {label: 'Is Child/Parent', fieldName: 'Relationship_To_Predecessor__c', type: 'text'},
     {label: 'Of This Object Mapping', fieldName: 'Predecessor__c', type: 'text'},
     {label: 'Through This Field', fieldName: 'Relationship_Field__c', type: 'text'},
+    { label: 'Field Mapping', fieldName: 'url', type: 'url' },
     { type: 'action', typeAttributes: { rowActions: actions }}
 ];
 

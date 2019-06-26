@@ -142,7 +142,8 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                                                     Source_Field_API_Name__c,
                                                     Target_Field_API_Name__c,
                                                     Target_Object_Mapping__c,
-                                                    Target_Object_Mapping__r.DeveloperName
+                                                    Target_Object_Mapping__r.DeveloperName,
+                                                    Is_Deleted__c
                                         FROM Data_Import_Field_Mapping__mdt
                                         WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName]) {
 

@@ -60,7 +60,8 @@ public class BDI_ManageAdvancedMappingCtrl {
             bdiCMT.fieldMappingsByObjMappingDevName.get(objectSetName);
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
-            if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldSetName) {
+            if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldSetName &&
+                fieldMapping.Is_Deleted__c == false) {
                 fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
             }
         }
@@ -68,6 +69,12 @@ public class BDI_ManageAdvancedMappingCtrl {
         return fieldMappingWrappers;
     }
 
+
+    // Method takes in field mapping as JSON
+    // Uses the DataImportFieldMapping wrapper to generate the custom metadata record
+    // Drops it into a DeployContainer
+    // Sends it off to be deployed
+    // Return the jobId
     @AuraEnabled(cacheable=true)
     public static String createDataImportFieldMapping(String fieldMappingString) {
         System.debug('createDataImportFieldMapping()');
@@ -80,18 +87,19 @@ public class BDI_ManageAdvancedMappingCtrl {
             System.debug(cmt);
             Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
             mdContainer.addMetadata(cmt);
-            
+
             // Setup deploy callback, MyDeployCallback implements
             // the Metadata.DeployCallback interface 
             CustomMetadataCallback callback = new CustomMetadataCallback();
-        
+
             // Enqueue custom metadata deployment
             // jobId is the deployment ID
+            System.debug('START TIME: ' + DateTime.now());
             Id jobId = Metadata.Operations.enqueueDeployment(mdContainer, callback);
             System.debug('***Custom Metadata Record Below:');
             System.debug(mdContainer);
-            return JSON.serialize(cmt);
-            
+            return jobId;
+
         } catch(Exception ex){
              System.assert(false,ex.getMessage()); 
              return 'Error while creating new button.';
@@ -103,7 +111,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         Map<String, String> useableDFRs = new Map<String, String>();
         Map<String, Schema.DescribeFieldResult> fieldDescribes =
             UTIL_Describe.getAllFieldsDescribe('DataImport__c');
-        
+
         for (String key : fieldDescribes.keySet()) {
             System.debug('Key: ' + key);
             useableDFRs.put(fieldDescribes.get(key).label, key);
@@ -211,7 +219,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
-
+    // TODO: Delete later, one wrapper if needed
     public class DataImportFieldMappingWrapper {
         @AuraEnabled public String MasterLabel;
         @AuraEnabled public String Source_Field_API_Name;
@@ -237,11 +245,64 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Check the status of metadata deployment
+    * @return Metadata.DeployResult JSON
+    */
+    @AuraEnabled
+    public static Metadata.DeployResult getDeploymentResult(Id deploymentId) {
+        System.debug('getDeploymentResult()');
+        System.debug(deploymentId);
+        Http h = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('callout:Metadata_Deployment_Result/' +
+            '/services/data/v44.0/metadata/deployRequest/' +
+            deploymentId +
+            '?includeDetails=true');
+        request.setMethod('GET');
+        //request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
+        HttpResponse response = h.send(request);
+        System.debug(response.getBody());
+        DeploymentResponse deploymentResponse =
+            (DeploymentResponse)JSON.deserialize(response.getBody(), DeploymentResponse.class);
+
+        return deploymentResponse.deployResult;
+    }
+
+    /*******************************************************************************************************
+    * @description Wrapper used to deserialize the deployment request response
+    */
+    private class DeploymentResponse {
+        Metadata.DeployResult deployResult;
+    }
+
     public class CustomMetadataCallback implements Metadata.DeployCallback {
         public void handleResult(Metadata.DeployResult result,
                                 Metadata.DeployCallbackContext context) {
             if (result.status == Metadata.DeployStatus.Succeeded) {
+                System.debug('END TIME: ' + DateTime.now());
                 System.debug('success: '+ result);
+                // Trying out Platform Events for checking the deployment status
+                /*List<Custom_Metadata_Data_Deployment__e> deploymentEvents =
+                    new List<Custom_Metadata_Data_Deployment__e>();
+                deploymentEvents.add(new Custom_Metadata_Data_Deployment__e(Test__c='Test'));
+
+                // Call method to publish events
+                List<Database.SaveResult> results = EventBus.publish(deploymentEvents);
+
+                // Inspect publishing result for each event
+                for (Database.SaveResult sr : results) {
+                    if (sr.isSuccess()) {
+                        System.debug('Successfully published event.');
+                    } else {
+                        for(Database.Error err : sr.getErrors()) {
+                            System.debug('Error returned: ' +
+                                        err.getStatusCode() +
+                                        ' - ' +
+                                        err.getMessage());
+                        }
+                    }       
+                }*/
             } else {
                 // Deployment was not successful
                 System.debug('fail: '+ result);

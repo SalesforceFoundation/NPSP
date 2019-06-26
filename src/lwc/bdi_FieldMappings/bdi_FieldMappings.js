@@ -1,12 +1,8 @@
 import { LightningElement, track, wire, api } from 'lwc';
+import { refreshApex } from '@salesforce/apex';
 import { CurrentPageReference } from 'lightning/navigation';
 import getFieldMappingsByObjectAndFieldSetNames from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
-import {
-    registerListener,
-    unregisterListener,
-    unregisterAllListeners,
-    fireEvent
-} from 'c/pubsubNoPageRef';
+import { registerListener, unregisterListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
@@ -28,18 +24,35 @@ const columns = [
 ];
 
 export default class Bdi_FieldMappings extends LightningElement {
-
+    // Testing getting url params from parent component
+    @api url;
+    //
     @track displayFieldMappings = false;
     @track isLoading = true;
     @track isModalOpen = false;
-    @track fieldMappings;
-    @track columns = columns;
-
-    @api objectMapping = {
+    @api objectMapping = this.objectMapping || {
         DeveloperName: 'Payment',
         MasterLabel: 'Payment',
-        Object_API_Name__c: 'npe01__OppPayment__c'};
+        Object_API_Name__c: 'npe01__OppPayment__c'
+    };
+    @track fieldMappings;
+
+    /*wiredFieldMappings;
+    @wire(getFieldMappingsByObjectAndFieldSetNames, {objectSetName: 'Payment', fieldSetName: 'Migrated_Custom_Field_Mapping_Set'})
+    imperativeWiring(result) {
+        this.wiredFieldMappings = result;
+        if(result.data) {
+            this.fieldMappings = result.data;
+        }
+    }
+    @api
+    forceRefresh() {
+        return refreshApex(this.wiredFieldMappings); 
+    }*/
+
+    @track columns = columns;
     @api forceRefresh() {
+        console.log('forceRefresh()');
         this.handleFieldMappings();
     }
 
@@ -49,14 +62,15 @@ export default class Bdi_FieldMappings extends LightningElement {
 
     connectedCallback() {
         console.log('bdi_FieldMappings | connectedCallback()');
+        console.log('%c URL DETAILS: ' + this.url, 'font-size: 16px; font-weight: bold;');
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
-        registerListener('closeModal', this.handleCloseModal, this);
+        registerListener('forceRefresh', this.forceRefresh, this);
 
         // TODO: delete later, using so I can hop directly into the field mappings
         // component via a url addressable harness aura component
-        this.handleFieldMappings();
-        this.displayFieldMappings = true;
+        //this.handleFieldMappings();
+        //this.displayFieldMappings = true;
     }
 
     disconnectedCallback() {
@@ -81,11 +95,6 @@ export default class Bdi_FieldMappings extends LightningElement {
         fireEvent(this.pageRef,'openModal', { objectMapping: this.objectMapping });
     }
 
-    handleCloseModal(event) {
-        console.log('CLOSE NEW FIELD MAPPING MODAL');
-        this.isModalOpen = false;
-    }
-
     /*******************************************************************************
     * @description Call apex method 'getFieldMappingsByObjectMappingName' to get
     * a list of field mappings by their parent object mapping name
@@ -93,13 +102,14 @@ export default class Bdi_FieldMappings extends LightningElement {
     * @param name: Name of the object mapping received from parent component 
     */
     handleFieldMappings = function () {
-        console.log('getFieldMappings()');
+        console.log('bdi_FieldMappings | getFieldMappings()');
         getFieldMappingsByObjectAndFieldSetNames({
                 objectSetName: this.objectMapping.DeveloperName,
                 // TODO: Get field set name dynamically
                 fieldSetName: 'Migrated_Custom_Field_Mapping_Set'
             })
             .then((data) => {
+                console.log('Field Mappings: ', this.log(data));
                 this.fieldMappings = data;
                 this.isLoading = false;
             })
@@ -119,6 +129,7 @@ export default class Bdi_FieldMappings extends LightningElement {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
         switch (actionName) {
+
             case 'delete':
                 console.log('DELETE ACTION');
                 this.deleteRowFromDatatable(row);
@@ -128,13 +139,19 @@ export default class Bdi_FieldMappings extends LightningElement {
                 // Or would it be possible to potentially queue up and send off deletes
                 // as a group? Probably not a good idea. One deployment per delete seems safest.
                 break;
+
             case 'edit':
                 console.log('EDIT ACTION');
                 console.log('Row: ', this.log(row));
-                alert('Send edit field mapping event to parent container');
+                fireEvent(this.pageRef,'openModal', {
+                    objectMapping: this.objectMapping,
+                    sourceFieldLabel: row.Source_Field_Label,
+                    sourceFieldAPIName: row.Source_Field_API_Name,
+                    targetFieldAPIName: row.Target_Field_API_Name });
                 // TODO: Add logic to send event to parent container / edit component containing
                 // data on the row (field mapping) to be editted.
                 break;
+
             default:
         }
     }

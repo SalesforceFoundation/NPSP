@@ -1,18 +1,15 @@
 import { LightningElement, api, track } from 'lwc';
-import createDataImportFieldMapping from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
-import getDataImportFieldDescribes from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getDataImportFieldDescribes';
-import getObjectFieldDescribes from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
-import {
-    registerListener,
-    unregisterListener,
-    unregisterAllListeners,
-    fireEvent
-} from 'c/pubsubNoPageRef';
+import createDataImportFieldMapping
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
+import getObjectFieldDescribes
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
+import { registerListener, unregisterListener, unregisterAllListeners, fireEvent }
+    from 'c/pubsubNoPageRef';
 
 export default class BdiMappingModal extends LightningElement {
 
     @api objectMapping;
-    @track isModalOpen;
+    @api isModalOpen;
     @track isLoading;
 
     // Combobox vars
@@ -37,6 +34,13 @@ export default class BdiMappingModal extends LightningElement {
     connectedCallback() {
         this.logBold('bdiMappingModal | connectCallback()');
         registerListener('openModal', this.handleOpenModal, this);
+
+        this.handleGetDataImportFieldDescribes();
+        this.handleGetTargetObjectFieldDescribes();
+    }
+
+    disconnectedCallback() {
+        unregisterAllListeners(this);
     }
 
     handleCloseModal() {
@@ -47,10 +51,28 @@ export default class BdiMappingModal extends LightningElement {
     handleOpenModal(event) {
         this.logBold('bdiMappingModal | handleOpenModal()');
         console.log('ObjectMapping: ', this.log(event.objectMapping));
-        this.objectMapping = event.objectMapping;
-        this.handleGetDataImportFieldDescribes();
-        this.handleGetTargetObjectFieldDescribes();
+        console.log('Event: ', this.log(event));
         this.isModalOpen = true;
+        this.isLoading = true;
+        this.objectMapping = event.objectMapping;
+
+        // TODO: Clean up or find better way. This is how we're setting the edit mode stuff
+        console.log('handleGetTargetObjectFieldDescribes inside then');
+        if (event.sourceFieldLabel && event.targetFieldAPIName) {
+            this.selectedSourceFieldLabel = event.sourceFieldLabel;
+            this.selectedSourceFieldAPIName = this.diFieldsByLabel[event.sourceFieldLabel];
+            console.log(event.targetFieldAPIName);
+            this.selectedTargetFieldAPIName = event.targetFieldAPIName.toLowerCase();
+            this.selectedTargetFieldLabel =
+                this.targetObjectFieldsByAPIName[event.targetFieldAPIName.toLowerCase()];
+        } else {
+            this.selectedSourceFieldLabel = undefined;
+            this.selectedSourceFieldAPIName = undefined;
+            this.selectedTargetFieldLabel = undefined;
+            this.selectedTargetFieldAPIName = undefined;
+        }
+        console.log('Set isLoading to false');
+        this.isLoading = false;
     }
 
     handleSave() {
@@ -59,10 +81,21 @@ export default class BdiMappingModal extends LightningElement {
         createDataImportFieldMapping({fieldMappingString: this.buildDataImportFieldMapping()})
             .then((data) => {
                 console.log(this.log(data));
+                this.handleSaveResult(data);
             })
             .catch((error) => {
                 console.log(error);
             });
+    }
+
+    handleSaveResult() {
+        this.logBold('bdiMappingModal | handleSaveResult');
+        let that = this;
+        setTimeout(function() {
+            console.log('First Refresh');
+            fireEvent(that.pageRef, 'forceRefresh', {});
+            that.isModalOpen = false;
+        }, 5000, that);
     }
 
     buildDataImportFieldMapping = function() {
@@ -74,10 +107,6 @@ export default class BdiMappingModal extends LightningElement {
         console.log(this.selectedTargetFieldAPIName);
 
         let dataImportFieldMapping = {
-            // this.selectedSourceFieldAPIName is actually the label, this is used in the
-            // combobox and the value of the option is the Label. Named so currently
-            // because it's used by the Source Field API Name combobox. Come back and clean up
-            // same thing for this.selectedTargetFieldLabel, it's actually the Label
             label: 'AAA ' + this.selectedSourceFieldLabel,
             dataImportFieldMappingSetName: 'Migrated_Custom_Field_Mapping_Set',
             sourceFieldAPIName: this.selectedSourceFieldAPIName,
