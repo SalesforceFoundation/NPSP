@@ -46,9 +46,9 @@ public with sharing class OPP_StageMappingCMT {
     /*******************************************************************************************************
     * @description Creates the finalized state record if there are no finalized records. It utilizes the 
     * "Opportunity Stage when Fully Paid" field (If it's populated) as the Opportunity stage for the finalized state. 
-    * @params List<Metadata.CustomMetadata> metadataToInsert A running list of custom metadata that is going to be inserted,
+    * @param List<Metadata.CustomMetadata> metadataToInsert A running list of custom metadata that is going to be inserted,
     * the created record will be added into this list. 
-    * @returns List<Metadata.CustomMetadata> A running list of custom metadata to be inserted. 
+    * @return List<Metadata.CustomMetadata> A running list of custom metadata to be inserted. 
     ********************************************************************************************************/
     public static List<Metadata.CustomMetadata> createFinalizedOppStageToStateRecord(List<Metadata.CustomMetadata> metadataToInsert) {
         npe01__Contacts_And_Orgs_Settings__c contactAndOrgCustomSetting = UTIL_CustomSEttingsFacade.getOrgContactsSettings();
@@ -71,9 +71,9 @@ public with sharing class OPP_StageMappingCMT {
     * @description Creates the initial Opportunity Stage to State record if there are no existing records. 
     * When there are no existing records, it will create a new "Committed" state record for a "Pledged" stage
     * if there is one. 
-    * @params List<Metadata.CustomMetadata> metadataToInsert A running list of custom metadata that is going to be inserted,
+    * @param List<Metadata.CustomMetadata> metadataToInsert A running list of custom metadata that is going to be inserted,
     * the created record will be added into this list. 
-    * @returns List<Metadata.CustomMetadata> A running list of custom metadata to be inserted. 
+    * @return List<Metadata.CustomMetadata> A running list of custom metadata to be inserted. 
     ********************************************************************************************************/
     public static List<Metadata.CustomMetadata> createPledgedOppStageToStateRecord(List<Metadata.CustomMetadata> metadataToInsert) {
         npe01__Contacts_And_Orgs_Settings__c contactAndOrgCustomSetting = UTIL_CustomSEttingsFacade.getOrgContactsSettings();
@@ -110,9 +110,9 @@ public with sharing class OPP_StageMappingCMT {
 
     /*******************************************************************************************************
     * @description Creates a custom metadata record based on the parameters provided to the method. 
-    * @params String oppStage The opportunity stage that will be mapped in the custom metadata record. 
-    * @params String oppState The opportunity state that will be mapped in the custom metadata record. 
-    * @returns Metadata.CustomMetadata The created custom metadata record with the mapped Opportunity stage and state
+    * @param String oppStage The opportunity stage that will be mapped in the custom metadata record. 
+    * @param String oppState The opportunity state that will be mapped in the custom metadata record. 
+    * @return Metadata.CustomMetadata The created custom metadata record with the mapped Opportunity stage and state
     ********************************************************************************************************/
     public static Metadata.CustomMetadata createCustomMetadata(String oppStage, String oppState) {        
         Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
