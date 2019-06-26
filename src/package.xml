@@ -1413,6 +1413,7 @@
         <members>alloTotals</members>
         <members>alloUnallocated</members>
         <members>bdiAccountCustomIdError</members>
+        <members>bdiAdditionalObjChildNotUpdated</members>
         <members>bdiAdditionalObjPredNotFound</members>
         <members>bdiAdditionalObjRequiredFieldsNull</members>
         <members>bdiBatchException</members>
@@ -2693,6 +2694,7 @@
         <members>HasUserManagedTDTM</members>
         <members>IsEnabled_AddressVerification</members>
         <members>IsEnabled_AutomaticPayments</members>
+        <members>IsEnabled_BDICMT</members>
         <members>IsEnabled_CustomizableRollups</members>
         <members>IsEnabled_DefaultGAU</members>
         <members>IsEnabled_HouseholdAcctModel</members>

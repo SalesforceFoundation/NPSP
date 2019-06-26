@@ -50,7 +50,7 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
         for (BDI_ObjectWrapper objWrap : objWraps) {
             Map<String, Schema.DescribeFieldResult> targetFieldDescByFieldName = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
 
-            objWrap.sObj = Schema.getGlobalDescribe().get(objWrap.objMapping.Object_API_Name__c).newSObject();
+            objWrap.sObj = UTIL_Describe.getPrototypeObject(objWrap.objMapping.Object_API_Name__c);
 
             if (objWrap.existingSObjectId != null) {
                 objWrap.sObj.put('Id', objWrap.existingSObjectId);
