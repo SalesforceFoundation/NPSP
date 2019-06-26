@@ -1,0 +1,114 @@
+<template>
+
+    <template if:true={isModalOpen}>
+        <section role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open"> <!--slds-modal_large-->
+
+            <div class="slds-modal__container">
+                <div class="slds-modal__container_extension">
+
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading">
+                        </lightning-spinner>
+                    </template>
+
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close">
+                            <!-- TODO: Fix missing icons -->
+                            <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New {objectMapping.DeveloperName} Field Mapping</h2>
+                    </header>
+
+                    <div class="slds-modal__content slds-p-around_medium slds-modal_content_extension" id="modal-content-id-1">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-section slds-is-open slds-m-bottom_small">
+                                    <h3 class="slds-section__title slds-theme_shade">
+                                        <span class="slds-truncate slds-p-horizontal_small"
+                                              title="Source (NPSP Data Import Object)">
+                                              Source (NPSP Data Import Object)
+                                        </span>
+                                    </h3>
+                                    <lightning-combobox
+                                        name="sourceFieldLabel"
+                                        label="Field Label"
+                                        value={selectedSourceFieldAPIName}
+                                        placeholder="Field Label"
+                                        options={sourceFieldLabelOptions}
+                                        onchange={handleSourceFieldLabelChange}>
+                                    </lightning-combobox>
+
+                                    <lightning-combobox
+                                        name="sourceFieldAPIName"
+                                        label="Field API Name"
+                                        value={selectedSourceFieldLabel}
+                                        placeholder="Source Field API Name"
+                                        options={sourceFieldAPINameOptions}
+                                        onchange={handleSourceFieldAPINameChange}>
+                                    </lightning-combobox>
+                                </div>
+                            </div>
+                            
+                            <div class="slds-size_1-of-1 slds-m-vertical_medium">
+                                <h3 class="slds-text-align_center"><i>Maps to</i></h3>
+                            </div>
+
+                            <div class="slds-size_1-of-1 slds-m-bottom_medium">
+                                <div class="slds-section slds-is-open slds-m-bottom_small">
+                                    <h3 class="slds-section__title slds-theme_shade">
+                                        <span class="slds-truncate slds-p-horizontal_small"
+                                                title="Source (NPSP Data Import Object)">
+                                                Target ({objectMapping.MasterLabel} Object)
+                                        </span>
+                                    </h3>
+                                    <lightning-combobox
+                                        name="targetFieldLabel"
+                                        label="Field Label"
+                                        value={selectedTargetFieldAPIName}
+                                        placeholder="Target Field Label"
+                                        options={targetFieldLabelOptions}
+                                        onchange={handleTargetFieldLabelChange}>
+                                    </lightning-combobox>
+
+                                    <lightning-combobox
+                                        name="targetFieldAPIName"
+                                        label="Field API Name"
+                                        value={selectedTargetFieldLabel}
+                                        placeholder="Target Field API Name"
+                                        options={targetFieldAPINameOptions}
+                                        onchange={handleTargetFieldAPINameChange}>
+                                    </lightning-combobox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral"
+                                onclick={handleCloseModal}>
+                            Cancel
+                        </button>
+                        <button class="slds-button slds-button_brand"
+                                onclick={handleSave}>
+                            Save
+                        </button>
+                    </footer>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+    </template>
+
+</template>

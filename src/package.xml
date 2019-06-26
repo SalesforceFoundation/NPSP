@@ -2782,6 +2782,7 @@
     <types>
         <members>bdi_FieldMappings</members>
         <members>bdi_ObjectMappings</members>
+        <members>bdiMappingModal</members>
         <members>pubsubNoPageRef</members>
         <name>LightningComponentBundle</name>
     </types>
@@ -2912,5 +2913,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>43.0</version>
+    <version>45.0</version>
 </Package>

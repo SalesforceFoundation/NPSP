@@ -1,5 +1,7 @@
 <template>
 
+    <c-bdi-mapping-modal></c-bdi-mapping-modal>
+
     <template if:true={displayFieldMappings}>
         <div class="slds-grid slds-wrap slds-m-bottom_small">
             <div class="slds-size_1-of-2">
@@ -13,12 +15,12 @@
                 <lightning-button
                     label="Create New Field Mapping"
                     title="Create New Field Mapping"
-                    onclick={handleNewFieldMapping}
+                    onclick={handleOpenModal}
                     class="slds-m-left_x-small slds-float_right">
                 </lightning-button>
             </div>
             <div class="slds-size_1-of-1 slds-m-bottom_large">
-                <!--<h1 class="slds-text-heading_small slds-m-bottom_xx-small">{objectMapping.MasterLabel} Group</h1>-->
+                <h1 class="slds-text-heading_small slds-m-bottom_xx-small">{objectMapping.MasterLabel} Group</h1>
                 <h2 class="slds-text-heading_x-small slds-m-bottom_small">Field Mappings</h2>
 
                 <p class="slds-text-body_small slds-m-bottom_small">
@@ -38,7 +40,7 @@
                     </div>
                     <div class="slds-size_2-of-7"></div>
                     <div class="slds-size_3-of-7">
-                        <!--<p class="slds-text-heading_x-small">Target ({objectMapping.MasterLabel})</p>-->
+                        <p class="slds-text-heading_x-small">Target ({objectMapping.MasterLabel})</p>
                     </div>
                     <div class="slds-size_1-of-1 slds-m-top_x-small">
                         <tempate if:true={isLoading}>

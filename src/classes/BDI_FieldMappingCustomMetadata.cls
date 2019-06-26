@@ -137,6 +137,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
             for (Data_Import_Field_Mapping__mdt difm:[SELECT MasterLabel,
                                                     DeveloperName,
                                                     Data_Import_Field_Mapping_Set__c,
+                                                    Data_Import_Field_Mapping_Set__r.DeveloperName,
                                                     Required__c,
                                                     Source_Field_API_Name__c,
                                                     Target_Field_API_Name__c,

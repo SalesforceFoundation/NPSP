@@ -1,6 +1,6 @@
 import { LightningElement, track, wire, api } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
-import getFieldMappingsByObjectMappingName from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectMappingName';
+import getFieldMappingsByObjectAndFieldSetNames from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
 import {
     registerListener,
     unregisterListener,
@@ -30,11 +30,15 @@ const columns = [
 export default class Bdi_FieldMappings extends LightningElement {
 
     @track displayFieldMappings = false;
-    @track selectedObjectMapping = 'Opportunity';
     @track isLoading = true;
-    @api objectMapping;
+    @track isModalOpen = false;
     @track fieldMappings;
     @track columns = columns;
+
+    @api objectMapping = {
+        DeveloperName: 'Payment',
+        MasterLabel: 'Payment',
+        Object_API_Name__c: 'npe01__OppPayment__c'};
     @api forceRefresh() {
         this.handleFieldMappings();
     }
@@ -47,6 +51,7 @@ export default class Bdi_FieldMappings extends LightningElement {
         console.log('bdi_FieldMappings | connectedCallback()');
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
+        registerListener('closeModal', this.handleCloseModal, this);
 
         // TODO: delete later, using so I can hop directly into the field mappings
         // component via a url addressable harness aura component
@@ -68,7 +73,17 @@ export default class Bdi_FieldMappings extends LightningElement {
         this.objectMapping = event.objectMapping;
         this.displayFieldMappings = true;
         this.forceRefresh();
+    }
 
+    handleOpenModal() {
+        console.log('bdi_FieldMappings | handleOpenModal()');
+        console.log(this.log(this.objectMapping));
+        fireEvent(this.pageRef,'openModal', { objectMapping: this.objectMapping });
+    }
+
+    handleCloseModal(event) {
+        console.log('CLOSE NEW FIELD MAPPING MODAL');
+        this.isModalOpen = false;
     }
 
     /*******************************************************************************
@@ -79,7 +94,11 @@ export default class Bdi_FieldMappings extends LightningElement {
     */
     handleFieldMappings = function () {
         console.log('getFieldMappings()');
-        getFieldMappingsByObjectMappingName({ name: 'Account1' })
+        getFieldMappingsByObjectAndFieldSetNames({
+                objectSetName: this.objectMapping.DeveloperName,
+                // TODO: Get field set name dynamically
+                fieldSetName: 'Migrated_Custom_Field_Mapping_Set'
+            })
             .then((data) => {
                 this.fieldMappings = data;
                 this.isLoading = false;
@@ -140,11 +159,6 @@ export default class Bdi_FieldMappings extends LightningElement {
             return false;
         });
         return ret;
-    }
-
-    handleNewFieldMapping() {
-        console.log('bdi_FieldMappings | handleNewFieldMapping()');
-        alert('Send create new field mapping event to parent container');
     }
 
     // TODO: Delete later

@@ -10,6 +10,9 @@
             ],
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
+            ],
+            "c/bdiMappingModal": [
+                "bdiMappingModal/bdiMappingModal.js"
             ]
         },
         "experimentalDecorators": true
