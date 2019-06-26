@@ -199,7 +199,12 @@ npsp_lex_locators={
 
     'object_manager':{
         'button':'//input[@title="{}"]',
-        }
+        },
+    'custom_settings':{
+        'subtree':'//a/mark[text()="{}"]',
+        'link':"//table[@class='list']/tbody/tr[./th/a[text()='{}']]/td/a[text()='{}']",
+        'cbx_status':'//table[@class="detailList"]/tbody/tr/th[./span[text()="{}"]]/following-sibling::td//img[@title="{}"]',
+        },
     
 }
     
