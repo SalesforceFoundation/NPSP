@@ -57,7 +57,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountRdOpps,
         Data_CountRecurringDonations,
         Data_CountRds,
-        Data_CountErrorLog
+        Data_CountErrorLog,
+        Data_CountBDIRows,
+        Data_CountBGERows
     }
 
     /**
@@ -75,6 +77,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountRdOppsOpenEnded,
         Data_CountRdsWithDiffAmount,
         Data_CountRecurringDonationsAll,
+        Data_CountBDIRowsLast30Days,
+        Data_CountBGERowsLast30Days,
         Data_MaxNumRelatedOpps,
         HasUserManagedTDTM,
         Org_CountNonEnglishLanguages,
@@ -164,6 +168,14 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
                 featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountRecurringDonationsAll.name(), -1);
                 featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), -1);
+            }
+
+            when Data_CountBDIRows {
+                handleBDICount();
+            }
+
+            when Data_CountBGERows {
+                handleBGECount();
             }
 
             when Data_CountErrorLog {
@@ -321,6 +333,30 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             }
         }
         featureManager.setPackageBooleanValue(TelemetryParameterName.HasUserManagedTDTM.name(), hasUserManagedTrigger);
+    }
+
+    /**
+     * @description Total number of BDI records created in the last 30 days
+     */
+    private void handleBDICount() {
+        try {
+            Integer bdiCount = Database.countQuery('SELECT count() FROM DataImport__c WHERE CreatedDate = Last_n_days:30');
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), bdiCount);
+        } catch (Exception ex) {
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBDIRowsLast30Days.name(), -1);
+        }
+    }
+
+    /**
+     * @description Total number of BGE records created in the last 30 days
+     */
+    private void handleBGECount() {
+        try {
+            Integer bgeCount = Database.countQuery('SELECT count() FROM DataImport__c WHERE CreatedDate = Last_n_days:30 AND NPSP_Data_Import_Batch__r.GiftBatch__c = true');
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), bgeCount);
+        } catch (Exception ex) {
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), -1);
+        }
     }
 
     /**

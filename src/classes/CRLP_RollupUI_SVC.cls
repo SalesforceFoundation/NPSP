@@ -318,13 +318,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 };
                 List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, pscFieldsToReturn, false);
                 objNameToFieldTypeMap.put(obj, pscList);
-            } else if (obj == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')) {
-                List<String> ascFieldsToReturn = new List<String>{
-                        UTIL_Namespace.StrAllNSPrefix('Role__c'),
-                        UTIL_Namespace.StrAllNSPrefix('Amount__c')
-                };
-                List<Map<String, String>> ascList = getSpecificFieldsWithType(obj, ascFieldsToReturn, false);
-                objNameToFieldTypeMap.put(obj, ascList);
+                
             } else {
                 List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
                 objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
@@ -429,14 +423,7 @@ public with sharing class CRLP_RollupUI_SVC {
                     };
                     List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, pscFieldsToReturn, true);
                     objNameToFieldTypeMap.put(detailObj, pscList);
-                } else if (detailObj == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')) {
-                    List<String> ascFieldsToReturn = new List<String>{
-                            UTIL_Namespace.StrAllNSPrefix('Role__c'),
-                            UTIL_Namespace.StrAllNSPrefix('Amount__c'),
-                            UTIL_Namespace.StrAllNSPrefix('Id')
-                    };
-                    List<Map<String, String>> ascList = getSpecificFieldsWithType(detailObj, ascFieldsToReturn, true);
-                    objNameToFieldTypeMap.put(detailObj, ascList);
+
                 } else {
                     List<Map<String, String>> detailNameToFieldTypeObj = getDetailFieldsWithType(detailObj);
                     objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
@@ -693,62 +680,55 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
-     * @description Handle the save (insert/update) of a Rollup__mdt record
-     * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
+     * @description Handle the save (insert/update/delete) of a Rollup__mdt record
+     * @param jsonRollup Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
      * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
      * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
      * the insert (deployment) completes.
      */
     @AuraEnabled
-    public static String saveRollup(String rollupCMT) {
+    public static String saveRollup(String jsonRollup) {
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
-            CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
-
-            // Check for duplicate Target fields on active Rollups
-            for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
-                if (rlp.DeveloperName != rollupCMTObj.recordName
-                        && rlp.Active__c
-                        && rollupCMTObj.summaryObject == rlp.Summary_Object__r.QualifiedApiName
-                        && rollupCMTObj.summaryField == rlp.Summary_Field__r.QualifiedApiName
-                        && !Test.isRunningTest()) {
-                    throw new RollupException(Label.CRLP_DuplicateTargetField);
-                }
+            CRLP_RollupCMT.Rollup cmtRollup = (CRLP_RollupCMT.Rollup) JSON.deserialize(jsonRollup, CRLP_RollupCMT.Rollup.class);
+            
+            if (cmtRollup.isDuplicate()) {
+                throw new RollupException(Label.CRLP_DuplicateTargetField);
             }
 
-            // Queue up the deployment
-            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});
+            List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{cmtRollup};
+            CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
 
-            // Trigger the asynchronous deployment process
-            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
+            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
 
             // Return the unique record DeveloperName value of the Rollup__mdt record
-            return jobId + '-' + rollupCMTObj.recordName;
+            return jobId + '-' + cmtRollup.recordName;
+
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
             throw new AuraHandledException('ERROR: ' + ex.getMessage());
-
         }
     }
 
     /*******************************************************************************************************
      * @description Handle the save (insert/update) of a Rollup__mdt record
-     * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
+     * @param jsonFilterGroup Stringified structure of a CRLP_RollupCMT.FilterGroup wrapper class
      * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
      * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
      * the insert (deployment) completes.
      */
     @AuraEnabled
-    public static String saveFilterGroupAndRules(String filterGroupCMT) {
+    public static String saveFilterGroupAndRules(String jsonFilterGroup) {
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
-            CRLP_RollupCMT.FilterGroup filterGroupCMTObj = (CRLP_RollupCMT.FilterGroup) JSON.deserialize(filterGroupCMT, CRLP_RollupCMT.FilterGroup.class);
+            CRLP_RollupCMT.FilterGroup cmtFilterGroup = (CRLP_RollupCMT.FilterGroup) JSON.deserialize(jsonFilterGroup, CRLP_RollupCMT.FilterGroup.class);
 
-            if (filterGroupCMTObj.isDeleted == true) {
+            if (cmtFilterGroup.isDeleted == true) {
                 Map<Id, List<Rollup__mdt>> rollupsByFilterGroup = CRLP_Rollup_SEL.getRollupsByFilterGroup();
-                Integer countRollups = rollupsByFilterGroup.containsKey(filterGroupCMTObj.recordId) ? rollupsByFilterGroup.get(filterGroupCMTObj.recordId).size() : 0;
+                Integer countRollups = rollupsByFilterGroup.containsKey(cmtFilterGroup.recordId) ? rollupsByFilterGroup.get(cmtFilterGroup.recordId).size() : 0;
 
                 if (countRollups > 0) {
                     throw new RollupException(Label.CMT_FilterGroupDeleteError);
@@ -756,13 +736,14 @@ public with sharing class CRLP_RollupUI_SVC {
             }
 
             // Queue up the deployment
-            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.FilterGroup>{filterGroupCMTObj});
+            List<CRLP_RollupCMT.FilterGroup> filterGroups = new List<CRLP_RollupCMT.FilterGroup>{cmtFilterGroup};
+            CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(filterGroups);
 
-            // Trigger the asynchronous deployment process
-            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
-
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
+            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
+            
             // Return the unique record DeveloperName value of the FilterGroup__mdt record
-            return jobId + '-' + filterGroupCMTObj.recordName;
+            return jobId + '-' + cmtFilterGroup.recordName;
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
             throw new AuraHandledException('ERROR: ' + ex.getMessage());
@@ -927,12 +908,12 @@ public with sharing class CRLP_RollupUI_SVC {
         return fieldObjectList;
     }
 
-    /*******************************************************************************************************
+    /******************************************************************************************************************
     * @description Checks that a given field is allowed as a target field
     * @param objectName the name of the object
     * @param dfr the DescribeFieldResult of the field
     * @return Boolean
-    */
+    /*****************************************************************************************************************/
     public static Boolean isTargetFieldAllowed(String objectName, Schema.DescribeFieldResult dfr) {
 
         if(!dfr.isUpdateable()
@@ -969,6 +950,8 @@ public with sharing class CRLP_RollupUI_SVC {
         return true;
 
     }
+
+    
 
     public class RollupException extends Exception {}
 

@@ -101,9 +101,8 @@ public class CMT_MetadataAPI {
         });
     }
 
-    /**
+    /******************************************************************************************************************
      * @description Initiate a deployment of custom metadata type records.
-     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
      * @param mtToDeploy List of CustomMetadata objects to deploy
      */
     public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
@@ -116,6 +115,14 @@ public class CMT_MetadataAPI {
      * @param mtToDeploy List of CustomMetadata objects to deploy
      */
     public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy, Source source) {
+        deployMetadata(mtToDeploy, new MetadataCallBack(jobId, source));
+    }
+    /**
+     * @description Initiate a deployment of custom metadata type records.
+     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
+     * @param mtToDeploy List of CustomMetadata objects to deploy
+     */
+    public static void deployMetadata(List<Metadata.CustomMetadata> mtToDeploy, MetadataCallBack callback) {
 
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
@@ -123,21 +130,27 @@ public class CMT_MetadataAPI {
             mdContainer.addMetadata(md);
         }
 
-        // Setup deploy callback
-        MetadataCallBack callback = new MetadataCallBack(jobId, source);
-
         // Enqueue custom metadata deployment and return the Job Id
         if (!Test.isRunningTest()) {
             Metadata.Operations.enqueueDeployment(mdContainer, callback);
         }
     }
 
-    /**
+    /******************************************************************************************************************
+     * @description Interface for Metadata Callback Handler
+     * Is used to allow metadata deployments to have customized on result handlers
+     *****************************************************************************************************************/
+    public interface MetadataCallbackHandler {
+        void performSuccessHandler(Map<String, Object> params, String status);
+        void performErrorHandler(Map<String, Object> params, String status);
+    }
+
+    /******************************************************************************************************************
      * @description Inserting or Updating CMT's through the Apex Metadata API is an asynchronous process. This callback
      * class is used to handle the async response from the call to Metadata.Operations.enqueueDeployment().
      * If the call is not successfull, the Customizable_Rollup_Settings__c  record is updated
      * with the result status.
-     */
+     *****************************************************************************************************************/
     public class MetadataCallBack implements Metadata.DeployCallBack {
 
         private String jobId;
@@ -145,11 +158,18 @@ public class CMT_MetadataAPI {
         private Source source;
 
         /**
+         * @description  Handler to allow for calling functions to have customized result handling with parameters
+         */
+        public MetadataCallbackHandler callbackHandler { get; set; }
+        public Map<String, Object> callbackParams {get; set;}
+        
+        /**
          * @description Constructor for Callback Class
          * @param jobId Some unique string value to use when writing the deployment status to the Custom Settings object
          */
         public MetadataCallBack(String jobId) {
             this.jobId = jobId;
+            this.source = CMT_MetadataAPI.Source.CUSTOMIZABLE_ROLLUPS;
         }
 
         /**
@@ -178,7 +198,7 @@ public class CMT_MetadataAPI {
 
             if (source == CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION) {
                 setHelpTextMigrationSettings(statusMap, isSuccess);
-            } else {
+            } else { 
                 setCustomizableRollupsSettings(statusMap, isSuccess);
             }
 
