@@ -189,6 +189,49 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
+    * @description When changing the amount of a Payment with Allocations:
+    * Increasing the amount will adjust the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust
+    * the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an
+    * error is thrown and the payment update is blocked.
+    ********************************************************************************************************/
+    static testMethod void duplicateGAUWithPayments() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Account acc = new Account(Name='Account-pmtAmountChange');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 100, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+        
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
+        insert gau;
+
+        //resetting these manually as a test is considered a single context for static variables
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        Allocation__c percentAllo = new Allocation__c(Opportunity__c=opp.id, Percent__c = 75, General_Accounting_Unit__c = gau.id);
+        alloForInsert.add(percentAllo);
+        Allocation__c amountAllo = new Allocation__c(Opportunity__c=opp.id, Amount__c = 25, General_Accounting_Unit__c = gau.id);
+        alloForInsert.add(amountAllo);
+        insert alloForInsert;
+
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 100, npe01__Opportunity__c = opp.Id);
+        insert pmt;
+
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.Id, gau.Id);
+
+        System.assertEquals(1, queryAllo.size(), 'There should only be one allocation');
+        System.assertEquals(100, queryAllo[0].Amount__c, 'The allocation amount should be 100');
+    }
+
+    /*******************************************************************************************************
     * @description When working with negative amount Payments:
     * Updating the amount will adjust the percentage allocations.
     * Changing the amount sign from positive to negative and vice versa also flips the sign on the allocations

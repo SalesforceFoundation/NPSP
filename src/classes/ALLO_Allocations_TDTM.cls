@@ -983,36 +983,55 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         // Consolidate the records that are on the same parent and same GAU into one
         List<Allocation__c> consolidatedAllocationList = new List<Allocation__c>();
         Map<Id, Map<Id, Allocation__c>> parentIDToGAUIdToAllo = new Map<Id, Map<Id, Allocation__c>>();
-
-        for (Allocation__c allo : database.query(alloQueryString)) {
+        List<Allocation__c> queriedAllocations = database.query(alloQueryString);
+        System.debug(loggingLevel.ERROR, 'queriedAllocations: ' + queriedAllocations);
+        System.debug(loggingLevel.ERROR, 'queriedAllocations size is: ' + queriedAllocations.size());
+        for (Allocation__c allo : queriedAllocations) {
+            System.debug(loggingLevel.ERROR, 'allo is: ' + allo);
             Id parentId = getParentId(allo);
             Id GAUId = allo.General_Accounting_Unit__c;
+            System.debug(loggingLevel.ERROR, 'GAU Id is: ' + GAUId);
 
             Map<Id, Allocation__c> gauToAllo = new Map<Id, Allocation__c>();
 
             if (parentIDToGAUIdToAllo.containsKey(parentId)) {
                 gauToAllo = parentIDToGAUIdToAllo.get(parentId);
             } 
-
+            System.debug(loggingLevel.ERROR, 'gauToAllo: ' + gauToAllo);
             Allocation__c alloInMap;
             if (gauToAllo.containsKey(GAUId)) {
                 alloInMap = gauToAllo.get(GAuId);
+                System.debug(loggingLevel.ERROR, 'allo amount before adding: ' + alloInMap.Amount__c);
+                
+                // If it's a percentage, convert it to an amount
+                // and add it into the running amount. 
+                if (allo.Percent__c != null) {
+                    System.debug(loggingLevel.ERROR, 'allo has percentage: ' + allo.percent__c);
+                    if (allo.Payment__c != null) {
+                        System.debug(loggingLevel.ERROR, 'allo adding this amount in: ' + (allo.Payment__r.npe01__Payment_Amount__c * allo.Percent__c * .01));
+                        alloInMap.Amount__c += (allo.Payment__r.npe01__Payment_Amount__c * allo.Percent__c * .01);
+                    }
 
-                if (allo.Amount__c != null) {
+                    if (allo.Opportunity__c != null) {
+                        System.debug(loggingLevel.ERROR, 'allo adding this amount in: ' + (allo.Opportunity__r.Amount * allo.Percent__c * .01));
+                        alloInMap.Amount__c += (allo.Opportunity__r.Amount * allo.Percent__c * .01);
+                    }
+                } else if (allo.Amount__c != null) {
+                    System.debug(loggingLevel.ERROR, 'adding this amount in: ' + allo.Amount__c);
+                    // If it's an amount, just add it into the running amount. 
                     alloInMap.Amount__c += allo.Amount__c;
                 }
-                
-                if (allo.Percent__c != null) {
-                    alloInMap.Percent__c += allo.Percent__c;
-                }
-                
             } else {
+                System.debug(loggingLevel.ERROR, 'allo in else: ' + allo);
                 alloInMap = allo;
+                // Clear out the percentage since we will be working off amounts only. 
+                alloInMap.Percent__c = null;
             }
 
             gauToAllo.put(GAUId, alloInMap);
             parentIDToGAUIdToAllo.put(parentId, gauToAllo);
         }
+        System.debug(loggingLevel.ERROR, 'parentIDToGAUIdToAllo: ' + parentIDToGAUIdToAllo);
 
         // After getting rid of the duplicates, put it into a list 
         // So that the original logic can run now
