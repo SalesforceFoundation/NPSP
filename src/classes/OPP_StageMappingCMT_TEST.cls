@@ -40,15 +40,13 @@ private with sharing class OPP_StageMappingCMT_TEST {
     **********************************************************************************************************/
     @isTest
     private static void testFinalizedOppStageToStateRecordCreation() {
-        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
-
         npe01__Contacts_And_Orgs_Settings__c contactAndOrgSetting = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                                                                         new npe01__Contacts_And_Orgs_Settings__c(
-                                                                            Payments_Auto_Close_Stage_Name__c = closedWonStage
+                                                                            Payments_Auto_Close_Stage_Name__c = UTIL_UnitTestData_TEST.getClosedWonStage()
                                                                         )
                                                                     );
 
-        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = UTIL_UnitTestData_TEST.getClosedWonStage();
         
         Test.startTest();
         // We cannot test the result of this call since the response to this call is async. 
@@ -71,15 +69,13 @@ private with sharing class OPP_StageMappingCMT_TEST {
     **********************************************************************************************************/
     @isTest
     private static void testPledgedOppStageToStateRecordCreation() {
-        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
-
         npe01__Contacts_And_Orgs_Settings__c contactAndOrgSetting = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                                                                         new npe01__Contacts_And_Orgs_Settings__c(
-                                                                            Payments_Auto_Close_Stage_Name__c = closedWonStage
+                                                                            Payments_Auto_Close_Stage_Name__c = UTIL_UnitTestData_TEST.getClosedWonStage()
                                                                         )
                                                                     );
 
-        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = UTIL_UnitTestData_TEST.getClosedWonStage();
         
         Test.startTest();
         // We cannot test the result of this call since the response to this call is async. 
