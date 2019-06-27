@@ -24,22 +24,24 @@ Setup Variables
     Set suite variable    ${org_ns}
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     Set suite variable    ${date}
+    ${ns} =  Get NPSP Namespace Prefix
+    Set suite variable    ${ns}
 
 *** Test Cases ***
 
 Create Data Import Via API
     [tags]  stable
     &{data_import} =  API Create DataImport    
-    ...        Account1_Name__c=${acc1}    
-    ...        Account2_Name__c=${acc2} 
-    ...        Contact1_Firstname__c=${first_name1}
-    ...        Contact1_Lastname__c=${last_name1}
-    ...        Contact2_Firstname__c=${first_name2}
-    ...        Contact2_Lastname__c=${last_name2}
-    ...        Home_Street__c=123 automation street
-    ...        Home_City__c=Toledo
-    ...        Home_State_Province__c=Ohio
-    ...        Home_Zip_Postal_Code__c=94326
+    ...        ${ns}Account1_Name__c=${acc1}    
+    ...        ${ns}Account2_Name__c=${acc2} 
+    ...        ${ns}Contact1_Firstname__c=${first_name1}
+    ...        ${ns}Contact1_Lastname__c=${last_name1}
+    ...        ${ns}Contact2_Firstname__c=${first_name2}
+    ...        ${ns}Contact2_Lastname__c=${last_name2}
+    ...        ${ns}Home_Street__c=123 automation street
+    ...        ${ns}Home_City__c=Toledo
+    ...        ${ns}Home_State_Province__c=Ohio
+    ...        ${ns}Home_Zip_Postal_Code__c=94326
     ...        ${org_ns}custom_acc_text__c=automation
     ...        ${org_ns}Custom_add_date__c=${date}
     ...        ${org_ns}custom_cont_num__c=9876543210
@@ -56,26 +58,25 @@ Create Data Import Via API
 
 Verify Custom Fields on Account Contact and Address Objects
     [tags]  stable
-    ${ns} =  Get NPSP Namespace Prefix
     &{data_import_new} =     Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Verify Expected Values    nonns    Account    &{data_import_new}[Account1Imported__c]
+    Verify Expected Values    nonns    Account    &{data_import_new}[${ns}Account1Imported__c]
     ...    Name=${acc1}
     ...    ${org_ns}custom_acc_text__c=automation
-    Verify Expected Values    nonns    Account    &{data_import_new}[Account2Imported__c]
+    Verify Expected Values    nonns    Account    &{data_import_new}[${ns}Account2Imported__c]
     ...    Name=${acc2}
     ...    ${org_ns}custom_acc_text__c=None
-    Verify Expected Values    nonns    Contact    &{data_import_new}[Contact1Imported__c]
+    Verify Expected Values    nonns    Contact    &{data_import_new}[${ns}Contact1Imported__c]
     ...    FirstName=${first_name1}
     ...    LastName=${last_name1}
     ...    ${org_ns}custom_cont_num__c=None
-    Verify Expected Values    nonns    Contact    &{data_import_new}[Contact2Imported__c]
+    Verify Expected Values    nonns    Contact    &{data_import_new}[${ns}Contact2Imported__c]
     ...    FirstName=${first_name2}
     ...    LastName=${last_name2}
     ...    ${org_ns}custom_cont_num__c=9876543210.0
-    Verify Expected Values    nonns    Address__c    &{data_import_new}[HomeAddressImported__c]
+    Verify Expected Values    nonns    ${ns}Address__c    &{data_import_new}[${ns}HomeAddressImported__c]
     ...        ${org_ns}Custom_add_date__c=${date}
-    ...        MailingStreet__c=123 automation street
-    ...        MailingCity__c=Toledo
-    ...        MailingState__c=Ohio
-    ...        MailingPostalCode__c=94326
+    ...        ${ns}MailingStreet__c=123 automation street
+    ...        ${ns}MailingCity__c=Toledo
+    ...        ${ns}MailingState__c=Ohio
+    ...        ${ns}MailingPostalCode__c=94326
     
