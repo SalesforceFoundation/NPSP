@@ -2,7 +2,7 @@
     <div class="slds-grid slds-wrap">
         <div class="slds-size_1-of-1 slds-card slds-p-around_small">
             <c:bdi_ObjectMappings/>
-            <c:bdi_FieldMappings/>
+            <c:bdiFieldMappings/>
         </div>
     </div>
 </aura:component>	

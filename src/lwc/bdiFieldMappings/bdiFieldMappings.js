@@ -3,6 +3,8 @@ import { refreshApex } from '@salesforce/apex';
 import { CurrentPageReference } from 'lightning/navigation';
 import getFieldMappingsByObjectAndFieldSetNames from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
 import { registerListener, unregisterListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import DATAIMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
@@ -24,9 +26,12 @@ const columns = [
 ];
 
 export default class Bdi_FieldMappings extends LightningElement {
-    // Testing getting url params from parent component
-    @api url;
-    //
+
+    @track diObjectInfo;
+ 
+    @wire(getObjectInfo, { objectApiName: DATAIMPORT_OBJECT })
+    diObjectInfo;
+
     @track displayFieldMappings = false;
     @track isLoading = true;
     @track isModalOpen = false;

@@ -2,17 +2,17 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "c/bdiMappingModal": [
-                "bdiMappingModal/bdiMappingModal.js"
-            ],
-            "c/bdi_FieldMappings": [
-                "bdi_FieldMappings/bdi_FieldMappings.js"
-            ],
             "c/bdi_ObjectMappings": [
                 "bdi_ObjectMappings/bdi_ObjectMappings.js"
             ],
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
+            ],
+            "c/bdiFieldMappingModal": [
+                "bdiFieldMappingModal/bdiFieldMappingModal.js"
+            ],
+            "c/bdiFieldMappings": [
+                "bdiFieldMappings/bdiFieldMappings.js"
             ]
         },
         "experimentalDecorators": true
