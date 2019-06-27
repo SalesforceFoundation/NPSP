@@ -268,11 +268,11 @@ public class ERR_Handler {
             processErrors(new Error__c[]{error}, context);
         }
     }
-    
-    
+
+
     /*******************************************************************************************************
     * @description Creates error records from passed in exceptions.
-    *   If the Error Settings is enabled, errors are stored in the database. 
+    *   If the Error Settings is enabled, errors are stored in the database.
     *   If the Error Settings has notification enabled, an email notificiation is sent.
     * @param exceptions List of exceptions.
     * @param context The context the exception was raised on.
@@ -283,7 +283,7 @@ public class ERR_Handler {
         for (Exception e : exceptions) {
             errors.add(createError(e, context.name()));
         }
-        
+
         processErrors(errors, context.name());
     }
 
@@ -301,8 +301,27 @@ public class ERR_Handler {
             }
 
             if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+                List<Error__c> errsToInsert = new List<Error__c>();
+
+                // Using Map to eliminate duplicate records from map
+                Map<Id, Error__c> errsToUpdate = new Map<Id, Error__c>();
+
+                for (Error__c err : errorRecords) {
+                    if (err.Id == null) {
+                        errsToInsert.add (err);
+                    } else { // Looks like we need to update this error, not insert it
+                        errsToUpdate.put (err.Id, err);
+                    }
+                }
+
                 UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
-                Database.insert(errorRecords, false);
+
+                if (!errsToInsert.isEmpty()) { // New Errprs
+                    Database.insert(errorRecords, false);
+                }
+                if (!errsToUpdate.isEmpty()) { // Updated Errors
+                    Database.update(errsToUpdate.values(), false);
+                }
             }
 
             //ERR_Notifier takes care of checking the settings itself.
@@ -316,7 +335,7 @@ public class ERR_Handler {
     * @param context The context the exception was raised on.
     * @return Error__c Error record.
     */
-    private static Error__c createError(Exception e, String context) {
+    @testVisible private static Error__c createError(Exception e, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Error_Type__c = e.getTypeName();
@@ -335,7 +354,7 @@ public class ERR_Handler {
             message = 'Stacktrace available at the time of saving the record - ';
         }
         error.Stack_Trace__c = message + stackTrace;
-        
+
         return error;
     }
 
@@ -409,7 +428,7 @@ public class ERR_Handler {
         UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
         return error;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the URL of a record, if available.
     * @param saveResultId The id resulting from a DML operation of the Database class.
@@ -420,15 +439,15 @@ public class ERR_Handler {
         String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
         if (saveResultId != null)
             recordURL += saveResultId;
-        else            
+        else
             recordURL += objId;
-                     
+
         if (recordURL.startsWith('http:'))
             recordURL = recordURL.replaceFirst('http:', 'https:');
-            
+
         return recordURL;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the ID of the object the error is about if available.
     * @param error. The Error object.
@@ -440,7 +459,7 @@ public class ERR_Handler {
         }
         return null;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the status of the error that happened as a result of a DML operation performed through
     *              the Database class as a string.
@@ -449,7 +468,7 @@ public class ERR_Handler {
     */
     private static String getStatusCode(system.StatusCode status) {
         if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
-            return 'Required Field Missing';   
+            return 'Required Field Missing';
         else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
             return 'Custom Validation Rule Failed';
         else
