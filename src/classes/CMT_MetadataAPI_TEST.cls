@@ -36,7 +36,14 @@
 @isTest(IsParallel=true)
 private class CMT_MetadataAPI_TEST {
 
-    static testMethod void test_cmt_api() {
+    private static final String SUCCESS_HANDLER_EXECUTED = 'SuccessHandlerExecuted';
+    private static final String ERROR_HANDLER_EXECUTED = 'ErrorHandlerExecuted';
+
+    /***********************************************************************************************************
+     * @description verify that the metadata deploy calls the callback handler when provided
+     **/
+    @isTest
+    private static void metadataDeployExecutesSuccessCallbackHandler() {
         CMT_MetadataAPI.upsertCustomMetadata(CRLP_RollupCMT.MetadataObject.Filter_Rule, 'Rule_1', 'Rule 1: OCR.Role',
                 new Map<String,Object>{
                         'Filter_Group__c' => 'm016A000000YXdG',
@@ -51,19 +58,87 @@ private class CMT_MetadataAPI_TEST {
 
         // Construct our callback class
         CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack('Test');
+        MockCallbackHandler callbackHandler = new MockCallbackHandler();
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+        callback.callbackHandler = callbackHandler;
 
         // Call the handleResult() method of our main Callback with our dummy context var
         callback.handleResult(null, context);
+
+        List<Account> accounts = [SELECT Id, Name, Description FROM Account WHERE Name = :SUCCESS_HANDLER_EXECUTED];
+        System.assertEquals(0, accounts.size(), 'No accounts should be created.');
+
+        Metadata.DeployResult result = new Metadata.DeployResult();
+        result.status = Metadata.DeployStatus.Succeeded;
+
+        callback.handleResult(result, context);
+
+        accounts = [SELECT Id, Name, Description FROM Account WHERE Name = :SUCCESS_HANDLER_EXECUTED];
+        System.assertEquals(1, accounts.size(), 'A single account should be created.');
+        System.assertNotEquals(null, accounts[0].Description, 'Account Description Should have description');
+ 
     }
 
-
-    /* @description DeployCallbackContext subclass for testing that returns myJobId */
+    /***********************************************************************************************************
+     * @description DeployCallbackContext subclass for testing that returns myJobId
+     **/
     public class TestingDeployCallbackContext extends Metadata.DeployCallbackContext {
         public override Id getCallbackJobId() {
             return '000000000122345';
+        }
+    }
+
+    /******************************************************************************************************
+     * @description verify that the metadata deploy calls the error callback handler when an error occurs
+     **/
+    @isTest
+    private static void metadataDeployExecutesErrorCallbackHandler() {
+        CMT_MetadataAPI.upsertCustomMetadata(CRLP_RollupCMT.MetadataObject.Filter_Rule, 'Rule_1', 'Rule 1: OCR.Role',
+                new Map<String,Object>{
+                        'Filter_Group__c' => 'm016A000000YXdG',
+                        'Operation__c' => 'Equals',
+                        'Constant__c' => 'Solicitor',
+                        'Object__c' => SObjectType.OpportunityContactRole.getName(),
+                        'Field__c' => SObjectType.OpportunityContactRole.Fields.Role.getName()
+                });
+
+        CMT_MetadataAPI.deployMetadata(UserInfo.getUserId(), CMT_MetadataAPI.cmtUpsertQueue);
+        CMT_MetadataAPI.deleteCustomMetadataTypeRecord(CRLP_RollupCMT.MetadataObject.Filter_Group, 'SomeName');
+
+        // Construct our callback class
+        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack('Test');
+        MockCallbackHandler callbackHandler = new MockCallbackHandler();
+
+         // Construct a dummy Context
+        TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+        callback.callbackHandler = callbackHandler;
+        callback.callbackParams = new Map<String, Object>();
+
+        Metadata.DeployResult result = new Metadata.DeployResult();
+        result.status = Metadata.DeployStatus.FAILED;
+        result.details = new Metadata.DeployDetails();
+        result.details.componentFailures = new List<Metadata.DeployMessage>();
+
+        callback.handleResult(result, context);
+
+        List<Contact> contacts = [SELECT Id, Lastname FROM Contact WHERE Lastname = :ERROR_HANDLER_EXECUTED];
+        System.assertEquals(1, contacts.size(), 'A single contact should be created.'); 
+    }
+
+    /*************************************************************************************************************
+     * @description Callback Handler to test the result callback
+     **/
+    public class MockCallbackHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
+        public void performSuccessHandler(Map<String, Object> params, String status) {
+            Account newAccount = new Account(Name = SUCCESS_HANDLER_EXECUTED, Description = status);
+            insert newAccount;
+        }
+
+        public void performErrorHandler(Map<String, Object> params, String status) {
+            Contact c = new Contact(Lastname = ERROR_HANDLER_EXECUTED);
+            insert c;
         }
     }
 

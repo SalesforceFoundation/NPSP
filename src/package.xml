@@ -48,6 +48,9 @@
         <members>ALLO_ManageAllocations_TEST</members>
         <members>ALLO_Multicurrency_TDTM</members>
         <members>ALLO_Multicurrency_TEST</members>
+        <members>ALLO_PaymentSync_SVC</members>
+        <members>ALLO_PaymentSync_TDTM</members>
+        <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
         <members>BDE_BatchDataEntry</members>
@@ -182,6 +185,7 @@
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
         <members>CRLP_RollupCMT</members>
+        <members>CRLP_RollupCMT_TEST</members>
         <members>CRLP_RollupContact_SVC</members>
         <members>CRLP_RollupContact_TEST</members>
         <members>CRLP_RollupGAU_SVC</members>
@@ -444,6 +448,8 @@
         <members>UTIL_HtmlOutput_CTRL</members>
         <members>UTIL_HtmlOutput_TEST</members>
         <members>UTIL_IScheduled</members>
+        <members>UTIL_IntegrationConfig</members>
+        <members>UTIL_IntegrationConfig_TEST</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
         <members>UTIL_LightningComponentSupport</members>
@@ -1405,9 +1411,13 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
+        <members>alloPaidPmtsExceedsOpp</members>
         <members>alloPaymentNotEnabled</members>
+        <members>alloPaymentOverallocatedError</members>
         <members>alloPercentExceed100</members>
+        <members>alloPmtOppSingleTransaction</members>
         <members>alloRemainder</members>
+        <members>alloRemoveOppWithPmt</members>
         <members>alloSignMistmatch</members>
         <members>alloSingleParent</members>
         <members>alloTotalExceedsOppAmt</members>
@@ -1818,8 +1828,6 @@
         <members>pmtModifyCurrency</members>
         <members>pmtPaidPaymentDateRequired</members>
         <members>pmtUnpaidPaymentScheduledDateRequired</members>
-        <members>pmtWriteOffPaidPayment</members>
-        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -1855,6 +1863,7 @@
         <members>pmtWizardWriteoffNoAccessMessage</members>
         <members>pmtWizardYear</members>
         <members>pmtWriteOffPaidPayment</members>
+        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
@@ -2712,6 +2721,8 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>Data_CountBDIRowsLast30Days</members>
+        <members>Data_CountBGERowsLast30Days</members>
         <members>Data_CountErrorLog</members>
         <members>Data_CountRdOppsAll</members>
         <members>Data_CountRdOppsOpenEnded</members>

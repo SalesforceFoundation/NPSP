@@ -43,6 +43,8 @@ global with sharing class BDI_DataImportService {
 
     public BDI_FieldMapping fieldMapper;
 
+    private static Set<String> inaccessibleFields = new Set<String>();
+
     /*******************************************************************************************************
     * @description constructor
     * @param isDryRun whether to run in Dry Run mode or commit records.
@@ -849,9 +851,13 @@ global with sharing class BDI_DataImportService {
                     fieldDescribe == null ||
                     (!isCreatable && isPopulated) ||
                     (!isAuditField && !isUpdateable && isPopulated)) {
+                        /***
                         throw (new FLSException(
                             String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + targetFieldName }
                         )));
+                        ****/
+                        System.debug(' *** Adding to inaccessible fields: '+targetObjectName + '.' + targetFieldName);
+                        inaccessibleFields.add(targetObjectName + '.' + targetFieldName);
                 }
             }
         }
@@ -878,6 +884,16 @@ global with sharing class BDI_DataImportService {
         // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
         if (value != null && value != false) {
             String destinationField = mapDIFieldToDstField.get(dataImportField);
+
+            String fullFieldName = destinationRecord.getSObjectType().getDescribe().getName() + '.' + 
+                destinationField;
+
+            System.debug(' *** Checking list of inaccessible fields for: '+fullFieldName);
+            if(inaccessibleFields.contains(fullFieldName)) {
+                throw (new FLSException(
+                    String.format(System.Label.flsError, new List<String>{ fullFieldName }
+                )));    
+            }
 
             // if values haven't changed, don't copy it and say the object was modified!
             if (destinationRecord.get(destinationField) == value) {

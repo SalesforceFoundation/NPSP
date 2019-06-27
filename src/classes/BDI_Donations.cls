@@ -161,41 +161,45 @@ public class BDI_Donations {
         List<DataImport__c> dataImportsToUpdate = new List<DataImport__c>();
 
         for (DataImport__c dataImport : dataImportDonations) {
-            if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
-                // park a new empty payment in the map if the user specified Apply New Payment
-                paymentsByDataImportId.put(
-                        dataImport.Id,
-                        new npe01__OppPayment__c(
-                                npe01__Opportunity__c = dataImport.DonationImported__c
-                        )
-                );
-                dataImport.PaymentImportStatus__c = Label.bdiCreated;
-            } else {
-                // validate against our desired matching behavior (exact match, best match, new, etc.)
-                if (!isValidMatchBehavior(dataImport, matchBehavior)) {
-                    continue;
-                }
-
-                // update the new or existing Opp with the DI's field data
-                Opportunity opp = prepareOppForUpdateInsert(dataImport);
-
-                // handle any error from the prepare
-                if (opp == null) {
-                    continue;
-                }
-
-                if (opp.Id == null) {
-                    opportunitiesToInsert.add(opp);
-                    dataImportsToInsert.add(dataImport);
+            try {
+                if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                    // park a new empty payment in the map if the user specified Apply New Payment
+                    paymentsByDataImportId.put(
+                            dataImport.Id,
+                            new npe01__OppPayment__c(
+                                    npe01__Opportunity__c = dataImport.DonationImported__c
+                            )
+                    );
+                    dataImport.PaymentImportStatus__c = Label.bdiCreated;
                 } else {
-                    opportunitiesToUpdate.add(opp);
-                    dataImportsToUpdate.add(dataImport);
-                }
+                    // validate against our desired matching behavior (exact match, best match, new, etc.)
+                    if (!isValidMatchBehavior(dataImport, matchBehavior)) {
+                        continue;
+                    }
 
-                // for some error handling detection tests
-                if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
-                    opp.Name = null;
+                    // update the new or existing Opp with the DI's field data
+                    Opportunity opp = prepareOppForUpdateInsert(dataImport);
+
+                    // handle any error from the prepare
+                    if (opp == null) {
+                        continue;
+                    }
+
+                    if (opp.Id == null) {
+                        opportunitiesToInsert.add(opp);
+                        dataImportsToInsert.add(dataImport);
+                    } else {
+                        opportunitiesToUpdate.add(opp);
+                        dataImportsToUpdate.add(dataImport);
+                    }
+
+                    // for some error handling detection tests
+                    if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
+                        opp.Name = null;
+                    }
                 }
+            } catch (Exception ex) {
+                bdi.LogBDIError(dataImport, ex.getMessage(), 'DonationImportStatus__c');
             }
         }
 
