@@ -30,30 +30,28 @@ export default class Bdi_FieldMappings extends LightningElement {
     @track displayFieldMappings = false;
     @track isLoading = true;
     @track isModalOpen = false;
-    @api objectMapping = this.objectMapping || {
+    @track columns = columns;
+    @api objectMapping = {
+        Id: 'm034P000000buts',
         DeveloperName: 'Payment',
         MasterLabel: 'Payment',
         Object_API_Name__c: 'npe01__OppPayment__c'
     };
-    @track fieldMappings;
 
-    /*wiredFieldMappings;
-    @wire(getFieldMappingsByObjectAndFieldSetNames, {objectSetName: 'Payment', fieldSetName: 'Migrated_Custom_Field_Mapping_Set'})
-    imperativeWiring(result) {
+    @track fieldMappings;
+    wiredFieldMappings
+    @wire(getFieldMappingsByObjectAndFieldSetNames, { objectSetName: '$objectMapping.DeveloperName', fieldSetName: 'Migrated_Custom_Field_Mapping_Set' })
+    fieldMappingsWiring(result) {
         this.wiredFieldMappings = result;
-        if(result.data) {
+        if (result.data) {
             this.fieldMappings = result.data;
         }
     }
+
     @api
     forceRefresh() {
+        console.log('attempting to refresh');
         return refreshApex(this.wiredFieldMappings); 
-    }*/
-
-    @track columns = columns;
-    @api forceRefresh() {
-        console.log('forceRefresh()');
-        this.handleFieldMappings();
     }
 
     handleNavButton(event) {
@@ -62,15 +60,20 @@ export default class Bdi_FieldMappings extends LightningElement {
 
     connectedCallback() {
         console.log('bdi_FieldMappings | connectedCallback()');
-        console.log('%c URL DETAILS: ' + this.url, 'font-size: 16px; font-weight: bold;');
+        let outerThis = this;
+        setTimeout(function() {
+            console.log('%c Object Schema Data: ', 'font-size: 16px; font-weight: bold;');
+            console.log(JSON.parse(JSON.stringify(outerThis.diObjectInfo.data)));
+        }, 3000, outerThis);
+
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
         registerListener('forceRefresh', this.forceRefresh, this);
 
         // TODO: delete later, using so I can hop directly into the field mappings
         // component via a url addressable harness aura component
-        //this.handleFieldMappings();
-        //this.displayFieldMappings = true;
+        this.handleFieldMappings();
+        this.displayFieldMappings = true;
     }
 
     disconnectedCallback() {

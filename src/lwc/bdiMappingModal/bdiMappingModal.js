@@ -98,22 +98,22 @@ export default class BdiMappingModal extends LightningElement {
         }, 5000, that);
     }
 
-    buildDataImportFieldMapping = function() {
+    buildDataImportFieldMapping() {
         // TODO: Make dynamic
         this.logBold('Building Data Import Field Mapping');
-        console.log(this.selectedSourceFieldLabel);
-        console.log(this.selectedTargetFieldLabel);
-        console.log(this.selectedSourceFieldAPIName);
-        console.log(this.selectedTargetFieldAPIName);
 
         let dataImportFieldMapping = {
-            label: 'AAA ' + this.selectedSourceFieldLabel,
-            dataImportFieldMappingSetName: 'Migrated_Custom_Field_Mapping_Set',
-            sourceFieldAPIName: this.selectedSourceFieldAPIName,
-            targetFieldAPIName: this.selectedTargetFieldAPIName,
-            targetObjectMappingName: this.objectMapping.DeveloperName
-        }
+            DeveloperName: this.selectedSourceFieldLabel.replace(/\s/g, '_'),
+            MasterLabel: this.selectedSourceFieldLabel,
+            Label: this.selectedSourceFieldLabel,
+            Source_Field_API_Name__c: this.selectedSourceFieldAPIName,
+            Target_Field_API_Name__c: this.selectedTargetFieldAPIName,
+            Data_Import_Field_Mapping_Set__c: 'Migrated_Custom_Field_Mapping_Set',
+            Target_Object_Mapping__c: this.objectMapping.DeveloperName,
+            Is_Deleted__c: false,
+            Required__c: 'No'};
         console.log(dataImportFieldMapping);
+        console.log(JSON.stringify(dataImportFieldMapping));
         
         return JSON.stringify(dataImportFieldMapping);
     }

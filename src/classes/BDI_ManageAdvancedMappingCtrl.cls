@@ -51,6 +51,19 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     @AuraEnabled(cacheable=true)
+    public static Map<String, String> getObjectFieldDescribes(String objectName) {
+        Map<String, String> useableDFRs = new Map<String, String>();
+        Map<String, Schema.DescribeFieldResult> fieldDescribes =
+            UTIL_Describe.getAllFieldsDescribe(objectName);
+
+        for (String key : fieldDescribes.keySet()) {
+            useableDFRs.put(fieldDescribes.get(key).label, key);
+        }
+
+        return useableDFRs;
+    }
+
+    @AuraEnabled(cacheable=true)
     public static DataImportFieldMappingWrapper[] getFieldMappingsByObjectAndFieldSetNames(
         String objectSetName, String fieldSetName) {
 
@@ -69,7 +82,6 @@ public class BDI_ManageAdvancedMappingCtrl {
         return fieldMappingWrappers;
     }
 
-
     // Method takes in field mapping as JSON
     // Uses the DataImportFieldMapping wrapper to generate the custom metadata record
     // Drops it into a DeployContainer
@@ -77,146 +89,117 @@ public class BDI_ManageAdvancedMappingCtrl {
     // Return the jobId
     @AuraEnabled(cacheable=true)
     public static String createDataImportFieldMapping(String fieldMappingString) {
-        System.debug('createDataImportFieldMapping()');
-        System.debug('difm: ' + fieldMappingString);
-        try {
-            DataImportFieldMapping difm =
-                (DataImportFieldMapping)JSON.deserialize(fieldMappingString, DataImportFieldMapping.class);
+        Data_Import_Field_Mapping__mdt difm =
+            (Data_Import_Field_Mapping__mdt)JSON.deserialize(fieldMappingString, Data_Import_Field_Mapping__mdt.class);
 
-            Metadata.CustomMetadata cmt = difm.getMetadataRecord();
-            System.debug(cmt);
-            Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
-            mdContainer.addMetadata(cmt);
+        String deploymentId = enqueueMetadataRecords(difm);
 
-            // Setup deploy callback, MyDeployCallback implements
-            // the Metadata.DeployCallback interface 
-            CustomMetadataCallback callback = new CustomMetadataCallback();
-
-            // Enqueue custom metadata deployment
-            // jobId is the deployment ID
-            System.debug('START TIME: ' + DateTime.now());
-            Id jobId = Metadata.Operations.enqueueDeployment(mdContainer, callback);
-            System.debug('***Custom Metadata Record Below:');
-            System.debug(mdContainer);
-            return jobId;
-
-        } catch(Exception ex){
-             System.assert(false,ex.getMessage()); 
-             return 'Error while creating new button.';
-        }
+        return deploymentId;
     }
 
-    @AuraEnabled(cacheable=true)
-    public static Map<String, String> getDataImportFieldDescribes() {
-        Map<String, String> useableDFRs = new Map<String, String>();
-        Map<String, Schema.DescribeFieldResult> fieldDescribes =
-            UTIL_Describe.getAllFieldsDescribe('DataImport__c');
+    // TODO: Break up into smaller methods?
+    // Does the bulk of the work converting records to custom metadata that are enqueueable
+    public static String enqueueMetadataRecords(List<sObject> customMetadataList ) {
+        //Create Deployment container for custom Metadata
+        Metadata.DeployContainer deployContainer = new Metadata.DeployContainer();
+        for(sobject sObjectCastedCustomMetadata : customMetadataList) {
+            //Get metadata object name and details
+            String sObjectName = sObjectCastedCustomMetadata.getSObjectType().getDescribe().getName();
 
-        for (String key : fieldDescribes.keySet()) {
-            System.debug('Key: ' + key);
-            useableDFRs.put(fieldDescribes.get(key).label, key);
-        }
+            //Create custom Metadata instance
+            Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
 
-        return useableDFRs;
-    }
+            String recordName = generateRecordName(String.valueOf(sObjectCastedCustomMetadata.get('MasterLabel')));
+            customMetadata.fullName = sObjectName +'.'+recordName;
+            customMetadata.label = (String)sObjectCastedCustomMetadata.get('MasterLabel');
 
-    @AuraEnabled(cacheable=true)
-    public static Map<String, String> getObjectFieldDescribes(String objectName) {
-        Map<String, String> useableDFRs = new Map<String, String>();
-        Map<String, Schema.DescribeFieldResult> fieldDescribes =
-            UTIL_Describe.getAllFieldsDescribe(objectName);
-        
-        for (String key : fieldDescribes.keySet()) {
-            useableDFRs.put(fieldDescribes.get(key).label, key);
-        }
+            // Get all fields
+            // Store sObjectType schema in class variable (map) and check if already exists
+            // before attempting to call the global describe again
+            // OR
+            // Use lightning web component to get the describe and pass in to apex
+            schema.SObjectType sObjectType = Schema.getGlobalDescribe().get(sObjectName );
 
-        return useableDFRs;
-    }
+            Map<String, Schema.sObjectField> sObjectFields = sObjectType.getDescribe().fields.getMap();
+            // TODO: Hoist up and make final
+            Set<String> skipFieldSet = new Set<String>{'developername','masterlabel','language','namespaceprefix', 'label','qualifiedapiname', 'id'};
 
-    /*******************************************************************************************************
-    * @description Wrapper class for Data_Import_Field_Mapping__mdt used to create
-    * the default CMT data as well as for use in the Custom UI.
-    */
-    public class DataImportFieldMapping {
-        public String recordName;
-        public String label;
-        public String dataImportFieldMappingSetName;
-        public String sourceFieldAPIName;
-        public String targetFieldAPIName;
-        public String targetObjectMappingName;
-        public Boolean isDeleted = false;
-        public Boolean isRequired = false;
+            // Use getPopulatedFieldsAsMap to loop through and populate all fields with relevant values
+            // Maybe break this section out into its own method?
+            for(String fieldName : sObjectCastedCustomMetadata.getPopulatedFieldsAsMap().keySet()) {
 
-        public DataImportFieldMapping() {}
-
-        // TODO: Make more generic
-        public Metadata.CustomMetadata getMetadataRecord() {
-            String mdTypeName = 'Data_Import_Field_Mapping__mdt';
-
-            // Setup custom metadata to be created or updated in the subscriber org.
-            Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
-
-            recordName = generateRecordName(label);
-
-            customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
-            customMd.protected_x = false;
-            // TODO: remove debugging string
-            customMd.label = 'AAA  ' + label;
-
-            Map<String, Object> fieldValues;
-            if (this.isDeleted != true) {
-
-                if (NAMESPACE != 'npsp') {
-                    this.targetFieldAPIName =
-                        UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                if(skipFieldSet.contains(fieldName.toLowerCase()) || sObjectCastedCustomMetadata.get(fieldName) == null) {
+                    continue;
                 }
 
-                fieldValues = new Map<String, Object>{
-                    'Data_Import_Field_Mapping_Set__c' => dataImportFieldMappingSetName == null ? 'Default_Field_Mapping_Set' : dataImportFieldMappingSetName,
-                    'Required__c' => isRequired,
-                    'Source_Field_API_Name__c' => sourceFieldAPIName,
-                    'Target_Field_API_Name__c' => targetFieldAPIName,
-                    'Target_Object_Mapping__c' => targetObjectMappingName,
-                    'Is_Deleted__c' => isDeleted
-                };
-            } else {
-                fieldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
-            }
-            customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
+                Object value = sObjectCastedCustomMetadata.get(fieldName);
 
-            return customMd;
+                if (value != null) {
+                    // TODO: Improve casting/type checking
+                    Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
+                    customField.field = fieldName;
+                    if (value instanceof Id) {
+                        customField.value = (Id)value;
+                    }
+                    if (value instanceof String) {
+                        customField.value = (String)value;
+                    }
+                    if (value instanceof Boolean) {
+                        customField.value = (Boolean)value;
+                    }
+                    //Add fields in the object, similar to creating sObject instance
+                    customMetadata.values.add(customField);
+                } else {
+                    continue;
+                }
+            }
+
+            //Add metadata to deployment container
+            deployContainer.addMetadata(customMetadata);
         }
 
-        /****************************************************************************************************
-        * @description Utility to convert a name into a valid 'DeveloperName' quality value (or unique GUID)
-        * for the CMT record
-        *
-        * @param name String
-        * @param makeUnique Boolean
-        * @return DeveloperName format string
-        */
-        private String generateRecordName(String label) {
-            String name = '';
+        // Callback class instance
+        CustomMetadataCallback callback = new CustomMetadataCallback();
 
-            if (String.isNotBlank(label)) {
-                name = label.replace(' ', '_');
-            }
+        // Enqueue custom metadata deployment
+        Id jobId = Metadata.Operations.enqueueDeployment(deployContainer, callback);
+        return jobId;
+    }
 
-            if (name.length() > 30) {
-                String firstFifteen = name.substring(0, 15);
-                String lastFifteen = name.substring(name.length() - 15, name.length());
-                name = firstFifteen + lastFifteen;
-            }
+    // overload, use to pass single metadata instance
+    public static String enqueueMetadataRecords(sObject customMetadata ) {
+    return enqueueMetadataRecords(new List<sObject>{customMetadata} );
+    }
 
-            // Create a GUID format unique string
-            Blob b = Crypto.GenerateAESKey(128);
-            String h = EncodingUtil.ConvertTohex(b);
-            // force everything to have a 9-char random string at the end
-            name = name.left(30).removeEnd('_') + '_' + h.left(9);
+    /****************************************************************************************************
+    * @description Utility to convert a name into a valid 'DeveloperName' quality value (or unique GUID)
+    * for the CMT record
+    *
+    * @param name String
+    * @param makeUnique Boolean
+    * @return DeveloperName format string
+    */
+    public static String generateRecordName(String label) {
+        String name = '';
 
-            name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');
-            return name;
+        if (String.isNotBlank(label)) {
+            name = label.replace(' ', '_');
         }
+
+        if (name.length() > 30) {
+            String firstFifteen = name.substring(0, 15);
+            String lastFifteen = name.substring(name.length() - 15, name.length());
+            name = firstFifteen + lastFifteen;
+        }
+
+        // Create a GUID format unique string
+        Blob b = Crypto.GenerateAESKey(128);
+        String h = EncodingUtil.ConvertTohex(b);
+        // force everything to have a 9-char random string at the end
+        name = name.left(30).removeEnd('_') + '_' + h.left(9);
+
+        name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');
+        return name;
     }
 
     // TODO: Delete later, one wrapper if needed
