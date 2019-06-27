@@ -613,6 +613,7 @@ public with sharing class BDI_MigrationMappingUtility {
         * @return DeveloperName format string
         */
         private String generateRecordName(String name, Boolean makeUnique, String objectLabel, String objectAPIName) {
+            name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');
 
             if (String.isNotBlank(objectLabel)) {
                 objectLabel = objectLabel.replace(' ', '_');
@@ -635,7 +636,6 @@ public with sharing class BDI_MigrationMappingUtility {
                 name = name.left(40);
             }
 
-            name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');
             return name;
         }
     }
