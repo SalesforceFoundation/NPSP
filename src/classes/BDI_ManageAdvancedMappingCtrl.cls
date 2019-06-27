@@ -109,7 +109,13 @@ public class BDI_ManageAdvancedMappingCtrl {
             //Create custom Metadata instance
             Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
 
-            String recordName = generateRecordName(String.valueOf(sObjectCastedCustomMetadata.get('MasterLabel')));
+            String developerName = String.valueOf(sObjectCastedCustomMetadata.get('DeveloperName'));
+            String recordName;
+            if (developerName == null) {
+                recordName = generateRecordName(String.valueOf(sObjectCastedCustomMetadata.get('MasterLabel')));
+            } else {
+                recordName = developerName;
+            }
             customMetadata.fullName = sObjectName +'.'+recordName;
             customMetadata.label = (String)sObjectCastedCustomMetadata.get('MasterLabel');
 
@@ -204,6 +210,7 @@ public class BDI_ManageAdvancedMappingCtrl {
 
     // TODO: Delete later, one wrapper if needed
     public class DataImportFieldMappingWrapper {
+        @AuraEnabled public String DeveloperName;
         @AuraEnabled public String MasterLabel;
         @AuraEnabled public String Source_Field_API_Name;
         @AuraEnabled public String Target_Field_API_Name;
@@ -225,6 +232,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.Maps_To_Icon = 'utility:forward';
             this.Source_Field_Label = dfr.label;
             this.Source_Field_Data_Type = String.valueOf(dfr.type);
+            this.DeveloperName = fieldMapping.DeveloperName;
         }
     }
 

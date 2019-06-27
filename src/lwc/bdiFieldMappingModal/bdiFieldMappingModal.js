@@ -6,11 +6,12 @@ import getObjectFieldDescribes
 import { registerListener, unregisterListener, unregisterAllListeners, fireEvent }
     from 'c/pubsubNoPageRef';
 
-export default class BdiMappingModal extends LightningElement {
+export default class bdiFieldMappingModal extends LightningElement {
 
     @api objectMapping;
     @api isModalOpen;
     @track isLoading;
+    @track row;
 
     // Combobox vars
     @track selectedSourceFieldLabel;
@@ -32,7 +33,7 @@ export default class BdiMappingModal extends LightningElement {
     @api targetObjectFieldsByAPIName;
 
     connectedCallback() {
-        this.logBold('bdiMappingModal | connectCallback()');
+        this.logBold('bdiFieldMappingModal | connectCallback()');
         registerListener('openModal', this.handleOpenModal, this);
 
         this.handleGetDataImportFieldDescribes();
@@ -49,12 +50,13 @@ export default class BdiMappingModal extends LightningElement {
     }
 
     handleOpenModal(event) {
-        this.logBold('bdiMappingModal | handleOpenModal()');
+        this.logBold('bdiFieldMappingModal | handleOpenModal()');
         console.log('ObjectMapping: ', this.log(event.objectMapping));
         console.log('Event: ', this.log(event));
         this.isModalOpen = true;
         this.isLoading = true;
         this.objectMapping = event.objectMapping;
+        this.row = event.row;
 
         // TODO: Clean up or find better way. This is how we're setting the edit mode stuff
         console.log('handleGetTargetObjectFieldDescribes inside then');
@@ -76,7 +78,7 @@ export default class BdiMappingModal extends LightningElement {
     }
 
     handleSave() {
-        this.logBold('bdiMappingModal | handleSave()');
+        this.logBold('bdiFieldMappingModal | handleSave()');
         this.isLoading = true;
         createDataImportFieldMapping({fieldMappingString: this.buildDataImportFieldMapping()})
             .then((data) => {
@@ -89,7 +91,7 @@ export default class BdiMappingModal extends LightningElement {
     }
 
     handleSaveResult() {
-        this.logBold('bdiMappingModal | handleSaveResult');
+        this.logBold('bdiFieldMappingModal | handleSaveResult');
         let that = this;
         setTimeout(function() {
             console.log('First Refresh');
@@ -102,8 +104,14 @@ export default class BdiMappingModal extends LightningElement {
         // TODO: Make dynamic
         this.logBold('Building Data Import Field Mapping');
 
+        let developerName = null;
+        if (this.row && this.row.DeveloperName) {
+            console.log(this.row);
+            developerName = this.row.DeveloperName;
+        }
+
         let dataImportFieldMapping = {
-            DeveloperName: this.selectedSourceFieldLabel.replace(/\s/g, '_'),
+            DeveloperName: developerName,
             MasterLabel: this.selectedSourceFieldLabel,
             Label: this.selectedSourceFieldLabel,
             Source_Field_API_Name__c: this.selectedSourceFieldAPIName,
@@ -119,8 +127,11 @@ export default class BdiMappingModal extends LightningElement {
     }
 
     handleSourceFieldLabelChange(event) {
-        this.logBold('bdiMappingModal | handleSourceFieldLabelChange()');
-        console.log(event.detail.value);
+        this.logBold('bdiFieldMappingModal | handleSourceFieldLabelChange()');
+        console.log('Event: ', event);
+        console.log('Event.srcElement: ', this.log(event.srcElement));
+        console.log('Event.detail: ', this.log(event.detail));
+        console.log('Event.detail.value: ', event.detail.value);
         console.log(this.diFieldsByAPIName[event.detail.value]);
         let selectedSourceFieldAPIName = event.detail.value;
         let selectedSourceFieldLabel = this.diFieldsByAPIName[selectedSourceFieldAPIName];
@@ -129,7 +140,7 @@ export default class BdiMappingModal extends LightningElement {
     }
 
     handleSourceFieldAPINameChange(event) {
-        this.logBold('bdiMappingModal | handleSourceFieldAPINameChange()');
+        this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
         console.log(event.detail.value);
         console.log(this.diFieldsByLabel[event.detail.value]);
         let selectedSourceFieldLabel = event.detail.value;
@@ -139,7 +150,7 @@ export default class BdiMappingModal extends LightningElement {
     }
 
     handleTargetFieldLabelChange(event) {
-        this.logBold('bdiMappingModal | handleTargetFieldLabelChange()');
+        this.logBold('bdiFieldMappingModal | handleTargetFieldLabelChange()');
         console.log(event.detail.value);
         console.log(this.targetObjectFieldsByAPIName[event.detail.value]);
         let selectedTargetFieldAPIName = event.detail.value;
@@ -149,7 +160,7 @@ export default class BdiMappingModal extends LightningElement {
     }
 
     handleTargetFieldAPINameChange(event) {
-        this.logBold('bdiMappingModal | handleTargetFieldAPINameChange()');
+        this.logBold('bdiFieldMappingModal | handleTargetFieldAPINameChange()');
         console.log(event.detail.value);
         console.log(this.targetObjectFieldsByLabel[event.detail.value]);
         let selectedTargetFieldLabel = event.detail.value;

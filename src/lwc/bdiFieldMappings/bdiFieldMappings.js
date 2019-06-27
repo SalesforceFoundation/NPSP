@@ -21,11 +21,11 @@ const columns = [
         },
     { label: 'Field Label', fieldName: 'MasterLabel', type: 'text' },
     { label: 'Field API Name', fieldName: 'Target_Field_API_Name', type: 'text' },
-    { label: 'Data Type', fieldName: '', type: 'text' },
+    { label: 'Data Type', fieldName: 'DeveloperName', type: 'text' },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
 
-export default class Bdi_FieldMappings extends LightningElement {
+export default class bdiFieldMappings extends LightningElement {
 
     @track diObjectInfo;
  
@@ -64,7 +64,7 @@ export default class Bdi_FieldMappings extends LightningElement {
     }
 
     connectedCallback() {
-        console.log('bdi_FieldMappings | connectedCallback()');
+        console.log('bdiFieldMappings | connectedCallback()');
         let outerThis = this;
         setTimeout(function() {
             console.log('%c Object Schema Data: ', 'font-size: 16px; font-weight: bold;');
@@ -98,9 +98,9 @@ export default class Bdi_FieldMappings extends LightningElement {
     }
 
     handleOpenModal() {
-        console.log('bdi_FieldMappings | handleOpenModal()');
+        console.log('bdiFieldMappings | handleOpenModal()');
         console.log(this.log(this.objectMapping));
-        fireEvent(this.pageRef,'openModal', { objectMapping: this.objectMapping });
+        fireEvent(this.pageRef, 'openModal', { objectMapping: this.objectMapping });
     }
 
     /*******************************************************************************
@@ -110,7 +110,7 @@ export default class Bdi_FieldMappings extends LightningElement {
     * @param name: Name of the object mapping received from parent component 
     */
     handleFieldMappings = function () {
-        console.log('bdi_FieldMappings | getFieldMappings()');
+        console.log('bdiFieldMappings | getFieldMappings()');
         getFieldMappingsByObjectAndFieldSetNames({
                 objectSetName: this.objectMapping.DeveloperName,
                 // TODO: Get field set name dynamically
@@ -133,7 +133,7 @@ export default class Bdi_FieldMappings extends LightningElement {
     * @param event: Event containing row details of the action
     */
     handleRowAction(event) {
-        console.log('bdi_FieldMappings | handleRowAction()');
+        console.log('bdiFieldMappings | handleRowAction()');
         const actionName = event.detail.action.name;
         const row = event.detail.row;
         switch (actionName) {
@@ -155,7 +155,8 @@ export default class Bdi_FieldMappings extends LightningElement {
                     objectMapping: this.objectMapping,
                     sourceFieldLabel: row.Source_Field_Label,
                     sourceFieldAPIName: row.Source_Field_API_Name,
-                    targetFieldAPIName: row.Target_Field_API_Name });
+                    targetFieldAPIName: row.Target_Field_API_Name,
+                    row: row });
                 // TODO: Add logic to send event to parent container / edit component containing
                 // data on the row (field mapping) to be editted.
                 break;
