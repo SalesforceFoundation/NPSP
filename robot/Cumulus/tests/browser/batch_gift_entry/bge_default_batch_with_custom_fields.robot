@@ -86,7 +86,7 @@ Verify Custom Fields on Payment and Donation
     ${date} =     Get Current Date    result_format=%Y-%m-%d       
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
-    Select Window    ${value} | Salesforce    5
+    Select Window    ${value} | Salesforce    7
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     ${org_ns} =  Get Org Namespace Prefix
