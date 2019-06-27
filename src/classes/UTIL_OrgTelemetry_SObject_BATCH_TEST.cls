@@ -357,6 +357,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
      * @description Confirms Opportunity Payment metrics are captured in FeatureManagement at the end of the batch
      * when Auto Payments are enabled
      */
+    /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+             you move forward with Data_OppPaymentsWithoutPaymentsEnabled
     @isTest
     private static void shouldCaptureOppPaymentMetricsInFeatureManagementWhenAutoPaymentsEnabled() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -389,11 +391,16 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set correctly'
         );
     }
+    */
 
     /**
      * @description Confirms Opportunity Payment metrics are captured in FeatureManagement at the end of the batch
      * when Auto Payments are not enabled
      */
+
+    /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+             you move forward with Data_OppPaymentsWithoutPaymentsEnabled
+
     @isTest
     private static void shouldCaptureOppPaymentMetricsInFeatureManagementWhenAutoPaymentsNotEnabled() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -427,6 +434,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set correctly'
         );
     }
+    */
 
     /**
      * @description Confirms batch is not run again if lastProcessedId is null

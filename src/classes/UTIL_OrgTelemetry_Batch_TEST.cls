@@ -91,7 +91,9 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, null);
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, null);
-        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, null);
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+        //assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, null);
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, null);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, null);
@@ -112,7 +114,9 @@ private class UTIL_OrgTelemetry_Batch_TEST {
             'The OPPORTUNITIES batch should not be executed');
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, 0);
-        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, 0);
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+        //assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, 0);
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, 0);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, 0);
@@ -136,7 +140,9 @@ private class UTIL_OrgTelemetry_Batch_TEST {
             'The OPPORTUNITIES batch should be executed');
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, null);
-        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, null);
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+        //assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, null);
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, null);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, null);

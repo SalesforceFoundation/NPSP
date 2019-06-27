@@ -319,11 +319,14 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         STG_SettingsService stgSvc = new STG_SettingsService();
         featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), oppsWithMultiplePaymentsCount);
 
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled
         if (stgSvc.stgCon.npe01__Payments_Enabled__c) {
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
         } else {
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), oppsWithPayments);
         }
+        */
     }
 
     /** @description Returns whether or not another batch should be chained*/

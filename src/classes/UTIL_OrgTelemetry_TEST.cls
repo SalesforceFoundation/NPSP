@@ -261,6 +261,9 @@ private class UTIL_OrgTelemetry_TEST {
             'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and defaulted to -1'
         );
 
+        /*
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled
         System.assertEquals(
             -1,
             featureManagementMock.packageIntegerValuesByName.get(
@@ -268,6 +271,7 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and defaulted to -1'
         );
+        */
     }
 
     /**

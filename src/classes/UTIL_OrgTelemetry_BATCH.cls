@@ -113,7 +113,9 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
 
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), 0);
-            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
+            /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+            //featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
         }
     }
 

@@ -2563,7 +2563,6 @@
         <members>Data_CountRdsWithDiffAmount</members>
         <members>Data_CountRecurringDonationsAll</members>
         <members>Data_MaxNumRelatedOpps</members>
-        <members>Data_OppPaymentsWithoutPaymentsEnabled</members>
         <members>Org_CountNonEnglishLanguages</members>
         <members>Org_CountTimedOutBatchJobsLast7Days</members>
         <members>Org_LongestRunningBatchLast7Days</members>

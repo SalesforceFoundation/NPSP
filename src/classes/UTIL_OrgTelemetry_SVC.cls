@@ -74,7 +74,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_DefaultGAU,
         Data_CountErrorLog,
         Data_CountOppsWithMultiplePayments,
-        Data_OppPaymentsWithoutPaymentsEnabled,
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+        //Data_OppPaymentsWithoutPaymentsEnabled,
         Data_CountRdOppsAll,
         Data_CountRdOppsOpenEnded,
         Data_CountRdsWithDiffAmount,
@@ -186,7 +188,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             when Data_CountPaymentOpps {
                 // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
                 featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), -1);
-                featureManager.setPackageIntegerValue(TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), -1);
+
+                /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                         you move forward with Data_OppPaymentsWithoutPaymentsEnabled
+                //featureManager.setPackageIntegerValue(TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), -1); */
             }
         }
     }
