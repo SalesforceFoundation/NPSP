@@ -196,7 +196,6 @@ public class CMT_MetadataAPI {
          */
         public MetadataCallBack(String jobId) {
             this.jobId = jobId;
-            this.source = CMT_MetadataAPI.Source.CUSTOMIZABLE_ROLLUPS;
         }
 
         /**
