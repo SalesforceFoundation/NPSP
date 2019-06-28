@@ -56,7 +56,7 @@
 * Recommend registering a default handler using an interface that can be switched out/overriden
 * as desired for specific use cases.
 */
-public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database.Batchable<SObject>, Database.Stateful {
+public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
     /**
      * @description The Maximum LDV Chunk size that is allowed to be used.  If > MAX will use the MAX
