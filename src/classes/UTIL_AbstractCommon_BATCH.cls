@@ -230,7 +230,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
         String ldvWhere = isFirstChunk() ? getLdvWhereFirstChunk() : getLdvWhereAfterFirstChunk();
         String whereClause = getQueryNonLDVWhereClause();
 
-        String nonLdvWhere =  ((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '';
+        String nonLdvWhere =  (String.isNotBlank(whereClause)) ? ' WHERE (' + whereClause + ')' : '';
 
         return (ldvMode) ? ldvWhere : nonLdvWhere;
     }
@@ -262,8 +262,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
 
         String whereClause = getWhereClause();
 
-        Boolean mainWhere = (whereClause != null && whereClause.trim().length() > 0);
-        Boolean addtlWhere = (additionalWhereClause != null && additionalWhereClause.trim().length() > 0);
+        Boolean mainWhere = String.isNotBlank(whereClause);
+        Boolean addtlWhere = String.isNotBlank(additionalWhereClause);
         if (mainWhere && addtlWhere) {
             return '(' + whereClause.trim() + ') AND (' + additionalWhereClause.trim() + ')';
         } else if (mainWhere && !addtlWhere) {
@@ -323,7 +323,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
         if (ldvMode || isSubQueryPresent()) {
             String whereClause = getQueryNonLdvWhereClause();
             String query = 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSObjectName() + ' WHERE (Id in :records) ' +
-                        (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' AND (' + whereClause + ')' : '');
+                        ((String.isNotBlank(whereClause)) ? ' AND (' + whereClause + ')' : '');
 
             return Database.query(query);
         } else { // No need to requery if not LDV Chunking mode
@@ -340,7 +340,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     @testVisible private String getQueryForValidate() {
         String whereClause = getQueryNonLdvWhereClause();
         return 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSObjectName() +
-                (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '') +
+                ((String.isNotBlank(whereClause)) ? ' WHERE (' + whereClause + ')' : '') +
                 ' LIMIT 1';
     }
 
