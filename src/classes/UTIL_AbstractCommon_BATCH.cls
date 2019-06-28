@@ -416,7 +416,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     @testVisible private boolean isLDVCircumstance(Id startId, Id endId) {
         Long recordDistance = UTIL_SalesforceID.computeRecordDistance(startId, endId);
 
-        return (recordDistance > getMaxNonLDVSize() || recordDistance > getLDVChunkSize());
+        return (recordDistance > getMaxNonLDVSize());
     }
 
     /**

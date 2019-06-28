@@ -42,6 +42,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
     private Integer expectedResult;
     private Integer testChunkSize = 1;
+    private Integer testMaxNonLDVSize = 1;
     private String testWhereClause = '';
 
     /*******************************************************************************************************************
@@ -56,6 +57,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_BATCH_TEST(10);
         tab.setTestChunkSize(10);
+        tab.setTestMaxNonLDVSize(10);
         System.assertEquals (10, tab.getBatchSize(), 'Batch Size');
         tab.setExpectedResult(TEST_ACCOUNT_CNT);
         Database.executeBatch(tab, 10);
@@ -146,6 +148,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         Test.startTest();
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[0].Name + '\'');
         tab.setTestChunkSize(10);
+        tab.setTestMaxNonLDVSize(10);
         tab.setExpectedResult(1);
 
         Database.executeBatch(tab, 1);
@@ -189,6 +192,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
         tab.setTestWhereClause('Name = \'' + accs[0].Name + '\'');
         tab.setTestChunkSize(10);
+        tab.setTestMaxNonLDVSize(10);
         tab.setExpectedResult(1);
 
         Database.executeBatch(tab, 1);
@@ -232,6 +236,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\' or Name=\'' + accs[3].Name + '\'');
         tab.setTestWhereClause('Name = \'' + accs[0].Name + '\' or Name=\'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\''                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          );
         tab.setTestChunkSize(10);
+       tab.setTestMaxNonLDVSize(10);
         tab.setExpectedResult(2);
 
         Database.executeBatch(tab, 10);
@@ -359,9 +364,18 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
     /**
      * @description Primarily here to allow overriding of LDVChunk size for specific requirements, E.g. if a specific batch needs a lower threshold for running in LDV mode
+     * @return Integer size to limit batch results to when running in LDV Chunking mode
      */
     public override Integer getLDVChunkSize() {
         return this.testChunkSize;
+    }
+
+    /**
+     * @description Here to allow overriding of Max Non LDV Record Count (Size)
+     * @return Integer Maximum number of records that be present for the distance check before running in LDV mode
+     */
+    public override Integer getMaxNonLDVSize() {
+        return this.testMaxNonLDVSize;
     }
 
     /**
@@ -399,12 +413,21 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
             System.assertEquals (expectedResult, recCnt, 'Account Count Mismatch');
         }
     }
+
     /**
      * @description Allows the test batches chunk size to be updated
      * @param Integer testChunkSize Size to set the chunk size for the test batch to
      */
     public void setTestChunkSize(Integer testChunkSize) {
         this.testChunkSize = testChunkSize;
+    }
+
+    /**
+     * @description Allows the test batches max non ldv size to be configured for specific tests
+     * @param Integer testMaxNonLDVSize Size to set the maxNonLDVSize to
+     */
+    public void setTestMaxNonLDVSize(Integer testMaxNonLDVSize) {
+        this.testMaxNonLDVSize = testMaxNonLDVSize;
     }
 
     // **************************** HELPER METHODS ****************************
