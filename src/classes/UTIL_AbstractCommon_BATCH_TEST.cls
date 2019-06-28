@@ -49,16 +49,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void executeTestBatch() {
-
-        List<Account> accs = new List<Account>();
-
-        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
-            accs.add(
-                new Account(
-                    Name = '1-Test Account #' + i
-                )
-            );
-        }
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
@@ -81,15 +72,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     @isTest
     public static void executeTestBatchLDV() {
 
-        List<Account> accs = new List<Account>();
-
-        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
-            accs.add(
-                new Account(
-                    Name = '2-Test Account #' + i
-                )
-            );
-        }
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
@@ -103,7 +86,6 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         System.assertEquals (7, aajobs.size(), '# of jobs present');
     }
 
-
     /*******************************************************************************************************************
      * @description Test Additional Constructors for Abstract Batch
      */
@@ -115,7 +97,6 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         assertConstructor('BatchSize', new UTIL_AbstractCommon_BATCH_TEST(5), 5, false, '');
         assertConstructor('LDVMode, Additional Where, BatchSize', new UTIL_AbstractCommon_BATCH_TEST(5, true, 'Name = \'test\''), 5, true, 'Name = \'test\'');
     }
-
 
     /*******************************************************************************************************************
      * @description asserts the member variables that are set during construction of the batch class
@@ -139,19 +120,11 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void executeAddtlWhereClauseLDV() {
-        List<Account> accs = new List<Account>();
-
-        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
-            accs.add(
-                new Account(
-                    Name = '3-Test Account #' + i
-                )
-            );
-        }
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'3-Test Account #0\'');
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[0].Name + '\'');
         tab.setExpectedResult(1);
 
         Database.executeBatch(tab, 1);
@@ -167,19 +140,11 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void executeAddtlWhereClause() {
-        List<Account> accs = new List<Account>();
-
-        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
-            accs.add(
-                new Account(
-                    Name = '4-Test Account #' + i
-                )
-            );
-        }
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'4-Test Account #0\'');
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[0].Name + '\'');
         tab.setTestChunkSize(10);
         tab.setExpectedResult(1);
 
@@ -196,20 +161,12 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void executeWhereClauseLDV() {
-        List<Account> accs = new List<Account>();
-
-        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
-            accs.add(
-                new Account(
-                    Name = '5-Test Account #' + i
-                )
-            );
-        }
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
-        tab.setTestWhereClause('Name = \'5-Test Account #0\'');
+        tab.setTestWhereClause('Name = \'' + accs[0].Name + '\'');
         tab.setExpectedResult(1);
 
         Database.executeBatch(tab, 1);
@@ -225,20 +182,12 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void executeWhereClause() {
-        List<Account> accs = new List<Account>();
-
-        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
-            accs.add(
-                new Account(
-                    Name = '6-Test Account #' + i
-                )
-            );
-        }
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
         UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
-        tab.setTestWhereClause('Name = \'6-Test Account #0\'');
+        tab.setTestWhereClause('Name = \'' + accs[0].Name + '\'');
         tab.setTestChunkSize(10);
         tab.setExpectedResult(1);
 
@@ -255,20 +204,12 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void executeWhereAndAdditionalClauseLDV() {
-        List<Account> accs = new List<Account>();
-
-        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
-            accs.add(
-                new Account(
-                    Name = '7-Test Account #' + i
-                )
-            );
-        }
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'7-Test Account #1\' or Name=\'7-Test Account #2\' or Name=\'7-Test Account #3\'');
-        tab.setTestWhereClause('Name = \'7-Test Account #0\' or Name=\'7-Test Account #1\' or Name=\'7-Test Account #2\'');
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\' or Name=\'' + accs[3].Name + '\'');
+        tab.setTestWhereClause('Name = \'' + accs[0].Name + '\' or Name=\'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\'');
         tab.setExpectedResult(2);
 
         Database.executeBatch(tab, 1);
@@ -284,20 +225,12 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void executeWhereAndAdditionalClause() {
-        List<Account> accs = new List<Account>();
-
-        for (Integer i = 0; i < TEST_ACCOUNT_CNT; i++) {
-            accs.add(
-                new Account(
-                    Name = '8-Test Account #' + i
-                )
-            );
-        }
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'8-Test Account #1\' or Name=\'8-Test Account #2\' or Name=\'8-Test Account #3\'');
-        tab.setTestWhereClause('Name = \'8-Test Account #0\' or Name=\'8-Test Account #1\' or Name=\'8-Test Account #2\'');
+        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\' or Name=\'' + accs[3].Name + '\'');
+        tab.setTestWhereClause('Name = \'' + accs[0].Name + '\' or Name=\'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\''                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          );
         tab.setTestChunkSize(10);
         tab.setExpectedResult(2);
 
