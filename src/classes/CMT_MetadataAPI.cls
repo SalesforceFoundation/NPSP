@@ -96,49 +96,34 @@ public class CMT_MetadataAPI {
     /******************************************************************************************************************
      * @description Initiate a deployment of custom metadata type records.
      * @param mtToDeploy List of CustomMetadata objects to deploy
-     */
-    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
-
-        // Add all queued up metadata updates to the deployment container
-        Metadata.DeployContainer mdContainer = getDeployContainer(mtToDeploy);
-
-        // Setup deploy callback
-        MetadataCallBack callback = new MetadataCallBack(jobId);
-
-        // Enqueue custom metadata deployment and return the Job Id
-        if (!Test.isRunningTest()) {
-            Metadata.Operations.enqueueDeployment(mdContainer, callback);
-        }
-    }
-
-    /**
-     * @description Initiate a deployment of custom metadata type records.
-     * @param mtToDeploy: List of CustomMetadata objects to deploy
-     * @param callback: Instance of Metadata.DeployCallback defined by the caller
-     * @return Id: Deployment Id
-     */
+     * @param callback a MetadataCallBack to handle the deployment result
+     *****************************************************************************************************************/
     public static Id deployMetadata(List<Metadata.CustomMetadata> mtToDeploy, Metadata.DeployCallback callback) {
-        // Add all queued up metadata updates to the deployment container
-        Metadata.DeployContainer mdContainer = getDeployContainer(mtToDeploy);
 
-        // Enqueue custom metadata deployment and return the Deployment Id
-        if (!Test.isRunningTest()) {
-            return Metadata.Operations.enqueueDeployment(mdContainer, callback);
-        }
-        return null;
-    }
-
-    private static Metadata.DeployContainer getDeployContainer(List<Metadata.CustomMetadata> mtToDeploy) {
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
         for (Metadata.CustomMetadata md: mtToDeploy) {
             mdContainer.addMetadata(md);
         }
 
-        return mdContainer;
+        // Enqueue custom metadata deployment and return the Job Id
+        if (!Test.isRunningTest()) {
+            return Metadata.Operations.enqueueDeployment(mdContainer, callback);
+        }
+
+        return null;
     }
 
-    /**
+    /******************************************************************************************************************
+     * @description Initiate a deployment of custom metadata type records.
+     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
+     * @param mtToDeploy List of CustomMetadata objects to deploy
+     *****************************************************************************************************************/
+    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
+        deployMetadata(mtToDeploy, new MetadataCallBack(jobId));
+    }
+
+    /******************************************************************************************************************
      * @description Check the status of metadata deployment
      * @return Metadata.DeployResult JSON
      */
@@ -158,12 +143,13 @@ public class CMT_MetadataAPI {
         return deploymentResponse.deployResult;
     }
 
-    /**
+    /******************************************************************************************************************
      * @description Wrapper used to deserialize the deployment request response
      */
     private class DeploymentResponse {
         Metadata.DeployResult deployResult;
     }
+
 
     /******************************************************************************************************************
      * @description Interface for Metadata Callback Handler
@@ -218,16 +204,18 @@ public class CMT_MetadataAPI {
                 isSuccess = false;
             }
 
-            // Write the deployment status to the custom settings object
-            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-            crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-            // THIS WILL NEED TO BE REFACTORED IF THIS CMT DEPLOYMENT CODE IS USED BY SOMETHING OTHER THAN ROLLUPS
-            crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
-            if (!Test.isRunningTest()) {
-                upsert crlpSettings;
-            }
             if (isSuccess) {
-                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+                if (!Test.isRunningTest()) {
+                    UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+                }
+
+                if (callbackHandler != null) {
+                    callbackHandler.performSuccessHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
+                }
+            } else {
+                if (callbackHandler != null) {
+                    callbackHandler.performErrorHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
+                }
             }
         }
     }
