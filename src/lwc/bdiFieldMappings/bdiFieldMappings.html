@@ -2,10 +2,10 @@
 
     <template if:true={displayFieldMappings}>
 
-        <c-bdi-mapping-modal
+        <c-bdi-field-mapping-modal
             object-mapping={objectMapping}
             is-modal-open={isModalOpen}>
-        </c-bdi-mapping-modal>
+        </c-bdi-field-mapping-modal>
 
         <div class="slds-grid slds-wrap slds-m-bottom_small">
             <div class="slds-size_1-of-2">
@@ -22,6 +22,11 @@
                     onclick={handleOpenModal}
                     class="slds-m-left_x-small slds-float_right">
                 </lightning-button>
+                <lightning-button-icon
+                    icon-name="utility:refresh"
+                    onclick={refresh}
+                    class="slds-float_right">
+                </lightning-button-icon>
             </div>
             <div class="slds-size_1-of-1 slds-m-bottom_large">
                 <h1 class="slds-text-heading_small slds-m-bottom_xx-small">{objectMapping.MasterLabel} Group</h1>
@@ -50,15 +55,13 @@
                         <tempate if:true={isLoading}>
                             <lightning-spinner></lightning-spinner>
                         </tempate>
-                        <template if:false={isLoading}>
-                            <lightning-datatable
-                                key-field="id"
-                                data={fieldMappings}
-                                columns={columns}
-                                hide-checkbox-column
-                                onrowaction={handleRowAction}>
-                            </lightning-datatable>
-                        </template>
+                        <lightning-datatable
+                            key-field="id"
+                            data={fieldMappings}
+                            columns={columns}
+                            hide-checkbox-column
+                            onrowaction={handleRowAction}>
+                        </lightning-datatable>
                     </div>
                 </div>
             </div>

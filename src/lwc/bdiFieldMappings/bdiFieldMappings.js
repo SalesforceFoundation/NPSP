@@ -1,8 +1,9 @@
-import { LightningElement, track, wire, api } from 'lwc';
-import { refreshApex } from '@salesforce/apex';
-import { CurrentPageReference } from 'lightning/navigation';
+import { LightningElement, track, api } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import getFieldMappingsByObjectAndFieldSetNames from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
-import { registerListener, unregisterListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
+import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
+import createDataImportFieldMapping
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
@@ -10,89 +11,64 @@ const actions = [
 ];
 
 const columns = [
-    { label: 'Field Label', fieldName: 'Source_Field_Label', type: 'text', sortable: true },
-    { label: 'Field API Name', fieldName: 'Source_Field_API_Name', type: 'text' },
-    { label: 'Data Type', fieldName: 'Source_Field_Data_Type', type: 'text' },
+    { label: 'Field Label', fieldName: 'Source_Field_Label_xxx', type: 'text', sortable: true },
+    { label: 'Field API Name', fieldName: 'Source_Field_API_Name_xxx', type: 'text' },
+    { label: 'Data Type', fieldName: 'Source_Field_Data_Type_xxx', type: 'text' },
         {
             label: 'Maps To', fieldName: '', type: 'text',
             cellAttributes: { iconName: { fieldName: 'Maps_To_Icon' }, iconPosition: 'right' }
         },
-    { label: 'Field Label', fieldName: 'MasterLabel', type: 'text' },
-    { label: 'Field API Name', fieldName: 'Target_Field_API_Name', type: 'text' },
-    { label: 'Data Type', fieldName: '', type: 'text' },
+    { label: 'Field Label', fieldName: 'Target_Field_Label_xxx', type: 'text' },
+    { label: 'Field API Name', fieldName: 'Target_Field_API_Name_xxx', type: 'text' },
+    { label: 'Data Type', fieldName: 'Target_Field_Data_Type_xxx', type: 'text' },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
 
-export default class Bdi_FieldMappings extends LightningElement {
-    // Testing getting url params from parent component
-    @api url;
-    //
+export default class bdiFieldMappings extends LightningElement {
     @track displayFieldMappings = false;
     @track isLoading = true;
     @track isModalOpen = false;
-    @api objectMapping = this.objectMapping || {
-        DeveloperName: 'Payment',
-        MasterLabel: 'Payment',
-        Object_API_Name__c: 'npe01__OppPayment__c'
-    };
+    @track columns = columns;
+    @api objectMapping;
     @track fieldMappings;
 
-    /*wiredFieldMappings;
-    @wire(getFieldMappingsByObjectAndFieldSetNames, {objectSetName: 'Payment', fieldSetName: 'Migrated_Custom_Field_Mapping_Set'})
-    imperativeWiring(result) {
-        this.wiredFieldMappings = result;
-        if(result.data) {
-            this.fieldMappings = result.data;
-        }
-    }
     @api
-    forceRefresh() {
-        return refreshApex(this.wiredFieldMappings); 
-    }*/
-
-    @track columns = columns;
-    @api forceRefresh() {
-        console.log('forceRefresh()');
+    refresh() {
+        this.isLoading = true;
         this.handleFieldMappings();
     }
 
-    handleNavButton(event) {
+    handleNavButton() {
         fireEvent(this.pageRef, 'showobjectmappings');
     }
 
     connectedCallback() {
-        console.log('bdi_FieldMappings | connectedCallback()');
-        console.log('%c URL DETAILS: ' + this.url, 'font-size: 16px; font-weight: bold;');
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
-        registerListener('forceRefresh', this.forceRefresh, this);
+        registerListener('deleteRowFromTable', this.handleDeleteRowFromTable, this);
+        registerListener('refresh', this.refresh, this);
 
-        // TODO: delete later, using so I can hop directly into the field mappings
-        // component via a url addressable harness aura component
-        //this.handleFieldMappings();
-        //this.displayFieldMappings = true;
+        if (this.objectMapping) {
+            this.handleFieldMappings();
+        }
     }
 
     disconnectedCallback() {
         unregisterAllListeners(this);
     }
 
-    handleShowObjectMappings(event) {
-        console.log('In handleShowObjectMappings for fieldmappings cmp');
+    handleShowObjectMappings() {
         this.displayFieldMappings = false;
     }
 
     handleShowFieldMappings(event) {
-        console.log('In handleShowFieldMappings for fieldmappings cmp');
         this.objectMapping = event.objectMapping;
         this.displayFieldMappings = true;
-        this.forceRefresh();
+        this.refresh();
     }
 
     handleOpenModal() {
-        console.log('bdi_FieldMappings | handleOpenModal()');
-        console.log(this.log(this.objectMapping));
-        fireEvent(this.pageRef,'openModal', { objectMapping: this.objectMapping });
+        fireEvent(this.pageRef, 'openModal', { objectMapping: this.objectMapping, row: undefined });
     }
 
     /*******************************************************************************
@@ -101,8 +77,7 @@ export default class Bdi_FieldMappings extends LightningElement {
     *
     * @param name: Name of the object mapping received from parent component 
     */
-    handleFieldMappings = function () {
-        console.log('bdi_FieldMappings | getFieldMappings()');
+    handleFieldMappings() {
         getFieldMappingsByObjectAndFieldSetNames({
                 objectSetName: this.objectMapping.DeveloperName,
                 // TODO: Get field set name dynamically
@@ -125,19 +100,35 @@ export default class Bdi_FieldMappings extends LightningElement {
     * @param event: Event containing row details of the action
     */
     handleRowAction(event) {
-        console.log('bdi_FieldMappings | handleRowAction()');
+        console.log('bdiFieldMappings | handleRowAction()');
         const actionName = event.detail.action.name;
         const row = event.detail.row;
+
         switch (actionName) {
 
             case 'delete':
                 console.log('DELETE ACTION');
-                this.deleteRowFromDatatable(row);
-                alert('Row deleted from datatable in UI, send delete event');
-                // TODO: Add logic to mark field mapping's field isDeleted = true
-                // Are we going to fire off a 'delete' deployment for every single delete?
-                // Or would it be possible to potentially queue up and send off deletes
-                // as a group? Probably not a good idea. One deployment per delete seems safest.
+                console.log(this.log(row));
+                this.isLoading = true;
+
+                row.Is_Deleted_xxx = true;
+                let clonedRow = JSON.stringify(row);
+
+                createDataImportFieldMapping({fieldMappingString: clonedRow})
+                    .then((data) => {
+                        console.log(this.log(data));
+                        this.handleDeleteResult(row);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.isLoading = false;
+                        this.showToast(
+                            'Error',
+                            '{0}. {1}. {2}.',
+                            'error',
+                            'sticky',
+                            [error.body.exceptionType, error.body.message, error.body.stackTrace]);
+                    });
                 break;
 
             case 'edit':
@@ -145,37 +136,59 @@ export default class Bdi_FieldMappings extends LightningElement {
                 console.log('Row: ', this.log(row));
                 fireEvent(this.pageRef,'openModal', {
                     objectMapping: this.objectMapping,
-                    sourceFieldLabel: row.Source_Field_Label,
-                    sourceFieldAPIName: row.Source_Field_API_Name,
-                    targetFieldAPIName: row.Target_Field_API_Name });
-                // TODO: Add logic to send event to parent container / edit component containing
-                // data on the row (field mapping) to be editted.
+                    row: row });
                 break;
 
             default:
         }
     }
 
-    deleteRowFromDatatable(row) {
-        const { id } = row;
-        const index = this.findRowIndexById(id);
+    handleDeleteResult(row) {
+        this.logBold('bdiFieldMappingModal | handleDeleteResult');
+        let that = this;
+        setTimeout(function() {
+            console.log('First Refresh');
+            that.handleDeleteRowFromDatatable(row);
+            that.isLoading = false;
+            that.showToast(
+                'Success',
+                'Field mapping has been deleted.',
+                'success');
+        }, 5000, that);
+    }
+
+    handleDeleteRowFromDatatable(row) {
+        const { DeveloperName } = row;
+        const index = this.findRowIndexById(DeveloperName);
         if (index !== -1) {
             this.fieldMappings = this.fieldMappings
                 .slice(0, index)
                 .concat(this.fieldMappings.slice(index + 1));
+            //this.refresh();
         }
     }
 
-    findRowIndexById(id) {
+    findRowIndexById(DeveloperName) {
         let ret = -1;
         this.fieldMappings.some((row, index) => {
-            if (row.id === id) {
+            if (row.DeveloperName === DeveloperName) {
                 ret = index;
                 return true;
             }
             return false;
         });
         return ret;
+    }
+
+    showToast(title, message, variant, mode, messageData) {
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+            mode: mode,
+            messageData: messageData
+        });
+        this.dispatchEvent(event);
     }
 
     // TODO: Delete later
@@ -186,5 +199,9 @@ export default class Bdi_FieldMappings extends LightningElement {
     */
     log(object) {
         return JSON.parse(JSON.stringify(object));
+    }
+
+    logBold(string) {
+        return console.log('%c ' + string, 'font-weight: bold; font-size: 16px;');
     }
 }

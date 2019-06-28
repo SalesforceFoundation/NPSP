@@ -2802,9 +2802,9 @@
         <name>Letterhead</name>
     </types>
     <types>
-        <members>bdi_FieldMappings</members>
+        <members>bdiFieldMappings</members>
         <members>bdi_ObjectMappings</members>
-        <members>bdiMappingModal</members>
+        <members>bdiFieldMappingModal</members>
         <members>pubsubNoPageRef</members>
         <name>LightningComponentBundle</name>
     </types>
