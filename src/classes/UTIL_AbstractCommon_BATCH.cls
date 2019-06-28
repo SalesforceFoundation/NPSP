@@ -58,9 +58,23 @@
 */
 public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
+    /**
+     * @description The Maximum LDV Chunk size that is allowed to be used.  If > MAX will use the MAX
+     */
     private static final Integer MAX_LDV_CHUNK_SIZE = 10000000;
+    /**
+     * @description Default size to use when chunking records
+     */
     private static final Integer DEFAULT_LDV_CHUNK_SIZE = 1000000;
+    /**
+     * @description Default Maximum Size in # of records between min and max Id before it must run in LDV Chunking Mode
+     */
+    private static final Integer DEFAULT_MAX_NON_LDV_SIZE = 1000000;
+    /**
+     * @description Default size of the batch when re-executing in chunk mode, if not provided
+     */
     private static final Integer DEFAULT_BATCH_SIZE = 500;
+
     private Id startId;
     private Id endId;
     private Id currentEndId;
@@ -136,21 +150,6 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
         this.chunkIteration = 0;
         this.ldvMode = ldvMode;
         this.additionalWhereClause = additionalWhereClause;
-    }
-
-    public Object withBatchSize(Integer batchSize) {
-        this.batchSize = batchSize;
-        return this;
-    }
-
-    public Object withLDVMode(Boolean ldvMode) {
-        this.ldvMode = ldvMode;
-        return this;
-    }
-
-    public Object withAdditionalWhereClause(String additionalWhereClause) {
-        this.additionalWhereClause = additionalWhereClause;
-        return this;
     }
 
     /**
@@ -408,7 +407,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
 
     /**
      * @description Returns an indicator indicating whether or not a batch should execute in LDV Chunking mode.  Basically, if the theoretical record distance
-     * exceeds the LDV Chunk Size, it will return true, and false otherwise.  If the Ids are null, meaning there are no records present,
+     * exceeds either the maximum non LDV size allowed for the job or the LDV Chunk Size, it will return true, and false otherwise.  If the Ids are null, meaning there are no records present,
      * computeRecordDistance returns a negative number.  In all other cases, the record distance is a positive number.
      * @param startId Starting Id of the all records present in the object
      * @param endId Ending Id of the records in the object
@@ -417,7 +416,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     @testVisible private boolean isLDVCircumstance(Id startId, Id endId) {
         Long recordDistance = UTIL_SalesforceID.computeRecordDistance(startId, endId);
 
-        return recordDistance > getValidLDVChunkSize();
+        return (recordDistance > getMaxNonLDVSize() || recordDistance > getLDVChunkSize());
     }
 
     /**
@@ -458,6 +457,16 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     public virtual Integer getLDVChunkSize() {
         return DEFAULT_LDV_CHUNK_SIZE;
     }
+
+    /**
+     * @description Returns 1,000,000 by default for the maximum non LDV size, but can be overriden by implementing class to return a different value.  This value will be used
+     * in the disctance check between the minimum and the maximum Id of the object when deciding whether to run in regular or LDV mode
+     * @return Integer Maximum number of records that be present for the distance check before running in LDV mode
+     */
+    public virtual Integer getMaxNonLDVSize() {
+        return DEFAULT_MAX_NON_LDV_SIZE;
+    }
+
 
     /**
      * Returns ID by default.  Can be modified to return other fields, and subQueries instead
