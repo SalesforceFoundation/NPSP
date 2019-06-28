@@ -1,14 +1,9 @@
-import { LightningElement, track, wire, api } from 'lwc';
-import { refreshApex } from '@salesforce/apex';
+import { LightningElement, track, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { CurrentPageReference } from 'lightning/navigation';
 import getFieldMappingsByObjectAndFieldSetNames from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
-import { registerListener, unregisterListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
+import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
-
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import DATAIMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
@@ -30,81 +25,49 @@ const columns = [
 ];
 
 export default class bdiFieldMappings extends LightningElement {
-
-    @track diObjectInfo;
- 
-    @wire(getObjectInfo, { objectApiName: DATAIMPORT_OBJECT })
-    diObjectInfo;
-
     @track displayFieldMappings = false;
     @track isLoading = true;
     @track isModalOpen = false;
     @track columns = columns;
-    @api objectMapping = {
-        Id: 'm034P000000buts',
-        DeveloperName: 'Payment',
-        MasterLabel: 'Payment',
-        Object_API_Name__c: 'npe01__OppPayment__c'
-    };
-
+    @api objectMapping;
     @track fieldMappings;
-    wiredFieldMappings
-    @wire(getFieldMappingsByObjectAndFieldSetNames, { objectSetName: '$objectMapping.DeveloperName', fieldSetName: 'Migrated_Custom_Field_Mapping_Set' })
-    fieldMappingsWiring(result) {
-        this.wiredFieldMappings = result;
-        if (result.data) {
-            this.fieldMappings = result.data;
-        }
-    }
 
     @api
-    forceRefresh() {
-        console.log('attempting to refresh');
-        return refreshApex(this.wiredFieldMappings); 
+    refresh() {
+        this.isLoading = true;
+        this.handleFieldMappings();
     }
 
-    handleNavButton(event) {
+    handleNavButton() {
         fireEvent(this.pageRef, 'showobjectmappings');
     }
 
     connectedCallback() {
-        console.log('bdiFieldMappings | connectedCallback()');
-        let outerThis = this;
-        setTimeout(function() {
-            console.log('%c Object Schema Data: ', 'font-size: 16px; font-weight: bold;');
-            console.log(JSON.parse(JSON.stringify(outerThis.diObjectInfo.data)));
-        }, 3000, outerThis);
-
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
         registerListener('deleteRowFromTable', this.handleDeleteRowFromTable, this);
-        registerListener('forceRefresh', this.forceRefresh, this);
+        registerListener('refresh', this.refresh, this);
 
-        // TODO: delete later, using so I can hop directly into the field mappings
-        // component via a url addressable harness aura component
-        this.handleFieldMappings();
-        //this.displayFieldMappings = true;
+        if (this.objectMapping) {
+            this.handleFieldMappings();
+        }
     }
 
     disconnectedCallback() {
         unregisterAllListeners(this);
     }
 
-    handleShowObjectMappings(event) {
-        console.log('In handleShowObjectMappings for fieldmappings cmp');
+    handleShowObjectMappings() {
         this.displayFieldMappings = false;
     }
 
     handleShowFieldMappings(event) {
-        this.logBold('In handleShowFieldMappings for fieldmappings cmp');
         this.objectMapping = event.objectMapping;
         this.displayFieldMappings = true;
-        this.forceRefresh();
+        this.refresh();
     }
 
     handleOpenModal() {
-        console.log('bdiFieldMappings | handleOpenModal()');
-        console.log(this.log(this.objectMapping));
         fireEvent(this.pageRef, 'openModal', { objectMapping: this.objectMapping, row: undefined });
     }
 
@@ -114,8 +77,7 @@ export default class bdiFieldMappings extends LightningElement {
     *
     * @param name: Name of the object mapping received from parent component 
     */
-    handleFieldMappings = function () {
-        console.log('bdiFieldMappings | getFieldMappings()');
+    handleFieldMappings() {
         getFieldMappingsByObjectAndFieldSetNames({
                 objectSetName: this.objectMapping.DeveloperName,
                 // TODO: Get field set name dynamically
@@ -146,9 +108,10 @@ export default class bdiFieldMappings extends LightningElement {
 
             case 'delete':
                 console.log('DELETE ACTION');
+                console.log(this.log(row));
                 this.isLoading = true;
 
-                row.Is_Deleted__c = true;
+                row.Is_Deleted_xxx = true;
                 let clonedRow = JSON.stringify(row);
 
                 createDataImportFieldMapping({fieldMappingString: clonedRow})

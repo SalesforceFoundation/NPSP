@@ -45,6 +45,7 @@ export default class Bdi_ObjectMappings extends LightningElement {
     }
 
     connectedCallback() {
+        console.log('bdi_ObjectMappings | connectedCallback()');
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
     }

@@ -63,7 +63,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         return useableDFRs;
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static DataImportFieldMappingWrapper[] getFieldMappingsByObjectAndFieldSetNames(
         String objectSetName, String fieldSetName) {
 

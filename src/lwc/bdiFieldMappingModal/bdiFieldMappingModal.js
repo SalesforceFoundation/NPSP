@@ -34,7 +34,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     @api targetObjectFieldsByAPIName;
 
     connectedCallback() {
-        this.logBold('bdiFieldMappingModal | connectCallback()');
         registerListener('openModal', this.handleOpenModal, this);
 
         this.handleGetDataImportFieldDescribes();
@@ -52,15 +51,12 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     handleOpenModal(event) {
         this.logBold('bdiFieldMappingModal | handleOpenModal()');
-        console.log('ObjectMapping: ', this.log(event.objectMapping));
-        console.log('Event: ', this.log(event));
         this.isModalOpen = true;
         this.isLoading = true;
         this.objectMapping = event.objectMapping;
         this.row = event.row;
 
         if (this.row) {
-            console.log('Made it in here? Row exists?');
             this.selectedSourceFieldLabel = this.row.Source_Field_Label_xxx;
             this.selectedSourceFieldAPIName = this.diFieldsByLabel[this.row.Source_Field_Label_xxx];
             this.selectedTargetFieldAPIName = this.row.Target_Field_API_Name_xxx.toLowerCase();
@@ -83,15 +79,12 @@ export default class bdiFieldMappingModal extends LightningElement {
         let clonedRow;
 
         if (this.row) {
-            console.log('setting source and target fields...');
             // Set source and target fields
             this.row.Source_Field_API_Name_xxx = this.selectedSourceFieldAPIName;
             this.row.Target_Field_API_Name_xxx = this.selectedTargetFieldAPIName;
             clonedRow = JSON.stringify(this.row);
         } else {
-            console.log('creating new field mapping...');
             // New Field Mapping
-
             clonedRow = JSON.stringify({
                 Data_Import_Field_Mapping_Set__c: 'Migrated_Custom_Field_Mapping_Set',
                 DeveloperName: null,
@@ -103,7 +96,6 @@ export default class bdiFieldMappingModal extends LightningElement {
                 Target_Field_API_Name__c: this.selectedTargetFieldAPIName,
                 Target_Object_Mapping__c: this.objectMapping.DeveloperName
             });
-            console.log(clonedRow);
         }
 
         createDataImportFieldMapping({fieldMappingString: clonedRow})
@@ -128,7 +120,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         let that = this;
         setTimeout(function() {
             console.log('First Refresh');
-            fireEvent(that.pageRef, 'forceRefresh', {});
+            fireEvent(that.pageRef, 'refresh', {});
             that.isModalOpen = false;
             that.isLoading = false;
             that.showToast(
@@ -146,32 +138,20 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     handleSourceFieldAPINameChange(event) {
         this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
-        console.log(event.detail.value);
-        console.log(this.diFieldsByLabel[event.detail.value]);
-        let selectedSourceFieldLabel = event.detail.value;
-        let selectedSourceFieldAPIName = this.diFieldsByLabel[selectedSourceFieldLabel];
-        this.selectedSourceFieldAPIName = selectedSourceFieldAPIName;
-        this.selectedSourceFieldLabel = selectedSourceFieldLabel;
+        this.selectedSourceFieldLabel = event.detail.value;
+        this.selectedSourceFieldAPIName = this.diFieldsByLabel[event.detail.value];
     }
 
     handleTargetFieldLabelChange(event) {
         this.logBold('bdiFieldMappingModal | handleTargetFieldLabelChange()');
-        console.log(event.detail.value);
-        console.log(this.targetObjectFieldsByAPIName[event.detail.value]);
-        let selectedTargetFieldAPIName = event.detail.value;
-        let selectedTargetFieldLabel = this.targetObjectFieldsByAPIName[selectedTargetFieldAPIName];
-        this.selectedTargetFieldAPIName = selectedTargetFieldAPIName;
-        this.selectedTargetFieldLabel = selectedTargetFieldLabel;
+        this.selectedTargetFieldAPIName = event.detail.value;
+        this.selectedTargetFieldLabel = this.targetObjectFieldsByAPIName[event.detail.value];
     }
 
     handleTargetFieldAPINameChange(event) {
         this.logBold('bdiFieldMappingModal | handleTargetFieldAPINameChange()');
-        console.log(event.detail.value);
-        console.log(this.targetObjectFieldsByLabel[event.detail.value]);
-        let selectedTargetFieldLabel = event.detail.value;
-        let selectedTargetFieldAPIName = this.targetObjectFieldsByLabel[selectedTargetFieldLabel];
-        this.selectedTargetFieldAPIName = selectedTargetFieldAPIName;
-        this.selectedTargetFieldLabel = selectedTargetFieldLabel;
+        this.selectedTargetFieldLabel = event.detail.value;
+        this.selectedTargetFieldAPIName = this.targetObjectFieldsByLabel[event.detail.value];
     }
 
     handleGetDataImportFieldDescribes() {
@@ -193,7 +173,6 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 this.sourceFieldLabelOptions = sourceFieldLabelOptions;
                 this.sourceFieldAPINameOptions = sourceFieldAPINameOptions;
-                
 
                 // TODO: Clean up or find better way. Currently being used in order to set
                 // the value for the sibling combobox when one or the other is updated
@@ -214,7 +193,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleGetTargetObjectFieldDescribes() {
-        // TODO: Dynamically get object name
         getObjectFieldDescribes({objectName: this.objectMapping.Object_API_Name__c})
             .then((data) => {
                 let targetFieldLabelOptions = [], targetFieldAPINameOptions = [];
@@ -233,7 +211,6 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 this.targetFieldLabelOptions = targetFieldLabelOptions;
                 this.targetFieldAPINameOptions = targetFieldAPINameOptions;
-                
 
                 // TODO: Clean up or find better way. Currently being used in order to set
                 // the value for the sibling combobox when one or the other is updated
