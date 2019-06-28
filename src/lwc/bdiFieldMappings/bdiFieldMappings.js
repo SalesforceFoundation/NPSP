@@ -117,12 +117,7 @@ export default class bdiFieldMappings extends LightningElement {
                 createDataImportFieldMapping({fieldMappingString: clonedRow})
                     .then((data) => {
                         console.log(this.log(data));
-                        this.handleDeleteRowFromDatatable(row);
-                        this.isLoading = false;
-                        this.showToast(
-                            'Success',
-                            'Field mapping has been deleted.',
-                            'success');
+                        this.handleDeleteResult(row);
                     })
                     .catch((error) => {
                         console.log(error);
@@ -148,20 +143,35 @@ export default class bdiFieldMappings extends LightningElement {
         }
     }
 
+    handleDeleteResult(row) {
+        this.logBold('bdiFieldMappingModal | handleDeleteResult');
+        let that = this;
+        setTimeout(function() {
+            console.log('First Refresh');
+            that.handleDeleteRowFromDatatable(row);
+            that.isLoading = false;
+            that.showToast(
+                'Success',
+                'Field mapping has been deleted.',
+                'success');
+        }, 5000, that);
+    }
+
     handleDeleteRowFromDatatable(row) {
-        const { id } = row;
-        const index = this.findRowIndexById(id);
+        const { DeveloperName } = row;
+        const index = this.findRowIndexById(DeveloperName);
         if (index !== -1) {
             this.fieldMappings = this.fieldMappings
                 .slice(0, index)
                 .concat(this.fieldMappings.slice(index + 1));
+            //this.refresh();
         }
     }
 
-    findRowIndexById(id) {
+    findRowIndexById(DeveloperName) {
         let ret = -1;
         this.fieldMappings.some((row, index) => {
-            if (row.id === id) {
+            if (row.DeveloperName === DeveloperName) {
                 ret = index;
                 return true;
             }
