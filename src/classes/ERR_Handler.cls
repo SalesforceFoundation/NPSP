@@ -294,13 +294,24 @@ public class ERR_Handler {
     * @return void
     */
     public static void processErrors(List<Error__c> errorRecords, String context) {
+        processErrors(errorRecords, context, false);
+    }
+
+    /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * @param errorRecords The errors to store.
+    * @param context The context the errors were raised on.
+    * @param ignoreStoreErrorsSetting Will overridethe Error Setting that controls whether Errors are stored or not.  There are certain errors that must be stored no matter what.
+    * @return void
+    */
+    public static void processErrors(List<Error__c> errorRecords, String context, Boolean ignoreStoreErrorsSetting) {
 
         if (errorRecords != null && errorRecords.size() > 0) {
             if (ApexPages.currentPage() != null) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorRecords[0].Full_Message__c));
             }
 
-            if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+            if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c || ignoreStoreErrorsSetting) {
                 List<Error__c> errsToInsert = new List<Error__c>();
 
                 // Using Map to eliminate duplicate records from map
