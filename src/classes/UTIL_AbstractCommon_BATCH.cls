@@ -106,7 +106,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     /**
      * @description Constructor that assumes  that ldvMode will be
      * determined by record distance between min and max Id for main object of batch
-     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.  If a main where clause is also present both will be encapsulated in () and anded.
+     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.
+     *                              If a main where clause is also present both will be encapsulated in () and anded.
      * @param batchSize Integer Size of each batch
      */
     public UTIL_AbstractCommon_BATCH(Integer batchSize, String additionalWhereClause) {
@@ -142,7 +143,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * max Id for the object
      * @param batchSize Integer Size of each batch
      * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
-     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.  If a main where clause is also present both will be encapsulated in () and anded.
+     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.
+     *                               If a main where clause is also present both will be encapsulated in () and anded.
      */
     public UTIL_AbstractCommon_BATCH(Integer batchSize, Boolean ldvMode, String additionalWhereClause) {
         this.endReached = false;
