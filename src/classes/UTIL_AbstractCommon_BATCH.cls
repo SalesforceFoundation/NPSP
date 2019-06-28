@@ -302,9 +302,9 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     public void execute(Database.BatchableContext bc, List<SObject> records) {
 
         // Id of last record in batch of records
-        Id proposedCurrentEndId = records[records.size() - 1].Id;
+        Id LastIdInScope = records[records.size() - 1].Id;
         // Record the last record in the list as the current "end" Id, if greater than our current end id value, or if currently unassigned
-        this.currentEndId = (this.currentEndId == null || proposedCurrentEndId > currentEndId) ? proposedCurrentEndId : currentEndId;
+        this.currentEndId = (this.currentEndId == null || lastIdInScope > currentEndId) ? lastIdInScope : currentEndId;
 
         List<SObject> innerRecords = getInnerRecords(records);
 
