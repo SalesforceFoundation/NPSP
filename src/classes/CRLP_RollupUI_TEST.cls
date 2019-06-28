@@ -39,37 +39,30 @@
 public class CRLP_RollupUI_TEST {
 
     /*********************************************************************************************************
-    * @description Tests getRollupDefinitions()
+    * @description Tests that get rollup definitions returns the current rollups
     */
-    public static testMethod void testGetRollupDefinitions() {
-
-        // Create the test CMDT data
+    @isTest
+    private static void getRollupDefinitionsReturnsTheCurrentRollups() {
         mockRollupCMTValues();
-
         List<CRLP_RollupUI_SVC.RollupTableItem> rollups = CRLP_RollupUI_SVC.getRollupDefinitions();
         System.assertEquals(2,rollups.size());
-
     }
 
     /*********************************************************************************************************
-    * @description Tests getFilterGroupDefinitions()
+    * @description Tests that get filter group returns the current filter groups
     */
-    public static testMethod void testGetFilterGroupDefinitions() {
-
-        // Create the test CMDT data
+    @isTest
+    private static void getFilterGroupsReturnsTheCurrentFilterGroups() {
         mockRollupCMTValues();
-
         List<CRLP_RollupUI_SVC.FilterGroupTableItem> filterGroups = CRLP_RollupUI_SVC.getFilterGroupDefinitions();
         System.assertEquals(1,filterGroups.size());
-
     }
 
     /*********************************************************************************************************
-    * @description Tests setupFilterGroupDetail()
+    * @description Tests that setup Filter Group generates the filter model
     */
-    public static testMethod void testSetupFilterGroupDetail() {
-
-        // Create the test CMDT data
+    @isTest
+    private static void setFilterGroupGeneratesTheFilterModel() {
         mockRollupCMTValues();
 
         Filter_Group__mdt filterGroupMdt = CMT_FilterRule_SEL.cachedFilterGroups[0];
@@ -84,15 +77,13 @@ public class CRLP_RollupUI_TEST {
         System.assertEquals(3,filterGroupModel.filterRuleList.size(), 'There should be 3 Filter Rules');
         System.assertEquals(13,filterGroupModel.operators.size(), 'There should be 13 operators');
         System.assertEquals(objectList.size(),filterGroupModel.filterFieldsByDataType.size(), 'There should be one entry for each object passed in');
-
     }
 
     /*********************************************************************************************************
-    * @description Tests setupRollupGrid()
+    * @description Tests that setup rollup grid generates the rollup grid json model
     */
-    public static testMethod void testSetupRollupGrid() {
-
-        // Create the test CMDT data
+    @isTest
+    private static void setupRollupGridGeneratesTheJsonModel() {
         mockRollupCMTValues();
 
         String jsonModel = CRLP_RollupUI_SVC.setupRollupGrid();
@@ -100,13 +91,11 @@ public class CRLP_RollupUI_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Tests setupRollupDetail()
+    * @description Tests that setup rollup detail generates the json model
     */
-    public static testMethod void testSetupRollupDetail() {
-
-        // Create the test CMDT data
+    @isTest
+    private static void setupRollupDetailGeneratesTheJsonModel() {
         mockRollupCMTValues();
-
         Rollup__mdt rollup = CRLP_Rollup_SEL.cachedRollups[0];
 
         List<String> targetObjectNames = new List<String>{'Account','Contact'};
@@ -117,39 +106,25 @@ public class CRLP_RollupUI_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Tests saveRollup()
+    * @description Tests Saving a new Rollup With Summaries Disabled returns a job id for the deployment
     */
-    public static testMethod void testSaveRollup() {
-
-        CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup('test');
-        rollup.summaryObject = 'Account';
-        rollup.summaryField = 'CustomerPriority__c';
-        rollup.summaryObjectLabel = 'Account';
-        rollup.detailObject = 'Opportunity';
-        rollup.detailField = 'npe01__Member_Level__c';
-        rollup.amountField = 'Amount';
-        rollup.dateField = 'CloseDate';
-        rollup.operation = 'Smallest';
-        rollup.timeBoundOperationType = 'All_Time';
-        rollup.detailObjectLabel = 'Opportunity';
-        rollup.dateObjectLabel = 'Opportunity';
-        rollup.dateObject = 'Opportunity';
-        rollup.summaryFieldlabel = 'Customer Priority';
-        rollup.filterGroupRecordName = 'NPSP_Allocations_Filter';
-        rollup.detailFieldLabel = 'Member Level';
-
+    @isTest
+    private static void saveRollupReturnsDeploymentJob() {
+        CRLP_RollupCMT.Rollup rollup = CRLP_RollupCMT_Test.generateRollup('test');
         String rollupString = JSON.serialize(rollup);
+       
+        Test.startTest();
+        String saveResult = CRLP_RollupUI_SVC.saveRollup(rollupString);
+        Test.stopTest();
 
-        CRLP_RollupUI_SVC.saveRollup(rollupString);
-
-        // nothing to assert since CMDTs can't be inserted/updated in unit tests
-
+        System.assertNotEquals(null, saveResult, 'Job Id should be returned from save');
     }
 
     /*********************************************************************************************************
-    * @description Tests saveFilterGroupAndRules()
+    * @description Tests saveFilterGroup returns a job id for the deployment
     */
-    public static testMethod void testSaveFilterGroupAndRules() {
+    @isTest
+    public static void saveFilterGroupReturnsDeploymentJob() {
 
         CRLP_RollupCMT.FilterGroup filterGroup = new CRLP_RollupCMT.FilterGroup('test');
 
@@ -163,37 +138,37 @@ public class CRLP_RollupUI_TEST {
         rule.operationName = 'Equals';
         rule.value = '1';
         rules.add(rule);
-
         filterGroup.rules = rules;
-
         String filterGroupString = JSON.serialize(filterGroup);
 
-        CRLP_RollupUI_SVC.saveFilterGroupAndRules(filterGroupString);
+        Test.startTest();
+        String saveResult = CRLP_RollupUI_SVC.saveFilterGroupAndRules(filterGroupString);
+        Test.stopTest();
 
-        // nothing to assert since CMDTs can't be inserted/updated in unit tests
-
+        System.assertNotEquals(null, saveResult, 'Job Id should be returned from save');
     }
 
     /*********************************************************************************************************
     * @description Tests getFilterRuleConstantPicklistOptions()
     */
-    public static testMethod void testGetFilterRuleConstantPicklistOptions() {
+    @isTest
+    public static void getFilterRuleReturnsTheCurrentPicklist() {
         String objectName = 'Opportunity';
         String fieldName = 'StageName';
+
         List<Map<String,String>> options = CRLP_RollupUI_SVC.getFilterRuleConstantPicklistOptions(objectName, fieldName);
         List<PicklistEntry> picklistValues = Schema.getGlobalDescribe().get('Opportunity').getDescribe().fields.getMap().get('StageName').getDescribe().getPicklistValues();
+
         System.assertEquals(picklistValues.size(), options.size());
     }
 
     /*********************************************************************************************************
-    * @description Tests getDeploymentStatus()
+    * @description Tests getting the deployment status with invalid params throws an exception
     */
-    public static testMethod void testGetDeploymentStatus_Rollup() {
-
-        // Create the test CMDT data
+    @isTest
+    public static void getInvalidDeploymentIdThrowsAnException() {
         mockRollupCMTValues();
 
-        // Test a failure
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
                 CMT_API_Status__c = '{ "jobId" : "Some Text" }'
@@ -212,8 +187,15 @@ public class CRLP_RollupUI_TEST {
         } catch (Exception e) {
             System.assertNotEquals(null, e.getMessage());
         }
+    }
 
-        // Test a success
+    /*********************************************************************************************************
+    * @description Tests getting the deployment status with a valid id returns the json response
+    */
+    @isTest
+    public static void getValidDeploymentReturnsJsonResponse() {
+        mockRollupCMTValues();
+
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
                 CMT_API_Status__c = '{ "jobId" : "'+Metadata.DeployStatus.Succeeded.name()+'" }'
@@ -231,6 +213,10 @@ public class CRLP_RollupUI_TEST {
         System.assertNotEquals(null, response);
 
     }
+
+    /********************************************************************************************************
+    * Helper Functions
+    */
 
     /**
     * @description Create test Rollup__mdt records

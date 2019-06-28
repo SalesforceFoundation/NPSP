@@ -52,6 +52,18 @@
         <type>TextArea</type>
     </fields>
     <fields>
+        <fullName>CMT_Deployment_ID__c</fullName>
+        <description>ID of Custom Metadata deployment</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of Custom Metadata deployment</inlineHelpText>
+        <label>CMT Deployment ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Contact_Custom_Unique_ID__c</fullName>
         <description>An optional Unique Id field to use for Contact matching</description>
         <externalId>false</externalId>

@@ -1842,12 +1842,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
     </labels>
     <labels>
+        <fullName>alloPaidPmtsExceedsOpp</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaidPmtsExceedsOpp</shortDescription>
+        <value>The total allocation of paid payments cannot exceed the opportunity allocation for a GAU.</value>
+    </labels>
+    <labels>
         <fullName>alloPaymentNotEnabled</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Payment-level allocations are not enabled.</shortDescription>
         <value>Payment-level Allocations aren't enabled for your organization. Try allocating at the Opportunity level instead.</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentOverallocatedError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaymentOverallocatedError</shortDescription>
+        <value>The amount allocated is more than the amount of the Payment. Please update the Payment Allocation amount(s) so the total equals the Payment Amount. See Opportunity “{0}, Id: {1}”</value>
     </labels>
     <labels>
         <fullName>alloPercentExceed100</fullName>
@@ -1858,12 +1874,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Percent-based Allocations cannot exceed 100%.</value>
     </labels>
     <labels>
+        <fullName>alloPmtOppSingleTransaction</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPmtOppSingleTransaction</shortDescription>
+        <value>Opportunity and Payment Allocations for the same Opportunity record cannot be created or modified at the same time.</value>
+    </labels>
+    <labels>
         <fullName>alloRemainder</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloRemainder</shortDescription>
         <value>Remainder:</value>
+    </labels>
+        <labels>
+        <fullName>alloRemoveOppWithPmt</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloRemoveOppWithPmt</shortDescription>
+        <value>You cannot remove an opportunity allocation for a GAU that has paid payment allocations.</value>
     </labels>
     <labels>
         <fullName>alloSignMistmatch</fullName>
@@ -1918,7 +1950,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiAdditionalObjChildNotUpdated</shortDescription>
-        <value>Error when updating child record lookup field(s) with new parent record id. Error message is:</value>
+        <value>Unable to update the child record's lookup field with new parent record's ID. It was unable to update because of this system error:</value>
     </labels>
     <labels>
         <fullName>bdiAdditionalObjPredNotFound</fullName>
@@ -2081,12 +2113,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Created</value>
     </labels>
     <labels>
-        <fullName>bdiCustomObjectMappingSummary</fullName>
+        <fullName>bdiAdvancedMapping</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Custom Object Mapping Summary</shortDescription>
-        <value>Data Import Field Mapping</value>
+        <shortDescription>Data Import Advanced Mapping Summary</shortDescription>
+        <value>Data Import Advanced Mapping</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
@@ -2167,6 +2199,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiDataImporterTitle</shortDescription>
         <value>NPSP Data Import</value>
+    </labels>
+    <labels>
+        <fullName>bdiDeploymentInProgress</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDeploymentInProgress</shortDescription>
+        <value>Help Text mappings are currently being converted to Custom Metadata.</value>
     </labels>
     <labels>
         <fullName>bdiDonation</fullName>
@@ -2255,6 +2295,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>error when a batch is missing a name</shortDescription>
         <value>Batch Name is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDataImportCustomSettings</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when updating data import custom settings</shortDescription>
+        <value>There was an error attempting to update the Custom Settings named Data Import Settings.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDeploymentFailed</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error deploying metadata during migration from help text to metadata mapping</shortDescription>
+        <value>There was an error attempting to deploy Custom Metadata.</value>
     </labels>
     <labels>
         <fullName>bdiErrorDonationLookupMatch</fullName>
@@ -6116,6 +6172,67 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <value>The Account model used by the Nonprofit Success Pack. This option controls what happens when you create a Contact with a blank Account field value. WARNING: You should not use the Account Model record type you select as the default Account record type for any Profile. Doing so can cause various data issues.</value>
     </labels>
     <labels>
+        <fullName>stgHelpAdvancedMapping1</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping1</shortDescription>
+        <value>When you enable Advanced Mapping, we convert your existing Help Text field mapping in the NPSP Data Import object to use Custom Metadata. Once enabled, you'll edit mappings and create new ones on this page.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMapping2</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping2</shortDescription>
+        <value>You can disable Advanced Mapping and go back to Help Text mapping, but any changes you make with Advanced Mapping will be lost.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMapping3</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping3</shortDescription>
+        <value>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMapping4</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping4</shortDescription>
+        <value>
+            We couldn't convert some of your existing Help Text mappings because they were invalid. Read more about &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;common Help Text mapping issues&lt;/a&gt;. &lt;b&gt;Please take a screenshot of this page or copy the information in the table below to track updates you need to make to these mappings.&lt;/b&gt;
+            &lt;br/&gt;
+            &lt;br/&gt;
+            You can correct these mappings when you configure Advanced Mapping on the next screen. Please note, these changes will be lost if you turn off Advanced Mapping.
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMappingInvalidHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMappingInvalidHelpText</shortDescription>
+        <value>Invalid Help Text Mappings</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMappingTableHeader1</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMappingTableHeader1</shortDescription>
+        <value>NPSP Data Import Field</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMappingTableHeader2</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMappingTableHeader2</shortDescription>
+        <value>Current Help Text Value</value>
+    </labels>
+    <labels>
         <fullName>stgHelpAlloFiscalYearRollups</fullName>
         <categories>Allocation, Settings</categories>
         <language>en_US</language>
@@ -6151,7 +6268,7 @@ When you enable Payment Allocations, existing rollups remain the same. We do not
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAutoAffil</shortDescription>
-        <value>When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organization Accounts (Account record type = Organization) whenever the Contact&apos;s Account field or Primary Affiliation field changes.</value>
+        <value>When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organization Accounts whenever the Contact's Account field or Primary Affiliation field changes. Organizations Accounts include all Record Types except those defined as Household or One-to-One Account Record Types.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoRelCampaignRT</fullName>
@@ -6200,16 +6317,6 @@ When you enable Payment Allocations, existing rollups remain the same. We do not
         <protected>false</protected>
         <shortDescription>stgHelpBDEOppNaming</shortDescription>
         <value>When selected, NPSP uses the default naming convention for batch-entered Opportunities, regardless of the value you enter in the Name field of the batch entry screen. NOTE: This setting has no effect if custom Opportunity Names are configured.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpBDICustomObjectMappingEnable</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgHelpBDICustomObjectMappingEnable</shortDescription>
-        <value>
-            You can find complete Data Import Field Mapping documentation &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
-        </value>
     </labels>
     <labels>
         <fullName>stgHelpBatchAlloRollup</fullName>

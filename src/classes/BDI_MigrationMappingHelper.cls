@@ -37,125 +37,52 @@
 */
 public class BDI_MigrationMappingHelper {
 
-    /**
-     * @description Go through all fields in Data Import object and collect relevant help text mappings
-     * @return A collection of help text field names mapped to an instance of MappingDetail which holds
-     * relevant values for building
-     * the corresponding Metadata Type record (i.e. Source Object Name, Target Object Name, Target Field
-     * API Name, etc)
-     */
-    public Map<String, BDI_HelpTextCMT.MappingDetail> getAllMappedHelpTextFields() {
-
-        Map<String, BDI_HelpTextCMT.MappingDetail> helpTextFieldMap =
-                new Map<String, BDI_HelpTextCMT.MappingDetail>();
-
-        Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap =
-                new Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts>();
-
-        Map<String, Schema.DescribeFieldResult> allDFRs =
-                UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix('DataImport__c'));
-
-
-        for (String dataImportFieldName : allDFRs.keySet()) {
-
-            // check if field is importstatus or imported
-            Boolean isImportStatus = dataImportFieldName.contains('importstatus');
-            Boolean isImportLookup = dataImportFieldName.contains('imported');
-
-            if (isImportStatus || isImportLookup) {
-                // Pass help text values to a new instance of ImportStatusAndLookupParts wrapper class
-                BDI_HelpTextCMT.ImportStatusAndLookupParts importRelatedField =
-                        getImportStatusAndLookupParts(dataImportFieldName, importStatusAndLookupMap);
-
-                importStatusAndLookupMap.put(importRelatedField.objectName, importRelatedField);
-
-                // Found an import status or import lookup field, no help text value so continue
-                continue;
-            }
-
-            DescribeFieldResult sourceField = allDFRS.get(dataImportFieldName);
-            String helpText = sourceField.getInlineHelpText();
-            Boolean helpTextIsUsable = String.isNotBlank(helpText) && !helpText.contains(' ');
-
-            if (helpTextIsUsable) {
-                BDI_HelpTextCMT.HelpTextParts parts = new BDI_HelpTextCMT.HelpTextParts(helpText);
-                Boolean fieldNameIsUsable = String.isNotBlank(parts.fieldName);
-                Boolean objectNameIsUsable = String.isNotBlank(parts.objectName);
-
-                // Check if the current help text mapping's object and field name are usable
-                if (fieldNameIsUsable && objectNameIsUsable) {
-
-                    // Pass help text values to a new instance of MappingDetail wrapper class
-                    BDI_HelpTextCMT.MappingDetail newMappingDetail =
-                            new BDI_HelpTextCMT.MappingDetail(parts.objectName,
-                                    sourceField.Label,
-                                    parts.objectAPIName,parts.fieldName, null, null);
-
-                    helpTextFieldMap.put(sourceField.Name, newMappingDetail);
-
-                    // Remove from map once mapped
-                    allDFRS.remove(dataImportFieldName);
-                }
-            }
-        }
-
-        // Add import status and import lookup field values
-        for (String key : helpTextFieldMap.keySet()) {
-            BDI_HelpTextCMT.MappingDetail mappingDetail = helpTextFieldMap.get(key);
-            setImportStatusAndLookupFields(mappingDetail, importStatusAndLookupMap);
-        }
-
-        return helpTextFieldMap;
+    /*******************************************************************************************************
+    * @description Get a list of by Data Import Field Mapping Set by Developer Name
+    *
+    * @param developerName: String name of the Data Import Field Mapping Set
+    * @return List<Data_Import_Field_Mapping_Set__mdt>
+    */
+    public List<Data_Import_Field_Mapping_Set__mdt> getFieldMappingSet(String developerName) {
+        List<Data_Import_Field_Mapping_Set__mdt> sets =
+            [SELECT Id FROM Data_Import_Field_Mapping_Set__mdt WHERE DeveloperName = :developerName];
+        return sets;
     }
 
-    /**
-     * @description Set import lookup and import status fields on the MappingDetail instance
-     * @param  mappingDetail Instance of MappingDetail where fields are to be set
-     * @param  importStatusAndLookupMap Map holding the field values to be set to MappingDetail
-     */
-    private void setImportStatusAndLookupFields(BDI_HelpTextCMT.MappingDetail mappingDetail,
-            Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap) {
+    /*******************************************************************************************************
+    * @description Get a list of Help Text Field Mappings from Data Import Help Text Field Describes
+    *
+    * @return List<Data_Import_Field_Mapping_Set__mdt>
+    */
+    public List<BDI_MigrationMappingUtility.HelpTextFieldMapping> getAllHelpTextFieldMappings() {
 
-        BDI_HelpTextCMT.ImportStatusAndLookupParts importStatusAndLookupParts =
-                importStatusAndLookupMap.get(mappingDetail.dataImportObjectName);
+        Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
+            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(
+                BDI_MigrationMappingUtility.DATA_IMPORT_OBJECT_NAME));
 
-        mappingDetail.importedRecordField = importStatusAndLookupParts.importLookupFieldName;
-        mappingDetail.importedRecordStatusField = importStatusAndLookupParts.importStatusFieldName;
-    }
+        List<BDI_MigrationMappingUtility.HelpTextFieldMapping> helpTextFieldMappings =
+            new List<BDI_MigrationMappingUtility.HelpTextFieldMapping>();
 
-    /**
-     * @description Builds an instance of ImportStatusAndLookupParts which holds an object name,
-     *              ImportedLookup__c and ImportStatus__c field names
-     * @param dataImportFieldName Name of a Data Import field
-     * @param importStatusAndLookupMap List of ImportStatusAndLookupParts instances
-     * @return instance of ImportStatusAndLookupParts
-     */
-    private BDI_HelpTextCMT.ImportStatusAndLookupParts getImportStatusAndLookupParts(String dataImportFieldName,
-            Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap) {
+        for (String dataImportFieldName : describeFieldResultsByFieldName.keySet()) {
 
-        // Create new instance of ImportStatusAndLookupParts
-        BDI_HelpTextCMT.ImportStatusAndLookupParts importRelatedField =
-                new BDI_HelpTextCMT.ImportStatusAndLookupParts(dataImportFieldName);
+            DescribeFieldResult sourceField = describeFieldResultsByFieldName.get(dataImportFieldName);
+            BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping =
+                new BDI_MigrationMappingUtility.HelpTextFieldMapping(sourceField);
 
-        // Check if there is already an existing and matching instance of ImportStatusAndLookupParts
-        BDI_HelpTextCMT.ImportStatusAndLookupParts exists =
-                importStatusAndLookupMap.get(importRelatedField.objectName);
-
-        // If one exists, reset instance with newly added field
-        if (exists != null) {
-            importRelatedField = new BDI_HelpTextCMT.ImportStatusAndLookupParts(exists, dataImportFieldName);
+            helpTextFieldMappings.add(helpTextFieldMapping);
         }
 
-        return importRelatedField;
+        return helpTextFieldMappings;
     }
 
-    /**
-     * @description Queries for default Object Mappings and builds a map of DeveloperName to Object Mapping record
-     * Used to check for existance of Object Mapping record without loop
+    /*******************************************************************************************************
+     * @description Queries for default Object Mappings and builds a map of DeveloperName to Object Mapping
+     * record used to check for existance of Object Mapping record without loop
+     *
      * @param objectMappingSetId Id of the default Object Mapping Set
      * @return Collection of Object Mapping DeveloperName to Object Mapping record
      */
-    public Map<String, Data_Import_Object_Mapping__mdt> getDefaultObjectMappings(Id objectMappingSetId) {
+    public Map<String, Data_Import_Object_Mapping__mdt> getObjectMappingsBySetDeveloperName(String developerName) {
         List<Data_Import_Object_Mapping__mdt> existingObjectMappings = [SELECT 
                     Id, 
                     Label, 
@@ -168,51 +95,67 @@ public class BDI_MigrationMappingHelper {
                     Relationship_To_Predecessor__c, 
                     Is_Deleted__c
             FROM Data_Import_Object_Mapping__mdt
-            WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSetId];
+            WHERE Data_Import_Object_Mapping_Set__r.DeveloperName = :developerName];
 
-        Map<String, Data_Import_Object_Mapping__mdt> diObjectNameToObjectMappingMap = 
+        Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName = 
             new Map<String, Data_Import_Object_Mapping__mdt>();
 
         for (Data_Import_Object_Mapping__mdt objectMapping : existingObjectMappings) {
-            diObjectNameToObjectMappingMap.put(objectMapping.DeveloperName, objectMapping);
+            objectMappingsByDeveloperName.put(objectMapping.DeveloperName, objectMapping);
         }
 
-        return diObjectNameToObjectMappingMap;
+        return objectMappingsByDeveloperName;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Queries for default Field Mappings and builds a map of DeveloperName to Field Mapping record
      * Used to check for existance of Field Mapping record without loop
      * @param fieldMappingSetId Id of the default Field Mapping Set
      * @return Collection of Field Mapping DeveloperName to Field Mapping record
      */
-    public Map<String, Data_Import_Field_Mapping__mdt> getDefaultFieldMappings(Id fieldMappingSetId) {
+    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByFieldMappingSetDeveloperName(
+        String developerName) {
+
         List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT 
                     Id, 
                     Label, 
+                    MasterLabel,
                     DeveloperName, 
                     Data_Import_Field_Mapping_Set__c,
+                    Data_Import_Field_Mapping_Set__r.Label,
+                    Data_Import_Field_Mapping_Set__r.DeveloperName,
                     Required__c, 
                     Source_Field_API_Name__c, 
                     Target_Field_API_Name__c, 
                     Target_Object_Mapping__c,
                     Target_Object_Mapping__r.Object_API_Name__c,
+                    Target_Object_Mapping__r.DeveloperName,
+                    Target_Object_Mapping__r.MasterLabel,
                     Is_Deleted__c
             FROM Data_Import_Field_Mapping__mdt
-            WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSetId];
+            WHERE Data_Import_Field_Mapping_Set__r.DeveloperName = :developerName];
 
-        Map<String, Data_Import_Field_Mapping__mdt> diFieldNameToFieldMappingMap = 
+        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsBySourceFieldName =
             new Map<String, Data_Import_Field_Mapping__mdt>();
 
         String namespace = UTIL_Namespace.getNamespace();
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
             if (namespace != 'npsp') {
-                fieldMapping.Source_Field_API_Name__c = UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                fieldMapping.Source_Field_API_Name__c =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                fieldMapping.Target_Object_Mapping__r.Object_API_Name__c =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
             }
-            diFieldNameToFieldMappingMap.put(fieldMapping.Source_Field_API_Name__c, fieldMapping);
+            fieldMappingsBySourceFieldName.put(
+                fieldMapping.Target_Object_Mapping__r.Object_API_Name__c
+                + '.'
+                + fieldMapping.Target_Object_Mapping__r.DeveloperName
+                + '.'
+                + fieldMapping.Source_Field_API_Name__c,
+                fieldMapping);
         }
 
-        return diFieldNameToFieldMappingMap;
+        return fieldMappingsBySourceFieldName;
     }
 }

@@ -252,7 +252,7 @@ public with sharing class USER_UserService {
     * @return True or False
     **********************************************************************************************************/
     public static Boolean isUserRunningLightning() {
-        return (UserInfo.getUiThemeDisplayed() == 'Theme4d');
+        return (UserInfo.getUiThemeDisplayed() == 'Theme4d' || UserInfo.getUiThemeDisplayed() == 'Theme4u');
     }
 
     /*********************************************************************************************************
