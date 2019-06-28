@@ -3,6 +3,7 @@ import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { registerListener, unregisterListener, unregisterAllListeners, fireEvent }
     from 'c/pubsubNoPageRef';
 
@@ -58,21 +59,20 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.objectMapping = event.objectMapping;
         this.row = event.row;
 
-        // TODO: Clean up or find better way. This is how we're setting the edit mode stuff
-        console.log('handleGetTargetObjectFieldDescribes inside then');
-        if (event.sourceFieldLabel && event.targetFieldAPIName) {
-            this.selectedSourceFieldLabel = event.sourceFieldLabel;
-            this.selectedSourceFieldAPIName = this.diFieldsByLabel[event.sourceFieldLabel];
-            console.log(event.targetFieldAPIName);
-            this.selectedTargetFieldAPIName = event.targetFieldAPIName.toLowerCase();
+        if (this.row) {
+            console.log('Made it in here? Row exists?');
+            this.selectedSourceFieldLabel = this.row.Source_Field_Label_xxx;
+            this.selectedSourceFieldAPIName = this.diFieldsByLabel[this.row.Source_Field_Label_xxx];
+            this.selectedTargetFieldAPIName = this.row.Target_Field_API_Name_xxx.toLowerCase();
             this.selectedTargetFieldLabel =
-                this.targetObjectFieldsByAPIName[event.targetFieldAPIName.toLowerCase()];
+                this.targetObjectFieldsByAPIName[this.row.Target_Field_API_Name_xxx.toLowerCase()];
         } else {
             this.selectedSourceFieldLabel = undefined;
             this.selectedSourceFieldAPIName = undefined;
             this.selectedTargetFieldLabel = undefined;
             this.selectedTargetFieldAPIName = undefined;
         }
+
         console.log('Set isLoading to false');
         this.isLoading = false;
     }
@@ -80,13 +80,46 @@ export default class bdiFieldMappingModal extends LightningElement {
     handleSave() {
         this.logBold('bdiFieldMappingModal | handleSave()');
         this.isLoading = true;
-        createDataImportFieldMapping({fieldMappingString: this.buildDataImportFieldMapping()})
+        let clonedRow;
+
+        if (this.row) {
+            console.log('setting source and target fields...');
+            // Set source and target fields
+            this.row.Source_Field_API_Name_xxx = this.selectedSourceFieldAPIName;
+            this.row.Target_Field_API_Name_xxx = this.selectedTargetFieldAPIName;
+            clonedRow = JSON.stringify(this.row);
+        } else {
+            console.log('creating new field mapping...');
+            // New Field Mapping
+
+            clonedRow = JSON.stringify({
+                Data_Import_Field_Mapping_Set__c: 'Migrated_Custom_Field_Mapping_Set',
+                DeveloperName: null,
+                Is_Deleted__c: false,
+                Label: this.selectedSourceFieldLabel,
+                MasterLabel: this.selectedSourceFieldLabel,
+                Required__c: 'No',
+                Source_Field_API_Name__c: this.selectedSourceFieldAPIName,
+                Target_Field_API_Name__c: this.selectedTargetFieldAPIName,
+                Target_Object_Mapping__c: this.objectMapping.DeveloperName
+            });
+            console.log(clonedRow);
+        }
+
+        createDataImportFieldMapping({fieldMappingString: clonedRow})
             .then((data) => {
                 console.log(this.log(data));
                 this.handleSaveResult(data);
             })
             .catch((error) => {
-                console.log(error);
+                console.log(this.log(error));
+                this.isLoading = false;
+                this.showToast(
+                    'Error',
+                    '{0}. {1}. {2}.',
+                    'error',
+                    'sticky',
+                    [error.body.exceptionType, error.body.message, error.body.stackTrace]);
             });
     }
 
@@ -97,46 +130,18 @@ export default class bdiFieldMappingModal extends LightningElement {
             console.log('First Refresh');
             fireEvent(that.pageRef, 'forceRefresh', {});
             that.isModalOpen = false;
+            that.isLoading = false;
+            that.showToast(
+                'Success',
+                '',
+                'success');
         }, 5000, that);
-    }
-
-    buildDataImportFieldMapping() {
-        // TODO: Make dynamic
-        this.logBold('Building Data Import Field Mapping');
-
-        let developerName = null;
-        if (this.row && this.row.DeveloperName) {
-            console.log(this.row);
-            developerName = this.row.DeveloperName;
-        }
-
-        let dataImportFieldMapping = {
-            DeveloperName: developerName,
-            MasterLabel: this.selectedSourceFieldLabel,
-            Label: this.selectedSourceFieldLabel,
-            Source_Field_API_Name__c: this.selectedSourceFieldAPIName,
-            Target_Field_API_Name__c: this.selectedTargetFieldAPIName,
-            Data_Import_Field_Mapping_Set__c: 'Migrated_Custom_Field_Mapping_Set',
-            Target_Object_Mapping__c: this.objectMapping.DeveloperName,
-            Is_Deleted__c: false,
-            Required__c: 'No'};
-        console.log(dataImportFieldMapping);
-        console.log(JSON.stringify(dataImportFieldMapping));
-        
-        return JSON.stringify(dataImportFieldMapping);
     }
 
     handleSourceFieldLabelChange(event) {
         this.logBold('bdiFieldMappingModal | handleSourceFieldLabelChange()');
-        console.log('Event: ', event);
-        console.log('Event.srcElement: ', this.log(event.srcElement));
-        console.log('Event.detail: ', this.log(event.detail));
-        console.log('Event.detail.value: ', event.detail.value);
-        console.log(this.diFieldsByAPIName[event.detail.value]);
-        let selectedSourceFieldAPIName = event.detail.value;
-        let selectedSourceFieldLabel = this.diFieldsByAPIName[selectedSourceFieldAPIName];
-        this.selectedSourceFieldAPIName = selectedSourceFieldAPIName;
-        this.selectedSourceFieldLabel = selectedSourceFieldLabel;
+        this.selectedSourceFieldAPIName = event.detail.value;
+        this.selectedSourceFieldLabel = this.diFieldsByAPIName[event.detail.value];
     }
 
     handleSourceFieldAPINameChange(event) {
@@ -246,6 +251,17 @@ export default class bdiFieldMappingModal extends LightningElement {
             .catch((error) => {
                 console.log(error);
             });
+    }
+
+    showToast(title, message, variant, mode, messageData) {
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+            mode: mode,
+            messageData: messageData
+        });
+        this.dispatchEvent(event);
     }
 
     // TODO: Delete later

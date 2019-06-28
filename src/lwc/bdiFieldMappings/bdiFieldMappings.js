@@ -1,8 +1,12 @@
 import { LightningElement, track, wire, api } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { CurrentPageReference } from 'lightning/navigation';
 import getFieldMappingsByObjectAndFieldSetNames from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
 import { registerListener, unregisterListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
+import createDataImportFieldMapping
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
+
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import DATAIMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 
@@ -12,16 +16,16 @@ const actions = [
 ];
 
 const columns = [
-    { label: 'Field Label', fieldName: 'Source_Field_Label', type: 'text', sortable: true },
-    { label: 'Field API Name', fieldName: 'Source_Field_API_Name', type: 'text' },
-    { label: 'Data Type', fieldName: 'Source_Field_Data_Type', type: 'text' },
+    { label: 'Field Label', fieldName: 'Source_Field_Label_xxx', type: 'text', sortable: true },
+    { label: 'Field API Name', fieldName: 'Source_Field_API_Name_xxx', type: 'text' },
+    { label: 'Data Type', fieldName: 'Source_Field_Data_Type_xxx', type: 'text' },
         {
             label: 'Maps To', fieldName: '', type: 'text',
             cellAttributes: { iconName: { fieldName: 'Maps_To_Icon' }, iconPosition: 'right' }
         },
-    { label: 'Field Label', fieldName: 'MasterLabel', type: 'text' },
-    { label: 'Field API Name', fieldName: 'Target_Field_API_Name', type: 'text' },
-    { label: 'Data Type', fieldName: 'DeveloperName', type: 'text' },
+    { label: 'Field Label', fieldName: 'Target_Field_Label_xxx', type: 'text' },
+    { label: 'Field API Name', fieldName: 'Target_Field_API_Name_xxx', type: 'text' },
+    { label: 'Data Type', fieldName: 'Target_Field_Data_Type_xxx', type: 'text' },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
 
@@ -73,6 +77,7 @@ export default class bdiFieldMappings extends LightningElement {
 
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
+        registerListener('deleteRowFromTable', this.handleDeleteRowFromTable, this);
         registerListener('forceRefresh', this.forceRefresh, this);
 
         // TODO: delete later, using so I can hop directly into the field mappings
@@ -100,7 +105,7 @@ export default class bdiFieldMappings extends LightningElement {
     handleOpenModal() {
         console.log('bdiFieldMappings | handleOpenModal()');
         console.log(this.log(this.objectMapping));
-        fireEvent(this.pageRef, 'openModal', { objectMapping: this.objectMapping });
+        fireEvent(this.pageRef, 'openModal', { objectMapping: this.objectMapping, row: undefined });
     }
 
     /*******************************************************************************
@@ -136,16 +141,36 @@ export default class bdiFieldMappings extends LightningElement {
         console.log('bdiFieldMappings | handleRowAction()');
         const actionName = event.detail.action.name;
         const row = event.detail.row;
+
         switch (actionName) {
 
             case 'delete':
                 console.log('DELETE ACTION');
-                this.deleteRowFromDatatable(row);
-                alert('Row deleted from datatable in UI, send delete event');
-                // TODO: Add logic to mark field mapping's field isDeleted = true
-                // Are we going to fire off a 'delete' deployment for every single delete?
-                // Or would it be possible to potentially queue up and send off deletes
-                // as a group? Probably not a good idea. One deployment per delete seems safest.
+                this.isLoading = true;
+
+                row.Is_Deleted__c = true;
+                let clonedRow = JSON.stringify(row);
+
+                createDataImportFieldMapping({fieldMappingString: clonedRow})
+                    .then((data) => {
+                        console.log(this.log(data));
+                        this.handleDeleteRowFromDatatable(row);
+                        this.isLoading = false;
+                        this.showToast(
+                            'Success',
+                            'Field mapping has been deleted.',
+                            'success');
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.isLoading = false;
+                        this.showToast(
+                            'Error',
+                            '{0}. {1}. {2}.',
+                            'error',
+                            'sticky',
+                            [error.body.exceptionType, error.body.message, error.body.stackTrace]);
+                    });
                 break;
 
             case 'edit':
@@ -153,19 +178,14 @@ export default class bdiFieldMappings extends LightningElement {
                 console.log('Row: ', this.log(row));
                 fireEvent(this.pageRef,'openModal', {
                     objectMapping: this.objectMapping,
-                    sourceFieldLabel: row.Source_Field_Label,
-                    sourceFieldAPIName: row.Source_Field_API_Name,
-                    targetFieldAPIName: row.Target_Field_API_Name,
                     row: row });
-                // TODO: Add logic to send event to parent container / edit component containing
-                // data on the row (field mapping) to be editted.
                 break;
 
             default:
         }
     }
 
-    deleteRowFromDatatable(row) {
+    handleDeleteRowFromDatatable(row) {
         const { id } = row;
         const index = this.findRowIndexById(id);
         if (index !== -1) {
@@ -185,6 +205,17 @@ export default class bdiFieldMappings extends LightningElement {
             return false;
         });
         return ret;
+    }
+
+    showToast(title, message, variant, mode, messageData) {
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+            mode: mode,
+            messageData: messageData
+        });
+        this.dispatchEvent(event);
     }
 
     // TODO: Delete later

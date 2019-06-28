@@ -89,13 +89,23 @@ public class BDI_ManageAdvancedMappingCtrl {
     // Return the jobId
     @AuraEnabled(cacheable=true)
     public static String createDataImportFieldMapping(String fieldMappingString) {
-        Data_Import_Field_Mapping__mdt difm =
-            (Data_Import_Field_Mapping__mdt)JSON.deserialize(fieldMappingString, Data_Import_Field_Mapping__mdt.class);
+        System.debug(LoggingLevel.ERROR, 'createDataImportFieldMapping()');
+        System.debug(fieldMappingString);
+        // TODO: Delete later. Used to test error toast in UI
+        //throw new testerException('SOMETHING WENT WRONG');
+        try {
+            Data_Import_Field_Mapping__mdt difm =
+            (Data_Import_Field_Mapping__mdt)JSON.deserialize(fieldMappingString.replaceAll('_xxx','__c'), Data_Import_Field_Mapping__mdt.class);
 
-        String deploymentId = enqueueMetadataRecords(difm);
+            String deploymentId = enqueueMetadataRecords(difm);
 
-        return deploymentId;
+            return deploymentId;
+        } catch (Exception e) {
+            throw e;
+        }
     }
+    // TODO: Delete later? Used to test error toast in UI
+    public class testerException extends Exception {}
 
     // TODO: Break up into smaller methods?
     // Does the bulk of the work converting records to custom metadata that are enqueueable
@@ -208,31 +218,49 @@ public class BDI_ManageAdvancedMappingCtrl {
         return name;
     }
 
-    // TODO: Delete later, one wrapper if needed
     public class DataImportFieldMappingWrapper {
         @AuraEnabled public String DeveloperName;
         @AuraEnabled public String MasterLabel;
-        @AuraEnabled public String Source_Field_API_Name;
-        @AuraEnabled public String Target_Field_API_Name;
+        @AuraEnabled public String Source_Field_Label_xxx;
+        @AuraEnabled public String Source_Field_API_Name_xxx;
+        @AuraEnabled public String Source_Field_Data_Type_xxx;
+        @AuraEnabled public String Target_Field_Label_xxx;
+        @AuraEnabled public String Target_Field_API_Name_xxx;
+        @AuraEnabled public String Target_Field_Data_Type_xxx;
         @AuraEnabled public String Maps_To_Icon;
-        @AuraEnabled public String Source_Field_Label;
-        @AuraEnabled public String Source_Field_Data_Type;
-        // TODO: Still needs to be assigned
-        @AuraEnabled public String Target_Field_Data_Type;
+        @AuraEnabled public String Label;
+        @AuraEnabled public String Data_Import_Field_Mapping_Set_xxx;
+        @AuraEnabled public String Target_Object_Mapping_xxx;
+        @AuraEnabled public String Required_xxx;
+        @AuraEnabled public Boolean Is_Deleted_xxx;
+
 
         public DataImportFieldMappingWrapper(Data_Import_Field_Mapping__mdt fieldMapping) {
-            Schema.DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(
+            Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
                 UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
                 UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c));
 
+            Schema.DescribeFieldResult targetFieldDescribe = UTIL_Describe.getFieldDescribe(
+                UTIL_Namespace.StrTokenNSPrefix(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c),
+                UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Field_API_Name__c));
+
+            this.DeveloperName = fieldMapping.DeveloperName;
             this.MasterLabel = fieldMapping.MasterLabel;
-            this.Source_Field_API_Name = fieldMapping.Source_Field_API_Name__c;
-            this.Target_Field_API_Name = fieldMapping.Target_Field_API_Name__c;
+            this.Source_Field_Label_xxx = sourceFieldDescribe.label;
+            this.Source_Field_API_Name_xxx = fieldMapping.Source_Field_API_Name__c;
+            this.Source_Field_Data_Type_xxx = String.valueOf(sourceFieldDescribe.type);
+
+            this.Target_Field_Label_xxx = targetFieldDescribe.label;
+            this.Target_Field_API_Name_xxx = fieldMapping.Target_Field_API_Name__c;
+            this.Target_Field_Data_Type_xxx = String.valueOf(targetFieldDescribe.type);
 
             this.Maps_To_Icon = 'utility:forward';
-            this.Source_Field_Label = dfr.label;
-            this.Source_Field_Data_Type = String.valueOf(dfr.type);
-            this.DeveloperName = fieldMapping.DeveloperName;
+
+            this.Label = fieldMapping.MasterLabel;
+            this.Data_Import_Field_Mapping_Set_xxx = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
+            this.Target_Object_Mapping_xxx = fieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.Required_xxx = fieldMapping.Required__c;
+            this.Is_Deleted_xxx = fieldMapping.Is_Deleted__c;
         }
     }
 
