@@ -84,11 +84,11 @@
         <members>BDI_FieldMappingCustomMetadata</members>
         <members>BDI_FieldMappingCustomMetadataTest</members>
         <members>BDI_FieldMappingHelpText</members>
-        <members>BDI_HelpTextCMT</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_MigrationMappingHelper</members>
+        <members>BDI_MigrationMappingHelperTest</members>
         <members>BDI_MigrationMappingUtility</members>
         <members>BDI_MigrationMappingUtilityTest</members>
         <members>BDI_ObjectMappingLogic</members>
@@ -373,7 +373,7 @@
         <members>STG_PanelContacts_CTRL</members>
         <members>STG_PanelCreatePayments_CTRL</members>
         <members>STG_PanelCustomizableRollup_CTRL</members>
-        <members>STG_PanelDataImportMapping_CTRL</members>
+        <members>STG_PanelDataImportAdvancedMapping_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
@@ -557,7 +557,7 @@
         <members>STG_PanelContacts</members>
         <members>STG_PanelCreatePayments</members>
         <members>STG_PanelCustomizableRollup</members>
-        <members>STG_PanelDataImportMapping</members>
+        <members>STG_PanelDataImportAdvancedMapping</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
         <members>STG_PanelHealthCheck</members>
@@ -936,6 +936,7 @@
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Batch_Size__c</members>
         <members>Data_Import_Settings__c.CMT_API_Status__c</members>
+        <members>Data_Import_Settings__c.CMT_Deployment_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Default_Data_Import_Field_Mapping_Set__c</members>
@@ -1426,6 +1427,7 @@
         <members>bdiAdditionalObjChildNotUpdated</members>
         <members>bdiAdditionalObjPredNotFound</members>
         <members>bdiAdditionalObjRequiredFieldsNull</members>
+        <members>bdiAdvancedMapping</members>
         <members>bdiBatchException</members>
         <members>bdiBehaviorBestMatchOrCreate</members>
         <members>bdiBehaviorDoNotMatch</members>
@@ -1444,7 +1446,6 @@
         <members>bdiContactMatchFnameLnamePhone</members>
         <members>bdiContactMatchLnameEmail</members>
         <members>bdiCreated</members>
-        <members>bdiCustomObjectMappingSummary</members>
         <members>bdiDataImporterConfigTitle</members>
         <members>bdiDataImporterDescription</members>
         <members>bdiDataImporterInfoLine1</members>
@@ -1455,6 +1456,7 @@
         <members>bdiDataImporterInfoTitle</members>
         <members>bdiDataImporterNumToProcess</members>
         <members>bdiDataImporterTitle</members>
+        <members>bdiDeploymentInProgress</members>
         <members>bdiDonation</members>
         <members>bdiDonationMatchingRuleEmpty</members>
         <members>bdiDryRunBeginButton</members>
@@ -1466,6 +1468,8 @@
         <members>bdiDryRunRecordsValidated</members>
         <members>bdiDryRunTitle</members>
         <members>bdiErrorBatchNameRequired</members>
+        <members>bdiErrorDataImportCustomSettings</members>
+        <members>bdiErrorDeploymentFailed</members>
         <members>bdiErrorDonationLookupMatch</members>
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
@@ -1952,6 +1956,13 @@
         <members>stgErrorInvalidNameFormat</members>
         <members>stgHHNameRefreshTitle</members>
         <members>stgHelpAccountModel</members>
+        <members>stgHelpAdvancedMapping1</members>
+        <members>stgHelpAdvancedMapping2</members>
+        <members>stgHelpAdvancedMapping3</members>
+        <members>stgHelpAdvancedMapping4</members>
+        <members>stgHelpAdvancedMappingInvalidHelpText</members>
+        <members>stgHelpAdvancedMappingTableHeader1</members>
+        <members>stgHelpAdvancedMappingTableHeader2</members>
         <members>stgHelpAlloFiscalYearRollups</members>
         <members>stgHelpAlloNDayValue</members>
         <members>stgHelpAllocationLevel</members>
@@ -1962,7 +1973,6 @@
         <members>stgHelpAutoRelType</members>
         <members>stgHelpBDEAllowBlankOppNames</members>
         <members>stgHelpBDEOppNaming</members>
-        <members>stgHelpBDICustomObjectMappingEnable</members>
         <members>stgHelpBatchAlloRollup</members>
         <members>stgHelpBatchCreateDefault</members>
         <members>stgHelpBatchOppRollup</members>

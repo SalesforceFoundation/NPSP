@@ -34,14 +34,6 @@
 public class CMT_MetadataAPI {
 
     /**
-     * @description Enum of the supported 'callers'
-     */
-    public enum Source {
-        CUSTOMIZABLE_ROLLUPS,
-        HELP_TEXT_MIGRATION
-    }
-
-    /**
      * @description Static list of queued metadata updates to submit in a single process rather than
      * one update at a time.
      */
@@ -104,25 +96,9 @@ public class CMT_MetadataAPI {
     /******************************************************************************************************************
      * @description Initiate a deployment of custom metadata type records.
      * @param mtToDeploy List of CustomMetadata objects to deploy
-     */
-    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
-        deployMetadata(jobId, mtToDeploy, CMT_MetadataAPI.Source.CUSTOMIZABLE_ROLLUPS);
-    }
-
-    /**
-     * @description Initiate a deployment of custom metadata type records.
-     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
-     * @param mtToDeploy List of CustomMetadata objects to deploy
-     */
-    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy, Source source) {
-        deployMetadata(mtToDeploy, new MetadataCallBack(jobId, source));
-    }
-    /**
-     * @description Initiate a deployment of custom metadata type records.
-     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
-     * @param mtToDeploy List of CustomMetadata objects to deploy
-     */
-    public static void deployMetadata(List<Metadata.CustomMetadata> mtToDeploy, MetadataCallBack callback) {
+     * @param callback a MetadataCallBack to handle the deployment result
+     *****************************************************************************************************************/
+    public static Id deployMetadata(List<Metadata.CustomMetadata> mtToDeploy, Metadata.DeployCallback callback) {
 
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
@@ -132,9 +108,48 @@ public class CMT_MetadataAPI {
 
         // Enqueue custom metadata deployment and return the Job Id
         if (!Test.isRunningTest()) {
-            Metadata.Operations.enqueueDeployment(mdContainer, callback);
+            return Metadata.Operations.enqueueDeployment(mdContainer, callback);
         }
+
+        return null;
     }
+
+    /******************************************************************************************************************
+     * @description Initiate a deployment of custom metadata type records.
+     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
+     * @param mtToDeploy List of CustomMetadata objects to deploy
+     *****************************************************************************************************************/
+    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
+        deployMetadata(mtToDeploy, new MetadataCallBack(jobId));
+    }
+
+    /******************************************************************************************************************
+     * @description Check the status of metadata deployment
+     * @return Metadata.DeployResult JSON
+     */
+    public static Metadata.DeployResult getDeploymentResult(Id deploymentId) {
+        Http h = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
+            '/services/data/v44.0/metadata/deployRequest/' +
+            deploymentId +
+            '?includeDetails=true');
+        request.setMethod('GET');
+        request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
+        HttpResponse response = h.send(request);
+        DeploymentResponse deploymentResponse =
+            (DeploymentResponse)JSON.deserialize(response.getBody(), DeploymentResponse.class);
+
+        return deploymentResponse.deployResult;
+    }
+
+    /******************************************************************************************************************
+     * @description Wrapper used to deserialize the deployment request response
+     */
+    private class DeploymentResponse {
+        Metadata.DeployResult deployResult;
+    }
+
 
     /******************************************************************************************************************
      * @description Interface for Metadata Callback Handler
@@ -154,8 +169,6 @@ public class CMT_MetadataAPI {
     public class MetadataCallBack implements Metadata.DeployCallBack {
 
         private String jobId;
-        // Maybe a string 'source' instead of a boolean?
-        private Source source;
 
         /**
          * @description  Handler to allow for calling functions to have customized result handling with parameters
@@ -169,17 +182,6 @@ public class CMT_MetadataAPI {
          */
         public MetadataCallBack(String jobId) {
             this.jobId = jobId;
-            this.source = CMT_MetadataAPI.Source.CUSTOMIZABLE_ROLLUPS;
-        }
-
-        /**
-         * @description Constructor for Callback Class
-         * @param jobId Some unique string value to use when writing the deployment status to the Custom Settings object
-         * @param source
-         */
-        public MetadataCallBack(String jobId, Source source) {
-            this.jobId = jobId;
-            this.source = source;
         }
 
         /**
@@ -190,68 +192,31 @@ public class CMT_MetadataAPI {
 
             Boolean isSuccess = (result != null ? result.status == Metadata.DeployStatus.Succeeded : false);
             Map<String, String> statusMap = new Map<String, String>{ this.jobId => (result != null ? result.status.name() : 'Unknown') };
-
             // If the status is not Success, collect all errors into a string that can be written as the status
             if (result != null && result.status != Metadata.DeployStatus.Succeeded) {
-                setStatusMap(result, statusMap, isSuccess);
-            }
-
-            if (source == CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION) {
-                setHelpTextMigrationSettings(statusMap, isSuccess);
-            } else { 
-                setCustomizableRollupsSettings(statusMap, isSuccess);
+                String errMsg = '';
+                for (Integer n=0; n < result.details.componentFailures.size(); n++) {
+                    errMsg += (n > 0 ? '\n' : '') + '* ' + result.details.componentFailures[n].fullName +
+                            '> ' + result.details.componentFailures[n].problem;
+                }
+                // The custom settings field is a max of 255 characters, but need space for the serialized json overhead
+                statusMap.put(this.jobId, errMsg.left(220));
+                isSuccess = false;
             }
 
             if (isSuccess) {
-                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+                if (!Test.isRunningTest()) {
+                    UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+                }
+
+                if (callbackHandler != null) {
+                    callbackHandler.performSuccessHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
+                }
+            } else {
+                if (callbackHandler != null) {
+                    callbackHandler.performErrorHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
+                }
             }
         }
-
-        /**
-        * @description Method that parses the Metadata deployment result into a map, job id => status
-        */
-        private void setStatusMap(Metadata.DeployResult result, Map<String, String> statusMap, Boolean isSuccess) {
-            String errMsg = '';
-            for (Integer n=0; n < result.details.componentFailures.size(); n++) {
-                errMsg += (n > 0 ? '\n' : '') + '* ' + result.details.componentFailures[n].fullName +
-                        '> ' + result.details.componentFailures[n].problem;
-            }
-
-            // The custom settings field is a max of 255 characters, but need space for the serialized json overhead
-            statusMap.put(this.jobId, errMsg.left(220));
-            isSuccess = false;
-        }
-
-        /**
-        * @description Update Customizable Rollups Settings
-        */
-        private void setCustomizableRollupsSettings(Map<String, String> statusMap, Boolean isSuccess) {
-            // Write the deployment status to the custom settings object
-            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-            crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-
-            crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
-            if (!Test.isRunningTest()) {
-                upsert crlpSettings;
-            }
-        }
-    }
-
-    /**
-     * @description Update Data Import Custom Settings
-     */
-    public static Data_Import_Settings__c setHelpTextMigrationSettings(Map<String, String> statusMap, Boolean isSuccess) {
-        // Write the deployment status to the custom settings object
-        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-
-        dataImportSettings.Field_Mapping_Method__c = (isSuccess ? 'Data Import Field Mapping' : 'Help Text');
-        dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = (isSuccess ? 'Default_Field_Mapping_Set' : '');
-
-        if (!Test.isRunningTest()) {
-            upsert dataImportSettings;
-        }
-
-        return dataImportSettings;
     }
 }
