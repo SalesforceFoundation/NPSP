@@ -421,10 +421,10 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
 
     /**
      * @description Returns a String name for the main object associated with this batch job
-     * @return String name of the SOBject, or null
+     * @return String name of the SObject, or null
      */
     @testVisible private String getSObjectName() {
-        SOBjectType sOT = this.getSOBjectType();
+        SObjectType sOT = this.getSObjectType();
 
         return (sOT != null) ? sOT.getDescribe().getName() : null;
     }
@@ -480,7 +480,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * Indicates the main object to query/retrieve data from.  A valid value must be supplied by the implementing class
      * @return SObjectType of main object to drive query
      */
-    public abstract SObjectType getSOBjectType();
+    public abstract SObjectType getSObjectType();
 
     /**
      * Overridable method called from the start method for any implementing classes logic just prior to execution of start.  firstChunk will be true
