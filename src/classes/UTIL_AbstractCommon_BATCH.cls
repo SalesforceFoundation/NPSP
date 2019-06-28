@@ -338,10 +338,10 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return String query to use for validation of batch query
      */
     @testVisible private String getQueryForValidate() {
-            String whereClause = getQueryNonLdvWhereClause();
-            return 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSObjectName() +
-                    (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '') +
-                    ' LIMIT 1';
+        String whereClause = getQueryNonLdvWhereClause();
+        return 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSObjectName() +
+                (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '') +
+                ' LIMIT 1';
     }
 
 
