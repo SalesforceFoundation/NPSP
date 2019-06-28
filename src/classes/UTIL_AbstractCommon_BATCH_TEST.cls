@@ -109,13 +109,29 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void addtlBatchConstructors() {
-        UTIL_AbstractCommon_BATCH_TEST tabNoParam = new UTIL_AbstractCommon_BATCH_TEST();
-        UTIL_AbstractCommon_BATCH_TEST tabLDV = new UTIL_AbstractCommon_BATCH_TEST(false);
-        UTIL_AbstractCommon_BATCH_TEST tabLDVAddtlWhere = new UTIL_AbstractCommon_BATCH_TEST(false, 'Name = \'test\'');
-        UTIL_AbstractCommon_BATCH_TEST tabBatchSizeAddtlWhere = new UTIL_AbstractCommon_BATCH_TEST(5, 'Name = \'test\'');
-        UTIL_AbstractCommon_BATCH_TEST tabBatchSize = new UTIL_AbstractCommon_BATCH_TEST(5);
-        UTIL_AbstractCommon_BATCH_TEST tabAll = new UTIL_AbstractCommon_BATCH_TEST(5, true, 'Name = \'test\'');
+        assertConstructor('No Params', new UTIL_AbstractCommon_BATCH_TEST(), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, '');
+        assertConstructor('LDVMode Only', new UTIL_AbstractCommon_BATCH_TEST(false), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, '');
+        assertConstructor('LDVMode, Additional Where', new UTIL_AbstractCommon_BATCH_TEST(false, 'Name = \'test\''), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, 'Name = \'test\'');
+        assertConstructor('BatchSize', new UTIL_AbstractCommon_BATCH_TEST(5), 5, false, '');
+        assertConstructor('LDVMode, Additional Where, BatchSize', new UTIL_AbstractCommon_BATCH_TEST(5, true, 'Name = \'test\''), 5, true, 'Name = \'test\'');
+    }
 
+
+    /*******************************************************************************************************************
+     * @description asserts the member variables that are set during construction of the batch class
+     * @param conDesc Constructor Description
+     * @param batch the constructed batch class
+     * @param expectedBatchSize expected value for batchSize
+     * @param expectedLDVMode expected value for ldvMode
+     * @param expectedAdditionalWhere expected value for additionalWhereClause
+     */
+    private static void assertConstructor(String conDesc, UTIL_AbstractCommon_BATCH_TEST batch, Integer expectedBatchSize, Boolean expectedLDVMode, String expectedAdditionalWhere) {
+        System.assertNotEquals(null, batch, conDesc + ': Null Check');
+        System.assertEquals (0, batch.chunkIteration, conDesc + ': Chunk Iteration');
+        System.assertEquals (false, batch.endReached, conDesc + ': End Reached');
+        System.assertEquals (expectedBatchSize, batch.batchSize, conDesc + ': Batch Size');
+        System.assertEquals (expectedLDVMode, batch.ldvMode, conDesc + ': LDV Mode');
+        System.assertEquals (expectedAdditionalWhere, batch.additionalWhereClause, conDesc + ': Additional Where Clause');
     }
 
     /*******************************************************************************************************************
@@ -450,7 +466,6 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
             System.assertEquals (expectedResult, recCnt, 'Account Count Mismatch');
         }
     }
-
     /**
      * @description Allows the test batches chunk size to be updated
      * @param Integer testChunkSize Size to set the chunk size for the test batch to
@@ -459,8 +474,11 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         this.testChunkSize = testChunkSize;
     }
 
+    // **************************** HELPER METHODS ****************************
+
     /**
      * @description Retrieves List of batch jobs for most recent executions in test
+     * @return List of jobs matching this test batch
      */
     private static List<AsyncApexJob> queryBatchJobs() {
         return [

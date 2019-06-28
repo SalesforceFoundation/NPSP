@@ -61,28 +61,28 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     /**
      * @description The Maximum LDV Chunk size that is allowed to be used.  If > MAX will use the MAX
      */
-    private static final Integer MAX_LDV_CHUNK_SIZE = 10000000;
+    @testVisible private static final Integer MAX_LDV_CHUNK_SIZE = 10000000;
     /**
      * @description Default size to use when chunking records
      */
-    private static final Integer DEFAULT_LDV_CHUNK_SIZE = 1000000;
+    @testVisible private static final Integer DEFAULT_LDV_CHUNK_SIZE = 1000000;
     /**
      * @description Default Maximum Size in # of records between min and max Id before it must run in LDV Chunking Mode
      */
-    private static final Integer DEFAULT_MAX_NON_LDV_SIZE = 1000000;
+    @testVisible private static final Integer DEFAULT_MAX_NON_LDV_SIZE = 1000000;
     /**
      * @description Default size of the batch when re-executing in chunk mode, if not provided
      */
-    private static final Integer DEFAULT_BATCH_SIZE = 500;
+    @testVisible private static final Integer DEFAULT_BATCH_SIZE = 500;
 
-    private Id startId;
-    private Id endId;
-    private Id currentEndId;
-    private Boolean endReached;
-    private Integer batchSize = DEFAULT_BATCH_SIZE;
-    private Integer chunkIteration;
-    private Boolean ldvMode = null;
-    private String additionalWhereClause;
+    @testVisible private Id startId;
+    @testVisible private Id endId;
+    @testVisible private Id currentEndId;
+    @testVisible private Boolean endReached;
+    @testVisible private Integer batchSize = DEFAULT_BATCH_SIZE;
+    @testVisible private Integer chunkIteration;
+    @testVisible private Boolean ldvMode = null;
+    @testVisible private String additionalWhereClause;
 
     /**
      * @description No argument constructor that assumes default batch size of 500, and that ldvMode will be
@@ -90,7 +90,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      */
     public UTIL_AbstractCommon_BATCH() {
         // batchSize, ldvMode, additionalWhereClause
-        this(DEFAULT_BATCH_SIZE, null,'');
+        this(DEFAULT_BATCH_SIZE, false,'');
     }
 
     /**
