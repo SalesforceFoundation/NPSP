@@ -32,7 +32,7 @@
 * @group Utilities
 * @description This class contains methods to help parse ids
 */
-public class UTIL_SalesforceID {
+public inherited sharing class UTIL_SalesforceID {
 
     private static final String VALID_ID_CHAR = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
@@ -47,7 +47,7 @@ public class UTIL_SalesforceID {
     * @param id2 Second Id to compare
     * @return Long numberic distance between the two ids.  If a negative value is returned, it should be considered invalid
     ********************************************************************************************************/
-     @testVisible public static Long computeRecordDistance(ID id1, ID id2) {
+     public static Long computeRecordDistance(ID id1, ID id2) {
         if (id1 == null || id2 == null) {
             return -1;
         }
