@@ -83,7 +83,7 @@ export default class bdiFieldMappings extends LightningElement {
         // TODO: delete later, using so I can hop directly into the field mappings
         // component via a url addressable harness aura component
         this.handleFieldMappings();
-        this.displayFieldMappings = true;
+        //this.displayFieldMappings = true;
     }
 
     disconnectedCallback() {
@@ -96,7 +96,7 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     handleShowFieldMappings(event) {
-        console.log('In handleShowFieldMappings for fieldmappings cmp');
+        this.logBold('In handleShowFieldMappings for fieldmappings cmp');
         this.objectMapping = event.objectMapping;
         this.displayFieldMappings = true;
         this.forceRefresh();
@@ -226,5 +226,9 @@ export default class bdiFieldMappings extends LightningElement {
     */
     log(object) {
         return JSON.parse(JSON.stringify(object));
+    }
+
+    logBold(string) {
+        return console.log('%c ' + string, 'font-weight: bold; font-size: 16px;');
     }
 }
