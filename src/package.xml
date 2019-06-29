@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -951,6 +951,9 @@
         <members>Data_Import_Settings__c.Field_Mapping_Method__c</members>
         <members>Data_Import_Settings__c.Post_Process_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Run_Opportunity_Rollups_while_Processing__c</members>
+        <members>DeploymentEvent__e.CompletedDate__c</members>
+        <members>DeploymentEvent__e.DeploymentId__c</members>
+        <members>DeploymentEvent__e.Status__c</members>
         <members>Engagement_Plan_Task__c.Assigned_To__c</members>
         <members>Engagement_Plan_Task__c.Comments__c</members>
         <members>Engagement_Plan_Task__c.Days_After__c</members>
@@ -2372,6 +2375,7 @@
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Rollup__mdt</members>
+        <members>DeploymentEvent__e</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -2683,6 +2687,7 @@
         <members>npo02__Households_Settings__c-iw</members>
         <members>npo02__Households_Settings__c-ja</members>
         <members>npo02__Households_Settings__c-nl_NL</members>
+        <members>DeploymentEvent__e-en_US</members>
         <name>CustomObjectTranslation</name>
     </types>
     <types>
