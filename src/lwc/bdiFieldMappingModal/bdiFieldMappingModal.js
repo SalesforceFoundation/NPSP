@@ -33,7 +33,24 @@ export default class bdiFieldMappingModal extends LightningElement {
     @api targetObjectFieldsByLabel;
     @api targetObjectFieldsByAPIName;
 
+    // Map of field lists by Display Type
+    @api targetFieldsByLabelByDisplayType;
+    @api targetFieldsByAPINameByDisplayType;
+
+    get isTargetFieldDisabled() {
+        if (this.selectedSourceFieldAPIName || this.selectedSourceFieldLabel) {
+            return false;
+        }
+        return true;
+    }
+
+    constructor() {
+        super();
+        this.escapeFunction = this.escapeFunction.bind(this);
+    }
+
     connectedCallback() {
+        document.addEventListener("keydown", this.escapeFunction, false);
         registerListener('openModal', this.handleOpenModal, this);
 
         this.handleGetDataImportFieldDescribes();
@@ -41,7 +58,15 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     disconnectedCallback() {
+        this.logBold('Modal | disconnectedCallback()');
+        document.removeEventListener("keydown", this.escapeFunction, false);
         unregisterAllListeners(this);
+    }
+
+    escapeFunction(event) {
+        if (event.keyCode === 27) {
+            this.handleCloseModal();
+        }
     }
 
     handleCloseModal() {
@@ -132,14 +157,26 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     handleSourceFieldLabelChange(event) {
         this.logBold('bdiFieldMappingModal | handleSourceFieldLabelChange()');
-        this.selectedSourceFieldAPIName = event.detail.value;
-        this.selectedSourceFieldLabel = this.diFieldsByAPIName[event.detail.value];
+        let fieldAPIName = event.detail.value;
+        let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
+
+        this.selectedSourceFieldAPIName = fieldAPIName;
+        this.selectedSourceFieldLabel = fieldInfo.label;
+
+        this.targetFieldLabelOptions = this.targetFieldsByLabelByDisplayType[fieldInfo.displayType];
+        this.targetFieldAPINameOptions = this.targetFieldsByAPINameByDisplayType[fieldInfo.displayType];
     }
 
     handleSourceFieldAPINameChange(event) {
         this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
-        this.selectedSourceFieldLabel = event.detail.value;
-        this.selectedSourceFieldAPIName = this.diFieldsByLabel[event.detail.value];
+        let fieldLabel = event.detail.value;
+        let fieldInfo = this.diFieldsByLabel[fieldLabel];
+
+        this.selectedSourceFieldLabel = fieldLabel;
+        this.selectedSourceFieldAPIName = fieldInfo.value;
+
+        this.targetFieldLabelOptions = this.targetFieldsByLabelByDisplayType[fieldInfo.displayType];
+        this.targetFieldAPINameOptions = this.targetFieldsByAPINameByDisplayType[fieldInfo.displayType];
     }
 
     handleTargetFieldLabelChange(event) {
@@ -157,34 +194,27 @@ export default class bdiFieldMappingModal extends LightningElement {
     handleGetDataImportFieldDescribes() {
         getObjectFieldDescribes({objectName: 'DataImport__c'})
             .then((data) => {
-                let sourceFieldLabelOptions = [], sourceFieldAPINameOptions = [];
+                this.sourceFieldLabelOptions = [], this.sourceFieldAPINameOptions = [];
+                let diFieldsByLabel = {}, diFieldsByAPIName = {};
 
-                Object.keys(data).forEach((key) => {
-                    let labelOption = {}, apiNameOption = {};
-
-                    labelOption.label = key;
-                    labelOption.value = data[key];
-                    apiNameOption.label = data[key];
-                    apiNameOption.value = key;
-
-                    sourceFieldLabelOptions.push(labelOption);
-                    sourceFieldAPINameOptions.push(apiNameOption);
-                });
-
-                this.sourceFieldLabelOptions = sourceFieldLabelOptions;
-                this.sourceFieldAPINameOptions = sourceFieldAPINameOptions;
-
-                // TODO: Clean up or find better way. Currently being used in order to set
-                // the value for the sibling combobox when one or the other is updated
-                this.diFieldsByLabel = data;
-                let diFieldsByAPIName = {};
-                if (data) {
-                    for(let key in data){
-                        if (data[key]) {
-                            diFieldsByAPIName[data[key]] = key;
-                        }
+                for (let i = 0; i < data.length; i++) {
+                    let labelOption = {
+                        label: data[i].label,
+                        value: data[i].value
                     }
+                    let apiNameOption = {
+                        label: data[i].value,
+                        value: data[i].label
+                    };
+
+                    this.sourceFieldLabelOptions.push(labelOption);
+                    this.sourceFieldAPINameOptions.push(apiNameOption);
+
+                    diFieldsByLabel[labelOption.label] = data[i];
+                    diFieldsByAPIName[labelOption.value] = data[i];
                 }
+
+                this.diFieldsByLabel = diFieldsByLabel;
                 this.diFieldsByAPIName = diFieldsByAPIName;
             })
             .catch((error) => {
@@ -195,35 +225,42 @@ export default class bdiFieldMappingModal extends LightningElement {
     handleGetTargetObjectFieldDescribes() {
         getObjectFieldDescribes({objectName: this.objectMapping.Object_API_Name__c})
             .then((data) => {
-                let targetFieldLabelOptions = [], targetFieldAPINameOptions = [];
-
-                Object.keys(data).forEach((key) => {
-                    let labelOption = {}, apiNameOption = {};
-
-                    labelOption.label = key;
-                    labelOption.value = data[key];
-                    apiNameOption.label = data[key];
-                    apiNameOption.value = key;
-
-                    targetFieldLabelOptions.push(labelOption);
-                    targetFieldAPINameOptions.push(apiNameOption);
-                });
-
-                this.targetFieldLabelOptions = targetFieldLabelOptions;
-                this.targetFieldAPINameOptions = targetFieldAPINameOptions;
-
-                // TODO: Clean up or find better way. Currently being used in order to set
-                // the value for the sibling combobox when one or the other is updated
-                this.targetObjectFieldsByLabel = data;
-                let targetObjectFieldsByAPIName = {};
-                if (data) {
-                    for(let key in data){
-                        if (data[key]) {
-                            targetObjectFieldsByAPIName[data[key]] = key;
-                        }
+                this.targetFieldLabelOptions = [], this.targetFieldAPINameOptions = [];
+                let targetObjectFieldsByLabel = {}, targetObjectFieldsByAPIName = {};
+                let fieldByLabelByDisplayType = {}, fieldByAPINameByDisplayType = {};
+                for (let i = 0; i < data.length; i++) {
+                    let labelOption = {
+                        label: data[i].label,
+                        value: data[i].value
                     }
+                    let apiNameOption = {
+                        label: data[i].value,
+                        value: data[i].label
+                    };
+
+                    this.targetFieldLabelOptions.push(labelOption);
+                    if (fieldByLabelByDisplayType[data[i].displayType]) {
+                        fieldByLabelByDisplayType[data[i].displayType].push(labelOption);
+                    } else {
+                        fieldByLabelByDisplayType[data[i].displayType] = [labelOption];
+                    }
+
+                    this.targetFieldAPINameOptions.push(apiNameOption);
+                    if (fieldByAPINameByDisplayType[data[i].displayType]) {
+                        fieldByAPINameByDisplayType[data[i].displayType].push(apiNameOption);
+                    } else {
+                        fieldByAPINameByDisplayType[data[i].displayType] = [apiNameOption];
+                    }
+
+                    targetObjectFieldsByLabel[labelOption.label] = labelOption.value;
+                    targetObjectFieldsByAPIName[labelOption.value] = labelOption.label;
                 }
+
+                this.targetObjectFieldsByLabel = targetObjectFieldsByLabel;
                 this.targetObjectFieldsByAPIName = targetObjectFieldsByAPIName;
+
+                this.targetFieldsByLabelByDisplayType = fieldByLabelByDisplayType;
+                this.targetFieldsByAPINameByDisplayType = fieldByAPINameByDisplayType;
             })
             .catch((error) => {
                 console.log(error);

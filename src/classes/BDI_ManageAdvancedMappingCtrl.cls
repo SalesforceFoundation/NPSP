@@ -51,16 +51,20 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     @AuraEnabled(cacheable=true)
-    public static Map<String, String> getObjectFieldDescribes(String objectName) {
+    public static FieldInfo[] getObjectFieldDescribes(String objectName) {
         Map<String, String> useableDFRs = new Map<String, String>();
+        FieldInfo[] fieldInfos = new List<FieldInfo>();
+
         Map<String, Schema.DescribeFieldResult> fieldDescribes =
             UTIL_Describe.getAllFieldsDescribe(objectName);
 
         for (String key : fieldDescribes.keySet()) {
-            useableDFRs.put(fieldDescribes.get(key).label, key);
+            fieldInfos.add(new FieldInfo(fieldDescribes.get(key)));
+            //useableDFRs.put(fieldDescribes.get(key).label, key);
         }
 
-        return useableDFRs;
+        //return useableDFRs;
+        return fieldInfos;
     }
 
     @AuraEnabled
@@ -104,6 +108,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             throw e;
         }
     }
+
     // TODO: Delete later? Used to test error toast in UI
     public class testerException extends Exception {}
 
@@ -234,7 +239,6 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String Required_xxx;
         @AuraEnabled public Boolean Is_Deleted_xxx;
 
-
         public DataImportFieldMappingWrapper(Data_Import_Field_Mapping__mdt fieldMapping) {
             Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
                 UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
@@ -261,6 +265,18 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.Target_Object_Mapping_xxx = fieldMapping.Target_Object_Mapping__r.DeveloperName;
             this.Required_xxx = fieldMapping.Required__c;
             this.Is_Deleted_xxx = fieldMapping.Is_Deleted__c;
+        }
+    }
+
+    public class FieldInfo {
+        @AuraEnabled public String label;
+        @AuraEnabled public String value;
+        @AuraEnabled public String displayType;
+
+        public FieldInfo(DescribeFieldResult dfr) {
+            this.value = dfr.getName();
+            this.label = dfr.getLabel();
+            this.displayType = dfr.getType().name();
         }
     }
 

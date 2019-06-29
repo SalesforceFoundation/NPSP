@@ -19,10 +19,13 @@
                     <header class="slds-modal__header">
                         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
                             title="Close">
-                            <!-- TODO: Fix missing icons -->
-                            <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
-                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
-                            </svg>
+                            <lightning-icon
+                                icon-name="utility:close"
+                                alternative-text="close modal"
+                                variant="inverse"
+                                size="small"
+                                onclick={handleCloseModal}>
+                            </lightning-icon>
                             <span class="slds-assistive-text">Close</span>
                         </button>
                         <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New {objectMapping.DeveloperName} Field Mapping</h2>
@@ -76,7 +79,8 @@
                                         value={selectedTargetFieldAPIName}
                                         placeholder=""
                                         options={targetFieldLabelOptions}
-                                        onchange={handleTargetFieldLabelChange}>
+                                        onchange={handleTargetFieldLabelChange}
+                                        disabled={isTargetFieldDisabled}>
                                     </lightning-combobox>
 
                                     <lightning-combobox
@@ -85,7 +89,8 @@
                                         value={selectedTargetFieldLabel}
                                         placeholder=""
                                         options={targetFieldAPINameOptions}
-                                        onchange={handleTargetFieldAPINameChange}>
+                                        onchange={handleTargetFieldAPINameChange}
+                                        disabled={isTargetFieldDisabled}>
                                     </lightning-combobox>
                                 </div>
                             </div>
