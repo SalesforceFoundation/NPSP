@@ -82,12 +82,18 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.row = event.row;
 
         if (this.row) {
+            // Edit
+            console.log('Edit');
+            console.log(this.log(this.row));
             this.selectedSourceFieldLabel = this.row.Source_Field_Label_xxx;
-            this.selectedSourceFieldAPIName = this.diFieldsByLabel[this.row.Source_Field_Label_xxx];
-            this.selectedTargetFieldAPIName = this.row.Target_Field_API_Name_xxx.toLowerCase();
-            this.selectedTargetFieldLabel =
-                this.targetObjectFieldsByAPIName[this.row.Target_Field_API_Name_xxx.toLowerCase()];
+            this.selectedSourceFieldAPIName = this.row.Source_Field_API_Name_xxx;
+            this.selectedTargetFieldAPIName = this.row.Target_Field_API_Name_xxx;
+            this.selectedTargetFieldLabel = this.row.Target_Field_Label_xxx;
+
+            this.targetFieldLabelOptions = this.targetFieldsByLabelByDisplayType[this.row.Source_Field_Data_Type_xxx];
+            this.targetFieldAPINameOptions = this.targetFieldsByAPINameByDisplayType[this.row.Source_Field_Data_Type_xxx];
         } else {
+            // New
             this.selectedSourceFieldLabel = undefined;
             this.selectedSourceFieldAPIName = undefined;
             this.selectedTargetFieldLabel = undefined;
