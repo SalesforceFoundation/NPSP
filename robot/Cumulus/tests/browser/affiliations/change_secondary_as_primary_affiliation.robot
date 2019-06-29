@@ -21,6 +21,7 @@ Create Secondary Affiliation for Contact
     Scroll Element Into View  text:Primary
     Click Button  title:Edit Primary
     Wait Until Loading Is Complete
+    Capture Page SCreenshot
     Wait For Locator  checkbox.details-checkbox  Primary
     Select Lightning Checkbox    Primary
     Click Button    Save
