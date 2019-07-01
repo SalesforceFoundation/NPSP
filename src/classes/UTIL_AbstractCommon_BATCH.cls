@@ -56,19 +56,33 @@
 * Recommend registering a default handler using an interface that can be switched out/overriden
 * as desired for specific use cases.
 */
-public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database.Batchable<SObject>, Database.Stateful {
+public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
-    private static final Integer MAX_LDV_CHUNK_SIZE = 10000000;
-    private static final Integer DEFAULT_LDV_CHUNK_SIZE = 1000000;
-    private static final Integer DEFAULT_BATCH_SIZE = 500;
-    private Id startId;
-    private Id endId;
-    private Id currentEndId;
-    private Boolean endReached;
-    private Integer batchSize = DEFAULT_BATCH_SIZE;
-    private Integer chunkIteration;
-    private Boolean ldvMode = null;
-    private String additionalWhereClause;
+    /**
+     * @description The Maximum LDV Chunk size that is allowed to be used.  If > MAX will use the MAX
+     */
+    @testVisible private static final Integer MAX_LDV_CHUNK_SIZE = 10000000;
+    /**
+     * @description Default size to use when chunking records
+     */
+    @testVisible private static final Integer DEFAULT_LDV_CHUNK_SIZE = 1000000;
+    /**
+     * @description Default Maximum Size in # of records between min and max Id before it must run in LDV Chunking Mode
+     */
+    @testVisible private static final Integer DEFAULT_MAX_NON_LDV_SIZE = 1000000;
+    /**
+     * @description Default size of the batch when re-executing in chunk mode, if not provided
+     */
+    @testVisible private static final Integer DEFAULT_BATCH_SIZE = 500;
+
+    @testVisible private Id startId;
+    @testVisible private Id endId;
+    @testVisible private Id currentEndId;
+    @testVisible private Boolean endReached;
+    @testVisible private Integer batchSize = DEFAULT_BATCH_SIZE;
+    @testVisible private Integer chunkIteration;
+    @testVisible private Boolean ldvMode = null;
+    @testVisible private String additionalWhereClause;
 
     /**
      * @description No argument constructor that assumes default batch size of 500, and that ldvMode will be
@@ -76,7 +90,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      */
     public UTIL_AbstractCommon_BATCH() {
         // batchSize, ldvMode, additionalWhereClause
-        this(DEFAULT_BATCH_SIZE, null,'');
+        this(DEFAULT_BATCH_SIZE, false,'');
     }
 
     /**
@@ -92,7 +106,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     /**
      * @description Constructor that assumes  that ldvMode will be
      * determined by record distance between min and max Id for main object of batch
-     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.  If a main where clause is also present both will be encapsulated in () and anded.
+     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.
+     *                              If a main where clause is also present both will be encapsulated in () and anded.
      * @param batchSize Integer Size of each batch
      */
     public UTIL_AbstractCommon_BATCH(Integer batchSize, String additionalWhereClause) {
@@ -128,7 +143,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * max Id for the object
      * @param batchSize Integer Size of each batch
      * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
-     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.  If a main where clause is also present both will be encapsulated in () and anded.
+     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.
+     *                               If a main where clause is also present both will be encapsulated in () and anded.
      */
     public UTIL_AbstractCommon_BATCH(Integer batchSize, Boolean ldvMode, String additionalWhereClause) {
         this.endReached = false;
@@ -136,21 +152,6 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
         this.chunkIteration = 0;
         this.ldvMode = ldvMode;
         this.additionalWhereClause = additionalWhereClause;
-    }
-
-    public Object withBatchSize(Integer batchSize) {
-        this.batchSize = batchSize;
-        return this;
-    }
-
-    public Object withLDVMode(Boolean ldvMode) {
-        this.ldvMode = ldvMode;
-        return this;
-    }
-
-    public Object withAdditionalWhereClause(String additionalWhereClause) {
-        this.additionalWhereClause = additionalWhereClause;
-        return this;
     }
 
     /**
@@ -231,7 +232,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
         String ldvWhere = isFirstChunk() ? getLdvWhereFirstChunk() : getLdvWhereAfterFirstChunk();
         String whereClause = getQueryNonLDVWhereClause();
 
-        String nonLdvWhere =  ((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '';
+        String nonLdvWhere =  (String.isNotBlank(whereClause)) ? ' WHERE (' + whereClause + ')' : '';
 
         return (ldvMode) ? ldvWhere : nonLdvWhere;
     }
@@ -263,8 +264,8 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
 
         String whereClause = getWhereClause();
 
-        Boolean mainWhere = (whereClause != null && whereClause.trim().length() > 0);
-        Boolean addtlWhere = (additionalWhereClause != null && additionalWhereClause.trim().length() > 0);
+        Boolean mainWhere = String.isNotBlank(whereClause);
+        Boolean addtlWhere = String.isNotBlank(additionalWhereClause);
         if (mainWhere && addtlWhere) {
             return '(' + whereClause.trim() + ') AND (' + additionalWhereClause.trim() + ')';
         } else if (mainWhere && !addtlWhere) {
@@ -303,9 +304,9 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     public void execute(Database.BatchableContext bc, List<SObject> records) {
 
         // Id of last record in batch of records
-        Id proposedCurrentEndId = records[records.size() - 1].Id;
+        Id LastIdInScope = records[records.size() - 1].Id;
         // Record the last record in the list as the current "end" Id, if greater than our current end id value, or if currently unassigned
-        this.currentEndId = (this.currentEndId == null || proposedCurrentEndId > currentEndId) ? proposedCurrentEndId : currentEndId;
+        this.currentEndId = (this.currentEndId == null || lastIdInScope > currentEndId) ? lastIdInScope : currentEndId;
 
         List<SObject> innerRecords = getInnerRecords(records);
 
@@ -324,7 +325,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
         if (ldvMode || isSubQueryPresent()) {
             String whereClause = getQueryNonLdvWhereClause();
             String query = 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSObjectName() + ' WHERE (Id in :records) ' +
-                        (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' AND (' + whereClause + ')' : '');
+                        ((String.isNotBlank(whereClause)) ? ' AND (' + whereClause + ')' : '');
 
             return Database.query(query);
         } else { // No need to requery if not LDV Chunking mode
@@ -339,10 +340,10 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * @return String query to use for validation of batch query
      */
     @testVisible private String getQueryForValidate() {
-            String whereClause = getQueryNonLdvWhereClause();
-            return 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSObjectName() +
-                    (((whereClause != null) && (whereClause.trim().length() > 0)) ? ' WHERE (' + whereClause + ')' : '') +
-                    ' LIMIT 1';
+        String whereClause = getQueryNonLdvWhereClause();
+        return 'SELECT ' + getSOQLFullQueryFieldList() + ' FROM ' + getSObjectName() +
+                ((String.isNotBlank(whereClause)) ? ' WHERE (' + whereClause + ')' : '') +
+                ' LIMIT 1';
     }
 
 
@@ -408,7 +409,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
 
     /**
      * @description Returns an indicator indicating whether or not a batch should execute in LDV Chunking mode.  Basically, if the theoretical record distance
-     * exceeds the LDV Chunk Size, it will return true, and false otherwise.  If the Ids are null, meaning there are no records present,
+     * exceeds either the maximum non LDV size allowed for the job or the LDV Chunk Size, it will return true, and false otherwise.  If the Ids are null, meaning there are no records present,
      * computeRecordDistance returns a negative number.  In all other cases, the record distance is a positive number.
      * @param startId Starting Id of the all records present in the object
      * @param endId Ending Id of the records in the object
@@ -417,15 +418,15 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     @testVisible private boolean isLDVCircumstance(Id startId, Id endId) {
         Long recordDistance = UTIL_SalesforceID.computeRecordDistance(startId, endId);
 
-        return recordDistance > getValidLDVChunkSize();
+        return (recordDistance > getMaxNonLDVSize());
     }
 
     /**
      * @description Returns a String name for the main object associated with this batch job
-     * @return String name of the SOBject, or null
+     * @return String name of the SObject, or null
      */
     @testVisible private String getSObjectName() {
-        SOBjectType sOT = this.getSOBjectType();
+        SObjectType sOT = this.getSObjectType();
 
         return (sOT != null) ? sOT.getDescribe().getName() : null;
     }
@@ -460,6 +461,16 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
     }
 
     /**
+     * @description Returns 1,000,000 by default for the maximum non LDV size, but can be overriden by implementing class to return a different value.  This value will be used
+     * in the disctance check between the minimum and the maximum Id of the object when deciding whether to run in regular or LDV mode
+     * @return Integer Maximum number of records that be present for the distance check before running in LDV mode
+     */
+    public virtual Integer getMaxNonLDVSize() {
+        return DEFAULT_MAX_NON_LDV_SIZE;
+    }
+
+
+    /**
      * Returns ID by default.  Can be modified to return other fields, and subQueries instead
      * @return String SOQL Query fragment consisting of fields and subqueries to retrieve, part between outer select and from
      */
@@ -471,7 +482,7 @@ public abstract with sharing class UTIL_AbstractCommon_BATCH implements Database
      * Indicates the main object to query/retrieve data from.  A valid value must be supplied by the implementing class
      * @return SObjectType of main object to drive query
      */
-    public abstract SObjectType getSOBjectType();
+    public abstract SObjectType getSObjectType();
 
     /**
      * Overridable method called from the start method for any implementing classes logic just prior to execution of start.  firstChunk will be true

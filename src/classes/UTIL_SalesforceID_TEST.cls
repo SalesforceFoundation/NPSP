@@ -32,7 +32,7 @@
 * @group Utilities
 * @description The test class for the UTIL_SalesforceID class
 */
-@IsTest
+@isTest(isParallel=true)
 public class UTIL_SalesforceID_TEST {
 
     /*******************************************************************************************************************
