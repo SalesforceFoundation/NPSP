@@ -79,10 +79,7 @@ export default class bdiFieldMappings extends LightningElement {
     */
     handleFieldMappings() {
         getFieldMappingsByObjectAndFieldSetNames({
-                objectSetName: this.objectMapping.DeveloperName,
-                // TODO: Get field set name dynamically
-                fieldSetName: 'Migrated_Custom_Field_Mapping_Set'
-            })
+                objectSetName: this.objectMapping.DeveloperName})
             .then((data) => {
                 console.log('Field Mappings: ', this.log(data));
                 this.fieldMappings = data;
