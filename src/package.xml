@@ -172,6 +172,7 @@
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
         <members>CRLP_RollupCMT</members>
+        <members>CRLP_RollupCMT_TEST</members>
         <members>CRLP_RollupContact_SVC</members>
         <members>CRLP_RollupContact_TEST</members>
         <members>CRLP_RollupGAU_SVC</members>
@@ -433,6 +434,8 @@
         <members>UTIL_HtmlOutput_CTRL</members>
         <members>UTIL_HtmlOutput_TEST</members>
         <members>UTIL_IScheduled</members>
+        <members>UTIL_IntegrationConfig</members>
+        <members>UTIL_IntegrationConfig_TEST</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
         <members>UTIL_LightningComponentSupport</members>
@@ -2549,6 +2552,8 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>Data_CountBDIRowsLast30Days</members>
+        <members>Data_CountBGERowsLast30Days</members>
         <members>Data_CountErrorLog</members>
         <members>Data_CountRdOppsAll</members>
         <members>Data_CountRdOppsOpenEnded</members>

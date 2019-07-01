@@ -6112,7 +6112,7 @@ When you enable Payment Allocations, existing rollups remain the same. We do not
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAutoAffil</shortDescription>
-        <value>When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organization Accounts (Account record type = Organization) whenever the Contact&apos;s Account field or Primary Affiliation field changes.</value>
+        <value>When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organization Accounts whenever the Contact's Account field or Primary Affiliation field changes. Organizations Accounts include all Record Types except those defined as Household or One-to-One Account Record Types.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoRelCampaignRT</fullName>
