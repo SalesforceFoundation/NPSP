@@ -548,9 +548,13 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 (sObj.get('CampaignId') != null && mapWrapper.containsKey((Id)sObj.get('CampaignId'))))) {
 
                 alloWrapper wrap;
+                Map<Id, Allocation__c> GAUtoAlloMapping;
                 //get wrapper for parent Payment.
-                if (sObj instanceof npe01__OppPayment__c)
+                if (sObj instanceof npe01__OppPayment__c) {
                     wrap = mapWrapper.get((Id)sObj.get('npe01__Opportunity__c'));
+                    GAUtoAlloMapping = new Map<Id, Allocation__c>();
+                }
+                    
                 //get wrapper for parent object, preferring recurring donation over campaign allocations if they exist
                 else if (sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c')))
                     wrap = mapWrapper.get((Id)sObj.get('npe03__Recurring_Donation__c'));
@@ -569,6 +573,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                 //reparent the cloned allocation to the opportunity
                 for (Allocation__c allo : listAlloForInsert) {
+                    Allocation__c alloInMap; 
+
+                    if (GAUtoAlloMapping != null && GAUtoAlloMapping.containsKey(allo.General_Accounting_Unit__c)) {
+                        alloInMap = GAUtoAlloMapping.get(allo.General_Accounting_Unit__c);
+                    }
+
                     allo.Opportunity__c = null;
                     allo.Recurring_Donation__c = null;
                     allo.Campaign__c = null;
@@ -586,22 +596,60 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                 (String)sObj.get('CurrencyIsoCode'),
                                 allo.Amount__c
                             );
+
+                            if (alloInMap != null) {
+                                alloInMap.Amount__c += allo.Amount__c;
+                            }
                         }
                         allo.put('CurrencyIsoCode', sObj.get('CurrencyIsoCode'));
                     }
 
                     if (allo.Percent__c != null) {
                         allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
+                        
+                        if (alloInMap != null) {
+                            alloInMap.Amount__c += allo.Amount__c;
+                        }
                     }
 
                     //Calculate proportional amount for non-percentage based Payment allocations
                     if (sObj instanceof npe01__OppPayment__c && allo.Percent__c == null) {
                         allo.Percent__c = allo.Amount__c / wrap.parentAmount * 100;
                         allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
+
+                        if (alloInMap != null) {
+                            alloInMap.Amount__c += allo.Amount__c;
+                        }
                     }
 
                     remainder -= allo.Amount__c;
+
+                    if (GAUtoAlloMapping != null) {
+                        if (alloInMap != null) {
+                            GAUtoAlloMapping.put(alloInMap.General_Accounting_Unit__c, alloInMap);
+                        } else {
+                            GAUtoAlloMapping.put(allo.General_Accounting_Unit__c, allo);
+                        }
+                    }
                 }
+
+                // Only set the percentages and update the list to insert to the consolidated list
+                // when it's a payment. 
+                if (GAUtoAlloMapping != null) {
+                    List<Allocation__c> consolidatedAllocationList = GAUtoAlloMapping.values();
+
+
+                    // Only set the percentage if it is a payment or an opportunity that isn't tied to a campaign or a recurring donation.
+                    // At this point, only the amounts on each allocation is correct, not the percentage. 
+                    // Go through the allocation and adjust the percentage so it is correct.
+                    for (Allocation__c consolidatedAllocation : consolidatedAllocationList) {
+                        consolidatedAllocation.Percent__c = consolidatedAllocation.Amount__c / amount * 100;
+                    }
+
+                    // Set the consolidated list as the list to insert
+                    listAlloForInsert = consolidatedAllocationList;
+                }
+                
 
                 //if our remainder is negative, only create percentage based allocations
                 if ((amount >= 0 && remainder < 0)||(amount < 0 && remainder > 0)) {
@@ -979,67 +1027,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         alloQueryString += ' FROM Allocation__c WHERE (Payment__c IN :setParentId OR Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId)';
         //alloQueryString += ' AND General_Accounting_Unit__r.Active__c = TRUE';
 
-        // Take the list of allocations
-        // Consolidate the records that are on the same parent and same GAU into one
-        List<Allocation__c> consolidatedAllocationList = new List<Allocation__c>();
-        Map<Id, Map<Id, Allocation__c>> parentIDToGAUIdToAllo = new Map<Id, Map<Id, Allocation__c>>();
-        List<Allocation__c> queriedAllocations = database.query(alloQueryString);
-        System.debug(loggingLevel.ERROR, 'queriedAllocations: ' + queriedAllocations);
-        System.debug(loggingLevel.ERROR, 'queriedAllocations size is: ' + queriedAllocations.size());
-        for (Allocation__c allo : queriedAllocations) {
-            System.debug(loggingLevel.ERROR, 'allo is: ' + allo);
-            Id parentId = getParentId(allo);
-            Id GAUId = allo.General_Accounting_Unit__c;
-            System.debug(loggingLevel.ERROR, 'GAU Id is: ' + GAUId);
-
-            Map<Id, Allocation__c> gauToAllo = new Map<Id, Allocation__c>();
-
-            if (parentIDToGAUIdToAllo.containsKey(parentId)) {
-                gauToAllo = parentIDToGAUIdToAllo.get(parentId);
-            } 
-            System.debug(loggingLevel.ERROR, 'gauToAllo: ' + gauToAllo);
-            Allocation__c alloInMap;
-            if (gauToAllo.containsKey(GAUId)) {
-                alloInMap = gauToAllo.get(GAuId);
-                System.debug(loggingLevel.ERROR, 'allo amount before adding: ' + alloInMap.Amount__c);
-                
-                // If it's a percentage, convert it to an amount
-                // and add it into the running amount. 
-                if (allo.Percent__c != null) {
-                    System.debug(loggingLevel.ERROR, 'allo has percentage: ' + allo.percent__c);
-                    if (allo.Payment__c != null) {
-                        System.debug(loggingLevel.ERROR, 'allo adding this amount in: ' + (allo.Payment__r.npe01__Payment_Amount__c * allo.Percent__c * .01));
-                        alloInMap.Amount__c += (allo.Payment__r.npe01__Payment_Amount__c * allo.Percent__c * .01);
-                    }
-
-                    if (allo.Opportunity__c != null) {
-                        System.debug(loggingLevel.ERROR, 'allo adding this amount in: ' + (allo.Opportunity__r.Amount * allo.Percent__c * .01));
-                        alloInMap.Amount__c += (allo.Opportunity__r.Amount * allo.Percent__c * .01);
-                    }
-                } else if (allo.Amount__c != null) {
-                    System.debug(loggingLevel.ERROR, 'adding this amount in: ' + allo.Amount__c);
-                    // If it's an amount, just add it into the running amount. 
-                    alloInMap.Amount__c += allo.Amount__c;
-                }
-            } else {
-                System.debug(loggingLevel.ERROR, 'allo in else: ' + allo);
-                alloInMap = allo;
-                // Clear out the percentage since we will be working off amounts only. 
-                alloInMap.Percent__c = null;
-            }
-
-            gauToAllo.put(GAUId, alloInMap);
-            parentIDToGAUIdToAllo.put(parentId, gauToAllo);
-        }
-        System.debug(loggingLevel.ERROR, 'parentIDToGAUIdToAllo: ' + parentIDToGAUIdToAllo);
-
-        // After getting rid of the duplicates, put it into a list 
-        // So that the original logic can run now
-        for (Map<Id, Allocation__c> gauToAllo : parentIDToGAUIdToAllo.values()) {
-            consolidatedAllocationList.addAll(gauToAllo.values());
-        }
-
-        for (Allocation__c allo : consolidatedAllocationList) {
+        for (Allocation__c allo : database.query(alloQueryString)) {
 
             //create wrapper if it doesn't exist yet
             if (!mapWrapper.containsKey(getParentId(allo)))
