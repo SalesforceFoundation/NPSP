@@ -4,7 +4,7 @@ import createDataImportFieldMapping
 import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { registerListener, unregisterListener, unregisterAllListeners, fireEvent }
+import { registerListener, unregisterAllListeners, fireEvent }
     from 'c/pubsubNoPageRef';
 
 export default class bdiFieldMappingModal extends LightningElement {
@@ -83,15 +83,13 @@ export default class bdiFieldMappingModal extends LightningElement {
 
         if (this.row) {
             // Edit
-            console.log('Edit');
-            console.log(this.log(this.row));
-            this.selectedSourceFieldLabel = this.row.Source_Field_Label_xxx;
-            this.selectedSourceFieldAPIName = this.row.Source_Field_API_Name_xxx;
-            this.selectedTargetFieldAPIName = this.row.Target_Field_API_Name_xxx;
-            this.selectedTargetFieldLabel = this.row.Target_Field_Label_xxx;
+            this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
+            this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
+            this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
+            this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
 
-            this.targetFieldLabelOptions = this.targetFieldsByLabelByDisplayType[this.row.Source_Field_Data_Type_xxx];
-            this.targetFieldAPINameOptions = this.targetFieldsByAPINameByDisplayType[this.row.Source_Field_Data_Type_xxx];
+            this.targetFieldLabelOptions = this.targetFieldsByLabelByDisplayType[this.row.xxx_Source_Field_Data_Type_xxx];
+            this.targetFieldAPINameOptions = this.targetFieldsByAPINameByDisplayType[this.row.xxx_Source_Field_Data_Type_xxx];
         } else {
             // New
             this.selectedSourceFieldLabel = undefined;
@@ -100,42 +98,39 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.selectedTargetFieldAPIName = undefined;
         }
 
-        console.log('Set isLoading to false');
         this.isLoading = false;
     }
 
     handleSave() {
         this.logBold('bdiFieldMappingModal | handleSave()');
         this.isLoading = true;
-        let clonedRow;
+        let rowDetails;
 
         if (this.row) {
             // Set source and target fields
-            this.row.Source_Field_API_Name_xxx = this.selectedSourceFieldAPIName;
-            this.row.Target_Field_API_Name_xxx = this.selectedTargetFieldAPIName;
-            clonedRow = JSON.stringify(this.row);
+            this.row.xxx_Source_Field_API_Name_xxx = this.selectedSourceFieldAPIName;
+            this.row.xxx_Target_Field_API_Name_xxx = this.selectedTargetFieldAPIName;
+            rowDetails = JSON.stringify(this.row);
         } else {
             // New Field Mapping
-            clonedRow = JSON.stringify({
-                Data_Import_Field_Mapping_Set__c: 'Migrated_Custom_Field_Mapping_Set',
+            rowDetails = JSON.stringify({
                 DeveloperName: null,
-                Is_Deleted__c: false,
                 Label: this.selectedSourceFieldLabel,
                 MasterLabel: this.selectedSourceFieldLabel,
-                Required__c: 'No',
-                Source_Field_API_Name__c: this.selectedSourceFieldAPIName,
-                Target_Field_API_Name__c: this.selectedTargetFieldAPIName,
-                Target_Object_Mapping__c: this.objectMapping.DeveloperName
+                xxx_Data_Import_Field_Mapping_Set_xxx: 'Migrated_Custom_Field_Mapping_Set',
+                xxx_Is_Deleted_xxx: false,
+                xxx_Required_xxx: 'No',
+                xxx_Source_Field_API_Name_xxx: this.selectedSourceFieldAPIName,
+                xxx_Target_Field_API_Name_xxx: this.selectedTargetFieldAPIName,
+                xxx_Target_Object_Mapping_xxx: this.objectMapping.DeveloperName
             });
         }
 
-        createDataImportFieldMapping({fieldMappingString: clonedRow})
+        createDataImportFieldMapping({fieldMappingString: rowDetails})
             .then((data) => {
-                console.log(this.log(data));
                 this.handleSaveResult(data);
             })
             .catch((error) => {
-                console.log(this.log(error));
                 this.isLoading = false;
                 this.showToast(
                     'Error',
@@ -200,7 +195,8 @@ export default class bdiFieldMappingModal extends LightningElement {
     handleGetDataImportFieldDescribes() {
         getObjectFieldDescribes({objectName: 'DataImport__c'})
             .then((data) => {
-                this.sourceFieldLabelOptions = [], this.sourceFieldAPINameOptions = [];
+                this.sourceFieldLabelOptions = [];
+                this.sourceFieldAPINameOptions = [];
                 let diFieldsByLabel = {}, diFieldsByAPIName = {};
 
                 for (let i = 0; i < data.length; i++) {
@@ -224,14 +220,20 @@ export default class bdiFieldMappingModal extends LightningElement {
                 this.diFieldsByAPIName = diFieldsByAPIName;
             })
             .catch((error) => {
-                console.log(error);
+                this.showToast(
+                    'Error',
+                    '{0}. {1}. {2}.',
+                    'error',
+                    'sticky',
+                    [error.body.exceptionType, error.body.message, error.body.stackTrace]);
             });
     }
 
     handleGetTargetObjectFieldDescribes() {
-        getObjectFieldDescribes({objectName: this.objectMapping.Object_API_Name__c})
+        getObjectFieldDescribes({objectName: this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c})
             .then((data) => {
-                this.targetFieldLabelOptions = [], this.targetFieldAPINameOptions = [];
+                this.targetFieldLabelOptions = [];
+                this.targetFieldAPINameOptions = [];
                 let targetObjectFieldsByLabel = {}, targetObjectFieldsByAPIName = {};
                 let fieldByLabelByDisplayType = {}, fieldByAPINameByDisplayType = {};
                 for (let i = 0; i < data.length; i++) {
@@ -269,7 +271,12 @@ export default class bdiFieldMappingModal extends LightningElement {
                 this.targetFieldsByAPINameByDisplayType = fieldByAPINameByDisplayType;
             })
             .catch((error) => {
-                console.log(error);
+                this.showToast(
+                    'Error',
+                    '{0}. {1}. {2}.',
+                    'error',
+                    'sticky',
+                    [error.body.exceptionType, error.body.message, error.body.stackTrace]);
             });
     }
 

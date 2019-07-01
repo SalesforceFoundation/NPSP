@@ -55,15 +55,15 @@ public class BDI_ManageAdvancedMappingCtrl {
         Map<String, String> useableDFRs = new Map<String, String>();
         FieldInfo[] fieldInfos = new List<FieldInfo>();
 
+        objectName = UTIL_Namespace.StrAllNSPrefix(objectName);
+
         Map<String, Schema.DescribeFieldResult> fieldDescribes =
             UTIL_Describe.getAllFieldsDescribe(objectName);
 
         for (String key : fieldDescribes.keySet()) {
             fieldInfos.add(new FieldInfo(fieldDescribes.get(key)));
-            //useableDFRs.put(fieldDescribes.get(key).label, key);
         }
 
-        //return useableDFRs;
         return fieldInfos;
     }
 
@@ -75,12 +75,15 @@ public class BDI_ManageAdvancedMappingCtrl {
         String fieldSetName = dataImportSettings.Default_Data_Import_Field_Mapping_Set__c;
         DataImportFieldMappingWrapper[] fieldMappingWrappers =
             new List<DataImportFieldMappingWrapper>();
+
         Data_Import_Field_Mapping__mdt[] fieldMappings =
             bdiCMT.fieldMappingsByObjMappingDevName.get(objectSetName);
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
+
             if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldSetName &&
                 fieldMapping.Is_Deleted__c == false) {
+
                 fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
             }
         }
@@ -99,10 +102,19 @@ public class BDI_ManageAdvancedMappingCtrl {
         System.debug(fieldMappingString);
         // TODO: Delete later. Used to test error toast in UI
         //throw new testerException('SOMETHING WENT WRONG');
+        fieldMappingString = fieldMappingString.replaceAll('_xxx','__c');
+
+        if (NAMESPACE == 'npsp') {
+            fieldMappingString = fieldMappingString.replaceAll('xxx_','npsp__');
+        } else {
+            fieldMappingString = fieldMappingString.replaceAll('xxx_','');
+        }
+
         try {
             Data_Import_Field_Mapping__mdt difm =
-            (Data_Import_Field_Mapping__mdt)JSON.deserialize(fieldMappingString.replaceAll('_xxx','__c'), Data_Import_Field_Mapping__mdt.class);
-
+                (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                    fieldMappingString, Data_Import_Field_Mapping__mdt.class);
+            System.debug(difm);
             String deploymentId = enqueueMetadataRecords(difm);
 
             return deploymentId;
@@ -228,45 +240,62 @@ public class BDI_ManageAdvancedMappingCtrl {
     public class DataImportFieldMappingWrapper {
         @AuraEnabled public String DeveloperName;
         @AuraEnabled public String MasterLabel;
-        @AuraEnabled public String Source_Field_Label_xxx;
-        @AuraEnabled public String Source_Field_API_Name_xxx;
-        @AuraEnabled public String Source_Field_Data_Type_xxx;
-        @AuraEnabled public String Target_Field_Label_xxx;
-        @AuraEnabled public String Target_Field_API_Name_xxx;
-        @AuraEnabled public String Target_Field_Data_Type_xxx;
-        @AuraEnabled public String Maps_To_Icon;
         @AuraEnabled public String Label;
-        @AuraEnabled public String Data_Import_Field_Mapping_Set_xxx;
-        @AuraEnabled public String Target_Object_Mapping_xxx;
-        @AuraEnabled public String Required_xxx;
-        @AuraEnabled public Boolean Is_Deleted_xxx;
+        @AuraEnabled public String Maps_To_Icon;
+        @AuraEnabled public String xxx_Source_Field_Label_xxx;
+        @AuraEnabled public String xxx_Source_Field_API_Name_xxx;
+        @AuraEnabled public String xxx_Source_Field_Data_Type_xxx;
+        @AuraEnabled public String xxx_Target_Field_Label_xxx;
+        @AuraEnabled public String xxx_Target_Field_API_Name_xxx;
+        @AuraEnabled public String xxx_Target_Field_Data_Type_xxx;
+        @AuraEnabled public String xxx_Data_Import_Field_Mapping_Set_xxx;
+        @AuraEnabled public String xxx_Target_Object_Mapping_xxx;
+        @AuraEnabled public String xxx_Required_xxx;
+        @AuraEnabled public Boolean xxx_Is_Deleted_xxx;
 
         public DataImportFieldMappingWrapper(Data_Import_Field_Mapping__mdt fieldMapping) {
+            String dataImport = 'npsp__DataImport__c';
+            String objectAPIName = fieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
+            String sourceFieldAPIName = fieldMapping.Source_Field_API_Name__c;
+            String targetFieldAPIName = fieldMapping.Target_Field_API_Name__c;
+
+            System.debug('DataImportFieldMappingWrapper');
+            System.debug('NAMESPACE: ' + NAMESPACE);
+            if (NAMESPACE != 'npsp') {
+                dataImport = 'DataImport__c';
+                objectAPIName =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
+                sourceFieldAPIName =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                targetFieldAPIName =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Field_API_Name__c);
+            }
+
             Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
-                UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
-                UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c));
+                dataImport,
+                sourceFieldAPIName);
 
             Schema.DescribeFieldResult targetFieldDescribe = UTIL_Describe.getFieldDescribe(
-                UTIL_Namespace.StrTokenNSPrefix(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c),
-                UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Field_API_Name__c));
+                objectAPIName,
+                targetFieldAPIName);
 
             this.DeveloperName = fieldMapping.DeveloperName;
             this.MasterLabel = fieldMapping.MasterLabel;
-            this.Source_Field_Label_xxx = sourceFieldDescribe.label;
-            this.Source_Field_API_Name_xxx = fieldMapping.Source_Field_API_Name__c;
-            this.Source_Field_Data_Type_xxx = String.valueOf(sourceFieldDescribe.type);
+            this.Label = fieldMapping.MasterLabel;
+            this.xxx_Source_Field_Label_xxx = sourceFieldDescribe.label;
+            this.xxx_Source_Field_API_Name_xxx = fieldMapping.Source_Field_API_Name__c;
+            this.xxx_Source_Field_Data_Type_xxx = String.valueOf(sourceFieldDescribe.type);
 
-            this.Target_Field_Label_xxx = targetFieldDescribe.label;
-            this.Target_Field_API_Name_xxx = fieldMapping.Target_Field_API_Name__c;
-            this.Target_Field_Data_Type_xxx = String.valueOf(targetFieldDescribe.type);
+            this.xxx_Target_Field_Label_xxx = targetFieldDescribe.label;
+            this.xxx_Target_Field_API_Name_xxx = fieldMapping.Target_Field_API_Name__c;
+            this.xxx_Target_Field_Data_Type_xxx = String.valueOf(targetFieldDescribe.type);
 
             this.Maps_To_Icon = 'utility:forward';
 
-            this.Label = fieldMapping.MasterLabel;
-            this.Data_Import_Field_Mapping_Set_xxx = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
-            this.Target_Object_Mapping_xxx = fieldMapping.Target_Object_Mapping__r.DeveloperName;
-            this.Required_xxx = fieldMapping.Required__c;
-            this.Is_Deleted_xxx = fieldMapping.Is_Deleted__c;
+            this.xxx_Data_Import_Field_Mapping_Set_xxx = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
+            this.xxx_Target_Object_Mapping_xxx = fieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.xxx_Required_xxx = fieldMapping.Required__c;
+            this.xxx_Is_Deleted_xxx = fieldMapping.Is_Deleted__c;
         }
     }
 

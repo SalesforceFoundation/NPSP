@@ -11,16 +11,16 @@ const actions = [
 ];
 
 const columns = [
-    { label: 'Field Label', fieldName: 'Source_Field_Label_xxx', type: 'text', sortable: true },
-    { label: 'Field API Name', fieldName: 'Source_Field_API_Name_xxx', type: 'text' },
-    { label: 'Data Type', fieldName: 'Source_Field_Data_Type_xxx', type: 'text' },
+    { label: 'Field Label', fieldName: 'xxx_Source_Field_Label_xxx', type: 'text', sortable: true },
+    { label: 'Field API Name', fieldName: 'xxx_Source_Field_API_Name_xxx', type: 'text' },
+    { label: 'Data Type', fieldName: 'xxx_Source_Field_Data_Type_xxx', type: 'text' },
         {
             label: 'Maps To', fieldName: '', type: 'text',
             cellAttributes: { iconName: { fieldName: 'Maps_To_Icon' }, iconPosition: 'right' }
         },
-    { label: 'Field Label', fieldName: 'Target_Field_Label_xxx', type: 'text' },
-    { label: 'Field API Name', fieldName: 'Target_Field_API_Name_xxx', type: 'text' },
-    { label: 'Data Type', fieldName: 'Target_Field_Data_Type_xxx', type: 'text' },
+    { label: 'Field Label', fieldName: 'xxx_Target_Field_Label_xxx', type: 'text' },
+    { label: 'Field API Name', fieldName: 'xxx_Target_Field_API_Name_xxx', type: 'text' },
+    { label: 'Data Type', fieldName: 'xxx_Target_Field_Data_Type_xxx', type: 'text' },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
 
@@ -78,16 +78,21 @@ export default class bdiFieldMappings extends LightningElement {
     * @param name: Name of the object mapping received from parent component 
     */
     handleFieldMappings() {
+        this.logBold('bdiFieldMappings | handleFieldMappings()');
         getFieldMappingsByObjectAndFieldSetNames({
                 objectSetName: this.objectMapping.DeveloperName})
             .then((data) => {
-                console.log('Field Mappings: ', this.log(data));
                 this.fieldMappings = data;
                 this.isLoading = false;
             })
             .catch((error) => {
-                console.log(error);
                 this.isLoading = false;
+                this.showToast(
+                    'Error',
+                    '{0}. {1}. {2}.',
+                    'error',
+                    'sticky',
+                    [error.body.exceptionType, error.body.message, error.body.stackTrace]);
             });
     }
 
@@ -97,27 +102,22 @@ export default class bdiFieldMappings extends LightningElement {
     * @param event: Event containing row details of the action
     */
     handleRowAction(event) {
-        console.log('bdiFieldMappings | handleRowAction()');
+        this.logBold('bdiFieldMappings | handleRowAction()');
         const actionName = event.detail.action.name;
         const row = event.detail.row;
 
         switch (actionName) {
 
             case 'delete':
-                console.log('DELETE ACTION');
-                console.log(this.log(row));
                 this.isLoading = true;
-
-                row.Is_Deleted_xxx = true;
+                row.xxx_Is_Deleted_xxx = true;
                 let clonedRow = JSON.stringify(row);
 
                 createDataImportFieldMapping({fieldMappingString: clonedRow})
-                    .then((data) => {
-                        console.log(this.log(data));
+                    .then(() => {
                         this.handleDeleteResult(row);
                     })
                     .catch((error) => {
-                        console.log(error);
                         this.isLoading = false;
                         this.showToast(
                             'Error',
@@ -129,8 +129,6 @@ export default class bdiFieldMappings extends LightningElement {
                 break;
 
             case 'edit':
-                console.log('EDIT ACTION');
-                console.log('Row: ', this.log(row));
                 fireEvent(this.pageRef,'openModal', {
                     objectMapping: this.objectMapping,
                     row: row });
