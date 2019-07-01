@@ -182,7 +182,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
 
         // Callback class instance
-        CustomMetadataCallback callback = new CustomMetadataCallback();
+        DeploymentCallback callback = new DeploymentCallback();
 
         // Enqueue custom metadata deployment
         Id jobId = Metadata.Operations.enqueueDeployment(deployContainer, callback);
@@ -313,36 +313,27 @@ public class BDI_ManageAdvancedMappingCtrl {
         Metadata.DeployResult deployResult;
     }
 
-    public class CustomMetadataCallback implements Metadata.DeployCallback {
-        public void handleResult(Metadata.DeployResult result,
-                                Metadata.DeployCallbackContext context) {
-            if (result.status == Metadata.DeployStatus.Succeeded) {
-                System.debug('END TIME: ' + DateTime.now());
-                System.debug('success: '+ result);
-                // Trying out Platform Events for checking the deployment status
-                /*List<Custom_Metadata_Data_Deployment__e> deploymentEvents =
-                    new List<Custom_Metadata_Data_Deployment__e>();
-                deploymentEvents.add(new Custom_Metadata_Data_Deployment__e(Test__c='Test'));
+    public class DeploymentCallback implements Metadata.DeployCallback {
 
-                // Call method to publish events
-                List<Database.SaveResult> results = EventBus.publish(deploymentEvents);
+        public void handleResult(
+                Metadata.DeployResult deployResult,
+                Metadata.DeployCallbackContext context) {
 
-                // Inspect publishing result for each event
-                for (Database.SaveResult sr : results) {
-                    if (sr.isSuccess()) {
-                        System.debug('Successfully published event.');
-                    } else {
-                        for(Database.Error err : sr.getErrors()) {
-                            System.debug('Error returned: ' +
-                                        err.getStatusCode() +
-                                        ' - ' +
-                                        err.getMessage());
-                        }
-                    }       
-                }*/
-            } else {
-                // Deployment was not successful
-                System.debug('fail: '+ result);
+            DeploymentEvent__e de = new DeploymentEvent__e(
+                    DeploymentId__c = deployResult.id,
+                    Status__c = deployResult.status.name(),
+                    CompletedDate__c = deployResult.completedDate
+            );
+
+            Database.SaveResult saveResult = EventBus.publish(de);
+
+            if (!saveResult.isSuccess()) {
+                for (Database.Error error : saveResult.getErrors()) {
+                    //TODO: collaborate with docs on label/text value in the event that a deployment fails
+                    throw new AuraHandledException('Error returned: ' +
+                            error.getStatusCode() + ' - ' +
+                            error.getMessage());
+                }
             }
         }
     }
