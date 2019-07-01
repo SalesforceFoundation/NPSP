@@ -21,7 +21,7 @@ Delete a Data Import
     ...    ${ns}GiftBatch__c=true    
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{account} =     API Create Organization Account
-    &{data_import} =  API Create DataImport    &{batch}[Id]    ${ns}Account1Imported__c=&{account}[Id]    ${ns}Donation_Donor__c=Account1
+    &{data_import} =  API Create DataImport    ${ns}NPSP_Data_Import_Batch__c=&{batch}[Id]    ${ns}Account1Imported__c=&{account}[Id]    ${ns}Donation_Donor__c=Account1
     Select App Launcher Tab   Batch Gift Entry
     # Click Link      link=&{batch}[Name]
     Click Link With Text    &{batch}[Name]
