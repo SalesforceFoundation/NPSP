@@ -37,6 +37,24 @@ export default class bdiFieldMappingModal extends LightningElement {
     @api targetFieldsByLabelByDisplayType;
     @api targetFieldsByAPINameByDisplayType;
 
+    // Map of Display Types
+    validTargetTypesBySourceType = {
+        "ID": ["ID", "STRING"],
+        "REFERENCE": ["REFERENCE", "STRING"],
+        "PHONE": ["PHONE", "STRING"],
+        "TEXTAREA": ["TEXTAREA", "STRING"],
+        "URL": ["URL", "STRING"],
+        "EMAIL": ["EMAIL", "STRING"],
+        // The following currently only support same-type mapping
+        "BOOLEAN": ["BOOLEAN"],
+        "STRING": ["STRING"],
+        "DATETIME": ["DATETIME"],
+        "DATE": ["DATE"],
+        "PICKLIST": ["PICKLIST"], // TODO: Include sometimes Boolean as per the BDI Mapping Field Types dc
+        "CURRENCY": ["CURRENCY"],
+        "PERCENT": ["PERCENT"]
+    };
+
     get isTargetFieldDisabled() {
         if (this.selectedSourceFieldAPIName || this.selectedSourceFieldLabel) {
             return false;
@@ -50,6 +68,8 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     connectedCallback() {
+        this.logBold('Modal | connectedCallback()');
+        console.log(this.validTargetTypesBySourceType);
         document.addEventListener("keydown", this.escapeFunction, false);
         registerListener('openModal', this.handleOpenModal, this);
 
@@ -164,8 +184,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.selectedSourceFieldAPIName = fieldAPIName;
         this.selectedSourceFieldLabel = fieldInfo.label;
 
-        this.targetFieldLabelOptions = this.targetFieldsByLabelByDisplayType[fieldInfo.displayType];
-        this.targetFieldAPINameOptions = this.targetFieldsByAPINameByDisplayType[fieldInfo.displayType];
+        this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo.displayType);
     }
 
     handleSourceFieldAPINameChange(event) {
@@ -176,8 +195,24 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.selectedSourceFieldLabel = fieldLabel;
         this.selectedSourceFieldAPIName = fieldInfo.value;
 
-        this.targetFieldLabelOptions = this.targetFieldsByLabelByDisplayType[fieldInfo.displayType];
-        this.targetFieldAPINameOptions = this.targetFieldsByAPINameByDisplayType[fieldInfo.displayType];
+        this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo.displayType);
+    }
+
+    handleAvailableTargetFieldsBySourceFieldDisplayType(displayType) {
+        this.logBold('bdiFieldMappingModal | handleAvailableTargetFieldsBySourceFieldDisplayType()');
+        this.targetFieldLabelOptions = [];
+        this.targetFieldAPINameOptions = [];
+        let validTargetTypes = this.validTargetTypesBySourceType[displayType];
+
+        for (let i = 0; i < validTargetTypes.length; i++) {
+            let validType = validTargetTypes[i];
+
+            let validTargetTypesByLabel = this.targetFieldsByLabelByDisplayType[validType];
+            let validTargetTypesAPIName = this.targetFieldsByAPINameByDisplayType[validType];
+
+            this.targetFieldLabelOptions.push(...validTargetTypesByLabel);
+            this.targetFieldAPINameOptions.push(...validTargetTypesAPIName);
+        }
     }
 
     handleTargetFieldLabelChange(event) {
@@ -193,6 +228,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleGetDataImportFieldDescribes() {
+        this.logBold('bdiFieldMappingModal | handleGetDataImportFieldDescribes()');
         getObjectFieldDescribes({objectName: 'DataImport__c'})
             .then((data) => {
                 this.sourceFieldLabelOptions = [];
@@ -218,6 +254,8 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 this.diFieldsByLabel = diFieldsByLabel;
                 this.diFieldsByAPIName = diFieldsByAPIName;
+
+                console.log(this.log(diFieldsByLabel));
             })
             .catch((error) => {
                 this.showToast(
@@ -269,6 +307,8 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 this.targetFieldsByLabelByDisplayType = fieldByLabelByDisplayType;
                 this.targetFieldsByAPINameByDisplayType = fieldByAPINameByDisplayType;
+
+                console.log(this.log(fieldByLabelByDisplayType));
             })
             .catch((error) => {
                 this.showToast(
@@ -297,7 +337,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     *
     * @param object: Object to be parsed
     */
-    log(obj) {
+    parse(obj) {
        return JSON.parse(JSON.stringify(obj));
     }
 

@@ -2802,9 +2802,9 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
         <members>bdi_ObjectMappings</members>
-        <members>bdiFieldMappingModal</members>
         <members>pubsubNoPageRef</members>
         <name>LightningComponentBundle</name>
     </types>
@@ -2935,5 +2935,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>45.0</version>
+    <version>43.0</version>
 </Package>
