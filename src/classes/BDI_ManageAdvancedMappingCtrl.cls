@@ -69,7 +69,7 @@ public class BDI_ManageAdvancedMappingCtrl {
 
     @AuraEnabled
     public static DataImportFieldMappingWrapper[] getFieldMappingsByObjectAndFieldSetNames(
-        String objectSetName) {
+        String objectName) {
 
         Data_Import_Settings__c dataImportSettings = Data_Import_Settings__c.getInstance();
         String fieldSetName = dataImportSettings.Default_Data_Import_Field_Mapping_Set__c;
@@ -77,7 +77,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             new List<DataImportFieldMappingWrapper>();
 
         Data_Import_Field_Mapping__mdt[] fieldMappings =
-            bdiCMT.fieldMappingsByObjMappingDevName.get(objectSetName);
+            bdiCMT.fieldMappingsByObjMappingDevName.get(objectName);
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
 

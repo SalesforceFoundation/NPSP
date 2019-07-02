@@ -1,11 +1,10 @@
 import { LightningElement, api, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
+import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoPageRef';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { registerListener, unregisterAllListeners, fireEvent }
-    from 'c/pubsubNoPageRef';
 
 export default class bdiFieldMappingModal extends LightningElement {
 
@@ -103,7 +102,10 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     handleGetTargetObjectFieldDescribes = async() => {
         this.logBold('bdiFieldMappingModal | handleGetTargetObjectFieldDescribes()');
-        return getObjectFieldDescribes({objectName: this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c})
+        let objectAPIName =
+            this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c;
+
+        return getObjectFieldDescribes({objectName: objectAPIName})
             .then((data) => {
                 return data;
             });
@@ -180,6 +182,13 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 targetObjectFieldsByLabel[labelOption.label] = labelOption.value;
                 targetObjectFieldsByAPIName[labelOption.value] = labelOption.label;
+
+                // Filter available target fields by DisplayType
+                if (this.selectedTargetFieldLabel && this.selectedTargetFieldLabel === data[i].label) {
+                    this.handleAvailableTargetFieldsBySourceFieldDisplayType(data[i].displayType);
+                    this.selectedTargetFieldLabel = data[i].label;
+                    this.selectedTargetFieldAPIName = data[i].value;
+                }
             }
         }
 
@@ -230,8 +239,10 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
             this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
 
-            this.targetFieldLabelOptions = this.targetFieldsByLabelByDisplayType[this.row.xxx_Source_Field_Data_Type_xxx];
-            this.targetFieldAPINameOptions = this.targetFieldsByAPINameByDisplayType[this.row.xxx_Source_Field_Data_Type_xxx];
+            this.targetFieldLabelOptions =
+                this.targetFieldsByLabelByDisplayType[this.row.xxx_Source_Field_Data_Type_xxx];
+            this.targetFieldAPINameOptions =
+                this.targetFieldsByAPINameByDisplayType[this.row.xxx_Source_Field_Data_Type_xxx];
         } else {
             // New
             this.selectedSourceFieldLabel = undefined;

@@ -1,7 +1,8 @@
 import { LightningElement, track, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import getFieldMappingsByObjectAndFieldSetNames from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
 import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
+import getFieldMappingsByObjectAndFieldSetNames
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 
@@ -84,7 +85,7 @@ export default class bdiFieldMappings extends LightningElement {
     handleFieldMappings() {
         this.logBold('bdiFieldMappings | handleFieldMappings()');
         getFieldMappingsByObjectAndFieldSetNames({
-                objectSetName: this.objectMapping.DeveloperName})
+                objectName: this.objectMapping.DeveloperName})
             .then((data) => {
                 this.fieldMappings = data;
                 this.isLoading = false;
