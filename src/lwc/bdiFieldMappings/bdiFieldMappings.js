@@ -42,6 +42,25 @@ export default class bdiFieldMappings extends LightningElement {
         fireEvent(this.pageRef, 'showobjectmappings');
     }
 
+    constructor(){
+        super();
+        this.template.addEventListener('deployment', this.handleDeploymentEvent);
+    }
+
+    handleDeploymentEvent(event) {
+        console.log('*** ' + 'handling deployment event in fieldMapping.js' + ' ***');
+        console.log(JSON.stringify(event));
+        let deploymentId = event.detail.deploymentId;
+        console.log(deploymentId);
+
+        console.log('*** ' + 'dispatching from fieldMapping.js' + ' ***');
+        this.dispatchEvent(new CustomEvent('deploymentNotification', {
+            bubbles: true,
+            composed: true,
+            detail: deploymentId
+        }));
+    }
+
     connectedCallback() {
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
