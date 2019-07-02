@@ -2810,6 +2810,7 @@
         <members>bdiFieldMappings</members>
         <members>bdi_ObjectMappings</members>
         <members>bdiFieldMappingModal</members>
+        <members>platformEventListener</members>
         <members>pubsubNoPageRef</members>
         <name>LightningComponentBundle</name>
     </types>
