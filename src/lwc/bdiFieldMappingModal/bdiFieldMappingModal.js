@@ -279,9 +279,11 @@ export default class bdiFieldMappingModal extends LightningElement {
             });
         }
 
-        createDataImportFieldMapping({fieldMappingString: rowDetails})
-            .then((data) => {
-                this.handleSaveResult(data);
+        createDataImportFieldMapping({fieldMappingString: clonedRow})
+            .then((deploymentId) => {
+                console.log('deployed metadata, deploymentId vvv');
+                console.log(this.log(deploymentId));
+                this.handleDeploymentId(deploymentId);
             })
             .catch((error) => {
                 this.isLoading = false;
@@ -294,6 +296,17 @@ export default class bdiFieldMappingModal extends LightningElement {
                         [error.body.exceptionType, error.body.message, error.body.stackTrace]);
                 }
             });
+    }
+
+    handleDeploymentId(deploymentId) {
+        //tell our parent element that we have an Id to monitor
+        const deploymentEvent = new CustomEvent('deployment', {
+            bubbles: true,
+            composed: true,
+            detail: {deploymentId}
+        });
+        this.dispatchEvent(deploymentEvent);
+        this.isLoading = false;
     }
 
     handleSaveResult() {

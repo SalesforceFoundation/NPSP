@@ -13,6 +13,9 @@
             ],
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
+            ],
+            "c/platformEventListener": [
+                "platformEventListener/platformEventListener.js"
             ]
         },
         "experimentalDecorators": true

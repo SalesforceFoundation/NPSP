@@ -2,7 +2,14 @@
     <div class="slds-grid slds-wrap">
         <div class="slds-size_1-of-1 slds-p-around_small">
             <c:bdi_ObjectMappings/>
-            <c:bdiFieldMappings/>
+
+            <c:bdiFieldMappings ondeployment="{!c.handleDeploymentNotification}"/>
+
+            <c:platformEventListener
+                    channelName="/event/DeploymentEvent__e"
+                    isShowToastEnabled="true"
+                    isConsoleLogEnabled="true"
+                    aura:id="platformEventListener"/>
         </div>
     </div>
-</aura:component>	
+</aura:component>
