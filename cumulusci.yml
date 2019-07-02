@@ -431,8 +431,6 @@ orgs:
             config_file: orgs/beta_personaccounts.json
         beta_statecountry:
             config_file: orgs/beta_statecountry.json
-        beta_wave:
-            config_file: orgs/beta_wave.json
         prerelease:
             config_file: orgs/prerelease.json
         trial:
