@@ -28,14 +28,17 @@ export default class PlatformEventListener extends LightningElement {
             this.handleEventReceived(this._deploymentResponses.get(deploymentId));
         } else {
             this._deploymentIds.add(deploymentId);
-            console.log('Deployment Id : ' + deploymentId + ' is now registered for monitoring.');
         }
     }
 
     showToast(response){
+        const status =
+            response.data.payload.Status__c || response.data.payload.npsp__Status__c;
+        const deploymentId =
+            response.data.payload.DeploymentId__c || response.data.payload.npsp__DeploymentId__c;
         const evt = new ShowToastEvent({
-            title: 'Deployment completed with Status: ' + response.data.payload.Status__c,
-            message: 'Deployment Id: ' + response.data.payload.DeploymentId__c,
+            title: 'Deployment completed with Status: ' + status,
+            message: 'Deployment Id: ' + deploymentId,
             variant: 'success',
         });
         this.dispatchEvent(evt);
@@ -72,7 +75,8 @@ export default class PlatformEventListener extends LightningElement {
     }
 
     handleEventReceived(response) {
-        const deploymentId = response.data.payload.DeploymentId__c;
+        const deploymentId =
+            response.data.payload.DeploymentId__c || response.data.payload.npsp__DeploymentId__c;
         if (this.isMonitored(deploymentId)) {
             if (this.isShowToastEnabled) {
                 this.showToast(response);

@@ -312,30 +312,6 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
-    * @description Check the status of metadata deployment
-    * @return Metadata.DeployResult JSON
-    */
-    @AuraEnabled
-    public static Metadata.DeployResult getDeploymentResult(Id deploymentId) {
-        System.debug('getDeploymentResult()');
-        System.debug(deploymentId);
-        Http h = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint('callout:Metadata_Deployment_Result/' +
-            '/services/data/v44.0/metadata/deployRequest/' +
-            deploymentId +
-            '?includeDetails=true');
-        request.setMethod('GET');
-        //request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
-        HttpResponse response = h.send(request);
-        System.debug(response.getBody());
-        DeploymentResponse deploymentResponse =
-            (DeploymentResponse)JSON.deserialize(response.getBody(), DeploymentResponse.class);
-
-        return deploymentResponse.deployResult;
-    }
-
-    /*******************************************************************************************************
     * @description Wrapper used to deserialize the deployment request response
     */
     private class DeploymentResponse {

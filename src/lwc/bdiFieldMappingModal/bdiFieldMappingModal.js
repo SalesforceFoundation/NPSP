@@ -279,10 +279,10 @@ export default class bdiFieldMappingModal extends LightningElement {
             });
         }
 
-        createDataImportFieldMapping({fieldMappingString: clonedRow})
+        createDataImportFieldMapping({fieldMappingString: rowDetails})
             .then((deploymentId) => {
                 console.log('deployed metadata, deploymentId vvv');
-                console.log(this.log(deploymentId));
+                console.log(this.parse(deploymentId));
                 this.handleDeploymentId(deploymentId);
             })
             .catch((error) => {
