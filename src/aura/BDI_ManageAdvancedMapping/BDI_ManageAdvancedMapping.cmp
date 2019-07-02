@@ -10,7 +10,6 @@
                     channelName="/event/DeploymentEvent__e"
                     isShowToastEnabled="true"
                     isConsoleLogEnabled="true"
-                    isDebugFlagEnabled="true"
                     aura:id="platformEventListener"/>
         </div>
     </div>
