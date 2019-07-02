@@ -5757,6 +5757,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Allocation Type</value>
     </labels>
     <labels>
+        <fullName>stgBDIGoToSetup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgBDIGoToSetup</shortDescription>
+        <value>Configure Advanced Mapping</value>
+    </labels>
+    <labels>
         <fullName>stgBtnBack</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

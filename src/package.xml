@@ -1910,6 +1910,7 @@
         <members>stgAddrMustChooseClass</members>
         <members>stgAddrPermissionDenied</members>
         <members>stgAllocationLevel</members>
+        <members>stgBDIGoToSetup</members>
         <members>stgBtnBack</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>

@@ -55,6 +55,11 @@
                                 <span class="slds-checkbox_off">Disabled</span>
                             </span>
                         </label>
+
+                        <apex:commandButton id="navigateAdvancedMapping"
+                                            value="{!$Label.stgBDIGoToSetup}"
+                                            styleClass="slds-m-vertical_large slds-button slds-button_brand"
+                                            action="{!navigate}" />
                     </apex:outputPanel>
                 </div>
             </div>

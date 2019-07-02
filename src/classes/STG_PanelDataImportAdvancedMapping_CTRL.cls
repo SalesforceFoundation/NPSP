@@ -129,6 +129,18 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
+    * @description Action Method to navigate to separate VF page that contains custom Advanced Mapping UI in
+    * Aura and Lightning
+    *
+    * @return PageReference
+    */
+    public PageReference navigate(){
+        PageReference advancedMapping = new PageReference('/apex/BDI_ManageAdvancedMapping');
+        advancedMapping.setRedirect(true);
+        return advancedMapping;
+    }
+
+    /*******************************************************************************************************
     * @description Action Method to enable Custom Metadata mapping and update data import custom settings
     * @return null
     */
