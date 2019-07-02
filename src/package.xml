@@ -2935,5 +2935,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>43.0</version>
+    <version>45.0</version>
 </Package>

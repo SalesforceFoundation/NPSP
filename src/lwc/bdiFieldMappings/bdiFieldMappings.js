@@ -68,7 +68,11 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     handleOpenModal() {
-        fireEvent(this.pageRef, 'openModal', { objectMapping: this.objectMapping, row: undefined });
+        fireEvent(this.pageRef, 'openModal', {
+            objectMapping: this.objectMapping,
+            row: undefined,
+            fieldMappings: this.fieldMappings
+        });
     }
 
     /*******************************************************************************
@@ -129,9 +133,11 @@ export default class bdiFieldMappings extends LightningElement {
                 break;
 
             case 'edit':
-                fireEvent(this.pageRef,'openModal', {
+                fireEvent(this.pageRef, 'openModal', {
                     objectMapping: this.objectMapping,
-                    row: row });
+                    row: row,
+                    fieldMappings: this.fieldMappings
+                });
                 break;
 
             default:
