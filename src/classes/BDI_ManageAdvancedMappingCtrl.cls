@@ -50,7 +50,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         return objMappings;
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static FieldInfo[] getObjectFieldDescribes(String objectName) {
         Map<String, String> useableDFRs = new Map<String, String>();
         FieldInfo[] fieldInfos = new List<FieldInfo>();
@@ -96,7 +96,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     // Drops it into a DeployContainer
     // Sends it off to be deployed
     // Return the jobId
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
         System.debug(LoggingLevel.ERROR, 'createDataImportFieldMapping()');
         System.debug(fieldMappingString);
