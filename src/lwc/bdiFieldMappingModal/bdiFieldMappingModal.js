@@ -18,6 +18,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     @track sourceFieldLabelOptions;
     @track selectedSourceFieldAPIName;
     @track sourceFieldAPINameOptions;
+    @track selectedSourceFieldDisplayType;
 
     @track selectedTargetFieldLabel;
     @track targetFieldLabelOptions;
@@ -150,6 +151,8 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.targetFieldAPINameOptions = [];
         let targetObjectFieldsByLabel = {}, targetObjectFieldsByAPIName = {};
         let fieldByLabelByDisplayType = {}, fieldByAPINameByDisplayType = {};
+        let selectedTargetFieldLabel = this.selectedTargetFieldLabel
+        let selectedTargetFieldAPIName = this.selectedTargetFieldAPIName;
 
         for (let i = 0; i < data.length; i++) {
 
@@ -182,13 +185,6 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 targetObjectFieldsByLabel[labelOption.label] = labelOption.value;
                 targetObjectFieldsByAPIName[labelOption.value] = labelOption.label;
-
-                // Filter available target fields by DisplayType
-                if (this.selectedTargetFieldLabel && this.selectedTargetFieldLabel === data[i].label) {
-                    this.handleAvailableTargetFieldsBySourceFieldDisplayType(data[i].displayType);
-                    this.selectedTargetFieldLabel = data[i].label;
-                    this.selectedTargetFieldAPIName = data[i].value;
-                }
             }
         }
 
@@ -197,6 +193,13 @@ export default class bdiFieldMappingModal extends LightningElement {
 
         this.targetFieldsByLabelByDisplayType = fieldByLabelByDisplayType;
         this.targetFieldsByAPINameByDisplayType = fieldByAPINameByDisplayType;
+
+        if (this.selectedSourceFieldDisplayType) {
+            this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.selectedSourceFieldDisplayType);
+        }
+
+        this.selectedTargetFieldLabel = selectedTargetFieldLabel;
+        this.selectedTargetFieldAPIName = selectedTargetFieldAPIName;
     }
 
     disconnectedCallback() {
@@ -233,16 +236,13 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.row = event.row;
 
         if (this.row) {
+            this.logBold('EDIT');
             // Edit
             this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
             this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
             this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
             this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
-
-            this.targetFieldLabelOptions =
-                this.targetFieldsByLabelByDisplayType[this.row.xxx_Source_Field_Data_Type_xxx];
-            this.targetFieldAPINameOptions =
-                this.targetFieldsByAPINameByDisplayType[this.row.xxx_Source_Field_Data_Type_xxx];
+            this.selectedSourceFieldDisplayType = this.row.xxx_Source_Field_Data_Type_xxx;
         } else {
             // New
             this.selectedSourceFieldLabel = undefined;
