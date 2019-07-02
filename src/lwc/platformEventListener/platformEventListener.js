@@ -24,26 +24,26 @@ export default class PlatformEventListener extends LightningElement {
 
     @api
     registerDeploymentId(deploymentId) {
-        const deploymentResponse = this._deploymentResponses.get(deploymentId);
-        if (deploymentResponse) {
-            this.handleEventReceived(deploymentResponse);
+        if (this._deploymentResponses.has(deploymentId)) {
+            this.handleEventReceived(this._deploymentResponses.get(deploymentId));
         } else {
             this._deploymentIds.add(deploymentId);
         }
-        console.log('end of registerDeploymentId - this._deploymentIds: ', this._deploymentIds);
     }
 
     showToast(response){
         const evt = new ShowToastEvent({
-            title: 'Deployment completed with Status: ' + response.status.name(),
-            message: JSON.stringify(response),
+            title: 'Deployment completed with Status: ' + response.data.payload.Status__c,
+            message: 'Deployment Id: ' + response.data.payload.DeploymentId__c,
             variant: 'success',
         });
         this.dispatchEvent(evt);
     }
 
     log(response) {
-        console.log('Deployment Event received! Message: ', JSON.stringify(response));
+        console.log('Deployment Event received! ' +
+            'Deployment Id: ' + response.data.payload.DeploymentId__c +
+            ' with Status: ' + response.data.payload.Status__c);
     }
 
     isMonitored(deploymentId) {
@@ -56,7 +56,7 @@ export default class PlatformEventListener extends LightningElement {
 
         // Callback invoked whenever a new event message is received
         const messageCallback = function (response) {
-            console.log('*** ' + 'Received Platform Event' + ' ***');
+            // console.log('*** ' + 'Received Platform Event' + ' ***');
             // console.log('JSON.stringify(response): ', JSON.stringify(response));
             //TODO: see if we can import DeploymentEvent__e schema
             x.handleEventReceived(response);
@@ -71,9 +71,7 @@ export default class PlatformEventListener extends LightningElement {
     }
 
     handleEventReceived(response) {
-        console.log('*** in platformEventListener.handleEventReceived, this.monitoredIds: ' + this._deploymentIds + ' ***');
         const deploymentId = response.data.payload.DeploymentId__c;
-        console.log('deploymentId: ', deploymentId);
         if (this.isMonitored(deploymentId)) {
             if (this.isShowToastEnabled) {
                 this.showToast(response);
@@ -85,8 +83,6 @@ export default class PlatformEventListener extends LightningElement {
 
         //Store the response, in case we were unable to verify the deploymentId yet
         this._deploymentResponses.put(deploymentId, response);
-        console.log('this._deploymentResponses: ', this._deploymentResponses);
-        console.log('*** ' + 'end handle events received' + ' ***');
     }
 
     static onError(error) {
