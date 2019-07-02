@@ -6,13 +6,13 @@
   ],
   "instance": "CS46",
   "hasSampleData": "true",
-  "orgPreferences" : {
-    "enabled": [
-      "AnalyticsSharingEnable",
-      "ChatterEnabled",
-      "DisableParallelApexTesting",
-      "NotesReservedPref01",
-      "S1DesktopEnabled"
-    ]
+  "settings": {
+    "orgPreferenceSettings": {
+      "chatterEnabled": true,
+      "disableParallelApexTesting": true,
+      "notesReservedPref01": true,
+      "s1DesktopEnabled": true,
+      "analyticsSharingEnabled": true
+    }
   }
 }
