@@ -61,7 +61,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     get isTargetFieldDisabled() {
         if ((this.selectedSourceFieldAPIName || this.selectedSourceFieldLabel) &&
-            (this.targetFieldLabelOptions.length > 0 || this.targetFieldAPINameOptions.length > 0)) {
+            (this.targetFieldLabelOptions && this.targetFieldLabelOptions.length > 0)) {
             return false;
         }
         return true;
@@ -76,6 +76,9 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.logBold('Modal | connectedCallback()');
         document.addEventListener("keydown", this.escapeFunction, false);
         registerListener('openModal', this.handleOpenModal, this);
+
+        this.handleGetDataImportFieldDescribes();
+        this.handleGetTargetObjectFieldDescribes();
     }
 
     disconnectedCallback() {
@@ -127,8 +130,7 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.selectedTargetFieldAPIName = undefined;
         }
 
-        this.handleGetDataImportFieldDescribes();
-        this.handleGetTargetObjectFieldDescribes();
+        this.isLoading = false;
     }
 
     handleSave() {
@@ -211,6 +213,8 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     handleAvailableTargetFieldsBySourceFieldDisplayType(displayType) {
         this.logBold('bdiFieldMappingModal | handleAvailableTargetFieldsBySourceFieldDisplayType()');
+        this.selectedTargetFieldAPIName = undefined;
+        this.selectedTargetFieldLabel = undefined;
         this.targetFieldLabelOptions = [];
         this.targetFieldAPINameOptions = [];
         let validTargetTypes = this.validTargetTypesBySourceType[displayType];
@@ -325,8 +329,6 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 this.targetFieldsByLabelByDisplayType = fieldByLabelByDisplayType;
                 this.targetFieldsByAPINameByDisplayType = fieldByAPINameByDisplayType;
-
-                this.isLoading = false;
             })
             .catch((error) => {
                 if (error && error.body) {
