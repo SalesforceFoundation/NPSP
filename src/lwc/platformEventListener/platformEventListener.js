@@ -28,6 +28,7 @@ export default class PlatformEventListener extends LightningElement {
             this.handleEventReceived(this._deploymentResponses.get(deploymentId));
         } else {
             this._deploymentIds.add(deploymentId);
+            console.log('Deployment Id : ' + deploymentId + ' is now registered for monitoring.');
         }
     }
 
@@ -56,7 +57,7 @@ export default class PlatformEventListener extends LightningElement {
 
         // Callback invoked whenever a new event message is received
         const messageCallback = function (response) {
-            // console.log('*** ' + 'Received Platform Event' + ' ***');
+            console.log('*** ' + 'Received Platform Event' + ' ***');
             // console.log('JSON.stringify(response): ', JSON.stringify(response));
             //TODO: see if we can import DeploymentEvent__e schema
             x.handleEventReceived(response);
