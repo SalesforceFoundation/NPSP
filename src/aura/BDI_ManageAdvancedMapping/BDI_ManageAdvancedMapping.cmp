@@ -4,7 +4,7 @@
 
             <c:bdi_ObjectMappings/>
 
-            <c:bdiFieldMappings ondeploymentNotification="{!c.handleDeploymentNotification}"/>
+            <c:bdiFieldMappings ondeployment="{!c.handleDeploymentNotification}"/>
 
             <c:platformEventListener
                     channelName="/event/DeploymentEvent__e"
