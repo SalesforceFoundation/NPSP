@@ -151,9 +151,9 @@ export default class bdiFieldMappingModal extends LightningElement {
         //tell our parent element that we have an Id to monitor
         const deploymentEvent = new CustomEvent('deployment', {
             bubbles: true,
+            composed: true,
             detail: {deploymentId}
         });
-        console.log('*** ' + 'deployment event dispatchING from modal' + ' ***');
         this.dispatchEvent(deploymentEvent);
         this.isLoading = false;
     }
