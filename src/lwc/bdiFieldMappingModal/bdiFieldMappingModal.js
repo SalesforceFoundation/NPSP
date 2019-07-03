@@ -1,3 +1,4 @@
+/* eslint-disable @lwc/lwc/no-async-operation */
 import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoPageRef';
@@ -52,7 +53,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         "URL": ["URL", "STRING"],
         "EMAIL": ["EMAIL", "STRING"],
         "BOOLEAN": ["BOOLEAN"],
-        "STRING": ["STRING"],
+        "STRING": ["STRING", "PICKLIST"],
         "DATETIME": ["DATETIME"],
         "DATE": ["DATE"],
         "PICKLIST": ["PICKLIST"], // TODO: Include sometimes Boolean as per the BDI Mapping Field Types dc
