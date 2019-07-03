@@ -41,6 +41,11 @@ public class OPP_OpportunityNaming_BATCH extends UTIL_AbstractCommon_BATCH imple
      */
     private static final Integer BATCH_SIZE = 200;
 
+    /**
+     * @description Chunk size to use when running in LDV Mode
+     */
+    private static final Integer CHUNK_SIZE = 10000000;
+
     /** @description Default No argument constructor */
     public OPP_OpportunityNaming_BATCH() {
         super();
@@ -98,7 +103,7 @@ public class OPP_OpportunityNaming_BATCH extends UTIL_AbstractCommon_BATCH imple
      * @return Integer chunk size to use when running in LDV Chunking mode
      */
     public override Integer getLDVChunkSize() {
-        return 10000000;
+        return CHUNK_SIZE;
     }
 
     /**
