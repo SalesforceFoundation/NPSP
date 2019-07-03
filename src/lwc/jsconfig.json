@@ -16,6 +16,9 @@
             ],
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
+            ],
+            "c/stencil": [
+                "stencil/stencil.js"
             ]
         },
         "experimentalDecorators": true
