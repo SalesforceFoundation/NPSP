@@ -33,17 +33,12 @@
 * @description Tests for UTIL_AbstractCommon_BATCH class
 */
 @isTest(isParallel=true)
-public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
+public class UTIL_AbstractCommon_BATCH_TEST {
 
     /*******************************************************************************************************************
      * @description The number of Accounts to create for test conditions
      */
     private static final Integer TEST_ACCOUNT_CNT = 7;
-
-    private Integer expectedResult;
-    private Integer testChunkSize = 1;
-    private Integer testMaxNonLDVSize = 1;
-    private String testWhereClause = '';
 
     /*******************************************************************************************************************
      * @description Test Batch Execution with inner test batch class to test non chunking conditions
@@ -55,7 +50,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
         Test.startTest();
 
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_BATCH_TEST(10);
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10);
         tab.setTestChunkSize(10);
         tab.setTestMaxNonLDVSize(10);
         System.assertEquals (10, tab.getBatchSize(), 'Batch Size');
@@ -79,7 +74,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
         Test.startTest();
 
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_BATCH_TEST(1, true, '');
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(1, true, '');
         tab.setExpectedResult(TEST_ACCOUNT_CNT);
         Database.executeBatch(tab, 1);
         Test.stopTest();
@@ -93,11 +88,11 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void addtlBatchConstructors() {
-        assertConstructor('No Params', new UTIL_AbstractCommon_BATCH_TEST(), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, '');
-        assertConstructor('LDVMode Only', new UTIL_AbstractCommon_BATCH_TEST(false), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, '');
-        assertConstructor('LDVMode, Additional Where', new UTIL_AbstractCommon_BATCH_TEST(false, 'Name = \'test\''), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, 'Name = \'test\'');
-        assertConstructor('BatchSize', new UTIL_AbstractCommon_BATCH_TEST(5), 5, false, '');
-        assertConstructor('LDVMode, Additional Where, BatchSize', new UTIL_AbstractCommon_BATCH_TEST(5, true, 'Name = \'test\''), 5, true, 'Name = \'test\'');
+        assertConstructor('No Params', new UTIL_AbstractCommon_MOCK(), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, null);
+        assertConstructor('LDVMode Only', new UTIL_AbstractCommon_MOCK(false), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, null);
+        assertConstructor('LDVMode, Additional Where', new UTIL_AbstractCommon_MOCK(false, 'Name = \'test\''), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, 'Name = \'test\'');
+        assertConstructor('BatchSize', new UTIL_AbstractCommon_MOCK(5), 5, false, null);
+        assertConstructor('LDVMode, Additional Where, BatchSize', new UTIL_AbstractCommon_MOCK(5, true, 'Name = \'test\''), 5, true, 'Name = \'test\'');
     }
 
     /*******************************************************************************************************************
@@ -108,7 +103,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      * @param expectedLDVMode expected value for ldvMode
      * @param expectedAdditionalWhere expected value for additionalWhereClause
      */
-    private static void assertConstructor(String conDesc, UTIL_AbstractCommon_BATCH_TEST batch, Integer expectedBatchSize, Boolean expectedLDVMode, String expectedAdditionalWhere) {
+    private static void assertConstructor(String conDesc, UTIL_AbstractCommon_MOCK batch, Integer expectedBatchSize, Boolean expectedLDVMode, String expectedAdditionalWhere) {
         System.assertNotEquals(null, batch, conDesc + ': Null Check');
         System.assertEquals (0, batch.chunkIteration, conDesc + ': Chunk Iteration');
         System.assertEquals (false, batch.endReached, conDesc + ': End Reached');
@@ -126,7 +121,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[0].Name + '\'');
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Name = \'' + accs[0].Name + '\'');
         tab.setExpectedResult(1);
 
         Database.executeBatch(tab, 1);
@@ -146,7 +141,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[0].Name + '\'');
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Name = \'' + accs[0].Name + '\'');
         tab.setTestChunkSize(10);
         tab.setTestMaxNonLDVSize(10);
         tab.setExpectedResult(1);
@@ -168,7 +163,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10);
         tab.setTestWhereClause('Name = \'' + accs[0].Name + '\'');
         tab.setExpectedResult(1);
 
@@ -189,7 +184,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10);
         tab.setTestWhereClause('Name = \'' + accs[0].Name + '\'');
         tab.setTestChunkSize(10);
         tab.setTestMaxNonLDVSize(10);
@@ -212,7 +207,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\' or Name=\'' + accs[3].Name + '\'');
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Name = \'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\' or Name=\'' + accs[3].Name + '\'');
         tab.setTestWhereClause('Name = \'' + accs[0].Name + '\' or Name=\'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\'');
         tab.setExpectedResult(2);
 
@@ -233,10 +228,10 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\' or Name=\'' + accs[3].Name + '\'');
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Name = \'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\' or Name=\'' + accs[3].Name + '\'');
         tab.setTestWhereClause('Name = \'' + accs[0].Name + '\' or Name=\'' + accs[1].Name + '\' or Name=\'' + accs[2].Name + '\''                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          );
         tab.setTestChunkSize(10);
-       tab.setTestMaxNonLDVSize(10);
+        tab.setTestMaxNonLDVSize(10);
         tab.setExpectedResult(2);
 
         Database.executeBatch(tab, 10);
@@ -253,7 +248,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     public static void noRecordsReturned() {
 
         Test.startTest();
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10);
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10);
         tab.setExpectedResult(0);
 
         Database.executeBatch(tab, 1);
@@ -261,7 +256,6 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
         System.assertEquals (1, aajobs.size(), '# of jobs present');
-
     }
 
     /*******************************************************************************************************************
@@ -270,7 +264,7 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     @isTest
     public static void validateValidQuery() {
 
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
         tab.setTestWhereClause('Name = \'Test Account #0\' or Name=\'Test Account #1\' or Name=\'Test Account #2\'');
 
         System.assertEquals(null, tab.validateQuery(), 'No Exception expected');
@@ -282,152 +276,10 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
     @isTest
     public static void validateInvalidQuery() {
 
-        UTIL_AbstractCommon_BATCH_TEST tab = new UTIL_AbstractCommon_Batch_TEST(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Name = \'Test Account #1\' or Name=\'Test Account #2\' or Name=\'Test Account #3\'');
         tab.setTestWhereClause('Name equals \'Test Account #0\' or Name equals \'Test Account #1\' or Name equals \'Test Account #2\'');
 
         System.assertNotEquals(null, tab.validateQuery(), 'Exception expected');
-    }
-
-    /* Test Harness for Batch Implementation Here... */
-
-    /**
-     * @description sets the Number of Records we expect to find at the end of execution during tests.
-     * @param anExpectedResult - The Number of Records we expect to find
-     */
-    public void setExpectedResult(Integer anExpectedResult) {
-        this.expectedResult = anExpectedResult;
-    }
-
-    // Initialize private variable for record count to 0
-    private Integer recCnt = 0;
-
-    /**
-     * @description No parameter constructor
-     */
-    public UTIL_AbstractCommon_BATCH_TEST() {
-        super();
-    }
-
-    /**
-     * @description Constructor
-     * @param batchSize How many records should be in each batch
-     */
-    public UTIL_AbstractCommon_BATCH_TEST(Integer batchSize) {
-        super(batchSize);
-    }
-
-    /**
-     * @description Constructor
-     * @param batchSize How many records should be in each batch
-     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
-     */
-    public UTIL_AbstractCommon_BATCH_TEST(Integer batchSize, String additionalWhereClause) {
-        super(batchSize, additionalWhereClause);
-    }
-
-    /**
-     * @description Constructor
-     * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
-     */
-    public UTIL_AbstractCommon_BATCH_TEST(Boolean ldvMode) {
-        super(ldvMode);
-    }
-
-    /**
-     * @description Constructor
-     * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
-     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
-     */
-    public UTIL_AbstractCommon_BATCH_TEST(Boolean ldvMode, String additionalWhereClause) {
-        super(ldvMode, additionalWhereClause);
-    }
-
-
-    /**
-     * @description Constructor
-     * @param batchSize How many records should be in each batch
-     * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
-     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
-     */
-    public UTIL_AbstractCommon_BATCH_TEST(Integer batchSize, Boolean ldvMode, String additionalWhereClause) {
-        super(batchSize, ldvMode, additionalWhereClause);
-    }
-
-    /**
-     * @description Test implementation of doExecute method (the implementing classes equivalent to the execute method)
-     * @param bc BatchableContext
-     * @param records The list of records returned for this batch, filtered for any additionalWhere clause added, and including the fields/subqueries configured for this batch
-     */
-    public override void doExecute(Database.BatchableContext bc, List<SObject>records ) {
-        recCnt += records.size();
-    }
-
-    /**
-     * @description Primarily here to allow overriding of LDVChunk size for specific requirements, E.g. if a specific batch needs a lower threshold for running in LDV mode
-     * @return Integer size to limit batch results to when running in LDV Chunking mode
-     */
-    public override Integer getLDVChunkSize() {
-        return this.testChunkSize;
-    }
-
-    /**
-     * @description Here to allow overriding of Max Non LDV Record Count (Size)
-     * @return Integer Maximum number of records that be present for the distance check before running in LDV mode
-     */
-    public override Integer getMaxNonLDVSize() {
-        return this.testMaxNonLDVSize;
-    }
-
-    /**
-     * @description Required to set the main object the batch executes against
-     */
-    public override SObjectType getSObjectType() {
-        return Account.getSObjectType();
-    }
-
-    /**
-      * Setter for testWhereClause Field
-      * @param testWhereClause new value for testWhereClause
-      */
-    public void setTestWhereClause(String testWhereClause) {
-        this.testWhereClause = testWhereClause;
-    }
-
-    /**
-     * Overridable test Where Clause to add to the inner query, or non LDV query, if not running in LDV/Chunking mode
-     * @return String ''
-     */
-    public override String getWhereClause() {
-        return this.testWhereClause;
-    }
-
-    /**
-     * @description Called on completion of the batch job.  If this is running LDV Mode it may be called more than once.  All but the last invocation will
-     * have an isComplete value of false.  This method isd similar in nature/roughly equivalent to the finish method of a standard Apex Batch job
-     * @param bc BatchableContext
-     * @param isComplete boolean value that indicates whether or not this is the final invocation, or will be executing against additional chunks
-     */
-    public override void doFinish(Database.BatchableContext bc , Boolean isComplete) {
-        if (isComplete) {
-            System.debug('# of Account Records Found: ' + recCnt);
-            System.assertEquals (expectedResult, recCnt, 'Account Count Mismatch');
-        }
-    }
-
-    /**
-     * @description Allows the test batches chunk size to be updated
-     * @param Integer testChunkSize Size to set the chunk size for the test batch to
-     */
-    public void setTestChunkSize(Integer testChunkSize) {
-        this.testChunkSize = testChunkSize;
-    }
-
-    /**
-     * @description Allows the test batches max non ldv size to be configured for specific tests
-     * @param Integer testMaxNonLDVSize Size to set the maxNonLDVSize to
-     */
-    public void setTestMaxNonLDVSize(Integer testMaxNonLDVSize) {
-        this.testMaxNonLDVSize = testMaxNonLDVSize;
     }
 
     // **************************** HELPER METHODS ****************************
@@ -440,7 +292,8 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
         return [
             SELECT Id FROM AsyncApexJob
             WHERE JobType = 'BatchApex'
-            AND ApexClass.Name = 'UTIL_AbstractCommon_BATCH_TEST'
+            AND ApexClass.Name = 'UTIL_AbstractCommon_MOCK'
         ];
     }
+
 }
