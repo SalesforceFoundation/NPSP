@@ -2,12 +2,12 @@
   "orgName": "NPSP - Beta Test Org",
   "edition": "Developer",
   "hasSampleData": "true",
-  "orgPreferences" : {
-    "enabled": [
-      "ChatterEnabled",
-      "DisableParallelApexTesting",
-      "NotesReservedPref01",
-      "S1DesktopEnabled"
-    ]
+  "settings": {
+    "orgPreferenceSettings": {
+      "chatterEnabled": true,
+      "disableParallelApexTesting": true,
+      "notesReservedPref01": true,
+      "s1DesktopEnabled": true
+    }
   }
 }
