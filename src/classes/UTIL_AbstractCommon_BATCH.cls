@@ -90,7 +90,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      */
     public UTIL_AbstractCommon_BATCH() {
         // batchSize, ldvMode, additionalWhereClause
-        this(DEFAULT_BATCH_SIZE, false,'');
+        this(DEFAULT_BATCH_SIZE, false, null);
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      */
     public UTIL_AbstractCommon_BATCH(Integer batchSize) {
         // batchSize, ldvMode, additionalWhereClause
-        this(batchSize, false, '');
+        this(batchSize, false, null);
     }
 
     /**
@@ -123,7 +123,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      */
     public UTIL_AbstractCommon_BATCH(Boolean ldvMode) {
         // batchSize, ldvMode
-        this(DEFAULT_BATCH_SIZE, ldvMode, '');
+        this(DEFAULT_BATCH_SIZE, ldvMode, null);
     }
 
    /**

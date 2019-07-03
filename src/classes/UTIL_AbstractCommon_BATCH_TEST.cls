@@ -93,10 +93,10 @@ public class UTIL_AbstractCommon_BATCH_TEST extends UTIL_AbstractCommon_BATCH {
      */
     @isTest
     public static void addtlBatchConstructors() {
-        assertConstructor('No Params', new UTIL_AbstractCommon_BATCH_TEST(), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, '');
-        assertConstructor('LDVMode Only', new UTIL_AbstractCommon_BATCH_TEST(false), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, '');
+        assertConstructor('No Params', new UTIL_AbstractCommon_BATCH_TEST(), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, null);
+        assertConstructor('LDVMode Only', new UTIL_AbstractCommon_BATCH_TEST(false), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, null);
         assertConstructor('LDVMode, Additional Where', new UTIL_AbstractCommon_BATCH_TEST(false, 'Name = \'test\''), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, 'Name = \'test\'');
-        assertConstructor('BatchSize', new UTIL_AbstractCommon_BATCH_TEST(5), 5, false, '');
+        assertConstructor('BatchSize', new UTIL_AbstractCommon_BATCH_TEST(5), 5, false, null);
         assertConstructor('LDVMode, Additional Where, BatchSize', new UTIL_AbstractCommon_BATCH_TEST(5, true, 'Name = \'test\''), 5, true, 'Name = \'test\'');
     }
 
