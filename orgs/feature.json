@@ -2,16 +2,14 @@
   "orgName": "NPSP - Feature Test Org",
   "edition": "Developer",
   "hasSampleData": "true",
-  "orgPreferences" : {
-    "enabled": [
-      "ChatterEnabled",
-      "DisableParallelApexTesting",
-      "NotesReservedPref01",
-      "S1DesktopEnabled",
-      "Translation"
-    ],
-    "disabled": [
-      "S1EncryptedStoragePref2"
-    ]
+  "settings": {
+    "orgPreferenceSettings": {
+      "chatterEnabled": true,
+      "disableParallelApexTesting": true,
+      "notesReservedPref01": true,
+      "s1DesktopEnabled": true,
+      "translation": true,
+      "s1EncryptedStoragePref2": false
+    }
   }
 }
