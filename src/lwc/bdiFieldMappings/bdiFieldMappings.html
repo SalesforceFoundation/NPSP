@@ -53,14 +53,17 @@
                     <div class="slds-size_1-of-1 slds-m-top_x-small">
                         <tempate if:true={isLoading}>
                             <lightning-spinner></lightning-spinner>
+                            <c-stencil row-count="10" column-count="7"></c-stencil>
                         </tempate>
-                        <lightning-datatable
-                            key-field="id"
-                            data={fieldMappings}
-                            columns={columns}
-                            hide-checkbox-column
-                            onrowaction={handleRowAction}>
-                        </lightning-datatable>
+                        <template if:false={isLoading}>
+                            <lightning-datatable
+                                key-field="id"
+                                data={fieldMappings}
+                                columns={columns}
+                                hide-checkbox-column
+                                onrowaction={handleRowAction}>
+                            </lightning-datatable>
+                        </template>
                     </div>
                 </div>
             </div>

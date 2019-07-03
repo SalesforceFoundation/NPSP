@@ -32,69 +32,74 @@
                     </header>
 
                     <div class="slds-modal__content slds-p-around_medium slds-modal_content_extension" id="modal-content-id-1">
-                        <div class="slds-grid slds-wrap">
-                            <div class="slds-size_1-of-1">
-                                <div class="slds-section slds-is-open slds-m-bottom_small">
-                                    <h3 class="slds-section__title slds-theme_shade">
-                                        <span class="slds-truncate slds-p-horizontal_small"
-                                              title="Source (NPSP Data Import Object)">
-                                              Source (NPSP Data Import Object)
-                                        </span>
-                                    </h3>
-                                    <lightning-combobox
-                                        name="sourceFieldLabel"
-                                        label="Field Label"
-                                        value={selectedSourceFieldAPIName}
-                                        placeholder=""
-                                        options={sourceFieldLabelOptions}
-                                        onchange={handleSourceFieldLabelChange}>
-                                    </lightning-combobox>
+                        <template if:true={isLoading}>
+                            <c-stencil row-count="10" column-count="1"></c-stencil>
+                        </template>
+                        <template if:false={isLoading}>
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-size_1-of-1">
+                                    <div class="slds-section slds-is-open slds-m-bottom_small">
+                                        <h3 class="slds-section__title slds-theme_shade">
+                                            <span class="slds-truncate slds-p-horizontal_small"
+                                                    title="Source (NPSP Data Import Object)">
+                                                    Source (NPSP Data Import Object)
+                                            </span>
+                                        </h3>
+                                        <lightning-combobox
+                                            name="sourceFieldLabel"
+                                            label="Field Label"
+                                            value={selectedSourceFieldAPIName}
+                                            placeholder=""
+                                            options={sourceFieldLabelOptions}
+                                            onchange={handleSourceFieldLabelChange}>
+                                        </lightning-combobox>
 
-                                    <lightning-combobox
-                                        name="sourceFieldAPIName"
-                                        label="Field API Name"
-                                        value={selectedSourceFieldLabel}
-                                        placeholder=""
-                                        options={sourceFieldAPINameOptions}
-                                        onchange={handleSourceFieldAPINameChange}>
-                                    </lightning-combobox>
+                                        <lightning-combobox
+                                            name="sourceFieldAPIName"
+                                            label="Field API Name"
+                                            value={selectedSourceFieldLabel}
+                                            placeholder=""
+                                            options={sourceFieldAPINameOptions}
+                                            onchange={handleSourceFieldAPINameChange}>
+                                        </lightning-combobox>
+                                    </div>
+                                </div>
+
+                                <div class="slds-size_1-of-1 slds-m-vertical_medium">
+                                    <h3 class="slds-text-align_center"><i>Maps to</i></h3>
+                                </div>
+
+                                <div class="slds-size_1-of-1 slds-m-bottom_medium">
+                                    <div class="slds-section slds-is-open slds-m-bottom_small">
+                                        <h3 class="slds-section__title slds-theme_shade">
+                                            <span class="slds-truncate slds-p-horizontal_small"
+                                                    title="Source (NPSP Data Import Object)">
+                                                    Target ({objectMapping.MasterLabel} Object)
+                                            </span>
+                                        </h3>
+                                        <lightning-combobox
+                                            name="targetFieldLabel"
+                                            label="Field Label"
+                                            value={selectedTargetFieldAPIName}
+                                            placeholder=""
+                                            options={targetFieldLabelOptions}
+                                            onchange={handleTargetFieldLabelChange}
+                                            disabled={isTargetFieldDisabled}>
+                                        </lightning-combobox>
+
+                                        <lightning-combobox
+                                            name="targetFieldAPIName"
+                                            label="Field API Name"
+                                            value={selectedTargetFieldLabel}
+                                            placeholder=""
+                                            options={targetFieldAPINameOptions}
+                                            onchange={handleTargetFieldAPINameChange}
+                                            disabled={isTargetFieldDisabled}>
+                                        </lightning-combobox>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div class="slds-size_1-of-1 slds-m-vertical_medium">
-                                <h3 class="slds-text-align_center"><i>Maps to</i></h3>
-                            </div>
-
-                            <div class="slds-size_1-of-1 slds-m-bottom_medium">
-                                <div class="slds-section slds-is-open slds-m-bottom_small">
-                                    <h3 class="slds-section__title slds-theme_shade">
-                                        <span class="slds-truncate slds-p-horizontal_small"
-                                                title="Source (NPSP Data Import Object)">
-                                                Target ({objectMapping.MasterLabel} Object)
-                                        </span>
-                                    </h3>
-                                    <lightning-combobox
-                                        name="targetFieldLabel"
-                                        label="Field Label"
-                                        value={selectedTargetFieldAPIName}
-                                        placeholder=""
-                                        options={targetFieldLabelOptions}
-                                        onchange={handleTargetFieldLabelChange}
-                                        disabled={isTargetFieldDisabled}>
-                                    </lightning-combobox>
-
-                                    <lightning-combobox
-                                        name="targetFieldAPIName"
-                                        label="Field API Name"
-                                        value={selectedTargetFieldLabel}
-                                        placeholder=""
-                                        options={targetFieldAPINameOptions}
-                                        onchange={handleTargetFieldAPINameChange}
-                                        disabled={isTargetFieldDisabled}>
-                                    </lightning-combobox>
-                                </div>
-                            </div>
-                        </div>
+                        </template>
                     </div>
 
                     <footer class="slds-modal__footer">

@@ -16,6 +16,9 @@
             ],
             "c/platformEventListener": [
                 "platformEventListener/platformEventListener.js"
+            ],
+            "c/stencil": [
+                "stencil/stencil.js"
             ]
         },
         "experimentalDecorators": true
