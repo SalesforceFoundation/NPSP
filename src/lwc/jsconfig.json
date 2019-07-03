@@ -11,11 +11,11 @@
             "c/bdi_ObjectMappings": [
                 "bdi_ObjectMappings/bdi_ObjectMappings.js"
             ],
-            "c/pubsubNoPageRef": [
-                "pubsubNoPageRef/pubsubNoPageRef.js"
-            ],
             "c/platformEventListener": [
                 "platformEventListener/platformEventListener.js"
+            ],
+            "c/pubsubNoPageRef": [
+                "pubsubNoPageRef/pubsubNoPageRef.js"
             ]
         },
         "experimentalDecorators": true

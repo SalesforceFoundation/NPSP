@@ -311,13 +311,6 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
-    /*******************************************************************************************************
-    * @description Wrapper used to deserialize the deployment request response
-    */
-    private class DeploymentResponse {
-        Metadata.DeployResult deployResult;
-    }
-
     public class DeploymentCallback implements Metadata.DeployCallback {
 
         public void handleResult(

@@ -10,11 +10,9 @@ import getObjectFieldDescribes
 export default class bdiFieldMappingModal extends LightningElement {
 
     @api objectMapping;
-    @api isModalOpen;
+    @api isModalOpen = false;
     @track isLoading;
     @track row;
-    @track deploymentTimer;
-    @api deploymentTimeout = 5000;
 
     // Combobox vars
     @track selectedSourceFieldLabel;
@@ -78,12 +76,12 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.logBold('Modal | connectedCallback()');
         document.addEventListener("keydown", this.escapeFunction, false);
         registerListener('openModal', this.handleOpenModal, this);
-        registerListener('deploymentResponse', this.handleDeploymentResponse, this);
+        registerListener('closeModal', this.handleCloseModal, this);
         this.getAllData();
     }
 
     disconnectedCallback() {
-        this.logBold('Modal | disconnectedCallback()');
+        //this.logBold('Modal | disconnectedCallback()');
         document.removeEventListener("keydown", this.escapeFunction, false);
         unregisterAllListeners(this);
     }
@@ -104,7 +102,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleGetDataImportFieldDescribes = async() => {
-        this.logBold('bdiFieldMappingModal | handleGetDataImportFieldDescribes()');
+        //this.logBold('bdiFieldMappingModal | handleGetDataImportFieldDescribes()');
         return getObjectFieldDescribes({objectName: 'DataImport__c'})
             .then((data) => {
                 return data;
@@ -112,7 +110,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleGetTargetObjectFieldDescribes = async() => {
-        this.logBold('bdiFieldMappingModal | handleGetTargetObjectFieldDescribes()');
+        //this.logBold('bdiFieldMappingModal | handleGetTargetObjectFieldDescribes()');
         let objectAPIName =
             this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c;
 
@@ -123,7 +121,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     setDataImportProperties(data) {
-        this.logBold('setDataImportProperties()');
+        //this.logBold('setDataImportProperties()');
         this.sourceFieldLabelOptions = [];
         this.sourceFieldAPINameOptions = [];
         let diFieldsByLabel = {};
@@ -156,7 +154,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     setTargetObjectFieldDescribes(data) {
-        this.logBold('setTargetObjectFieldDescribes()');
+        //this.logBold('setTargetObjectFieldDescribes()');
         this.targetFieldLabelOptions = [];
         this.targetFieldAPINameOptions = [];
         let targetObjectFieldsByLabel = {}, targetObjectFieldsByAPIName = {};
@@ -219,7 +217,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleCloseModal() {
-        this.objectMapping = undefined;
         this.isModalOpen = false;
     }
 
@@ -240,7 +237,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.row = event.row;
 
         if (this.row) {
-            this.logBold('EDIT');
+            //this.logBold('EDIT');
             // Edit
             this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
             this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
@@ -285,8 +282,6 @@ export default class bdiFieldMappingModal extends LightningElement {
 
         createDataImportFieldMapping({fieldMappingString: rowDetails})
             .then((deploymentId) => {
-                console.log('deployed metadata, deploymentId vvv');
-                console.log(this.parse(deploymentId));
                 this.handleDeploymentId(deploymentId);
             })
             .catch((error) => {
@@ -311,40 +306,11 @@ export default class bdiFieldMappingModal extends LightningElement {
         });
         this.dispatchEvent(deploymentEvent);
 
-        let that = this;
-        this.deploymentTimer = setTimeout(function() {
-            that.isLoading = false;
-            that.isModalOpen = false;
-            that.showToast(
-                'Field Mapping deployment is taking longer than expected.',
-                'Your deployment ({0}) will continue to save in the background. Please refresh your mappings or come back in a bit.',
-                'warning',
-                'sticky',
-                [deploymentId]);
-        }, this.deploymentTimeout, that);
-    }
-
-    handleDeploymentResponse(platformEvent) {
-        clearTimeout(this.deploymentTimer);
-        const status =
-            platformEvent.response.data.payload.Status__c || platformEvent.response.data.payload.npsp__Status__c;
-        const deploymentId =
-            platformEvent.response.data.payload.DeploymentId__c || platformEvent.response.data.payload.npsp__DeploymentId__c;
-        const evt = new ShowToastEvent({
-            title: 'Deployment completed with Status: ' + status,
-            message: 'Deployment Id: ' + deploymentId,
-            variant: 'success',
-        });
-        this.dispatchEvent(evt);
-
-        fireEvent(this.pageRef, 'refresh', {});
-
-        this.isLoading = false;
-        this.isModalOpen = false;
+        fireEvent(this.pageRef, 'startDeploymentTimeout', { deploymentId: deploymentId });
     }
 
     handleSourceFieldLabelChange(event) {
-        this.logBold('bdiFieldMappingModal | handleSourceFieldLabelChange()');
+        //this.logBold('bdiFieldMappingModal | handleSourceFieldLabelChange()');
         let fieldAPIName = event.detail.value;
         let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
 
@@ -355,7 +321,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleSourceFieldAPINameChange(event) {
-        this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
+        //this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
         let fieldLabel = event.detail.value;
         let fieldInfo = this.diFieldsByLabel[fieldLabel];
 
@@ -366,7 +332,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleAvailableTargetFieldsBySourceFieldDisplayType(displayType) {
-        this.logBold('bdiFieldMappingModal | handleAvailableTargetFieldsBySourceFieldDisplayType()');
+        //this.logBold('bdiFieldMappingModal | handleAvailableTargetFieldsBySourceFieldDisplayType()');
         this.selectedTargetFieldAPIName = undefined;
         this.selectedTargetFieldLabel = undefined;
         this.targetFieldLabelOptions = [];
@@ -384,13 +350,13 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleTargetFieldLabelChange(event) {
-        this.logBold('bdiFieldMappingModal | handleTargetFieldLabelChange()');
+        //this.logBold('bdiFieldMappingModal | handleTargetFieldLabelChange()');
         this.selectedTargetFieldAPIName = event.detail.value;
         this.selectedTargetFieldLabel = this.targetObjectFieldsByAPIName[event.detail.value];
     }
 
     handleTargetFieldAPINameChange(event) {
-        this.logBold('bdiFieldMappingModal | handleTargetFieldAPINameChange()');
+        //this.logBold('bdiFieldMappingModal | handleTargetFieldAPINameChange()');
         this.selectedTargetFieldLabel = event.detail.value;
         this.selectedTargetFieldAPIName = this.targetObjectFieldsByLabel[event.detail.value];
     }

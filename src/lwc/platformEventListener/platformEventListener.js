@@ -5,7 +5,7 @@
 import {LightningElement, track, api} from 'lwc';
 import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import fireEvent from 'c/pubsubNoPageRef';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 export default class PlatformEventListener extends LightningElement {
     @api channelName = '/event/DeploymentEvent__e'; //Default
@@ -85,7 +85,7 @@ export default class PlatformEventListener extends LightningElement {
         if (this.isMonitored(deploymentId)) {
             if (this.isShowToastEnabled) {
                 //this.showToast(response);
-                fireEvent(this.pageRef, 'deploymentResponse', {response: response});
+                fireEvent(this.pageRef, 'deploymentResponse', { response: response });
             }
             if (this.isConsoleLogEnabled) {
                 this.log(response);

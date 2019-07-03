@@ -28,10 +28,11 @@ const columns = [
 export default class bdiFieldMappings extends LightningElement {
     @track displayFieldMappings = false;
     @track isLoading = true;
-    @track isModalOpen = false;
     @track columns = columns;
     @api objectMapping;
     @track fieldMappings;
+    @track deploymentTimer;
+    @api deploymentTimeout = 5000;
 
     @api
     refresh() {
@@ -44,9 +45,11 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     connectedCallback() {
+        this.logBold('bdiFieldMappings | connectedCallback()');
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
-        registerListener('deleteRowFromTable', this.handleDeleteRowFromTable, this);
+        registerListener('deploymentResponse', this.handleDeploymentResponse, this);
+        registerListener('startDeploymentTimeout', this.handleDeploymentTimeout, this);
         registerListener('refresh', this.refresh, this);
 
         if (this.objectMapping) {
@@ -56,6 +59,40 @@ export default class bdiFieldMappings extends LightningElement {
 
     disconnectedCallback() {
         unregisterAllListeners(this);
+    }
+
+    handleDeploymentTimeout(event) {
+        let that = this;
+        this.deploymentTimer = setTimeout(function() {
+            that.isLoading = false;
+            fireEvent(this.pageRef, 'closeModal', {});
+            that.showToast(
+                'Field Mapping deployment is taking longer than expected.',
+                'Your deployment ({0}) will continue to process in the background.',
+                'warning',
+                'sticky',
+                [event.deploymentId]);
+        }, this.deploymentTimeout, that);
+    }
+
+    handleDeploymentResponse(platformEvent) {
+        console.log('handleDeploymentResponse()');
+        clearTimeout(this.deploymentTimer);
+        fireEvent(this.pageRef, 'refresh', {});
+        fireEvent(this.pageRef, 'closeModal', {});
+
+        const status =
+            platformEvent.response.data.payload.Status__c || platformEvent.response.data.payload.npsp__Status__c;
+        const deploymentId =
+            platformEvent.response.data.payload.DeploymentId__c || platformEvent.response.data.payload.npsp__DeploymentId__c;
+        console.log('Creating toast event');
+        const evt = new ShowToastEvent({
+            title: 'Deployment completed with Status: ' + status,
+            message: 'Deployment Id: ' + deploymentId,
+            variant: 'success',
+        });
+        this.dispatchEvent(evt);
+        console.log('Toast event dispatched');
     }
 
     handleShowObjectMappings() {
@@ -83,7 +120,7 @@ export default class bdiFieldMappings extends LightningElement {
     * @param name: Name of the object mapping received from parent component 
     */
     handleFieldMappings() {
-        this.logBold('bdiFieldMappings | handleFieldMappings()');
+        //this.logBold('bdiFieldMappings | handleFieldMappings()');
         getFieldMappingsByObjectAndFieldSetNames({
                 objectName: this.objectMapping.DeveloperName})
             .then((data) => {
@@ -107,7 +144,7 @@ export default class bdiFieldMappings extends LightningElement {
     * @param event: Event containing row details of the action
     */
     handleRowAction(event) {
-        this.logBold('bdiFieldMappings | handleRowAction()');
+        //this.logBold('bdiFieldMappings | handleRowAction()');
         const actionName = event.detail.action.name;
         const row = event.detail.row;
 
@@ -119,8 +156,8 @@ export default class bdiFieldMappings extends LightningElement {
                 let clonedRow = JSON.stringify(row);
 
                 createDataImportFieldMapping({fieldMappingString: clonedRow})
-                    .then(() => {
-                        this.handleDeleteResult(row);
+                    .then((deploymentId) => {
+                        this.handleDeleteDeploymentId(deploymentId);
                     })
                     .catch((error) => {
                         this.isLoading = false;
@@ -145,41 +182,16 @@ export default class bdiFieldMappings extends LightningElement {
         }
     }
 
-    handleDeleteResult(row) {
-        this.logBold('bdiFieldMappingModal | handleDeleteResult');
-        let that = this;
-        setTimeout(function() {
-            console.log('First Refresh');
-            that.handleDeleteRowFromDatatable(row);
-            that.isLoading = false;
-            that.showToast(
-                'Success',
-                'Field mapping has been deleted.',
-                'success');
-        }, 5000, that);
-    }
-
-    handleDeleteRowFromDatatable(row) {
-        const { DeveloperName } = row;
-        const index = this.findRowIndexById(DeveloperName);
-        if (index !== -1) {
-            this.fieldMappings = this.fieldMappings
-                .slice(0, index)
-                .concat(this.fieldMappings.slice(index + 1));
-            //this.refresh();
-        }
-    }
-
-    findRowIndexById(DeveloperName) {
-        let ret = -1;
-        this.fieldMappings.some((row, index) => {
-            if (row.DeveloperName === DeveloperName) {
-                ret = index;
-                return true;
-            }
-            return false;
+    handleDeleteDeploymentId(deploymentId) {
+        //tell our parent element that we have an Id to monitor
+        const deploymentEvent = new CustomEvent('deployment', {
+            bubbles: true,
+            composed: true,
+            detail: {deploymentId}
         });
-        return ret;
+        this.dispatchEvent(deploymentEvent);
+
+        this.deploymentTimeout({ deploymentId: deploymentId });
     }
 
     showToast(title, message, variant, mode, messageData) {
