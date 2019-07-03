@@ -166,7 +166,6 @@ public class CRLP_Operation_SVC {
             try {
                 amount = (Decimal) amtSObject.get(amtField);
             } catch (Exception e) {
-                // The amount field is stale and it is not included in the rollup definition
                 amount = null;
             }
         }
