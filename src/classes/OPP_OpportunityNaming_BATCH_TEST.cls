@@ -83,8 +83,13 @@ private with sharing class OPP_OpportunityNaming_BATCH_TEST {
         OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
 
         Test.startTest();
-        String chron = '0 0 23 * * ?';
-        System.schedule('Test Sched', chron, batch);
+
+        String CRON_EXP = '0 0 23 * * ?';
+        String jobId = System.schedule('Test Sched', CRON_EXP, batch);
+        CronTrigger ct = [SELECT Id, CronExpression, TimesTriggered, NextFireTime FROM CronTrigger WHERE id = :jobId];
+        System.assertEquals(CRON_EXP, ct.CronExpression);
+        System.assertEquals(0, ct.TimesTriggered);
+
         Test.stopTest();
     }
 

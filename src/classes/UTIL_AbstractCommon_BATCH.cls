@@ -90,7 +90,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      */
     public UTIL_AbstractCommon_BATCH() {
         // batchSize, ldvMode, additionalWhereClause
-        this(DEFAULT_BATCH_SIZE, false,'');
+        this(DEFAULT_BATCH_SIZE, false, null);
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      */
     public UTIL_AbstractCommon_BATCH(Integer batchSize) {
         // batchSize, ldvMode, additionalWhereClause
-        this(batchSize, false, '');
+        this(batchSize, false, null);
     }
 
     /**
@@ -123,7 +123,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      */
     public UTIL_AbstractCommon_BATCH(Boolean ldvMode) {
         // batchSize, ldvMode
-        this(DEFAULT_BATCH_SIZE, ldvMode, '');
+        this(DEFAULT_BATCH_SIZE, ldvMode, null);
     }
 
    /**
@@ -203,7 +203,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      * @return String queryString to execute for Batch
      */
     @testVisible private String getQuery(Id startId) {
-        return 'SELECT ' + getQueryFieldList() + ' FROM ' + getSObjectName() + getQueryWhereClause() + getQueryOrderByAndLimitClause();
+        return 'SELECT ' + getQueryFieldList() + ' FROM ' + getSObjectName() + ' ' + getQueryWhereClause() + ' ' + getQueryOrderByAndLimitClause();
     }
 
     /**
@@ -232,7 +232,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
         String ldvWhere = isFirstChunk() ? getLdvWhereFirstChunk() : getLdvWhereAfterFirstChunk();
         String whereClause = getQueryNonLDVWhereClause();
 
-        String nonLdvWhere =  (String.isNotBlank(whereClause)) ? ' WHERE (' + whereClause + ')' : '';
+        String nonLdvWhere =  (String.isNotBlank(whereClause)) ? 'WHERE (' + whereClause + ')' : '';
 
         return (ldvMode) ? ldvWhere : nonLdvWhere;
     }
@@ -243,7 +243,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      * @return String Where clause fragment
      */
     @testVisible private String getLdvWhereFirstChunk() {
-        return ' WHERE Id >= \'' + startId + '\'';
+        return 'WHERE Id >= \'' + startId + '\'';
     }
 
     /**
@@ -252,7 +252,7 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      * @return String Where clause fragment
      */
     @testVisible private String getLdvWhereAfterFirstChunk() {
-        return ' WHERE Id > \'' + startId + '\'';
+        return 'WHERE Id > \'' + startId + '\'';
     }
 
     /**
