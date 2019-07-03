@@ -5,6 +5,7 @@
 import {LightningElement, track, api} from 'lwc';
 import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import fireEvent from 'c/pubsubNoPageRef';
 
 export default class PlatformEventListener extends LightningElement {
     @api channelName = '/event/DeploymentEvent__e'; //Default
@@ -45,9 +46,13 @@ export default class PlatformEventListener extends LightningElement {
     }
 
     log(response) {
+        const status =
+            response.data.payload.Status__c || response.data.payload.npsp__Status__c;
+        const deploymentId =
+            response.data.payload.DeploymentId__c || response.data.payload.npsp__DeploymentId__c;
         console.log('Deployment Event received! ' +
-            'Deployment Id: ' + response.data.payload.DeploymentId__c +
-            ' with Status: ' + response.data.payload.Status__c);
+            'Deployment Id: ' + deploymentId +
+            ' with Status: ' + status);
     }
 
     isMonitored(deploymentId) {
@@ -79,7 +84,8 @@ export default class PlatformEventListener extends LightningElement {
             response.data.payload.DeploymentId__c || response.data.payload.npsp__DeploymentId__c;
         if (this.isMonitored(deploymentId)) {
             if (this.isShowToastEnabled) {
-                this.showToast(response);
+                //this.showToast(response);
+                fireEvent(this.pageRef, 'deploymentResponse', {response: response});
             }
             if (this.isConsoleLogEnabled) {
                 this.log(response);

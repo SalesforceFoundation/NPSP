@@ -12,6 +12,8 @@ export default class bdiFieldMappingModal extends LightningElement {
     @api isModalOpen;
     @track isLoading;
     @track row;
+    @track deploymentTimer;
+    @api deploymentTimeout = 5000;
 
     // Combobox vars
     @track selectedSourceFieldLabel;
@@ -75,7 +77,14 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.logBold('Modal | connectedCallback()');
         document.addEventListener("keydown", this.escapeFunction, false);
         registerListener('openModal', this.handleOpenModal, this);
+        registerListener('deploymentResponse', this.handleDeploymentResponse, this);
         this.getAllData();
+    }
+
+    disconnectedCallback() {
+        this.logBold('Modal | disconnectedCallback()');
+        document.removeEventListener("keydown", this.escapeFunction, false);
+        unregisterAllListeners(this);
     }
 
     getAllData = async() => {
@@ -202,12 +211,6 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.selectedTargetFieldAPIName = selectedTargetFieldAPIName;
     }
 
-    disconnectedCallback() {
-        this.logBold('Modal | disconnectedCallback()');
-        document.removeEventListener("keydown", this.escapeFunction, false);
-        unregisterAllListeners(this);
-    }
-
     escapeFunction(event) {
         if (event.keyCode === 27) {
             this.handleCloseModal();
@@ -306,21 +309,37 @@ export default class bdiFieldMappingModal extends LightningElement {
             detail: {deploymentId}
         });
         this.dispatchEvent(deploymentEvent);
-        this.isLoading = false;
+
+        let that = this;
+        this.deploymentTimer = setTimeout(function() {
+            that.isLoading = false;
+            that.isModalOpen = false;
+            that.showToast(
+                'Field Mapping deployment is taking longer than expected.',
+                'Your deployment ({0}) will continue to save in the background. Please refresh your mappings or come back in a bit.',
+                'warning',
+                'sticky',
+                [deploymentId]);
+        }, this.deploymentTimeout, that);
     }
 
-    handleSaveResult() {
-        this.logBold('bdiFieldMappingModal | handleSaveResult');
-        let that = this;
-        setTimeout(function() {
-            fireEvent(that.pageRef, 'refresh', {});
-            that.isModalOpen = false;
-            that.isLoading = false;
-            that.showToast(
-                'Success',
-                '',
-                'success');
-        }, 5000, that);
+    handleDeploymentResponse(platformEvent) {
+        clearTimeout(this.deploymentTimer);
+        const status =
+            platformEvent.response.data.payload.Status__c || platformEvent.response.data.payload.npsp__Status__c;
+        const deploymentId =
+            platformEvent.response.data.payload.DeploymentId__c || platformEvent.response.data.payload.npsp__DeploymentId__c;
+        const evt = new ShowToastEvent({
+            title: 'Deployment completed with Status: ' + status,
+            message: 'Deployment Id: ' + deploymentId,
+            variant: 'success',
+        });
+        this.dispatchEvent(evt);
+
+        fireEvent(this.pageRef, 'refresh', {});
+
+        this.isLoading = false;
+        this.isModalOpen = false;
     }
 
     handleSourceFieldLabelChange(event) {
