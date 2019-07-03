@@ -36,6 +36,10 @@
 * in groups of 10,000,000 records ordered by Id and chains itself to process additional records to avoid query limits
  */
 public class OPP_OpportunityNaming_BATCH extends UTIL_AbstractCommon_BATCH implements Schedulable {
+    /**
+     * @description # of records in each batch
+     */
+    private static final Integer BATCH_SIZE = 200;
 
     /** @description Default No argument constructor */
     public OPP_OpportunityNaming_BATCH() {
@@ -49,7 +53,7 @@ public class OPP_OpportunityNaming_BATCH extends UTIL_AbstractCommon_BATCH imple
 
     /** @description Schedulable execute method.*/
     public void execute(SchedulableContext context) {
-        Database.executeBatch(new OPP_OpportunityNaming_BATCH(200), 200);
+        Database.executeBatch(new OPP_OpportunityNaming_BATCH(BATCH_SIZE), BATCH_SIZE);
     }
 
     /*********************************************************************************************************
