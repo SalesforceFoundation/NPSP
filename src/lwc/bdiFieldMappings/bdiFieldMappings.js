@@ -129,12 +129,15 @@ export default class bdiFieldMappings extends LightningElement {
             })
             .catch((error) => {
                 this.isLoading = false;
-                this.showToast(
-                    'Error',
-                    '{0}. {1}. {2}.',
-                    'error',
-                    'sticky',
-                    [error.body.exceptionType, error.body.message, error.body.stackTrace]);
+                console.log(error);
+                if (error && error.body) {
+                    this.showToast(
+                        'Error',
+                        '{0}. {1}. {2}.',
+                        'error',
+                        'sticky',
+                        [error.body.exceptionType, error.body.message, error.body.stackTrace]);
+                }
             });
     }
 
@@ -160,13 +163,15 @@ export default class bdiFieldMappings extends LightningElement {
                         this.handleDeleteDeploymentId(deploymentId);
                     })
                     .catch((error) => {
-                        this.isLoading = false;
-                        this.showToast(
-                            'Error',
-                            '{0}. {1}. {2}.',
-                            'error',
-                            'sticky',
-                            [error.body.exceptionType, error.body.message, error.body.stackTrace]);
+                        console.log(error);
+                        if (error && error.body) {
+                            this.showToast(
+                                'Error',
+                                '{0}. {1}. {2}.',
+                                'error',
+                                'sticky',
+                                [error.body.exceptionType, error.body.message, error.body.stackTrace]);
+                        }
                     });
                 break;
 
@@ -191,7 +196,7 @@ export default class bdiFieldMappings extends LightningElement {
         });
         this.dispatchEvent(deploymentEvent);
 
-        this.deploymentTimeout({ deploymentId: deploymentId });
+        this.handleDeploymentTimeout({ deploymentId: deploymentId });
     }
 
     showToast(title, message, variant, mode, messageData) {
