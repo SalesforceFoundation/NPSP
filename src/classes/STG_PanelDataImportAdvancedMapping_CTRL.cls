@@ -135,7 +135,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * @return PageReference
     */
     public PageReference navigate(){
-        PageReference advancedMapping = new PageReference('/apex/BDI_ManageAdvancedMapping');
+        PageReference advancedMapping = new PageReference('/lightning/cmp/c__BDI_ManageAdvancedMapping');
         advancedMapping.setRedirect(true);
         return advancedMapping;
     }

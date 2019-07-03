@@ -1,2 +1,11 @@
-.THIS {
+.THIS.slds-grid_extension {
+    position: fixed;
+    top: 5.55rem;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+}
+
+.THIS.slds-grid_extension .slds-size_1-of-1 {
+    height: 100%;
 }

@@ -58,7 +58,7 @@
 
                         <apex:commandButton id="navigateAdvancedMapping"
                                             value="{!$Label.stgBDIGoToSetup}"
-                                            styleClass="slds-m-vertical_large slds-button slds-button_brand {!IF(isAdvancedMappingEnabled == false,'','slds-hide')}"
+                                            styleClass="slds-m-vertical_large slds-button slds-button_brand {!IF(isAdvancedMappingEnabled,'','slds-hide')}"
                                             action="{!navigate}" />
                     </apex:outputPanel>
                 </div>

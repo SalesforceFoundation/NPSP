@@ -2813,6 +2813,7 @@
         <members>bdi_ObjectMappings</members>
         <members>platformEventListener</members>
         <members>pubsubNoPageRef</members>
+        <members>stencil</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
