@@ -38,6 +38,7 @@
 private with sharing class Callable_API_TEST {
 
     private static final String TDTM_TRIGGER_ACTION = 'TDTM.DisableAllTriggers';
+    private static final String CRLP_IS_ENABLED_ACTION = 'CRLP.iscrlpenabled';
     
     /*******************************************************************************************************
     * @description verify the TDTM Callable action returns an Object
@@ -68,6 +69,27 @@ private with sharing class Callable_API_TEST {
         Integer accountCountAfter = Database.countQuery('SELECT COUNT() FROM Account');
         System.assertEquals(accountCountBefore, accountCountAfter, 'Account record was created');
     }
+
+    /***
+    * @description verify the CRLP call returns true if enabled
+    **/
+    @isTest
+    private static void verifyCrlpEnabledCallReturnsRollupEnabled() {
+         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+        
+        Test.startTest();
+
+        Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> args = new Map<String, Object>();
+        Object result = npspApi.call(CRLP_IS_ENABLED_ACTION, args);
+
+        Test.stopTest();
+
+        System.assertEquals(true, (Boolean) result, 'CRLP is identified as enabled');
+    }
+
 
 
     /*******************************************************************************************************
