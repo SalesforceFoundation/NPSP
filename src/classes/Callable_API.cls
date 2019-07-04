@@ -82,6 +82,10 @@ global with sharing class Callable_API implements System.Callable {
 
                 return JSON.serialize(rollupDefs,false);
 
+            } when 'crlp.iscrlpenabled' {
+                CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
+                return crlpApiSvc.isCrlpEnabled();
+
             } when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
