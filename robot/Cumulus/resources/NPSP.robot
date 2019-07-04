@@ -27,6 +27,7 @@ API Create Contact
     ...                  &{fields}  
     &{contact} =     Salesforce Get  Contact  ${contact_id}
     [return]         &{contact}
+    Log     %{SFDX_CONFIG}
 
 API Modify Contact
     [Arguments]      ${contact_id}      &{fields}
