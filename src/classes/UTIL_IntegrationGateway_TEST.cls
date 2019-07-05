@@ -34,7 +34,7 @@
 * @description Tests for UTIL_IntegrationGateway
 */
 @isTest
-private with sharing class UTIL_IntegrationGateway_TEST {
+public with sharing class UTIL_IntegrationGateway_TEST {
 
     @isTest
     private static void shouldDispatchToIntegrationsOnBeforeDeleteWhenInstalled() {
@@ -104,6 +104,34 @@ private with sharing class UTIL_IntegrationGateway_TEST {
         public Object call(String action, Map<String, Object> params) {
             paramsByAction.put(action, params);
             callCount++;
+
+            return null;
+        }
+    }
+
+    /*******************************************************************************************************************
+    * @description Stub for UTIL_Permissions instance
+    */
+    public class Stub implements System.StubProvider {
+        public Map<String, Map<String,Object>> paramsByMethodName = new Map<String, Map<String,Object>>();
+
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> paramTypes,
+            List<String> params,
+            List<Object> paramValues
+        ) {
+            if (!paramsByMethodName.containsKey(stubbedMethodName)) {
+                paramsByMethodName.put(stubbedMethodName, new Map<String,Object>());
+            }
+
+            if (params != null && !params.isEmpty()) {
+                for (Integer i = 0; i < params.size(); i++) {
+                    paramsByMethodName.get(stubbedMethodName).put(params[i], paramValues[i]);
+                }
+            }
 
             return null;
         }

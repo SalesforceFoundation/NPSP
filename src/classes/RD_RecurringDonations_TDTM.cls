@@ -34,6 +34,16 @@
 * @description Trigger Handler on Recurring Donations 
 */
 public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
+    @TestVisible
+    private UTIL_IntegrationGateway integrationGateway {
+        get {
+            if (integrationGateway == null) {
+                integrationGateway = new UTIL_IntegrationGateway();
+            }
+            return integrationGateway;
+        }
+        set;
+    }
     
     /*******************************************************************************************************
     * @description Trigger Handler on Recurring Donations.  Deals with creating/updating/deleting the opps
@@ -113,6 +123,8 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         }
+
+        dispatchToIntegrationGateway(newlist, oldlist, triggerAction);
         return null;
     }
 
@@ -147,5 +159,11 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
             && r.npe03__Installment_Period__c != system.label.npe03.RecurringDonationInstallmentPeriodMonthly
             && r.npe03__Installment_Period__c != system.label.npe03.RecurringDonationInstallmentPeriodQuarterly
             && !customInstallmentsMap.containsKey(r.npe03__Installment_Period__c);
+    }
+
+    private void dispatchToIntegrationGateway(List<SObject> newlist, List<SObject> oldlist, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
+            integrationGateway.handleBeforeDelete(oldlist, new Map<Id,SObject>(oldlist));
+        }
     }
 }
