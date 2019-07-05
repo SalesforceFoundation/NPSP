@@ -34,17 +34,6 @@
 * @description Trigger Handler on Recurring Donations 
 */
 public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
-    @TestVisible
-    private UTIL_IntegrationGateway integrationGateway {
-        get {
-            if (integrationGateway == null) {
-                integrationGateway = new UTIL_IntegrationGateway();
-            }
-            return integrationGateway;
-        }
-        set;
-    }
-    
     /*******************************************************************************************************
     * @description Trigger Handler on Recurring Donations.  Deals with creating/updating/deleting the opps
     * related to the Recurring Donations.

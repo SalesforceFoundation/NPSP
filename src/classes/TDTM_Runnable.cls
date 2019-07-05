@@ -42,6 +42,16 @@
  * the future method would have no effect.) Also, some classes might not want to prevent it.
  */
 global abstract class TDTM_Runnable {
+    @TestVisible
+    protected UTIL_IntegrationGateway integrationGateway {
+        get {
+            if (integrationGateway == null) {
+                integrationGateway = new UTIL_IntegrationGateway();
+            }
+            return integrationGateway;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
      * @description Calls the run method of the class, as a future. To be called dynamically from TDTM_TriggerHandler. 
