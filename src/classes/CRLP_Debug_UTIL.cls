@@ -109,17 +109,17 @@ public class CRLP_Debug_UTIL {
     }
 
     public static String getCurrentRollupState() {
-        String val = '';
+        String concatenatedRollupState = '';
         if (isDebuggingEnabled) {
-            for (Integer n = currentRollupState.size() - 1; n >= 0; n--) {
-                if (!currentRollupState[n].startsWith(' ')) {
-                    val += '* ' + currentRollupState[n] + '\n';
+            for (String rs : currentRollupState) {
+                if (!rs.startsWith(' ')) {
+                    concatenatedRollupState += '* ' + rs + '\n';
                 } else {
-                    val += '  ' + currentRollupState[n] + '\n';
+                    concatenatedRollupState += '  ' + rs + '\n';
                 }
             }
         }
-        return val;
+        return concatenatedRollupState;
     }
 
     private static String getRollupCurrentValues(CRLP_Rollup rlp) {
