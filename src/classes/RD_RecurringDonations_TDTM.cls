@@ -81,29 +81,19 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
             npe03__Recurring_Donation__c r = (npe03__Recurring_Donation__c)sobj;                   
 
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-                if (r.npe03__Organization__c == null && r.npe03__Contact__c == null) {
-                    r.addError(system.label.npe03.RecurringDonationMissingDataError);
-                }
-                if (r.npe03__Organization__c != null && r.npe03__Contact__c != null) {
-                    r.addError(system.label.RecurringDonationAccountAndContactError);
-                }
-                if (r.npe03__Installments__c > rds.npe03__Maximum_Donations__c && 
-                    (r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationOpenStatus && 
-                     r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationClosedStatus)) {
-                    r.addError(system.label.npe03.RecurringDonationTooManyInstallmentsError);
-                }
-                // Reset this field to false if the installment period is not Monthly, Quarterly, or one of the
-                // custom installment periods
-                if (r.Always_Use_Last_Day_Of_Month__c == true && r.npe03__Installment_Period__c != system.label.npe03.RecurringDonationInstallmentPeriodMonthly
-                        && r.npe03__Installment_Period__c != system.label.npe03.RecurringDonationInstallmentPeriodQuarterly
-                        && !customInstallmentsMap.containsKey(r.npe03__Installment_Period__c)) {
+                validateRecurringDonationData(r, rds);
+                
+                if (shouldResetAlwaysUseLastDayOfMonth(r, customInstallmentsMap)) {
                     r.Always_Use_Last_Day_Of_Month__c = false;
                 }
+
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 mapIdRDInserts.put(r.id, r);
+
             } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 listRDUpdates.add(r);
-            }            
+
+            }
         }
         
         if (listRDUpdates.size() > 0) {
@@ -125,5 +115,37 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         }
         return null;
     }
-            
+
+    /*******************************************************************************************************
+    * @description Validates missing data on Recurring Donation
+    * @param r the Recurring Donation to validate
+    * @param rds Recurring Donation Settings
+    ********************************************************************************************************/
+    private void validateRecurringDonationData(npe03__Recurring_Donation__c r, npe03__Recurring_Donations_Settings__c rds){
+        if (r.npe03__Organization__c == null && r.npe03__Contact__c == null) {
+            r.addError(system.label.npe03.RecurringDonationMissingDataError);
+        }
+        if (r.npe03__Organization__c != null && r.npe03__Contact__c != null) {
+            r.addError(system.label.RecurringDonationAccountAndContactError);
+        }
+        if (r.npe03__Installments__c > rds.npe03__Maximum_Donations__c && 
+            (r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationOpenStatus && 
+                r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationClosedStatus)) {
+            r.addError(system.label.npe03.RecurringDonationTooManyInstallmentsError);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Returns whether or not to reset Always_Use_Last_Day_Of_Month__c
+    * if the installment period is not Monthly, Quarterly, or one of the custom installment periods
+    * @param r the Recurring Donation to check
+    * @return boolean.
+    ********************************************************************************************************/
+    private Boolean shouldResetAlwaysUseLastDayOfMonth(npe03__Recurring_Donation__c r, map<string, npe03__Custom_Installment_Settings__c> customInstallmentsMap) {
+        return
+            r.Always_Use_Last_Day_Of_Month__c == true 
+            && r.npe03__Installment_Period__c != system.label.npe03.RecurringDonationInstallmentPeriodMonthly
+            && r.npe03__Installment_Period__c != system.label.npe03.RecurringDonationInstallmentPeriodQuarterly
+            && !customInstallmentsMap.containsKey(r.npe03__Installment_Period__c);
+    }
 }
