@@ -125,7 +125,12 @@ public class CRLP_RollupProcessor_SVC {
     public static List<CRLP_Rollup> fullyCloneList(List<CRLP_Rollup> rollups) {
         List<CRLP_Rollup> newList = new List<CRLP_Rollup>();
         for (CRLP_Rollup r : rollups) {
-            newList.add(r.clone());
+            CRLP_Rollup clonedRollup = r.clone();
+            clonedRollup.rollupsMdt = new List<CRLP_Rollup.Rollupmdt>();
+            for (CRLP_Rollup.Rollupmdt rmdt : r.rollupsMdt) {
+                clonedRollup.rollupsMdt.add(rmdt.clone());
+            }
+            newList.add(clonedRollup);
         }
         return newList;
     }
