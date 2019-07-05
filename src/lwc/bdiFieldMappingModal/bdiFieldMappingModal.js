@@ -4,13 +4,13 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoPageRef';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
-import getObjectFieldDescribes
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
 
 const DELAY = 300;
 
 export default class bdiFieldMappingModal extends LightningElement {
 
+    @api diFieldDescribes;
+    @api targetObjectFieldDescribes;
     @api objectMapping
     @api isModalOpen;
     @api isSearchOpen;
@@ -90,48 +90,12 @@ export default class bdiFieldMappingModal extends LightningElement {
         registerListener('sourceFieldAPINameChange', this.handleSourceFieldAPINameChange, this);
         registerListener('targetFieldLabelChange', this.handleTargetFieldLabelChange, this);
         registerListener('targetFieldAPINameChange', this.handleTargetFieldAPINameChange, this);
-
-        this.getAllData();
     }
 
     disconnectedCallback() {
         //this.logBold('Modal | disconnectedCallback()');
         document.removeEventListener("keydown", this.escapeFunction, false);
         unregisterAllListeners(this);
-    }
-
-    getAllData = async() => {
-        try {
-            const dataImportFieldDescribe = await this.handleGetDataImportFieldDescribes();
-            const targetObjectFieldDescribes = await this.handleGetTargetObjectFieldDescribes();
-
-            this.setDataImportProperties(dataImportFieldDescribe);
-            this.setTargetObjectFieldDescribes(targetObjectFieldDescribes);
-        } catch(error) {
-            if (error) {
-                this.showToast('Error', error, 'error', 'sticky');
-            }
-            throw error;
-        }
-    }
-
-    handleGetDataImportFieldDescribes = async() => {
-        //this.logBold('bdiFieldMappingModal | handleGetDataImportFieldDescribes()');
-        return getObjectFieldDescribes({objectName: 'DataImport__c'})
-            .then((data) => {
-                return data;
-            });
-    }
-
-    handleGetTargetObjectFieldDescribes = async() => {
-        //this.logBold('bdiFieldMappingModal | handleGetTargetObjectFieldDescribes()');
-        let objectAPIName =
-            this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c;
-
-        return getObjectFieldDescribes({objectName: objectAPIName})
-            .then((data) => {
-                return data;
-            });
     }
 
     setDataImportProperties(data) {
@@ -339,7 +303,10 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.selectedTargetFieldAPIName = undefined;
         }
 
-        this.getAllData().then(() => { this.isLoading = false });
+        this.setDataImportProperties(this.diFieldDescribes);
+        this.setTargetObjectFieldDescribes(this.targetObjectFieldDescribes);
+
+        this.isLoading = false
     }
 
     handleSave() {
