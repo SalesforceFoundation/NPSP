@@ -19,6 +19,9 @@
             ],
             "c/stencil": [
                 "stencil/stencil.js"
+            ],
+            "c/bdiFieldMappingModalComboboxSearch": [
+                "bdiFieldMappingModalComboboxSearch/bdiFieldMappingModalComboboxSearch.js"
             ]
         },
         "experimentalDecorators": true

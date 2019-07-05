@@ -45,73 +45,23 @@
                                                   Source (NPSP Data Import Object)
                                             </span>
                                         </h3>
-                                        <div class="slds-grid slds-grid_vertical-align-end">
-                                            <template if:true={isSearchOpen}>
-                                                <div class="slds-size_11-of-12">
-                                                        <lightning-input
-                                                            type="text"
-                                                            name="sourceField"
-                                                            label="Search Source Field"
-                                                            onchange={debounceOnSearchKeyChange}
-                                                            value={searchKey}>
-                                                        </lightning-input>
-                                                </div>
-                                                <div class="slds-size_1-of-12 slds-p-left_small">
-                                                    <lightning-button-icon
-                                                        icon-name="utility:close"
-                                                        onclick={hideSearch}>
-                                                    </lightning-button-icon>
-                                                </div>
-                                            </template>
-                                            <template if:false={isSearchOpen}>
-                                                <div class="slds-size_11-of-12">
-                                                    <lightning-combobox
-                                                        name="sourceFieldLabel"
-                                                        label="Field Label"
-                                                        value={selectedSourceFieldAPIName}
-                                                        placeholder=""
-                                                        options={sourceFieldLabelOptions}
-                                                        onchange={handleSourceFieldLabelChange}
-                                                        class="slds-p-top_small">
-                                                    </lightning-combobox>
-                                                </div>
-                                                <div class="slds-size_1-of-12 slds-p-left_small">
-                                                    <lightning-button-icon
-                                                        icon-name="utility:search"
-                                                        onclick={showSearch}>
-                                                    </lightning-button-icon>
-                                                </div>
-                                            </template>
-                                        </div>
-    
-                                        <template if:true={areSearchResultsVisible}>
-                                            <div class="slds-grid slds-wrap">
-                                                <div class="slds-size_11-of-12">
-                                                    <div class="slds-box custom-search-result-box">
-                                                        <template for:each={searchResults} for:item="result">
-                                                            <p key={result.id}
-                                                               data-id={result.id}
-                                                               data-field-label={result.fieldInfo.label}
-                                                               data-field-value={result.fieldInfo.value}
-                                                               data-field-info={result.fieldInfo}
-                                                               onclick={selectSearchResult}>
-                                                                {result.fieldInfo.label}
-                                                            </p>
-                                                        </template>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </template>
+                                        <c-bdi-field-mapping-modal-combobox-search
+                                            name="sourceFieldLabel"
+                                            search-input-label="Search Source Field by Label"
+                                            combobox-label="Field Label"
+                                            selected-field-value={selectedSourceFieldAPIName}
+                                            options={sourceFieldLabelOptions}
+                                            parent-listener-event-name="sourceFieldLabelChange">
+                                        </c-bdi-field-mapping-modal-combobox-search>
 
-                                        <lightning-combobox
+                                        <c-bdi-field-mapping-modal-combobox-search
                                             name="sourceFieldAPIName"
-                                            label="Field API Name"
-                                            value={selectedSourceFieldLabel}
-                                            placeholder=""
+                                            search-input-label="Search Source Field by API Name"
+                                            combobox-label="Field API Name"
+                                            selected-field-value={selectedSourceFieldLabel}
                                             options={sourceFieldAPINameOptions}
-                                            onchange={handleSourceFieldAPINameChange}
-                                            class="slds-p-top_small">
-                                        </lightning-combobox>
+                                            parent-listener-event-name="sourceFieldAPINameChange">
+                                        </c-bdi-field-mapping-modal-combobox-search>
                                     </div>
                                 </div>
 
@@ -127,27 +77,26 @@
                                                     Target ({objectMapping.MasterLabel} Object)
                                             </span>
                                         </h3>
-                                        <lightning-combobox
-                                            name="targetFieldLabel"
-                                            label="Field Label"
-                                            value={selectedTargetFieldAPIName}
-                                            placeholder=""
-                                            options={targetFieldLabelOptions}
-                                            onchange={handleTargetFieldLabelChange}
-                                            disabled={isTargetFieldDisabled}
-                                            class="slds-p-top_small">
-                                        </lightning-combobox>
 
-                                        <lightning-combobox
+                                        <c-bdi-field-mapping-modal-combobox-search
+                                            name="targetFieldLabel"
+                                            search-input-label="Search Target Field by Label"
+                                            combobox-label="Field Label"
+                                            selected-field-value={selectedTargetFieldAPIName}
+                                            options={targetFieldLabelOptions}
+                                            parent-listener-event-name="targetFieldLabelChange"
+                                            disabled={isTargetFieldDisabled}>
+                                        </c-bdi-field-mapping-modal-combobox-search>
+
+                                        <c-bdi-field-mapping-modal-combobox-search
                                             name="targetFieldAPIName"
-                                            label="Field API Name"
-                                            value={selectedTargetFieldLabel}
-                                            placeholder=""
+                                            search-input-label="Search Target Field by API Name"
+                                            combobox-label="Field API Name"
+                                            selected-field-value={selectedTargetFieldLabel}
                                             options={targetFieldAPINameOptions}
-                                            onchange={handleTargetFieldAPINameChange}
-                                            disabled={isTargetFieldDisabled}
-                                            class="slds-p-top_small">
-                                        </lightning-combobox>
+                                            parent-listener-event-name="targetFieldAPINameChange"
+                                            disabled={isTargetFieldDisabled}>
+                                        </c-bdi-field-mapping-modal-combobox-search>
                                     </div>
                                 </div>
                             </div>

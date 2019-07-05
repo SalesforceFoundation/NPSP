@@ -11,11 +11,7 @@ const DELAY = 300;
 
 export default class bdiFieldMappingModal extends LightningElement {
 
-    @api objectMapping = {
-        DeveloperName: 'Account',
-        Object_API_Name__c: 'Account',
-        MasterLabel: 'Account1'
-    };
+    @api objectMapping
     @api isModalOpen;
     @api isSearchOpen;
     @track isLoading;
@@ -88,8 +84,14 @@ export default class bdiFieldMappingModal extends LightningElement {
         document.addEventListener("keydown", this.escapeFunction, false);
         registerListener('openModal', this.handleOpenModal, this);
         registerListener('closeModal', this.handleCloseModal, this);
+
+        // Register listeners for child searchable combobox components
+        registerListener('sourceFieldLabelChange', this.handleSourceFieldLabelChange, this);
+        registerListener('sourceFieldAPINameChange', this.handleSourceFieldAPINameChange, this);
+        registerListener('targetFieldLabelChange', this.handleTargetFieldLabelChange, this);
+        registerListener('targetFieldAPINameChange', this.handleTargetFieldAPINameChange, this);
+
         this.getAllData();
-        this.isModalOpen = true;
     }
 
     disconnectedCallback() {
@@ -397,10 +399,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     handleSourceFieldLabelChange(event) {
         this.logBold('bdiFieldMappingModal | handleSourceFieldLabelChange()');
         let fieldAPIName = event.detail.value;
-        console.log('fieldAPIName: ', fieldAPIName);
-        console.log('this.diFieldsByAPIName: ', this.parse(this.diFieldsByAPIName));
         let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
-        console.log('fieldInfo: ', fieldInfo);
 
         this.selectedSourceFieldAPIName = fieldAPIName;
         this.selectedSourceFieldLabel = fieldInfo.label;
@@ -410,9 +409,9 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleSourceFieldAPINameChange(event) {
-        //this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
+        this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
         let fieldLabel = event.detail.value;
-        let fieldInfo = this.diFieldsByLabel[fieldLabel.toLowerCase()];
+        let fieldInfo = this.diFieldsByLabel[fieldLabel];
 
         this.selectedSourceFieldLabel = fieldLabel;
         this.selectedSourceFieldAPIName = fieldInfo.value;

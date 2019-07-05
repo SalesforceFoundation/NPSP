@@ -2809,6 +2809,7 @@
     </types>
     <types>
         <members>bdiFieldMappingModal</members>
+        <members>bdiFieldMappingModalComboboxSearch</members>
         <members>bdiFieldMappings</members>
         <members>bdi_ObjectMappings</members>
         <members>platformEventListener</members>
