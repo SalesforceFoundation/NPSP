@@ -4,15 +4,22 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoPageRef';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
-import getObjectFieldDescribes
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
+
+const DELAY = 300;
 
 export default class bdiFieldMappingModal extends LightningElement {
 
-    @api objectMapping;
-    @api isModalOpen = false;
+    @api diFieldDescribes;
+    @api targetObjectFieldDescribes;
+    @api objectMapping
+    @api isModalOpen;
+    @api isSearchOpen;
     @track isLoading;
     @track row;
+    @track searchKey = '';
+    @track diKeys;
+    @track searchResults;
+    @track areSearchResultsVisible = false;
 
     // Combobox vars
     @track selectedSourceFieldLabel;
@@ -77,47 +84,18 @@ export default class bdiFieldMappingModal extends LightningElement {
         document.addEventListener("keydown", this.escapeFunction, false);
         registerListener('openModal', this.handleOpenModal, this);
         registerListener('closeModal', this.handleCloseModal, this);
-        this.getAllData();
+
+        // Register listeners for child searchable combobox components
+        registerListener('sourceFieldLabelChange', this.handleSourceFieldLabelChange, this);
+        registerListener('sourceFieldAPINameChange', this.handleSourceFieldAPINameChange, this);
+        registerListener('targetFieldLabelChange', this.handleTargetFieldLabelChange, this);
+        registerListener('targetFieldAPINameChange', this.handleTargetFieldAPINameChange, this);
     }
 
     disconnectedCallback() {
         //this.logBold('Modal | disconnectedCallback()');
         document.removeEventListener("keydown", this.escapeFunction, false);
         unregisterAllListeners(this);
-    }
-
-    getAllData = async() => {
-        try {
-            const dataImportFieldDescribe = await this.handleGetDataImportFieldDescribes();
-            const targetObjectFieldDescribes = await this.handleGetTargetObjectFieldDescribes();
-
-            this.setDataImportProperties(dataImportFieldDescribe);
-            this.setTargetObjectFieldDescribes(targetObjectFieldDescribes);
-        } catch(error) {
-            if (error) {
-                this.showToast('Error', error, 'error', 'sticky');
-            }
-            throw error;
-        }
-    }
-
-    handleGetDataImportFieldDescribes = async() => {
-        //this.logBold('bdiFieldMappingModal | handleGetDataImportFieldDescribes()');
-        return getObjectFieldDescribes({objectName: 'DataImport__c'})
-            .then((data) => {
-                return data;
-            });
-    }
-
-    handleGetTargetObjectFieldDescribes = async() => {
-        //this.logBold('bdiFieldMappingModal | handleGetTargetObjectFieldDescribes()');
-        let objectAPIName =
-            this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c;
-
-        return getObjectFieldDescribes({objectName: objectAPIName})
-            .then((data) => {
-                return data;
-            });
     }
 
     setDataImportProperties(data) {
@@ -216,6 +194,79 @@ export default class bdiFieldMappingModal extends LightningElement {
         }
     }
 
+    showSearch() {
+        this.isSearchOpen = true;
+    }
+
+    hideSearch() {
+        this.isSearchOpen = false;
+        this.areSearchResultsVisible = false;
+    }
+
+    debounceOnSearchKeyChange(event) {
+        // Debouncing this method: Do not update the reactive property as long as this function is
+        // being called within a delay of DELAY. This is to avoid a very large number of Apex method calls.
+        window.clearTimeout(this.delayTimeout);
+        const searchKey = event.target.value;
+        if (searchKey && searchKey.length > 1) {
+            console.log('Start time out for search');
+            this.delayTimeout = setTimeout(() => {
+                this.handleSearchkeyChange(searchKey);
+            }, DELAY);
+        } else {
+            this.searchResults = undefined;
+        }
+    }
+
+    handleSearchkeyChange(searchKey) {
+        console.log('handleSearchkeyChange: ', searchKey);
+        let results = [];
+        if (!this.diKeys) {
+            this.diKeys = Object.keys(this.diFieldsByLabel);
+        }
+        console.log('By Labels');
+        console.log(this.parse(this.diFieldsByLabel));
+        console.log('By Keys');
+        console.log(this.parse(this.diKeys));
+
+        for(let i = 0; i < this.diKeys.length; i++) {
+            if (this.diKeys[i].toLowerCase().indexOf(searchKey.toLowerCase()) != -1) {
+                let result = {
+                    id: i,
+                    fieldInfo: this.diFieldsByLabel[this.diKeys[i]]
+                }
+                results.push(result);
+            }
+        }
+        this.searchResults = results;
+        this.areSearchResultsVisible = true;
+        console.log(results);
+    }
+
+    selectSearchResult(event) {
+        this.logBold('bdiFieldMappingModal | selectSearchResult()');
+        let result = {
+            id: event.target.dataset.id,
+            label: event.target.dataset.fieldLabel,
+            value: event.target.dataset.fieldValue
+        }
+        console.log(result);
+
+        let fieldAPIName = result.value;
+        console.log('fieldAPIName: ', fieldAPIName);
+        let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
+        console.log('fieldInfo: ', fieldInfo);
+
+        this.selectedSourceFieldAPIName = fieldAPIName;
+        this.selectedSourceFieldLabel = fieldInfo.label;
+
+        this.searchResults = undefined;
+        this.isSearchOpen = false;
+        this.areSearchResultsVisible = false;
+
+        this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo.displayType);
+    }
+
     handleCloseModal() {
         this.isModalOpen = false;
     }
@@ -252,7 +303,10 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.selectedTargetFieldAPIName = undefined;
         }
 
-        this.getAllData().then(() => { this.isLoading = false });
+        this.setDataImportProperties(this.diFieldDescribes);
+        this.setTargetObjectFieldDescribes(this.targetObjectFieldDescribes);
+
+        this.isLoading = false
     }
 
     handleSave() {
@@ -310,18 +364,19 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleSourceFieldLabelChange(event) {
-        //this.logBold('bdiFieldMappingModal | handleSourceFieldLabelChange()');
+        this.logBold('bdiFieldMappingModal | handleSourceFieldLabelChange()');
         let fieldAPIName = event.detail.value;
         let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
 
         this.selectedSourceFieldAPIName = fieldAPIName;
         this.selectedSourceFieldLabel = fieldInfo.label;
 
+        console.log('handling available target fields by source field display type');
         this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo.displayType);
     }
 
     handleSourceFieldAPINameChange(event) {
-        //this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
+        this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
         let fieldLabel = event.detail.value;
         let fieldInfo = this.diFieldsByLabel[fieldLabel];
 

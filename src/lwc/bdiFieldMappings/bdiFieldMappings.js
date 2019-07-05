@@ -5,6 +5,8 @@ import getFieldMappingsByObjectAndFieldSetNames
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
+import getObjectFieldDescribes
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
@@ -34,6 +36,9 @@ export default class bdiFieldMappings extends LightningElement {
     @track deploymentTimer;
     @api deploymentTimeout = 10000;
 
+    @api diFieldDescribes;
+    @api targetObjectFieldDescribes;
+
     @api
     get noFieldMappings() {
         return !this.fieldMappings || this.fieldMappings.length === 0;
@@ -43,6 +48,7 @@ export default class bdiFieldMappings extends LightningElement {
     refresh() {
         this.isLoading = true;
         this.handleFieldMappings();
+        this.getModalData();
     }
 
     handleNavButton() {
@@ -56,14 +62,41 @@ export default class bdiFieldMappings extends LightningElement {
         registerListener('deploymentResponse', this.handleDeploymentResponse, this);
         registerListener('startDeploymentTimeout', this.handleDeploymentTimeout, this);
         registerListener('refresh', this.refresh, this);
-
-        if (this.objectMapping) {
-            this.handleFieldMappings();
-        }
     }
 
     disconnectedCallback() {
         unregisterAllListeners(this);
+    }
+
+    getModalData = async() => {
+        this.logBold('bdiFieldMappings | getModalData()');
+        try {
+            this.diFieldDescribes = await this.handleGetDataImportFieldDescribes();
+            this.targetObjectFieldDescribes = await this.handleGetTargetObjectFieldDescribes();
+        } catch(error) {
+            if (error) {
+                this.showToast('Error', error, 'error', 'sticky');
+            }
+        }
+    }
+
+    handleGetDataImportFieldDescribes = async() => {
+        //this.logBold('bdiFieldMappingModal | handleGetDataImportFieldDescribes()');
+        return getObjectFieldDescribes({objectName: 'DataImport__c'})
+            .then((data) => {
+                return data;
+            });
+    }
+
+    handleGetTargetObjectFieldDescribes = async() => {
+        //this.logBold('bdiFieldMappingModal | handleGetTargetObjectFieldDescribes()');
+        let objectAPIName =
+            this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c;
+
+        return getObjectFieldDescribes({objectName: objectAPIName})
+            .then((data) => {
+                return data;
+            });
     }
 
     handleDeploymentTimeout(event) {
