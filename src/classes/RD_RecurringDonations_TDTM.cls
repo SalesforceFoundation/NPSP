@@ -150,6 +150,12 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
             && !customInstallmentsMap.containsKey(r.npe03__Installment_Period__c);
     }
 
+    /*******************************************************************************************************
+    * @description Dispatches trigger records to integration gateway
+    * @param newlist the list of RD's from trigger new.
+    * @param oldlist the list of RD's from trigger old.
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    ********************************************************************************************************/
     private void dispatchToIntegrationGateway(List<SObject> newlist, List<SObject> oldlist, TDTM_Runnable.Action triggerAction) {
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
             integrationGateway.handleBeforeDelete(oldlist, new Map<Id,SObject>(oldlist));
