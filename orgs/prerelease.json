@@ -3,13 +3,13 @@
   "edition": "Developer",
   "instance": "CS46",
   "hasSampleData": "true",
-  "orgPreferences" : {
-    "enabled": [
-      "ChatterEnabled",
-      "DisableParallelApexTesting",
-      "NotesReservedPref01",
-      "S1DesktopEnabled",
-      "Translation"
-    ]
+  "settings": {
+    "orgPreferenceSettings": {
+      "chatterEnabled": true,
+      "disableParallelApexTesting": true,
+      "notesReservedPref01": true,
+      "s1DesktopEnabled": true,
+      "translation": true
+    }
   }
 }
