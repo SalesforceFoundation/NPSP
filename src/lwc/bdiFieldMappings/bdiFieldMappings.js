@@ -56,7 +56,6 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     connectedCallback() {
-        this.logBold('bdiFieldMappings | connectedCallback()');
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
         registerListener('deploymentResponse', this.handleDeploymentResponse, this);
@@ -68,10 +67,15 @@ export default class bdiFieldMappings extends LightningElement {
         unregisterAllListeners(this);
     }
 
+    /*******************************************************************************
+    * @description Groups up the two calls to get data import field describes and
+    * target object field describes
+    */
     getModalData = async() => {
-        this.logBold('bdiFieldMappings | getModalData()');
         try {
-            this.diFieldDescribes = await this.handleGetDataImportFieldDescribes();
+            if (!this.diFieldDescribes) {
+                this.diFieldDescribes = await this.handleGetDataImportFieldDescribes();
+            }
             this.targetObjectFieldDescribes = await this.handleGetTargetObjectFieldDescribes();
         } catch(error) {
             if (error) {
@@ -80,16 +84,28 @@ export default class bdiFieldMappings extends LightningElement {
         }
     }
 
+    /*******************************************************************************
+    * @description Gets the Data Import object's field describes
+    *
+    * @param {string} objectName: API name of the object we need field describes for
+    *
+    * @return {array} data: List of FieldInfo instances
+    */
     handleGetDataImportFieldDescribes = async() => {
-        //this.logBold('bdiFieldMappingModal | handleGetDataImportFieldDescribes()');
         return getObjectFieldDescribes({objectName: 'DataImport__c'})
             .then((data) => {
                 return data;
             });
     }
 
+    /*******************************************************************************
+    * @description Gets the target object's field describes
+    *
+    * @param {string} objectAPIName: API name of the object we need field describes for
+    *
+    * @return {array} data: List of FieldInfo instances
+    */
     handleGetTargetObjectFieldDescribes = async() => {
-        //this.logBold('bdiFieldMappingModal | handleGetTargetObjectFieldDescribes()');
         let objectAPIName =
             this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c;
 
@@ -99,6 +115,11 @@ export default class bdiFieldMappings extends LightningElement {
             });
     }
 
+    /*******************************************************************************
+    * @description Handles the timeout toast of deployments whenever a deployment
+    * that's registered with platformEventListener takes 10 seconds or longer to
+    * send out a response.
+    */
     handleDeploymentTimeout(event) {
         let that = this;
         this.deploymentTimer = setTimeout(function() {
@@ -113,6 +134,13 @@ export default class bdiFieldMappings extends LightningElement {
         }, this.deploymentTimeout, that);
     }
 
+    /*******************************************************************************
+    * @description Listens for an event from the platformEventListener component.
+    * Upon receiving an event refreshes the field mappings records, closes the modal,
+    * and creates a toast.
+    *
+    * @param {object} platformEvent: Object containing the platform event payload
+    */
     handleDeploymentResponse(platformEvent) {
         console.log('handleDeploymentResponse()');
         clearTimeout(this.deploymentTimer);
@@ -133,16 +161,28 @@ export default class bdiFieldMappings extends LightningElement {
         console.log('Toast event dispatched');
     }
 
+    /*******************************************************************************
+    * @description Hides the field mappings component and fires an event to the parent
+    * object mappings component to show itself.
+    */
     handleShowObjectMappings() {
         this.displayFieldMappings = false;
     }
 
+    /*******************************************************************************
+    * @description Shows the field mappings component and forces a refresh to get
+    * fresh field mapping records for the currently selected object mapping.
+    */
     handleShowFieldMappings(event) {
         this.objectMapping = event.objectMapping;
         this.displayFieldMappings = true;
         this.refresh();
     }
 
+    /*******************************************************************************
+    * @description Opens the field mapping modal passing in relevant details on
+    * the currently selected object and child field mappings.
+    */
     handleOpenModal() {
         fireEvent(this.pageRef, 'openModal', {
             objectMapping: this.objectMapping,
@@ -154,8 +194,6 @@ export default class bdiFieldMappings extends LightningElement {
     /*******************************************************************************
     * @description Call apex method 'getFieldMappingsByObjectMappingName' to get
     * a list of field mappings by their parent object mapping name
-    *
-    * @param name: Name of the object mapping received from parent component 
     */
     handleFieldMappings() {
         //this.logBold('bdiFieldMappings | handleFieldMappings()');
@@ -246,19 +284,5 @@ export default class bdiFieldMappings extends LightningElement {
             messageData: messageData
         });
         this.dispatchEvent(event);
-    }
-
-    // TODO: Delete later
-    /*******************************************************************************
-    * @description Parse proxy objects for debugging, mutating, etc
-    *
-    * @param object: Object to be parsed
-    */
-    log(object) {
-        return JSON.parse(JSON.stringify(object));
-    }
-
-    logBold(string) {
-        return console.log('%c ' + string, 'font-weight: bold; font-size: 16px;');
     }
 }
