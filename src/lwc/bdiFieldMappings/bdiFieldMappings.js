@@ -14,14 +14,14 @@ const actions = [
 const columns = [
     { label: 'Field Label', fieldName: 'xxx_Source_Field_Label_xxx', type: 'text', sortable: true },
     { label: 'Field API Name', fieldName: 'xxx_Source_Field_API_Name_xxx', type: 'text' },
-    { label: 'Data Type', fieldName: 'xxx_Source_Field_Data_Type_xxx', type: 'text' },
+    { label: 'Data Type', fieldName: 'xxx_Source_Field_Data_Type_xxx', type: 'text', fixedWidth: 125 },
         {
-            label: 'Maps To', fieldName: '', type: 'text',
+            label: 'Maps To', fieldName: '', type: 'text', fixedWidth: 95,
             cellAttributes: { iconName: { fieldName: 'Maps_To_Icon' }, iconPosition: 'right' }
         },
     { label: 'Field Label', fieldName: 'xxx_Target_Field_Label_xxx', type: 'text' },
     { label: 'Field API Name', fieldName: 'xxx_Target_Field_API_Name_xxx', type: 'text' },
-    { label: 'Data Type', fieldName: 'xxx_Target_Field_Data_Type_xxx', type: 'text' },
+    { label: 'Data Type', fieldName: 'xxx_Target_Field_Data_Type_xxx', type: 'text', fixedWidth: 125 },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
 
@@ -32,7 +32,12 @@ export default class bdiFieldMappings extends LightningElement {
     @api objectMapping;
     @track fieldMappings;
     @track deploymentTimer;
-    @api deploymentTimeout = 5000;
+    @api deploymentTimeout = 10000;
+
+    @api
+    get noFieldMappings() {
+        return !this.fieldMappings || this.fieldMappings.length === 0;
+    }
 
     @api
     refresh() {

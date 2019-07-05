@@ -63,6 +63,11 @@
                                 hide-checkbox-column
                                 onrowaction={handleRowAction}>
                             </lightning-datatable>
+                            <template if:true={noFieldMappings}>
+                                <p class="slds-text-align_center slds-text-title_caps slds-p-around_medium table-no-field-mappings">
+                                    No field mappings found.
+                                </p>
+                            </template>
                         </template>
                     </div>
                 </div>

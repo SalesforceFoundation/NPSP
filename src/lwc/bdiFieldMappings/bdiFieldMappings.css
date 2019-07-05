@@ -29,3 +29,24 @@
 .table-header-target {
     margin-left: -1.5rem;
 }
+
+.table-no-field-mappings {
+    background-color: rgb(250, 250, 249);
+}
+
+.custom-col {
+    display: inline-block;
+    width: auto;
+}
+
+.custom-col_1, .custom-col_5 {
+    width: 20%;
+}
+
+.custom-col_3, .custom-col_7 {
+    width: 125px;
+}
+
+.custom-col_4 {
+    width: 95px;
+}
