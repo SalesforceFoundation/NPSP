@@ -35,7 +35,7 @@
 */
 public with sharing class UTIL_IntegrationGateway {
     @TestVisible
-    private static final String ACTION_ARCHIVE_BRIDGE_HANDLE_BEFORE_DELETE = 'dso.handleBeforeDelete';
+    private static final String ACTION_HANDLE_BEFORE_DELETE = 'dso.handleBeforeDelete';
 
     @TestVisible
     private static final String PARAM_TRIGGER_OLD = 'TriggerOld';
@@ -54,11 +54,11 @@ public with sharing class UTIL_IntegrationGateway {
         set;
     }
 
-    private List<Callable> listeners {
+    private List<UTIL_IntegrationConfig> listeners {
         get {
             if (listeners == null) {
-                listeners = new List<Callable>{
-                    archiveBridgeConfig.getCallableApi()
+                listeners = new List<UTIL_IntegrationConfig>{
+                    archiveBridgeConfig
                 };
             }
             return listeners;
@@ -72,8 +72,10 @@ public with sharing class UTIL_IntegrationGateway {
             PARAM_TRIGGER_OLD_MAP => triggerOldMap
         };
 
-        for (Callable listener : listeners) {
-            listener.call(ACTION_ARCHIVE_BRIDGE_HANDLE_BEFORE_DELETE, params);
+        for (UTIL_IntegrationConfig listener : listeners) {
+            if (listener.isInstalled()) {
+                listener.getCallableApi().call(ACTION_HANDLE_BEFORE_DELETE, params);
+            }
         }
     }
 }

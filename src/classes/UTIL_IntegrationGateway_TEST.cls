@@ -58,15 +58,38 @@ private with sharing class UTIL_IntegrationGateway_TEST {
 
         System.assertEquals(1, callableMock.callCount, 'The archive bridge api should have been called once');
 
-        System.assert(callableMock.paramsByAction.containsKey(UTIL_IntegrationGateway.ACTION_ARCHIVE_BRIDGE_HANDLE_BEFORE_DELETE),
+        System.assert(callableMock.paramsByAction.containsKey(UTIL_IntegrationGateway.ACTION_HANDLE_BEFORE_DELETE),
             'The archive bridge api should have been called with the correct action');
 
-        Map<String, Object> paramsForAction = callableMock.paramsByAction.get(UTIL_IntegrationGateway.ACTION_ARCHIVE_BRIDGE_HANDLE_BEFORE_DELETE);
+        Map<String, Object> paramsForAction = callableMock.paramsByAction.get(UTIL_IntegrationGateway.ACTION_HANDLE_BEFORE_DELETE);
 
         System.assertEquals(triggerOld, paramsForAction.get(UTIL_IntegrationGateway.PARAM_TRIGGER_OLD),
             'Should pass Trigger.old to the archive API with the correct parameter');
         System.assertEquals(triggerOldMap, paramsForAction.get(UTIL_IntegrationGateway.PARAM_TRIGGER_OLD_MAP),
             'Should pass Trigger.oldMap to the archive API with the correct parameter');
+    }
+
+    @isTest
+    private static void shouldNotDispatchToIntegrationsOnBeforeDeleteWhenNotInstalled() {
+        UTIL_IntegrationConfig_TEST.MockPackage mockPackage = new UTIL_IntegrationConfig_TEST.MockPackage();
+        mockPackage.isInstalled = false;
+
+        MockCallable callableMock = new MockCallable();
+        mockPackage.callableApi = callableMock;
+
+        UTIL_IntegrationGateway gateway = new UTIL_IntegrationGateway();
+        gateway.archiveBridgeConfig = mockPackage;
+
+        List<SObject> triggerOld = UTIL_UnitTestData_TEST.createMultipleTestAccounts(10, null);
+        UTIL_UnitTestData_TEST.setMockIds(triggerOld);
+
+        Map<Id, SObject> triggerOldMap = new Map<Id, SObject>(triggerOld);
+
+        Test.startTest();
+        gateway.handleBeforeDelete(triggerOld, triggerOldMap);
+        Test.stopTest();
+
+        System.assertEquals(0, callableMock.callCount, 'The archive bridge api should not have been called');
     }
 
     /**
