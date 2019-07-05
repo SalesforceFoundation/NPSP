@@ -11,8 +11,14 @@
             "c/bdi_ObjectMappings": [
                 "bdi_ObjectMappings/bdi_ObjectMappings.js"
             ],
+            "c/platformEventListener": [
+                "platformEventListener/platformEventListener.js"
+            ],
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
+            ],
+            "c/stencil": [
+                "stencil/stencil.js"
             ]
         },
         "experimentalDecorators": true

@@ -9,11 +9,10 @@
 
         <div class="slds-grid slds-wrap slds-m-bottom_small">
             <div class="slds-size_1-of-2">
-                <lightning-button
-                    variant="base"
-                    label="Go to Object Mappings"
-                    onclick={handleNavButton}>
-                </lightning-button>
+                <button class="slds-text-title_caps slds-button slds-button_extension-back"
+                        onclick={handleNavButton}>
+                    Back to Mapping Group
+                </button>
             </div>
             <div class="slds-size_1-of-2">
                 <lightning-button
@@ -28,11 +27,11 @@
                     class="slds-float_right">
                 </lightning-button-icon>
             </div>
-            <div class="slds-size_1-of-1 slds-m-bottom_large">
-                <h1 class="slds-text-heading_small slds-m-bottom_xx-small">{objectMapping.MasterLabel} Group</h1>
-                <h2 class="slds-text-heading_x-small slds-m-bottom_small">Field Mappings</h2>
+            <div class="slds-size_1-of-1 slds-m-top_small slds-m-bottom_large">
+                <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">{objectMapping.MasterLabel} Group</h1>
+                <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">Field Mappings</h2>
 
-                <p class="slds-text-body_small slds-m-bottom_small">
+                <p class="slds-text_extension slds-m-bottom_medium">
                     Connect the field you created on the NPSP Data Import object to the field on your target object in
                     the grid below.
                     You can find fields by Field Label or the Field API Name.
@@ -40,30 +39,45 @@
                     When you select an NPSP Data Import field, only the compatible target fields will be available.
                 </p>
 
-                <p class="slds-text-body_small">Find complete Advanced Mapping setup documentation here.</p>
+                <p class="slds-text_extension">Find complete Advanced Mapping setup documentation <a href="#">here</a>.</p>
             </div>
             <div class="slds-size_1-of-1 slds-m-vertical_small">
                 <div class="slds-grid slds-wrap">
-                    <div class="slds-size_2-of-7">
-                        <p class="slds-text-heading_x-small">Source (NPSP Data Import Object)</p>
+                    <div class="slds-size_4-of-8">
+                        <p class="slds-truncate slds-text-heading_small table-header">Source (NPSP Data Import Object)</p>
                     </div>
-                    <div class="slds-size_2-of-7"></div>
-                    <div class="slds-size_3-of-7">
-                        <p class="slds-text-heading_x-small">Target ({objectMapping.MasterLabel})</p>
+                    <div class="slds-size_4-of-8">
+                        <p class="slds-truncate slds-text-heading_small table-header table-header-target">Target ({objectMapping.MasterLabel})</p>
                     </div>
                     <div class="slds-size_1-of-1 slds-m-top_x-small">
                         <tempate if:true={isLoading}>
                             <lightning-spinner></lightning-spinner>
+                            <c-stencil row-count="10" column-count="7"></c-stencil>
                         </tempate>
-                        <lightning-datatable
-                            key-field="id"
-                            data={fieldMappings}
-                            columns={columns}
-                            hide-checkbox-column
-                            onrowaction={handleRowAction}>
-                        </lightning-datatable>
+                        <template if:false={isLoading}>
+                            <lightning-datatable
+                                key-field="id"
+                                data={fieldMappings}
+                                columns={columns}
+                                hide-checkbox-column
+                                onrowaction={handleRowAction}>
+                            </lightning-datatable>
+                            <template if:true={noFieldMappings}>
+                                <p class="slds-text-align_center slds-text-title_caps slds-p-around_medium table-no-field-mappings">
+                                    No field mappings found.
+                                </p>
+                            </template>
+                        </template>
                     </div>
                 </div>
+            </div>
+            <div class="slds-size_1-of-1 slds-m-top_small">
+                <lightning-button
+                    label="Create New Field Mapping"
+                    title="Create New Field Mapping"
+                    onclick={handleOpenModal}
+                    class="slds-m-left_x-small slds-float_right">
+                </lightning-button>
             </div>
         </div>
     </template>

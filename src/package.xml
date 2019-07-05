@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -1121,6 +1121,9 @@
         <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
         <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
         <members>Data_Import_Object_Mapping__mdt.Relationship_To_Predecessor__c</members>
+        <members>DeploymentEvent__e.CompletedDate__c</members>
+        <members>DeploymentEvent__e.DeploymentId__c</members>
+        <members>DeploymentEvent__e.Status__c</members>
         <members>Filter_Group__mdt.Description__c</members>
         <members>Filter_Group__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Constant__c</members>
@@ -1910,6 +1913,7 @@
         <members>stgAddrMustChooseClass</members>
         <members>stgAddrPermissionDenied</members>
         <members>stgAllocationLevel</members>
+        <members>stgBDIGoToSetup</members>
         <members>stgBtnBack</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
@@ -2369,6 +2373,7 @@
         <members>Data_Import_Field_Mapping__mdt</members>
         <members>Data_Import_Object_Mapping_Set__mdt</members>
         <members>Data_Import_Object_Mapping__mdt</members>
+        <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Rollup__mdt</members>
@@ -2608,6 +2613,7 @@
         <members>Trigger_Handler__c-iw</members>
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
+        <members>DeploymentEvent__e-en_US</members>
         <members>Filter_Group__mdt-de</members>
         <members>Filter_Group__mdt-en_US</members>
         <members>Filter_Group__mdt-es</members>
@@ -2802,10 +2808,12 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
         <members>bdi_ObjectMappings</members>
-        <members>bdiFieldMappingModal</members>
+        <members>platformEventListener</members>
         <members>pubsubNoPageRef</members>
+        <members>stencil</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
@@ -2935,5 +2943,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>45.0</version>
+    <version>46.0</version>
 </Package>

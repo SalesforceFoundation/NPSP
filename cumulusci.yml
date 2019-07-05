@@ -5,7 +5,7 @@ project:
         name: Cumulus
         name_managed: Nonprofit Success Pack
         namespace: npsp
-        api_version: 43.0
+        api_version: 46.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
@@ -431,8 +431,6 @@ orgs:
             config_file: orgs/beta_personaccounts.json
         beta_statecountry:
             config_file: orgs/beta_statecountry.json
-        beta_wave:
-            config_file: orgs/beta_wave.json
         prerelease:
             config_file: orgs/prerelease.json
         trial:

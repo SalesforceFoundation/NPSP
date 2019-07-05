@@ -50,35 +50,40 @@ public class BDI_ManageAdvancedMappingCtrl {
         return objMappings;
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static FieldInfo[] getObjectFieldDescribes(String objectName) {
         Map<String, String> useableDFRs = new Map<String, String>();
         FieldInfo[] fieldInfos = new List<FieldInfo>();
+
+        objectName = UTIL_Namespace.StrAllNSPrefix(objectName);
 
         Map<String, Schema.DescribeFieldResult> fieldDescribes =
             UTIL_Describe.getAllFieldsDescribe(objectName);
 
         for (String key : fieldDescribes.keySet()) {
             fieldInfos.add(new FieldInfo(fieldDescribes.get(key)));
-            //useableDFRs.put(fieldDescribes.get(key).label, key);
         }
 
-        //return useableDFRs;
         return fieldInfos;
     }
 
     @AuraEnabled
     public static DataImportFieldMappingWrapper[] getFieldMappingsByObjectAndFieldSetNames(
-        String objectSetName, String fieldSetName) {
+        String objectName) {
 
+        Data_Import_Settings__c dataImportSettings = Data_Import_Settings__c.getInstance();
+        String fieldSetName = dataImportSettings.Default_Data_Import_Field_Mapping_Set__c;
         DataImportFieldMappingWrapper[] fieldMappingWrappers =
             new List<DataImportFieldMappingWrapper>();
+
         Data_Import_Field_Mapping__mdt[] fieldMappings =
-            bdiCMT.fieldMappingsByObjMappingDevName.get(objectSetName);
+            bdiCMT.fieldMappingsByObjMappingDevName.get(objectName);
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
+
             if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldSetName &&
                 fieldMapping.Is_Deleted__c == false) {
+
                 fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
             }
         }
@@ -91,16 +96,25 @@ public class BDI_ManageAdvancedMappingCtrl {
     // Drops it into a DeployContainer
     // Sends it off to be deployed
     // Return the jobId
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
         System.debug(LoggingLevel.ERROR, 'createDataImportFieldMapping()');
         System.debug(fieldMappingString);
         // TODO: Delete later. Used to test error toast in UI
         //throw new testerException('SOMETHING WENT WRONG');
+        fieldMappingString = fieldMappingString.replaceAll('_xxx','__c');
+
+        if (NAMESPACE == 'npsp') {
+            fieldMappingString = fieldMappingString.replaceAll('xxx_','npsp__');
+        } else {
+            fieldMappingString = fieldMappingString.replaceAll('xxx_','');
+        }
+
         try {
             Data_Import_Field_Mapping__mdt difm =
-            (Data_Import_Field_Mapping__mdt)JSON.deserialize(fieldMappingString.replaceAll('_xxx','__c'), Data_Import_Field_Mapping__mdt.class);
-
+                (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                    fieldMappingString, Data_Import_Field_Mapping__mdt.class);
+            System.debug(difm);
             String deploymentId = enqueueMetadataRecords(difm);
 
             return deploymentId;
@@ -180,7 +194,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
 
         // Callback class instance
-        CustomMetadataCallback callback = new CustomMetadataCallback();
+        DeploymentCallback callback = new DeploymentCallback();
 
         // Enqueue custom metadata deployment
         Id jobId = Metadata.Operations.enqueueDeployment(deployContainer, callback);
@@ -226,45 +240,62 @@ public class BDI_ManageAdvancedMappingCtrl {
     public class DataImportFieldMappingWrapper {
         @AuraEnabled public String DeveloperName;
         @AuraEnabled public String MasterLabel;
-        @AuraEnabled public String Source_Field_Label_xxx;
-        @AuraEnabled public String Source_Field_API_Name_xxx;
-        @AuraEnabled public String Source_Field_Data_Type_xxx;
-        @AuraEnabled public String Target_Field_Label_xxx;
-        @AuraEnabled public String Target_Field_API_Name_xxx;
-        @AuraEnabled public String Target_Field_Data_Type_xxx;
-        @AuraEnabled public String Maps_To_Icon;
         @AuraEnabled public String Label;
-        @AuraEnabled public String Data_Import_Field_Mapping_Set_xxx;
-        @AuraEnabled public String Target_Object_Mapping_xxx;
-        @AuraEnabled public String Required_xxx;
-        @AuraEnabled public Boolean Is_Deleted_xxx;
+        @AuraEnabled public String Maps_To_Icon;
+        @AuraEnabled public String xxx_Source_Field_Label_xxx;
+        @AuraEnabled public String xxx_Source_Field_API_Name_xxx;
+        @AuraEnabled public String xxx_Source_Field_Data_Type_xxx;
+        @AuraEnabled public String xxx_Target_Field_Label_xxx;
+        @AuraEnabled public String xxx_Target_Field_API_Name_xxx;
+        @AuraEnabled public String xxx_Target_Field_Data_Type_xxx;
+        @AuraEnabled public String xxx_Data_Import_Field_Mapping_Set_xxx;
+        @AuraEnabled public String xxx_Target_Object_Mapping_xxx;
+        @AuraEnabled public String xxx_Required_xxx;
+        @AuraEnabled public Boolean xxx_Is_Deleted_xxx;
 
         public DataImportFieldMappingWrapper(Data_Import_Field_Mapping__mdt fieldMapping) {
+            String dataImport = 'npsp__DataImport__c';
+            String objectAPIName = fieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
+            String sourceFieldAPIName = fieldMapping.Source_Field_API_Name__c;
+            String targetFieldAPIName = fieldMapping.Target_Field_API_Name__c;
+
+            System.debug('DataImportFieldMappingWrapper');
+            System.debug('NAMESPACE: ' + NAMESPACE);
+            if (NAMESPACE != 'npsp') {
+                dataImport = 'DataImport__c';
+                objectAPIName =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
+                sourceFieldAPIName =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                targetFieldAPIName =
+                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Field_API_Name__c);
+            }
+
             Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
-                UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
-                UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c));
+                dataImport,
+                sourceFieldAPIName);
 
             Schema.DescribeFieldResult targetFieldDescribe = UTIL_Describe.getFieldDescribe(
-                UTIL_Namespace.StrTokenNSPrefix(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c),
-                UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Field_API_Name__c));
+                objectAPIName,
+                targetFieldAPIName);
 
             this.DeveloperName = fieldMapping.DeveloperName;
             this.MasterLabel = fieldMapping.MasterLabel;
-            this.Source_Field_Label_xxx = sourceFieldDescribe.label;
-            this.Source_Field_API_Name_xxx = fieldMapping.Source_Field_API_Name__c;
-            this.Source_Field_Data_Type_xxx = String.valueOf(sourceFieldDescribe.type);
+            this.Label = fieldMapping.MasterLabel;
+            this.xxx_Source_Field_Label_xxx = sourceFieldDescribe.label;
+            this.xxx_Source_Field_API_Name_xxx = fieldMapping.Source_Field_API_Name__c;
+            this.xxx_Source_Field_Data_Type_xxx = String.valueOf(sourceFieldDescribe.type);
 
-            this.Target_Field_Label_xxx = targetFieldDescribe.label;
-            this.Target_Field_API_Name_xxx = fieldMapping.Target_Field_API_Name__c;
-            this.Target_Field_Data_Type_xxx = String.valueOf(targetFieldDescribe.type);
+            this.xxx_Target_Field_Label_xxx = targetFieldDescribe.label;
+            this.xxx_Target_Field_API_Name_xxx = fieldMapping.Target_Field_API_Name__c;
+            this.xxx_Target_Field_Data_Type_xxx = String.valueOf(targetFieldDescribe.type);
 
             this.Maps_To_Icon = 'utility:forward';
 
-            this.Label = fieldMapping.MasterLabel;
-            this.Data_Import_Field_Mapping_Set_xxx = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
-            this.Target_Object_Mapping_xxx = fieldMapping.Target_Object_Mapping__r.DeveloperName;
-            this.Required_xxx = fieldMapping.Required__c;
-            this.Is_Deleted_xxx = fieldMapping.Is_Deleted__c;
+            this.xxx_Data_Import_Field_Mapping_Set_xxx = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
+            this.xxx_Target_Object_Mapping_xxx = fieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.xxx_Required_xxx = fieldMapping.Required__c;
+            this.xxx_Is_Deleted_xxx = fieldMapping.Is_Deleted__c;
         }
     }
 
@@ -280,67 +311,27 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
-    /*******************************************************************************************************
-    * @description Check the status of metadata deployment
-    * @return Metadata.DeployResult JSON
-    */
-    @AuraEnabled
-    public static Metadata.DeployResult getDeploymentResult(Id deploymentId) {
-        System.debug('getDeploymentResult()');
-        System.debug(deploymentId);
-        Http h = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint('callout:Metadata_Deployment_Result/' +
-            '/services/data/v44.0/metadata/deployRequest/' +
-            deploymentId +
-            '?includeDetails=true');
-        request.setMethod('GET');
-        //request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
-        HttpResponse response = h.send(request);
-        System.debug(response.getBody());
-        DeploymentResponse deploymentResponse =
-            (DeploymentResponse)JSON.deserialize(response.getBody(), DeploymentResponse.class);
+    public class DeploymentCallback implements Metadata.DeployCallback {
 
-        return deploymentResponse.deployResult;
-    }
+        public void handleResult(
+                Metadata.DeployResult deployResult,
+                Metadata.DeployCallbackContext context) {
 
-    /*******************************************************************************************************
-    * @description Wrapper used to deserialize the deployment request response
-    */
-    private class DeploymentResponse {
-        Metadata.DeployResult deployResult;
-    }
+            DeploymentEvent__e de = new DeploymentEvent__e(
+                    DeploymentId__c = deployResult.id,
+                    Status__c = deployResult.status.name(),
+                    CompletedDate__c = deployResult.completedDate
+            );
 
-    public class CustomMetadataCallback implements Metadata.DeployCallback {
-        public void handleResult(Metadata.DeployResult result,
-                                Metadata.DeployCallbackContext context) {
-            if (result.status == Metadata.DeployStatus.Succeeded) {
-                System.debug('END TIME: ' + DateTime.now());
-                System.debug('success: '+ result);
-                // Trying out Platform Events for checking the deployment status
-                /*List<Custom_Metadata_Data_Deployment__e> deploymentEvents =
-                    new List<Custom_Metadata_Data_Deployment__e>();
-                deploymentEvents.add(new Custom_Metadata_Data_Deployment__e(Test__c='Test'));
+            Database.SaveResult saveResult = EventBus.publish(de);
 
-                // Call method to publish events
-                List<Database.SaveResult> results = EventBus.publish(deploymentEvents);
-
-                // Inspect publishing result for each event
-                for (Database.SaveResult sr : results) {
-                    if (sr.isSuccess()) {
-                        System.debug('Successfully published event.');
-                    } else {
-                        for(Database.Error err : sr.getErrors()) {
-                            System.debug('Error returned: ' +
-                                        err.getStatusCode() +
-                                        ' - ' +
-                                        err.getMessage());
-                        }
-                    }       
-                }*/
-            } else {
-                // Deployment was not successful
-                System.debug('fail: '+ result);
+            if (!saveResult.isSuccess()) {
+                for (Database.Error error : saveResult.getErrors()) {
+                    //TODO: collaborate with docs on label/text value in the event that a deployment fails
+                    throw new AuraHandledException('Error returned: ' +
+                            error.getStatusCode() + ' - ' +
+                            error.getMessage());
+                }
             }
         }
     }
