@@ -194,6 +194,13 @@ public without sharing class CRLP_ApiService {
         return rollupDefs;
     }
 
+    /**
+    * @description indicates of CRLP is enabled
+    * @return Boolean
+    */
+    public Boolean isCrlpEnabled() {
+        return CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
+    }
 
     /**
     * @description Throw a custom exception there is an error parsing the parameter
