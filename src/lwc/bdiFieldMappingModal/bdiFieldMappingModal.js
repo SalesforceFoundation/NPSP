@@ -14,6 +14,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     @api objectMapping
     @api isModalOpen;
     @api isSearchOpen;
+
     @track isLoading;
     @track row;
     @track searchKey = '';
@@ -80,7 +81,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     connectedCallback() {
-        this.logBold('Modal | connectedCallback()');
         document.addEventListener("keydown", this.escapeFunction, false);
         registerListener('openModal', this.handleOpenModal, this);
         registerListener('closeModal', this.handleCloseModal, this);
@@ -93,13 +93,11 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     disconnectedCallback() {
-        //this.logBold('Modal | disconnectedCallback()');
         document.removeEventListener("keydown", this.escapeFunction, false);
         unregisterAllListeners(this);
     }
 
     setDataImportProperties(data) {
-        //this.logBold('setDataImportProperties()');
         this.sourceFieldLabelOptions = [];
         this.sourceFieldAPINameOptions = [];
         let diFieldsByLabel = {};
@@ -132,7 +130,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     setTargetObjectFieldDescribes(data) {
-        //this.logBold('setTargetObjectFieldDescribes()');
         this.targetFieldLabelOptions = [];
         this.targetFieldAPINameOptions = [];
         let targetObjectFieldsByLabel = {}, targetObjectFieldsByAPIName = {};
@@ -209,7 +206,6 @@ export default class bdiFieldMappingModal extends LightningElement {
         window.clearTimeout(this.delayTimeout);
         const searchKey = event.target.value;
         if (searchKey && searchKey.length > 1) {
-            console.log('Start time out for search');
             this.delayTimeout = setTimeout(() => {
                 this.handleSearchkeyChange(searchKey);
             }, DELAY);
@@ -219,15 +215,10 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleSearchkeyChange(searchKey) {
-        console.log('handleSearchkeyChange: ', searchKey);
         let results = [];
         if (!this.diKeys) {
             this.diKeys = Object.keys(this.diFieldsByLabel);
         }
-        console.log('By Labels');
-        console.log(this.parse(this.diFieldsByLabel));
-        console.log('By Keys');
-        console.log(this.parse(this.diKeys));
 
         for(let i = 0; i < this.diKeys.length; i++) {
             if (this.diKeys[i].toLowerCase().indexOf(searchKey.toLowerCase()) != -1) {
@@ -240,22 +231,17 @@ export default class bdiFieldMappingModal extends LightningElement {
         }
         this.searchResults = results;
         this.areSearchResultsVisible = true;
-        console.log(results);
     }
 
     selectSearchResult(event) {
-        this.logBold('bdiFieldMappingModal | selectSearchResult()');
         let result = {
             id: event.target.dataset.id,
             label: event.target.dataset.fieldLabel,
             value: event.target.dataset.fieldValue
         }
-        console.log(result);
 
         let fieldAPIName = result.value;
-        console.log('fieldAPIName: ', fieldAPIName);
         let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
-        console.log('fieldInfo: ', fieldInfo);
 
         this.selectedSourceFieldAPIName = fieldAPIName;
         this.selectedSourceFieldLabel = fieldInfo.label;
@@ -272,7 +258,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleOpenModal(event) {
-        this.logBold('bdiFieldMappingModal | handleOpenModal()');
         this.isModalOpen = true;
         this.isLoading = true;
         this.objectMapping = event.objectMapping;
@@ -288,7 +273,6 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.row = event.row;
 
         if (this.row) {
-            //this.logBold('EDIT');
             // Edit
             this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
             this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
@@ -310,7 +294,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleSave() {
-        this.logBold('bdiFieldMappingModal | handleSave()');
         this.isLoading = true;
         let rowDetails;
 
@@ -364,19 +347,16 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleSourceFieldLabelChange(event) {
-        this.logBold('bdiFieldMappingModal | handleSourceFieldLabelChange()');
         let fieldAPIName = event.detail.value;
         let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
 
         this.selectedSourceFieldAPIName = fieldAPIName;
         this.selectedSourceFieldLabel = fieldInfo.label;
 
-        console.log('handling available target fields by source field display type');
         this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo.displayType);
     }
 
     handleSourceFieldAPINameChange(event) {
-        this.logBold('bdiFieldMappingModal | handleSourceFieldAPINameChange()');
         let fieldLabel = event.detail.value;
         let fieldInfo = this.diFieldsByLabel[fieldLabel];
 
@@ -387,7 +367,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleAvailableTargetFieldsBySourceFieldDisplayType(displayType) {
-        //this.logBold('bdiFieldMappingModal | handleAvailableTargetFieldsBySourceFieldDisplayType()');
         this.selectedTargetFieldAPIName = undefined;
         this.selectedTargetFieldLabel = undefined;
         this.targetFieldLabelOptions = [];
@@ -405,13 +384,11 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     handleTargetFieldLabelChange(event) {
-        //this.logBold('bdiFieldMappingModal | handleTargetFieldLabelChange()');
         this.selectedTargetFieldAPIName = event.detail.value;
         this.selectedTargetFieldLabel = this.targetObjectFieldsByAPIName[event.detail.value];
     }
 
     handleTargetFieldAPINameChange(event) {
-        //this.logBold('bdiFieldMappingModal | handleTargetFieldAPINameChange()');
         this.selectedTargetFieldLabel = event.detail.value;
         this.selectedTargetFieldAPIName = this.targetObjectFieldsByLabel[event.detail.value];
     }
@@ -427,7 +404,6 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.dispatchEvent(event);
     }
 
-    // TODO: Delete later
     /*******************************************************************************
     * @description Parse proxy objects for debugging, mutating, etc
     *
@@ -436,9 +412,4 @@ export default class bdiFieldMappingModal extends LightningElement {
     parse(obj) {
        return JSON.parse(JSON.stringify(obj));
     }
-
-    logBold(string) {
-        return console.log('%c ' + string, 'font-weight: bold; font-size: 16px;');
-    }
-    // TODO: END
 }
