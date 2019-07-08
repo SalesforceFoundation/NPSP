@@ -4,8 +4,6 @@ import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoP
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 
-const DELAY = 300;
-
 export default class bdiFieldMappingModal extends LightningElement {
 
     @api diFieldDescribes;

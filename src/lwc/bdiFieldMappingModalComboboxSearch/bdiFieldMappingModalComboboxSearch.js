@@ -1,10 +1,9 @@
-/* eslint-disable @lwc/lwc/no-async-operation */
 import { LightningElement, api, track } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
 
 const DELAY = 300;
 
-export default class bdiFieldMappingModalComboboxSearchComboboxSearch extends LightningElement {
+export default class bdiFieldMappingModalComboboxSearch extends LightningElement {
 
     @api name;
     @api comboboxLabel;
