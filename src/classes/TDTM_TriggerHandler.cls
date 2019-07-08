@@ -60,14 +60,15 @@ public class TDTM_TriggerHandler {
     * @return void
     */
     public static void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
-    Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
-    Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
-    	if (disableTDTM) {
+            Boolean isDelete, Boolean isUnDelete, List<SObject> newList, List<SObject> oldList,
+            Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
+
+        if (disableTDTM) {
            UTIL_Debug.debug(LoggingLevel.WARN, '****TDTM Disabled: no triggers will run for this transaction.');
            return;
         }
 
-        if(newList != null) {
+        if (newList != null) {
            UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
         }
 
@@ -78,7 +79,7 @@ public class TDTM_TriggerHandler {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 
         // If there are no records, insert the defaults.
-        if(!defaultRecordsInserted && dao.isEmpty()) {
+        if (!defaultRecordsInserted && dao.isEmpty()) {
             // We will not insert the default records when Triggered by the User object to prevent MixedDML errors
             if (describeObj == Schema.SObjectType.User) {
                 return;
@@ -90,13 +91,13 @@ public class TDTM_TriggerHandler {
 
         // Get the classes to run. Note that we are using the local object name, so it works for objects
         // from Cumulus both in the package and unmanaged dev orgs.
-        List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getLocalName(), thisAction);
+        List<SObject> classesToCall = dao.getClassesToCallForObject(describeObj.getLocalName(), thisAction);
 //        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 
         // fixup our trigger lists to deal with workflow rules
         oldList = FixupOldList(thisAction, newList, oldList, describeObj);
 
-        if(classesToCall != null && classesToCall.size() > 0) {
+        if (classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
                 TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
@@ -117,23 +118,27 @@ public class TDTM_TriggerHandler {
                     }
                 }
 
-                if(dmlWrapperLocal != null) {
-                    if(dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty())
+                if (dmlWrapperLocal != null) {
+                    if (dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty()) {
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
-                    if(dmlWrapperLocal.objectsToUpdate != null && !dmlWrapperLocal.objectsToUpdate.isEmpty())
+                    }
+                    if (dmlWrapperLocal.objectsToUpdate != null && !dmlWrapperLocal.objectsToUpdate.isEmpty()) {
                         dmlWrapper.objectsToUpdate.addAll(dmlWrapperLocal.objectsToUpdate);
-                    if(dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty())
+                    }
+                    if (dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty()) {
                         dmlWrapper.objectsToDelete.addAll(dmlWrapperLocal.objectsToDelete);
-                    if(dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty())
+                    }
+                    if (dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty()) {
                         dmlWrapper.objectsToUndelete.addAll(dmlWrapperLocal.objectsToUndelete);
+                    }
                 }
                 UTIL_Debug.debugWithInfo('****Finished executing: ' + classToCall.get('Class__c') + ' for ' +
-                        describeObj.getName() + ': ' + thisAction);
+                    describeObj.getName() + ': ' + thisAction);
             }
 
             
             //Process the result
-            if(dmlWrapper != null) {
+            if (dmlWrapper != null) {
                 try {
                     processDML(dmlWrapper);
                 } catch (Exception ex) {
@@ -153,27 +158,38 @@ public class TDTM_TriggerHandler {
         }
     }
 
-    private static TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord, List<Sobject> newList, List<Sobject> oldList, 
-    TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj, TDTM_Runnable.DmlWrapper dmlWrapper) {
-    	        
-        if(classToRunRecord != null) {
-	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
-	        Type classType = Type.forName(classToRunName);
+    /*******************************************************************************************************
+     * @description Given a specific TriggerHandler record linked to the current trigger event, execute the
+     * specified class based on the type of class instance it represents.
+     * @param classToRunRecord Trigger_Handler__c record
+     * @param newList Collection of Trigger.New
+     * @param oldList Collection of Trigger.Old
+     * @param thisAction Trigger Event (Insert, Update, Delete, ...)
+     * @param describeObj SObjectDescribe of the target object
+     * @param dmlWrapper The DmlWrapper instance for the current processing
+     * @return An updated DML Wrapper instance (or null)
+     */
+    private static TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord, List<SObject> newList, List<SObject> oldList,
+            TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj, TDTM_Runnable.DmlWrapper dmlWrapper) {
 
-	        if(classType != null) {   	
-	        	Object classInstance = classType.newInstance();
-	        	
-	        	//The objects we create dynamically need to implement the TDTM_Runnable interface
-	        	if(classInstance instanceof TDTM_Runnable) {
-			        TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
-			        Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
-			        boolean isBefore = (thisAction == TDTM_Runnable.Action.BeforeInsert || 
-			             thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete); 
-			        
-			        //A class can only run asynchronously (calling a future) if we have the ids of the
+        if (classToRunRecord != null) {
+            String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
+            Type classType = Type.forName(classToRunName);
+
+            if (classType != null) {
+                Object classInstance = classType.newInstance();
+
+                //The objects we create dynamically need to implement the TDTM_Runnable interface
+                if (classInstance instanceof TDTM_Runnable) {
+                    TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
+                    Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
+                    boolean isBefore = (thisAction == TDTM_Runnable.Action.BeforeInsert ||
+                         thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete);
+
+                    //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
-                    if(async && !isBefore && !System.isFuture() && !System.isBatch()) {
+                    if (async && !isBefore && !System.isFuture() && !System.isBatch()) {
                         UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName + ' for ' +
                                 describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                         runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
@@ -182,7 +198,7 @@ public class TDTM_TriggerHandler {
                                 describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                         return classToRun.run(newlist, oldlist, thisAction, describeObj);
                     }
-	        	} else if(classInstance instanceof TDTM_RunnableMutable) {
+                } else if (classInstance instanceof TDTM_RunnableMutable) {
                     // alternatively, objects created dynamically can implement the TDTM_RunnableMutable
                     // interface if the class intends to directly modify the global DmlWrappper
                     TDTM_RunnableMutable classToRun = (TDTM_RunnableMutable) classInstance;
@@ -195,29 +211,39 @@ public class TDTM_TriggerHandler {
                     // whatever exists in the collection after iterating through all classes to run
                     classToRun.run(newList, oldList, thisAction, describeObj, dmlWrapper);
                 } else {
-	        		UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
-	        	}
-	        } else {
-	        	UTIL_Debug.debug(LoggingLevel.WARN, '****ClassType was null.');
-	        }
+                    UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
+                }
+            } else {
+                UTIL_Debug.debug(LoggingLevel.WARN, '****ClassType was null.');
+            }
         } else {
-        	UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
+            UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
         }
         return null;
     }
-    
-    private static void runAsync(TDTM_Runnable classToRun, String classToRunName, List<Sobject> newList, 
-    List<Sobject> oldList, TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
-       set<Id> setNewId;
-       if(newlist != null) {
-           Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
-           setNewId = new set<Id>(nm.keySet());
+
+    /*******************************************************************************************************
+     * @description Given a specific TriggerHandler record linked to the current trigger event, execute the
+     * specified class based on the type of class instance it represents.
+     * @param classToRun Instance of class that implements the TDTM_Runnable interface
+     * @param classToRunName The name of the class to be executed
+     * @param newList Collection of Trigger.New
+     * @param oldList Collection of Trigger.Old
+     * @param thisAction Trigger Event (Insert, Update, Delete, ...)
+     * @param describeObj SObjectDescribe of the target object
+     */
+    private static void runAsync(TDTM_Runnable classToRun, String classToRunName, List<SObject> newList,
+            List<SObject> oldList, TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
+       Set<Id> setNewId;
+       if (newList != null) {
+           Map<Id,SObject> nm = new Map<Id,SObject>(newList);
+           setNewId = new Set<Id>(nm.keySet());
        }
        
-       set<Id> setOldId;
-       if(oldlist != null) {
-           Map<Id,Sobject> om = new Map<Id,SObject>(oldlist);
-           setOldId = new set<Id>(om.keySet());
+       Set<Id> setOldId;
+       if (oldList != null) {
+           Map<Id,SObject> om = new Map<Id,SObject>(oldList);
+           setOldId = new Set<Id>(om.keySet());
        }
        
        classToRun.runFutureNonStatic(setNewId, setOldId, thisAction.name(), describeObj.getName(), classToRunName);
@@ -242,8 +268,9 @@ public class TDTM_TriggerHandler {
     * @return Errors Object with list of Error objects
     */
     public static ERR_Handler.Errors processDMLAllOrNothing(TDTM_Runnable.DmlWrapper dmlWrapper, boolean allOrNothing) {
-        if (dmlWrapper == null)
+        if (dmlWrapper == null) {
             return null;
+        }
                     
         dmlWrapper.groupByType(); //sort thyself!
 
@@ -269,7 +296,7 @@ public class TDTM_TriggerHandler {
     /*******************************************************************************************************
     * @description a cache of SObject maps for each object type, used by FixupOldList()
     */
-    private static map<Schema.DescribeSobjectResult, map<Id, SObject>> mapDescObjToMapOldForUpdates = new map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
+    private static Map<Schema.DescribeSobjectResult, Map<Id, SObject>> mapDescObjToMapOldForUpdates = new Map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
 
     /*******************************************************************************************************
     * @description Returns the correct old list of objects for the trigger, for the current context.  By
@@ -286,12 +313,12 @@ public class TDTM_TriggerHandler {
     * @param describeObj the describe for the SObject
     * @return list<SObject> the correct oldList for the current trigger
     */
-    private static list<SObject> FixupOldList(TDTM_Runnable.Action triggerAction, List<Sobject> newList, List<Sobject> oldList,
+    private static List<SObject> FixupOldList(TDTM_Runnable.Action triggerAction, List<SObject> newList, List<SObject> oldList,
         Schema.DescribeSobjectResult describeObj) {
 
         // return cached objects if we have them
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            list<SObject> listSObj = new List<SObject>();
+            List<SObject> listSObj = new List<SObject>();
             Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(describeObj);
             if (mapIdToSObj != null) {
 
