@@ -48,7 +48,6 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     @track mappedDIFieldLabels = [];
     @track mappedTargetFieldLabels = [];
-    @track mappedTargetFieldAPINames = [];
 
     // Map of Display Types
     validTargetTypesBySourceType = {
@@ -97,7 +96,43 @@ export default class bdiFieldMappingModal extends LightningElement {
         unregisterAllListeners(this);
     }
 
-    setDataImportProperties(data) {
+    handleOpenModal(event) {
+        this.isModalOpen = true;
+        this.isLoading = true;
+        this.objectMapping = event.objectMapping;
+
+        this.collectMappedDataImportFields(event.fieldMappings);
+
+        this.row = event.row;
+
+        if (this.row) {
+            // Edit row
+            this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
+            this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
+            this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
+            this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
+            this.selectedSourceFieldDisplayType = this.row.xxx_Source_Field_Data_Type_xxx;
+        } else {
+            // New row
+            this.clearSelections();
+        }
+
+        this.setDataImportFieldDescribes(this.diFieldDescribes);
+        this.setTargetObjectFieldDescribes(this.targetObjectFieldDescribes);
+
+        this.isLoading = false
+    }
+
+    collectMappedDataImportFields(fieldMappings) {
+        for (let i = 0; i < fieldMappings.length; i++) {
+            let fieldMapping = fieldMappings[i];
+
+            this.mappedDIFieldLabels.push(fieldMapping.xxx_Source_Field_Label_xxx);
+            this.mappedTargetFieldLabels.push(fieldMapping.xxx_Target_Field_Label_xxx);
+        }
+    }
+
+    setDataImportFieldDescribes(data) {
         this.sourceFieldLabelOptions = [];
         this.sourceFieldAPINameOptions = [];
         let diFieldsByLabel = {};
@@ -185,6 +220,13 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.selectedTargetFieldAPIName = selectedTargetFieldAPIName;
     }
 
+    clearSelections() {
+        this.selectedSourceFieldLabel = undefined;
+        this.selectedSourceFieldAPIName = undefined;
+        this.selectedTargetFieldLabel = undefined;
+        this.selectedTargetFieldAPIName = undefined;
+    }
+
     escapeFunction(event) {
         if (event.keyCode === 27) {
             this.handleCloseModal();
@@ -255,42 +297,6 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     handleCloseModal() {
         this.isModalOpen = false;
-    }
-
-    handleOpenModal(event) {
-        this.isModalOpen = true;
-        this.isLoading = true;
-        this.objectMapping = event.objectMapping;
-
-        for (let i = 0; i < event.fieldMappings.length; i++) {
-            let fieldMapping = event.fieldMappings[i];
-
-            this.mappedDIFieldLabels.push(fieldMapping.xxx_Source_Field_Label_xxx);
-            this.mappedTargetFieldLabels.push(fieldMapping.xxx_Target_Field_Label_xxx);
-            this.mappedTargetFieldAPINames.push(fieldMapping.xxx_Target_Field_API_Name_xxx);
-        }
-
-        this.row = event.row;
-
-        if (this.row) {
-            // Edit
-            this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
-            this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
-            this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
-            this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
-            this.selectedSourceFieldDisplayType = this.row.xxx_Source_Field_Data_Type_xxx;
-        } else {
-            // New
-            this.selectedSourceFieldLabel = undefined;
-            this.selectedSourceFieldAPIName = undefined;
-            this.selectedTargetFieldLabel = undefined;
-            this.selectedTargetFieldAPIName = undefined;
-        }
-
-        this.setDataImportProperties(this.diFieldDescribes);
-        this.setTargetObjectFieldDescribes(this.targetObjectFieldDescribes);
-
-        this.isLoading = false
     }
 
     handleSave() {
