@@ -177,7 +177,8 @@ public class EP_Task_UTIL {
         //this will not be comitted to the database
         epTask.Days_After__c = getParentDelayRecursive(epTask);
 
-        taskResult.ActivityDate = calcActivityDate(epTask, System.today());
+        Date startDate = engagementPlan.Start_Date__c == null ? System.Today() : engagementPlan.Start_Date__c;
+        taskResult.ActivityDate = calcActivityDate(epTask, startDate);
 
         //default the Priority field if none is set
         if (String.isBlank(taskResult.Priority)) {
