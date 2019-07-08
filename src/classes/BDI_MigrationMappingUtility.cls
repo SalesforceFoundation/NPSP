@@ -486,6 +486,7 @@ public with sharing class BDI_MigrationMappingUtility {
             this.dataImportObjectName = helpTextMapping.dataImportObjectName;
             this.targetFieldAPIName = helpTextMapping.targetFieldAPIName;
             this.targetObjectAPIName = helpTextMapping.targetObjectAPIName;
+            this.isRequired = helpTextMapping.isRequired;
         }
 
         public DataImportFieldMapping(
@@ -500,7 +501,7 @@ public with sharing class BDI_MigrationMappingUtility {
             this.dataImportObjectName = sourceFieldMapping.Target_Object_Mapping__r.DeveloperName;
             this.targetObjectAPIName = sourceFieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
             this.recordName = sourceFieldMapping.DeveloperName;
-            this.isRequired = 'No';
+            this.isRequired = sourceFieldMapping.Required__c;
             this.isDeleted = false;
         }
 
@@ -649,6 +650,7 @@ public with sharing class BDI_MigrationMappingUtility {
         private Boolean isFieldNameUsable = false;
         private Boolean isObjectNameUsable = false;
         private Boolean isObjectAPINameUsable = false;
+        private String isRequired = '';
         public String dataImportObjectName;
         public String targetObjectAPIName;
         public String targetFieldAPIName;
@@ -662,6 +664,7 @@ public with sharing class BDI_MigrationMappingUtility {
             this.dataImportFieldName = dfr.Label;
             this.dataImportFieldAPIName = dfr.Name;
             this.helpText = dfr.getInlineHelpText();
+            this.isRequired = dfr.isNillable() ? 'No' : 'Yes';
 
             if (this.helpText != null) {
                 List<String> parts = helpText.split('\\.', 2);
