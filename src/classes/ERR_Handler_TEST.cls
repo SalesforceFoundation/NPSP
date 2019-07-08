@@ -285,6 +285,23 @@ private class ERR_Handler_TEST {
             System.assertEquals (sr.isSuccess(), ERR_Handler.isDmlResultSuccess(sr), 'isSuccess() and isDmlResultSuccess should alwaysd agrree');
         }
 
+        Database.DeleteResult[] delResults = Database.delete (accs, false);
+
+        System.assertEquals (1, delResults.size(), '# of accounts deleted' );
+
+        for (Database.DeleteResult dr : delResults) {
+            System.assertEquals (dr.isSuccess(), ERR_Handler.isDmlResultSuccess(dr), 'isSuccess() and isDmlResultSuccess should alwaysd agrree');
+        }
+
+        Database.UndeleteResult[] undelResults = Database.undelete (accs, false);
+
+        System.assertEquals (1, undelResults.size(), '# of accounts undeleted' );
+
+        for (Database.UndeleteResult udr : undelResults) {
+            System.assertEquals (udr.isSuccess(), ERR_Handler.isDmlResultSuccess(udr), 'isSuccess() and isDmlResultSuccess should alwaysd agrree');
+        }
+
+
     }
 
     // Helpers

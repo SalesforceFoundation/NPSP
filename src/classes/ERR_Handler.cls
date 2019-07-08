@@ -55,7 +55,13 @@ public class ERR_Handler {
         public List<Error__c> errorRecords = new List<Error__c>();
     }
 
+    /*******************************************************************************************************
+    * @description Inner class that groups the result of processing the result of multiple DML operations performed
+    * using the Database class, as well as manages Errors by Record Id (Salesforce Id of the record most directly
+    * associated with the operation).
+    */
     public class RecordErrors {
+
         private Map<String, Error__c> existingErrorsByRecordId = new Map<String, Error__c>();
 
         private String context;
@@ -63,15 +69,34 @@ public class ERR_Handler {
         private Map<String, Error__c> insRecordErrors = new Map<String, Error__c>();
         private Map<String, Error__c> updRecordErrors = new Map<String, Error__c>();
 
+        /*******************************************************************************************************
+        * @description Constructor for the RecordErrors class.  It should include a context that represents the
+        * process these Record Errors should be associated with.
+        * @param context The process or batch to be associated with any errors processed via this instance
+        *                of RecordErrors
+        */
         public RecordErrors (String context) {
             this.context = context;
         }
 
+        /*******************************************************************************************************
+        * @description Allows a RecordErrors instance to reference "existing" errors previously set for this
+        * process.
+        * @param existingErrorsByRecordId A Map of Existing Error records by Record Id
+        * @return A reference to the RecordErrors Object so it can be part of an construct and configure statement
+        */
         public RecordErrors withExistingErrors(Map<String, Error__c> existingErrorsByRecordId) {
             this.existingErrorsByRecordId = existingErrorsByRecordId;
             return this;
         }
 
+        /*******************************************************************************************************
+        * @description Queries the Errors object using the Context Type configured for this RecordErrors instance,
+        * and the list of sObjects passed in to populate a map of existing errors by "Record Id", which are kept
+        * in an internal map and used when other errors are added to determine if it is an update or an insert
+        * operation.
+        * @param sObjects the list of sObjects to determine if errors are present for
+        */
         public void retrieveExistingErrorsFor (List<SObject> sObjects) {
             Set<String> ids = new Set<String>();
 
@@ -94,22 +119,47 @@ public class ERR_Handler {
                                     ];
 
             for (Error__c error : errors) {
-                existingErrorsByRecordId.put(error.Record_Id__c, error);
+                this.existingErrorsByRecordId.put(error.Record_Id__c, error);
             }
         }
 
-        public Boolean isNewErrorsPresent() {
-            return (!insRecordErrors.isEmpty() || !updRecordErrors.isEmpty());
+        /*******************************************************************************************************
+        * @description Indicates whether any new are errors are present to be committed to the Database
+        * @return Boolean true if there are new errors present to be inserted/updated.
+        */
+          public Boolean isNewErrorsPresent() {
+            return (!this.insRecordErrors.isEmpty() || !this.updRecordErrors.isEmpty());
         }
 
-        private List<Error__c> getErrorsForInsert() {
+        /*******************************************************************************************************
+        * @description Returns a list of Errors for records to be inserted that did not previously have Errors
+        * for that Record and Process.
+        * @return List of Errors to be inserted
+        */
+        @testVisible private List<Error__c> getErrorsForInsert() {
             return this.insRecordErrors.values();
         }
 
-        private List<Error__c> getErrorsForUpdate() {
+
+        /*******************************************************************************************************
+        * @description Returns a list of Errors for records to be updated because they was a previous Error record
+        * present for that Record Id and process
+        * @return List of Errors to be updated
+        */
+        @testVisible private List<Error__c> getErrorsForUpdate() {
             return this.updRecordErrors.values();
         }
 
+        /*******************************************************************************************************
+        * @description Checks the maps in a hierarchy to find the Error record that should be used when adding a
+        * new error.  This is to allow Errors (sometimes multiple errors for a single record) to be added without
+        * requiring the process to manage all the nuances required.  Basically, if the record is in our updated
+        * records map, we will use that first.  If not, we will check the existing Errors next.  Finally we will
+        * check for newly inserted error records.  Once an Error has been added or updated, it will ignore the
+        * record in the existing errors map.
+        * @param recordId Id of the Salesforce Record to get from the maps hierarchy
+        * @return Error__c record, if found in any of the maps
+        */
         @testVisible private Error__c get(String recordId) {
             if (updRecordErrors.containsKey(recordId)) {
                 return updRecordErrors.get(recordId);
@@ -122,6 +172,12 @@ public class ERR_Handler {
             }
         }
 
+        /*******************************************************************************************************
+        * @description Adds/or replaces an error in either the insert or update error map.  If the Error record
+        * has a Salesforce Id, it will put it in the update map.  Otherwise, it will put it in the insert map.
+        * @param recordId The Record Id of the Salesforce record associated with the Error
+        * @param Error__c The error record
+        */
         @testVisible private void put(String recordId, Error__c error) {
             if (error.Id != null) {
                 updRecordErrors.put (recordId, error);
@@ -130,17 +186,24 @@ public class ERR_Handler {
             }
         }
 
-        public void addError(String soId, Object dmlResult, SObject sObj) {
+        /*******************************************************************************************************
+        * @description Adds a single Error by Record Id to the appropriate insert or update map, if an error
+        * occurred (isSuccess() of the dmlResult != true).
+        * @param recordId The Record Id of the Salesforce record associated with the Error
+        * @param dmlResult The result of the DML Operation
+        * @param sObj The record the error is associated with
+        */
+        public void addError(String recordId, Object dmlResult, SObject sObj) {
             if (!isDmlResultSuccess(dmlResult)) {
                 // Checks to see if this in already in the Record Errors List
-                Error__c err = this.get(soId);
+                Error__c err = this.get(recordId);
 
                 if (err == null) {
                     // Create Error record
                     err = createRecordError(
                         dmlResult,
                         (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
-                        soId,
+                        recordId,
                         context
                     );
                 } else {
@@ -152,10 +215,19 @@ public class ERR_Handler {
                 }
 
                 // Put into inserts or updates list, depending on requirements
-                this.put(soId, err);
+                this.put(recordId, err);
             }
         }
 
+        /*******************************************************************************************************
+        * @description Adds errors by Record Ids to the appropriate insert or update map, if an error
+        * occurred (isSuccess() of the dmlResult != true).  The three lists are ordinal, and should be the same
+        * length.  The information provided in each parameter will be associated together by it's position in
+        * the list.
+        * @param dmlResults The list of result of the DML Operation
+        * @param errorIdForSObject The List of Record Ids that match each dmlResult, in terms of errors
+        * @param sObjects The list of records any errors are associated with
+        */
         public void addErrors(List<Object> dmlResults, List<Id> errorIdForSObject, List<SObject> sObjects) {
             if (dmlResults != null && !dmlResults.isEmpty()) {
                 for(Integer i=0; i < dmlResults.size(); i++) {
@@ -164,9 +236,15 @@ public class ERR_Handler {
             }
         }
 
-        public void addError(String soId, String errorMessage, SObject sObj) {
+       /*******************************************************************************************************
+        * @description Adds a single Error by Record Id to the appropriate insert or update map.
+        * @param recordId The Record Id of the Salesforce record associated with the Error
+        * @param errorMessage The erorr to add
+        * @param sObj The record the error is associated with
+        */
+          public void addError(String recordId, String errorMessage, SObject sObj) {
             // Checks to see if this in already in the Record Errors List
-            Error__c err = this.get(soId);
+            Error__c err = this.get(recordId);
 
             if (err == null) {
                 // Create Error record
@@ -174,7 +252,7 @@ public class ERR_Handler {
                     errorMessage,
                     STATUS_CODE_OTHER_VAL,
                     (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
-                    soId,
+                    recordId,
                     context
                 );
             } else {
@@ -187,9 +265,15 @@ public class ERR_Handler {
             }
 
             // Put into inserts or updates list, depending on requirements
-            this.put(soId, err);
+            this.put(recordId, err);
         }
 
+        /*******************************************************************************************************
+        * @description Adds errors by Record Ids to the appropriate insert or update map.  The two parameters
+        * are keyed by the Record Id associated with teh error
+        * @param errorMessagesByRecordId Error Messages to add, keyed by Record Id
+        * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the Error
+        */
         public void addErrors(Map<String, String> errorMessagesByRecordId, Map<String, SObject> sObjects) {
             if (errorMessagesByRecordId != null && !errorMessagesByRecordId.isEmpty()) {
                 for(String soId :errorMessagesByRecordId.keySet()) {
@@ -198,6 +282,12 @@ public class ERR_Handler {
             }
         }
 
+        /*******************************************************************************************************
+        * @description Executes DML for any pending inserts and updates.  Then, it updates the Existing Errors Map
+        * using the inserted and updated data
+        * @param errorMessagesByRecordId Error Messages to add, keyed by Record Id
+        * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the Error
+        */
         public void processErrors() {
             List<Error__c> errsForIns = getErrorsForInsert();
             if (errsForIns != null && !errsForIns.isEmpty()) {
@@ -220,7 +310,12 @@ public class ERR_Handler {
             }
         }
 
-        private void refreshExistingErrorsMap(List<Error__c> errs) {
+        /*******************************************************************************************************
+        * @description Takes a list of Errors, and updates the existing Errors map using the errors Record Id
+        * as a key
+        * @param errs List of Errors to be processed into the Existing Errors Map
+        */
+        @testVisible private void refreshExistingErrorsMap(List<Error__c> errs) {
             for (Error__c err : errs) {
                 this.existingErrorsByRecordId.put (err.Record_Id__c, err);
             }
