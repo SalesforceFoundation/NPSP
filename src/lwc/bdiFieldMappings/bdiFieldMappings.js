@@ -28,16 +28,18 @@ const columns = [
 ];
 
 export default class bdiFieldMappings extends LightningElement {
+
+    @api objectMapping;
+    @api diFieldDescribes;
+    @api targetObjectFieldDescribes;
+
     @track displayFieldMappings = false;
     @track isLoading = true;
     @track columns = columns;
-    @api objectMapping;
     @track fieldMappings;
-    @track deploymentTimer;
-    @api deploymentTimeout = 10000;
 
-    @api diFieldDescribes;
-    @api targetObjectFieldDescribes;
+    deploymentTimer;
+    deploymentTimeout = 10000;
 
     @api
     get noFieldMappings() {
@@ -142,23 +144,18 @@ export default class bdiFieldMappings extends LightningElement {
     * @param {object} platformEvent: Object containing the platform event payload
     */
     handleDeploymentResponse(platformEvent) {
-        console.log('handleDeploymentResponse()');
         clearTimeout(this.deploymentTimer);
         fireEvent(this.pageRef, 'refresh', {});
         fireEvent(this.pageRef, 'closeModal', {});
 
-        const status =
-            platformEvent.response.data.payload.Status__c || platformEvent.response.data.payload.npsp__Status__c;
-        const deploymentId =
-            platformEvent.response.data.payload.DeploymentId__c || platformEvent.response.data.payload.npsp__DeploymentId__c;
-        console.log('Creating toast event');
-        const evt = new ShowToastEvent({
-            title: 'Deployment completed with Status: ' + status,
-            message: 'Deployment Id: ' + deploymentId,
-            variant: 'success',
-        });
-        this.dispatchEvent(evt);
-        console.log('Toast event dispatched');
+        const payload = platformEvent.response.data.payload;
+        const status = payload.Status__c || payload.npsp__Status__c;
+        const deploymentId = payload.DeploymentId__c || payload.npsp__DeploymentId__c;
+
+        this.showToast(
+            'Deployment completed with Status: ' + status,
+            'Deployment Id: ' + deploymentId,
+            'success');
     }
 
     /*******************************************************************************
@@ -196,7 +193,6 @@ export default class bdiFieldMappings extends LightningElement {
     * a list of field mappings by their parent object mapping name
     */
     handleFieldMappings() {
-        //this.logBold('bdiFieldMappings | handleFieldMappings()');
         getFieldMappingsByObjectAndFieldSetNames({
                 objectName: this.objectMapping.DeveloperName})
             .then((data) => {
@@ -223,7 +219,6 @@ export default class bdiFieldMappings extends LightningElement {
     * @param event: Event containing row details of the action
     */
     handleRowAction(event) {
-        //this.logBold('bdiFieldMappings | handleRowAction()');
         const actionName = event.detail.action.name;
         const row = event.detail.row;
 
@@ -232,14 +227,14 @@ export default class bdiFieldMappings extends LightningElement {
             case 'delete':
                 this.isLoading = true;
                 row.xxx_Is_Deleted_xxx = true;
-                let clonedRow = JSON.stringify(row);
 
-                createDataImportFieldMapping({fieldMappingString: clonedRow})
+                createDataImportFieldMapping({fieldMappingString: JSON.stringify(row)})
                     .then((deploymentId) => {
                         this.handleDeleteDeploymentId(deploymentId);
                     })
                     .catch((error) => {
                         console.log(error);
+                        // TODO: Need to clean up the way these errors are handled
                         if (error && error.body) {
                             this.showToast(
                                 'Error',
@@ -264,7 +259,6 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     handleDeleteDeploymentId(deploymentId) {
-        //tell our parent element that we have an Id to monitor
         const deploymentEvent = new CustomEvent('deployment', {
             bubbles: true,
             composed: true,
