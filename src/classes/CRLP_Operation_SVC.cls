@@ -154,39 +154,52 @@ public class CRLP_Operation_SVC {
      * @return Amount (converted to the currency of the summary record)
      */
     private static Decimal getAmountValue(CRLP_Rollup rollup, Opportunity oppSObject, SObject amtSObject, Date dateValue) {
-        Decimal amountValue = null;
+        Decimal amount = null;
         String amtField = rollup.amountFieldName;
 
         // Hardcoding this performance tweak similar to the Opportunity.CloseDate field above
         if (rollup.AmountObject == oppObjectName && amtField == 'Amount') {
-            amountValue = oppSObject.Amount;
-        }
-        if (amountValue == null && amtField != null && amtSObject.get(amtField) != null) {
-            amountValue = (Decimal) amtSObject.get(amtField);
+            amount = oppSObject.Amount;
         }
 
-        // If multi currency is enabled in the organization, get the "From" CurrencyCode to use for conversion
-        String fromCurrCode = UserInfo.getDefaultCurrency(); // default just in case there's an issue getting the detail record currency
-        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+        if (amount == null && amtField != null) {
             try {
-                // Try to get the CurrencyIsoCode
-                Object currObj = amtSObject.get('CurrencyIsoCode');
-                if (currObj != null) {
-                    fromCurrCode = (String)currObj;
-                }
-            } catch (Exception ex) { }
-        }
-
-        // If the amount is not null or zero, then convert to the Account currency as required
-        if (amountValue != null && amountValue != 0) {
-            // If multi currency is enabled in the organization, convert the Amount value to the
-            // summary objects currency.
-            if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-                amountValue = UTIL_CurrencyConversion.convertAmount(amountValue, dateValue, fromCurrCode, rollup.currCode);
+                amount = (Decimal) amtSObject.get(amtField);
+            } catch (Exception e) {
+                amount = null;
             }
         }
 
-        return amountValue;
+        return convertAmountToCurrency(amount, rollup, amtSObject, dateValue);
+    }
+
+    /**
+     * @description Convert amount to correct currency if the org is MultiCurrencyOrganization
+     * @param amount
+     * @param rollup
+     * @param amtSObject
+     * @param dateValue
+     */
+    private static Decimal convertAmountToCurrency(Decimal amount, CRLP_Rollup rollup, SObject amtSObject, Date dateValue) {
+
+        // If the amount is not null or zero, then convert to the Account currency as required
+        if (amount == null || amount == 0 || !UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            return amount;
+        }
+
+        // If multi currency is enabled in the organization, get the "From" CurrencyCode to use for conversion
+        // default just in case there's an issue getting the detail record currency
+        String fromCurrency = UserInfo.getDefaultCurrency(); 
+
+        try {
+            Object currencyIsoCode = amtSObject.get('CurrencyIsoCode');
+            if (currencyIsoCode != null) {
+                fromCurrency = (String) currencyIsoCode;
+            }
+        } catch (Exception ex) { }
+
+        // Convert the Amount value to the summary objects currency.
+        return UTIL_CurrencyConversion.convertAmount(amount, dateValue, fromCurrency, rollup.currCode);
     }
 
     /**
