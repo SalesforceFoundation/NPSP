@@ -38,6 +38,8 @@
 */
 public class ERR_Handler {
 
+    private static final String STATUS_CODE_OTHER_VAL = 'Other';
+
     /*******************************************************************************************************
     * @description Inner class that groups the result of processing the result of multiple DML operations performed
     *              using the Database class.
@@ -53,6 +55,178 @@ public class ERR_Handler {
         public List<Error__c> errorRecords = new List<Error__c>();
     }
 
+    public class RecordErrors {
+        private Map<String, Error__c> existingErrorsByRecordId = new Map<String, Error__c>();
+
+        private String context;
+
+        private Map<String, Error__c> insRecordErrors = new Map<String, Error__c>();
+        private Map<String, Error__c> updRecordErrors = new Map<String, Error__c>();
+
+        public RecordErrors (String context) {
+            this.context = context;
+        }
+
+        public RecordErrors withExistingErrors(Map<String, Error__c> existingErrorsByRecordId) {
+            this.existingErrorsByRecordId = existingErrorsByRecordId;
+            return this;
+        }
+
+        public void retrieveExistingErrorsFor (List<SObject> sObjects) {
+            Set<String> ids = new Set<String>();
+
+            for (SObject so : sObjects) {
+                ids.add((String)so.Id);
+            }
+
+            List<Error__c> errors = [Select     Id,
+                                                Context_Type__c,
+                                                Datetime__c,
+                                                Error_Type__c,
+                                                Full_Message__c,
+                                                Object_Type__c,
+                                                Record_Id__c,
+                                                Record_URL__c,
+                                                Retry_Pending__c
+                                    from Error__c
+                                    where      Record_Id__c in :ids and
+                                                Context_Type__c = :context
+                                    ];
+
+            for (Error__c error : errors) {
+                existingErrorsByRecordId.put(error.Record_Id__c, error);
+            }
+        }
+
+        public Boolean isNewErrorsPresent() {
+            return (!insRecordErrors.isEmpty() || !updRecordErrors.isEmpty());
+        }
+
+        private List<Error__c> getErrorsForInsert() {
+            return this.insRecordErrors.values();
+        }
+
+        private List<Error__c> getErrorsForUpdate() {
+            return this.updRecordErrors.values();
+        }
+
+        @testVisible private Error__c get(String recordId) {
+            if (updRecordErrors.containsKey(recordId)) {
+                return updRecordErrors.get(recordId);
+            } else if (existingErrorsByRecordId.containsKey(recordId)) {
+                return existingErrorsByRecordId.get(recordId);
+            } else if (insRecordErrors.containsKey(recordId)) {
+                return insRecordErrors.get(recordId);
+            } else {
+                return null;
+            }
+        }
+
+        @testVisible private void put(String recordId, Error__c error) {
+            if (error.Id != null) {
+                updRecordErrors.put (recordId, error);
+            } else {
+                insRecordErrors.put (recordId, error);
+            }
+        }
+
+        public void addError(String soId, Object dmlResult, SObject sObj) {
+            if (!isDmlResultSuccess(dmlResult)) {
+                // Checks to see if this in already in the Record Errors List
+                Error__c err = this.get(soId);
+
+                if (err == null) {
+                    // Create Error record
+                    err = createRecordError(
+                        dmlResult,
+                        (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
+                        soId,
+                        context
+                    );
+                } else {
+                    // Existing Error associated with record exists, update.
+                    err = updateRecordError(
+                        err,
+                        dmlResult
+                    );
+                }
+
+                // Put into inserts or updates list, depending on requirements
+                this.put(soId, err);
+            }
+        }
+
+        public void addErrors(List<Object> dmlResults, List<Id> errorIdForSObject, List<SObject> sObjects) {
+            if (dmlResults != null && !dmlResults.isEmpty()) {
+                for(Integer i=0; i < dmlResults.size(); i++) {
+                    addError(errorIdForSObject[i], dmlResults[i], sObjects[i]);
+                }
+            }
+        }
+
+        public void addError(String soId, String errorMessage, SObject sObj) {
+            // Checks to see if this in already in the Record Errors List
+            Error__c err = this.get(soId);
+
+            if (err == null) {
+                // Create Error record
+                err = createRecordError(
+                    errorMessage,
+                    STATUS_CODE_OTHER_VAL,
+                    (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
+                    soId,
+                    context
+                );
+            } else {
+                // Existing Error associated with record exists, update.
+                err = updateRecordError(
+                    err,
+                    errorMessage,
+                    STATUS_CODE_OTHER_VAL
+                );
+            }
+
+            // Put into inserts or updates list, depending on requirements
+            this.put(soId, err);
+        }
+
+        public void addErrors(Map<String, String> errorMessagesByRecordId, Map<String, SObject> sObjects) {
+            if (errorMessagesByRecordId != null && !errorMessagesByRecordId.isEmpty()) {
+                for(String soId :errorMessagesByRecordId.keySet()) {
+                    addError(soId, errorMessagesByRecordId.get(soId), sObjects.get(soId));
+                }
+            }
+        }
+
+        public void processErrors() {
+            List<Error__c> errsForIns = getErrorsForInsert();
+            if (errsForIns != null && !errsForIns.isEmpty()) {
+                ERR_Handler.processErrors(errsForIns, context, true);
+
+                // Refresh existing Errors Map
+                refreshExistingErrorsMap(errsForIns);
+
+                insRecordErrors.clear();
+            }
+
+            List<Error__c> errsForUpd = getErrorsForUpdate();
+            if (errsForUpd != null && !errsForUpd.isEmpty()) {
+                ERR_Handler.processErrors(errsForUpd, context, true);
+
+                // Refresh existing Errors Map
+                refreshExistingErrorsMap(errsForUpd);
+
+                updRecordErrors.clear();
+            }
+        }
+
+        private void refreshExistingErrorsMap(List<Error__c> errs) {
+            for (Error__c err : errs) {
+                this.existingErrorsByRecordId.put (err.Record_Id__c, err);
+            }
+        }
+
+    }
 
     /*******************************************************************************************************
     * @description Processes the result of multiple DML operations performed using the Database class, to determine
@@ -112,16 +286,7 @@ public class ERR_Handler {
             return errors;
         }
         for (Integer i=0; i<dmlResults.size(); i++) {
-            Boolean isSuccess = true;
-            if (dmlResults[i] instanceof Database.SaveResult) {
-                isSuccess = ((Database.SaveResult)dmlResults[i]).isSuccess();
-            } else if (dmlResults[i] instanceof Database.DeleteResult) {
-                isSuccess = ((Database.DeleteResult)dmlResults[i]).isSuccess();
-            } else if (dmlResults[i] instanceof Database.UndeleteResult) {
-                isSuccess = ((Database.UndeleteResult)dmlResults[i]).isSuccess();
-            }
-
-            if (!isSuccess) {
+            if (!isDmlResultSuccess(dmlResults[i])) {
                 errors.errorsExist = true;
 
                 //Creating error object
@@ -196,10 +361,26 @@ public class ERR_Handler {
 
     /*******************************************************************************************************
     * @description Checks if a given DML operation has succeeded depending on the type of DML result.
-    * @param dmlResult The results of a DML batch operation performed using the Database class.
+    * @param Boolean true, if no errors are present
     */
     public static boolean isDmlSuccess(Object dmlResult) {
         return getDmlResultErrors(dmlResult).size() == 0;
+    }
+
+    /*******************************************************************************************************
+    * @description Checks if a given DML operation has succeeded depending on the type of DML result.  Use the
+    * isSuccess() method of the result.
+    * @param Boolean true if isSuccess() was true
+    */
+    @testVisible private static boolean isDmlResultSuccess(Object dmlResult) {
+        if (dmlResult instanceof Database.SaveResult) {
+            return ((Database.SaveResult)dmlResult).isSuccess();
+        } else if (dmlResult instanceof Database.DeleteResult) {
+            return ((Database.DeleteResult)dmlResult).isSuccess();
+        } else if (dmlResult instanceof Database.UndeleteResult) {
+            return ((Database.UndeleteResult)dmlResult).isSuccess();
+        }
+        return true;
     }
 
     /*******************************************************************************************************
@@ -328,7 +509,7 @@ public class ERR_Handler {
                 UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
 
                 if (!errsToInsert.isEmpty()) { // New Errprs
-                    Database.insert(errorRecords, false);
+                    Database.insert(errsToInsert, false);
                 }
                 if (!errsToUpdate.isEmpty()) { // Updated Errors
                     Database.update(errsToUpdate.values(), false);
@@ -405,6 +586,144 @@ public class ERR_Handler {
     }
 
     /*******************************************************************************************************
+    * @description Creates a error record associated with a specific context and record from the result of a DML
+    * operation performed through the Database class.
+    * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of
+    *               the different DML operations that the Database class can perform don't have a common parent.
+    * @param objectType The name of the type of object that caused the error.
+    * @param objId The id of the record that caused the error.
+    * @param context The context the exception was raised on.
+    * @return The error record.
+    */
+    private static Error__c createRecordError(Object result, String objectType, Id objId, String context) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Object_Type__c = objectType;
+        error.Context_Type__c = context;
+        error.Retry_Pending__c = true;
+
+        Database.Error dmlError;
+
+        if (result instanceof Database.SaveResult) {
+            Database.SaveResult saveResult = (Database.SaveResult) result;
+            dmlError = saveResult.getErrors()[0];
+            error.Record_Id__c = (saveResult.getId() != null) ? saveResult.getId() : objId;
+        } else if (result instanceof Database.DeleteResult) {
+            Database.DeleteResult deleteResult = (Database.DeleteResult) result;
+            dmlError = deleteResult.getErrors()[0];
+            error.Record_Id__c = (deleteResult.getId() != null) ? deleteResult.getId() : objId;
+        } else if (result instanceof Database.UndeleteResult) {
+            Database.UndeleteResult undeleteResult = (Database.UndeleteResult) result;
+            dmlError = undeleteResult.getErrors()[0];
+            error.Record_Id__c = (undeleteResult.getId() != null) ? undeleteResult.getId() : objId;
+        }
+
+        error.Record_URL__c = getRecordURL(error.Record_Id__c);
+        error.Error_Type__c = getStatusCode(dmlError.getStatusCode());
+        error.Full_Message__c = updateFullMessage(error.Datetime__c, '', dmlError.getMessage());
+
+        UTIL_Debug.debug('**** createRecordError() returns error: ' + error);
+        return error;
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a error record associated with a specific context and record with the message
+    * passed to the method.
+    * @param message The full message of all the errors for a given job and compiled IDs.
+    * @param statusCode The code associated with the error
+    * @param objectType The name of the type of object that caused the error.
+    * @param objId The id of the record that caused the error.
+    * @param context The context the exception was raised on.
+    * @return The error record.
+    */
+    private static Error__c createRecordError(String message, String statusCode, String objectType, Id objId, String context) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Object_Type__c = objectType;
+        error.Context_Type__c = context;
+        error.Retry_Pending__c = true;
+
+        error.Record_Id__c = objId;
+        error.Record_URL__c = getRecordURL(error.Record_Id__c);
+        error.Error_Type__c = statusCode;
+        error.Full_Message__c = updateFullMessage(error.Datetime__c, '', message);
+        return error;
+    }
+
+    /*******************************************************************************************************
+    * @description Updates an existing error record associated with a specific context and record from the result of a DML
+    * operation performed through the Database class.  Full_Message__c will be prepended with the latest message and timestamp, and
+    * truncated to 5K.  The Error Type will be updated based on the StatusCode of the Result.  The Datetime field will be updated
+    * to the current timestamp.  Retry_Pending__c will be set to true, indicated it should try the record again, if possible.
+    * @param error The error record to be updated.
+    * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of
+    *               the different DML operations that the Database class can perform don't have a common parent.
+    * @return The error record.
+    */
+    private static Error__c updateRecordError(Error__c error, Object result) {
+
+        error.Datetime__c = System.now();
+        error.Retry_Pending__c = true;
+
+        Database.Error dmlError;
+
+        if (result instanceof Database.SaveResult) {
+            Database.SaveResult saveResult = (Database.SaveResult) result;
+            dmlError = saveResult.getErrors()[0];
+        } else if (result instanceof Database.DeleteResult) {
+            Database.DeleteResult deleteResult = (Database.DeleteResult) result;
+            dmlError = deleteResult.getErrors()[0];
+        } else if (result instanceof Database.UndeleteResult) {
+            Database.UndeleteResult undeleteResult = (Database.UndeleteResult) result;
+            dmlError = undeleteResult.getErrors()[0];
+        }
+
+        error.Error_Type__c = getStatusCode(dmlError.getStatusCode());
+        error.Full_Message__c = updateFullMessage(error.Datetime__c, '', dmlError.getMessage());
+
+        return error;
+    }
+
+    /*******************************************************************************************************
+    * @description Updates an existing error record associated with a specific context and record from the result of a DML
+    * operation performed through the Database class.  Full_Message__c will be prepended with the latest message and timestamp, and
+    * truncated to 5K.  The Error Type will be updated based on the StatusCode of the Result.  The Datetime field will be updated
+    * to the current timestamp.  Retry_Pending__c will be set to true, indicated it should try the record again, if possible.
+    * @param error The error record to be updated.
+    * @param message The full message of all the errors for a given job and compiled IDs.
+    * @param statusCode The code associated with the error
+    * @return The error record.
+    */
+    private static Error__c updateRecordError (Error__c error, String message, String statusCode) {
+        error.Datetime__c = System.now();
+        error.Retry_Pending__c = true;
+        error.Error_Type__c = statusCode;
+        error.Full_Message__c = updateFullMessage(error.Datetime__c, '', message);
+
+        return error;
+    }
+
+    /*******************************************************************************************************
+    * @description For existing error records, it will concatenate the new message, and any existing text with a separator in between.
+    * @param ts The timestamp the associated
+    * @param context The context the exception was raised on.
+    * @param objectType The type of all records in the job, only to be passed in if they all match.
+    * @return The error record.
+    */
+    private static String updateFullMessage(Datetime ts, String existingMessage, String message) {
+
+        String updatedMessage = ts.format() + ':\r\n' + message;
+
+        if (String.isNotBlank(existingMessage)) {
+            updatedMessage += '\r\n' + '========================================\r\n' + existingMessage;
+            // Limit to 5K worth of Message History
+            updatedMessage = updatedMessage.abbreviate(0, 5120);
+        }
+
+        return updatedMessage;
+    }
+
+    /*******************************************************************************************************
     * @description Creates a single error record from a Database class DML operation in a batch, future or queued job.
     * @param message The full message of all the errors for a given job and compiled IDs.
     * @param context The context the exception was raised on.
@@ -460,6 +779,20 @@ public class ERR_Handler {
     }
 
     /*******************************************************************************************************
+    * @description Returns the URL of a record, if available.
+    * @param recordId The id of the record associated with the error
+    * @return The URL of the record. Warning: it may not necessarily be valid.
+    */
+    private static String getRecordURL(String recordId) {
+        String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/' + recordId;
+
+        if (recordURL.startsWith('http:'))
+            recordURL = recordURL.replaceFirst('http:', 'https:');
+
+        return recordURL;
+    }
+
+    /*******************************************************************************************************
     * @description Returns the ID of the object the error is about if available.
     * @param error. The Error object.
     * @return ID the object's Id if available, otherwise null.
@@ -483,6 +816,6 @@ public class ERR_Handler {
         else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
             return 'Custom Validation Rule Failed';
         else
-            return 'Other';
+            return STATUS_CODE_OTHER_VAL;
     }
 }

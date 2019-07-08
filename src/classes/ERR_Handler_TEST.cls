@@ -271,6 +271,22 @@ private class ERR_Handler_TEST {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Test isDMLResultSuccess()
+    */
+    @IsTest
+    private static void isDMLResultSuccessCorrect() {
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        Database.SaveResult[] saveResults = Database.insert (accs, false);
+
+        System.assertEquals (1, saveResults.size(), '# of accounts inserted' );
+
+        for (Database.SaveResult sr : saveResults) {
+            System.assertEquals (sr.isSuccess(), ERR_Handler.isDmlResultSuccess(sr), 'isSuccess() and isDmlResultSuccess should alwaysd agrree');
+        }
+
+    }
+
     // Helpers
     ////////////
 
