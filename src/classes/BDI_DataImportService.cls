@@ -552,7 +552,7 @@ global with sharing class BDI_DataImportService {
             Set<String> populatedDataImportFieldSet = new Set<String>();
 
             // first set a clean state for each DI
-            for (DataImport__c dataImport : dataImports) {
+            for (DataImport__c dataImport : listDI) {
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
@@ -568,7 +568,7 @@ global with sharing class BDI_DataImportService {
                 populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
 
-            checkFieldAccess(dataImports);
+            checkFieldAccess(listDI);
 
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
@@ -633,7 +633,7 @@ global with sharing class BDI_DataImportService {
             // update all the di's with errors with the error state.
             // those di's without specific errors will get the exception's error
             List<DataImport__c> dataImportErrors = new List<DataImport__c>();
-            for (DataImport__c dataImport : dataImports) {
+            for (DataImport__c dataImport : listDI) {
                 dataImportErrors.add(new DataImport__c(
                     Id = dataImport.Id,
                     Status__c = statusDIFailed(),
