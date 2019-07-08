@@ -216,7 +216,7 @@ export default class bdiFieldMappings extends LightningElement {
     /*******************************************************************************
     * @description Action handler for datatable row actions (i.e. edit, delete)
     *
-    * @param event: Event containing row details of the action
+    * @param {object} event: Event containing row details of the action
     */
     handleRowAction(event) {
         const actionName = event.detail.action.name;

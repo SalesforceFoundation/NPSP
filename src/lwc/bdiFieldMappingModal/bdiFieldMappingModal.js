@@ -1,4 +1,3 @@
-/* eslint-disable @lwc/lwc/no-async-operation */
 import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoPageRef';
@@ -96,6 +95,11 @@ export default class bdiFieldMappingModal extends LightningElement {
         unregisterAllListeners(this);
     }
 
+    /*******************************************************************************
+    * @description Handles the open modal event from bdiFieldMappings
+    *
+    * @param event: Event containing row details or lack of row details
+    */
     handleOpenModal(event) {
         this.isModalOpen = true;
         this.isLoading = true;
@@ -123,6 +127,12 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.isLoading = false
     }
 
+    /*******************************************************************************
+    * @description Loops through and collects the source field label and target field
+    * labels of existing field mappings for the currently selected object mapping
+    *
+    * @param {array} fieldMappings: List of field mappings from bdiFieldMappings
+    */
     collectMappedDataImportFields(fieldMappings) {
         for (let i = 0; i < fieldMappings.length; i++) {
             let fieldMapping = fieldMappings[i];
@@ -132,6 +142,12 @@ export default class bdiFieldMappingModal extends LightningElement {
         }
     }
 
+    /*******************************************************************************
+    * @description Creates a map of data import field labels by field API name and a
+    * map of data import field API names by field label.
+    *
+    * @param {array} data: List of data import field describes
+    */
     setDataImportFieldDescribes(data) {
         this.sourceFieldLabelOptions = [];
         this.sourceFieldAPINameOptions = [];
@@ -164,6 +180,12 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.diFieldsByAPIName = diFieldsByAPIName;
     }
 
+    /*******************************************************************************
+    * @description Creates a map of target object field labels by field API name and a
+    * map of target object field API names by field label.
+    *
+    * @param {array} data: List of target object field describes
+    */
     setTargetObjectFieldDescribes(data) {
         this.targetFieldLabelOptions = [];
         this.targetFieldAPINameOptions = [];
@@ -220,6 +242,9 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.selectedTargetFieldAPIName = selectedTargetFieldAPIName;
     }
 
+    /*******************************************************************************
+    * @description Clears out all the various "selected" properties
+    */
     clearSelections() {
         this.selectedSourceFieldLabel = undefined;
         this.selectedSourceFieldAPIName = undefined;
@@ -227,78 +252,28 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.selectedTargetFieldAPIName = undefined;
     }
 
+    /*******************************************************************************
+    * @description Handles the close modal event from bdiFieldMappings
+    */
+    handleCloseModal() {
+        this.isModalOpen = false;
+    }
+
+    /*******************************************************************************
+    * @description Handles escape key press and closes the modal
+    */
     escapeFunction(event) {
         if (event.keyCode === 27) {
             this.handleCloseModal();
         }
     }
 
-    showSearch() {
-        this.isSearchOpen = true;
-    }
-
-    hideSearch() {
-        this.isSearchOpen = false;
-        this.areSearchResultsVisible = false;
-    }
-
-    debounceOnSearchKeyChange(event) {
-        // Debouncing this method: Do not update the reactive property as long as this function is
-        // being called within a delay of DELAY. This is to avoid a very large number of Apex method calls.
-        window.clearTimeout(this.delayTimeout);
-        const searchKey = event.target.value;
-        if (searchKey && searchKey.length > 1) {
-            this.delayTimeout = setTimeout(() => {
-                this.handleSearchkeyChange(searchKey);
-            }, DELAY);
-        } else {
-            this.searchResults = undefined;
-        }
-    }
-
-    handleSearchkeyChange(searchKey) {
-        let results = [];
-        if (!this.diKeys) {
-            this.diKeys = Object.keys(this.diFieldsByLabel);
-        }
-
-        for(let i = 0; i < this.diKeys.length; i++) {
-            if (this.diKeys[i].toLowerCase().indexOf(searchKey.toLowerCase()) != -1) {
-                let result = {
-                    id: i,
-                    fieldInfo: this.diFieldsByLabel[this.diKeys[i]]
-                }
-                results.push(result);
-            }
-        }
-        this.searchResults = results;
-        this.areSearchResultsVisible = true;
-    }
-
-    selectSearchResult(event) {
-        let result = {
-            id: event.target.dataset.id,
-            label: event.target.dataset.fieldLabel,
-            value: event.target.dataset.fieldValue
-        }
-
-        let fieldAPIName = result.value;
-        let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
-
-        this.selectedSourceFieldAPIName = fieldAPIName;
-        this.selectedSourceFieldLabel = fieldInfo.label;
-
-        this.searchResults = undefined;
-        this.isSearchOpen = false;
-        this.areSearchResultsVisible = false;
-
-        this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo.displayType);
-    }
-
-    handleCloseModal() {
-        this.isModalOpen = false;
-    }
-
+    /*******************************************************************************
+    * @description Handles the creation or update of a row based on the existence of
+    * the row property. If the row property exists, we only set the source and target
+    * field API name, otherwise we set all the fields. Calls the handleDeploymentId
+    * function on receiving an id back from createDataImportFieldMapping.
+    */
     handleSave() {
         this.isLoading = true;
         let rowDetails;
@@ -340,8 +315,14 @@ export default class bdiFieldMappingModal extends LightningElement {
             });
     }
 
+    /*******************************************************************************
+    * @description Creates and dispatches a CustomEvent 'deployment' letting the
+    * platformEventListener know that we have an id to register and monitor. After
+    * dispatching the CustomEvent, start the deployment timeout on bdiFieldMappings.
+    *
+    * @param {string} deploymentId: Custom Metadata Deployment Id
+    */
     handleDeploymentId(deploymentId) {
-        //tell our parent element that we have an Id to monitor
         const deploymentEvent = new CustomEvent('deployment', {
             bubbles: true,
             composed: true,
@@ -352,6 +333,14 @@ export default class bdiFieldMappingModal extends LightningElement {
         fireEvent(this.pageRef, 'startDeploymentTimeout', { deploymentId: deploymentId });
     }
 
+    /*******************************************************************************
+    * @description Handles the onchange event for the bdiFieldMappingModalComboboxSearch
+    * sourceFieldLabel, sets the value for both sourceFieldLabel and sourceFieldAPIName,
+    * and updates the available target fields based on the selected source field's display
+    * type.
+    *
+    * @param {object} event: Event containing combobox selection details
+    */
     handleSourceFieldLabelChange(event) {
         let fieldAPIName = event.detail.value;
         let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
@@ -362,6 +351,14 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo.displayType);
     }
 
+    /*******************************************************************************
+    * @description Handles the onchange event for the bdiFieldMappingModalComboboxSearch
+    * sourceFieldAPIName, sets the value for both sourceFieldAPIName and sourceFieldLabel,
+    * and updates the available target fields based on the selected source field's display
+    * type.
+    *
+    * @param {object} event: Event containing combobox selection details
+    */
     handleSourceFieldAPINameChange(event) {
         let fieldLabel = event.detail.value;
         let fieldInfo = this.diFieldsByLabel[fieldLabel];
@@ -372,6 +369,11 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo.displayType);
     }
 
+    /*******************************************************************************
+    * @description Filters the available target fields based on display type
+    *
+    * @param {string} displayType: Display Type of the currently selected source field
+    */
     handleAvailableTargetFieldsBySourceFieldDisplayType(displayType) {
         this.selectedTargetFieldAPIName = undefined;
         this.selectedTargetFieldLabel = undefined;
@@ -389,16 +391,39 @@ export default class bdiFieldMappingModal extends LightningElement {
         }
     }
 
+    /*******************************************************************************
+    * @description Handles the onchange event for the bdiFieldMappingModalComboboxSearch
+    * targetFieldLabel, sets the value for both targetFieldLabel and targetFieldAPIName.
+    *
+    * @param {object} event: Event containing combobox selection details
+    */
     handleTargetFieldLabelChange(event) {
         this.selectedTargetFieldAPIName = event.detail.value;
         this.selectedTargetFieldLabel = this.targetObjectFieldsByAPIName[event.detail.value];
     }
 
+    /*******************************************************************************
+    * @description Handles the onchange event for the bdiFieldMappingModalComboboxSearch
+    * targetFieldAPIName, sets the value for both targetFieldAPIName and targetFieldLabel.
+    *
+    * @param {object} event: Event containing combobox selection details
+    */
     handleTargetFieldAPINameChange(event) {
         this.selectedTargetFieldLabel = event.detail.value;
         this.selectedTargetFieldAPIName = this.targetObjectFieldsByLabel[event.detail.value];
     }
 
+    /*******************************************************************************
+    * @description Creates and dispatches a ShowToastEvent
+    *
+    * @param {string} title: Title of the toast, dispalyed as a heading.
+    * @param {string} message: Message of the toast. It can contain placeholders in
+    * the form of {0} ... {N}. The placeholders are replaced with the links from
+    * messageData param
+    * @param {string} mode: Mode of the toast
+    * @param {array} messageData: List of values that replace the {index} placeholders
+    * in the message param
+    */
     showToast(title, message, variant, mode, messageData) {
         const event = new ShowToastEvent({
             title: title,
