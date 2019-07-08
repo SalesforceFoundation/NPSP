@@ -45,6 +45,11 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     @AuraEnabled(cacheable=true)
+    public static String getFieldMappingSetName() {
+        return UTIL_CustomSettings_API.getDataImportSettings().Default_Data_Import_Field_Mapping_Set__c;
+    }
+
+    @AuraEnabled(cacheable=true)
     public static Data_Import_Object_Mapping__mdt[] getObjectMappings(){
         Data_Import_Object_Mapping__mdt[] objMappings = bdiCMT.objMappingsByDevName.values();
         return objMappings;
@@ -69,10 +74,8 @@ public class BDI_ManageAdvancedMappingCtrl {
 
     @AuraEnabled
     public static DataImportFieldMappingWrapper[] getFieldMappingsByObjectAndFieldSetNames(
-        String objectName) {
+        String objectName, String fieldMappingSetname) {
 
-        Data_Import_Settings__c dataImportSettings = Data_Import_Settings__c.getInstance();
-        String fieldSetName = dataImportSettings.Default_Data_Import_Field_Mapping_Set__c;
         DataImportFieldMappingWrapper[] fieldMappingWrappers =
             new List<DataImportFieldMappingWrapper>();
 
@@ -81,7 +84,7 @@ public class BDI_ManageAdvancedMappingCtrl {
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
 
-            if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldSetName &&
+            if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldMappingSetname &&
                 fieldMapping.Is_Deleted__c == false) {
 
                 fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
@@ -98,10 +101,6 @@ public class BDI_ManageAdvancedMappingCtrl {
     // Return the jobId
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
-        System.debug(LoggingLevel.ERROR, 'createDataImportFieldMapping()');
-        System.debug(fieldMappingString);
-        // TODO: Delete later. Used to test error toast in UI
-        //throw new testerException('SOMETHING WENT WRONG');
         fieldMappingString = fieldMappingString.replaceAll('_xxx','__c');
 
         if (NAMESPACE == 'npsp') {
@@ -259,8 +258,6 @@ public class BDI_ManageAdvancedMappingCtrl {
             String sourceFieldAPIName = fieldMapping.Source_Field_API_Name__c;
             String targetFieldAPIName = fieldMapping.Target_Field_API_Name__c;
 
-            System.debug('DataImportFieldMappingWrapper');
-            System.debug('NAMESPACE: ' + NAMESPACE);
             if (NAMESPACE != 'npsp') {
                 dataImport = 'DataImport__c';
                 objectAPIName =

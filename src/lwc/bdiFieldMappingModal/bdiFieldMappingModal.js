@@ -6,7 +6,8 @@ import createDataImportFieldMapping
 
 export default class bdiFieldMappingModal extends LightningElement {
 
-    @api objectMapping
+    @api objectMapping;
+    @api fieldMappingSetName;
     @api isModalOpen;
     @api diFieldDescribes;
     @api targetObjectFieldDescribes;
@@ -68,9 +69,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
         // Register listeners for child searchable combobox components
         registerListener('sourceFieldLabelChange', this.handleSourceFieldLabelChange, this);
-        registerListener('sourceFieldAPINameChange', this.handleSourceFieldAPINameChange, this);
         registerListener('targetFieldLabelChange', this.handleTargetFieldLabelChange, this);
-        registerListener('targetFieldAPINameChange', this.handleTargetFieldAPINameChange, this);
     }
 
     disconnectedCallback() {
@@ -191,6 +190,10 @@ export default class bdiFieldMappingModal extends LightningElement {
 
         this.targetFieldsByAPIName = targetFieldsByAPIName;
         this.targetFieldsByLabelByDisplayType = targetFieldsByLabelByDisplayType;
+
+        if (this.selectedSourceFieldDisplayType) {
+            this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.selectedSourceFieldDisplayType);
+        }
     }
 
     /*******************************************************************************
@@ -240,7 +243,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                 DeveloperName: null,
                 Label: this.selectedSourceFieldLabel,
                 MasterLabel: this.selectedSourceFieldLabel,
-                xxx_Data_Import_Field_Mapping_Set_xxx: 'Migrated_Custom_Field_Mapping_Set',
+                xxx_Data_Import_Field_Mapping_Set_xxx: this.fieldMappingSetName,
                 xxx_Is_Deleted_xxx: false,
                 xxx_Required_xxx: 'No',
                 xxx_Source_Field_API_Name_xxx: this.selectedSourceFieldAPIName,

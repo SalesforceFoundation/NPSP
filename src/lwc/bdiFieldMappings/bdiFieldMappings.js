@@ -1,6 +1,8 @@
 import { LightningElement, track, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
+import getFieldMappingSetName
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingSetName';
 import getFieldMappingsByObjectAndFieldSetNames
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
 import createDataImportFieldMapping
@@ -36,6 +38,7 @@ export default class bdiFieldMappings extends LightningElement {
     @track displayFieldMappings = false;
     @track isLoading = true;
     @track columns = columns;
+    @track fieldMappingSetName;
     @track fieldMappings;
 
     deploymentTimer;
@@ -48,9 +51,7 @@ export default class bdiFieldMappings extends LightningElement {
 
     @api
     refresh() {
-        this.isLoading = true;
-        this.handleFieldMappings();
-        this.getModalData();
+        this.init();
     }
 
     handleNavButton() {
@@ -70,51 +71,43 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Groups up the two calls to get data import field describes and
-    * target object field describes
+    * @description Group up various get data calls to apex
     */
-    getModalData = async() => {
+    init = async() => {
         try {
+            this.isLoading = true;
+
+            // Get all the data import field describes
             if (!this.diFieldDescribes) {
-                this.diFieldDescribes = await this.handleGetDataImportFieldDescribes();
+                this.diFieldDescribes =
+                    await getObjectFieldDescribes({objectName: 'DataImport__c'});
             }
-            this.targetObjectFieldDescribes = await this.handleGetTargetObjectFieldDescribes();
+
+            // Get all the target object field describes based on the currently
+            // selected object mapping
+            let objectAPIName =
+                this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c;
+            this.targetObjectFieldDescribes =
+                await getObjectFieldDescribes({objectName: objectAPIName});
+
+            // Get the field mapping set name from the data import custom settings
+            this.fieldMappingSetName =
+                await getFieldMappingSetName();
+
+            // Get all the field mappings for the currently selected object mapping
+            this.fieldMappings =
+                await getFieldMappingsByObjectAndFieldSetNames({
+                    objectName: this.objectMapping.DeveloperName,
+                    fieldMappingSetname: this.fieldMappingSetName
+                });
+
+            this.isLoading = false;
+
         } catch(error) {
             if (error) {
                 this.showToast('Error', error, 'error', 'sticky');
             }
         }
-    }
-
-    /*******************************************************************************
-    * @description Gets the Data Import object's field describes
-    *
-    * @param {string} objectName: API name of the object we need field describes for
-    *
-    * @return {array} data: List of FieldInfo instances
-    */
-    handleGetDataImportFieldDescribes = async() => {
-        return getObjectFieldDescribes({objectName: 'DataImport__c'})
-            .then((data) => {
-                return data;
-            });
-    }
-
-    /*******************************************************************************
-    * @description Gets the target object's field describes
-    *
-    * @param {string} objectAPIName: API name of the object we need field describes for
-    *
-    * @return {array} data: List of FieldInfo instances
-    */
-    handleGetTargetObjectFieldDescribes = async() => {
-        let objectAPIName =
-            this.objectMapping.Object_API_Name__c || this.objectMapping.npsp__Object_API_Name__c;
-
-        return getObjectFieldDescribes({objectName: objectAPIName})
-            .then((data) => {
-                return data;
-            });
     }
 
     /*******************************************************************************
@@ -173,7 +166,7 @@ export default class bdiFieldMappings extends LightningElement {
     handleShowFieldMappings(event) {
         this.objectMapping = event.objectMapping;
         this.displayFieldMappings = true;
-        this.refresh();
+        this.init();
     }
 
     /*******************************************************************************
@@ -186,31 +179,6 @@ export default class bdiFieldMappings extends LightningElement {
             row: undefined,
             fieldMappings: this.fieldMappings
         });
-    }
-
-    /*******************************************************************************
-    * @description Call apex method 'getFieldMappingsByObjectMappingName' to get
-    * a list of field mappings by their parent object mapping name
-    */
-    handleFieldMappings() {
-        getFieldMappingsByObjectAndFieldSetNames({
-                objectName: this.objectMapping.DeveloperName})
-            .then((data) => {
-                this.fieldMappings = data;
-                this.isLoading = false;
-            })
-            .catch((error) => {
-                this.isLoading = false;
-                console.log(error);
-                if (error && error.body) {
-                    this.showToast(
-                        'Error',
-                        '{0}. {1}. {2}.',
-                        'error',
-                        'sticky',
-                        [error.body.exceptionType, error.body.message, error.body.stackTrace]);
-                }
-            });
     }
 
     /*******************************************************************************
@@ -258,6 +226,13 @@ export default class bdiFieldMappings extends LightningElement {
         }
     }
 
+    /*******************************************************************************
+    * @description Creates and dispatches a CustomEvent 'deployment' for deletion
+    * letting the platformEventListener know that we have an id to register and monitor.
+    * After dispatching the CustomEvent, start the deployment timeout.
+    *
+    * @param {string} deploymentId: Custom Metadata Deployment Id
+    */
     handleDeleteDeploymentId(deploymentId) {
         const deploymentEvent = new CustomEvent('deployment', {
             bubbles: true,
@@ -269,6 +244,17 @@ export default class bdiFieldMappings extends LightningElement {
         this.handleDeploymentTimeout({ deploymentId: deploymentId });
     }
 
+    /*******************************************************************************
+    * @description Creates and dispatches a ShowToastEvent
+    *
+    * @param {string} title: Title of the toast, dispalyed as a heading.
+    * @param {string} message: Message of the toast. It can contain placeholders in
+    * the form of {0} ... {N}. The placeholders are replaced with the links from
+    * messageData param
+    * @param {string} mode: Mode of the toast
+    * @param {array} messageData: List of values that replace the {index} placeholders
+    * in the message param
+    */
     showToast(title, message, variant, mode, messageData) {
         const event = new ShowToastEvent({
             title: title,
