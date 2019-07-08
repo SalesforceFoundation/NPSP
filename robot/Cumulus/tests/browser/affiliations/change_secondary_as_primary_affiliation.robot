@@ -8,6 +8,7 @@ Suite Teardown    Capture Screenshot and Delete Records and Close Browser
 *** Test Cases ***
 
 Create Secondary Affiliation for Contact
+    [tags]  unstable
     &{account} =  API Create Organization Account
     &{contact} =  API Create Contact    Email=skristem@robot.com 
     Store Session Record    Account    &{contact}[AccountId]   
