@@ -47,6 +47,69 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
     private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
 
+    /****************************************************************************************************
+    * @description Map of legacy help text field data import object names to object api names
+    */
+    private final Map<String, String> DI_OBJECT_MAP = new Map<String, String>{
+            'Account1' => 'Account',
+            'Account2' => 'Account',
+            'Address' => UTIL_Namespace.StrTokenNSPrefix('Address__c'),
+            'Contact1' => 'Contact',
+            'Contact2' => 'Contact',
+            'Household' => 'Account',
+            'Opportunity' => 'Opportunity',
+            'Donation' => 'Opportunity',
+            'Payment' => 'npe01__OppPayment__c',
+            'GAU_Allocation_1' => UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),
+            'GAU_Allocation_2' => UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),
+            'Opportunity_Contact_Role_1' => UTIL_Namespace.StrTokenNSPrefix('OpportunityContactRole'),
+            'Opportunity_Contact_Role_2' => UTIL_Namespace.StrTokenNSPrefix('OpportunityContactRole')
+    };
+
+    public Map<String, Map<String, Set<String>>> getTargetObjectsAndFieldsByDataImportField() {
+
+        Map<String, Map<String, Set<String>>> targetObjectsAndFieldsByDataImportField =
+                new Map<String, Map<String, Set<String>>>();
+
+        for (String dataImportObjectName : fieldMappingsByObjMappingDevName.keySet()) { //loop all field mappings by Obj Name
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + dataImportObjectName);
+            //ex: diObjName would be "Account1", "Contact2", etc.
+            String targetSobjectName = DI_OBJECT_MAP.get(dataImportObjectName) != null ? DI_OBJECT_MAP.get(dataImportObjectName) : dataImportObjectName; //if its a DI "obj name" then convert it to the sobject name, otherwise it is probably already an sobject name (like a custom object)
+            System.debug(LoggingLevel.ERROR, '*** variable value targetSobjectName: ' + targetSobjectName);
+            List<Data_Import_Field_Mapping__mdt> fieldMappingsForThisDataImportObject = fieldMappingsByObjMappingDevName.get(dataImportObjectName);
+
+            //Top Level - Source Field
+            for (Data_Import_Field_Mapping__mdt dataImportFieldMapping : fieldMappingsForThisDataImportObject) { //Looping just the field mappings for this target obj
+                String sourceField = dataImportFieldMapping.Source_Field_API_Name__c;
+                String targetField = dataImportFieldMapping.Target_Field_API_Name__c;
+                Map<String, Set<String>> targetFieldsByTargetObjectMap = targetObjectsAndFieldsByDataImportField.get(sourceField);
+
+                //Inner Level - Object
+                if (targetFieldsByTargetObjectMap != null) {
+                    Set<String> targetFieldsForThisObjectSet = targetFieldsByTargetObjectMap.get(targetSobjectName);
+
+                    //Inner Level - Fields Set
+                    if (targetFieldsForThisObjectSet != null) {
+                        targetFieldsByTargetObjectMap.get(targetSobjectName).add(targetField);
+                    } else {
+                        targetFieldsForThisObjectSet = new Set<String>{
+                                targetField
+                        };
+                        targetObjectsAndFieldsByDataImportField.get(sourceField).put(targetSobjectName, targetFieldsForThisObjectSet);
+                    }
+                } else {
+                    targetFieldsByTargetObjectMap = new Map<String, Set<String>>();
+                    Set<String> targetFields = new Set<String>{
+                            targetField
+                    };
+                    targetFieldsByTargetObjectMap.put(targetSobjectName, targetFields);
+                    targetObjectsAndFieldsByDataImportField.put(sourceField, targetFieldsByTargetObjectMap);
+                }
+            }
+        }
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + targetObjectsAndFieldsByDataImportField);
+        return targetObjectsAndFieldsByDataImportField;
+    }
 
     /*******************************************************************************************************
     * @description return singleton instance of the class
