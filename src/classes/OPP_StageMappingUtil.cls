@@ -91,6 +91,14 @@ public with sharing class OPP_StageMappingUtil {
     }
 
     /*******************************************************************************************************
+    * @description Returns the finalized state for use in other methods/classes.
+    * @return String Returns the finalized constant
+    ********************************************************************************************************/
+    public static String getFinalizedState() {
+        return FINALIZED_STATE_VAL;
+    }
+
+    /*******************************************************************************************************
     * @description initializes the Opportunity State Sets, used by other parts of this class, if
     * necessary.
     ********************************************************************************************************/

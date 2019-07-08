@@ -92,9 +92,9 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     *  otherwise returns null
     ********************************************************************************************************/
     public DmlWrapper runForPayments(
-        List<npe01__OppPayment__c> newlist,
-        List<npe01__OppPayment__c> oldlist,
-        TDTM_Runnable.Action triggerAction) {
+            List<npe01__OppPayment__c> newlist,
+            List<npe01__OppPayment__c> oldlist,
+            TDTM_Runnable.Action triggerAction) {
 
         DmlWrapper dmlWrapper = null;
 
@@ -115,14 +115,17 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @return dmlWrapper Returns a dmlWrapper object if there were opportunity records modified.
     ********************************************************************************************************/
     public DmlWrapper runForOpportunities(
-        List<Opportunity> newlist,
-        List<Opportunity> oldlist,
-        TDTM_Runnable.Action triggerAction) {
+            List<Opportunity> newlist,
+            List<Opportunity> oldlist,
+            TDTM_Runnable.Action triggerAction) {
 
         Map<Id, Opportunity> mapIdOppNew = (newlist != null ? new Map<Id, Opportunity>(newlist) : new Map<Id, Opportunity>());
         Map<Id, Opportunity> mapIdOppOld = (oldlist != null ? new Map<Id, Opportunity>(oldlist) : new Map<Id, Opportunity>());
 
         DmlWrapper dmlWrapper = new DmlWrapper();
+        System.debug(loggingLevel.ERROR, 'before calling validate');
+        validateOpportunity(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper);
+        System.debug(loggingLevel.ERROR, 'after calling validate');
 
         // Create new Payments as necessary. Also (when Advanced Curr Mgt is not enabled), auto close the
         // Opportunity if that is enabled in settings and the total Payments == Opp.Amount.
@@ -160,10 +163,10 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         // Get a list of the Payment records by Opportunity and update the CurrencyIsoCode value
         String soql =
-            'SELECT Id, CurrencyIsoCode, npe01__Payment_Amount__c, npe01__Opportunity__r.CurrencyIsoCode ' +
-            'FROM npe01__OppPayment__c ' +
-            'WHERE npe01__Opportunity__c IN :oppIds ' +
-            'ORDER BY npe01__Opportunity__c';
+                'SELECT Id, CurrencyIsoCode, npe01__Payment_Amount__c, npe01__Opportunity__r.CurrencyIsoCode ' +
+                        'FROM npe01__OppPayment__c ' +
+                        'WHERE npe01__Opportunity__c IN :oppIds ' +
+                        'ORDER BY npe01__Opportunity__c';
         for (npe01__OppPayment__c pmt : database.query(soql)) {
             Opportunity opp = (Opportunity)pmt.getSObject('npe01__Opportunity__r');
             pmt.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
@@ -198,10 +201,10 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @return dmlWrapper this method modifies dmlWrapper and returns it
     ********************************************************************************************************/
     private DmlWrapper handleMultiCurrencyPayments(
-        List<npe01__OppPayment__c> newlist,
-        List<npe01__OppPayment__c> oldlist,
-        TDTM_Runnable.Action triggerAction,
-        DmlWrapper dmlWrapper) {
+            List<npe01__OppPayment__c> newlist,
+            List<npe01__OppPayment__c> oldlist,
+            TDTM_Runnable.Action triggerAction,
+            DmlWrapper dmlWrapper) {
 
         if (dmlWrapper == null) {
             dmlWrapper = new DmlWrapper();
@@ -235,7 +238,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             if (isACMEnabled && String.isNotEmpty(closedStageName)) {
                 // Loop through all the queried Opps with the subquery on payments
                 for (Opportunity opp : oppsById.values()) {
-                   handleOppPaymentWithAdvancedCurrency(opp, closedStageName, dmlWrapper);
+                    handleOppPaymentWithAdvancedCurrency(opp, closedStageName, dmlWrapper);
                 }
             }
         }
@@ -296,10 +299,10 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @return void Does not return anything
     ********************************************************************************************************/
     private void validatePayments(
-        List<npe01__OppPayment__c> newlist,
-        List<npe01__OppPayment__c> oldlist,
-        TDTM_Runnable.Action triggerAction,
-        DmlWrapper dmlWrapper) {
+            List<npe01__OppPayment__c> newlist,
+            List<npe01__OppPayment__c> oldlist,
+            TDTM_Runnable.Action triggerAction,
+            DmlWrapper dmlWrapper) {
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             for (npe01__OppPayment__c payment : newlist) {
                 if (isEnforceAccountingDataConsistency) {
@@ -308,6 +311,54 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
                 if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
                     payment.addError(System.Label.pmtWriteOffPaidPayment);
+                }
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Validate that the opportunity has the appropriate values. This will check to make sure
+    * that the opportunity amount is not set to an amount lower than the paid payments.
+    * @param newlist The list of Opportunities from trigger new.
+    * @param oldlist The list of Opportunities from trigger old.
+    * @param triggerAction  Which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @return void Does not return anything
+    ********************************************************************************************************/
+    private void validateOpportunity(Map<Id, Opportunity> newMap, Map<Id, Opportunity> oldMap, TDTM_Runnable.Action triggerAction, DmlWrapper dmlWrapper) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            enforceFinalizedOpportunityAmountIsEqualToPayment(newMap, oldMap);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Makes sure that for finalized opportunities, the amount is equal to the paid payment amount
+    * If the user tries to change the amount, throw an error telling them to change the payments instead.
+    * @param opportunitiesToCheck The list of opportunities to check the amount for
+    * @return void Does not return anything.
+    ********************************************************************************************************/
+    private void enforceFinalizedOpportunityAmountIsEqualToPayment(Map<Id, Opportunity> newMap, Map<Id, Opportunity> oldMap) {
+
+        // Get the opportunities with payments.
+        Map<Id, Opportunity> oppsById = getPaymentOpportunities(newMap.keySet());
+
+        for (Opportunity queriedOpp : oppsById.values()) {
+            Opportunity oldOpp = oldMap.get(queriedOpp.Id);
+            Opportunity updatedOpp = newMap.get(queriedOpp.Id);
+
+            if (oldOpp.Amount != updatedOpp.Amount && OPP_StageMappingUtil.determineOppStateFromOppStage(updatedOpp.StageName) == OPP_StageMappingUtil.getFinalizedState()) {
+
+                // Get all the paid payments and calculate how much the amount is and compare to the opportunity's amount.
+                List<npe01__OppPayment__c> relatedPayments = queriedOpp.npe01__OppPayment__r;
+                Decimal totalPaidAmount = 0.00;
+
+                for (npe01__OppPayment__c payment : relatedPayments) {
+                    if (payment.npe01__Paid__c == true) {
+                        totalPaidAmount += payment.npe01__Payment_Amount__c;
+                    }
+                }
+
+                if (totalPaidAmount != updatedOpp.Amount) {
+                    updatedOpp.addError('An Opportunity that is ' + updatedOpp.StageName + ' cannot change the amount. To change the amount, please make the changes on the payment.');
                 }
             }
         }
