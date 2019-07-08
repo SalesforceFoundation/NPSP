@@ -42,8 +42,7 @@ private with sharing class TDTM_RunnableMutable_TEST {
     **/
     @TestSetup
     static void makeData() {
-        insert UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(3, CAO_Constants.HH_ACCOUNT_TYPE);      
-        insert UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
+        insert UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
     }
 
     /*************************************************************************** 
@@ -51,11 +50,14 @@ private with sharing class TDTM_RunnableMutable_TEST {
     * times where that class implements TDTM_RunnableMutable
     **/
     @isTest
-    private static void testAllowMutation() {
+    private static void shouldPermitDmlWrapperMutation() {
         // we will run the same class this many times, and based on the sample
         // implementation of TDTM_RunnableMutable, this will be the value
         // of the NumberOfEmployees field on each Account 
         Integer numberOfIterations = 5;
+
+        String mockClass = TDTM_RunnableMutableMock_TEST.class.getName();
+        mockClass = (mockClass.contains('.') ? mockClass.substringAfter('.') : mockClass);
 
         // creating multiple trigger handlers of the same type
         List<Trigger_Handler__c> triggerHandlers = new List<Trigger_Handler__c>();
@@ -64,14 +66,15 @@ private with sharing class TDTM_RunnableMutable_TEST {
             Trigger_Handler__c triggerHandler = new Trigger_Handler__c();
             triggerHandler.Active__c = true;
             triggerHandler.Asynchronous__c = false;
-            triggerHandler.Class__c = 'TDTM_RunnableMutableExample_TEST';
+            triggerHandler.Class__c = mockClass;
             triggerHandler.Load_Order__c = i;
             triggerHandler.Object__c = 'Contact';
             triggerHandler.Trigger_Action__c = 'AfterUpdate';
             triggerHandlers.add(triggerHandler);
         }
-
         insert triggerHandlers;
+
+        Test.startTest();
 
         // pull some contacts, perform update
         List<Contact> contacts = [SELECT Id, AccountId FROM Contact];
@@ -89,6 +92,8 @@ private with sharing class TDTM_RunnableMutable_TEST {
             FROM Account
             WHERE Id IN :accountIds
         ];
+
+        Test.stopTest();
 
         for (Account account : accounts) {
             System.assertEquals(numberOfIterations, account.NumberOfEmployees);

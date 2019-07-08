@@ -38,14 +38,17 @@
  * field will increment by 1.
  */
 @isTest
-public class TDTM_RunnableMutableExample_TEST extends TDTM_RunnableMutable {
+public class TDTM_RunnableMutableMock_TEST extends TDTM_RunnableMutable {
 
     /*******************************************************************************************************
-     * @description Mock class used for testing the TDTM_RunnableMutable class
+     * @description Mock class used for testing the TDTM_RunnableMutable class. If the dmlWrapper collection
+     * contains Contact objects, the parent Account.NumberOfEmployees field value is incremented from zero
+     * to show that the dmlWrapper collection returned (by reference) is mutated by this class.
      */
     public override void run(List<SObject> newList, List<SObject> oldList, 
-        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult,
-        TDTM_Runnable.DmlWrapper dmlWrapper) {
+            TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult,
+            TDTM_Runnable.DmlWrapper dmlWrapper
+    ) {
 
         // collect each Contact's AccountId
         Set<Id> accountIds = new Set<Id>();

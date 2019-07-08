@@ -46,7 +46,9 @@ global abstract class TDTM_RunnableMutable {
      * @param oldlist The records that were passed to the trigger as trigger.old.
      * @param action The event (before insert, after insert,...) that caused the class to run.
      * @param objectResult The type of SObject the class runs for.
-     * @param dmlWrapper the global TDTM_Runnable.DmlWrapper collection that is passed from TDTM_TriggerHandler
+     * @param dmlWrapper the global TDTM_Runnable.DmlWrapper collection that is passed from TDTM_TriggerHandler.
+     * Because this is passed by reference it can be modified by the run() method that implements this interface
+     * and any values are returned back to the TriggerHandler class for dml.
      * @return void
     */
     global abstract void run(List<SObject> newlist, List<SObject> oldlist, TDTM_Runnable.Action triggerAction,

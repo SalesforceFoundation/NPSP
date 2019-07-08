@@ -404,7 +404,7 @@
         <members>TDTM_ProcessControl</members>
         <members>TDTM_Runnable</members>
         <members>TDTM_RunnableMutable</members>
-        <members>TDTM_RunnableMutableExample_TEST</members>
+        <members>TDTM_RunnableMutableMock_TEST</members>
         <members>TDTM_RunnableMutable_TEST</members>
         <members>TDTM_Runnable_TEST</members>
         <members>TDTM_TriggerActionHelper</members>
