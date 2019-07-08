@@ -66,10 +66,14 @@ public with sharing class UTIL_IntegrationGateway {
         set;
     }
 
-    public void handleBeforeDelete(List<SObject> triggerOld, Map<Id,SObject> triggerOldMap) {
+    /*******************************************************************************************************
+     * @description Passes trigger records to listener integrations
+     * @param triggerOld records that were passed to the trigger as trigger.old
+     */
+    public void handleBeforeDelete(List<SObject> triggerOld) {
         Map<String, Object> params = new Map<String, Object> {
             PARAM_TRIGGER_OLD => triggerOld,
-            PARAM_TRIGGER_OLD_MAP => triggerOldMap
+            PARAM_TRIGGER_OLD_MAP => new Map<Id, SObject>(triggerOld)
         };
 
         for (UTIL_IntegrationConfig listener : listeners) {

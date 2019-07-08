@@ -158,7 +158,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     private void dispatchToIntegrationGateway(List<SObject> newlist, List<SObject> oldlist, TDTM_Runnable.Action triggerAction) {
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-            integrationGateway.handleBeforeDelete(oldlist, new Map<Id,SObject>(oldlist));
+            integrationGateway.handleBeforeDelete(oldlist);
         }
     }
 }

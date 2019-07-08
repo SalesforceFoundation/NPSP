@@ -229,8 +229,8 @@
         <members>ERR_Notifier_TEST</members>
         <members>ERR_ParentAccountUpdater2_TEST</members>
         <members>ERR_ParentAccountUpdater_TEST</members>
-        <members>GAU_GeneralAccountingUnits_TDTM</members>
-        <members>GAU_GeneralAccountingUnits_TDTM_TEST</members>
+        <members>GAU_TDTM</members>
+        <members>GAU_TDTM_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>

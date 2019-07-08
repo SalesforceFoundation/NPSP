@@ -353,7 +353,7 @@ public without sharing class TDTM_DefaultConfig {
                 Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
 
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
-                Class__c = 'GAU_GeneralAccountingUnits_TDTM', Load_Order__c = 1, Object__c = 'General_Accounting_Unit__c',
+                Class__c = 'GAU_TDTM', Load_Order__c = 1, Object__c = 'General_Accounting_Unit__c',
                 Trigger_Action__c = 'BeforeDelete;'));
 
         return handlers;

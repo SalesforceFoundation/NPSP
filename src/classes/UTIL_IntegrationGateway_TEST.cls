@@ -36,6 +36,10 @@
 @isTest
 public with sharing class UTIL_IntegrationGateway_TEST {
 
+    /**
+     * @description Confirms handleBeforeDelete tries to call integration callable api if installed
+     * and passes correct parameters to it
+     */
     @isTest
     private static void shouldDispatchToIntegrationsOnBeforeDeleteWhenInstalled() {
         UTIL_IntegrationConfig_TEST.MockPackage mockPackage = new UTIL_IntegrationConfig_TEST.MockPackage();
@@ -50,10 +54,8 @@ public with sharing class UTIL_IntegrationGateway_TEST {
         List<SObject> triggerOld = UTIL_UnitTestData_TEST.createMultipleTestAccounts(10, null);
         UTIL_UnitTestData_TEST.setMockIds(triggerOld);
 
-        Map<Id, SObject> triggerOldMap = new Map<Id, SObject>(triggerOld);
-
         Test.startTest();
-        gateway.handleBeforeDelete(triggerOld, triggerOldMap);
+        gateway.handleBeforeDelete(triggerOld);
         Test.stopTest();
 
         System.assertEquals(1, callableMock.callCount, 'The archive bridge api should have been called once');
@@ -65,10 +67,15 @@ public with sharing class UTIL_IntegrationGateway_TEST {
 
         System.assertEquals(triggerOld, paramsForAction.get(UTIL_IntegrationGateway.PARAM_TRIGGER_OLD),
             'Should pass Trigger.old to the archive API with the correct parameter');
+
+        Map<Id, SObject> triggerOldMap = new Map<Id, SObject>(triggerOld);
         System.assertEquals(triggerOldMap, paramsForAction.get(UTIL_IntegrationGateway.PARAM_TRIGGER_OLD_MAP),
-            'Should pass Trigger.oldMap to the archive API with the correct parameter');
+            'Should pass trigger.old as a map to the archive API with the correct parameter');
     }
 
+    /**
+     * @description Confirms handleBeforeDelete does not try to call integration callable api if not installed
+     */
     @isTest
     private static void shouldNotDispatchToIntegrationsOnBeforeDeleteWhenNotInstalled() {
         UTIL_IntegrationConfig_TEST.MockPackage mockPackage = new UTIL_IntegrationConfig_TEST.MockPackage();
@@ -83,10 +90,8 @@ public with sharing class UTIL_IntegrationGateway_TEST {
         List<SObject> triggerOld = UTIL_UnitTestData_TEST.createMultipleTestAccounts(10, null);
         UTIL_UnitTestData_TEST.setMockIds(triggerOld);
 
-        Map<Id, SObject> triggerOldMap = new Map<Id, SObject>(triggerOld);
-
         Test.startTest();
-        gateway.handleBeforeDelete(triggerOld, triggerOldMap);
+        gateway.handleBeforeDelete(triggerOld);
         Test.stopTest();
 
         System.assertEquals(0, callableMock.callCount, 'The archive bridge api should not have been called');

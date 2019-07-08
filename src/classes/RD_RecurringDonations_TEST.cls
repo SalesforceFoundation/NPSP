@@ -201,13 +201,13 @@ public class RD_RecurringDonations_TEST {
 
     @isTest
     private static void shouldDispatchRDsToIntegrationGatewayOnBeforeDelete() {
-        List<npe03__Recurring_Donation__c> triggerOld = new List<npe03__Recurring_Donation__c> {
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c> {
             buildRecurringDonationMonthlyInstallment(null),
             buildRecurringDonationMonthlyInstallment(null),
             buildRecurringDonationMonthlyInstallment(null)
         };
 
-        UTIL_UnitTestData_TEST.setMockIds(triggerOld);
+        UTIL_UnitTestData_TEST.setMockIds(rds);
 
         RD_RecurringDonations_TDTM tdtm = new RD_RecurringDonations_TDTM();
         UTIL_IntegrationGateway_TEST.Stub gatewayStub = new UTIL_IntegrationGateway_TEST.Stub();
@@ -216,7 +216,7 @@ public class RD_RecurringDonations_TEST {
         Test.startTest();
         tdtm.run(
             null,
-            triggerOld,
+            rds,
             TDTM_Runnable.Action.BeforeDelete,
             npe03__Recurring_Donation__c.SObjectType.getDescribe()
         );
@@ -227,11 +227,8 @@ public class RD_RecurringDonations_TEST {
 
         Map<String, Object> paramsForMethod = gatewayStub.paramsByMethodName.get('handleBeforeDelete');
 
-        System.assertEquals(triggerOld, paramsForMethod.get('triggerOld'),
+        System.assertEquals(rds, paramsForMethod.get('triggerOld'),
             'The triggerOld parameter should contain the data from the oldList parameter');
-
-        System.assertEquals(new Map<Id, npe03__Recurring_Donation__c>(triggerOld), paramsForMethod.get('triggerOldMap'),
-            'The triggerOldMap parameter should contain the data from the oldList parameter');
     }
 
     @isTest

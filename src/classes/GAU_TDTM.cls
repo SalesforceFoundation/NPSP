@@ -33,7 +33,7 @@
 * @group General Accounting Units
 * @description TDTM trigger handler for General_Accounting_Unit__c
 */
-public with sharing class GAU_GeneralAccountingUnits_TDTM extends TDTM_Runnable {
+public with sharing class GAU_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description Trigger Handler on General Accounting Units.
     * @param newlist the list of GAU's from trigger new.
@@ -58,7 +58,7 @@ public with sharing class GAU_GeneralAccountingUnits_TDTM extends TDTM_Runnable 
     ********************************************************************************************************/
     private void dispatchToIntegrationGateway(List<SObject> newlist, List<SObject> oldlist, TDTM_Runnable.Action triggerAction) {
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-            integrationGateway.handleBeforeDelete(oldlist, new Map<Id,SObject>(oldlist));
+            integrationGateway.handleBeforeDelete(oldlist);
         }
     }
 }

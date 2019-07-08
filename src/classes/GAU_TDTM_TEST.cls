@@ -31,28 +31,28 @@
 * @author Salesforce.org
 * @date 2019
 * @group General Accounting Units
-* @description Test class for the GAU_GeneralAccountingUnits_TDTM class
+* @description Test class for the GAU_TDTM class
 */
 @isTest
-private with sharing class GAU_GeneralAccountingUnits_TDTM_TEST {
+private with sharing class GAU_TDTM_TEST {
     @isTest
     private static void shouldDispatchGAUsToIntegrationGatewayOnBeforeDelete() {
-        List<General_Accounting_Unit__c> triggerOld = new List<General_Accounting_Unit__c> {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c> {
             new General_Accounting_Unit__c(Name = 'TEST_GAU'),
             new General_Accounting_Unit__c(Name = 'TEST_GAU1'),
             new General_Accounting_Unit__c(Name = 'TEST_GAU2')
         };
 
-        UTIL_UnitTestData_TEST.setMockIds(triggerOld);
+        UTIL_UnitTestData_TEST.setMockIds(gaus);
 
-        GAU_GeneralAccountingUnits_TDTM tdtm = new GAU_GeneralAccountingUnits_TDTM();
+        GAU_TDTM tdtm = new GAU_TDTM();
         UTIL_IntegrationGateway_TEST.Stub gatewayStub = new UTIL_IntegrationGateway_TEST.Stub();
         tdtm.integrationGateway = (UTIL_IntegrationGateway) Test.createStub(UTIL_IntegrationGateway.class, gatewayStub);
 
         Test.startTest();
         tdtm.run(
             null,
-            triggerOld,
+            gaus,
             TDTM_Runnable.Action.BeforeDelete,
             General_Accounting_Unit__c.SObjectType.getDescribe()
         );
@@ -63,10 +63,7 @@ private with sharing class GAU_GeneralAccountingUnits_TDTM_TEST {
 
         Map<String, Object> paramsForMethod = gatewayStub.paramsByMethodName.get('handleBeforeDelete');
 
-        System.assertEquals(triggerOld, paramsForMethod.get('triggerOld'),
+        System.assertEquals(gaus, paramsForMethod.get('triggerOld'),
             'The triggerOld parameter should contain the data from the oldList parameter');
-
-        System.assertEquals(new Map<Id, General_Accounting_Unit__c>(triggerOld), paramsForMethod.get('triggerOldMap'),
-            'The triggerOldMap parameter should contain the data from the oldList parameter');
     }
 }
