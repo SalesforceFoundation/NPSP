@@ -1384,25 +1384,29 @@ private with sharing class BDI_DataImport_TEST2 {
     *    nothing imported
     *    records marked with fls error
     **********************************************************************************************************/            
-    static testMethod void testFieldLevelSecurity() {
+    static testMethod void givenUserHasOnlyReadAccessWhenDataImportRunsThenImportsShouldFail() {
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         listDI.add(BDI_DataImport_TEST.newDI('c2', 'C2'));
         listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3'));
         insert listDI;
-          
-        //run batch data import
-        Test.StartTest();
-        BDI_FieldMappingHelpText fieldMapper = BDI_FieldMappingHelpText.getInstance();
-        BDI_DataImportService.failFieldLevelSecurity = true;
-        BDI_DataImportService dataImportService = 
-            new BDI_DataImportService(false, fieldMapper);
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
 
-        ID ApexJobId = Database.executeBatch(bdi, 10);
-        Test.stopTest();
-    
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Read Only');
+        System.runAs(readOnlyUser) {
+            //run batch data import
+            Test.StartTest();
+            BDI_FieldMappingHelpText fieldMapper = BDI_FieldMappingHelpText.getInstance();
+            BDI_DataImportService.failFieldLevelSecurity = true;
+            BDI_DataImportService dataImportService =
+                    new BDI_DataImportService(false, fieldMapper);
+            BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
+
+
+            ID ApexJobId = Database.executeBatch(bdi, 10);
+            Test.stopTest();
+        }
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(0, listCon.size());
