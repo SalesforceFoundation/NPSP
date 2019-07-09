@@ -36,25 +36,60 @@
 */
 public class BDI_ManageAdvancedMappingCtrl {
 
-    private static BDI_FieldMappingCustomMetadata bdiCMT = BDI_FieldMappingCustomMetadata.getInstance();
-    private static final String NAMESPACE = UTIL_Namespace.getNamespace();
-
     /** @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed) */
     public string getNamespacePrefix() {
         return UTIL_Namespace.getNamespace();
     }
 
+    /*******************************************************************************************************
+    * @description Instance of BDI_FieldMappingCustomMetadata
+    */
+    private static BDI_FieldMappingCustomMetadata bdiCMT = BDI_FieldMappingCustomMetadata.getInstance();
+
+    /*******************************************************************************************************
+    * @description Current package namespace
+    */
+    private static final String NAMESPACE = UTIL_Namespace.getNamespace();
+
+    /*******************************************************************************************************
+    * @description Name of default packaged Object Mapping Set
+    */
+    private static final Set<String> IGNORE_FIELDS = new Set<String> {
+        'developername',
+        'masterlabel',
+        'language',
+        'namespaceprefix',
+        'label',
+        'qualifiedapiname',
+        'id'};
+
+    /*******************************************************************************************************
+    * @description Name of the default Field Mapping Set
+    *
+    * @return String: Default Field Mapping Set name
+    */
     @AuraEnabled(cacheable=true)
     public static String getFieldMappingSetName() {
         return UTIL_CustomSettings_API.getDataImportSettings().Default_Data_Import_Field_Mapping_Set__c;
     }
 
+    /*******************************************************************************************************
+    * @description Gets all the existing Data Import Object Mapping records.
+    *
+    * @return List: List of Data Import Object Mapping
+    */
     @AuraEnabled(cacheable=true)
     public static Data_Import_Object_Mapping__mdt[] getObjectMappings(){
-        Data_Import_Object_Mapping__mdt[] objMappings = bdiCMT.objMappingsByDevName.values();
-        return objMappings;
+        return bdiCMT.objMappingsByDevName.values();
     }
 
+    /*******************************************************************************************************
+    * @description Gets all the field describes from a given object.
+    *
+    * @param objectName: Object name
+    *
+    * @return List: List of BDI_ManageAdvancedMappingCtrl.FieldInfo
+    */
     @AuraEnabled
     public static FieldInfo[] getObjectFieldDescribes(String objectName) {
         Map<String, String> useableDFRs = new Map<String, String>();
@@ -72,6 +107,15 @@ public class BDI_ManageAdvancedMappingCtrl {
         return fieldInfos;
     }
 
+    /*******************************************************************************************************
+    * @description Gets Data Import Field Mapping records based on their parent object and a Field Mapping
+    * Set name and converts each to instances of DataImportFieldMappingWrapper for use in the UI.
+    *
+    * @param objectName: Object name
+    * @param fieldMappingSetname: Field Mapping Set name
+    *
+    * @return List: List of DataImportFieldMappingWrapper
+    */
     @AuraEnabled
     public static DataImportFieldMappingWrapper[] getFieldMappingsByObjectAndFieldSetNames(
         String objectName, String fieldMappingSetname) {
@@ -94,11 +138,15 @@ public class BDI_ManageAdvancedMappingCtrl {
         return fieldMappingWrappers;
     }
 
-    // Method takes in field mapping as JSON
-    // Uses the DataImportFieldMapping wrapper to generate the custom metadata record
-    // Drops it into a DeployContainer
-    // Sends it off to be deployed
-    // Return the jobId
+    /*******************************************************************************************************
+    * @description Converts a JSON string of a DataImportFieldMappingWrapper to an instance of
+    * Data_Import_Field_Mapping__mdt. Replaces the prefix 'xxx_' with the namespace if necessary
+    * and replaces the suffix '_xxx' with '__c' if necessary.
+    *
+    * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
+    *
+    * @return String: Deployment Id
+    */
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
         fieldMappingString = fieldMappingString.replaceAll('_xxx','__c');
@@ -113,7 +161,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             Data_Import_Field_Mapping__mdt difm =
                 (Data_Import_Field_Mapping__mdt)JSON.deserialize(
                     fieldMappingString, Data_Import_Field_Mapping__mdt.class);
-            System.debug(difm);
+
             String deploymentId = enqueueMetadataRecords(difm);
 
             return deploymentId;
@@ -122,15 +170,20 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
-    // TODO: Delete later? Used to test error toast in UI
-    public class testerException extends Exception {}
-
-    // TODO: Break up into smaller methods?
-    // Does the bulk of the work converting records to custom metadata that are enqueueable
+    /*******************************************************************************************************
+    * @description Method takes in a list of generic sObjects and casts them a relevant metadata type.
+    * Builds the deployment container, metadata type records along with their fields, and enqueues them
+    * for deployment.
+    *
+    * @param customMetadataList: List of generic sObjects to be converted to custom metadata type records
+    *
+    * @return String: Deployment Id
+    */
     public static String enqueueMetadataRecords(List<sObject> customMetadataList ) {
-        //Create Deployment container for custom Metadata
         Metadata.DeployContainer deployContainer = new Metadata.DeployContainer();
+
         for(sobject sObjectCastedCustomMetadata : customMetadataList) {
+
             //Get metadata object name and details
             String sObjectName = sObjectCastedCustomMetadata.getSObjectType().getDescribe().getName();
 
@@ -147,31 +200,23 @@ public class BDI_ManageAdvancedMappingCtrl {
             customMetadata.fullName = sObjectName +'.'+recordName;
             customMetadata.label = (String)sObjectCastedCustomMetadata.get('MasterLabel');
 
-            // Get all fields
-            // Store sObjectType schema in class variable (map) and check if already exists
-            // before attempting to call the global describe again
-            // OR
-            // Use lightning web component to get the describe and pass in to apex
             schema.SObjectType sObjectType = Schema.getGlobalDescribe().get(sObjectName );
 
             Map<String, Schema.sObjectField> sObjectFields = sObjectType.getDescribe().fields.getMap();
-            // TODO: Hoist up and make final
-            Set<String> skipFieldSet = new Set<String>{'developername','masterlabel','language','namespaceprefix', 'label','qualifiedapiname', 'id'};
 
-            // Use getPopulatedFieldsAsMap to loop through and populate all fields with relevant values
-            // Maybe break this section out into its own method?
             for(String fieldName : sObjectCastedCustomMetadata.getPopulatedFieldsAsMap().keySet()) {
 
-                if(skipFieldSet.contains(fieldName.toLowerCase()) || sObjectCastedCustomMetadata.get(fieldName) == null) {
+                if(IGNORE_FIELDS.contains(fieldName.toLowerCase()) || sObjectCastedCustomMetadata.get(fieldName) == null) {
                     continue;
                 }
 
                 Object value = sObjectCastedCustomMetadata.get(fieldName);
 
                 if (value != null) {
-                    // TODO: Improve casting/type checking
                     Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
+
                     customField.field = fieldName;
+
                     if (value instanceof Id) {
                         customField.value = (Id)value;
                     }
@@ -181,28 +226,34 @@ public class BDI_ManageAdvancedMappingCtrl {
                     if (value instanceof Boolean) {
                         customField.value = (Boolean)value;
                     }
-                    //Add fields in the object, similar to creating sObject instance
+
                     customMetadata.values.add(customField);
                 } else {
                     continue;
                 }
             }
 
-            //Add metadata to deployment container
             deployContainer.addMetadata(customMetadata);
         }
 
-        // Callback class instance
         DeploymentCallback callback = new DeploymentCallback();
 
-        // Enqueue custom metadata deployment
         Id jobId = Metadata.Operations.enqueueDeployment(deployContainer, callback);
+
         return jobId;
     }
 
-    // overload, use to pass single metadata instance
+    /*******************************************************************************************************
+    * @description Method takes in a single of generic sObject and cast it a relevant metadata type.
+    * Builds the deployment container, metadata type record along with its fields, and enqueues it
+    * for deployment.
+    *
+    * @param customMetadataList: A generic sObject to be converted to custom metadata type record
+    *
+    * @return String: Deployment Id
+    */
     public static String enqueueMetadataRecords(sObject customMetadata ) {
-    return enqueueMetadataRecords(new List<sObject>{customMetadata} );
+        return enqueueMetadataRecords(new List<sObject>{customMetadata} );
     }
 
     /****************************************************************************************************
@@ -236,6 +287,13 @@ public class BDI_ManageAdvancedMappingCtrl {
         return name;
     }
 
+    /*******************************************************************************************************
+    * @description Data_Import_Field_Mapping__mdt wrapper class used in the Field Mapping UI and for
+    * building corresponding custom metadata type records. Attributes have prefix 'xxx_' and suffix '_xxx'
+    * because we build instances of DataImportFieldMappingWrapper in the lightning web component and
+    * later replace the prefix with the namespace and the suffix with '__c' and deserialize to
+    * Data_Import_Field_Mapping__mdt.
+    */
     public class DataImportFieldMappingWrapper {
         @AuraEnabled public String DeveloperName;
         @AuraEnabled public String MasterLabel;
@@ -296,6 +354,9 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Wrapper class for Field Describe Results used in the Field Mapping UI
+    */
     public class FieldInfo {
         @AuraEnabled public String label;
         @AuraEnabled public String value;
@@ -308,6 +369,11 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Inserting or Updating Custom Metadata Types through the Apex Metadata API is an
+    * asynchronous process. This callback class is used to handle the async response from the call to
+    * Metadata.Operations.enqueueDeployment().
+    */
     public class DeploymentCallback implements Metadata.DeployCallback {
 
         public void handleResult(
