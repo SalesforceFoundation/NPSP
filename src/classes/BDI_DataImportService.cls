@@ -484,50 +484,6 @@ global with sharing class BDI_DataImportService {
         return isDryRun ? BDI_DataImport_API.bdiDryRunValidated : BDI_DataImport_API.bdiImported;
     }
 
-    public void checkFieldAccess(List<DataImport__c> dataImports) {
-        BDI_MigrationMappingHelper fieldHelper =  new BDI_MigrationMappingHelper();
-        Map<String, BDI_HelpTextCMT.MappingDetail> helpTextFieldDetails = fieldHelper.getAllMappedHelpTextFields();
-
-        for (String mappedField: helpTextFieldDetails.keySet()){
-            System.debug('  **** help text map key: '+mappedField);
-            helpTextFieldDetails.put(mappedField.toLowerCase(), helpTextFieldDetails.get(mappedField));
-        }
-
-        for (DataImport__c dataImport : dataImports) {
-            for(String dataImportFieldName: dataImport.getPopulatedFieldsAsMap().keySet()) {  
-                System.debug(' **** Checking mapped field map for key: '+dataImportFieldName.toLowerCase()+' '+
-                    helpTextFieldDetails.containsKey(dataImportFieldName.toLowerCase()));
-                if(!helpTextFieldDetails.containsKey(dataImportFieldName.toLowerCase())) {
-                    continue;
-                }
-                BDI_HelpTextCMT.MappingDetail mappingDetail = helpTextFieldDetails.get(dataImportFieldName.toLowerCase());
-                String targetFieldName = mappingDetail.targetFieldAPIName.toLowerCase();
-                String targetObjectName = mappingDetail.targetObjectName.toLowerCase();
-
-                if (!Test.isRunningTest() || failFieldLevelSecurity) {
-                    DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, targetFieldName);
-                    Set<String> setAuditFields = new Set<String>{
-                        'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
-                    };
-                    Boolean isAuditField = setAuditFields.contains(targetFieldName);
-                    Boolean isCreatable = fieldDescribe.isCreateable();
-                    Boolean isUpdateable = fieldDescribe.isUpdateable();
-                    Boolean isPopulated = true;  
-
-                    if (failFieldLevelSecurity ||
-                        fieldDescribe == null ||
-                        (!isCreatable && isPopulated) ||
-                        (!isAuditField && !isUpdateable && isPopulated)) {
-                            String errMessage = String.format(System.Label.flsError, 
-                                    new List<String>{ targetObjectName + '.' + targetFieldName });
-                            System.debug(' ***** FLS failed with ' + errMessage);
-                            LogBDIError(dataImport, errMessage, null);
-                            dataImport.FailureInformation__c = errMessage;
-                    }
-                }
-            }
-        }
-    }
 
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
@@ -536,6 +492,7 @@ global with sharing class BDI_DataImportService {
     * @param listDI a list of Data Import records to import
     * @return void
     */
+    private DataImports dataImportsInstance;//Will be used to validate FLS for target mappings
     public void process(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports) {
 
         // initialize our performance logger
@@ -545,14 +502,14 @@ global with sharing class BDI_DataImportService {
         SavePoint sp = Database.setSavepoint();
 
         try {
-            this.listDI = dataImports;
+            System.debug(LoggingLevel.ERROR, '*** ##### try block ######');
             this.diSettings = dataImportSettings;
 
             // list of populated data import fields
             Set<String> populatedDataImportFieldSet = new Set<String>();
 
             // first set a clean state for each DI
-            for (DataImport__c dataImport : listDI) {
+            for (DataImport__c dataImport : dataImports) { //Clear these fields for all passed in DataImport records
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
@@ -568,7 +525,12 @@ global with sharing class BDI_DataImportService {
                 populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
 
-            checkFieldAccess(listDI);
+            this.dataImportsInstance = new DataImports(dataImports);
+            if (isDryRun) {
+                this.listDI = dataImportsInstance.getDataImportsWithAccessibleTargetFields();
+            } else {
+                this.listDI = dataImportsInstance.getDataImportsWithUpdateableAndCreateableTargetFields();
+            }
 
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
@@ -617,6 +579,7 @@ global with sharing class BDI_DataImportService {
             pl.stop();
 
         } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, '*** ##### catch block ######');
             // we should only hit this exception if a truly unexpected runtime
             // error occurs.  not even database updates/inserts should get here,
             // since we now handle all database updates/inserts using the flavor
@@ -649,8 +612,156 @@ global with sharing class BDI_DataImportService {
             // then it would rollback our setting of failure state in the DI records.
             // so we just return, and rely on our Data Import ui to notify the user.
         } finally {
+            //since we filtered out any data imports with FLS exceptions earlier,
+            //lets stamp the exceptions onto the records here:
+            System.debug(LoggingLevel.ERROR, '*** ##### finally block ######');
+            List<DataImport__c> dataImportsWithFlsExceptions = dataImportsInstance.getDataImportsWithFlsExceptions(isDryRun);
+            System.debug(LoggingLevel.ERROR, '*** variable value dataImportsWithFlsExceptions: ' + dataImportsWithFlsExceptions);
+            if (dataImportsWithFlsExceptions != null && dataImportsWithFlsExceptions.size() > 0) {
+                for (DataImport__c dataImport : dataImportsWithFlsExceptions) {
+                    dataImport.Status__c = statusDIFailed();
+                    dataImport.ApexJobId__c = apexJobId; //Needed to display the correct totals on the BDI_DataImport page
+                    String errMessage;
+                    if (isDryRun) {
+                        Set<String> nonAccessibleFields = dataImportsInstance.getFieldsWithoutReadAccess(dataImport.Id);
+                        List<String> errorMsgObjects = new List<String>{String.join(new List<String>(nonAccessibleFields), ', ')};
+                        errMessage = String.format(System.Label.flsReadAccessError, errorMsgObjects);
+                    } else {
+                        Set<String> nonCreateableUpdateableFields = dataImportsInstance.getFieldsWithoutCreateUpdateAccess(dataImport.Id);
+                        List<String> errorMsgObjects = new List<String>{String.join(new List<String>(nonCreateableUpdateableFields), ', ')};
+                        errMessage = String.format(System.Label.flsError, errorMsgObjects);
+                    }
+                    System.debug(' ***** FLS failed with ' + errMessage);
+                    LogBDIError(dataImport, errMessage, null);
+                }
+                UTIL_DMLService.updateRecords(dataImportsWithFlsExceptions);
+            }
+
             perfLogger.stop();
             perfLogger.save();
+        }
+    }
+
+    /**
+     * @description Inner class used to validate Field Level Security of mapped target fields.
+     */
+    public class DataImports {
+        List<DataImport__c> dataImportsInitial;
+        Map<String, Map<String, Set<String>>> sourceFieldToObjectToFieldsMap;
+        List<DataImport__c> dataImportsFLSValidatedCreateUpdate = new List<DataImport__c>();
+        List<DataImport__c> dataImportsFLSValidatedAccessible = new List<DataImport__c>(); //Used for dry run
+        List<DataImport__c> dataImportsWithFLSExceptions = new List<DataImport__c>();
+        Map<Id, Set<String>> nonCreateableTargetFieldsByDataImportId = new Map<Id, Set<String>>();
+        Map<Id, Set<String>> nonUpdateableTargetFieldsByDataImportId = new Map<Id, Set<String>>();
+        Map<Id, Set<String>> nonAccessibleTargetFieldsByDataImportId = new Map<Id, Set<String>>();
+
+        //constructor
+        public DataImports(List<DataImport__c> dataImports) {
+            this.dataImportsInitial = dataImports;
+            this.sourceFieldToObjectToFieldsMap =
+                    getDefaultFieldMapping().getTargetObjectsAndFieldsByDataImportField();
+            this.validateTargetMappingFieldLevelSecurity();
+        }
+
+        //Used for dry run
+        public List<DataImport__c> getDataImportsWithAccessibleTargetFields() {
+            List<DataImport__c> accessibleDataImports = new List<DataImport__c>();
+            accessibleDataImports.addAll(dataImportsFLSValidatedCreateUpdate);
+            accessibleDataImports.addAll(dataImportsFLSValidatedAccessible);
+            return accessibleDataImports;
+        }
+
+        //Used for normal mode
+        public List<DataImport__c> getDataImportsWithUpdateableAndCreateableTargetFields() {
+            return dataImportsFLSValidatedCreateUpdate;
+        }
+
+        public List<DataImport__c> getDataImportsWithFlsExceptions(Boolean isDryRunEnabled) {
+            if (isDryRunEnabled) {
+                return dataImportsWithFLSExceptions;
+            } else {
+                List<DataImport__c> dataImportsWithFlsCreateUpdateExceptions = new List<DataImport__c>();
+                dataImportsWithFlsCreateUpdateExceptions.addAll(dataImportsWithFLSExceptions);
+                dataImportsWithFlsCreateUpdateExceptions.addAll(dataImportsFLSValidatedAccessible);
+                return dataImportsWithFlsCreateUpdateExceptions;
+            }
+        }
+
+        //Used to stamp errors
+        public Set<String> getFieldsWithoutCreateUpdateAccess(Id dataImportId) {
+            Set<String> fieldsWithoutCreateUpdateAccess = new Set<String>();
+            fieldsWithoutCreateUpdateAccess.addAll(nonCreateableTargetFieldsByDataImportId.get(dataImportId));
+            fieldsWithoutCreateUpdateAccess.addAll(nonUpdateableTargetFieldsByDataImportId.get(dataImportId));
+            return fieldsWithoutCreateUpdateAccess;
+        }
+
+        //Used to stamp errors in dry run
+        public Set<String> getFieldsWithoutReadAccess(Id dataImportId) {
+            return nonAccessibleTargetFieldsByDataImportId.get(dataImportId);
+        }
+
+        void validateTargetMappingFieldLevelSecurity() {
+            for (DataImport__c dataImport : dataImportsInitial) {
+                Set<String> nonCreateableTargetFields = new Set<String>();
+                Set<String> nonUpdateableTargetFields = new Set<String>();
+                Set<String> nonAccessibleTargetFields = new Set<String>();
+
+                for (String dataImportFieldName : dataImport.getPopulatedFieldsAsMap().keySet()) {
+                    Map<String, Set<String>> targetFieldsByObject = sourceFieldToObjectToFieldsMap.get(dataImportFieldName);
+
+                    if (targetFieldsByObject == null) { //this source field is unmapped
+                        continue;
+                    }
+
+                    //Now loop through all of the target object + field combos for this source field
+                    for (String targetObjectName : targetFieldsByObject.keySet()) {
+                        for (String targetFieldName : targetFieldsByObject.get(targetObjectName)) {
+                            System.debug(LoggingLevel.ERROR, '*** ##### checking access for '+targetObjectName+'-'+targetFieldName+' object ######');
+                            DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, targetFieldName);
+                            System.debug(LoggingLevel.ERROR, '*** access: ' + fieldDescribe.isAccessible());
+                            System.debug(LoggingLevel.ERROR, '*** create: ' + fieldDescribe.isCreateable());
+                            System.debug(LoggingLevel.ERROR, '*** update: ' + fieldDescribe.isUpdateable());
+                            if (fieldDescribe.isAccessible() == false) {
+                                nonAccessibleTargetFields.add(targetObjectName + '.' + targetFieldName);
+                            }
+                            if (fieldDescribe.isCreateable() == false) {
+                                nonCreateableTargetFields.add(targetObjectName + '.' + targetFieldName);
+                            }
+                            if (fieldDescribe.isUpdateable() == false) {
+                                nonUpdateableTargetFields.add(targetObjectName + '.' + targetFieldName);
+                            }
+                        }
+
+                    }
+                }
+
+                nonCreateableTargetFieldsByDataImportId.put(dataImport.Id, nonCreateableTargetFields);
+                nonUpdateableTargetFieldsByDataImportId.put(dataImport.Id, nonUpdateableTargetFields);
+                nonAccessibleTargetFieldsByDataImportId.put(dataImport.Id, nonAccessibleTargetFields);
+
+                System.debug(LoggingLevel.ERROR, '*** variable value: ' + nonCreateableTargetFieldsByDataImportId);
+                System.debug(LoggingLevel.ERROR, '^^^^^^ nonCreateableTargetFieldsByDataImportId ^^^^^^');
+
+                System.debug(LoggingLevel.ERROR, '*** variable value: ' + nonUpdateableTargetFieldsByDataImportId);
+                System.debug(LoggingLevel.ERROR, '^^^^^^ nonUpdateableTargetFieldsByDataImportId ^^^^^^');
+
+                System.debug(LoggingLevel.ERROR, '*** variable value: ' + nonAccessibleTargetFieldsByDataImportId);
+                System.debug(LoggingLevel.ERROR, '^^^^^^ nonAccessibleTargetFieldsByDataImportId ^^^^^^');
+
+                //now separate out the dis
+                if (nonCreateableTargetFields.isEmpty() && nonUpdateableTargetFields.isEmpty()) {
+                    dataImportsFLSValidatedCreateUpdate.add(dataImport);
+                } else if ((nonCreateableTargetFields.isEmpty()
+                        || nonUpdateableTargetFields.isEmpty())
+                        || nonAccessibleTargetFields.isEmpty()) {
+                    dataImportsFLSValidatedAccessible.add(dataImport);
+                } else {
+                    dataImportsWithFLSExceptions.add(dataImport);
+                }
+            }
+            System.debug(LoggingLevel.ERROR, '*** - - - this.dataImportsFLSValidatedCreateUpdate.size(): ' + dataImportsFLSValidatedCreateUpdate.size());
+            System.debug(LoggingLevel.ERROR, '*** - - - this.dataImportsFLSValidatedAccessible.size(): ' + dataImportsFLSValidatedAccessible.size());
+            System.debug(LoggingLevel.ERROR, '*** - - - this.dataImportsWithFLSExceptions.size(): ' + dataImportsWithFLSExceptions.size());
         }
     }
 
@@ -891,7 +1002,7 @@ global with sharing class BDI_DataImportService {
     * @param mapDIFieldToDstField The field map from a DI field to the destination field
     * @return boolean True if copied, False is not copied.
     */
-    public static Boolean copyDIFieldToDestinationRecord(DataImport__c dataImport, 
+    public static Boolean copyDIFieldToDestinationRecord(DataImport__c dataImport,
         String dataImportField, 
         SObject destinationRecord,
         Map<String, String> mapDIFieldToDstField) {

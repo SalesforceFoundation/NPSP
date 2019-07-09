@@ -50,4 +50,5 @@ public interface BDI_FieldMapping {
             String targetObjectName, 
             List<String> dataImportFields);
 
+    Map<String, Map<String, Set<String>>> getTargetObjectsAndFieldsByDataImportField();
 }

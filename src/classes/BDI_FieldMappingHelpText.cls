@@ -69,6 +69,47 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
         additionalFieldMappings.get(targetObjectName).put(sourceFieldName, destinationFieldName);
     }
 
+    public Map<String, Map<String, Set<String>>> getTargetObjectsAndFieldsByDataImportField() {
+            System.debug(LoggingLevel.ERROR, '*** ##### in BDI_FieldMappingHelpText.cls getTargetObjectsAndFieldsByDataImportField######');
+
+        Map<String, Map<String, Set<String>>> targetObjectsAndFieldsByDataImportField =
+                new Map<String, Map<String, Set<String>>>();
+
+        BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
+        for (BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping : helper.getAllHelpTextFieldMappings()) {
+            if (!helpTextFieldMapping.isUsable()) {
+                continue;
+            }
+//            System.debug(LoggingLevel.ERROR, '*** variable value: ' + targetObjectsAndFieldsByDataImportField);
+//            System.debug(LoggingLevel.ERROR, '^^^^^^ targetObjectsAndFieldsByDataImportField ^^^^^^');
+//            System.debug(LoggingLevel.ERROR, '*** variable value: ' + helpTextFieldMapping.targetObjectAPIName);
+//            System.debug(LoggingLevel.ERROR, '*** variable value: ' + helpTextFieldMapping.targetFieldAPIName);
+            if (targetObjectsAndFieldsByDataImportField.get(helpTextFieldMapping.dataImportFieldAPIName) == null) {
+                Set<String> targetFields = new Set<String>{helpTextFieldMapping.targetFieldAPIName};
+                Map<String, Set<String>> targetFieldsByTargetObject = new Map<String, Set<String>>{helpTextFieldMapping.targetObjectAPIName => targetFields};
+                targetObjectsAndFieldsByDataImportField.put(helpTextFieldMapping.dataImportFieldAPIName, targetFieldsByTargetObject);
+//                System.debug(LoggingLevel.ERROR, '*** ##### top if ######');
+            } else {
+                Map<String, Set<String>> targetFieldsByTargetObject = targetObjectsAndFieldsByDataImportField.get(helpTextFieldMapping.dataImportFieldAPIName);
+                if (targetFieldsByTargetObject.get(helpTextFieldMapping.targetObjectAPIName) == null) {
+                    Set<String> targetFields = new Set<String>{helpTextFieldMapping.targetFieldAPIName};
+                    targetFieldsByTargetObject.put(helpTextFieldMapping.targetObjectAPIName, targetFields);
+                System.debug(LoggingLevel.ERROR, '*** ##### inner if (although help text fields will only ever be mapped to a single target object+field...######');
+                } else {
+                    targetFieldsByTargetObject.get(helpTextFieldMapping.targetObjectAPIName).add(helpTextFieldMapping.targetFieldAPIName);
+                }
+//                System.debug(LoggingLevel.ERROR, '*** variable value targetFieldsByTargetObject: ' + targetFieldsByTargetObject);
+            }
+        }
+        System.debug(LoggingLevel.ERROR, '*** variable value - helptext cls targetObjectsAndFieldsByDataImportField: ' + targetObjectsAndFieldsByDataImportField);
+        return targetObjectsAndFieldsByDataImportField;
+    }
+
+//    public static Map<SObjectField,Map<SObjectType, List<SObjectField>> getMappedFieldsBySobjTypeByDataImportField() {
+//        System.debug(LoggingLevel.ERROR, '*** variable value: ' + getFieldMap('DataImport__c', 'Account1'));
+//        return null;
+//    }
+
     /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
     * return a map of DI field (key) to mapped field name on the destination record (value). 
