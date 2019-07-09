@@ -145,10 +145,17 @@ export default class bdiFieldMappings extends LightningElement {
         const status = payload.Status__c || payload.npsp__Status__c;
         const deploymentId = payload.DeploymentId__c || payload.npsp__DeploymentId__c;
 
-        this.showToast(
-            'Deployment completed with Status: ' + status,
-            'Deployment Id: ' + deploymentId,
-            'success');
+        if (status === 'Succeeded') {
+            this.showToast(
+                'Deployment completed with Status: ' + status,
+                'Deployment Id: ' + deploymentId,
+                'success');
+        } else {
+            this.showToast(
+                'Deployment completed with Status: ' + status,
+                'Deployment Id: ' + deploymentId,
+                'error');
+        }
     }
 
     /*******************************************************************************
