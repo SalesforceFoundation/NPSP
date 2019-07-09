@@ -78,6 +78,7 @@ Create New gift and process batch and validate
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Loading Is Complete
     Verify Row Count    1
     
     

@@ -47,6 +47,7 @@ Opportunity is Autoclosed when Overpaid
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Loading Is Complete
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
