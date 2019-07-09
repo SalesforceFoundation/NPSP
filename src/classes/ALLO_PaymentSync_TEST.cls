@@ -620,8 +620,10 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
     /*******************************************************************************************************
     * @description Test when an opportunity is over scheduled, has payment level allocations changed to the non default GAU,
-    * then the opportunity level allocations is increased. The payment level allocations should go back to the opportunity
-    * level allocation. 
+    * then opportunity level allocations is increased. This validates that the payment allocation gets scaled properly
+    * when over scheduled. Setting the opportunity allocation to an increased amount validates that the scaling happens properly when going
+    * from the opportunity to the payment. Updating the opportunity level allocation should also overwrite the
+    * payment level allocations.
     ********************************************************************************************************/
     @isTest
     private static void testAllocationAmountIncreasedOnOpportunityOverScheduled() {
@@ -671,8 +673,9 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
     /*******************************************************************************************************
     * @description Test when an opportunity is under scheduled, has payment level allocations changed to the non default GAU,
-    * then the opportunity level allocations is increased. The payment level allocations should go back to the opportunity
-    * level allocation. 
+    * then the opportunity level allocations is increased. This validates that the allocations are properly scaled when under scheduled.
+    * Setting the opportunity level allocation to an increased amount validates that it is properly scaled going
+    * from the opportunity to the payment. Updating the opportunity level allocation should also overwrite the payment level allocations.
     ********************************************************************************************************/
     @isTest
     private static void testAllocationAmountIncreasedOnOpportunityUnderScheduled() {
@@ -723,11 +726,13 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
     /*******************************************************************************************************
     * @description Test when an opportunity is under scheduled, has payment level allocations changed to the non default GAU,
-    * then the opportunity level allocation is decreased. The payment level allocations should go back to the opportunity
-    * level allocation. 
+    * then the opportunity level allocation is decreased. This validates that the allocations are properly scaled
+    * when under scheduled. Setting the opportunity level allocation to a lower amount validates that it is scaled
+    * properly when decreasing the amount, going from the opportunity to the payment.
+    * Updating the opportunity level allocation should also overwrite the payment level allocations.
     ********************************************************************************************************/
     @isTest
-    private static void testAllocationAmountDecreasedOnOpportunityUnderscheduled() {
+    private static void testAllocationAmountDecreasedOnOpportunityUnderScheduled() {
         setupForTests();
         makePayments(600, 10);
         makeGAUs(2);
@@ -775,8 +780,10 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
     /*******************************************************************************************************
     * @description Test when an opportunity is over scheduled, has payment level allocations changed,
-    * then opportunity level allocations changed. The payment level allocations should go back to the opportunity
-    * level allocation. 
+    * then opportunity level allocations decreases. This validates that the payment allocation gets scaled properly
+    * when over scheduled. Setting the opportunity allocation to a lower amount validates that the scaling happens properly when going
+    * from the opportunity to the payment. Updating the opportunity level allocation should also overwrite the
+    * payment level allocations.
     ********************************************************************************************************/
     @isTest
     private static void testAllocationAmountDecreasedOnOpportunityOverScheduled() {
