@@ -24,11 +24,6 @@
                     onclick={handleOpenModal}
                     class="slds-m-left_x-small slds-float_right">
                 </lightning-button>
-                <lightning-button-icon
-                    icon-name="utility:refresh"
-                    onclick={refresh}
-                    class="slds-float_right">
-                </lightning-button-icon>
             </div>
             <div class="slds-size_1-of-1 slds-m-top_small slds-m-bottom_large">
                 <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">{objectMapping.MasterLabel} Group</h1>
@@ -47,12 +42,16 @@
             <div class="slds-size_1-of-1 slds-m-vertical_small">
                 <div class="slds-grid slds-wrap">
                     <div class="slds-size_4-of-8">
-                        <p class="slds-truncate slds-text-heading_small table-header">Source (NPSP Data Import Object)</p>
+                        <p class="slds-truncate slds-p-bottom_xx-small slds-text-heading_small table-header table-header_source">
+                            Source (NPSP Data Import Object)
+                        </p>
                     </div>
                     <div class="slds-size_4-of-8">
-                        <p class="slds-truncate slds-text-heading_small table-header table-header-target">Target ({objectMapping.MasterLabel})</p>
+                        <p class="slds-truncate slds-p-bottom_xx-small slds-text-heading_small table-header table-header_target">
+                            Target ({objectMapping.MasterLabel})
+                        </p>
                     </div>
-                    <div class="slds-size_1-of-1 slds-m-top_x-small">
+                    <div class="slds-size_1-of-1">
                         <tempate if:true={isLoading}>
                             <lightning-spinner></lightning-spinner>
                             <c-stencil row-count="10" column-count="7"></c-stencil>
@@ -66,22 +65,25 @@
                                 onrowaction={handleRowAction}>
                             </lightning-datatable>
                             <template if:true={noFieldMappings}>
-                                <p class="slds-text-align_center slds-text-title_caps slds-p-around_medium table-no-field-mappings">
-                                    No field mappings found.
+                                <p class="slds-p-around_medium">
+                                    <i>There are no Field Mappings for this Mapping Group yet, </i>
+                                    <a href="#" onclick={handleOpenModal}>Create New Field Mapping</a>
                                 </p>
                             </template>
                         </template>
                     </div>
                 </div>
             </div>
-            <div class="slds-size_1-of-1 slds-m-top_small">
-                <lightning-button
-                    label="Create New Field Mapping"
-                    title="Create New Field Mapping"
-                    onclick={handleOpenModal}
-                    class="slds-m-left_x-small slds-float_right">
-                </lightning-button>
-            </div>
+            <template if:false={noFieldMappings}>
+                <div class="slds-size_1-of-1 slds-m-top_small">
+                    <lightning-button
+                        label="Create New Field Mapping"
+                        title="Create New Field Mapping"
+                        onclick={handleOpenModal}
+                        class="slds-m-left_x-small slds-float_right">
+                    </lightning-button>
+                </div>
+            </template>
         </div>
     </template>
 

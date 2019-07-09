@@ -7,8 +7,7 @@
                         name={name}
                         label={searchInputLabel}
                         onchange={debounceOnSearchKeyChange}
-                        value={searchKey}
-                        class="slds-p-top_small">
+                        value={searchKey}>
                     </lightning-input>
             </div>
             <div class="slds-size_1-of-12 slds-p-left_small">
@@ -27,8 +26,9 @@
                     placeholder=""
                     options={options}
                     onchange={handleFieldChange}
-                    class="slds-p-top_small"
-                    disabled={disabled}>
+                    disabled={disabled}
+                    field-level-help={fieldLevelHelp}
+                    class={comboboxClass}>
                 </lightning-combobox>
             </div>
             <div class="slds-size_1-of-12 slds-p-left_small">
@@ -51,7 +51,8 @@
                            data-id={result.id}
                            data-field-label={result.label}
                            data-field-value={result.value}
-                           onclick={selectSearchResult}>
+                           onclick={selectSearchResult}
+                           class="slds-p-vertical_x-small">
                             {result.label}
                         </p>
                     </template>

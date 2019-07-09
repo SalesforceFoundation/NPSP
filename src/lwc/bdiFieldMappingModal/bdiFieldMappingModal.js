@@ -19,10 +19,13 @@ export default class bdiFieldMappingModal extends LightningElement {
     @track selectedSourceFieldAPIName;
     @track sourceFieldLabelOptions;
     @track selectedSourceFieldDisplayType;
+    @track hasSourceFieldErrors;
 
     @track selectedTargetFieldLabel;
     @track selectedTargetFieldAPIName;
     @track targetFieldLabelOptions;
+    @track selectedTargetFieldDisplayType;
+    @track hasTargetFieldErrors;
 
     @api diFieldsByAPIName;
     @api targetFieldsByAPIName;
@@ -34,19 +37,19 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     // Map of Display Types
     validTargetTypesBySourceType = {
-        "ID": ["ID", "STRING"],
-        "REFERENCE": ["REFERENCE", "STRING"],
-        "PHONE": ["PHONE", "STRING"],
-        "TEXTAREA": ["TEXTAREA", "STRING"],
-        "URL": ["URL", "STRING"],
-        "EMAIL": ["EMAIL", "STRING"],
-        "BOOLEAN": ["BOOLEAN"],
-        "STRING": ["STRING", "PICKLIST"],
-        "DATETIME": ["DATETIME"],
-        "DATE": ["DATE"],
-        "PICKLIST": ["PICKLIST"], // TODO: Include sometimes Boolean as per the BDI Mapping Field Types dc
-        "CURRENCY": ["CURRENCY"],
-        "PERCENT": ["PERCENT"]
+        "Id": ["Id", "String"],
+        "Reference": ["Reference", "String"],
+        "Phone": ["Phone", "String"],
+        "Textarea": ["Textarea", "String"],
+        "Url": ["Url", "String"],
+        "Email": ["Email", "String"],
+        "Boolean": ["Boolean"],
+        "String": ["String", "Picklist"],
+        "Datetime": ["Datetime"],
+        "Date": ["Date"],
+        "Picklist": ["Picklist"], // Todo: Include Sometimes Boolean as per the Bdi Mapping Field Types Dc
+        "Currency": ["Currency"],
+        "Percent": ["Percent"]
     };
 
     get isTargetFieldDisabled() {
@@ -85,6 +88,8 @@ export default class bdiFieldMappingModal extends LightningElement {
     handleOpenModal(event) {
         this.isModalOpen = true;
         this.isLoading = true;
+        this.hasSourceFieldErrors = false;
+        this.hasTargetFieldErrors = false;
         this.objectMapping = event.objectMapping;
 
         this.collectMappedDataImportFields(event.fieldMappings);
@@ -97,7 +102,7 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
             this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
             this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
-            this.selectedSourceFieldDisplayType = this.row.xxx_Source_Field_Data_Type_xxx;
+            this.selectedSourceFieldDisplayType = this.toTitleCase(this.row.xxx_Source_Field_Data_Type_xxx);
         } else {
             // New row
             this.clearSelections();
@@ -179,11 +184,12 @@ export default class bdiFieldMappingModal extends LightningElement {
                 this.targetFieldLabelOptions.push(labelOption);
                 targetFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
 
+                let displayType = this.toTitleCase(fieldInfos[i].displayType);
                 // Collect target fields by display type
-                if (targetFieldsByLabelByDisplayType[fieldInfos[i].displayType]) {
-                    targetFieldsByLabelByDisplayType[fieldInfos[i].displayType].push(labelOption);
+                if (targetFieldsByLabelByDisplayType[displayType]) {
+                    targetFieldsByLabelByDisplayType[displayType].push(labelOption);
                 } else {
-                    targetFieldsByLabelByDisplayType[fieldInfos[i].displayType] = [labelOption];
+                    targetFieldsByLabelByDisplayType[displayType] = [labelOption];
                 }
             }
         }
@@ -229,7 +235,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     * function on receiving an id back from createDataImportFieldMapping.
     */
     handleSave() {
-        this.isLoading = true;
         let rowDetails;
 
         if (this.row) {
@@ -252,21 +257,52 @@ export default class bdiFieldMappingModal extends LightningElement {
             });
         }
 
-        createDataImportFieldMapping({fieldMappingString: rowDetails})
-            .then((deploymentId) => {
-                this.handleDeploymentId(deploymentId);
-            })
-            .catch((error) => {
-                this.isLoading = false;
-                if (error && error.body) {
-                    this.showToast(
-                        'Error',
-                        '{0}. {1}. {2}.',
-                        'error',
-                        'sticky',
-                        [error.body.exceptionType, error.body.message, error.body.stackTrace]);
-                }
-            });
+        let missingField = this.handleFieldValidations();
+
+        if (missingField.length === 0) {
+            this.isLoading = true;
+            createDataImportFieldMapping({fieldMappingString: rowDetails})
+                .then((deploymentId) => {
+                    this.handleDeploymentId(deploymentId);
+                })
+                .catch((error) => {
+                    this.isLoading = false;
+                    if (error && error.body) {
+                        this.showToast(
+                            'Error',
+                            '{0}. {1}. {2}.',
+                            'error',
+                            'sticky',
+                            [error.body.exceptionType, error.body.message, error.body.stackTrace]);
+                    }
+                });
+        } else {
+            this.showToast(
+                'Error',
+                `Missing the following fields [${missingField}]`,
+                'error',
+                'dismissable');
+        }
+    }
+
+    /*******************************************************************************
+    * @description Adds error classes to comboboxes and returns a string indicating
+    * which combobox selection is incomplete.
+    *
+    * @return {string} missingFields: Name of the incomplete combobox
+    */
+    handleFieldValidations() {
+        let missingField = '';
+        if (!this.selectedSourceFieldAPIName) {
+            missingField = 'Source Field';
+            this.hasSourceFieldErrors = true;
+        }
+        if (!this.selectedTargetFieldAPIName && !this.isTargetFieldDisabled) {
+            missingField = 'Target Field';
+            this.hasTargetFieldErrors = true;
+        }
+
+        return missingField;
     }
 
     /*******************************************************************************
@@ -300,8 +336,10 @@ export default class bdiFieldMappingModal extends LightningElement {
         let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
         this.selectedSourceFieldLabel = fieldInfo.label;
         this.selectedSourceFieldAPIName = fieldAPIName;
+        this.selectedSourceFieldDisplayType = this.toTitleCase(fieldInfo.displayType);
+        this.selectedTargetFieldAPIName = undefined;
 
-        this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo.displayType);
+        this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.selectedSourceFieldDisplayType);
     }
 
     /*******************************************************************************
@@ -331,6 +369,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         this.selectedTargetFieldAPIName = event.detail.value;
         let fieldInfo = this.targetFieldsByAPIName[this.selectedTargetFieldAPIName];
         this.selectedTargetFieldLabel = fieldInfo.label;
+        this.selectedTargetFieldDisplayType = this.toTitleCase(fieldInfo.displayType);
     }
 
     /*******************************************************************************
@@ -358,9 +397,22 @@ export default class bdiFieldMappingModal extends LightningElement {
     /*******************************************************************************
     * @description Parse proxy objects for debugging, mutating, etc
     *
-    * @param object: Object to be parsed
+    * @param {object} obj: Object to be parsed
     */
     parse(obj) {
        return JSON.parse(JSON.stringify(obj));
+    }
+
+    /*******************************************************************************
+    * @description Title cases a string
+    *
+    * @param {string} string: String to be title cased
+    */
+    toTitleCase(string) {
+        string = string.toLowerCase().split(' ');
+        for (let i = 0; i < string.length; i++) {
+            string[i] = string[i].charAt(0).toUpperCase() + string[i].slice(1);
+        }
+        return string.join(' ');
     }
 }

@@ -11,12 +11,18 @@ export default class bdiFieldMappingModalComboboxSearch extends LightningElement
     @api selectedFieldValue;
     @api options;
     @api parentListenerEventName;
+    @api fieldLevelHelp;
     @api disabled;
+    @api hasErrors;
 
     @track isSearchOpen;
     @track searchKey = '';
     @track searchResults;
     @track areSearchResultsVisible = false;
+
+    get comboboxClass() {
+        return this.hasErrors ? 'slds-has-error' : '';
+    }
 
     showSearch() {
         this.isSearchOpen = true;

@@ -26,27 +26,13 @@
     line-height: 21px;
 }
 
-.table-header-target {
+.table-header_source {
+    border-bottom: 2px solid black;
+    margin-right: 4rem;
+}
+
+.table-header_target {
+    border-bottom: 2px solid black;
     margin-left: 1.75rem;
-}
-
-.table-no-field-mappings {
-    background-color: rgb(250, 250, 249);
-}
-
-.custom-col {
-    display: inline-block;
-    width: auto;
-}
-
-.custom-col_1, .custom-col_5 {
-    width: 20%;
-}
-
-.custom-col_3, .custom-col_7 {
-    width: 125px;
-}
-
-.custom-col_4 {
-    width: 95px;
+    margin-right: 3rem;
 }
