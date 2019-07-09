@@ -619,12 +619,12 @@ private with sharing  class ALLO_PaymentSync_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Test when an opportunity is overscheduled, has payment level allocations changed, 
-    * then opportunity level allocations changed. The payment level allocations should go back to the opportunity
+    * @description Test when an opportunity is over scheduled, has payment level allocations changed to the non default GAU,
+    * then the opportunity level allocations is increased. The payment level allocations should go back to the opportunity
     * level allocation. 
     ********************************************************************************************************/
     @isTest
-    private static void testAllocationAmountIncreasedOnOpportunityOverscheduled() {
+    private static void testAllocationAmountIncreasedOnOpportunityOverScheduled() {
         setupForTests();
         makePayments(5000, 10);
         makeGAUs(2);
@@ -670,12 +670,12 @@ private with sharing  class ALLO_PaymentSync_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Test when an opportunity is underscheduled, has payment level allocations changed, 
-    * then opportunity level allocations changed. The payment level allocations should go back to the opportunity
+    * @description Test when an opportunity is under scheduled, has payment level allocations changed to the non default GAU,
+    * then the opportunity level allocations is increased. The payment level allocations should go back to the opportunity
     * level allocation. 
     ********************************************************************************************************/
     @isTest
-    private static void testAllocationAmountIncreasedOnOpportunityUnderscheduled() {
+    private static void testAllocationAmountIncreasedOnOpportunityUnderScheduled() {
         setupForTests();
         makePayments(600, 10);
         makeGAUs(2);
@@ -722,8 +722,8 @@ private with sharing  class ALLO_PaymentSync_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Test when an opportunity is underscheduled, has payment level allocations changed, 
-    * then opportunity level allocations changed. The payment level allocations should go back to the opportunity
+    * @description Test when an opportunity is under scheduled, has payment level allocations changed to the non default GAU,
+    * then the opportunity level allocation is decreased. The payment level allocations should go back to the opportunity
     * level allocation. 
     ********************************************************************************************************/
     @isTest
@@ -774,12 +774,12 @@ private with sharing  class ALLO_PaymentSync_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Test when an opportunity is underscheduled, has payment level allocations changed, 
+    * @description Test when an opportunity is over scheduled, has payment level allocations changed,
     * then opportunity level allocations changed. The payment level allocations should go back to the opportunity
     * level allocation. 
     ********************************************************************************************************/
     @isTest
-    private static void testAllocationAmountDecreasedOnOpportunityOverscheduled() {
+    private static void testAllocationAmountDecreasedOnOpportunityOverScheduled() {
         setupForTests();
         makePayments(5000, 10);
         makeGAUs(2);
