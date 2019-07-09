@@ -37,6 +37,7 @@ Opportunity is Autoclosed when Overpaid
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Click Link With Text    Review Donations
     Click BGE Button    Apply New Payment
+    Page Should Contain     You are currently applying a new Payment to Opportunity:&{opportunity}[Name]
     Fill BGE Form
     ...                       Donation Amount=101
     Click Field And Select Date    Donation Date    Today
