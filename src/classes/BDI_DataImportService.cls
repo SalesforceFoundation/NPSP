@@ -507,7 +507,6 @@ global with sharing class BDI_DataImportService {
         SavePoint sp = Database.setSavepoint();
 
         try {
-            System.debug(LoggingLevel.ERROR, '*** ##### try block ######');
             this.diSettings = dataImportSettings;
 
             // list of populated data import fields
@@ -602,8 +601,6 @@ global with sharing class BDI_DataImportService {
             // the failed update/inserts on the di record with the problem.
             // So go ahead and rollback the entire transaction on these totally unexpected errors.
             Database.rollback(sp);
-
-            System.debug(' ***** '+e.getStackTraceString());
 
             // log the unexpected error
             ERR_Handler.processError(e, ERR_Handler_API.Context.BDI);
@@ -737,11 +734,7 @@ global with sharing class BDI_DataImportService {
                     //Now loop through all of the target object + field combos for this source field
                     for (String targetObjectName : targetFieldsByObject.keySet()) {
                         for (String targetFieldName : targetFieldsByObject.get(targetObjectName)) {
-                            System.debug(LoggingLevel.ERROR, '*** ##### checking access for '+targetObjectName+'-'+targetFieldName+' object ######');
                             DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, targetFieldName);
-                            System.debug(LoggingLevel.ERROR, '*** access: ' + fieldDescribe.isAccessible());
-                            System.debug(LoggingLevel.ERROR, '*** create: ' + fieldDescribe.isCreateable());
-                            System.debug(LoggingLevel.ERROR, '*** update: ' + fieldDescribe.isUpdateable());
                             if (fieldDescribe.isAccessible() == false) {
                                 nonAccessibleTargetFields.add(targetObjectName + '.' + targetFieldName);
                             }
@@ -760,15 +753,6 @@ global with sharing class BDI_DataImportService {
                 nonUpdateableTargetFieldsByDataImportId.put(dataImport.Id, nonUpdateableTargetFields);
                 nonAccessibleTargetFieldsByDataImportId.put(dataImport.Id, nonAccessibleTargetFields);
 
-                System.debug(LoggingLevel.ERROR, '*** variable value: ' + nonCreateableTargetFieldsByDataImportId);
-                System.debug(LoggingLevel.ERROR, '^^^^^^ nonCreateableTargetFieldsByDataImportId ^^^^^^');
-
-                System.debug(LoggingLevel.ERROR, '*** variable value: ' + nonUpdateableTargetFieldsByDataImportId);
-                System.debug(LoggingLevel.ERROR, '^^^^^^ nonUpdateableTargetFieldsByDataImportId ^^^^^^');
-
-                System.debug(LoggingLevel.ERROR, '*** variable value: ' + nonAccessibleTargetFieldsByDataImportId);
-                System.debug(LoggingLevel.ERROR, '^^^^^^ nonAccessibleTargetFieldsByDataImportId ^^^^^^');
-
                 //now separate out the dis
                 if (nonCreateableTargetFields.isEmpty() && nonUpdateableTargetFields.isEmpty()) {
                     dataImportsFLSValidatedCreateUpdate.add(dataImport);
@@ -780,9 +764,6 @@ global with sharing class BDI_DataImportService {
                     dataImportsWithFLSExceptions.add(dataImport);
                 }
             }
-            System.debug(LoggingLevel.ERROR, '*** - - - this.dataImportsFLSValidatedCreateUpdate.size(): ' + dataImportsFLSValidatedCreateUpdate.size());
-            System.debug(LoggingLevel.ERROR, '*** - - - this.dataImportsFLSValidatedAccessible.size(): ' + dataImportsFLSValidatedAccessible.size());
-            System.debug(LoggingLevel.ERROR, '*** - - - this.dataImportsWithFLSExceptions.size(): ' + dataImportsWithFLSExceptions.size());
         }
     }
 

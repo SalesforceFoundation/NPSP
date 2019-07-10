@@ -1402,7 +1402,6 @@ private with sharing class BDI_DataImport_TEST2 {
                     new BDI_DataImportService(false, fieldMapper);
             BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
 
-
             ID ApexJobId = Database.executeBatch(bdi, 10);
             Test.stopTest();
         }
