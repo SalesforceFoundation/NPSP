@@ -484,6 +484,12 @@ global with sharing class BDI_DataImportService {
         return isDryRun ? BDI_DataImport_API.bdiDryRunValidated : BDI_DataImport_API.bdiImported;
     }
 
+    /**
+     * @description Instance of FieldLevelSecurityValidator inner class used to perform
+     * Field Level Security validation and temporarily store results to be used in
+     * further processing (writing exceptions to DataImport records, etc.)
+     */
+    private FieldLevelSecurityValidator flsValidator;
 
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
@@ -492,7 +498,6 @@ global with sharing class BDI_DataImportService {
     * @param listDI a list of Data Import records to import
     * @return void
     */
-    private DataImports dataImportsInstance;//Will be used to validate FLS for target mappings
     public void process(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports) {
 
         // initialize our performance logger
@@ -525,11 +530,18 @@ global with sharing class BDI_DataImportService {
                 populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
 
-            this.dataImportsInstance = new DataImports(dataImports);
+            this.flsValidator =
+                    new FieldLevelSecurityValidator(
+                            dataImports,
+                            fieldMapper.getTargetObjectsAndFieldsByDataImportField());
+
+            //From this point forward, only operate on the Data Import records that passed FLS
+            //validation.  Records that did not pass FLS validation will be updated with their
+            //respective FLS exceptions at the end of this block
             if (isDryRun) {
-                this.listDI = dataImportsInstance.getDataImportsWithAccessibleTargetFields();
+                this.listDI = flsValidator.getDataImportsWithAccessibleTargetFields();
             } else {
-                this.listDI = dataImportsInstance.getDataImportsWithUpdateableAndCreateableTargetFields();
+                this.listDI = flsValidator.getDataImportsWithUpdateableAndCreateableTargetFields();
             }
 
             // do any performance optimizations to avoid unnecessary code
@@ -578,8 +590,11 @@ global with sharing class BDI_DataImportService {
             customPostProcess();
             pl.stop();
 
+            List<DataImport__c> dataImportsWithFlsExceptions = flsValidator.getDataImportsWithFlsExceptions(isDryRun);
+            logFlsExceptions(dataImportsWithFlsExceptions, apexJobId);
+            UTIL_DMLService.updateRecords(dataImportsWithFlsExceptions);
+
         } catch (Exception e) {
-            System.debug(LoggingLevel.ERROR, '*** ##### catch block ######');
             // we should only hit this exception if a truly unexpected runtime
             // error occurs.  not even database updates/inserts should get here,
             // since we now handle all database updates/inserts using the flavor
@@ -612,54 +627,60 @@ global with sharing class BDI_DataImportService {
             // then it would rollback our setting of failure state in the DI records.
             // so we just return, and rely on our Data Import ui to notify the user.
         } finally {
-            //since we filtered out any data imports with FLS exceptions earlier,
-            //lets stamp the exceptions onto the records here:
-            System.debug(LoggingLevel.ERROR, '*** ##### finally block ######');
-            List<DataImport__c> dataImportsWithFlsExceptions = dataImportsInstance.getDataImportsWithFlsExceptions(isDryRun);
-            System.debug(LoggingLevel.ERROR, '*** variable value dataImportsWithFlsExceptions: ' + dataImportsWithFlsExceptions);
-            if (dataImportsWithFlsExceptions != null && dataImportsWithFlsExceptions.size() > 0) {
-                for (DataImport__c dataImport : dataImportsWithFlsExceptions) {
-                    dataImport.Status__c = statusDIFailed();
-                    dataImport.ApexJobId__c = apexJobId; //Needed to display the correct totals on the BDI_DataImport page
-                    String errMessage;
-                    if (isDryRun) {
-                        Set<String> nonAccessibleFields = dataImportsInstance.getFieldsWithoutReadAccess(dataImport.Id);
-                        List<String> errorMsgObjects = new List<String>{String.join(new List<String>(nonAccessibleFields), ', ')};
-                        errMessage = String.format(System.Label.flsReadAccessError, errorMsgObjects);
-                    } else {
-                        Set<String> nonCreateableUpdateableFields = dataImportsInstance.getFieldsWithoutCreateUpdateAccess(dataImport.Id);
-                        List<String> errorMsgObjects = new List<String>{String.join(new List<String>(nonCreateableUpdateableFields), ', ')};
-                        errMessage = String.format(System.Label.flsError, errorMsgObjects);
-                    }
-                    System.debug(' ***** FLS failed with ' + errMessage);
-                    LogBDIError(dataImport, errMessage, null);
-                }
-                UTIL_DMLService.updateRecords(dataImportsWithFlsExceptions);
-            }
-
             perfLogger.stop();
             perfLogger.save();
         }
     }
 
     /**
+     * @description Stamps Data Import records with their FLS
+     *
+     * @param dataImportsWithFlsExceptions
+     * @param apexJobId
+     */
+    private void logFlsExceptions(List<DataImport__c> dataImportsWithFlsExceptions, Id apexJobId){
+        for (DataImport__c dataImport : dataImportsWithFlsExceptions) {
+            dataImport.Status__c = statusDIFailed();
+            dataImport.ApexJobId__c = apexJobId; //Needed to display the correct totals on the BDI_DataImport page
+            String errMessage;
+            if (isDryRun) {
+                Set<String> nonAccessibleFields = flsValidator.getFieldsWithoutReadAccess(dataImport.Id);
+                List<String> errorMsgObjects = new List<String>{String.join(new List<String>(nonAccessibleFields), ', ')};
+                errMessage = String.format(System.Label.flsReadAccessError, errorMsgObjects);
+            } else {
+                Set<String> nonCreateableUpdateableFields = flsValidator.getFieldsWithoutCreateUpdateAccess(dataImport.Id);
+                List<String> errorMsgObjects = new List<String>{String.join(new List<String>(nonCreateableUpdateableFields), ', ')};
+                errMessage = String.format(System.Label.flsError, errorMsgObjects);
+            }
+            LogBDIError(dataImport, errMessage, null);
+        }
+    }
+
+    /**
      * @description Inner class used to validate Field Level Security of mapped target fields.
      */
-    public class DataImports {
+    private class FieldLevelSecurityValidator {
         List<DataImport__c> dataImportsInitial;
         Map<String, Map<String, Set<String>>> sourceFieldToObjectToFieldsMap;
-        List<DataImport__c> dataImportsFLSValidatedCreateUpdate = new List<DataImport__c>();
-        List<DataImport__c> dataImportsFLSValidatedAccessible = new List<DataImport__c>(); //Used for dry run
-        List<DataImport__c> dataImportsWithFLSExceptions = new List<DataImport__c>();
-        Map<Id, Set<String>> nonCreateableTargetFieldsByDataImportId = new Map<Id, Set<String>>();
-        Map<Id, Set<String>> nonUpdateableTargetFieldsByDataImportId = new Map<Id, Set<String>>();
-        Map<Id, Set<String>> nonAccessibleTargetFieldsByDataImportId = new Map<Id, Set<String>>();
+        List<DataImport__c> dataImportsFLSValidatedCreateUpdate;
+        List<DataImport__c> dataImportsFLSValidatedAccessible; //Used for dry run
+        List<DataImport__c> dataImportsWithFLSExceptions;
+        Map<Id, Set<String>> nonCreateableTargetFieldsByDataImportId;
+        Map<Id, Set<String>> nonUpdateableTargetFieldsByDataImportId;
+        Map<Id, Set<String>> nonAccessibleTargetFieldsByDataImportId;
 
         //constructor
-        public DataImports(List<DataImport__c> dataImports) {
+        public FieldLevelSecurityValidator(
+                List<DataImport__c> dataImports,
+                Map<String, Map<String, Set<String>>> sourceFieldToObjectToFieldsMap) {
             this.dataImportsInitial = dataImports;
-            this.sourceFieldToObjectToFieldsMap =
-                    getDefaultFieldMapping().getTargetObjectsAndFieldsByDataImportField();
+            this.sourceFieldToObjectToFieldsMap = sourceFieldToObjectToFieldsMap;
+            dataImportsFLSValidatedCreateUpdate = new List<DataImport__c>();
+            dataImportsFLSValidatedAccessible = new List<DataImport__c>();
+            dataImportsWithFLSExceptions = new List<DataImport__c>();
+            nonCreateableTargetFieldsByDataImportId = new Map<Id, Set<String>>();
+            nonUpdateableTargetFieldsByDataImportId = new Map<Id, Set<String>>();
+            nonAccessibleTargetFieldsByDataImportId = new Map<Id, Set<String>>();
             this.validateTargetMappingFieldLevelSecurity();
         }
 
