@@ -100,8 +100,35 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         validatePayments(newList, oldList, triggerAction, dmlWrapper);
 
+        Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>();
+
         if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-            return handleMultiCurrencyPayments(newlist, oldlist, triggerAction, dmlWrapper);
+            return handleMultiCurrencyPayments(oppsById, newlist, oldlist, triggerAction, dmlWrapper);
+        }
+
+        if (isEnforceAccountingDataConsistency) {
+            //If the Opp Map is not set in the previous step, then query the Opp here
+            if (oppsById.size() == 0) {
+                Set<Id> oppIds = new Set<Id>();
+                for (npe01__OppPayment__c pmt : newlist) {
+                    oppIds.add(pmt.npe01__Opportunity__c);
+                }
+                oppsById = getPaymentOpportunities(oppIds);
+            }
+            OPP_OpportunityAmountSync_SVC service = new OPP_OpportunityAmountSync_SVC();
+            List<Opportunity> oppsToUpdate = service.syncOppAmountWithTotalPaidPaymentAmount(oppsById);
+            for (Opportunity opp : oppsToUpdate) {
+                Boolean alreadyInDMLWrapper = false;
+                for (SObject obj : dmlWrapper.objectsToUpdate) {
+                    if (obj.Id == opp.Id) {
+                        alreadyInDMLWrapper = true;
+                        break;
+                    }
+                }
+                if(!alreadyInDMLWrapper) {
+                    dmlWrapper.objectsToUpdate.add(opp);
+                }
+            }
         }
 
         return dmlWrapper;
@@ -131,6 +158,33 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         // However, even if ACM is enabled, if the Opportunity.Amount is updated to match the total Payments
         // the Opportunity should still be marked as closed.
         PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper);
+
+        //Prevent user modify Opp Amount
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && isEnforceAccountingDataConsistency) {
+            Set<Id> oppIds = (new Map<Id, Opportunity>(newList)).keySet();
+
+            Map<Id, Opportunity> oppsById = getPaymentOpportunities(oppIds);
+
+            for (Opportunity opp : oppsById.values()) {
+                Decimal totalPaid = 0;
+
+                for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                    if (pmt.npe01__Paid__c) {
+                        totalPaid += pmt.npe01__Payment_Amount__c;
+                    }
+                }
+
+                if (OPP_StageMappingUtil.determineOppStateFromOppStage(opp.StageName) == 'FINALIZED'
+                        && mapIdOppNew.get(opp.Id).Amount != totalPaid) {
+                    opp.addError('The Opportunity Amount must be equal to total paid Payment Amount amount!');
+                }
+
+                if (OPP_StageMappingUtil.determineOppStateFromOppStage(opp.StageName) != 'FINALIZED'
+                        && mapIdOppNew.get(opp.Id).Amount < totalPaid) {
+                    opp.addError('You are not allow to lower the Opportunity Amount to less than total Paid Payment amount!');
+                }
+            }
+        }
 
         //if currency has changed, reset payment currencies
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate && isCurrencyFieldAvailable) {
@@ -198,6 +252,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @return dmlWrapper this method modifies dmlWrapper and returns it
     ********************************************************************************************************/
     private DmlWrapper handleMultiCurrencyPayments(
+        Map<Id, Opportunity> oppsById,
         List<npe01__OppPayment__c> newlist,
         List<npe01__OppPayment__c> oldlist,
         TDTM_Runnable.Action triggerAction,
@@ -212,7 +267,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             oppIds.add(pmt.npe01__Opportunity__c);
         }
 
-        Map<Id, Opportunity> oppsById = getPaymentOpportunities(oppIds);
+        oppsById = getPaymentOpportunities(oppIds);
 
         // Validation and default the CurrencyIsoCode for new records for Before Insert/update
         if (isCurrencyFieldAvailable && (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
