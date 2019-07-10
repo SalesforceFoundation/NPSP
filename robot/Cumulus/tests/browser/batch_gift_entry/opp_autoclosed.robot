@@ -48,10 +48,11 @@ Opportunity is Autoclosed when Overpaid
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Element Is Visible    text:All Gifts
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
-    Select Window    ${value} | Salesforce    5
+    Select Window    ${value} | Salesforce    7
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}

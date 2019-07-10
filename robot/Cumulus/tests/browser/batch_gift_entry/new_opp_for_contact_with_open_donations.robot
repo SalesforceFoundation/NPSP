@@ -9,7 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Create a new opportunity for a contact with open donations
     #Enter an account with open donations, then clear it and enter a contact with open donations, then choose to create a new opp and process it
-    [tags]  unstable
+    [tags]  stable
     Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
@@ -61,6 +61,7 @@ Create a new opportunity for a contact with open donations
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Element Is Visible    text:All Gifts
     Verify Expected Values    nonns    Opportunity    &{opportunity2}[Id]
     ...    Amount=100.0
     ...    CloseDate=${date}
@@ -69,7 +70,7 @@ Create a new opportunity for a contact with open donations
     ${value}    Return Locator Value    bge.value    Donation
     #Click Link    text:${value}
     Click Link With Text    ${value}
-    Select Window    ${value} | Salesforce    5
+    Select Window    ${value} | Salesforce    7
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     ${newopp_id}    Get Current Record ID
