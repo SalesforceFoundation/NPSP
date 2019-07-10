@@ -47,25 +47,6 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
     private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
 
-    /****************************************************************************************************
-    * @description Map of legacy help text field data import object names to object api names
-    */
-    private final Map<String, String> DI_OBJECT_MAP = new Map<String, String>{
-            'Account1' => 'Account',
-            'Account2' => 'Account',
-            'Address' => UTIL_Namespace.StrTokenNSPrefix('Address__c'),
-            'Contact1' => 'Contact',
-            'Contact2' => 'Contact',
-            'Household' => 'Account',
-            'Opportunity' => 'Opportunity',
-            'Donation' => 'Opportunity',
-            'Payment' => 'npe01__OppPayment__c',
-            'GAU_Allocation_1' => UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),
-            'GAU_Allocation_2' => UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),
-            'Opportunity_Contact_Role_1' => UTIL_Namespace.StrTokenNSPrefix('OpportunityContactRole'),
-            'Opportunity_Contact_Role_2' => UTIL_Namespace.StrTokenNSPrefix('OpportunityContactRole')
-    };
-
     public Map<String, Map<String, Set<String>>> getTargetObjectsAndFieldsByDataImportField() {
 
         Map<String, Map<String, Set<String>>> targetObjectsAndFieldsByDataImportField =
