@@ -38,10 +38,6 @@
 */
 public class ERR_Handler {
 
-    @testVisible private static final String STATUS_CODE_REQUIRED_FIELD_MISSING_VAL = 'Required Field Missing';
-    @testVisible private static final String STATUS_CODE_CUSTOM_VALIDATION_VAL = 'Custom Validation Rule Failed';
-    @testVisible private static final String STATUS_CODE_OTHER_VAL = 'Other';
-
     /*******************************************************************************************************
     * @description Inner class that groups the result of processing the result of multiple DML operations performed
     *              using the Database class.
@@ -56,6 +52,7 @@ public class ERR_Handler {
         */
         public List<Error__c> errorRecords = new List<Error__c>();
     }
+
 
     /*******************************************************************************************************
     * @description Processes the result of multiple DML operations performed using the Database class, to determine
@@ -115,7 +112,16 @@ public class ERR_Handler {
             return errors;
         }
         for (Integer i=0; i<dmlResults.size(); i++) {
-            if (!isDmlResultSuccess(dmlResults[i])) {
+            Boolean isSuccess = true;
+            if (dmlResults[i] instanceof Database.SaveResult) {
+                isSuccess = ((Database.SaveResult)dmlResults[i]).isSuccess();
+            } else if (dmlResults[i] instanceof Database.DeleteResult) {
+                isSuccess = ((Database.DeleteResult)dmlResults[i]).isSuccess();
+            } else if (dmlResults[i] instanceof Database.UndeleteResult) {
+                isSuccess = ((Database.UndeleteResult)dmlResults[i]).isSuccess();
+            }
+
+            if (!isSuccess) {
                 errors.errorsExist = true;
 
                 //Creating error object
@@ -190,47 +196,31 @@ public class ERR_Handler {
 
     /*******************************************************************************************************
     * @description Checks if a given DML operation has succeeded depending on the type of DML result.
-    * @param Boolean true, if no errors are present
+    * @param dmlResult The results of a DML batch operation performed using the Database class.
     */
     public static boolean isDmlSuccess(Object dmlResult) {
         return getDmlResultErrors(dmlResult).size() == 0;
     }
 
     /*******************************************************************************************************
-    * @description Checks if a given DML operation has succeeded depending on the type of DML result.  Use the
-    * isSuccess() method of the result.
-    * @param Boolean true if isSuccess() was true
-    */
-    @testVisible private static boolean isDmlResultSuccess(Object dmlResult) {
-        if (dmlResult instanceof Database.SaveResult) {
-            return ((Database.SaveResult)dmlResult).isSuccess();
-        } else if (dmlResult instanceof Database.DeleteResult) {
-            return ((Database.DeleteResult)dmlResult).isSuccess();
-        } else if (dmlResult instanceof Database.UndeleteResult) {
-            return ((Database.UndeleteResult)dmlResult).isSuccess();
-        }
-        return true;
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves errors from a DML operation depending on the type of DML result.
     * @param dmlResult The result of a DML batch operation performed using the Database class.
-    * @return List<Database.Error> list of Database Errors associated with the DML Result
+    * @return isSuccess Returns true if all DML operations passed successful; returns false if there was a DML exception.
     */
     public static List<Database.Error> getDmlResultErrors(Object dmlResult) {
-        List<Database.Error> errs = new List<Database.Error>();
+        List<Database.Error> errList = new List<Database.Error>();
 
         if (dmlResult instanceof Database.SaveResult) {
-            errs = ((Database.SaveResult)dmlResult).getErrors();
+            errList = ((Database.SaveResult)dmlResult).getErrors();
         } else if (dmlResult instanceof Database.DeleteResult) {
-            errs = ((Database.DeleteResult)dmlResult).getErrors();
+            errList = ((Database.DeleteResult)dmlResult).getErrors();
         } else if (dmlResult instanceof Database.UndeleteResult) {
-            errs = ((Database.UndeleteResult)dmlResult).getErrors();
+            errList = ((Database.UndeleteResult)dmlResult).getErrors();
         }
 
-        return errs;
-    }
+        return errList;
 
+    }
     /*******************************************************************************************************
     * @description Retrieves errors from a DML operation depending on the type of DML result.
     * @param sObjects List of generic sObjects
@@ -278,11 +268,11 @@ public class ERR_Handler {
             processErrors(new Error__c[]{error}, context);
         }
     }
-
-
+    
+    
     /*******************************************************************************************************
     * @description Creates error records from passed in exceptions.
-    *   If the Error Settings is enabled, errors are stored in the database.
+    *   If the Error Settings is enabled, errors are stored in the database. 
     *   If the Error Settings has notification enabled, an email notificiation is sent.
     * @param exceptions List of exceptions.
     * @param context The context the exception was raised on.
@@ -293,7 +283,7 @@ public class ERR_Handler {
         for (Exception e : exceptions) {
             errors.add(createError(e, context.name()));
         }
-
+        
         processErrors(errors, context.name());
     }
 
@@ -311,12 +301,8 @@ public class ERR_Handler {
             }
 
             if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-
                 UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
-
-                if (!errorRecords.isEmpty()) { // New Errors
-                    Database.insert(errorRecords, false);
-                }
+                Database.insert(errorRecords, false);
             }
 
             //ERR_Notifier takes care of checking the settings itself.
@@ -330,7 +316,7 @@ public class ERR_Handler {
     * @param context The context the exception was raised on.
     * @return Error__c Error record.
     */
-    @testVisible private static Error__c createError(Exception e, String context) {
+    private static Error__c createError(Exception e, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Error_Type__c = e.getTypeName();
@@ -349,7 +335,7 @@ public class ERR_Handler {
             message = 'Stacktrace available at the time of saving the record - ';
         }
         error.Stack_Trace__c = message + stackTrace;
-
+        
         return error;
     }
 
@@ -423,7 +409,7 @@ public class ERR_Handler {
         UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
         return error;
     }
-
+    
     /*******************************************************************************************************
     * @description Returns the URL of a record, if available.
     * @param saveResultId The id resulting from a DML operation of the Database class.
@@ -432,17 +418,17 @@ public class ERR_Handler {
     */
     private static String getRecordURL(Id saveResultId, Id objId) {
         String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
-        if (saveResultId != null) {
+        if (saveResultId != null)
             recordURL += saveResultId;
-        } else {
+        else            
             recordURL += objId;
-        }
-
-        recordURL = recordURL.replaceFirst('http:', 'https:');
-
+                     
+        if (recordURL.startsWith('http:'))
+            recordURL = recordURL.replaceFirst('http:', 'https:');
+            
         return recordURL;
     }
-
+    
     /*******************************************************************************************************
     * @description Returns the ID of the object the error is about if available.
     * @param error. The Error object.
@@ -454,7 +440,7 @@ public class ERR_Handler {
         }
         return null;
     }
-
+    
     /*******************************************************************************************************
     * @description Returns the status of the error that happened as a result of a DML operation performed through
     *              the Database class as a string.
@@ -462,11 +448,11 @@ public class ERR_Handler {
     * @return The error status as a string.
     */
     private static String getStatusCode(system.StatusCode status) {
-        if (status == System.Statuscode.REQUIRED_FIELD_MISSING)
-            return STATUS_CODE_REQUIRED_FIELD_MISSING_VAL;
-        else if (status == System.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
-            return STATUS_CODE_CUSTOM_VALIDATION_VAL;
+        if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
+            return 'Required Field Missing';   
+        else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
+            return 'Custom Validation Rule Failed';
         else
-            return STATUS_CODE_OTHER_VAL;
+            return 'Other';
     }
 }
