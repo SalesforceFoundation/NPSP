@@ -189,12 +189,10 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
-    * @description When changing the amount of a Payment with Allocations:
-    * Increasing the amount will adjust the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust
-    * the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an
-    * error is thrown and the payment update is blocked.
+    * @description Validates that when there are multiple allocations to the same GAU on the Opportunity,
+    * the allocation amount will be consolidated on the payment level on insert and update. Additionally,
+    * when there are multiple allocations to the same GAU on the payment level, it will be consolidated on the
+    * Opportunity level (Only going from payment to opportunity, not Recurring donation/campaign to opportunity)
     ********************************************************************************************************/
     static testMethod void duplicateGAUWithPayments() {
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
@@ -209,9 +207,16 @@ private with sharing class ALLO_Allocations_TEST {
         insert acc;
         Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 100, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
-        
+        List<npe01__OppPayment__c> defaultCreatedPayment = [Select Id from npe01__OppPayment__c Where npe01__Opportunity__c =: opp.Id];
+        delete defaultCreatedPayment;
+
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
         insert gau;
+
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name='GAU2');
+        insert gau2;
+
+
 
         //resetting these manually as a test is considered a single context for static variables
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
@@ -222,13 +227,56 @@ private with sharing class ALLO_Allocations_TEST {
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
+        // Validate the consolidation is correct on insert.
         npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 100, npe01__Opportunity__c = opp.Id);
         insert pmt;
 
         List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.Id, gau.Id);
 
+
         System.assertEquals(1, queryAllo.size(), 'There should only be one allocation');
         System.assertEquals(100, queryAllo[0].Amount__c, 'The allocation amount should be 100');
+
+        List<Allocation__c> oppAllocationList = getAllocationsOrderByPercent(opp.Id);
+        percentAllo.General_Accounting_Unit__c = gau2.Id;
+        percentAllo.Percent__c = 75;
+        percentAllo.Opportunity__c = opp.Id;
+
+        amountAllo.General_Accounting_Unit__c = gau2.Id;
+        amountAllo.Amount__c = 25;
+        amountAllo.Opportunity__c = opp.Id;
+        List<Allocation__c> alloForUpdate = new List<Allocation__c>();
+        alloForUpdate.add(percentAllo);
+        alloForUpdate.add(amountAllo);
+
+        // Validate the consolidation is correct on update.
+        update alloForUpdate;
+
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, gau2.Id);
+
+        System.assertEquals(1, queryAllo.size(), 'There should only be one allocation');
+        System.assertEquals(100, queryAllo[0].Amount__c, 'The allocation amount should be 100');
+
+        // Validate that the consolidation is correct going from payment to opportunity.
+        List<Allocation__c> alloForUpsert = new List<Allocation__c>();
+
+        Allocation__c paymentAllo = new Allocation__c(Payment__c=pmt.Id, Amount__c = 25, General_Accounting_Unit__c = gau.id);
+
+        Allocation__c existingPaymentAllo = queryAllo[0];
+        existingPaymentAllo.General_Accounting_Unit__c = gau.Id;
+        existingPaymentAllo.Percent__c = 75;
+        alloForUpsert.add(existingPaymentAllo);
+        alloForUpsert.add(paymentAllo);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
+
+        update existingPaymentAllo;
+        insert paymentAllo;
+
+        queryAllo = getAllocationsOrderByPercent(opp.Id);
+
+        System.assertEquals(1, queryAllo.size(), 'There should only be one allocation');
+        System.assertEquals(100, queryAllo[0].Amount__c, 'The allocation amount should be 100');
+
     }
 
     /*******************************************************************************************************

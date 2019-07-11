@@ -616,7 +616,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         allo.put('CurrencyIsoCode', sObj.get('CurrencyIsoCode'));
                     }
 
-                    if (isPaymentAllocation == true) {
+                    if (isPaymentAllocation == true && alloInMap != null) {
                         alloInMap.Amount__c += allo.Amount__c;
                     }
 
