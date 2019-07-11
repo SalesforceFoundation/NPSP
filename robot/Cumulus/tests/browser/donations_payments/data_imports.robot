@@ -34,5 +34,5 @@ Data Imports
     # Select Frame With Title   NPSP Data Import
     # Click Button With Value   Begin Data Import Process
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Locator    data_imports.status    Completed
+    Wait For Batch To Complete    data_imports.status    Completed
 
