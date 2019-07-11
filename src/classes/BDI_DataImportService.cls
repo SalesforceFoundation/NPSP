@@ -651,11 +651,12 @@ global with sharing class BDI_DataImportService {
         List<DataImport__c> dataImportsWithFlsExceptions = flsService.getInvalidRecords();
         for (DataImport__c dataImport : dataImportsWithFlsExceptions) {
             dataImport.Status__c = statusDIFailed();
-            dataImport.ApexJobId__c = apexJobId; //Needed to display the correct totals on the BDI_DataImport page
-            List<String> errorMsgObjects = new List<String>{
-                    String.join(flsService.getQualifiedInvalidFieldNamesById(dataImport.Id), ', ')
-            };
+            dataImport.ApexJobId__c = apexJobId;
+            List<String> invalidFields = flsService.getQualifiedInvalidFieldNamesById(dataImport.Id);
             String errMsgLabel = isDryRun ? System.Label.flsReadAccessError : System.Label.flsError;
+            List<String> errorMsgObjects = new List<String>{
+                    String.join(invalidFields, ', ')
+            };
             String errMessage = String.format(errMsgLabel, errorMsgObjects);
             LogBDIError(dataImport, errMessage, null);
         }
