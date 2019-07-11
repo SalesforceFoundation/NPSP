@@ -790,11 +790,6 @@ global with sharing class BDI_DataImportService {
     private class BDIException extends Exception {}
 
     /*******************************************************************************************************
-    * @description flag to allow us to test out field level security exception
-    */
-    public static Boolean failFieldLevelSecurity = false;
-
-    /*******************************************************************************************************
     * @description returns the target object (api name) for a given Data Import field
     * @param sourceFieldName the api name of the Data Import field
     * @return String the api name of the target object for that field, derived from the help text
