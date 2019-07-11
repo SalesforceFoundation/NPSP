@@ -33,7 +33,7 @@
 * @description Test class for ERR_RecordError_TEST
 * @group ErrorHandling
 */
-@isTest
+@isTest(isParallel=true)
 private class ERR_RecordError_TEST {
 
     private class TestException extends Exception { }
