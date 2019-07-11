@@ -63,7 +63,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
             for (Data_Import_Field_Mapping__mdt dataImportFieldMapping : fieldMappingsForThisDataImportObject) { //Looping just the field mappings for this target obj
                 String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
-                String sourceField = dataImportFieldMapping.Source_Field_API_Name__c;
+                String sourceField = UTIL_Namespace.StrAllNSPrefix(dataImportFieldMapping.Source_Field_API_Name__c);
                 SObjectField sourceSObjectField = UTIL_Describe.getFieldDescribe(sourceObject, sourceField).getSobjectField();
 
                 String targetField = dataImportFieldMapping.Target_Field_API_Name__c;
