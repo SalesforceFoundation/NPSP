@@ -100,7 +100,7 @@ public class ERR_RecordError {
             ids.add((String)so.Id);
         }
 
-        List<Error__c> errors = [Select     Id,
+        List<Error__c> errors = [SELECT     Id,
                                             Context_Type__c,
                                             Datetime__c,
                                             Error_Type__c,
@@ -109,8 +109,8 @@ public class ERR_RecordError {
                                             Record_Id__c,
                                             Record_URL__c,
                                             Retry_Pending__c
-                                from Error__c
-                                where      Record_Id__c in :ids and
+                                FROM Error__c
+                                WHERE      Record_Id__c IN :ids AND
                                             Context_Type__c = :context
                                 ];
 
