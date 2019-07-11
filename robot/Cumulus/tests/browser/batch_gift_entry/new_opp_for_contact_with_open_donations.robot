@@ -9,7 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Create a new opportunity for a contact with open donations
     #Enter an account with open donations, then clear it and enter a contact with open donations, then choose to create a new opp and process it
-    [tags]  unstable
+    [tags]  stable
     Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
@@ -23,6 +23,7 @@ Create a new opportunity for a contact with open donations
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{account} =     API Create Organization Account
     &{contact} =     API Create Contact
+    Store Session Record      Account    &{contact}[AccountId]
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity1} =     API Create Opportunity   &{account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}  
     &{opportunity2} =     API Create Opportunity   &{contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}      
@@ -59,8 +60,9 @@ Create a new opportunity for a contact with open donations
     # Select Frame With Title    NPSP Data Import
     # Click Button With Value   Begin Data Import Process
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Locator    data_imports.status    Completed
+    Wait For Batch To Complete    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Element Is Visible    text:All Gifts
     Verify Expected Values    nonns    Opportunity    &{opportunity2}[Id]
     ...    Amount=100.0
     ...    CloseDate=${date}
@@ -69,7 +71,7 @@ Create a new opportunity for a contact with open donations
     ${value}    Return Locator Value    bge.value    Donation
     #Click Link    text:${value}
     Click Link With Text    ${value}
-    Select Window    ${value} | Salesforce    5
+    Select Window    ${value} | Salesforce    7
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     ${newopp_id}    Get Current Record ID
@@ -82,4 +84,4 @@ Create a new opportunity for a contact with open donations
     Select Tab     Related
     Load Related List    Opportunities
     Verify Occurrence    Opportunities    2
-    Store Session Record      Account    &{contact}[AccountId]  
+      
