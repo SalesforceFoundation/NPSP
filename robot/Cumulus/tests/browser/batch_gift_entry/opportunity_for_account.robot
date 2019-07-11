@@ -9,7 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Select an opportunity for an account make grid changes and process it
     #Select an opportunity for an account, make grid changes, and process it
-    [tags]  unstable
+    [tags]  stable
     Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
@@ -48,8 +48,9 @@ Select an opportunity for an account make grid changes and process it
     Scroll Page To Location    0    0
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Locator    data_imports.status    Completed
+    Wait For Batch To Complete    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Element Is Visible    text:All Gifts
     Go To Record Home    &{opportunity}[Id]
     Confirm Value    Amount    $10.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
