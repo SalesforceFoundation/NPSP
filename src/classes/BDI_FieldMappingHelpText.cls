@@ -71,33 +71,32 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
     /**
     * @description Reads DataImport help text field mappings and produces a map of source field
-    * to target object to target fields.
+    * to target field wrappers.
     */
-    public Map<String, Map<String, Set<String>>> getTargetObjectsAndFieldsByDataImportField() {
+    public Map<SObjectField, BDI_TargetFields> getTargetFieldsBySourceField() {
 
-        Map<String, Map<String, Set<String>>> targetObjectsAndFieldsByDataImportField =
-                new Map<String, Map<String, Set<String>>>();
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = new Map<SObjectField, BDI_TargetFields>();
 
         BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
         for (BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping : helper.getAllHelpTextFieldMappings()) {
             if (!helpTextFieldMapping.isUsable()) {
                 continue;
             }
-            if (targetObjectsAndFieldsByDataImportField.get(helpTextFieldMapping.dataImportFieldAPIName) == null) {
-                Set<String> targetFields = new Set<String>{helpTextFieldMapping.targetFieldAPIName};
-                Map<String, Set<String>> targetFieldsByTargetObject = new Map<String, Set<String>>{helpTextFieldMapping.targetObjectAPIName => targetFields};
-                targetObjectsAndFieldsByDataImportField.put(helpTextFieldMapping.dataImportFieldAPIName, targetFieldsByTargetObject);
+            String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
+            String sourceField = helpTextFieldMapping.dataImportFieldAPIName;
+            SObjectField sourceSObjectField = UTIL_Describe.getFieldDescribe(sourceObject, sourceField).getSobjectField();
+            String targetObject = helpTextFieldMapping.targetObjectAPIName;
+            String targetField = helpTextFieldMapping.targetFieldAPIName;
+
+            if (targetFieldsBySourceField.keySet().contains(sourceSObjectField)) {
+                targetFieldsBySourceField.get(sourceSObjectField).addTargetField(targetObject, targetField);
             } else {
-                Map<String, Set<String>> targetFieldsByTargetObject = targetObjectsAndFieldsByDataImportField.get(helpTextFieldMapping.dataImportFieldAPIName);
-                if (targetFieldsByTargetObject.get(helpTextFieldMapping.targetObjectAPIName) == null) {
-                    Set<String> targetFields = new Set<String>{helpTextFieldMapping.targetFieldAPIName};
-                    targetFieldsByTargetObject.put(helpTextFieldMapping.targetObjectAPIName, targetFields);
-                } else {
-                    targetFieldsByTargetObject.get(helpTextFieldMapping.targetObjectAPIName).add(helpTextFieldMapping.targetFieldAPIName);
-                }
+                BDI_TargetFields targetFields = new BDI_TargetFields();
+                targetFields.addTargetField(targetObject, targetField);
+                targetFieldsBySourceField.put(sourceSObjectField, targetFields);
             }
         }
-        return targetObjectsAndFieldsByDataImportField;
+        return targetFieldsBySourceField;
     }
 
     /*******************************************************************************************************

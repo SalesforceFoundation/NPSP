@@ -47,50 +47,37 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
     private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
 
-    public Map<String, Map<String, Set<String>>> getTargetObjectsAndFieldsByDataImportField() {
+    /**
+    * @description Reads Data_Import_Field_Mapping__mdt field mappings and produces a map of source field
+    * to target field wrappers.
+    */
+    public Map<SObjectField, BDI_TargetFields> getTargetFieldsBySourceField() {
 
-        Map<String, Map<String, Set<String>>> targetObjectsAndFieldsByDataImportField =
-                new Map<String, Map<String, Set<String>>>();
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = new Map<SObjectField, BDI_TargetFields>();
 
         for (String dataImportObjectName : fieldMappingsByObjMappingDevName.keySet()) { //loop all field mappings by Obj Name
+
+            String targetObject = objMappingsByDevName.get(dataImportObjectName).Object_API_Name__c;
             List<Data_Import_Field_Mapping__mdt> fieldMappingsForThisDataImportObject =
                     fieldMappingsByObjMappingDevName.get(dataImportObjectName);
-            String targetObjectApiName =
-                    objMappingsByDevName.get(dataImportObjectName).Object_API_Name__c;
 
-            //Top Level - Source Field
             for (Data_Import_Field_Mapping__mdt dataImportFieldMapping : fieldMappingsForThisDataImportObject) { //Looping just the field mappings for this target obj
+                String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
                 String sourceField = dataImportFieldMapping.Source_Field_API_Name__c;
+                SObjectField sourceSObjectField = UTIL_Describe.getFieldDescribe(sourceObject, sourceField).getSobjectField();
+
                 String targetField = dataImportFieldMapping.Target_Field_API_Name__c;
-                Map<String, Set<String>> targetFieldsByTargetObjectMap =
-                        targetObjectsAndFieldsByDataImportField.get(sourceField);
 
-                //Inner Level - Object
-                if (targetFieldsByTargetObjectMap != null) {
-                    Set<String> targetFieldsForThisObjectSet = targetFieldsByTargetObjectMap.get(targetObjectApiName);
-
-                    //Inner Level - Fields Set
-                    if (targetFieldsForThisObjectSet != null) {
-                        targetFieldsByTargetObjectMap.get(targetObjectApiName).add(targetField);
-                    } else {
-                        targetFieldsForThisObjectSet = new Set<String>{
-                                targetField
-                        };
-                        targetObjectsAndFieldsByDataImportField.get(sourceField).put(
-                                targetObjectApiName,
-                                targetFieldsForThisObjectSet);
-                    }
+                if (targetFieldsBySourceField.keySet().contains(sourceSObjectField)) {
+                    targetFieldsBySourceField.get(sourceSObjectField).addTargetField(targetObject, targetField);
                 } else {
-                    targetFieldsByTargetObjectMap = new Map<String, Set<String>>();
-                    Set<String> targetFields = new Set<String>{
-                            targetField
-                    };
-                    targetFieldsByTargetObjectMap.put(targetObjectApiName, targetFields);
-                    targetObjectsAndFieldsByDataImportField.put(sourceField, targetFieldsByTargetObjectMap);
+                    BDI_TargetFields targetFields = new BDI_TargetFields();
+                    targetFields.addTargetField(targetObject, targetField);
+                    targetFieldsBySourceField.put(sourceSObjectField, targetFields);
                 }
             }
         }
-        return targetObjectsAndFieldsByDataImportField;
+        return targetFieldsBySourceField;
     }
 
     /*******************************************************************************************************

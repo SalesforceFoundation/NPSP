@@ -50,5 +50,9 @@ public interface BDI_FieldMapping {
             String targetObjectName, 
             List<String> dataImportFields);
 
-    Map<String, Map<String, Set<String>>> getTargetObjectsAndFieldsByDataImportField();
+    /*******************************************************************************************************
+    * @description Produces a map of fields to target field wrappers that contain mapped target fields
+    * with target object data.
+    */
+    Map<SObjectField, BDI_TargetFields> getTargetFieldsBySourceField();
 }

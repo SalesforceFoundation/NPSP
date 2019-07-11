@@ -485,11 +485,11 @@ global with sharing class BDI_DataImportService {
     }
 
     /**
-     * @description Instance of FieldLevelSecurityValidator inner class used to perform
+     * @description Instance of BDI_FieldLevelSecurityService used to perform
      * Field Level Security validation and temporarily store results to be used in
      * further processing (writing exceptions to DataImport records, etc.)
      */
-    private FieldLevelSecurityValidator flsValidator;
+    private BDI_FieldLevelSecurityService flsService;
 
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
@@ -529,19 +529,26 @@ global with sharing class BDI_DataImportService {
                 populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
 
-            this.flsValidator =
-                    new FieldLevelSecurityValidator(
-                            dataImports,
-                            fieldMapper.getTargetObjectsAndFieldsByDataImportField());
+            Set<BDI_FieldLevelSecurityAccessLevel> fieldAccessLevelsToValidate =
+                    new Set<BDI_FieldLevelSecurityAccessLevel>{
+                            BDI_FieldLevelSecurityAccessLevel.VALIDATE_READ
+                    };
+
+            if (!isDryRun) {
+                fieldAccessLevelsToValidate.add(BDI_FieldLevelSecurityAccessLevel.VALIDATE_UPDATE);
+                fieldAccessLevelsToValidate.add(BDI_FieldLevelSecurityAccessLevel.VALIDATE_CREATE);
+            }
+
+            this.flsService = new BDI_DataImportFLSService(
+                    dataImports,
+                    fieldMapper,
+                    fieldAccessLevelsToValidate
+            );
 
             //From this point forward, only operate on the Data Import records that passed FLS
             //validation.  Records that did not pass FLS validation will be updated with their
             //respective FLS exceptions at the end of this block
-            if (isDryRun) {
-                this.listDI = flsValidator.getDataImportsWithAccessibleTargetFields();
-            } else {
-                this.listDI = flsValidator.getDataImportsWithUpdateableAndCreateableTargetFields();
-            }
+            this.listDI = flsService.getValidRecords();
 
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
@@ -589,9 +596,7 @@ global with sharing class BDI_DataImportService {
             customPostProcess();
             pl.stop();
 
-            List<DataImport__c> dataImportsWithFlsExceptions = flsValidator.getDataImportsWithFlsExceptions(isDryRun);
-            logFlsExceptions(dataImportsWithFlsExceptions, apexJobId);
-            UTIL_DMLService.updateRecords(dataImportsWithFlsExceptions);
+            logFlsExceptions(apexJobId);
 
         } catch (Exception e) {
             // we should only hit this exception if a truly unexpected runtime
@@ -630,141 +635,24 @@ global with sharing class BDI_DataImportService {
     }
 
     /**
-     * @description Stamps Data Import records with their FLS
+     * @description Stamps Data Import records with their FLS exception details.
      *
      * @param dataImportsWithFlsExceptions
      * @param apexJobId
      */
-    private void logFlsExceptions(List<DataImport__c> dataImportsWithFlsExceptions, Id apexJobId){
+    private void logFlsExceptions(Id apexJobId) {
+        List<DataImport__c> dataImportsWithFlsExceptions = flsService.getInvalidRecords();
         for (DataImport__c dataImport : dataImportsWithFlsExceptions) {
             dataImport.Status__c = statusDIFailed();
             dataImport.ApexJobId__c = apexJobId; //Needed to display the correct totals on the BDI_DataImport page
-            String errMessage;
-            if (isDryRun) {
-                Set<String> nonAccessibleFields = flsValidator.getFieldsWithoutReadAccess(dataImport.Id);
-                List<String> errorMsgObjects = new List<String>{String.join(new List<String>(nonAccessibleFields), ', ')};
-                errMessage = String.format(System.Label.flsReadAccessError, errorMsgObjects);
-            } else {
-                Set<String> nonCreateableUpdateableFields = flsValidator.getFieldsWithoutCreateUpdateAccess(dataImport.Id);
-                List<String> errorMsgObjects = new List<String>{String.join(new List<String>(nonCreateableUpdateableFields), ', ')};
-                errMessage = String.format(System.Label.flsError, errorMsgObjects);
-            }
+            List<String> errorMsgObjects = new List<String>{
+                    String.join(flsService.getQualifiedInvalidFieldNamesById(dataImport.Id), ', ')
+            };
+            String errMsgLabel = isDryRun ? System.Label.flsReadAccessError : System.Label.flsError;
+            String errMessage = String.format(errMsgLabel, errorMsgObjects);
             LogBDIError(dataImport, errMessage, null);
         }
-    }
-
-    /**
-     * @description Inner class used to validate Field Level Security of mapped target fields.
-     */
-    private class FieldLevelSecurityValidator {
-        List<DataImport__c> dataImportsInitial;
-        Map<String, Map<String, Set<String>>> sourceFieldToObjectToFieldsMap;
-        List<DataImport__c> dataImportsFLSValidatedCreateUpdate;
-        List<DataImport__c> dataImportsFLSValidatedAccessible; //Used for dry run
-        List<DataImport__c> dataImportsWithFLSExceptions;
-        Map<Id, Set<String>> nonCreateableTargetFieldsByDataImportId;
-        Map<Id, Set<String>> nonUpdateableTargetFieldsByDataImportId;
-        Map<Id, Set<String>> nonAccessibleTargetFieldsByDataImportId;
-
-        //constructor
-        public FieldLevelSecurityValidator(
-                List<DataImport__c> dataImports,
-                Map<String, Map<String, Set<String>>> sourceFieldToObjectToFieldsMap) {
-            this.dataImportsInitial = dataImports;
-            this.sourceFieldToObjectToFieldsMap = sourceFieldToObjectToFieldsMap;
-            dataImportsFLSValidatedCreateUpdate = new List<DataImport__c>();
-            dataImportsFLSValidatedAccessible = new List<DataImport__c>();
-            dataImportsWithFLSExceptions = new List<DataImport__c>();
-            nonCreateableTargetFieldsByDataImportId = new Map<Id, Set<String>>();
-            nonUpdateableTargetFieldsByDataImportId = new Map<Id, Set<String>>();
-            nonAccessibleTargetFieldsByDataImportId = new Map<Id, Set<String>>();
-            this.validateTargetMappingFieldLevelSecurity();
-        }
-
-        //Used for dry run
-        public List<DataImport__c> getDataImportsWithAccessibleTargetFields() {
-            List<DataImport__c> accessibleDataImports = new List<DataImport__c>();
-            accessibleDataImports.addAll(dataImportsFLSValidatedCreateUpdate);
-            accessibleDataImports.addAll(dataImportsFLSValidatedAccessible);
-            return accessibleDataImports;
-        }
-
-        //Used for normal mode
-        public List<DataImport__c> getDataImportsWithUpdateableAndCreateableTargetFields() {
-            return dataImportsFLSValidatedCreateUpdate;
-        }
-
-        public List<DataImport__c> getDataImportsWithFlsExceptions(Boolean isDryRunEnabled) {
-            if (isDryRunEnabled) {
-                return dataImportsWithFLSExceptions;
-            } else {
-                List<DataImport__c> dataImportsWithFlsCreateUpdateExceptions = new List<DataImport__c>();
-                dataImportsWithFlsCreateUpdateExceptions.addAll(dataImportsWithFLSExceptions);
-                dataImportsWithFlsCreateUpdateExceptions.addAll(dataImportsFLSValidatedAccessible);
-                return dataImportsWithFlsCreateUpdateExceptions;
-            }
-        }
-
-        //Used to stamp errors
-        public Set<String> getFieldsWithoutCreateUpdateAccess(Id dataImportId) {
-            Set<String> fieldsWithoutCreateUpdateAccess = new Set<String>();
-            fieldsWithoutCreateUpdateAccess.addAll(nonCreateableTargetFieldsByDataImportId.get(dataImportId));
-            fieldsWithoutCreateUpdateAccess.addAll(nonUpdateableTargetFieldsByDataImportId.get(dataImportId));
-            return fieldsWithoutCreateUpdateAccess;
-        }
-
-        //Used to stamp errors in dry run
-        public Set<String> getFieldsWithoutReadAccess(Id dataImportId) {
-            return nonAccessibleTargetFieldsByDataImportId.get(dataImportId);
-        }
-
-        void validateTargetMappingFieldLevelSecurity() {
-            for (DataImport__c dataImport : dataImportsInitial) {
-                Set<String> nonCreateableTargetFields = new Set<String>();
-                Set<String> nonUpdateableTargetFields = new Set<String>();
-                Set<String> nonAccessibleTargetFields = new Set<String>();
-
-                for (String dataImportFieldName : dataImport.getPopulatedFieldsAsMap().keySet()) {
-                    Map<String, Set<String>> targetFieldsByObject = sourceFieldToObjectToFieldsMap.get(dataImportFieldName);
-
-                    if (targetFieldsByObject == null) { //this source field is unmapped
-                        continue;
-                    }
-
-                    //Now loop through all of the target object + field combos for this source field
-                    for (String targetObjectName : targetFieldsByObject.keySet()) {
-                        for (String targetFieldName : targetFieldsByObject.get(targetObjectName)) {
-                            DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, targetFieldName);
-                            if (fieldDescribe.isAccessible() == false) {
-                                nonAccessibleTargetFields.add(targetObjectName + '.' + targetFieldName);
-                            }
-                            if (fieldDescribe.isCreateable() == false) {
-                                nonCreateableTargetFields.add(targetObjectName + '.' + targetFieldName);
-                            }
-                            if (fieldDescribe.isUpdateable() == false) {
-                                nonUpdateableTargetFields.add(targetObjectName + '.' + targetFieldName);
-                            }
-                        }
-
-                    }
-                }
-
-                nonCreateableTargetFieldsByDataImportId.put(dataImport.Id, nonCreateableTargetFields);
-                nonUpdateableTargetFieldsByDataImportId.put(dataImport.Id, nonUpdateableTargetFields);
-                nonAccessibleTargetFieldsByDataImportId.put(dataImport.Id, nonAccessibleTargetFields);
-
-                //now separate out the dis
-                if (nonCreateableTargetFields.isEmpty() && nonUpdateableTargetFields.isEmpty()) {
-                    dataImportsFLSValidatedCreateUpdate.add(dataImport);
-                } else if ((nonCreateableTargetFields.isEmpty()
-                        || nonUpdateableTargetFields.isEmpty())
-                        || nonAccessibleTargetFields.isEmpty()) {
-                    dataImportsFLSValidatedAccessible.add(dataImport);
-                } else {
-                    dataImportsWithFLSExceptions.add(dataImport);
-                }
-            }
-        }
+        UTIL_DMLService.updateRecords(dataImportsWithFlsExceptions);
     }
 
     /*******************************************************************************************************
