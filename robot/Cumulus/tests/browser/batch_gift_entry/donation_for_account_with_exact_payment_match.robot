@@ -9,7 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Enter a donation for an account with exact payment match
     #Enter a donation for an account that has an exact payment match, don't select the match, and process batch
-    [tags]  unstable
+    [tags]  stable
     Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
@@ -53,8 +53,9 @@ Enter a donation for an account with exact payment match
     Sleep    2
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Locator    data_imports.status    Completed
+    Wait For Batch To Complete    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Element Is Visible    text:All Gifts
     Sleep    2
     ${value}    Return Locator Value    bge.value    Donation
     #Click Link    ${value}
