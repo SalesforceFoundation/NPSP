@@ -12,7 +12,7 @@ ${camp_id}
 
 Create BGE Batch With Custom Fields
     #Create a BGE batch with default values and selecting different types of custom fields for Donation and Payment
-    [tags]  unstable
+    [tags]  stable
     Set Window Size    1024    768
     # --------------------------------
     # Create Batch With Custom Fields
@@ -51,7 +51,7 @@ Create BGE Batch With Custom Fields
     ...    Run_Opportunity_Rollups_while_Processing__c=True
 
 Create New gift and process batch and validate
-    [tags]  unstable
+    [tags]  stable
     &{contact} =     API Create Contact
     &{campaign} =    API Create Campaign
     Set Global Variable     ${camp_id}       &{campaign}[Id]
@@ -76,17 +76,18 @@ Create New gift and process batch and validate
     Click BGE Button    Save
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Locator    data_imports.status    Completed
+    Wait For Batch To Complete    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Element Is Visible    text:All Gifts
     Verify Row Count    1
     
     
 Verify Custom Fields on Payment and Donation
-    [tags]  unstable 
+    [tags]  stable 
     ${date} =     Get Current Date    result_format=%Y-%m-%d       
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
-    Select Window    ${value} | Salesforce    5
+    Select Window    ${value} | Salesforce    7
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     ${org_ns} =  Get Org Namespace Prefix
