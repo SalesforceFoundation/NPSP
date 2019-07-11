@@ -63,7 +63,8 @@ public class BDI_DataImportFLSService implements BDI_FieldLevelSecurityService {
 
     public List<String> getQualifiedInvalidFieldNamesById(Id dataImportId) {
         List<String> qualifiedInvalidFieldNames = new List<String>();
-        for (BDI_SObjectFieldWrapper fieldWrapper : invalidFieldsByDataImportId.get(dataImportId)) {
+        for (BDI_SObjectFieldWrapper fieldWrapper :
+                invalidFieldsByDataImportId.get(dataImportId)) {
             qualifiedInvalidFieldNames.add(fieldWrapper.getQualifiedName());
         }
         return qualifiedInvalidFieldNames;
@@ -74,8 +75,11 @@ public class BDI_DataImportFLSService implements BDI_FieldLevelSecurityService {
             String sourceObjectName = DataImport__c.SObjectType.getDescribe().getName();
 
             List<BDI_SObjectFieldWrapper> invalidFields = new List<BDI_SObjectFieldWrapper>();
-            for (String dataImportFieldName : dataImport.getPopulatedFieldsAsMap().keySet()) { //Loop populated fields
-                SObjectField sourceSObjectField = UTIL_Describe.getFieldDescribe(sourceObjectName, dataImportFieldName).getSobjectField();
+            for (String dataImportFieldName : dataImport.getPopulatedFieldsAsMap().keySet()) {
+                SObjectField sourceSObjectField =
+                        UTIL_Describe.getFieldDescribe(
+                                sourceObjectName,
+                                dataImportFieldName).getSobjectField();
 
                 BDI_TargetFields targetFields = fieldMap.get(sourceSObjectField);
 
@@ -84,7 +88,9 @@ public class BDI_DataImportFLSService implements BDI_FieldLevelSecurityService {
                 }
 
                 //Now loop through all of the target object + field combos for this source field
-                Map<SObjectType, Set<SObjectField>> targetFieldsByObject = targetFields.getTargetFieldsByTargetObject();
+                Map<SObjectType, Set<SObjectField>> targetFieldsByObject =
+                        targetFields.getTargetFieldsByTargetObject();
+
                 for (SObjectType objectType : targetFieldsByObject.keySet()) {
                     for (SObjectField field : targetFieldsByObject.get(objectType)) {
                         if (!isValid(field)) {

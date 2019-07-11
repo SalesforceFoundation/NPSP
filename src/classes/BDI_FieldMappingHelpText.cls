@@ -78,18 +78,22 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
         Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = new Map<SObjectField, BDI_TargetFields>();
 
         BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
-        for (BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping : helper.getAllHelpTextFieldMappings()) {
+        for (BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping :
+                helper.getAllHelpTextFieldMappings()) {
+
             if (!helpTextFieldMapping.isUsable()) {
                 continue;
             }
             String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
             String sourceField = helpTextFieldMapping.dataImportFieldAPIName;
-            SObjectField sourceSObjectField = UTIL_Describe.getFieldDescribe(sourceObject, sourceField).getSobjectField();
+            SObjectField sourceSObjectField =
+                    UTIL_Describe.getFieldDescribe(sourceObject, sourceField).getSobjectField();
             String targetObject = helpTextFieldMapping.targetObjectAPIName;
             String targetField = helpTextFieldMapping.targetFieldAPIName;
 
             if (targetFieldsBySourceField.keySet().contains(sourceSObjectField)) {
-                targetFieldsBySourceField.get(sourceSObjectField).addTargetField(targetObject, targetField);
+                targetFieldsBySourceField.get(
+                        sourceSObjectField).addTargetField(targetObject, targetField);
             } else {
                 BDI_TargetFields targetFields = new BDI_TargetFields();
                 targetFields.addTargetField(targetObject, targetField);

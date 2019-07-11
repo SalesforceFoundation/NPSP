@@ -513,7 +513,7 @@ global with sharing class BDI_DataImportService {
             Set<String> populatedDataImportFieldSet = new Set<String>();
 
             // first set a clean state for each DI
-            for (DataImport__c dataImport : dataImports) { //Clear these fields for all passed in DataImport records
+            for (DataImport__c dataImport : dataImports) {
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
@@ -535,9 +535,9 @@ global with sharing class BDI_DataImportService {
                     getFieldAccessLevelsToValidate()
             );
 
-            //From this point forward, only operate on the Data Import records that passed FLS
-            //validation.  Records that did not pass FLS validation will be updated with their
-            //respective FLS exceptions at the end of this block
+            // From this point forward, only operate on the Data Import records that
+            // passed FLS validation.  Records that did not pass FLS validation will be
+            // updated with their respective FLS exceptions at the end of this block
             this.listDI = flsService.getValidRecords();
 
             // do any performance optimizations to avoid unnecessary code
@@ -635,8 +635,10 @@ global with sharing class BDI_DataImportService {
                 };
 
         if (!isDryRun) {
-            fieldAccessLevelsToValidate.add(BDI_FieldLevelSecurityAccessLevel.VALIDATE_UPDATE);
-            fieldAccessLevelsToValidate.add(BDI_FieldLevelSecurityAccessLevel.VALIDATE_CREATE);
+            fieldAccessLevelsToValidate.add(
+                    BDI_FieldLevelSecurityAccessLevel.VALIDATE_UPDATE);
+            fieldAccessLevelsToValidate.add(
+                    BDI_FieldLevelSecurityAccessLevel.VALIDATE_CREATE);
         }
         return fieldAccessLevelsToValidate;
     }
@@ -652,8 +654,10 @@ global with sharing class BDI_DataImportService {
         for (DataImport__c dataImport : dataImportsWithFlsExceptions) {
             dataImport.Status__c = statusDIFailed();
             dataImport.ApexJobId__c = apexJobId;
-            List<String> invalidFields = flsService.getQualifiedInvalidFieldNamesById(dataImport.Id);
-            String errMsgLabel = isDryRun ? System.Label.flsReadAccessError : System.Label.flsError;
+            List<String> invalidFields =
+                    flsService.getQualifiedInvalidFieldNamesById(dataImport.Id);
+            String errMsgLabel = isDryRun ?
+                    System.Label.flsReadAccessError : System.Label.flsError;
             List<String> errorMsgObjects = new List<String>{
                     String.join(invalidFields, ', ')
             };
