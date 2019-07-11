@@ -529,20 +529,10 @@ global with sharing class BDI_DataImportService {
                 populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
 
-            Set<BDI_FieldLevelSecurityAccessLevel> fieldAccessLevelsToValidate =
-                    new Set<BDI_FieldLevelSecurityAccessLevel>{
-                            BDI_FieldLevelSecurityAccessLevel.VALIDATE_READ
-                    };
-
-            if (!isDryRun) {
-                fieldAccessLevelsToValidate.add(BDI_FieldLevelSecurityAccessLevel.VALIDATE_UPDATE);
-                fieldAccessLevelsToValidate.add(BDI_FieldLevelSecurityAccessLevel.VALIDATE_CREATE);
-            }
-
             this.flsService = new BDI_DataImportFLSService(
                     dataImports,
                     fieldMapper,
-                    fieldAccessLevelsToValidate
+                    getFieldAccessLevelsToValidate()
             );
 
             //From this point forward, only operate on the Data Import records that passed FLS
@@ -632,6 +622,23 @@ global with sharing class BDI_DataImportService {
             perfLogger.stop();
             perfLogger.save();
         }
+    }
+
+    /**
+     * @description Provides the access levels that should be validated depending on whether
+     * dry run is enabled.
+     */
+    private Set<BDI_FieldLevelSecurityAccessLevel> getFieldAccessLevelsToValidate() {
+        Set<BDI_FieldLevelSecurityAccessLevel> fieldAccessLevelsToValidate =
+                new Set<BDI_FieldLevelSecurityAccessLevel>{
+                        BDI_FieldLevelSecurityAccessLevel.VALIDATE_READ
+                };
+
+        if (!isDryRun) {
+            fieldAccessLevelsToValidate.add(BDI_FieldLevelSecurityAccessLevel.VALIDATE_UPDATE);
+            fieldAccessLevelsToValidate.add(BDI_FieldLevelSecurityAccessLevel.VALIDATE_CREATE);
+        }
+        return fieldAccessLevelsToValidate;
     }
 
     /**
