@@ -53,7 +53,7 @@ Create Data Import Via API
     Click Special Object Button       Start Data Import
     Wait For Locator    frame    NPSP Data Import
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Locator    data_imports.status    Completed
+    Wait For Batch To Complete    data_imports.status    Completed
     Click Button With Value   Close
 
 Verify Custom Fields on Account Contact and Address Objects
