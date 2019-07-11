@@ -814,6 +814,24 @@ class NPSP(object):
         """Waits for 60 sec for the specified locator"""
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
         self.selenium.wait_until_element_is_visible(main_loc, timeout=90)
+        
+        
+    def wait_for_batch_to_complete(self, path, *args, **kwargs):
+        """Checks every 15 secs for upto 3.5mins for batch with given status
+        """
+        i = 0
+        locator = self.get_npsp_locator(path,*args, **kwargs)
+        while True:
+            i += 1
+            if i > 14:
+                raise AssertionError(
+                    "Timed out waiting for batch with locator {} to load.".format(locator)
+                )
+            try:
+                self.selenium.wait_until_element_is_visible(locator)
+                break
+            except ElementNotFound:
+                time.sleep(15)    
 
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
