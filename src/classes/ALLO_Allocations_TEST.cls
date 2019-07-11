@@ -205,10 +205,8 @@ private with sharing class ALLO_Allocations_TEST {
 
         Account acc = new Account(Name='Account-pmtAmountChange');
         insert acc;
-        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 100, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 100, AccountID=acc.id, CloseDate=system.today(), npe01__Do_Not_Automatically_Create_Payment__c = true, StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
-        List<npe01__OppPayment__c> defaultCreatedPayment = [Select Id from npe01__OppPayment__c Where npe01__Opportunity__c =: opp.Id];
-        delete defaultCreatedPayment;
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
         insert gau;
