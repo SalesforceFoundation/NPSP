@@ -27,6 +27,14 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
+* @description Implementation of the BDI_FieldLevelSecurityService used to validate
+* Field Level Security of the target fields mapped in the data import process.
+*/
 public class BDI_DataImportFLSService implements BDI_FieldLevelSecurityService {
     Set<BDI_FieldLevelSecurityAccessLevel> accessLevels;
     Map<SObjectField, BDI_TargetFields> fieldMap;

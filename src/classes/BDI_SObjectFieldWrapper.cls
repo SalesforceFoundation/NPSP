@@ -27,6 +27,14 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
+* @description Wrapper used to hold the SObjectType related to an SObjectField since the SObjectField
+* token does not provide a reliable method to get its related SObjectType.
+*/
 public class BDI_SObjectFieldWrapper {
 
     SObjectType sObjType;

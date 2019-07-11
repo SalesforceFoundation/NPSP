@@ -27,6 +27,14 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
+* @description Enum used to define varying levels of FLS validtion to be performed in the data
+* import process.
+*/
 public enum BDI_FieldLevelSecurityAccessLevel {
     VALIDATE_READ, VALIDATE_CREATE, VALIDATE_UPDATE
 }
