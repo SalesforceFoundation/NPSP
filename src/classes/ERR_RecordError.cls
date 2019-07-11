@@ -238,7 +238,7 @@ public class ERR_RecordError {
     * @param errorMessage The erorr to add
     * @param sObj The record the error is associated with
     */
-        public void addError(String recordId, String errorMessage, SObject sObj) {
+    public void addError(String recordId, String errorMessage, SObject sObj) {
         // Checks to see if this in already in the Record Errors List
         Error__c err = this.get(recordId);
 
@@ -345,7 +345,7 @@ public class ERR_RecordError {
     * @param errs The list of Errors
     * @return Database.Error the first error (if errors are present) or null
     */
-    public static Database.Error getFirstDmlError(List<Database.Error> errs) {
+    @testVisible private static Database.Error getFirstDmlError(List<Database.Error> errs) {
         return (errs != null && errs.size() > 0) ? errs[0] : null;
     }
 
