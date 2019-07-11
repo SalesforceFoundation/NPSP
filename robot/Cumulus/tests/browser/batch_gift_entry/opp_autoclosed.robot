@@ -37,6 +37,7 @@ Opportunity is Autoclosed when Overpaid
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Click Link With Text    Review Donations
     Click BGE Button    Apply New Payment
+    Page Should Contain     You are currently applying a new Payment to Opportunity:&{opportunity}[Name]
     Fill BGE Form
     ...                       Donation Amount=101
     Click Field And Select Date    Donation Date    Today
@@ -45,12 +46,13 @@ Opportunity is Autoclosed when Overpaid
     Page Should Contain Link    &{opportunity}[Name]
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Locator    data_imports.status    Completed
+    Wait For Batch To Complete    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Element Is Visible    text:All Gifts
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
-    Select Window    ${value} | Salesforce    5
+    Select Window    ${value} | Salesforce    7
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
