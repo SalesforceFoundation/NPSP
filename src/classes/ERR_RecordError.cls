@@ -1,0 +1,541 @@
+/*
+    Copyright (c) 2019, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/**
+* @author Salesforce.org
+* @date 2019
+* @description Helps manage the process of inserting and updating Record centered Errors.
+* @group ErrorHandling
+* @group-content ../../ApexDocContent/ErrorHandling.htm
+*/
+public class ERR_RecordError {
+
+   public class RecordErrorException extends Exception { }
+
+    @testVisible private static final String STATUS_CODE_REQUIRED_FIELD_MISSING_VAL = 'Required Field Missing';
+    @testVisible private static final String STATUS_CODE_CUSTOM_VALIDATION_VAL = 'Custom Validation Rule Failed';
+    @testVisible private static final String STATUS_CODE_OTHER_VAL = 'Other';
+    @testVisible private static final String ERROR_NO_CONTEXT_MSG = 'No context supplied to constructor';
+    @testVisible private static final String ERROR_UNSUPPORTED_DML_TYPE_MSG = 'Unsupported DML Type passed to Record Error';
+    private Map<String, Error__c> existingErrorsByRecordId = new Map<String, Error__c>();
+
+    private String context;
+
+    private Map<String, Error__c> insRecordErrors = new Map<String, Error__c>();
+    private Map<String, Error__c> updRecordErrors = new Map<String, Error__c>();
+
+    /*******************************************************************************************************
+    * @description Constructor for the ERR_RecordError class.  It should include a context that represents the
+    * process these Record Errors should be associated with.
+    * @param context The process or batch to be associated with any errors processed via this instance
+    *                of RecordErrors
+    */
+    public ERR_RecordError (String context) {
+        if (String.isNotBlank(context)) {
+            this.context = context;
+        } else {
+            // Consumer of this service is attempting to instantiate it without a Context Type, which is required for
+            // Record Errors
+            throw new RecordErrorException(ERROR_NO_CONTEXT_MSG);
+        }
+
+    }
+
+    /*******************************************************************************************************
+    * @description Allows a ERR_RecordError instance to reference "existing" errors previously set for this
+    * process.
+    * @param existingErrors A List of Existing Error records
+    * @return A reference to the ERR_RecordError Object so it can be part of an construct and configure statement
+    */
+    public ERR_RecordError withExistingErrors(List<Error__c> existingErrors) {
+        this.existingErrorsByRecordId = new Map<String, Error__c>();
+
+        for (Error__c err : existingErrors) {
+            if (err.Id != null && err.Record_Id__c != null) { // Only add if Error__c record is already inserted, and has a Record_Id__c
+                this.existingErrorsByRecordId.put(err.Record_Id__c, err);
+            }
+        }
+
+        return this;
+    }
+
+    /*******************************************************************************************************
+    * @description Queries the Errors object using the Context Type configured for this RecordErrors instance,
+    * and the list of sObjects passed in to populate a map of existing errors by "Record Id", which are kept
+    * in an internal map and used when other errors are added to determine if it is an update or an insert
+    * operation.
+    * @param sObjects the list of sObjects to determine if errors are present for
+    */
+    public void retrieveExistingErrorsFor (List<SObject> sObjects) {
+        Set<String> ids = new Set<String>();
+
+        for (SObject so : sObjects) {
+            ids.add((String)so.Id);
+        }
+
+        List<Error__c> errors = [Select     Id,
+                                            Context_Type__c,
+                                            Datetime__c,
+                                            Error_Type__c,
+                                            Full_Message__c,
+                                            Object_Type__c,
+                                            Record_Id__c,
+                                            Record_URL__c,
+                                            Retry_Pending__c
+                                from Error__c
+                                where      Record_Id__c in :ids and
+                                            Context_Type__c = :context
+                                ];
+
+        for (Error__c error : errors) {
+            this.existingErrorsByRecordId.put(error.Record_Id__c, error);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Indicates whether any new are errors are present to be committed to the Database
+    * @return Boolean true if there are new errors present to be inserted/updated.
+    */
+        public Boolean isNewErrorsPresent() {
+        return (!this.insRecordErrors.isEmpty() || !this.updRecordErrors.isEmpty());
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a list of Errors for records to be inserted that did not previously have Errors
+    * for that Record and Process.
+    * @return List of Errors to be inserted
+    */
+    @testVisible private List<Error__c> getErrorsForInsert() {
+        return this.insRecordErrors.values();
+    }
+
+
+    /*******************************************************************************************************
+    * @description Returns a list of Errors for records to be updated because they was a previous Error record
+    * present for that Record Id and process
+    * @return List of Errors to be updated
+    */
+    @testVisible private List<Error__c> getErrorsForUpdate() {
+        return this.updRecordErrors.values();
+    }
+
+    /*******************************************************************************************************
+    * @description Checks the maps in a hierarchy to find the Error record that should be used when adding a
+    * new error.  This is to allow Errors (sometimes multiple errors for a single record) to be added without
+    * requiring the process to manage all the nuances required.  Basically, if the record is in our updated
+    * records map, we will use that first.  If not, we will check the existing Errors next.  Finally we will
+    * check for newly inserted error records.  Once an Error has been added or updated, it will ignore the
+    * record in the existing errors map.
+    * @param recordId Id of the Salesforce Record to get from the maps hierarchy
+    * @return Error__c record, if found in any of the maps
+    */
+    @testVisible private Error__c get(String recordId) {
+        if (updRecordErrors.containsKey(recordId)) {
+            return updRecordErrors.get(recordId);
+        } else if (existingErrorsByRecordId.containsKey(recordId)) {
+            return existingErrorsByRecordId.get(recordId);
+        } else if (insRecordErrors.containsKey(recordId)) {
+            return insRecordErrors.get(recordId);
+        } else {
+            return null;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Adds/or replaces an error in either the insert or update error map.  If the Error record
+    * has a Salesforce Id, it will put it in the update map.  Otherwise, it will put it in the insert map.
+    * @param recordId The Record Id of the Salesforce record associated with the Error
+    * @param Error__c The error record
+    */
+    @testVisible private void put(String recordId, Error__c error) {
+        if (error.Id != null) {
+            updRecordErrors.put (recordId, error);
+        } else {
+            insRecordErrors.put (recordId, error);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Adds a single Error by Record Id to the appropriate insert or update map, if an error
+    * occurred (isSuccess() of the dmlResult != true).
+    * @param recordId The Record Id of the Salesforce record associated with the Error
+    * @param dmlResult The result of the DML Operation
+    * @param sObj The record the error is associated with
+    */
+    public void addError(String recordId, Object dmlResult, SObject sObj) {
+        if (!isDmlResultSuccess(dmlResult)) {
+            // Checks to see if this in already in the Record Errors List
+            Error__c err = this.get(recordId);
+
+            if (err == null) {
+                // Create Error record
+                err = createRecordError(
+                    dmlResult,
+                    (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
+                    recordId,
+                    context
+                );
+            } else {
+                // Existing Error associated with record exists, update.
+                err = updateRecordError(
+                    err,
+                    dmlResult
+                );
+            }
+
+            // Put into inserts or updates list, depending on requirements
+            this.put(recordId, err);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Adds errors by Record Ids to the appropriate insert or update map, if an error
+    * occurred (isSuccess() of the dmlResult != true).  The three lists are ordinal, and should be the same
+    * length.  The information provided in each parameter will be associated together by it's position in
+    * the list.
+    * @param dmlResults The list of result of the DML Operation
+    * @param errorIdForSObject The List of Record Ids that match each dmlResult, in terms of errors
+    * @param sObjects The list of records any errors are associated with
+    */
+    public void addErrors(List<Object> dmlResults, List<Id> errorIdForSObject, List<SObject> sObjects) {
+        if (dmlResults != null && !dmlResults.isEmpty()) {
+            for(Integer i=0; i < dmlResults.size(); i++) {
+                addError(errorIdForSObject[i], dmlResults[i], sObjects[i]);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Adds a single Error by Record Id to the appropriate insert or update map.
+    * @param recordId The Record Id of the Salesforce record associated with the Error
+    * @param errorMessage The erorr to add
+    * @param sObj The record the error is associated with
+    */
+        public void addError(String recordId, String errorMessage, SObject sObj) {
+        // Checks to see if this in already in the Record Errors List
+        Error__c err = this.get(recordId);
+
+        if (err == null) {
+            // Create Error record
+            err = createRecordError(
+                errorMessage,
+                STATUS_CODE_OTHER_VAL,
+                (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
+                recordId,
+                context
+            );
+        } else {
+            // Existing Error associated with record exists, update.
+            err = updateRecordError(
+                err,
+                errorMessage,
+                STATUS_CODE_OTHER_VAL
+            );
+        }
+
+        // Put into inserts or updates list, depending on requirements
+        this.put(recordId, err);
+    }
+
+    /*******************************************************************************************************
+    * @description Adds errors by Record Ids to the appropriate insert or update map.  The two parameters
+    * are keyed by the Record Id associated with teh error
+    * @param errorMessagesByRecordId Error Messages to add, keyed by Record Id
+    * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the Error
+    */
+    public void addErrors(Map<String, String> errorMessagesByRecordId, Map<String, SObject> sObjects) {
+        if (errorMessagesByRecordId != null && !errorMessagesByRecordId.isEmpty()) {
+            for(String soId :errorMessagesByRecordId.keySet()) {
+                addError(soId, errorMessagesByRecordId.get(soId), sObjects.get(soId));
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Executes DML for any pending inserts and updates.  Then, it updates the Existing Errors Map
+    * using the inserted and updated data
+    * @param errorMessagesByRecordId Error Messages to add, keyed by Record Id
+    * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the Error
+    */
+    public void processErrors() {
+        List<Error__c> errsForIns = getErrorsForInsert();
+        if (errsForIns != null && !errsForIns.isEmpty()) {
+            // Insert new record errors
+            Database.insert(errsForIns, false);
+
+            // Refresh existing Errors Map
+            refreshExistingErrorsMap(errsForIns);
+
+            insRecordErrors.clear();
+        }
+
+        List<Error__c> errsForUpd = getErrorsForUpdate();
+        if (errsForUpd != null && !errsForUpd.isEmpty()) {
+            // Update record errors that already existed in the system
+            Database.update(errsForUpd, false);
+
+            // Refresh existing Errors Map
+            refreshExistingErrorsMap(errsForUpd);
+
+            updRecordErrors.clear();
+        }
+
+        //ERR_Notifier takes care of checking the settings itself.
+        ERR_Notifier.sendErrorNotifications(context);
+    }
+
+    /*******************************************************************************************************
+    * @description Takes a list of Errors, and updates the existing Errors map using the errors Record Id
+    * as a key
+    * @param errs List of Errors to be processed into the Existing Errors Map
+    */
+    @testVisible private void refreshExistingErrorsMap(List<Error__c> errs) {
+        for (Error__c err : errs) {
+            this.existingErrorsByRecordId.put (err.Record_Id__c, err);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Checks if a given DML operation has succeeded depending on the type of DML result.  Use the
+    * isSuccess() method of the result.
+    * @param Boolean true if isSuccess() was true
+    */
+    @testVisible private static boolean isDmlResultSuccess(Object dmlResult) {
+        if (dmlResult instanceof Database.SaveResult) {
+            return ((Database.SaveResult)dmlResult).isSuccess();
+        } else if (dmlResult instanceof Database.DeleteResult) {
+            return ((Database.DeleteResult)dmlResult).isSuccess();
+        } else if (dmlResult instanceof Database.UndeleteResult) {
+            return ((Database.UndeleteResult)dmlResult).isSuccess();
+        }
+        // Will only occur if a user of this class tries to use an unsupported DML Type
+        throw new RecordErrorException(ERROR_UNSUPPORTED_DML_TYPE_MSG);
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the first error from the error list if the list is not null and has at least one
+    * error present
+    * @param errs The list of Errors
+    * @return Database.Error the first error (if errors are present) or null
+    */
+    public static Database.Error getFirstDmlError(List<Database.Error> errs) {
+        return (errs != null && errs.size() > 0) ? errs[0] : null;
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a error record associated with a specific context and record from the result of a DML
+    * operation performed through the Database class.
+    * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of
+    *               the different DML operations that the Database class can perform don't have a common parent.
+    * @param objectType The name of the type of object that caused the error.
+    * @param objId The id of the record that caused the error.
+    * @param context The context the exception was raised on.
+    * @return The error record.
+    */
+    @testVisible private static Error__c createRecordError(Object result, String objectType, Id objId, String context) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Object_Type__c = objectType;
+        error.Context_Type__c = context;
+        error.Retry_Pending__c = true;
+        error.Record_Id__c = objId;
+
+        Database.Error dmlError;
+
+        if (result instanceof Database.SaveResult) {
+            Database.SaveResult saveResult = (Database.SaveResult) result;
+            dmlError = getFirstDmlError(saveResult.getErrors());
+        } else if (result instanceof Database.DeleteResult) {
+            Database.DeleteResult deleteResult = (Database.DeleteResult) result;
+            dmlError = getFirstDmlError(deleteResult.getErrors());
+        } else if (result instanceof Database.UndeleteResult) {
+            Database.UndeleteResult undeleteResult = (Database.UndeleteResult) result;
+            dmlError = getFirstDmlError(undeleteResult.getErrors());
+        }
+
+        error.Record_URL__c = getRecordURL(error.Record_Id__c);
+        error.Error_Type__c = getStatusCode(dmlError);
+        String errorMessage = getDmlMessage(dmlError);
+        error.Full_Message__c = updateFullMessage(error.Datetime__c, '', errorMessage);
+
+        UTIL_Debug.debug('**** createRecordError() returns error: ' + error);
+        return error;
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a error record associated with a specific context and record with the message
+    * passed to the method.
+    * @param message The full message of all the errors for a given job and compiled IDs.
+    * @param statusCode The code associated with the error
+    * @param objectType The name of the type of object that caused the error.
+    * @param objId The id of the record that caused the error.
+    * @param context The context the exception was raised on.
+    * @return The error record.
+    */
+    @testVisible private static Error__c createRecordError(String message, String statusCode, String objectType, Id objId, String context) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Object_Type__c = objectType;
+        error.Context_Type__c = context;
+        error.Retry_Pending__c = true;
+
+        error.Record_Id__c = objId;
+        error.Record_URL__c = getRecordURL(error.Record_Id__c);
+        error.Error_Type__c = statusCode;
+        error.Full_Message__c = updateFullMessage(error.Datetime__c, '', message);
+
+        UTIL_Debug.debug('**** createRecordError() returns error: ' + error);
+        return error;
+    }
+
+    /*******************************************************************************************************
+    * @description Updates an existing error record associated with a specific context and record from the result of a DML
+    * operation performed through the Database class.  Full_Message__c will be prepended with the latest message and timestamp, and
+    * truncated to 5K.  The Error Type will be updated based on the StatusCode of the Result.  The Datetime field will be updated
+    * to the current timestamp.  Retry_Pending__c will be set to true, indicated it should try the record again, if possible.
+    * @param error The error record to be updated.
+    * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of
+    *               the different DML operations that the Database class can perform don't have a common parent.
+    * @return The error record.
+    */
+    @testVisible private static Error__c updateRecordError(Error__c error, Object result) {
+
+        error.Datetime__c = System.now();
+        error.Retry_Pending__c = true;
+
+        Database.Error dmlError;
+
+        if (result instanceof Database.SaveResult) {
+            Database.SaveResult saveResult = (Database.SaveResult) result;
+            dmlError = getFirstDmlError(saveResult.getErrors());
+        } else if (result instanceof Database.DeleteResult) {
+            Database.DeleteResult deleteResult = (Database.DeleteResult) result;
+            dmlError = getFirstDmlError(deleteResult.getErrors());
+        } else if (result instanceof Database.UndeleteResult) {
+            Database.UndeleteResult undeleteResult = (Database.UndeleteResult) result;
+            dmlError = getFirstDmlError(undeleteResult.getErrors());
+        }
+
+        error.Error_Type__c = getStatusCode(dmlError);
+        error.Full_Message__c = updateFullMessage(error.Datetime__c, error.Full_Message__c, getDmlMessage(dmlError));
+
+        UTIL_Debug.debug('**** updateRecordError() returns error: ' + error);
+        return error;
+    }
+
+    /*******************************************************************************************************
+    * @description Updates an existing error record associated with a specific context and record from the result of a DML
+    * operation performed through the Database class.  Full_Message__c will be prepended with the latest message and timestamp, and
+    * truncated to 5K.  The Error Type will be updated based on the StatusCode of the Result.  The Datetime field will be updated
+    * to the current timestamp.  Retry_Pending__c will be set to true, indicated it should try the record again, if possible.
+    * @param error The error record to be updated.
+    * @param message The full message of all the errors for a given job and compiled IDs.
+    * @param statusCode The code associated with the error
+    * @return The error record.
+    */
+    @testVisible private static Error__c updateRecordError (Error__c error, String message, String statusCode) {
+        error.Datetime__c = System.now();
+        error.Retry_Pending__c = true;
+        error.Error_Type__c = statusCode;
+        error.Full_Message__c = updateFullMessage(error.Datetime__c, error.Full_Message__c, message);
+
+        UTIL_Debug.debug('**** updateRecordError() returns error: ' + error);
+        return error;
+    }
+
+    /*******************************************************************************************************
+    * @description For existing error records, it will concatenate the new message, and any existing text with a separator in between.
+    * @param ts The timestamp the associated
+    * @param context The context the exception was raised on.
+    * @param objectType The type of all records in the job, only to be passed in if they all match.
+    * @return The error record.
+    */
+    @testVisible private static String updateFullMessage(Datetime ts, String existingMessage, String message) {
+
+        String updatedMessage = ts.format() + ':\r\n' + message;
+
+        if (String.isNotBlank(existingMessage)) {
+            updatedMessage += '\r\n' + '========================================\r\n' + existingMessage;
+            // Limit to 5K worth of Message History
+            updatedMessage = updatedMessage.abbreviate(5120);
+        }
+
+        return updatedMessage;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the URL of a record, if available.
+    * @param recordId The id of the record associated with the error
+    * @return The URL of the record. Warning: it may not necessarily be valid.
+    */
+    private static String getRecordURL(String recordId) {
+        String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/' + recordId;
+
+        recordURL = recordURL.replaceFirst('http:', 'https:');
+
+        return recordURL;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the status of the error that happened as a result of a DML operation performed through
+    *              the Database class as a string.  If null, will return null
+    * @param dmlError The DML error that occurred
+    * @return The error message as a String
+    */
+    private static String getDmlMessage(Database.Error dmlError) {
+        return (dmlError != null) ? dmlError.getMessage() : null;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the status of the error that happened as a result of a DML operation performed through
+    *              the Database class as a string.  If null, will return null
+    * @param dmlError The DML error that occurred
+    * @return The error status as a string.
+    */
+    private static String getStatusCode(Database.Error dmlError) {
+        return (dmlError != null) ? getStatusCode(dmlError.getStatusCode()) : '(Error not available.)';
+    }
+
+
+    /*******************************************************************************************************
+    * @description Returns the status of the error that happened as a result of a DML operation performed through
+    *              the Database class as a string.
+    * @param status The status code.
+    * @return The error status as a string.
+    */
+    private static String getStatusCode(System.StatusCode status) {
+        if (status == System.Statuscode.REQUIRED_FIELD_MISSING)
+            return STATUS_CODE_REQUIRED_FIELD_MISSING_VAL;
+        else if (status == System.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
+            return STATUS_CODE_CUSTOM_VALIDATION_VAL;
+        else
+            return STATUS_CODE_OTHER_VAL;
+    }
+}

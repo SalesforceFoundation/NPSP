@@ -134,50 +134,6 @@ private class ERR_Handler_TEST {
         }
     }
 
-    /**
-     * @description Trigger error notification processing by calling
-     * ERR_Handler.processError() and verify that the error was emailed
-     */
-    @IsTest
-    private static void processErrorsWithInsertsAndUpdates() {
-        setupWithEmailNotifications();
-
-        Test.startTest();
-
-        StringException testException = new StringException('Test Exception');
-        ERR_Handler.processError(testException, ERR_Handler_API.Context.TDTM);
-
-        Test.stopTest();
-
-        List<Error__c> errors = getErrors();
-        System.assertEquals(1, errors.size());
-
-        List<Error__c> newAndUpdatedErrors = new List<Error__c>();
-
-        Id updatedErrId;
-
-        // Update Newly Created Error
-        for(Error__c error : errors) {
-            error.Context_Type__c = 'Test Update';
-            // Add Updated Error to list
-            newAndUpdatedErrors.add(error);
-            updatedErrId = error.Id;
-        }
-        // Add New Error to List
-        newAndUpdatedErrors.add(ERR_Handler.createError(testException, 'Test Update'));
-
-        ERR_Handler.processErrors(newAndUpdatedErrors, 'Test Update');
-
-        Map<Id, Error__c> errorsById = getErrorsById();
-
-        System.assertEquals (2, errorsById.size(), '2 errors should be present');
-
-        Error__c errUpd = errorsById.get(updatedErrId);
-
-        System.assertNotEquals(null, errUpd, 'Updated Error is present');
-        System.assertEquals('Test Update', errUpd.Context_Type__c, 'Updated Error Successfully');
-    }
-
     /*******************************************************************************************************
     * @description This is the same test called testErrorRecordCreation in the REL_Relationships_TEST class,
     * but using simple insert instead of Database.insert
@@ -300,8 +256,6 @@ private class ERR_Handler_TEST {
         for (Database.UndeleteResult udr : undelResults) {
             System.assertEquals (udr.isSuccess(), ERR_Handler.isDmlResultSuccess(udr), 'isSuccess() and isDmlResultSuccess should alwaysd agrree');
         }
-
-
     }
 
     // Helpers
