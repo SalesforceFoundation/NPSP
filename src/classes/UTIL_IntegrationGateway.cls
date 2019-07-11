@@ -41,9 +41,6 @@ public with sharing class UTIL_IntegrationGateway {
     private static final String PARAM_TRIGGER_OLD = 'TriggerOld';
 
     @TestVisible
-    private static final String PARAM_TRIGGER_OLD_MAP = 'TriggerOldMap';
-
-    @TestVisible
     private UTIL_IntegrationConfig archiveBridgeConfig {
         get {
             if (archiveBridgeConfig == null) {
@@ -72,8 +69,7 @@ public with sharing class UTIL_IntegrationGateway {
      */
     public void handleBeforeDelete(List<SObject> triggerOld) {
         Map<String, Object> params = new Map<String, Object> {
-            PARAM_TRIGGER_OLD => triggerOld,
-            PARAM_TRIGGER_OLD_MAP => new Map<Id, SObject>(triggerOld)
+            PARAM_TRIGGER_OLD => triggerOld
         };
 
         for (UTIL_IntegrationConfig listener : listeners) {

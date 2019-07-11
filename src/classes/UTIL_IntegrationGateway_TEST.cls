@@ -67,10 +67,6 @@ public with sharing class UTIL_IntegrationGateway_TEST {
 
         System.assertEquals(triggerOld, paramsForAction.get(UTIL_IntegrationGateway.PARAM_TRIGGER_OLD),
             'Should pass Trigger.old to the archive API with the correct parameter');
-
-        Map<Id, SObject> triggerOldMap = new Map<Id, SObject>(triggerOld);
-        System.assertEquals(triggerOldMap, paramsForAction.get(UTIL_IntegrationGateway.PARAM_TRIGGER_OLD_MAP),
-            'Should pass trigger.old as a map to the archive API with the correct parameter');
     }
 
     /**
