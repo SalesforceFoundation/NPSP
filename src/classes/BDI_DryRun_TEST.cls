@@ -992,8 +992,15 @@ public with sharing class BDI_DryRun_TEST {
 
         UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
-        List<Opportunity> existingOpps = UTIL_UnitTestData_TEST.OppsForContactList(existingContacts, null,
-                UTIL_unitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
+        List<Opportunity> existingOpps = UTIL_UnitTestData_TEST.OppsForContactList(
+                existingContacts,
+                null,
+                UTIL_unitTestData_TEST.getOpenStage(),
+                System.today(),
+                100,
+                null,
+                null);
+
         insert existingOpps;
 
         //Write-off the auto-created Payments

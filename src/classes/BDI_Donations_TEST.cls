@@ -2367,7 +2367,10 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        insert new DataImport__c(Contact1_Firstname__c = 'c0', Contact1_Lastname__c = 'c0', Contact1_Personal_Email__c = 'c0@c0.com',
+        insert new DataImport__c(
+                Contact1_Firstname__c = 'c0',
+                Contact1_Lastname__c = 'c0',
+                Contact1_Personal_Email__c = 'c0@c0.com',
                 Donation_Amount__c = 1100,
                 Donation_Date__c = System.Today(),
                 Donation_Donor__c = 'contact1',
