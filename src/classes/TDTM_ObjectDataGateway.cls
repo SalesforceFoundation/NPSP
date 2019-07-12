@@ -46,11 +46,11 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
      * @return Boolean True is there are no TDTM records. False otherwise.
      */
     public Boolean isEmpty() {
-        if(rowCount == null) {
-            List<Trigger_Handler__c> result = [select Id from Trigger_Handler__c limit 1];
+        if (rowCount == null) {
+            List<Trigger_Handler__c> result = [SELECT Id FROM Trigger_Handler__c LIMIT 1];
             rowCount = result.size();
         }
-        if(rowCount == 0) {
+        if (rowCount == 0) {
             return true;
         }
         return false;
@@ -89,14 +89,17 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
     /*******************************************************************************************************
      * @description holds the trigger handlers cached in a list, to avoid repetitive soql calls.
      */
-    public static list<Trigger_Handler__c> listTH {
+    public static List<Trigger_Handler__c> listTH {
         get {
             if (ADV_PackageInfo_SVC.useAdv() && ADV_PackageInfo_SVC.getApiNPSP() != null) {
                 listTH = ADV_PackageInfo_SVC.getApiNPSP().getDefaultTdtmConfigNpspRecords(listTH);
             } else {
                 if (listTH == null) {
-                    listTH =  [SELECT Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c,
-                        Trigger_Action__c, User_Managed__c FROM Trigger_Handler__c ORDER BY Load_Order__c];
+                    listTH =  [ SELECT Asynchronous__c, Class__c, Load_Order__c, 
+                                    Object__c, Active__c, Usernames_to_Exclude__c,
+                                    Trigger_Action__c, User_Managed__c 
+                                FROM Trigger_Handler__c 
+                                ORDER BY Load_Order__c];
                 }
             }
             return listTH;
