@@ -584,7 +584,6 @@ public class BDI_Donations {
     * @return String the soql string
     */
     private String buildPaymentQuery(String eligibleOpportunitiesVariableName) {
-        System.debug(LoggingLevel.ERROR, '*** ##### BDI_Donations.buildPaymentQuery ######');
         // the set of Payment fields for our soql
         Set<String> setPmtFields = new Set<String>();
         setPmtFields.add('Id');
