@@ -474,7 +474,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         strSoql += ', (SELECT ' + string.join(new list<String>(setPmtFields), ',');
         strSoql += ' FROM npe01__OppPayment__r ' +
                 'WHERE npe01__Paid__c = false ' +
-                'AND npe01__Written_Off__c = false)'; //Do not include written-off Payments.
+                'AND npe01__Written_Off__c = false)';
 
         strSoql += ' FROM Opportunity';
         strSoql += ' WHERE IsClosed = false AND (';
