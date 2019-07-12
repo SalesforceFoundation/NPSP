@@ -58,21 +58,21 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
 
     /*******************************************************************************************************
      * @description Returns the classes that will be called for the specified ojbect and action. Returned list 
-     *              is sorted by load order. Filters out in-active handlers and any where the list of 
+     *              is sorted by load order. Filters out inactive handlers and anywhere the list of 
      *              excluded usernames includes the current context user.
      * @param objectName The name of the object.
      * @param action The action (before insert, after insert,...). 
      * @return List<SObject> List of classes to call, sorted by load order.
      **/
     public static List<SObject> getClassesToCallForObject(String objectName, TDTM_Runnable.Action action) {   
-        string strAction = action.Name();
-        string currUserName = UserInfo.getUserName();
+        String strAction = action.Name();
+        String currUserName = UserInfo.getUserName();
         List<SObject> listClasses = new List<Sobject>();
         for (Trigger_Handler__c th : listTH) {
             Set<String> excludedUserNames = (th.Usernames_to_Exclude__c != null ?
-                    new Set<String>(th.Usernames_to_Exclude__c.split(';')) : new Set<String>());
+                    new Set<String>(th.Usernames_to_Exclude__c.toLowerCase().split(';')) : new Set<String>());
             if (th.Object__c == objectName && th.Trigger_Action__c.contains(strAction) && th.Active__c == true
-                    && !excludedUserNames.contains(currUserName)) {
+                    && !excludedUserNames.contains(currUserName.toLowerCase())) {
                 listClasses.add(th);
             }
         }
