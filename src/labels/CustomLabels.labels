@@ -1228,7 +1228,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>OppAmountLessThanPaidAmountError</shortDescription>
-        <value>You cannot change the amount on an Opportunity once it is finalized. You can instead update the amounts on related Payments</value>
+        <value>You cannot change the amount on an Opportunity once it is finalized. You can instead update the amounts on related Payments.</value>
     </labels>
     <labels>
         <fullName>OrganizationalOpportunities</fullName>
