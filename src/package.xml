@@ -1545,6 +1545,11 @@
         <members>engagementPlanMissingField</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
+        <members>errErrorNoContext</members>
+        <members>errErrorTypeOther</members>
+        <members>errErrorTypeRequiredFieldMissing</members>
+        <members>errErrorTypeValidationFailed</members>
+        <members>errErrorUnsupportedDMLType</members>
         <members>exceptionDeletePermission</members>
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>

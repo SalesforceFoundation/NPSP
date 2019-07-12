@@ -87,7 +87,7 @@ private class ERR_RecordError_TEST {
         System.assertEquals(true, err.Retry_Pending__c, 'Retry Pending?');
         System.assertEquals(UserInfo.getUserId(), err.Record_Id__c, 'Record Id');
         System.assertEquals(true, err.Record_URL__c.contains(UserInfo.getUserId()), 'Record URL');
-        System.assertEquals(ERR_RecordError.STATUS_CODE_REQUIRED_FIELD_MISSING_VAL, err.Error_Type__c , 'Error Type');
+        System.assertEquals(System.Label.errErrorTypeRequiredFieldMissing, err.Error_Type__c , 'Error Type');
         System.assertNotEquals(null, err.Full_Message__c, 'Full Message');
 
         // Setup certain values for next test
@@ -104,7 +104,7 @@ private class ERR_RecordError_TEST {
         System.assertEquals(true, err.Retry_Pending__c, 'Retry Pending?');
         System.assertEquals(UserInfo.getUserId(), err.Record_Id__c, 'Record Id');
         System.assertEquals(true, err.Record_URL__c.contains(UserInfo.getUserId()), 'Record URL');
-        System.assertEquals(ERR_RecordError.STATUS_CODE_REQUIRED_FIELD_MISSING_VAL, err.Error_Type__c , 'Error Type');
+        System.assertEquals(System.Label.errErrorTypeRequiredFieldMissing, err.Error_Type__c , 'Error Type');
         System.assertNotEquals('Bar', err.Full_Message__c, 'Full Message');
         System.assertEquals(true, err.Full_Message__c.contains('Bar'), 'Full Message');
     }
@@ -127,7 +127,7 @@ private class ERR_RecordError_TEST {
         System.assertEquals(true, err.Retry_Pending__c, 'Retry Pending?');
         System.assertEquals(accs[0].Id, err.Record_Id__c, 'Record Id');
         System.assertEquals(true, err.Record_URL__c.contains(accs[0].Id), 'Record URL');
-        System.assertEquals(ERR_RecordError.STATUS_CODE_OTHER_VAL, err.Error_Type__c , 'Error Type');
+        System.assertEquals(System.Label.errErrorTypeOther, err.Error_Type__c , 'Error Type');
         System.assertNotEquals(null, err.Full_Message__c, 'Full Message');
 
         // Setup certain values for next test
@@ -144,7 +144,7 @@ private class ERR_RecordError_TEST {
         System.assertEquals(true, err.Retry_Pending__c, 'Retry Pending?');
         System.assertEquals(accs[0].Id, err.Record_Id__c, 'Record Id');
         System.assertEquals(true, err.Record_URL__c.contains(accs[0].Id), 'Record URL');
-        System.assertEquals(ERR_RecordError.STATUS_CODE_OTHER_VAL, err.Error_Type__c , 'Error Type');
+        System.assertEquals(System.Label.errErrorTypeOther, err.Error_Type__c , 'Error Type');
         System.assertNotEquals('Bar', err.Full_Message__c, 'Full Message');
         System.assertEquals(true, err.Full_Message__c.contains('Bar'), 'Full Message');
     }
@@ -170,7 +170,7 @@ private class ERR_RecordError_TEST {
         System.assertEquals(true, err.Retry_Pending__c, 'Retry Pending?');
         System.assertEquals(accsId, err.Record_Id__c, 'Record Id');
         System.assertEquals(true, err.Record_URL__c.contains(accsId), 'Record URL');
-        System.assertEquals(ERR_RecordError.STATUS_CODE_OTHER_VAL, err.Error_Type__c , 'Error Type');
+        System.assertEquals(System.Label.errErrorTypeOther, err.Error_Type__c , 'Error Type');
         System.assertNotEquals(null, err.Full_Message__c, 'Full Message');
 
         // Setup certain values for next test
@@ -187,7 +187,7 @@ private class ERR_RecordError_TEST {
         System.assertEquals(true, err.Retry_Pending__c, 'Retry Pending?');
         System.assertEquals(accs[0].Id, err.Record_Id__c, 'Record Id');
         System.assertEquals(true, err.Record_URL__c.contains(accs[0].Id), 'Record URL');
-        System.assertEquals(ERR_RecordError.STATUS_CODE_OTHER_VAL, err.Error_Type__c , 'Error Type');
+        System.assertEquals(System.Label.errErrorTypeOther, err.Error_Type__c , 'Error Type');
         System.assertNotEquals('Bar', err.Full_Message__c, 'Full Message');
         System.assertEquals(true, err.Full_Message__c.contains('Bar'), 'Full Message');
     }
@@ -319,7 +319,7 @@ private class ERR_RecordError_TEST {
             System.assertEquals (true, err.Retry_Pending__c, 'Retry Pending?');
             System.assertEquals ('Test', err.Context_Type__c, 'Context Type');
             System.assertEquals ('Account', err.Object_Type__c, 'Object Type');
-            System.assertEquals (ERR_RecordError.STATUS_CODE_OTHER_VAL, err.Error_Type__c, 'Error Type');
+            System.assertEquals (System.Label.errErrorTypeOther, err.Error_Type__c, 'Error Type');
             System.assertEquals (acc.Id, err.Record_Id__c, 'Record Id');
             System.assertEquals (true, err.Record_URL__c.contains(acc.Id), 'Record URL');
             // Not asserting contents of Full Error since cannot control DML error text
@@ -345,7 +345,7 @@ private class ERR_RecordError_TEST {
             System.assertEquals (true, err.Retry_Pending__c, 'Retry Pending?');
             System.assertEquals ('Test', err.Context_Type__c, 'Context Type');
             System.assertEquals ('Account', err.Object_Type__c, 'Object Type');
-            System.assertEquals (ERR_RecordError.STATUS_CODE_OTHER_VAL, err.Error_Type__c, 'Error Type');
+            System.assertEquals (System.Label.errErrorTypeOther, err.Error_Type__c, 'Error Type');
             System.assertEquals (acc.Id, err.Record_Id__c, 'Record Id');
             System.assertEquals (true, err.Record_URL__c.contains(acc.Id), 'Record URL');
             // Not asserting contents of Full Error since cannot control DML error text
@@ -370,7 +370,7 @@ private class ERR_RecordError_TEST {
         System.assertEquals (true, err.Retry_Pending__c, 'Retry Pending');
         System.assertEquals ('Test', err.Context_Type__c, 'Context Type');
         System.assertEquals ('Account', err.Object_Type__c, 'Object Type');
-        System.assertEquals (ERR_RecordError.STATUS_CODE_REQUIRED_FIELD_MISSING_VAL, err.Error_Type__c, 'Error Type');
+        System.assertEquals (System.Label.errErrorTypeRequiredFieldMissing, err.Error_Type__c, 'Error Type');
         System.assertEquals (UserInfo.getUserId(), err.Record_Id__c, 'Record Id');
         System.assertEquals (true, err.Record_URL__c.contains(UserInfo.getUserId()), 'Record URL');
     }
@@ -503,7 +503,7 @@ private class ERR_RecordError_TEST {
             Boolean err = ERR_RecordError.isDmlResultSuccess(UserInfo.getUserId());
             throw new TestException ('Invalid DML Type Exception Expected but was not thrown.');
         } catch (ERR_RecordError.RecordErrorException e) {
-            System.assertEquals (true, e.getMessage().contains(ERR_RecordError.ERROR_UNSUPPORTED_DML_TYPE_MSG), 'Exception Message');
+            System.assertEquals (true, e.getMessage().contains(System.Label.errErrorUnsupportedDMLType), 'Exception Message');
         }
     }
 
@@ -518,7 +518,7 @@ private class ERR_RecordError_TEST {
             ERR_RecordError re = new ERR_RecordError('');
             throw new TestException ('Exception for blank Context Type expected but was not not thrown.');
         } catch (ERR_RecordError.RecordErrorException e) {
-            System.assertEquals (true, e.getMessage().contains(ERR_RecordError.ERROR_NO_CONTEXT_MSG), 'Exception Message');
+            System.assertEquals (true, e.getMessage().contains(System.Label.errErrorNoContext), 'Exception Message');
         }
     }
 

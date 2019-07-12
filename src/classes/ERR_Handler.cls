@@ -449,10 +449,10 @@ public class ERR_Handler {
     */
     private static String getStatusCode(system.StatusCode status) {
         if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
-            return 'Required Field Missing';   
+            return System.Label.errErrorTypeRequiredFieldMissing;   
         else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
-            return 'Custom Validation Rule Failed';
+            return System.Label.errErrorTypeValidationFailed;
         else
-            return 'Other';
+            return System.Label.errErrorTypeOther;
     }
 }

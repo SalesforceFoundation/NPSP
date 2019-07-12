@@ -39,11 +39,6 @@ public class ERR_RecordError {
 
    public class RecordErrorException extends Exception { }
 
-    @testVisible private static final String STATUS_CODE_REQUIRED_FIELD_MISSING_VAL = 'Required Field Missing';
-    @testVisible private static final String STATUS_CODE_CUSTOM_VALIDATION_VAL = 'Custom Validation Rule Failed';
-    @testVisible private static final String STATUS_CODE_OTHER_VAL = 'Other';
-    @testVisible private static final String ERROR_NO_CONTEXT_MSG = 'No context supplied to constructor';
-    @testVisible private static final String ERROR_UNSUPPORTED_DML_TYPE_MSG = 'Unsupported DML Type passed to Record Error';
     private Map<String, Error__c> existingErrorsByRecordId = new Map<String, Error__c>();
 
     private String context;
@@ -63,7 +58,7 @@ public class ERR_RecordError {
         } else {
             // Consumer of this service is attempting to instantiate it without a Context Type, which is required for
             // Record Errors
-            throw new RecordErrorException(ERROR_NO_CONTEXT_MSG);
+            throw new RecordErrorException(System.Label.errErrorNoContext);
         }
 
     }
@@ -246,7 +241,7 @@ public class ERR_RecordError {
             // Create Error record
             err = createRecordError(
                 errorMessage,
-                STATUS_CODE_OTHER_VAL,
+                System.Label.errErrorTypeOther,
                 (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
                 recordId,
                 context
@@ -256,7 +251,7 @@ public class ERR_RecordError {
             err = updateRecordError(
                 err,
                 errorMessage,
-                STATUS_CODE_OTHER_VAL
+                System.Label.errErrorTypeOther
             );
         }
 
@@ -336,7 +331,7 @@ public class ERR_RecordError {
             return ((Database.UndeleteResult)dmlResult).isSuccess();
         }
         // Will only occur if a user of this class tries to use an unsupported DML Type
-        throw new RecordErrorException(ERROR_UNSUPPORTED_DML_TYPE_MSG);
+        throw new RecordErrorException(System.Label.errErrorUnsupportedDMLType);
     }
 
     /*******************************************************************************************************
@@ -532,10 +527,10 @@ public class ERR_RecordError {
     */
     private static String getStatusCode(System.StatusCode status) {
         if (status == System.Statuscode.REQUIRED_FIELD_MISSING)
-            return STATUS_CODE_REQUIRED_FIELD_MISSING_VAL;
+            return System.Label.errErrorTypeRequiredFieldMissing;
         else if (status == System.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
-            return STATUS_CODE_CUSTOM_VALIDATION_VAL;
+            return System.Label.errErrorTypeValidationFailed;
         else
-            return STATUS_CODE_OTHER_VAL;
+            return System.Label.errErrorTypeOther;
     }
 }
