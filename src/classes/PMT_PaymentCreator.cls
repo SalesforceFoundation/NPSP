@@ -516,7 +516,9 @@ public class PMT_PaymentCreator {
         }
         soqlStatement += soqlSub;
         soqlStatement += 'npe01__scheduled_date__c ';
-        soqlStatement += 'FROM Opportunity.npe01__OppPayment__r) FROM Opportunity ';
+        soqlStatement += 'FROM Opportunity.npe01__OppPayment__r ' +
+                'WHERE npe01__Written_Off__c = false) ' +
+                'FROM Opportunity ';
 
         return soqlStatement;
     }
