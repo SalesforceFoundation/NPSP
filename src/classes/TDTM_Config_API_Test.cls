@@ -71,10 +71,11 @@ private class TDTM_Config_API_Test {
     }
 
     /*********************************************************************************************************
-    * @description Test that an individual trigger can be disabled permanently for a specified Username
+    * @description Test that an individual trigger can be disabled permanently for a specified Username. 
+    * Also tests case-insensitivity of username
     */
     @isTest
-    static void test_disable_for_specific_user() {
+    static void triggersAreDisabledForSpecificUser() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -82,15 +83,15 @@ private class TDTM_Config_API_Test {
         List<Trigger_Handler__c> handlers = TDTM_Config_API.getDefaultRecords();
         for (Trigger_Handler__c th : handlers) {
             if (th.Object__c == 'Contact' && th.Class__c == 'ACCT_IndividualAccounts_TDTM') {
-                th.Usernames_to_Exclude__c = UserInfo.getUserName();
+                th.Usernames_to_Exclude__c = UserInfo.getUserName().toUpperCase();
             }
         }
         insert handlers;
 
-        Contact con = new Contact(LastName='foo');
+        Contact con = new Contact(LastName = 'foo');
         insert con;
         con = [SELECT AccountId FROM Contact WHERE Id = :con.Id LIMIT 1];
-        system.assertEquals(null, con.AccountId, 'there should not be an account id associated with this new contact');
+        System.assertEquals(null, con.AccountId, 'there should not be an account id associated with this new contact');
     }
 
 
