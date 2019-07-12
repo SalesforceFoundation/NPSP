@@ -325,7 +325,9 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @return void Does not return anything
     ********************************************************************************************************/
     private void validateOpportunity(Map<Id, Opportunity> newMap, Map<Id, Opportunity> oldMap, TDTM_Runnable.Action triggerAction, DmlWrapper dmlWrapper) {
+        System.debug(loggingLevel.ERROR, 'inside of validate opp');
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            System.debug(loggingLevel.ERROR, 'about to call enforce');
             enforceFinalizedOpportunityAmountIsEqualToPayment(newMap, oldMap);
         }
     }
@@ -342,20 +344,26 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         Map<Id, Opportunity> oppsById = getPaymentOpportunities(newMap.keySet());
 
         for (Opportunity queriedOpp : oppsById.values()) {
+            System.debug(loggingLevel.ERROR, 'opp is: ' + queriedOpp);
             Opportunity oldOpp = oldMap.get(queriedOpp.Id);
             Opportunity updatedOpp = newMap.get(queriedOpp.Id);
-
+            System.debug(loggingLevel.ERROR, 'old amount is: ' + oldOpp.AMount);
+            System.debug(loggingLevel.ERROR, 'updated amount is: ' +  updatedOpp.Amount);
+            System.debug(loggingLevel.ERROR, 'OPP_StageMappingUtil.determineOppStateFromOppStage(updatedOpp.StageName): ' + OPP_StageMappingUtil.determineOppStateFromOppStage(updatedOpp.StageName));
             if (oldOpp.Amount != updatedOpp.Amount && OPP_StageMappingUtil.determineOppStateFromOppStage(updatedOpp.StageName) == OPP_StageMappingUtil.getFinalizedState()) {
 
                 // Get all the paid payments and calculate how much the amount is and compare to the opportunity's amount.
                 List<npe01__OppPayment__c> relatedPayments = queriedOpp.npe01__OppPayment__r;
                 Decimal totalPaidAmount = 0.00;
-
+                System.debug(loggingLevel.ERROR, 'inside of if statement');
                 for (npe01__OppPayment__c payment : relatedPayments) {
                     if (payment.npe01__Paid__c == true) {
                         totalPaidAmount += payment.npe01__Payment_Amount__c;
                     }
                 }
+
+                System.debug(loggingLevel.ERROR, 'total paid amount: ' + totalPaidAmount);
+                System.debug(loggingLevel.ERROR, 'updated opp amount: ' + updatedOpp.Amount);
 
                 if (totalPaidAmount != updatedOpp.Amount) {
                     updatedOpp.addError('An Opportunity that is ' + updatedOpp.StageName + ' cannot change the amount. To change the amount, please make the changes on the payment.');

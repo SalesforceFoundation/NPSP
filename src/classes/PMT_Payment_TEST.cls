@@ -836,6 +836,59 @@ private class PMT_Payment_TEST {
         System.assertEquals(closedWonStage, opp.StageName);
     }
 
+    /**
+     * @description Validate that opportunities that are finalized will not allow the amount
+     * decrease lower than the paid payment amount.
+     *
+     */
+    @isTest
+    private static void testFinalizedOpportunityCannotDecreaseLessThanPaidPayment() {
+
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = UTIL_UnitTestData_TEST.getClosedWonStage();
+
+        List<Metadata.CustomMetadata> metadataToInsert = new List<Metadata.CustomMetadata>();
+        Map<String, Object> params = new Map<String, Object>();
+
+        metadataToInsert = Opp_StageMappingCMT.createPledgedOppStageToStateRecord(metadataToInsert);
+
+        Opp_StageMappingCMT.deployOppStageToStateMetadata(metadataToInsert, params);
+
+
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+                Name='success',
+                Amount = 500,
+                AccountID=acc.id,
+                CloseDate=system.today(),
+                StageName=openStage);
+        insert opp;
+
+        List<npe01__OppPayment__c> pmts = [Select Id from npe01__oppPayment__c Where npe01__Opportunity__c =: opp.Id];
+
+
+        opp = [SELECT Name, Amount, StageName, IsClosed, IsWon FROM Opportunity WHERE Id = :opp.Id LIMIT 1];
+        System.assertEquals(openStage, opp.StageName, 'The Opportunity should still be in an open state');
+
+        // Mark the payment as Paid
+        pmts[0].npe01__Payment_Amount__c = 500;
+        pmts[0].npe01__Paid__c = true;
+        update pmts;
+
+
+        try {
+            opp.Amount = 100;
+            update opp;
+            System.debug(loggingLevel.ERROR, 'update was successful.');
+        } catch (Exception e) {
+            System.debug(loggingLevel.ERROR, 'this is the error: ' + e.getMessage());
+        }
+
+    }
+
 
     /**
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity
