@@ -32,7 +32,8 @@
 * @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Interface defining the methods to be implemented to perform FLS validtion in the data
+* @description Interface defining the methods to be implemented to perform FLS validation
+* in the data
 * import process.
 */
 public interface BDI_FieldLevelSecurityService {
