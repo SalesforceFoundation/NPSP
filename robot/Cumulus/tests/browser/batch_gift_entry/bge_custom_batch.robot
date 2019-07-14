@@ -10,7 +10,7 @@ Suite Teardown  Delete Records and Close Browser
 
 BGE Batch With Custom Values
     #Create a BGE batch with custom values (count/amount, new fields, new defaults, different settings)
-    [tags]  unstable
+    [tags]  stable
     Set Window Size    1024    768
     # --------------------------------
     # Create Custom Batch 
