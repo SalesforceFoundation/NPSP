@@ -87,30 +87,35 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @param event: Event containing row details or lack of row details
     */
     handleOpenModal(event) {
-        this.isModalOpen = true;
-        this.isLoading = true;
-        this.hasSourceFieldErrors = false;
-        this.hasTargetFieldErrors = false;
-        this.objectMapping = event.objectMapping;
+        try {
+            this.isModalOpen = true;
+            this.isLoading = true;
+            this.hasSourceFieldErrors = false;
+            this.hasTargetFieldErrors = false;
+            this.objectMapping = event.objectMapping;
 
-        this.collectMappedDataImportFields(event.fieldMappings);
+            this.collectMappedDataImportFields(event.fieldMappings);
 
-        this.row = event.row;
+            this.row = event.row;
 
-        if (this.row) {
-            // Edit row
-            this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
-            this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
-            this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
-            this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
-            this.selectedSourceFieldDisplayType = this.toTitleCase(this.row.xxx_Source_Field_Data_Type_xxx);
-        } else {
-            // New row
-            this.clearSelections();
+            if (this.row) {
+                // Edit row
+                this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
+                this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
+                this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
+                this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
+                this.selectedSourceFieldDisplayType = this.toTitleCase(this.row.xxx_Source_Field_Data_Type_xxx);
+                this.selectedTargetFieldDisplayType = this.toTitleCase(this.row.xxx_Target_Field_Data_Type_xxx);
+            } else {
+                // New row
+                this.clearSelections();
+            }
+
+            this.setDataImportFieldDescribes(this.diFieldDescribes);
+            this.setTargetObjectFieldDescribes(this.targetObjectFieldDescribes);
+        } catch(error) {
+            console.log('ERROR: ', error);
         }
-
-        this.setDataImportFieldDescribes(this.diFieldDescribes);
-        this.setTargetObjectFieldDescribes(this.targetObjectFieldDescribes);
 
         this.isLoading = false
     }
