@@ -23,7 +23,7 @@ const columns = [
     { type: 'action', typeAttributes: { rowActions: actions }}
 ];
 
-export default class Bdi_ObjectMappings extends LightningElement {
+export default class bdiObjectMappings extends LightningElement {
     @track error;
     @track columns = columns;
     @track displayObjectMappings = true;
@@ -45,7 +45,7 @@ export default class Bdi_ObjectMappings extends LightningElement {
     }
 
     connectedCallback() {
-        console.log('bdi_ObjectMappings | connectedCallback()');
+        console.log('bdiObjectMappings | connectedCallback()');
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
     }

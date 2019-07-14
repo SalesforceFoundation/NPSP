@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 
-export default class Stencil extends LightningElement {
+export default class utilStencil extends LightningElement {
     @api rowCount = 3;
     @api columnCount = 3;
     @track rows = [];

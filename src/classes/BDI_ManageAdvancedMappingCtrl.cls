@@ -192,12 +192,14 @@ public class BDI_ManageAdvancedMappingCtrl {
 
             String developerName = String.valueOf(sObjectCastedCustomMetadata.get('DeveloperName'));
             String recordName;
+
             if (developerName == null) {
                 recordName = generateRecordName(String.valueOf(sObjectCastedCustomMetadata.get('MasterLabel')));
             } else {
                 recordName = developerName;
             }
-            customMetadata.fullName = sObjectName +'.'+recordName;
+
+            customMetadata.fullName = sObjectName + '.' + recordName;
             customMetadata.label = (String)sObjectCastedCustomMetadata.get('MasterLabel');
 
             schema.SObjectType sObjectType = Schema.getGlobalDescribe().get(sObjectName );
@@ -206,7 +208,11 @@ public class BDI_ManageAdvancedMappingCtrl {
 
             for(String fieldName : sObjectCastedCustomMetadata.getPopulatedFieldsAsMap().keySet()) {
 
-                if(IGNORE_FIELDS.contains(fieldName.toLowerCase()) || sObjectCastedCustomMetadata.get(fieldName) == null) {
+                Boolean invalidField =
+                    IGNORE_FIELDS.contains(fieldName.toLowerCase()) ||
+                    sObjectCastedCustomMetadata.get(fieldName) == null;
+
+                if (invalidField) {
                     continue;
                 }
 

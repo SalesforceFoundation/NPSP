@@ -3,7 +3,7 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 
 const DELAY = 300;
 
-export default class bdiFieldMappingModalComboboxSearch extends LightningElement {
+export default class utilSearchableCombobox extends LightningElement {
 
     @api name;
     @api comboboxLabel;

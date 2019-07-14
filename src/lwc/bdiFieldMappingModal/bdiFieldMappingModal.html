@@ -32,7 +32,7 @@
 
                     <div class="slds-modal__content slds-p-around_medium slds-modal_content_extension" id="modal-content-id-1">
                         <template if:true={isLoading}>
-                            <c-stencil row-count="10" column-count="1"></c-stencil>
+                            <c-util-stencil row-count="10" column-count="1"></c-util-stencil>
                         </template>
                         <template if:false={isLoading}>
                             <div class="slds-grid slds-wrap">
@@ -46,7 +46,7 @@
                                             </span>
                                         </h3>
 
-                                        <c-bdi-field-mapping-modal-combobox-search
+                                        <c-util-searchable-combobox
                                             name="sourceFieldLabel"
                                             search-input-label="Search Source Field by Label"
                                             combobox-label="Field Label"
@@ -55,7 +55,7 @@
                                             parent-listener-event-name="sourceFieldLabelChange"
                                             field-level-help="Placeholder"
                                             has-errors={hasSourceFieldErrors}>
-                                        </c-bdi-field-mapping-modal-combobox-search>
+                                        </c-util-searchable-combobox>
 
                                         <template if:true={selectedSourceFieldAPIName}>
                                             <lightning-input
@@ -85,7 +85,7 @@
                                             </span>
                                         </h3>
 
-                                        <c-bdi-field-mapping-modal-combobox-search
+                                        <c-util-searchable-combobox
                                             name="targetFieldLabel"
                                             search-input-label="Search Target Field by Label"
                                             combobox-label="Field Label"
@@ -95,7 +95,7 @@
                                             field-level-help="Placeholder"
                                             disabled={isTargetFieldDisabled}
                                             has-errors={hasTargetFieldErrors}>
-                                        </c-bdi-field-mapping-modal-combobox-search>
+                                        </c-util-searchable-combobox>
 
                                         <template if:true={selectedTargetFieldAPIName}>
                                             <lightning-input

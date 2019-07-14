@@ -49,7 +49,8 @@ export default class bdiFieldMappingModal extends LightningElement {
         "Date": ["Date"],
         "Picklist": ["Picklist"], // Todo: Include Sometimes Boolean as per the Bdi Mapping Field Types Dc
         "Currency": ["Currency"],
-        "Percent": ["Percent"]
+        "Percent": ["Percent"],
+        "Integer": ["Integer"]
     };
 
     get isTargetFieldDisabled() {

@@ -5,23 +5,23 @@
             "c/bdiFieldMappingModal": [
                 "bdiFieldMappingModal/bdiFieldMappingModal.js"
             ],
-            "c/bdiFieldMappingModalComboboxSearch": [
-                "bdiFieldMappingModalComboboxSearch/bdiFieldMappingModalComboboxSearch.js"
-            ],
             "c/bdiFieldMappings": [
                 "bdiFieldMappings/bdiFieldMappings.js"
             ],
-            "c/bdi_ObjectMappings": [
-                "bdi_ObjectMappings/bdi_ObjectMappings.js"
-            ],
-            "c/platformEventListener": [
-                "platformEventListener/platformEventListener.js"
+            "c/bdiObjectMappings": [
+                "bdiObjectMappings/bdiObjectMappings.js"
             ],
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
             ],
-            "c/stencil": [
-                "stencil/stencil.js"
+            "c/utilPlatformEventListener": [
+                "utilPlatformEventListener/utilPlatformEventListener.js"
+            ],
+            "c/utilSearchableCombobox": [
+                "utilSearchableCombobox/utilSearchableCombobox.js"
+            ],
+            "c/utilStencil": [
+                "utilStencil/utilStencil.js"
             ]
         },
         "experimentalDecorators": true
