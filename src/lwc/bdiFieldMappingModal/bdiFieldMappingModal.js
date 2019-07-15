@@ -168,6 +168,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                 diFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
             }
         }
+        this.sourceFieldLabelOptions = this.sortBy(this.sourceFieldLabelOptions, 'label');
         this.diFieldsByAPIName = diFieldsByAPIName;
     }
 
@@ -370,6 +371,8 @@ export default class bdiFieldMappingModal extends LightningElement {
 
             this.targetFieldLabelOptions.push(...validTargetTypesByLabel);
         }
+
+        this.targetFieldLabelOptions = this.sortBy(this.targetFieldLabelOptions, 'label');
     }
 
     /*******************************************************************************
@@ -405,6 +408,16 @@ export default class bdiFieldMappingModal extends LightningElement {
             messageData: messageData
         });
         this.dispatchEvent(event);
+    }
+
+    /*******************************************************************************
+    * @description Sorts a list by a property
+    *
+    * @param {array} list: List to be sorted
+    * @param {string} sortedBy: Property to sort by
+    */
+    sortBy(list, sortedBy) {
+        return list.sort((a, b) => { return (a[sortedBy] > b[sortedBy]) ? 1 : -1} );
     }
 
     /*******************************************************************************

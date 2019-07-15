@@ -101,6 +101,10 @@ export default class bdiFieldMappings extends LightningElement {
                     fieldMappingSetname: this.fieldMappingSetName
                 });
 
+            if (this.fieldMappings && this.fieldMappings.length > 0) {
+                this.fieldMappings = this.sortBy(this.fieldMappings, 'xxx_Source_Field_Label_xxx');
+            }
+
             this.isLoading = false;
 
         } catch(error) {
@@ -249,6 +253,16 @@ export default class bdiFieldMappings extends LightningElement {
         this.dispatchEvent(deploymentEvent);
 
         this.handleDeploymentTimeout({ deploymentId: deploymentId });
+    }
+
+    /*******************************************************************************
+    * @description Sorts a list by a property
+    *
+    * @param {array} list: List to be sorted
+    * @param {string} sortedBy: Property to sort by
+    */
+    sortBy(list, sortedBy) {
+        return list.sort((a, b) => { return (a[sortedBy] > b[sortedBy]) ? 1 : -1} );
     }
 
     /*******************************************************************************
