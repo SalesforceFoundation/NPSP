@@ -83,7 +83,6 @@
         <members>BDI_Donations_TEST</members>
         <members>BDI_DryRun_TEST</members>
         <members>BDI_FieldLevelSecurityAccessLevel</members>
-        <members>BDI_FieldLevelSecurityService</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingCustomMetadata</members>
         <members>BDI_FieldMappingCustomMetadataTest</members>

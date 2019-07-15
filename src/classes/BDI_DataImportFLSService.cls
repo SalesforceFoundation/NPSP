@@ -32,10 +32,10 @@
 * @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Implementation of the BDI_FieldLevelSecurityService used to validate
+* @description Service class used to validate
 * Field Level Security of the target fields mapped in the data import process.
 */
-public class BDI_DataImportFLSService implements BDI_FieldLevelSecurityService {
+public class BDI_DataImportFLSService {
     Set<BDI_FieldLevelSecurityAccessLevel> accessLevels;
     Map<SObjectField, BDI_TargetFields> fieldMap;
     List<DataImport__c> dataImportsValidated;

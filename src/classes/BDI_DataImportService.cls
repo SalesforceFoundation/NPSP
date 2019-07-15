@@ -489,7 +489,7 @@ global with sharing class BDI_DataImportService {
      * Field Level Security validation and temporarily store results to be used in
      * further processing (writing exceptions to DataImport records, etc.)
      */
-    private BDI_FieldLevelSecurityService flsService;
+    private BDI_DataImportFLSService flsService;
 
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
