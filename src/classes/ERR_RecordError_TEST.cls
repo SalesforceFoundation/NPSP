@@ -43,7 +43,7 @@ private class ERR_RecordError_TEST {
     * is blank.
     */
     @IsTest
-    private static void updateFullMessageWithoutExistingMessage() {
+    private static void shouldUpdateFullMessageWithExistingNullMessage() {
 
         Datetime ts = System.now();
 
@@ -59,7 +59,7 @@ private class ERR_RecordError_TEST {
     * @description Unit Test of updateFullMessage, existing message is 'bar'
     */
     @IsTest
-    private static void updateFullMessageWithExistingMessage() {
+    private static void shouldUpdateFullMessageWithExistingMessage() {
 
         Datetime ts = System.now();
 
@@ -75,7 +75,7 @@ private class ERR_RecordError_TEST {
     * @description Unit Test for createRecordError and updateRecordError for invalid insert operation
     */
     @IsTest
-    private static void createAndUpdateDMLRecordErrorsForInvalidInsert() {
+    private static void shouldCreateAndUpdateDMLRecordErrorsForInvalidInsert() {
         Account acct = new Account();
 
         Database.SaveResult sr = Database.insert(acct, false);
@@ -113,7 +113,7 @@ private class ERR_RecordError_TEST {
     * @description Unit Test for createRecordError and updateRecordError for invalid undelete operation
     */
     @IsTest
-    private static void createAndUpdateDMLRecordErrorsForInvalidUndelete() {
+    private static void shouldCreateAndUpdateDMLRecordErrorsForInvalidUndelete() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
         insert accs;
 
@@ -154,7 +154,7 @@ private class ERR_RecordError_TEST {
     * @description Unit Test for createRecordError and updateRecordError for invalid delete operation
     */
     @IsTest
-    private static void createAndUpdateDMLRecordErrorsForInvalidDelete() {
+    private static void shouldCreateAndUpdateDMLRecordErrorsForInvalidDelete() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
         insert accs;
 
@@ -196,7 +196,7 @@ private class ERR_RecordError_TEST {
     * @description Unit Test for createRecordError and updateRecordError for non DML use case
     */
     @IsTest
-    private static void createAndUpdateNonDMLRecordError() {
+    private static void shouldCcreateAndUpdateNonDMLRecordError() {
 
         Error__c err = ERR_RecordError.createRecordError('Test Insert Message', 'NEW', 'User', UserInfo.getUserId(), 'Test');
 
@@ -231,7 +231,7 @@ private class ERR_RecordError_TEST {
     * @description Unit Tests for adding Non DML Record Errors via ERR_RecordError class
     */
     @IsTest
-    private static void addNonDMLRecordErrors() {
+    private static void shouldAddNonDMLRecordErrors() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(7, null);
         insert accs;
 
@@ -282,7 +282,7 @@ private class ERR_RecordError_TEST {
     * @description Unit Tests for adding DML Record Errors via ERR_RecordError class
     */
     @IsTest
-    private static void addDMLRecordErrors() {
+    private static void shouldAddDMLRecordErrors() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(7, null);
         insert accs;
 
@@ -380,7 +380,7 @@ private class ERR_RecordError_TEST {
     * for existing records by retrieving them.
     */
     @IsTest
-    private static void addNonDMLRecordErrorsWhileRetrievingExistingErrors() {
+    private static void shouldAddNonDMLRecordErrorsWhileRetrievingExistingErrors() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(7, null);
         insert accs;
 
@@ -438,7 +438,7 @@ private class ERR_RecordError_TEST {
     * for existing records by adding them via "with".
     */
     @IsTest
-    private static void addNonDMLRecordErrorsWithExistingErrors() {
+    private static void shouldAddNonDMLRecordErrorsWithExistingErrors() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(7, null);
         insert accs;
 
@@ -497,7 +497,7 @@ private class ERR_RecordError_TEST {
     * Error classes.  Only SaveResult, DeleteResult, and UndeleteResult are currently supported.
     */
     @IsTest
-    private static void checkDMLResultForUnsupportedDMLType() {
+    private static void shouldCheckDMLResultForUnsupportedDMLType() {
         Boolean exceptionThrown = false;
         try {
             Boolean err = ERR_RecordError.isDmlResultSuccess(UserInfo.getUserId());
@@ -512,7 +512,7 @@ private class ERR_RecordError_TEST {
     * an invalid/missing context type.  Context Type cannot be blank/null as it is required
     */
     @IsTest
-    private static void checkForExceptionOnInvalidContextType() {
+    private static void shouldCheckForExceptionOnInvalidContextType() {
 
         try {
             ERR_RecordError re = new ERR_RecordError('');
