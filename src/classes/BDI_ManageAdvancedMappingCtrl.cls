@@ -130,7 +130,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
 
             if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldMappingSetname &&
-                    fieldMapping.Is_Deleted__c == false) {
+                fieldMapping.Is_Deleted__c == false) {
 
                     fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
                 }
