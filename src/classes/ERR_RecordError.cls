@@ -193,7 +193,7 @@ public class ERR_RecordError {
                 // Create Error record
                 err = createRecordError(
                     dmlResult,
-                    (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
+                    (sObj != null) ? UTIL_Describe.getObjectDescribe(sObj.getSObjectType()).getDescribe().getName() : null,
                     recordId,
                     context
                 );
@@ -242,7 +242,7 @@ public class ERR_RecordError {
             err = createRecordError(
                 errorMessage,
                 System.Label.errErrorTypeOther,
-                (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
+                (sObj != null) ? UTIL_Describe.getObjectDescribe(sObj.getSObjectType()).getDescribe().getName() : null,
                 recordId,
                 context
             );
@@ -316,6 +316,8 @@ public class ERR_RecordError {
             this.existingErrorsByRecordId.put (err.Record_Id__c, err);
         }
     }
+
+    // **************************** HELPER METHODS ****************************
 
     /*******************************************************************************************************
     * @description Checks if a given DML operation has succeeded depending on the type of DML result.  Use the
