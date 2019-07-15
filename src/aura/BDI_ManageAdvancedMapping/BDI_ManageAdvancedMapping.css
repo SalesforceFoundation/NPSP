@@ -6,7 +6,7 @@
     width: 100%;
 }
 
-.THIS.slds-grid_extension .slds-size_1-of-1 {
+.THIS.slds-grid_extension .slds-size_1-of-1_outer-container {
     height: 100%;
     overflow: auto;
 }
