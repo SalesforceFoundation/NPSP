@@ -26,6 +26,7 @@ export default class utilSearchableCombobox extends LightningElement {
 
     showSearch() {
         this.isSearchOpen = true;
+        fireEvent(this.pageRef, this.parentListenerEventName, undefined);
     }
 
     hideSearch() {

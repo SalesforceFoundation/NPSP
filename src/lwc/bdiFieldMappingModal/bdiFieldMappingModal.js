@@ -249,31 +249,31 @@ export default class bdiFieldMappingModal extends LightningElement {
     * function on receiving an id back from createDataImportFieldMapping.
     */
     handleSave() {
-        let rowDetails;
-
-        if (this.row) {
-            // Set source and target fields
-            this.row.xxx_Source_Field_API_Name_xxx = this.selectedSourceFieldAPIName;
-            this.row.xxx_Target_Field_API_Name_xxx = this.selectedTargetFieldAPIName;
-            rowDetails = JSON.stringify(this.row);
-        } else {
-            // New Field Mapping
-            rowDetails = JSON.stringify({
-                DeveloperName: null,
-                Label: this.selectedSourceFieldLabel,
-                MasterLabel: this.selectedSourceFieldLabel,
-                xxx_Data_Import_Field_Mapping_Set_xxx: this.fieldMappingSetName,
-                xxx_Is_Deleted_xxx: false,
-                xxx_Required_xxx: 'No',
-                xxx_Source_Field_API_Name_xxx: this.selectedSourceFieldAPIName,
-                xxx_Target_Field_API_Name_xxx: this.selectedTargetFieldAPIName,
-                xxx_Target_Object_Mapping_xxx: this.objectMapping.DeveloperName
-            });
-        }
-
         let missingField = this.handleFieldValidations();
 
         if (missingField.length === 0) {
+            let rowDetails;
+
+            if (this.row) {
+                // Set source and target fields
+                this.row.xxx_Source_Field_API_Name_xxx = this.selectedSourceFieldAPIName;
+                this.row.xxx_Target_Field_API_Name_xxx = this.selectedTargetFieldAPIName;
+                rowDetails = JSON.stringify(this.row);
+            } else {
+                // New Field Mapping
+                rowDetails = JSON.stringify({
+                    DeveloperName: null,
+                    Label: this.selectedSourceFieldLabel,
+                    MasterLabel: this.selectedSourceFieldLabel,
+                    xxx_Data_Import_Field_Mapping_Set_xxx: this.fieldMappingSetName,
+                    xxx_Is_Deleted_xxx: false,
+                    xxx_Required_xxx: 'No',
+                    xxx_Source_Field_API_Name_xxx: this.selectedSourceFieldAPIName,
+                    xxx_Target_Field_API_Name_xxx: this.selectedTargetFieldAPIName,
+                    xxx_Target_Object_Mapping_xxx: this.objectMapping.DeveloperName
+                });
+            }
+
             this.isLoading = true;
             createDataImportFieldMapping({fieldMappingString: rowDetails})
                 .then((deploymentId) => {
@@ -307,6 +307,9 @@ export default class bdiFieldMappingModal extends LightningElement {
     */
     handleFieldValidations() {
         let missingField = '';
+        this.hasSourceFieldErrors = false;
+        this.hasTargetFieldErrors = false;
+
         if (!this.selectedSourceFieldAPIName) {
             missingField = 'Source Field';
             this.hasSourceFieldErrors = true;
@@ -346,12 +349,21 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @param {object} event: Event containing combobox selection details
     */
     handleSourceFieldLabelChange(event) {
-        let fieldAPIName = event.detail.value;
-        let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
-        this.selectedSourceFieldLabel = fieldInfo.label;
-        this.selectedSourceFieldAPIName = fieldAPIName;
-        this.selectedSourceFieldDisplayType = this.toTitleCase(fieldInfo.displayType);
-        this.selectedTargetFieldAPIName = undefined;
+        if (event) {
+            let fieldAPIName = event.detail.value;
+            let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
+
+            this.selectedSourceFieldLabel = fieldInfo.label;
+            this.selectedSourceFieldAPIName = fieldAPIName;
+            this.selectedSourceFieldDisplayType = this.toTitleCase(fieldInfo.displayType);
+            this.selectedTargetFieldAPIName = undefined;
+            this.hasSourceFieldErrors = false;
+        } else {
+            this.selectedSourceFieldAPIName = undefined;
+            this.selectedSourceFieldLabel = undefined;
+            this.selectedTargetFieldAPIName = undefined;
+            this.selectedSourceFieldDisplayType = undefined;
+        }
 
         this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.selectedSourceFieldDisplayType);
     }
@@ -382,10 +394,17 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @param {object} event: Event containing combobox selection details
     */
     handleTargetFieldLabelChange(event) {
-        this.selectedTargetFieldAPIName = event.detail.value;
-        let fieldInfo = this.targetFieldsByAPIName[this.selectedTargetFieldAPIName];
-        this.selectedTargetFieldLabel = fieldInfo.label;
-        this.selectedTargetFieldDisplayType = this.toTitleCase(fieldInfo.displayType);
+        if (event) {
+            this.selectedTargetFieldAPIName = event.detail.value;
+            let fieldInfo = this.targetFieldsByAPIName[this.selectedTargetFieldAPIName];
+            this.selectedTargetFieldLabel = fieldInfo.label;
+            this.selectedTargetFieldDisplayType = this.toTitleCase(fieldInfo.displayType);
+            this.hasTargetFieldErrors = false;
+        } else {
+            this.selectedTargetFieldAPIName = undefined;
+            this.selectedTargetFieldLabel = undefined;
+            this.selectedTargetFieldDisplayType = undefined;
+        }
     }
 
     /*******************************************************************************
