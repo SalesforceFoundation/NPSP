@@ -377,7 +377,7 @@ public class ERR_RecordError {
             dmlError = getFirstDmlError(undeleteResult.getErrors());
         }
 
-        error.Record_URL__c = getRecordURL(error.Record_Id__c);
+        error.Record_URL__c = ERR_Handler.getRecordURL(error.Record_Id__c);
         error.Error_Type__c = getStatusCode(dmlError);
         String errorMessage = getDmlMessage(dmlError);
         error.Full_Message__c = updateFullMessage(error.Datetime__c, '', errorMessage);
@@ -404,7 +404,7 @@ public class ERR_RecordError {
         error.Retry_Pending__c = true;
 
         error.Record_Id__c = objId;
-        error.Record_URL__c = getRecordURL(error.Record_Id__c);
+        error.Record_URL__c = ERR_Handler.getRecordURL(error.Record_Id__c);
         error.Error_Type__c = statusCode;
         error.Full_Message__c = updateFullMessage(error.Datetime__c, '', message);
 
@@ -488,19 +488,6 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Returns the URL of a record, if available.
-    * @param recordId The id of the record associated with the error
-    * @return The URL of the record. Warning: it may not necessarily be valid.
-    */
-    private static String getRecordURL(String recordId) {
-        String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/' + recordId;
-
-        recordURL = recordURL.replaceFirst('http:', 'https:');
-
-        return recordURL;
-    }
-
-    /*******************************************************************************************************
     * @description Returns the status of the error that happened as a result of a DML operation performed through
     *              the Database class as a string.  If null, will return null
     * @param dmlError The DML error that occurred
@@ -517,7 +504,7 @@ public class ERR_RecordError {
     * @return The error status as a string.
     */
     private static String getStatusCode(Database.Error dmlError) {
-        return (dmlError != null) ? getStatusCode(dmlError.getStatusCode()) : '(Error not available.)';
+        return (dmlError != null) ? ERR_Handler.getStatusCode(dmlError.getStatusCode()) : '(Error not available.)';
     }
 
 
