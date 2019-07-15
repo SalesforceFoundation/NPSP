@@ -37,7 +37,7 @@
 */
 public class ERR_RecordError {
 
-   public class RecordErrorException extends Exception { }
+   public class RecordErrorHandlerException extends Exception { }
 
     private Map<String, Error__c> existingErrorsByRecordId = new Map<String, Error__c>();
 
@@ -58,7 +58,7 @@ public class ERR_RecordError {
         } else {
             // Consumer of this service is attempting to instantiate it without a Context Type, which is required for
             // Record Errors
-            throw new RecordErrorException(System.Label.errErrorNoContext);
+            throw new RecordErrorHandlerException(System.Label.errErrorNoContext);
         }
 
     }
@@ -118,7 +118,7 @@ public class ERR_RecordError {
     * @description Indicates whether any new are errors are present to be committed to the Database
     * @return Boolean true if there are new errors present to be inserted/updated.
     */
-        public Boolean isNewErrorsPresent() {
+    public Boolean isNewErrorsPresent() {
         return (!this.insRecordErrors.isEmpty() || !this.updRecordErrors.isEmpty());
     }
 
@@ -193,7 +193,7 @@ public class ERR_RecordError {
                 // Create Error record
                 err = createRecordError(
                     dmlResult,
-                    (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
+                    (sObj != null) ? UTIL_Describe.getObjectDescribe(sObj.getSObjectType()).getName() : null,
                     recordId,
                     context
                 );
@@ -242,7 +242,7 @@ public class ERR_RecordError {
             err = createRecordError(
                 errorMessage,
                 System.Label.errErrorTypeOther,
-                (sObj != null) ? sObj.getSObjectType().getDescribe().getName() : null,
+                (sObj != null) ? UTIL_Describe.getObjectDescribe(sObj.getSObjectType()).getName() : null,
                 recordId,
                 context
             );
@@ -317,6 +317,8 @@ public class ERR_RecordError {
         }
     }
 
+    // **************************** HELPER METHODS ****************************
+
     /*******************************************************************************************************
     * @description Checks if a given DML operation has succeeded depending on the type of DML result.  Use the
     * isSuccess() method of the result.
@@ -331,7 +333,7 @@ public class ERR_RecordError {
             return ((Database.UndeleteResult)dmlResult).isSuccess();
         }
         // Will only occur if a user of this class tries to use an unsupported DML Type
-        throw new RecordErrorException(System.Label.errErrorUnsupportedDMLType);
+        throw new RecordErrorHandlerException(System.Label.errErrorUnsupportedDMLType);
     }
 
     /*******************************************************************************************************
@@ -375,7 +377,7 @@ public class ERR_RecordError {
             dmlError = getFirstDmlError(undeleteResult.getErrors());
         }
 
-        error.Record_URL__c = getRecordURL(error.Record_Id__c);
+        error.Record_URL__c = ERR_Handler.getRecordURL(error.Record_Id__c);
         error.Error_Type__c = getStatusCode(dmlError);
         String errorMessage = getDmlMessage(dmlError);
         error.Full_Message__c = updateFullMessage(error.Datetime__c, '', errorMessage);
@@ -402,7 +404,7 @@ public class ERR_RecordError {
         error.Retry_Pending__c = true;
 
         error.Record_Id__c = objId;
-        error.Record_URL__c = getRecordURL(error.Record_Id__c);
+        error.Record_URL__c = ERR_Handler.getRecordURL(error.Record_Id__c);
         error.Error_Type__c = statusCode;
         error.Full_Message__c = updateFullMessage(error.Datetime__c, '', message);
 
@@ -486,19 +488,6 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Returns the URL of a record, if available.
-    * @param recordId The id of the record associated with the error
-    * @return The URL of the record. Warning: it may not necessarily be valid.
-    */
-    private static String getRecordURL(String recordId) {
-        String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/' + recordId;
-
-        recordURL = recordURL.replaceFirst('http:', 'https:');
-
-        return recordURL;
-    }
-
-    /*******************************************************************************************************
     * @description Returns the status of the error that happened as a result of a DML operation performed through
     *              the Database class as a string.  If null, will return null
     * @param dmlError The DML error that occurred
@@ -515,7 +504,7 @@ public class ERR_RecordError {
     * @return The error status as a string.
     */
     private static String getStatusCode(Database.Error dmlError) {
-        return (dmlError != null) ? getStatusCode(dmlError.getStatusCode()) : '(Error not available.)';
+        return (dmlError != null) ? ERR_Handler.getStatusCode(dmlError.getStatusCode()) : '(Error not available.)';
     }
 
 
