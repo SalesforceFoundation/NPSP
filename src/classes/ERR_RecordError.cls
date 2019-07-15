@@ -193,7 +193,7 @@ public class ERR_RecordError {
                 // Create Error record
                 err = createRecordError(
                     dmlResult,
-                    (sObj != null) ? UTIL_Describe.getObjectDescribe(sObj.getSObjectType()).getDescribe().getName() : null,
+                    (sObj != null) ? UTIL_Describe.getObjectDescribe(sObj.getSObjectType()).getName() : null,
                     recordId,
                     context
                 );
@@ -242,7 +242,7 @@ public class ERR_RecordError {
             err = createRecordError(
                 errorMessage,
                 System.Label.errErrorTypeOther,
-                (sObj != null) ? UTIL_Describe.getObjectDescribe(sObj.getSObjectType()).getDescribe().getName() : null,
+                (sObj != null) ? UTIL_Describe.getObjectDescribe(sObj.getSObjectType()).getName() : null,
                 recordId,
                 context
             );
