@@ -502,7 +502,7 @@ private class ERR_RecordError_TEST {
         try {
             Boolean err = ERR_RecordError.isDmlResultSuccess(UserInfo.getUserId());
             throw new TestException ('Invalid DML Type Exception Expected but was not thrown.');
-        } catch (ERR_RecordError.RecordErrorException e) {
+        } catch (ERR_RecordError.RecordErrorHandlerException e) {
             System.assertEquals (true, e.getMessage().contains(System.Label.errErrorUnsupportedDMLType), 'Exception Message');
         }
     }
@@ -517,7 +517,7 @@ private class ERR_RecordError_TEST {
         try {
             ERR_RecordError re = new ERR_RecordError('');
             throw new TestException ('Exception for blank Context Type expected but was not not thrown.');
-        } catch (ERR_RecordError.RecordErrorException e) {
+        } catch (ERR_RecordError.RecordErrorHandlerException e) {
             System.assertEquals (true, e.getMessage().contains(System.Label.errErrorNoContext), 'Exception Message');
         }
     }

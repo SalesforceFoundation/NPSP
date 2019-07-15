@@ -37,7 +37,7 @@
 */
 public class ERR_RecordError {
 
-   public class RecordErrorException extends Exception { }
+   public class RecordErrorHandlerException extends Exception { }
 
     private Map<String, Error__c> existingErrorsByRecordId = new Map<String, Error__c>();
 
@@ -58,7 +58,7 @@ public class ERR_RecordError {
         } else {
             // Consumer of this service is attempting to instantiate it without a Context Type, which is required for
             // Record Errors
-            throw new RecordErrorException(System.Label.errErrorNoContext);
+            throw new RecordErrorHandlerException(System.Label.errErrorNoContext);
         }
 
     }
@@ -333,7 +333,7 @@ public class ERR_RecordError {
             return ((Database.UndeleteResult)dmlResult).isSuccess();
         }
         // Will only occur if a user of this class tries to use an unsupported DML Type
-        throw new RecordErrorException(System.Label.errErrorUnsupportedDMLType);
+        throw new RecordErrorHandlerException(System.Label.errErrorUnsupportedDMLType);
     }
 
     /*******************************************************************************************************
