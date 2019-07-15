@@ -9,6 +9,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     @api objectMapping;
     @api fieldMappingSetName;
     @api isModalOpen;
+    @api modalMode = 'new';
     @api diFieldDescribes;
     @api targetObjectFieldDescribes;
 
@@ -61,6 +62,10 @@ export default class bdiFieldMappingModal extends LightningElement {
         return true;
     }
 
+    get isModalModeNew() {
+        return this.modalMode === 'new';
+    }
+
     constructor() {
         super();
         this.escapeFunction = this.escapeFunction.bind(this);
@@ -100,6 +105,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
             if (this.row) {
                 // Edit row
+                this.modalMode = 'edit';
                 this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
                 this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
                 this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
@@ -108,6 +114,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                 this.selectedTargetFieldDisplayType = this.toTitleCase(this.row.xxx_Target_Field_Data_Type_xxx);
             } else {
                 // New row
+                this.modalMode = 'new';
                 this.clearSelections();
             }
 
