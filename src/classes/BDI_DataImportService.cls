@@ -628,17 +628,17 @@ global with sharing class BDI_DataImportService {
      * @description Provides the access levels that should be validated depending on whether
      * dry run is enabled.
      */
-    private Set<BDI_FieldLevelSecurityAccessLevel> getFieldAccessLevelsToValidate() {
-        Set<BDI_FieldLevelSecurityAccessLevel> fieldAccessLevelsToValidate =
-                new Set<BDI_FieldLevelSecurityAccessLevel>{
-                        BDI_FieldLevelSecurityAccessLevel.VALIDATE_READ
+    private Set<BDI_DataImportFLSService.AccessLevel> getFieldAccessLevelsToValidate() {
+        Set<BDI_DataImportFLSService.AccessLevel> fieldAccessLevelsToValidate =
+                new Set<BDI_DataImportFLSService.AccessLevel>{
+                        BDI_DataImportFLSService.AccessLevel.VALIDATE_READ
                 };
 
         if (!isDryRun) {
             fieldAccessLevelsToValidate.add(
-                    BDI_FieldLevelSecurityAccessLevel.VALIDATE_UPDATE);
+                    BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE);
             fieldAccessLevelsToValidate.add(
-                    BDI_FieldLevelSecurityAccessLevel.VALIDATE_CREATE);
+                    BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE);
         }
         return fieldAccessLevelsToValidate;
     }

@@ -36,15 +36,19 @@
 * Field Level Security of the target fields mapped in the data import process.
 */
 public class BDI_DataImportFLSService {
-    Set<BDI_FieldLevelSecurityAccessLevel> accessLevels;
+    Set<AccessLevel> accessLevels;
     Map<SObjectField, BDI_TargetFields> fieldMap;
     List<DataImport__c> dataImportsValidated;
     List<DataImport__c> dataImportsInvalidated;
     Map<Id, List<BDI_SObjectFieldWrapper>> invalidFieldsByDataImportId;
 
+    public enum AccessLevel {
+        VALIDATE_READ, VALIDATE_CREATE, VALIDATE_UPDATE
+    }
+
     public BDI_DataImportFLSService(List<DataImport__c> dataImports,
             BDI_FieldMapping fieldMap,
-            Set<BDI_FieldLevelSecurityAccessLevel> accessLevels){
+            Set<AccessLevel> accessLevels){
         this.accessLevels = accessLevels;
         this.fieldMap = fieldMap.getTargetFieldsBySourceField();
         this.dataImportsValidated = new List<DataImport__c>();
@@ -115,13 +119,13 @@ public class BDI_DataImportFLSService {
     }
 
     Boolean isValid(SObjectField field) {
-        if ((accessLevels.contains(BDI_FieldLevelSecurityAccessLevel.VALIDATE_CREATE)
+        if ((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
                 && !field.getDescribe().isCreateable())
                 ||
-                (accessLevels.contains(BDI_FieldLevelSecurityAccessLevel.VALIDATE_UPDATE)
+                (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
                         && !field.getDescribe().isUpdateable())
                 ||
-                (accessLevels.contains(BDI_FieldLevelSecurityAccessLevel.VALIDATE_READ)
+                (accessLevels.contains(AccessLevel.VALIDATE_READ)
                         && !field.getDescribe().isAccessible())) {
             return false;
         } else {
