@@ -21,7 +21,7 @@ export default class utilSearchableCombobox extends LightningElement {
     @track areSearchResultsVisible = false;
 
     get comboboxClass() {
-        return this.hasErrors ? 'slds-has-error' : '';
+        return this.hasErrors ? 'slds-has-error slds-listbox_extension' : 'slds-listbox_extension';
     }
 
     showSearch() {

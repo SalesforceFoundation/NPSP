@@ -9,3 +9,7 @@
 .THIS.slds-grid_extension .slds-size_1-of-1 {
     height: 100%;
 }
+
+.THIS.slds-grid_extension .slds-listbox_extension .slds-form-element__control .slds-combobox_container .slds-combobox .slds-listbox {
+    max-height: 300px;
+}
