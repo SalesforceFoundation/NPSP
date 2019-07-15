@@ -118,7 +118,7 @@ public class ERR_RecordError {
     * @description Indicates whether any new are errors are present to be committed to the Database
     * @return Boolean true if there are new errors present to be inserted/updated.
     */
-        public Boolean isNewErrorsPresent() {
+    public Boolean isNewErrorsPresent() {
         return (!this.insRecordErrors.isEmpty() || !this.updRecordErrors.isEmpty());
     }
 
