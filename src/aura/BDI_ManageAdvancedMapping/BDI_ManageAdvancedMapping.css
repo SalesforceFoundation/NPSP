@@ -2,12 +2,13 @@
     position: fixed;
     top: 5.55rem;
     left: 0;
-    height: 100vh;
+    height: calc(100vh - 5rem);
     width: 100%;
 }
 
 .THIS.slds-grid_extension .slds-size_1-of-1 {
     height: 100%;
+    overflow: auto;
 }
 
 .THIS.slds-grid_extension .slds-listbox_extension .slds-form-element__control .slds-combobox_container .slds-combobox .slds-listbox {
