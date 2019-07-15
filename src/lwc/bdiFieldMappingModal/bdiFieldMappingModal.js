@@ -20,12 +20,14 @@ export default class bdiFieldMappingModal extends LightningElement {
     @track selectedSourceFieldAPIName;
     @track sourceFieldLabelOptions;
     @track selectedSourceFieldDisplayType;
+    @track selectedSourceFieldDisplayTypeLabel;
     @track hasSourceFieldErrors;
 
     @track selectedTargetFieldLabel;
     @track selectedTargetFieldAPIName;
     @track targetFieldLabelOptions;
     @track selectedTargetFieldDisplayType;
+    @track selectedTargetFieldDisplayTypeLabel;
     @track hasTargetFieldErrors;
 
     @api diFieldsByAPIName;
@@ -38,20 +40,38 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     // Map of Display Types
     validTargetTypesBySourceType = {
-        "Id": ["Id", "String"],
-        "Reference": ["Reference", "String"],
-        "Phone": ["Phone", "String"],
-        "Textarea": ["Textarea", "String"],
-        "Url": ["Url", "String"],
-        "Email": ["Email", "String"],
-        "Boolean": ["Boolean"],
-        "String": ["String", "Picklist"],
-        "Datetime": ["Datetime"],
-        "Date": ["Date"],
-        "Picklist": ["Picklist"], // Todo: Include Sometimes Boolean as per the Bdi Mapping Field Types Dc
-        "Currency": ["Currency"],
-        "Percent": ["Percent"],
-        "Integer": ["Integer"]
+        'Boolean': ['Boolean'],
+        'Currency': ['Currency'],
+        'Date': ['Date'],
+        'Datetime': ['Datetime'],
+        'Email': ['Email', 'String'],
+        'Id': ['Id', 'String'],
+        'Integer': ['Integer'],
+        'Percent': ['Percent'],
+        'Phone': ['Phone', 'String'],
+        'Picklist': ['Picklist'], // Todo: Include Sometimes Boolean as per the Bdi Mapping Field Types Dc
+        'Reference': ['Reference', 'String'],
+        'String': ['String', 'Picklist'],
+        'Textarea': ['Textarea', 'String'],
+        'Url': ['Url', 'String']
+    };
+
+    // Map of Labels by Display Type
+    labelsByDisplayType = {
+        'Boolean': 'Checkbox',
+        'Currency': 'Currency',
+        'Date': 'Date',
+        'Datetime': 'Date/Time',
+        'Email': 'Email',
+        'Id': 'Id',
+        'Integer': 'Number',
+        'Percent': 'Percent',
+        'Phone': 'Phone',
+        'Picklist': 'Picklist',
+        'Reference': 'Lookup Relationship',
+        'String': 'Text',
+        'Textarea': 'Text Area',
+        'Url': 'URL'
     };
 
     get isTargetFieldDisabled() {
@@ -112,6 +132,8 @@ export default class bdiFieldMappingModal extends LightningElement {
                 this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
                 this.selectedSourceFieldDisplayType = this.toTitleCase(this.row.xxx_Source_Field_Data_Type_xxx);
                 this.selectedTargetFieldDisplayType = this.toTitleCase(this.row.xxx_Target_Field_Data_Type_xxx);
+                this.selectedSourceFieldDisplayTypeLabel = this.row.Source_Field_Display_Type_Label;
+                this.selectedTargetFieldDisplayTypeLabel = this.row.Target_Field_Display_Type_Label;
             } else {
                 // New row
                 this.modalMode = 'new';
@@ -161,7 +183,8 @@ export default class bdiFieldMappingModal extends LightningElement {
                 this.selectedSourceFieldLabel === fieldInfos[i].label) {
                 let labelOption = {
                     label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
-                    value: fieldInfos[i].value
+                    value: fieldInfos[i].value,
+                    displayTypeLabel: fieldInfos[i].displayTypeLabel
                 }
 
                 this.sourceFieldLabelOptions.push(labelOption);
@@ -222,8 +245,12 @@ export default class bdiFieldMappingModal extends LightningElement {
     clearSelections() {
         this.selectedSourceFieldLabel = undefined;
         this.selectedSourceFieldAPIName = undefined;
+        this.selectedSourceFieldDisplayType = undefined;
+        this.selectedSourceFieldDisplayTypeLabel = undefined;
         this.selectedTargetFieldLabel = undefined;
         this.selectedTargetFieldAPIName = undefined;
+        this.selectedTargetFieldDisplayType = undefined;
+        this.selectedTargetFieldDisplayTypeLabel = undefined;
     }
 
     /*******************************************************************************
@@ -356,6 +383,8 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.selectedSourceFieldLabel = fieldInfo.label;
             this.selectedSourceFieldAPIName = fieldAPIName;
             this.selectedSourceFieldDisplayType = this.toTitleCase(fieldInfo.displayType);
+            this.selectedSourceFieldDisplayTypeLabel =
+                this.labelsByDisplayType[this.selectedSourceFieldDisplayType];
             this.selectedTargetFieldAPIName = undefined;
             this.hasSourceFieldErrors = false;
         } else {
@@ -399,6 +428,8 @@ export default class bdiFieldMappingModal extends LightningElement {
             let fieldInfo = this.targetFieldsByAPIName[this.selectedTargetFieldAPIName];
             this.selectedTargetFieldLabel = fieldInfo.label;
             this.selectedTargetFieldDisplayType = this.toTitleCase(fieldInfo.displayType);
+            this.selectedTargetFieldDisplayTypeLabel =
+                this.labelsByDisplayType[this.selectedTargetFieldDisplayType];
             this.hasTargetFieldErrors = false;
         } else {
             this.selectedTargetFieldAPIName = undefined;

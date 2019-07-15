@@ -64,6 +64,26 @@ public class BDI_ManageAdvancedMappingCtrl {
         'id'};
 
     /*******************************************************************************************************
+    * @description Map of labels by display types used in the field mapping UI
+    */
+    private static final Map<String, String> LABELS_BY_DISPLAY_TYPE = new Map<String, String> {
+        'BOOLEAN' => 'Checkbox',
+        'CURRENCY' => 'Currency',
+        'DATE' => 'Date',
+        'DATETIME' => 'Date/Time',
+        'EMAIL' => 'Email',
+        'ID' => 'Id',
+        'INTEGER' => 'Number',
+        'PERCENT' => 'Percent',
+        'PHONE' => 'Phone',
+        'PICKLIST' => 'Picklist',
+        'REFERENCE' => 'Lookup Relationship',
+        'STRING' => 'Text',
+        'TEXTAREA' => 'Text Area',
+        'URL' => 'URL'
+    };
+
+    /*******************************************************************************************************
     * @description Name of the default Field Mapping Set
     *
     * @return String: Default Field Mapping Set name
@@ -317,6 +337,8 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String xxx_Target_Object_Mapping_xxx;
         @AuraEnabled public String xxx_Required_xxx;
         @AuraEnabled public Boolean xxx_Is_Deleted_xxx;
+        @AuraEnabled public String Source_Field_Display_Type_Label;
+        @AuraEnabled public String Target_Field_Display_Type_Label;
 
         public DataImportFieldMappingWrapper(Data_Import_Field_Mapping__mdt fieldMapping) {
             String dataImport = 'npsp__DataImport__c';
@@ -348,14 +370,19 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.xxx_Source_Field_Label_xxx = sourceFieldDescribe.label;
             this.xxx_Source_Field_API_Name_xxx = fieldMapping.Source_Field_API_Name__c;
             this.xxx_Source_Field_Data_Type_xxx = String.valueOf(sourceFieldDescribe.type);
+            this.Source_Field_Display_Type_Label =
+                LABELS_BY_DISPLAY_TYPE.get(this.xxx_Source_Field_Data_Type_xxx);
 
             this.xxx_Target_Field_Label_xxx = targetFieldDescribe.label;
             this.xxx_Target_Field_API_Name_xxx = fieldMapping.Target_Field_API_Name__c;
             this.xxx_Target_Field_Data_Type_xxx = String.valueOf(targetFieldDescribe.type);
+            this.Target_Field_Display_Type_Label =
+                LABELS_BY_DISPLAY_TYPE.get(this.xxx_Target_Field_Data_Type_xxx);
 
             this.Maps_To_Icon = 'utility:forward';
 
-            this.xxx_Data_Import_Field_Mapping_Set_xxx = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
+            this.xxx_Data_Import_Field_Mapping_Set_xxx =
+                fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
             this.xxx_Target_Object_Mapping_xxx = fieldMapping.Target_Object_Mapping__r.DeveloperName;
             this.xxx_Required_xxx = fieldMapping.Required__c;
             this.xxx_Is_Deleted_xxx = fieldMapping.Is_Deleted__c;
