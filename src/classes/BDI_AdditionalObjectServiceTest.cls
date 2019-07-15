@@ -942,4 +942,105 @@ private class BDI_AdditionalObjectServiceTest {
         System.assertNotEquals(null,testDataImportBResult.Opportunity_Contact_Role_2_Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportBResult.Opportunity_Contact_Role_2_ImportStatus__c);
     }
+
+    @isTest
+    static void givenOppHasBeenImportedWhenReprocessedThenAssertAdditionalObjectsImported() {
+        //Setup: use Advanced Field Mapping with Donation Matching Behavior set to "Single
+        // Match or Create"
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        dis.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        Account testAccount = new Account(Name = 'testAcct');
+        insert testAccount;
+
+        Opportunity testOpp = new Opportunity(
+                AccountId = testAccount.Id,
+                Name = 'testOpp',
+                Amount = 100,
+                CloseDate = Date.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert testOpp;
+
+        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(
+                Name = 'testGAU',
+                Active__c = true);
+        insert testGAU;
+
+        //Set up the Data Import record to look like it has already been run and created
+        //the Opportunity but failed with a reported error on the GAU Allocation additional
+        //object.
+        DataImport__c dataImport = new DataImport__c(
+                Account1_Name__c = 'testAcct',
+                Account1Imported__c = testAccount.Id,
+                Account1ImportStatus__c = System.Label.bdiCreated,
+
+                Donation_Donor__c = 'Account1',
+                Donation_Amount__c = 100,
+                Donation_Date__c = Date.today(),
+                DonationImported__c = testOpp.Id,
+                DonationImportStatus__c = System.Label.bdiCreated,
+
+                GAU_Allocation_1_GAU__c = testGAU.Id,
+                //Setting the GAU Allocation Percentage to a legitimate value alongside
+                //the Import Status error mimics a User fixing the percentage after the
+                //initial processing attempt.  The Data Import record should now be
+                //ready to re-process.
+                GAU_Allocation_1_Percent__c = 15,
+                GAU_Allocation_1_Import_Status__c = System.Label.alloTotalExceedsOppAmt,
+
+                Status__c = BDI_DataImport_API.bdiFailed,
+                FailureInformation__c = System.Label.alloTotalExceedsOppAmt
+        );
+        insert dataImport;
+
+        //Re-run batch data import process
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        dataImport = [
+                SELECT
+                        Status__c,
+                        FailureInformation__c,
+                        DonationImported__c,
+                        DonationImportStatus__c,
+                        GAU_Allocation_1_Imported__c,
+                        GAU_Allocation_1_Import_Status__c
+                FROM DataImport__c
+                WHERE Id = :dataImport.Id
+        ];
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + dataImport);
+        System.debug(LoggingLevel.ERROR, '^^^^^^ dataImport ^^^^^^');
+
+        System.assertEquals(System.Label.bdiImported, dataImport.Status__c,
+                'The Data Import should have been successfully re-processed and have an ' +
+                        '\"imported\" status.');
+        System.assertEquals(null, dataImport.FailureInformation__c,
+                'The Data Import should have been successfully re-processed without any failure ' +
+                        'information.');
+
+        System.assertEquals(testOpp.Id, dataImport.DonationImported__c,
+                'The Donation Imported lookup value should be unchanged.');
+        System.assertEquals(System.Label.bdiCreated, dataImport.DonationImportStatus__c,
+                'The Donation Import Status should be unchanged.');
+
+        System.assertNotEquals(null, dataImport.GAU_Allocation_1_Imported__c,
+                'An Allocation should have been created.');
+        System.assertEquals(System.Label.bdiCreated, dataImport.GAU_Allocation_1_Import_Status__c,
+                'An Allocation should have been created.');
+
+        System.assertEquals(1, [
+                SELECT COUNT()
+                FROM Allocation__c
+                WHERE Opportunity__c = :testOpp.Id
+                AND General_Accounting_Unit__c = :testGAU.Id
+                AND Percent__c = 15.0
+        ], 'An Allocation for 15% should have been created.');
+    }
+
 }
