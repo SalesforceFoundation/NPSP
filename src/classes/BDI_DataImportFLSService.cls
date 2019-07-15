@@ -40,7 +40,7 @@ public class BDI_DataImportFLSService {
     Map<SObjectField, BDI_TargetFields> fieldMap;
     List<DataImport__c> dataImportsValidated;
     List<DataImport__c> dataImportsInvalidated;
-    Map<Id, List<BDI_SObjectFieldWrapper>> invalidFieldsByDataImportId;
+    Map<Id, List<SObjectFieldWrapper>> invalidFieldsByDataImportId;
 
     public enum AccessLevel {
         VALIDATE_READ, VALIDATE_CREATE, VALIDATE_UPDATE
@@ -53,7 +53,7 @@ public class BDI_DataImportFLSService {
         this.fieldMap = fieldMap.getTargetFieldsBySourceField();
         this.dataImportsValidated = new List<DataImport__c>();
         this.dataImportsInvalidated = new List<DataImport__c>();
-        this.invalidFieldsByDataImportId = new Map<Id, List<BDI_SObjectFieldWrapper>>();
+        this.invalidFieldsByDataImportId = new Map<Id, List<SObjectFieldWrapper>>();
         validateTargetMappingFieldLevelSecurity(dataImports);
     }
 
@@ -67,7 +67,7 @@ public class BDI_DataImportFLSService {
 
     public List<String> getQualifiedInvalidFieldNamesById(Id dataImportId) {
         List<String> qualifiedInvalidFieldNames = new List<String>();
-        for (BDI_SObjectFieldWrapper fieldWrapper :
+        for (SObjectFieldWrapper fieldWrapper :
                 invalidFieldsByDataImportId.get(dataImportId)) {
             qualifiedInvalidFieldNames.add(fieldWrapper.getQualifiedName());
         }
@@ -78,7 +78,7 @@ public class BDI_DataImportFLSService {
         for (DataImport__c dataImport : dataImportsInitial) { //Loop DIs
             String sourceObjectName = DataImport__c.SObjectType.getDescribe().getName();
 
-            List<BDI_SObjectFieldWrapper> invalidFields = new List<BDI_SObjectFieldWrapper>();
+            List<SObjectFieldWrapper> invalidFields = new List<SObjectFieldWrapper>();
             for (String dataImportFieldName : dataImport.getPopulatedFieldsAsMap().keySet()) {
                 SObjectField sourceSObjectField =
                         UTIL_Describe.getFieldDescribe(
@@ -99,7 +99,7 @@ public class BDI_DataImportFLSService {
                     for (SObjectField field : targetFieldsByObject.get(objectType)) {
                         if (!isValid(field)) {
                             invalidFields.add(
-                                    new BDI_SObjectFieldWrapper(
+                                    new SObjectFieldWrapper(
                                             objectType,
                                             field
                                     )
@@ -130,6 +130,21 @@ public class BDI_DataImportFLSService {
             return false;
         } else {
             return true;
+        }
+    }
+
+    class SObjectFieldWrapper {
+
+        SObjectType sObjType;
+        SObjectField field;
+
+        SObjectFieldWrapper(SObjectType obj, SObjectField field) {
+            this.sObjType = obj;
+            this.field = field;
+        }
+
+        String getQualifiedName() {
+            return sObjType.getDescribe().getName() + '.' + field.getDescribe().getName();
         }
     }
 }
