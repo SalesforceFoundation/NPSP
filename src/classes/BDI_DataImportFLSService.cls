@@ -47,10 +47,10 @@ public class BDI_DataImportFLSService {
     }
 
     public BDI_DataImportFLSService(List<DataImport__c> dataImports,
-            BDI_FieldMapping fieldMap,
+            BDI_FieldMapping fieldMapping,
             Set<AccessLevel> accessLevels){
         this.accessLevels = accessLevels;
-        this.targetFieldsBySObjectFields = fieldMap.getTargetFieldsBySourceField();
+        this.targetFieldsBySObjectFields = fieldMapping.getTargetFieldsBySourceField();
         this.dataImportsValidated = new List<DataImport__c>();
         this.dataImportsInvalidated = new List<DataImport__c>();
         this.invalidFieldsByDataImportId = new Map<Id, List<SObjectFieldWrapper>>();
