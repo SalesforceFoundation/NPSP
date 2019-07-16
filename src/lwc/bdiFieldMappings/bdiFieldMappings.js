@@ -141,10 +141,7 @@ export default class bdiFieldMappings extends LightningElement {
             this.isLoading = false;
 
         } catch(error) {
-            if (error) {
-                console.log('Error: ', error);
-                this.showToast('Error', error, 'error', 'sticky');
-            }
+            this.handleError(error);
         }
     }
 
@@ -246,16 +243,7 @@ export default class bdiFieldMappings extends LightningElement {
                         this.handleDeleteDeploymentId(deploymentId);
                     })
                     .catch((error) => {
-                        console.log(error);
-                        // TODO: Need to clean up the way these errors are handled
-                        if (error && error.body) {
-                            this.showToast(
-                                'Error',
-                                '{0}. {1}. {2}.',
-                                'error',
-                                'sticky',
-                                [error.body.exceptionType, error.body.message, error.body.stackTrace]);
-                        }
+                        this.handleError(error);
                     });
                 break;
 
@@ -319,5 +307,21 @@ export default class bdiFieldMappings extends LightningElement {
             messageData: messageData
         });
         this.dispatchEvent(event);
+    }
+
+    /*******************************************************************************
+    * @description Creates and dispatches an error toast
+    *
+    * @param {object} error: Event holding error details
+    */
+    handleError(error) {
+        console.log('Error: ', error);
+        if (error && error.status && error.body) {
+            this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
+        } else if (error && error.name && error.message) {
+            this.showToast(`${error.name}`, error.message, 'error', 'sticky');
+        } else {
+            this.showToast('Unknown error', '', 'error', 'sticky');
+        }
     }
 }

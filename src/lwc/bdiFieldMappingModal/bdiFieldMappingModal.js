@@ -209,7 +209,7 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.setDataImportFieldDescribes(this.diFieldDescribes);
             this.setTargetObjectFieldDescribes(this.targetObjectFieldDescribes);
         } catch(error) {
-            console.log('ERROR: ', error);
+            this.handleError(error);
         }
 
         this.isLoading = false
@@ -238,27 +238,31 @@ export default class bdiFieldMappingModal extends LightningElement {
     * from the Data Import object
     */
     setDataImportFieldDescribes(fieldInfos) {
-        this.sourceFieldLabelOptions = [];
-        let diFieldsByAPIName = {};
+        try {
+            this.sourceFieldLabelOptions = [];
+            let diFieldsByAPIName = {};
 
-        for (let i = 0; i < fieldInfos.length; i++) {
+            for (let i = 0; i < fieldInfos.length; i++) {
 
-            // Include the data import field if it hasn't already been mapped
-            // or if it's the currently selected field (i.e. editing)
-            if (!this.mappedDIFieldLabels.includes(fieldInfos[i].label) ||
-                this.selectedSourceFieldLabel === fieldInfos[i].label) {
-                let labelOption = {
-                    label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
-                    value: fieldInfos[i].value,
-                    displayTypeLabel: fieldInfos[i].displayTypeLabel
+                // Include the data import field if it hasn't already been mapped
+                // or if it's the currently selected field (i.e. editing)
+                if (!this.mappedDIFieldLabels.includes(fieldInfos[i].label) ||
+                    this.selectedSourceFieldLabel === fieldInfos[i].label) {
+                    let labelOption = {
+                        label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
+                        value: fieldInfos[i].value,
+                        displayTypeLabel: fieldInfos[i].displayTypeLabel
+                    }
+
+                    this.sourceFieldLabelOptions.push(labelOption);
+                    diFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
                 }
-
-                this.sourceFieldLabelOptions.push(labelOption);
-                diFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
             }
+            this.sourceFieldLabelOptions = this.sortBy(this.sourceFieldLabelOptions, 'label');
+            this.diFieldsByAPIName = diFieldsByAPIName;
+        } catch(error) {
+            this.handleError(error);
         }
-        this.sourceFieldLabelOptions = this.sortBy(this.sourceFieldLabelOptions, 'label');
-        this.diFieldsByAPIName = diFieldsByAPIName;
     }
 
     /*******************************************************************************
@@ -269,39 +273,43 @@ export default class bdiFieldMappingModal extends LightningElement {
     * from the Data Import object
     */
     setTargetObjectFieldDescribes(fieldInfos) {
-        this.targetFieldLabelOptions = [];
-        let targetFieldsByAPIName = {};
-        let targetFieldsByLabelByDisplayType = {};
+        try {
+            this.targetFieldLabelOptions = [];
+            let targetFieldsByAPIName = {};
+            let targetFieldsByLabelByDisplayType = {};
 
-        for (let i = 0; i < fieldInfos.length; i++) {
+            for (let i = 0; i < fieldInfos.length; i++) {
 
-            // Include the data import field if it hasn't already been mapped
-            // or if it's the currently selected field (i.e. editing)
-            if (!this.mappedTargetFieldLabels.includes(fieldInfos[i].label) ||
-                this.selectedTargetFieldLabel === fieldInfos[i].label) {
-                let labelOption = {
-                    label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
-                    value: fieldInfos[i].value
-                }
+                // Include the data import field if it hasn't already been mapped
+                // or if it's the currently selected field (i.e. editing)
+                if (!this.mappedTargetFieldLabels.includes(fieldInfos[i].label) ||
+                    this.selectedTargetFieldLabel === fieldInfos[i].label) {
+                    let labelOption = {
+                        label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
+                        value: fieldInfos[i].value
+                    }
 
-                this.targetFieldLabelOptions.push(labelOption);
-                targetFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
+                    this.targetFieldLabelOptions.push(labelOption);
+                    targetFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
 
-                let displayType = this.toTitleCase(fieldInfos[i].displayType);
-                // Collect target fields by display type
-                if (targetFieldsByLabelByDisplayType[displayType]) {
-                    targetFieldsByLabelByDisplayType[displayType].push(labelOption);
-                } else {
-                    targetFieldsByLabelByDisplayType[displayType] = [labelOption];
+                    let displayType = this.toTitleCase(fieldInfos[i].displayType);
+                    // Collect target fields by display type
+                    if (targetFieldsByLabelByDisplayType[displayType]) {
+                        targetFieldsByLabelByDisplayType[displayType].push(labelOption);
+                    } else {
+                        targetFieldsByLabelByDisplayType[displayType] = [labelOption];
+                    }
                 }
             }
-        }
 
-        this.targetFieldsByAPIName = targetFieldsByAPIName;
-        this.targetFieldsByLabelByDisplayType = targetFieldsByLabelByDisplayType;
+            this.targetFieldsByAPIName = targetFieldsByAPIName;
+            this.targetFieldsByLabelByDisplayType = targetFieldsByLabelByDisplayType;
 
-        if (this.selectedSourceFieldDisplayType) {
-            this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.selectedSourceFieldDisplayType);
+            if (this.selectedSourceFieldDisplayType) {
+                this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.selectedSourceFieldDisplayType);
+            }
+        } catch(error) {
+            this.handleError(error);
         }
     }
 
@@ -342,55 +350,51 @@ export default class bdiFieldMappingModal extends LightningElement {
     * function on receiving an id back from createDataImportFieldMapping.
     */
     handleSave() {
-        let missingField = this.handleFieldValidations();
+        try {
+            let missingField = this.handleFieldValidations();
+            if (missingField.length === 0) {
+                let rowDetails;
 
-        if (missingField.length === 0) {
-            let rowDetails;
+                if (this.row) {
+                    // Set source and target fields
+                    this.row.xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx =
+                        this.selectedSourceFieldAPIName;
+                    this.row.xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx =
+                        this.selectedTargetFieldAPIName;
+                    rowDetails = JSON.stringify(this.row);
+                } else {
+                    // New Field Mapping
+                    rowDetails = JSON.stringify({
+                        DeveloperName: null,
+                        Label: this.selectedSourceFieldLabel,
+                        MasterLabel: this.selectedSourceFieldLabel,
+                        xxPrefixTokenxx_Data_Import_Field_Mapping_Set_xxSuffixTokenxx: this.fieldMappingSetName,
+                        xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx: false,
+                        xxPrefixTokenxx_Required_xxSuffixTokenxx: 'No',
+                        xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx: this.selectedSourceFieldAPIName,
+                        xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx: this.selectedTargetFieldAPIName,
+                        xxPrefixTokenxx_Target_Object_Mapping_xxSuffixTokenxx: this.objectMapping.DeveloperName
+                    });
+                }
 
-            if (this.row) {
-                // Set source and target fields
-                this.row.xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx =
-                    this.selectedSourceFieldAPIName;
-                this.row.xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx =
-                    this.selectedTargetFieldAPIName;
-                rowDetails = JSON.stringify(this.row);
+                this.isLoading = true;
+                createDataImportFieldMapping({fieldMappingString: rowDetails})
+                    .then((deploymentId) => {
+                        this.handleDeploymentId(deploymentId);
+                    })
+                    .catch((error) => {
+                        this.isLoading = false;
+                        this.handleError(error);
+                    });
             } else {
-                // New Field Mapping
-                rowDetails = JSON.stringify({
-                    DeveloperName: null,
-                    Label: this.selectedSourceFieldLabel,
-                    MasterLabel: this.selectedSourceFieldLabel,
-                    xxPrefixTokenxx_Data_Import_Field_Mapping_Set_xxSuffixTokenxx: this.fieldMappingSetName,
-                    xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx: false,
-                    xxPrefixTokenxx_Required_xxSuffixTokenxx: 'No',
-                    xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx: this.selectedSourceFieldAPIName,
-                    xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx: this.selectedTargetFieldAPIName,
-                    xxPrefixTokenxx_Target_Object_Mapping_xxSuffixTokenxx: this.objectMapping.DeveloperName
-                });
+                this.showToast(
+                    'Error',
+                    `Missing the following field ${missingField}`,
+                    'error',
+                    'dismissable');
             }
-
-            this.isLoading = true;
-            createDataImportFieldMapping({fieldMappingString: rowDetails})
-                .then((deploymentId) => {
-                    this.handleDeploymentId(deploymentId);
-                })
-                .catch((error) => {
-                    this.isLoading = false;
-                    if (error && error.body) {
-                        this.showToast(
-                            'Error',
-                            '{0}. {1}. {2}.',
-                            'error',
-                            'sticky',
-                            [error.body.exceptionType, error.body.message, error.body.stackTrace]);
-                    }
-                });
-        } else {
-            this.showToast(
-                'Error',
-                `Missing the following fields [${missingField}]`,
-                'error',
-                'dismissable');
+        } catch(error) {
+            this.handleError(error);
         }
     }
 
@@ -528,6 +532,22 @@ export default class bdiFieldMappingModal extends LightningElement {
             messageData: messageData
         });
         this.dispatchEvent(event);
+    }
+
+    /*******************************************************************************
+    * @description Creates and dispatches an error toast
+    *
+    * @param {object} error: Event holding error details
+    */
+    handleError(error) {
+        console.log('Error: ', error);
+        if (error && error.status && error.body) {
+            this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
+        } else if (error && error.name && error.message) {
+            this.showToast(`${error.name}`, error.message, 'error', 'sticky');
+        } else {
+            this.showToast('Unknown error', '', 'error', 'sticky');
+        }
     }
 
     /*******************************************************************************
