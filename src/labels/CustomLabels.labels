@@ -2491,7 +2491,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUILongDeployment</shortDescription>
-        <value>Metadata deployment is taking longer than expected.</value>
+        <value>Modifying this Field Mapping is taking longer than expected.</value>
     </labels>
     <labels>
         <fullName>bdiFMUILongDeploymentLink</fullName>
