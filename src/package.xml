@@ -1491,6 +1491,9 @@
         <members>bdiErrorOneToOneMultiContact</members>
         <members>bdiErrorPaymentMultiMatch</members>
         <members>bdiFailed</members>
+        <members>bdiFieldMappingUIDatatableMapsTo</members>
+        <members>bdiFieldMappingUISourceObject</members>
+        <members>bdiFieldMappings</members>
         <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>
         <members>bdiImported</members>
@@ -1926,6 +1929,7 @@
         <members>stgBtnCreateUDR</members>
         <members>stgBtnEdit</members>
         <members>stgBtnHHAutoName</members>
+        <members>stgBtnNew</members>
         <members>stgBtnNewAutoRel</members>
         <members>stgBtnNewONS</members>
         <members>stgBtnNewPaymentMap</members>

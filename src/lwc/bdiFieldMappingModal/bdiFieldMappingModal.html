@@ -6,7 +6,7 @@
             aria-labelledby="modal-heading-01"
             aria-modal="true"
             aria-describedby="modal-content-id-1"
-            class="slds-modal slds-fade-in-open"> <!--slds-modal_large-->
+            class="slds-modal slds-fade-in-open">
 
             <div class="slds-modal__container">
                 <div class="slds-modal__container_extension">
@@ -25,16 +25,16 @@
                                 size="small"
                                 onclick={handleCloseModal}>
                             </lightning-icon>
-                            <span class="slds-assistive-text">Close</span>
+                            <span class="slds-assistive-text">{labels.bdiBtnClose}</span>
                         </button>
                         <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
                             <tempate if:true={isModalModeNew}>
-                                New
+                                {labels.stgBtnNew}
                             </tempate>
                             <tempate if:false={isModalModeNew}>
-                                Edit
+                                {labels.stgBtnEdit}
                             </tempate>
-                            &nbsp;{objectMapping.MasterLabel} Field Mapping
+                            &nbsp;{objectMapping.MasterLabel} {labels.bdiFieldMappings}
                         </h2>
                     </header>
 
@@ -50,7 +50,7 @@
                                         <h3 class="slds-section__title">
                                             <span class="slds-truncate"
                                                   title="Source (NPSP Data Import Object)">
-                                                Source (NPSP Data Import Object)
+                                                {labels.bdiFieldMappingUISourceObject}
                                             </span>
                                         </h3>
 
@@ -80,7 +80,7 @@
                                 </div>
 
                                 <div class="slds-size_1-of-1 slds-m-vertical_medium">
-                                    <h3 class="slds-text-align_center"><i>Maps to</i></h3>
+                                    <h3 class="slds-text-align_center"><i>{labels.bdiFieldMappingUIDatatableMapsTo}</i></h3>
                                 </div>
 
                                 <div class="slds-size_1-of-1 slds-m-bottom_medium">
@@ -89,7 +89,7 @@
                                         <h3 class="slds-section__title">
                                             <span class="slds-truncate"
                                                   title="Source (NPSP Data Import Object)">
-                                                Target ({objectMapping.MasterLabel} Object)
+                                                {labels.stgLabelUDRTargetObject} ({objectMapping.MasterLabel})
                                             </span>
                                         </h3>
 
@@ -125,11 +125,11 @@
                     <footer class="slds-modal__footer">
                         <button class="slds-button slds-button_neutral"
                                 onclick={handleCloseModal}>
-                            Cancel
+                            {labels.stgBtnCancel}
                         </button>
                         <button class="slds-button slds-button_brand"
                                 onclick={handleSave}>
-                            Save
+                            {labels.stgBtnSave}
                         </button>
                     </footer>
 

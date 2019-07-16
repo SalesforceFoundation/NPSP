@@ -4,7 +4,30 @@ import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoP
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 
+// Import custom labels
+import bdiBtnClose from '@salesforce/label/c.bdiBtnClose';
+import bdiFieldMappings from '@salesforce/label/c.bdiFieldMappings';
+import bdiFieldMappingUIDatatableMapsTo from '@salesforce/label/c.bdiFieldMappingUIDatatableMapsTo';
+import bdiFieldMappingUISourceObject from '@salesforce/label/c.bdiFieldMappingUISourceObject';
+import stgBtnCancel from '@salesforce/label/c.stgBtnCancel';
+import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
+import stgBtnNew from '@salesforce/label/c.stgBtnNew';
+import stgBtnSave from '@salesforce/label/c.stgBtnSave';
+import stgLabelUDRTargetObject from '@salesforce/label/c.stgLabelUDRTargetObject';
+
 export default class bdiFieldMappingModal extends LightningElement {
+
+    labels = {
+        bdiBtnClose,
+        bdiFieldMappings,
+        bdiFieldMappingUIDatatableMapsTo,
+        bdiFieldMappingUISourceObject,
+        stgBtnCancel,
+        stgBtnEdit,
+        stgBtnNew,
+        stgBtnSave,
+        stgLabelUDRTargetObject
+    };
 
     @api objectMapping;
     @api fieldMappingSetName;

@@ -21,7 +21,7 @@ const columns = [
     { label: 'Data Type', fieldName: 'Source_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
         {
             label: 'Maps To', fieldName: '', type: 'text', fixedWidth: 95,
-            cellAttributes: { iconName: { fieldName: 'Maps_To_Icon' }, iconPosition: 'right' }
+            cellAttributes: { alignment: 'center', iconName: { fieldName: 'Maps_To_Icon' } }
         },
     { label: 'Field Label', fieldName: 'xxx_Target_Field_Label_xxx', type: 'text' },
     { label: 'Field API Name', fieldName: 'xxx_Target_Field_API_Name_xxx', type: 'text' },
