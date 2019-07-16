@@ -651,7 +651,6 @@ class NPSP(object):
     def add_gau_allocation(self,field, value):
         locator = npsp_lex_locators["gaus"]["input_field"].format(field)
         self.salesforce._populate_field(locator,value)
-#         loc = self.selenium.get_webelement(locator).send_keys(value)
             
         
     def click_save(self, page):
