@@ -40,3 +40,4 @@ report.html
 robot/Cumulus/results/
 datasets/dev_org/test_data.db
 *.db
+.cci
