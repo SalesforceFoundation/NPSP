@@ -3220,7 +3220,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>errErrorNoContext</shortDescription>
-        <value>No context supplied to constructor</value>
+        <value>No process context supplied to constructor</value>
     </labels>
     <labels>
         <fullName>errErrorTypeOther</fullName>
@@ -3252,7 +3252,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>errErrorUnsupportedDMLType</shortDescription>
-        <value>Unsupported DML Type passed to Record Error</value>
+        <value>Unsupported Operation: Unable to log an Error for this type of DML operation.</value>
     </labels>
     <labels>
         <fullName>exceptionDeletePermission</fullName>

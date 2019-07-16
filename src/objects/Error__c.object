@@ -160,9 +160,9 @@
     <fields>
         <fullName>Retry_Pending__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>The record associated with this error will be reprocessed the next time the process the error is associated with executes.</description>
+        <description>If checked, the record entered in Record Id will be reprocessed in the next available scheduled process. If the reprocessing is successful, this field is then unchecked.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The record associated with this error will be reprocessed the next time the process the error is associated with executes.</inlineHelpText>
+        <inlineHelpText>If checked, the record entered in Record Id will be reprocessed in the next available scheduled process.</inlineHelpText>
         <label>Retry Pending?</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
