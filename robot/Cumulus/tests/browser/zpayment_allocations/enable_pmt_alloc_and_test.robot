@@ -36,6 +36,8 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Verify Gau Allocations    GAU Allocations
     ...    &{def_gau}[Name]=$60.00
     ...    &{gau}[Name]=$40.00
+
+Update GAU Allocations and Verify Payment Allocations Sync
     Click Special Related List Button  GAU Allocations    Manage Allocations
     Choose Frame    Manage Allocations
     Add GAU Allocation    Percent 0    60
@@ -46,15 +48,8 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Verify Gau Allocations    GAU Allocations
     ...    &{def_gau}[Name]=$40.00
     ...    &{gau}[Name]=$60.00
-    Click Link    &{payment}[Name]    
-    Select Window
-    # Import Library  Dialogs
-    # Pause Execution
-    Select Tab    Related
-    # Verify Allocations    Payment Allocations
-    # ...    &{def_gau}[Name]=$40.00
-    # ...    &{gau}[Name]=$60.00
-    Reload Page
+    # As a workaround for lightning cache issue, going to the payment record directly as it would reload the record
+    Go To Record Home    &{payment}[Id]
     Select Tab    Related
     Verify Allocations    Payment Allocations
     ...    &{def_gau}[Name]=$40.00
