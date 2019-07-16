@@ -37,7 +37,7 @@
 */
 public class BDI_DataImportFLSService {
     Set<AccessLevel> accessLevels;
-    Map<SObjectField, BDI_TargetFields> fieldMap;
+    Map<SObjectField, BDI_TargetFields> targetFieldsBySObjectFields;
     List<DataImport__c> dataImportsValidated;
     List<DataImport__c> dataImportsInvalidated;
     Map<Id, List<SObjectFieldWrapper>> invalidFieldsByDataImportId;
@@ -50,7 +50,7 @@ public class BDI_DataImportFLSService {
             BDI_FieldMapping fieldMap,
             Set<AccessLevel> accessLevels){
         this.accessLevels = accessLevels;
-        this.fieldMap = fieldMap.getTargetFieldsBySourceField();
+        this.targetFieldsBySObjectFields = fieldMap.getTargetFieldsBySourceField();
         this.dataImportsValidated = new List<DataImport__c>();
         this.dataImportsInvalidated = new List<DataImport__c>();
         this.invalidFieldsByDataImportId = new Map<Id, List<SObjectFieldWrapper>>();
@@ -85,7 +85,7 @@ public class BDI_DataImportFLSService {
                                 sourceObjectName,
                                 dataImportFieldName).getSobjectField();
 
-                BDI_TargetFields targetFields = fieldMap.get(sourceSObjectField);
+                BDI_TargetFields targetFields = targetFieldsBySObjectFields.get(sourceSObjectField);
 
                 if (targetFields == null) { //this source field is unmapped
                     continue;
