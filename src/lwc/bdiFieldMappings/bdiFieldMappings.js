@@ -35,15 +35,15 @@ const actions = [
 ];
 
 const columns = [
-    { label: bdiFMUIFieldLabel, fieldName: 'xxx_Source_Field_Label_xxx', type: 'text', sortable: true },
-    { label: bdiFMUIFieldAPIName, fieldName: 'xxx_Source_Field_API_Name_xxx', type: 'text' },
+    { label: bdiFMUIFieldLabel, fieldName: 'xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx', type: 'text', sortable: true },
+    { label: bdiFMUIFieldAPIName, fieldName: 'xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx', type: 'text' },
     { label: bdiFMUIDataType, fieldName: 'Source_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
         {
             label: bdiFMUIDatatableMapsTo, fieldName: '', type: 'text', fixedWidth: 95,
             cellAttributes: { alignment: 'center', iconName: { fieldName: 'Maps_To_Icon' } }
         },
-    { label: bdiFMUIFieldLabel, fieldName: 'xxx_Target_Field_Label_xxx', type: 'text' },
-    { label: bdiFMUIFieldAPIName, fieldName: 'xxx_Target_Field_API_Name_xxx', type: 'text' },
+    { label: bdiFMUIFieldLabel, fieldName: 'xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx', type: 'text' },
+    { label: bdiFMUIFieldAPIName, fieldName: 'xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx', type: 'text' },
     { label: bdiFMUIDataType, fieldName: 'Target_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
@@ -133,7 +133,9 @@ export default class bdiFieldMappings extends LightningElement {
                 });
 
             if (this.fieldMappings && this.fieldMappings.length > 0) {
-                this.fieldMappings = this.sortBy(this.fieldMappings, 'xxx_Source_Field_Label_xxx');
+                this.fieldMappings = this.sortBy(
+                    this.fieldMappings,
+                    'xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx');
             }
 
             this.isLoading = false;
@@ -237,7 +239,7 @@ export default class bdiFieldMappings extends LightningElement {
 
             case 'delete':
                 this.isLoading = true;
-                row.xxx_Is_Deleted_xxx = true;
+                row.xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx = true;
 
                 createDataImportFieldMapping({fieldMappingString: JSON.stringify(row)})
                     .then((deploymentId) => {

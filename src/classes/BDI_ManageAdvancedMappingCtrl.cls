@@ -52,6 +52,11 @@ public class BDI_ManageAdvancedMappingCtrl {
     private static final String NAMESPACE = UTIL_Namespace.getNamespace();
 
     /*******************************************************************************************************
+    * @description SLDS icon utility:forward used in the field mapping datatable rows
+    */
+    private static final String UTILITY_FORWARD_SLDS_ICON = 'utility:forward';
+
+    /*******************************************************************************************************
     * @description Name of default packaged Object Mapping Set
     */
     private static final Set<String> IGNORE_FIELDS = new Set<String> {
@@ -162,8 +167,8 @@ public class BDI_ManageAdvancedMappingCtrl {
 
     /*******************************************************************************************************
     * @description Converts a JSON string of a DataImportFieldMappingWrapper to an instance of
-    * Data_Import_Field_Mapping__mdt. Replaces the prefix 'xxx_' with the namespace if necessary
-    * and replaces the suffix '_xxx' with '__c' if necessary.
+    * Data_Import_Field_Mapping__mdt. Replaces the prefix 'xxPrefixTokenxx_' with the namespace if necessary
+    * and replaces the suffix '_xxSuffixTokenxx' with '__c' if necessary.
     *
     * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
     *
@@ -171,12 +176,12 @@ public class BDI_ManageAdvancedMappingCtrl {
     */
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
-        fieldMappingString = fieldMappingString.replaceAll('_xxx','__c');
+        fieldMappingString = fieldMappingString.replaceAll('_xxSuffixTokenxx','__c');
 
         if (NAMESPACE == 'npsp') {
-            fieldMappingString = fieldMappingString.replaceAll('xxx_','npsp__');
+            fieldMappingString = fieldMappingString.replaceAll('xxPrefixTokenxx_','npsp__');
         } else {
-            fieldMappingString = fieldMappingString.replaceAll('xxx_','');
+            fieldMappingString = fieldMappingString.replaceAll('xxPrefixTokenxx_','');
         }
 
         try {
@@ -317,26 +322,26 @@ public class BDI_ManageAdvancedMappingCtrl {
 
     /*******************************************************************************************************
     * @description Data_Import_Field_Mapping__mdt wrapper class used in the Field Mapping UI and for
-    * building corresponding custom metadata type records. Attributes have prefix 'xxx_' and suffix '_xxx'
-    * because we build instances of DataImportFieldMappingWrapper in the lightning web component and
-    * later replace the prefix with the namespace and the suffix with '__c' and deserialize to
-    * Data_Import_Field_Mapping__mdt.
+    * building corresponding custom metadata type records. Attributes have prefix 'xxPrefixTokenxx_' and
+    * suffix '_xxSuffixTokenxx' because we build instances of DataImportFieldMappingWrapper in the
+    * lightning web component and later replace the prefix with the namespace and the suffix with '__c'
+    * and deserialize to Data_Import_Field_Mapping__mdt.
     */
     public class DataImportFieldMappingWrapper {
         @AuraEnabled public String DeveloperName;
         @AuraEnabled public String MasterLabel;
         @AuraEnabled public String Label;
         @AuraEnabled public String Maps_To_Icon;
-        @AuraEnabled public String xxx_Source_Field_Label_xxx;
-        @AuraEnabled public String xxx_Source_Field_API_Name_xxx;
-        @AuraEnabled public String xxx_Source_Field_Data_Type_xxx;
-        @AuraEnabled public String xxx_Target_Field_Label_xxx;
-        @AuraEnabled public String xxx_Target_Field_API_Name_xxx;
-        @AuraEnabled public String xxx_Target_Field_Data_Type_xxx;
-        @AuraEnabled public String xxx_Data_Import_Field_Mapping_Set_xxx;
-        @AuraEnabled public String xxx_Target_Object_Mapping_xxx;
-        @AuraEnabled public String xxx_Required_xxx;
-        @AuraEnabled public Boolean xxx_Is_Deleted_xxx;
+        @AuraEnabled public String xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx;
+        @AuraEnabled public String xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx;
+        @AuraEnabled public String xxPrefixTokenxx_Source_Field_Data_Type_xxSuffixTokenxx;
+        @AuraEnabled public String xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx;
+        @AuraEnabled public String xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx;
+        @AuraEnabled public String xxPrefixTokenxx_Target_Field_Data_Type_xxSuffixTokenxx;
+        @AuraEnabled public String xxPrefixTokenxx_Data_Import_Field_Mapping_Set_xxSuffixTokenxx;
+        @AuraEnabled public String xxPrefixTokenxx_Target_Object_Mapping_xxSuffixTokenxx;
+        @AuraEnabled public String xxPrefixTokenxx_Required_xxSuffixTokenxx;
+        @AuraEnabled public Boolean xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx;
         @AuraEnabled public String Source_Field_Display_Type_Label;
         @AuraEnabled public String Target_Field_Display_Type_Label;
 
@@ -349,7 +354,8 @@ public class BDI_ManageAdvancedMappingCtrl {
             if (NAMESPACE != 'npsp') {
                 dataImport = 'DataImport__c';
                 objectAPIName =
-                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
+                    UTIL_Namespace.removeNSPrefixNpspOnly(
+                        fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
                 sourceFieldAPIName =
                     UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
                 targetFieldAPIName =
@@ -366,26 +372,35 @@ public class BDI_ManageAdvancedMappingCtrl {
 
             this.DeveloperName = fieldMapping.DeveloperName;
             this.MasterLabel = fieldMapping.MasterLabel;
-            this.Label = fieldMapping.MasterLabel;
-            this.xxx_Source_Field_Label_xxx = sourceFieldDescribe.label;
-            this.xxx_Source_Field_API_Name_xxx = fieldMapping.Source_Field_API_Name__c;
-            this.xxx_Source_Field_Data_Type_xxx = String.valueOf(sourceFieldDescribe.type);
+            this.Label =fieldMapping.MasterLabel;
+            this.xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx =
+                sourceFieldDescribe.label;
+            this.xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx =
+                fieldMapping.Source_Field_API_Name__c;
+            this.xxPrefixTokenxx_Source_Field_Data_Type_xxSuffixTokenxx =
+                String.valueOf(sourceFieldDescribe.type);
             this.Source_Field_Display_Type_Label =
-                LABELS_BY_DISPLAY_TYPE.get(this.xxx_Source_Field_Data_Type_xxx);
+                LABELS_BY_DISPLAY_TYPE.get(this.xxPrefixTokenxx_Source_Field_Data_Type_xxSuffixTokenxx);
 
-            this.xxx_Target_Field_Label_xxx = targetFieldDescribe.label;
-            this.xxx_Target_Field_API_Name_xxx = fieldMapping.Target_Field_API_Name__c;
-            this.xxx_Target_Field_Data_Type_xxx = String.valueOf(targetFieldDescribe.type);
+            this.xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx =
+                targetFieldDescribe.label;
+            this.xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx =
+                fieldMapping.Target_Field_API_Name__c;
+            this.xxPrefixTokenxx_Target_Field_Data_Type_xxSuffixTokenxx =
+                String.valueOf(targetFieldDescribe.type);
             this.Target_Field_Display_Type_Label =
-                LABELS_BY_DISPLAY_TYPE.get(this.xxx_Target_Field_Data_Type_xxx);
+                LABELS_BY_DISPLAY_TYPE.get(this.xxPrefixTokenxx_Target_Field_Data_Type_xxSuffixTokenxx);
 
-            this.Maps_To_Icon = 'utility:forward';
+            this.Maps_To_Icon = UTILITY_FORWARD_SLDS_ICON;
 
-            this.xxx_Data_Import_Field_Mapping_Set_xxx =
+            this.xxPrefixTokenxx_Data_Import_Field_Mapping_Set_xxSuffixTokenxx =
                 fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
-            this.xxx_Target_Object_Mapping_xxx = fieldMapping.Target_Object_Mapping__r.DeveloperName;
-            this.xxx_Required_xxx = fieldMapping.Required__c;
-            this.xxx_Is_Deleted_xxx = fieldMapping.Is_Deleted__c;
+            this.xxPrefixTokenxx_Target_Object_Mapping_xxSuffixTokenxx =
+                fieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.xxPrefixTokenxx_Required_xxSuffixTokenxx =
+                fieldMapping.Required__c;
+            this.xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx =
+                fieldMapping.Is_Deleted__c;
         }
     }
 

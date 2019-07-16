@@ -184,14 +184,22 @@ export default class bdiFieldMappingModal extends LightningElement {
             if (this.row) {
                 // Edit row
                 this.modalMode = 'edit';
-                this.selectedSourceFieldLabel = this.row.xxx_Source_Field_Label_xxx;
-                this.selectedSourceFieldAPIName = this.row.xxx_Source_Field_API_Name_xxx;
-                this.selectedTargetFieldAPIName = this.row.xxx_Target_Field_API_Name_xxx;
-                this.selectedTargetFieldLabel = this.row.xxx_Target_Field_Label_xxx;
-                this.selectedSourceFieldDisplayType = this.toTitleCase(this.row.xxx_Source_Field_Data_Type_xxx);
-                this.selectedTargetFieldDisplayType = this.toTitleCase(this.row.xxx_Target_Field_Data_Type_xxx);
-                this.selectedSourceFieldDisplayTypeLabel = this.row.Source_Field_Display_Type_Label;
-                this.selectedTargetFieldDisplayTypeLabel = this.row.Target_Field_Display_Type_Label;
+                this.selectedSourceFieldLabel =
+                    this.row.xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx;
+                this.selectedSourceFieldAPIName =
+                    this.row.xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx;
+                this.selectedTargetFieldAPIName =
+                    this.row.xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx;
+                this.selectedTargetFieldLabel =
+                    this.row.xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx;
+                this.selectedSourceFieldDisplayType =
+                    this.toTitleCase(this.row.xxPrefixTokenxx_Source_Field_Data_Type_xxSuffixTokenxx);
+                this.selectedTargetFieldDisplayType =
+                    this.toTitleCase(this.row.xxPrefixTokenxx_Target_Field_Data_Type_xxSuffixTokenxx);
+                this.selectedSourceFieldDisplayTypeLabel =
+                    this.row.Source_Field_Display_Type_Label;
+                this.selectedTargetFieldDisplayTypeLabel =
+                    this.row.Target_Field_Display_Type_Label;
             } else {
                 // New row
                 this.modalMode = 'new';
@@ -217,8 +225,8 @@ export default class bdiFieldMappingModal extends LightningElement {
         for (let i = 0; i < fieldMappings.length; i++) {
             let fieldMapping = fieldMappings[i];
 
-            this.mappedDIFieldLabels.push(fieldMapping.xxx_Source_Field_Label_xxx);
-            this.mappedTargetFieldLabels.push(fieldMapping.xxx_Target_Field_Label_xxx);
+            this.mappedDIFieldLabels.push(fieldMapping.xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx);
+            this.mappedTargetFieldLabels.push(fieldMapping.xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx);
         }
     }
 
@@ -341,8 +349,10 @@ export default class bdiFieldMappingModal extends LightningElement {
 
             if (this.row) {
                 // Set source and target fields
-                this.row.xxx_Source_Field_API_Name_xxx = this.selectedSourceFieldAPIName;
-                this.row.xxx_Target_Field_API_Name_xxx = this.selectedTargetFieldAPIName;
+                this.row.xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx =
+                    this.selectedSourceFieldAPIName;
+                this.row.xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx =
+                    this.selectedTargetFieldAPIName;
                 rowDetails = JSON.stringify(this.row);
             } else {
                 // New Field Mapping
@@ -350,12 +360,12 @@ export default class bdiFieldMappingModal extends LightningElement {
                     DeveloperName: null,
                     Label: this.selectedSourceFieldLabel,
                     MasterLabel: this.selectedSourceFieldLabel,
-                    xxx_Data_Import_Field_Mapping_Set_xxx: this.fieldMappingSetName,
-                    xxx_Is_Deleted_xxx: false,
-                    xxx_Required_xxx: 'No',
-                    xxx_Source_Field_API_Name_xxx: this.selectedSourceFieldAPIName,
-                    xxx_Target_Field_API_Name_xxx: this.selectedTargetFieldAPIName,
-                    xxx_Target_Object_Mapping_xxx: this.objectMapping.DeveloperName
+                    xxPrefixTokenxx_Data_Import_Field_Mapping_Set_xxSuffixTokenxx: this.fieldMappingSetName,
+                    xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx: false,
+                    xxPrefixTokenxx_Required_xxSuffixTokenxx: 'No',
+                    xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx: this.selectedSourceFieldAPIName,
+                    xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx: this.selectedTargetFieldAPIName,
+                    xxPrefixTokenxx_Target_Object_Mapping_xxSuffixTokenxx: this.objectMapping.DeveloperName
                 });
             }
 
