@@ -10,26 +10,57 @@ import createDataImportFieldMapping
 import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
 
+// Import custom labels
+import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
+import bdiFMUIBackToMapGroup from '@salesforce/label/c.bdiFMUIBackToMapGroup';
+import bdiFMUIDescription from '@salesforce/label/c.bdiFMUIDescription';
+import bdiFMUINewFieldMapping from '@salesforce/label/c.bdiFMUINewFieldMapping';
+import bdiFMUINoFieldMappings from '@salesforce/label/c.bdiFMUINoFieldMappings';
+import bdiFMUISourceObject from '@salesforce/label/c.bdiFMUISourceObject';
+import bdiFMUITarget from '@salesforce/label/c.bdiFMUITarget';
+import stgHelpAdvancedMapping3 from '@salesforce/label/c.stgHelpAdvancedMapping3';
+import stgLabelObject from '@salesforce/label/c.stgLabelObject';
+
+// Import custom labels for datatable
+import bdiFMUIDatatableMapsTo from '@salesforce/label/c.bdiFMUIDatatableMapsTo';
+import bdiFMUIDataType from '@salesforce/label/c.bdiFMUIDataType';
+import bdiFMUIFieldAPIName from '@salesforce/label/c.bdiFMUIFieldAPIName';
+import bdiFMUIFieldLabel from '@salesforce/label/c.bdiFMUIFieldLabel';
+import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
+import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
+
 const actions = [
-    { label: 'Edit', name: 'edit' },
-    { label: 'Delete', name: 'delete' },
+    { label: stgBtnEdit, name: 'edit' },
+    { label: bgeActionDelete, name: 'delete' },
 ];
 
 const columns = [
-    { label: 'Field Label', fieldName: 'xxx_Source_Field_Label_xxx', type: 'text', sortable: true },
-    { label: 'Field API Name', fieldName: 'xxx_Source_Field_API_Name_xxx', type: 'text' },
-    { label: 'Data Type', fieldName: 'Source_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
+    { label: bdiFMUIFieldLabel, fieldName: 'xxx_Source_Field_Label_xxx', type: 'text', sortable: true },
+    { label: bdiFMUIFieldAPIName, fieldName: 'xxx_Source_Field_API_Name_xxx', type: 'text' },
+    { label: bdiFMUIDataType, fieldName: 'Source_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
         {
-            label: 'Maps To', fieldName: '', type: 'text', fixedWidth: 95,
+            label: bdiFMUIDatatableMapsTo, fieldName: '', type: 'text', fixedWidth: 95,
             cellAttributes: { alignment: 'center', iconName: { fieldName: 'Maps_To_Icon' } }
         },
-    { label: 'Field Label', fieldName: 'xxx_Target_Field_Label_xxx', type: 'text' },
-    { label: 'Field API Name', fieldName: 'xxx_Target_Field_API_Name_xxx', type: 'text' },
-    { label: 'Data Type', fieldName: 'Target_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
+    { label: bdiFMUIFieldLabel, fieldName: 'xxx_Target_Field_Label_xxx', type: 'text' },
+    { label: bdiFMUIFieldAPIName, fieldName: 'xxx_Target_Field_API_Name_xxx', type: 'text' },
+    { label: bdiFMUIDataType, fieldName: 'Target_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
 
 export default class bdiFieldMappings extends LightningElement {
+
+    customLabels = {
+        bdiFieldMappingsLabel,
+        bdiFMUIBackToMapGroup,
+        bdiFMUIDescription,
+        bdiFMUINewFieldMapping,
+        bdiFMUINoFieldMappings,
+        bdiFMUISourceObject,
+        bdiFMUITarget,
+        stgHelpAdvancedMapping3,
+        stgLabelObject,
+    }
 
     @api objectMapping;
     @api diFieldDescribes;

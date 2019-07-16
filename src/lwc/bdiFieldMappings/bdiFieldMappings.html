@@ -14,41 +14,46 @@
             <div class="slds-size_1-of-2">
                 <button class="slds-text-title_caps slds-button slds-button_extension-back"
                         onclick={handleNavButton}>
-                    Back to Mapping Group
+                    {customLabels.bdiFMUIBackToMapGroup}
                 </button>
             </div>
             <div class="slds-size_1-of-2">
                 <lightning-button
-                    label="Create New Field Mapping"
-                    title="Create New Field Mapping"
+                    label={customLabels.bdiFMUINewFieldMapping}
+                    title={customLabels.bdiFMUINewFieldMapping}
                     onclick={handleOpenModal}
                     class="slds-m-left_x-small slds-float_right">
                 </lightning-button>
             </div>
             <div class="slds-size_1-of-1 slds-m-top_small slds-m-bottom_large">
-                <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">{objectMapping.MasterLabel} Group</h1>
-                <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">Field Mappings</h2>
+                <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">
+                    <!-- Open question around whether to turn this into a custom label. Naming still in flux. -->
+                    {objectMapping.MasterLabel} Group
+                </h1>
+                <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">
+                    {customLabels.bdiFieldMappingsLabel}
+                </h2>
 
                 <p class="slds-text_extension slds-m-bottom_medium">
-                    Connect the field you created on the NPSP Data Import object to the field on your target object in
-                    the grid below.
-                    You can find fields by Field Label or the Field API Name.
-                    Fields on the NPSP Data Import object must map to compatible field types on your target object.
-                    When you select an NPSP Data Import field, only the compatible target fields will be available.
+                    {customLabels.bdiFMUIDescription}
                 </p>
 
-                <p class="slds-text_extension">Find complete Advanced Mapping setup documentation <a href="#">here</a>.</p>
+                <p class="slds-text_extension">
+                    <lightning-formatted-rich-text
+                        value={customLabels.stgHelpAdvancedMapping3}>
+                    </lightning-formatted-rich-text>
+                </p>
             </div>
             <div class="slds-size_1-of-1 slds-m-vertical_small">
                 <div class="slds-grid slds-wrap">
                     <div class="slds-size_4-of-8">
                         <p class="slds-truncate slds-p-bottom_xx-small slds-text-heading_small table-header table-header_source">
-                            Source (NPSP Data Import Object)
+                            {customLabels.bdiFMUISourceObject}
                         </p>
                     </div>
                     <div class="slds-size_4-of-8">
                         <p class="slds-truncate slds-p-bottom_xx-small slds-text-heading_small table-header table-header_target">
-                            Target ({objectMapping.MasterLabel})
+                            {customLabels.bdiFMUITarget} ({objectMapping.MasterLabel} {customLabels.stgLabelObject})
                         </p>
                     </div>
                     <div class="slds-size_1-of-1">
@@ -66,8 +71,10 @@
                             </lightning-datatable>
                             <template if:true={noFieldMappings}>
                                 <p class="slds-p-around_medium">
-                                    <i>There are no Field Mappings for this Mapping Group yet, </i>
-                                    <a href="#" onclick={handleOpenModal}>Create New Field Mapping.</a>
+                                    <i>{customLabels.bdiFMUINoFieldMappings}</i>
+                                    <a href="#" onclick={handleOpenModal}>
+                                        {customLabels.bdiFMUINewFieldMapping}.
+                                    </a>
                                 </p>
                             </template>
                         </template>
@@ -77,8 +84,8 @@
             <template if:false={noFieldMappings}>
                 <div class="slds-size_1-of-1 slds-m-top_small">
                     <lightning-button
-                        label="Create New Field Mapping"
-                        title="Create New Field Mapping"
+                        label={customLabels.bdiFMUINewFieldMapping}
+                        title={customLabels.bdiFMUINewFieldMapping}
                         onclick={handleOpenModal}
                         class="slds-m-left_x-small slds-float_right">
                     </lightning-button>

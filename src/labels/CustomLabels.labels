@@ -2417,34 +2417,119 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Donation information matched against multiple Payments, so the NPSP Data Importer did not import it. The Payment Possible Matches field contains the Salesforce Ids of the matched Payments.</value>
     </labels>
     <labels>
+        <fullName>bdiFMUIBackToMapGroup</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIBackToMapGroup</shortDescription>
+        <value>Back to Mapping Group</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDataType</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIDataType</shortDescription>
+        <value>Data Type</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDatatableMapsTo</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIDatatableMapsTo</shortDescription>
+        <value>Maps To</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDescription</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIDescription</shortDescription>
+        <value>
+            Connect the field you created on the NPSP Data Import object to the field on your target object in
+            the grid below. You can find fields by Field Label or the Field API Name.
+            Fields on the NPSP Data Import object must map to compatible field types on your target object.
+            When you select an NPSP Data Import field, only the compatible target fields will be available.
+        </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIFieldAPIName</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIFieldAPIName</shortDescription>
+        <value>Field API Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIFieldLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIFieldLabel</shortDescription>
+        <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUINewFieldMapping</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUINewFieldMapping</shortDescription>
+        <value>Create New Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUINoFieldMappings</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUINoFieldMappings</shortDescription>
+        <value>There are no Field Mappings for this Mapping Group yet, </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISearchSourceInputLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISearchSourceInputLabel</shortDescription>
+        <value>Search Source Field by Label or API Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISearchTargetInputLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISearchTargetInputLabel</shortDescription>
+        <value>Search Target Field by Label or API Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISourceObject</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISourceObject</shortDescription>
+        <value>Source (NPSP Data Import Object)</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUITarget</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUITarget</shortDescription>
+        <value>Target</value>
+    </labels>
+    <labels>
         <fullName>bdiFailed</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFailed</shortDescription>
         <value>Failed</value>
     </labels>
     <labels>
-        <fullName>bdiFieldMappingUIDatatableMapsTo</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>bdiFieldMappingUIDatatableMapsTo</shortDescription>
-        <value>Maps To</value>
-    </labels>
-    <labels>
-        <fullName>bdiFieldMappingUISourceObject</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>bdiFieldMappingUISourceObject</shortDescription>
-        <value>Source (NPSP Data Import Object)</value>
-    </labels>
-    <labels>
         <fullName>bdiFieldMappings</fullName>
-        <categories>Data Importer</categories>
+        <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>bdiFieldMappings</shortDescription>
         <value>Field Mappings</value>
     </labels>

@@ -1490,9 +1490,19 @@
         <members>bdiErrorNonHHAccountContactWithAdv</members>
         <members>bdiErrorOneToOneMultiContact</members>
         <members>bdiErrorPaymentMultiMatch</members>
+        <members>bdiFMUIBackToMapGroup</members>
+        <members>bdiFMUIDataType</members>
+        <members>bdiFMUIDatatableMapsTo</members>
+        <members>bdiFMUIDescription</members>
+        <members>bdiFMUIFieldAPIName</members>
+        <members>bdiFMUIFieldLabel</members>
+        <members>bdiFMUINewFieldMapping</members>
+        <members>bdiFMUINoFieldMappings</members>
+        <members>bdiFMUISearchSourceInputLabel</members>
+        <members>bdiFMUISearchTargetInputLabel</members>
+        <members>bdiFMUISourceObject</members>
+        <members>bdiFMUITarget</members>
         <members>bdiFailed</members>
-        <members>bdiFieldMappingUIDatatableMapsTo</members>
-        <members>bdiFieldMappingUISourceObject</members>
         <members>bdiFieldMappings</members>
         <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>

@@ -7,31 +7,43 @@ import createDataImportFieldMapping
 // Import custom labels
 import bdiBtnClose from '@salesforce/label/c.bdiBtnClose';
 import bdiFieldMappings from '@salesforce/label/c.bdiFieldMappings';
-import bdiFieldMappingUIDatatableMapsTo from '@salesforce/label/c.bdiFieldMappingUIDatatableMapsTo';
-import bdiFieldMappingUISourceObject from '@salesforce/label/c.bdiFieldMappingUISourceObject';
+import bdiFMUIDatatableMapsTo from '@salesforce/label/c.bdiFMUIDatatableMapsTo';
+import bdiFMUIDataType from '@salesforce/label/c.bdiFMUIDataType';
+import bdiFMUIFieldLabel from '@salesforce/label/c.bdiFMUIFieldLabel';
+import bdiFMUISearchSourceInputLabel from '@salesforce/label/c.bdiFMUISearchSourceInputLabel';
+import bdiFMUISearchTargetInputLabel from '@salesforce/label/c.bdiFMUISearchTargetInputLabel';
+import bdiFMUISourceObject from '@salesforce/label/c.bdiFMUISourceObject';
+import bdiFMUITarget from '@salesforce/label/c.bdiFMUITarget';
+import labelMessageLoading from '@salesforce/label/c.labelMessageLoading';
 import stgBtnCancel from '@salesforce/label/c.stgBtnCancel';
 import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
 import stgBtnNew from '@salesforce/label/c.stgBtnNew';
 import stgBtnSave from '@salesforce/label/c.stgBtnSave';
-import stgLabelUDRTargetObject from '@salesforce/label/c.stgLabelUDRTargetObject';
+import stgLabelObject from '@salesforce/label/c.stgLabelObject';
 
 export default class bdiFieldMappingModal extends LightningElement {
 
-    labels = {
+    customLabels = {
         bdiBtnClose,
         bdiFieldMappings,
-        bdiFieldMappingUIDatatableMapsTo,
-        bdiFieldMappingUISourceObject,
+        bdiFMUIDatatableMapsTo,
+        bdiFMUIDataType,
+        bdiFMUIFieldLabel,
+        bdiFMUISearchSourceInputLabel,
+        bdiFMUISearchTargetInputLabel,
+        bdiFMUISourceObject,
+        bdiFMUITarget,
+        labelMessageLoading,
         stgBtnCancel,
         stgBtnEdit,
         stgBtnNew,
         stgBtnSave,
-        stgLabelUDRTargetObject
+        stgLabelObject,
     };
 
     @api objectMapping;
     @api fieldMappingSetName;
-    @api isModalOpen;
+    @api isModalOpen = false;
     @api modalMode = 'new';
     @api diFieldDescribes;
     @api targetObjectFieldDescribes;
@@ -109,6 +121,14 @@ export default class bdiFieldMappingModal extends LightningElement {
         return this.modalMode === 'new';
     }
 
+    get sectionClasses() {
+        return this.isModalOpen ? 'slds-modal slds-fade-in-open' : 'slds-modal slds-hidden';
+    }
+
+    get backdropClasses() {
+        return this.isModalOpen ? 'slds-backdrop slds-backdrop_open' : 'slds-backdrop';
+    }
+
     constructor() {
         super();
         this.escapeFunction = this.escapeFunction.bind(this);
@@ -130,14 +150,30 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Handles the open modal event from bdiFieldMappings
+    * @description Handles the open modal event from bdiFieldMappings and allows
+    * for SLDS classes to fade in modal elements and backdrop
     *
     * @param event: Event containing row details or lack of row details
     */
     handleOpenModal(event) {
+        console.log('handleOpenModal');
+        this.isModalOpen = true;
+        this.isLoading = true;
+        let that = this;
+        let data = event;
+
+        setTimeout(function() {
+            that.handleLoadModalData(data);
+        }, 1, [that, data]);
+    }
+
+    /*******************************************************************************
+    * @description Handles loading relevant data into the modal
+    *
+    * @param event: Event containing row details or lack of row details
+    */
+    handleLoadModalData(event) {
         try {
-            this.isModalOpen = true;
-            this.isLoading = true;
             this.hasSourceFieldErrors = false;
             this.hasTargetFieldErrors = false;
             this.objectMapping = event.objectMapping;
