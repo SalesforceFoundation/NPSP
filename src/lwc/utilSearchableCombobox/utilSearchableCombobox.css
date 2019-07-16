@@ -1,7 +1,7 @@
 .custom-search-result-box {
     position: absolute;
     width: 87%;
-    padding: 0.25rem;
+    padding: 0.25rem 0;
     transform: translateY(0);
     clip: rect(0px, 2000px, 2000px, -10px);
     transition: opacity .2s ease-in-out,transform .2s ease-in-out,clip .2s ease-in-out;
@@ -11,11 +11,17 @@
     box-shadow: 0 2px 7px rgba(0, 0, 0, .07);
     z-index: 7000;
     overflow: hidden;
+    overflow-y: auto;
     margin-top: 1px;
+    max-height: 20rem;
+}
+
+.alignment-direction__bottom-left {
+    bottom: 8.5rem;
 }
 
 .custom-search-result-box > p {
-    padding: 0.25rem;
+    padding: 0.5rem 2rem;
 }
 
 .custom-search-result-box > p:hover {

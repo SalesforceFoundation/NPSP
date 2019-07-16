@@ -29,6 +29,7 @@
                     onchange={handleFieldChange}
                     disabled={disabled}
                     field-level-help={fieldLevelHelp}
+                    dropdown-alignment={dropdownAlignment}
                     class={comboboxClass}>
                 </lightning-combobox>
             </div>
@@ -45,15 +46,16 @@
     <template if:true={areSearchResultsVisible}>
         <div class="slds-grid slds-wrap">
             <div class="slds-size_11-of-12">
-                <div class="slds-box custom-search-result-box">
+                <div class={customSearchResultBoxClasses}>
                     <template for:each={searchResults} for:item="result">
                         <p key={result.id}
+                           title={result.label}
                            tabindex={result.id}
                            data-id={result.id}
                            data-field-label={result.label}
                            data-field-value={result.value}
                            onclick={selectSearchResult}
-                           class="slds-p-vertical_x-small">
+                           class="slds-p-vertical_x-small slds-truncate">
                             {result.label}
                         </p>
                     </template>

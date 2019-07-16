@@ -1,6 +1,6 @@
 .slds-modal__container_extension {
-    position: relative;
     border-radius: 0.25rem;
+    position: relative;
     overflow: visible;
 }
 

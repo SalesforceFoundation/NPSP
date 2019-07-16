@@ -14,11 +14,19 @@ export default class utilSearchableCombobox extends LightningElement {
     @api fieldLevelHelp;
     @api disabled;
     @api hasErrors;
+    @api dropdownAlignment = 'left';
 
     @track isSearchOpen;
     @track searchKey = '';
     @track searchResults;
     @track areSearchResultsVisible = false;
+
+    get customSearchResultBoxClasses() {
+        if (this.dropdownAlignment === 'bottom-left') {
+            return 'slds-box custom-search-result-box alignment-direction__bottom-left';
+        }
+        return 'slds-box custom-search-result-box';
+    }
 
     get comboboxClass() {
         return this.hasErrors ? 'slds-has-error slds-listbox_extension' : 'slds-listbox_extension';
