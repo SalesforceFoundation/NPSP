@@ -515,11 +515,12 @@ public class ERR_RecordError {
     * @return The error status as a string.
     */
     private static String getStatusCode(System.StatusCode status) {
-        if (status == System.Statuscode.REQUIRED_FIELD_MISSING)
+        if (status == System.Statuscode.REQUIRED_FIELD_MISSING) {
             return System.Label.errErrorTypeRequiredFieldMissing;
-        else if (status == System.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
+        } else if (status == System.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION) {
             return System.Label.errErrorTypeValidationFailed;
-        else
+        } else {
             return System.Label.errErrorTypeOther;
+        }
     }
 }
