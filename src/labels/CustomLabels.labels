@@ -2441,6 +2441,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Maps To</value>
     </labels>
     <labels>
+        <fullName>bdiFMUIDeploymentId</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIDeploymentId</shortDescription>
+        <value>Deployment Id: </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDeploymentStatus</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIDeploymentStatus</shortDescription>
+        <value>Deployment completed with Status: </value>
+    </labels>
+    <labels>
         <fullName>bdiFMUIDescription</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>

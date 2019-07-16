@@ -20,6 +20,7 @@ import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
 import stgBtnNew from '@salesforce/label/c.stgBtnNew';
 import stgBtnSave from '@salesforce/label/c.stgBtnSave';
 import stgLabelObject from '@salesforce/label/c.stgLabelObject';
+import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
 export default class bdiFieldMappingModal extends LightningElement {
 
@@ -546,7 +547,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         } else if (error && error.name && error.message) {
             this.showToast(`${error.name}`, error.message, 'error', 'sticky');
         } else {
-            this.showToast('Unknown error', '', 'error', 'sticky');
+            this.showToast(stgUnknownError, '', 'error', 'sticky');
         }
     }
 

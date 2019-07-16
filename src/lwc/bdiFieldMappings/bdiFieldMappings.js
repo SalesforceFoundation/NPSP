@@ -13,6 +13,8 @@ import getObjectFieldDescribes
 // Import custom labels
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
 import bdiFMUIBackToMapGroup from '@salesforce/label/c.bdiFMUIBackToMapGroup';
+import bdiFMUIDeploymentId from '@salesforce/label/c.bdiFMUIDeploymentId';
+import bdiFMUIDeploymentStatus from '@salesforce/label/c.bdiFMUIDeploymentStatus';
 import bdiFMUIDescription from '@salesforce/label/c.bdiFMUIDescription';
 import bdiFMUILongDeployment from '@salesforce/label/c.bdiFMUILongDeployment';
 import bdiFMUILongDeploymentLink from '@salesforce/label/c.bdiFMUILongDeploymentLink';
@@ -23,6 +25,7 @@ import bdiFMUISourceObject from '@salesforce/label/c.bdiFMUISourceObject';
 import bdiFMUITarget from '@salesforce/label/c.bdiFMUITarget';
 import stgHelpAdvancedMapping3 from '@salesforce/label/c.stgHelpAdvancedMapping3';
 import stgLabelObject from '@salesforce/label/c.stgLabelObject';
+import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
 // Import custom labels for datatable
 import bdiFMUIDatatableMapsTo from '@salesforce/label/c.bdiFMUIDatatableMapsTo';
@@ -190,17 +193,10 @@ export default class bdiFieldMappings extends LightningElement {
         const status = payload.Status__c || payload.npsp__Status__c;
         const deploymentId = payload.DeploymentId__c || payload.npsp__DeploymentId__c;
 
-        if (status === 'Succeeded') {
-            this.showToast(
-                'Deployment completed with Status: ' + status,
-                'Deployment Id: ' + deploymentId,
-                'success');
-        } else {
-            this.showToast(
-                'Deployment completed with Status: ' + status,
-                'Deployment Id: ' + deploymentId,
-                'error');
-        }
+        this.showToast(
+            `${bdiFMUIDeploymentStatus} ${status}`,
+            `${bdiFMUIDeploymentId} ${deploymentId}`,
+            status === 'Succeeded' ? 'success' : 'error');
     }
 
     /*******************************************************************************
@@ -331,7 +327,7 @@ export default class bdiFieldMappings extends LightningElement {
         } else if (error && error.name && error.message) {
             this.showToast(`${error.name}`, error.message, 'error', 'sticky');
         } else {
-            this.showToast('Unknown error', '', 'error', 'sticky');
+            this.showToast(stgUnknownError, '', 'error', 'sticky');
         }
     }
 }

@@ -1493,6 +1493,8 @@
         <members>bdiFMUIBackToMapGroup</members>
         <members>bdiFMUIDataType</members>
         <members>bdiFMUIDatatableMapsTo</members>
+        <members>bdiFMUIDeploymentId</members>
+        <members>bdiFMUIDeploymentStatus</members>
         <members>bdiFMUIDescription</members>
         <members>bdiFMUIFieldAPIName</members>
         <members>bdiFMUIFieldLabel</members>
