@@ -156,7 +156,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @param event: Event containing row details or lack of row details
     */
     handleOpenModal(event) {
-        console.log('handleOpenModal');
         this.isModalOpen = true;
         this.isLoading = true;
         let that = this;
