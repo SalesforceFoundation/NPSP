@@ -455,11 +455,12 @@ public class ERR_Handler {
     * @return The error status as a string.
     */
     public static String getStatusCode(system.StatusCode status) {
-        if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
+        if (status == system.Statuscode.REQUIRED_FIELD_MISSING) {
             return System.Label.errErrorTypeRequiredFieldMissing;
-        else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
+        } else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION) {
             return System.Label.errErrorTypeValidationFailed;
-        else
+        } else {
             return System.Label.errErrorTypeOther;
+        }
     }
 }
