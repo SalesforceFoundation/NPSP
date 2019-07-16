@@ -23,7 +23,6 @@ from cumulusci.tasks.apex.batch import BatchApexWait
 
 from locators_45 import npsp_lex_locators as locators_45
 from locators_46 import npsp_lex_locators as locators_46
-from StdSuites.Type_Names_Suite import null
 locators_by_api_version = {
     46.0: locators_46,  # Summer '19
     45.0: locators_45,  # Spring '19
