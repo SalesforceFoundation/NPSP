@@ -4,6 +4,7 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Enable Payment Allocations
+...             Setup Test Data
 Suite Teardown  Run keywords
 ...             Disable Payment Allocations
 ...             Delete Records and Close Browser
@@ -11,27 +12,13 @@ Suite Teardown  Run keywords
 *** Test Cases ***
 
 Create Payment Allocations and Verify Opportunity Allocations Sync
-    &{gau} =          API Create GAU    
-    ${date} =         Get Current Date    result_format=%Y-%m-%d
-    &{contact} =      API Create Contact
-    Store Session Record    Account    &{contact}[AccountId]
-    &{opportunity} =  API Create Opportunity   &{contact}[AccountId]    Donation  
-    ...    StageName=Prospecting    
-    ...    Amount=100    
-    ...    CloseDate=${date}    
-    ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
-    ...    Name=&{contact}[LastName] Test Donation
-    @{records} =     Salesforce Query    npe01__OppPayment__c    
-    ...    select=Id
-    ...    npe01__Opportunity__c=&{opportunity}[Id]
-    &{id} =     Get From List  ${records}  0
-    &{payment} =     Salesforce Get  npe01__OppPayment__c  &{id}[Id]
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
     Load Related List    GAU Allocations
     Click Link    &{payment}[Name]    
     Select Window
     Select Tab    Related
+    Capture Page Screenshot
     Verify Allocations    Payment Allocations
     ...    &{def_gau}[Name]=$100.00
     Click Related List Button    Payment Allocations    New
@@ -41,9 +28,7 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Wait Until Modal Is Closed
     Verify Allocations    Payment Allocations
     ...    &{def_gau}[Name]=$60.00
-    ...    &{gau}[Name]=$40.00 
-
-Update Allocations on Opportuntiy and Verify Payment Allocations Sync    
+    ...    &{gau}[Name]=$40.00     
     Select Tab    Details
     Click Link    &{opportunity}[Name]
     Select Tab    Related
@@ -66,14 +51,14 @@ Update Allocations on Opportuntiy and Verify Payment Allocations Sync
     # Import Library  Dialogs
     # Pause Execution
     Select Tab    Related
-    Verify Allocations    Payment Allocations
-    ...    &{def_gau}[Name]=$40.00
-    ...    &{gau}[Name]=$60.00
-    # Reload Page
-    # Select Tab    Related
     # Verify Allocations    Payment Allocations
     # ...    &{def_gau}[Name]=$40.00
     # ...    &{gau}[Name]=$60.00
+    Reload Page
+    Select Tab    Related
+    Verify Allocations    Payment Allocations
+    ...    &{def_gau}[Name]=$40.00
+    ...    &{gau}[Name]=$60.00
     
 ***Keywords***
 
@@ -110,3 +95,25 @@ Disable Payment Allocations
     Select Lightning Checkbox    Payment_Allocations_Enabled
     Populate Field With Id    Default__c    null
     Click Button    Save      
+    
+Setup Test Data
+    &{gau} =          API Create GAU  
+    Set suite variable    &{gau}  
+    ${date} =         Get Current Date    result_format=%Y-%m-%d
+    Set suite variable    ${date}
+    &{contact} =      API Create Contact
+    Set suite variable    &{contact}
+    Store Session Record    Account    &{contact}[AccountId]
+    &{opportunity} =  API Create Opportunity   &{contact}[AccountId]    Donation  
+    ...    StageName=Prospecting    
+    ...    Amount=100    
+    ...    CloseDate=${date}    
+    ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
+    ...    Name=&{contact}[LastName] Test Donation
+    @{records} =     Salesforce Query    npe01__OppPayment__c    
+    ...    select=Id
+    ...    npe01__Opportunity__c=&{opportunity}[Id]
+    &{id} =     Get From List  ${records}  0
+    &{payment} =     Salesforce Get  npe01__OppPayment__c  &{id}[Id]  
+    Set suite variable    &{opportunity}
+    Set suite variable    &{payment} 
