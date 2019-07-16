@@ -2499,7 +2499,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUILongDeploymentLink</shortDescription>
-        <value>here</value>
+        <value>view the deployment status here.</value>
     </labels>
     <labels>
         <fullName>bdiFMUILongDeploymentMessage</fullName>
