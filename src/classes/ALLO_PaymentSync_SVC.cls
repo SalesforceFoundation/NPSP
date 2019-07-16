@@ -83,9 +83,13 @@ public class ALLO_PaymentSync_SVC {
     * @param Decimal allocAmount amount to update total allocation amount by
     ********************************************************************************************************/
     private void addAllocationAmountToPayment(Id paymentId, Decimal allocAmount) {
+        System.debug(loggingLevel.ERROR, 'inside add allocation amount to payment method');
+        System.debug(loggingLevel.ERROR, 'payment Id: ' + paymentId);
+        System.debug(loggingLevel.ERROR, 'alloc amount: ' + allocAmount);
         Decimal amt = allocatedAmountByPayment.containsKey(paymentId) ? allocatedAmountByPayment.get(paymentId) : 0;
         amt += ((allocAmount != null) ? allocAmount : 0);
         allocatedAmountByPayment.put (paymentId, amt);
+        System.debug(loggingLevel.ERROR, 'after adding allocatedAmountByPayment: ' + allocatedAmountByPayment);
     }
 
     /*******************************************************************************************************
@@ -94,8 +98,13 @@ public class ALLO_PaymentSync_SVC {
     * @param Decimal allocAmount amount to update total allocation amount by
     ********************************************************************************************************/
     private void removeAllocationAmountFromPayment(Id paymentId, Decimal allocAmount) {
+        System.debug(loggingLevel.ERROR, 'calling remove allocation amount' );
+        System.debug(loggingLevel.ERROR, 'payment id: ' + paymentId);
+        System.debug(LoggingLevel.ERROR, 'alloc amount is: ' + allocAmount);
         Decimal amt = allocatedAmountByPayment.containsKey(paymentId) ? allocatedAmountByPayment.get(paymentId) : 0;
+        System.debug(loggingLevel.ERROR, 'existing amount is: ' + amt);
         amt -= ((allocAmount != null) ? allocAmount : 0);
+        System.debug(loggingLevel.ERROR, 'amt after removing is: ' + amt);
         allocatedAmountByPayment.put (paymentId, amt);
     }
 
@@ -159,8 +168,12 @@ public class ALLO_PaymentSync_SVC {
             }
             // Update Map of Default Allocations
             defaultAllocsByPayment.put (payment.Id, filterByGAU(payment.Allocations__r, defaultGAU));
+            System.debug(loggingLevel.ERROR, 'manually adding into allocated amount by payment');
+            System.debug(loggingLevel.ERROR, 'payment is: ' + payment);
+            System.debug(loggingLevel.ERROR, 'payment allocations is: ' + payment.Allocations__r);
             // Create Initial Total of Allocations by Payment, excluding the default amount
             allocatedAmountByPayment.put (payment.Id, calculateTotalAllocationAmountExcludingDefaultGAU(payment.Allocations__r, defaultGAU));
+            System.debug(loggingLevel.ERROR, 'after adding allocatedAmountByPayment: ' + allocatedAmountByPayment);
         }
 
         // Retrieve all opportunities, with associated allocations
@@ -177,7 +190,9 @@ public class ALLO_PaymentSync_SVC {
             }
 
             for (Allocation__c oppAllocation : opportunity.Allocations__r) {
+                System.debug(loggingLevel.ERROR, 'going through opp: ' + oppAllocation);
                 Id gau = oppAllocation.General_Accounting_Unit__c;
+                System.debug(loggingLevel.ERROR, 'gau is: ' + GAU);
 
                 if (context.opportunityAllocationsByGAU.containsKey(gau)) {
                     context.opportunityAllocationsByGAU.get(gau).add(oppAllocation);
@@ -366,9 +381,13 @@ public class ALLO_PaymentSync_SVC {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
         //loop through allocations totals by GAU
         for (Id gau : context.totalPaymentAllocationsByGAU.keySet()) {
+            System.debug(loggingLevel.ERROR, 'GAU: ' + gau);
+
             Decimal totalPaymentAllocations = context.totalPaymentAllocationsByGAU.get(gau);
             Decimal totalAllPayments = context.totalPaidUnpaidPayments;
             Decimal percentGAU = (totalAllPayments != 0) ? totalPaymentAllocations / totalAllPayments : 0;
+
+            System.debug(loggingLevel.ERROR, 'totalPaymentAllocations: ' + totalPaymentAllocations);
 
             // Calculate the proposed amount (based on the Opportunity amount, multiplied by the GAU Percentage)
             Decimal newGAUAmtForOpp = context.opportunity.Amount * percentGAU;
@@ -378,24 +397,43 @@ public class ALLO_PaymentSync_SVC {
 
                 Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
 
+                System.debug(loggingLevel.ERROR, 'totalOpportunityAllocations: ' + totalOpportunityAllocations);
+                System.debug(loggingLevel.ERROR, 'newGAUAmtForOpp: ' + newGAUAmtForOpp);
+
                 //check if they need updating
                 if (newGAUAmtForOpp != totalOpportunityAllocations) {
+                    Map<Id, Allocation__c> gauToOpportunityMap = new Map<Id, Allocation__c>();
                     for (Allocation__c oppAllocation : context.opportunityAllocationsByGAU.get(gau)) {
-                        //we want to keep the ratios amongst duplicate opportunity allocations
-                        Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
+                        if (!gauToOpportunityMap.containsKey(gau)) {
+                            System.debug(loggingLevel.ERROR, 'oppAllocation is: '  + oppAllocation);
+                            //we want to keep the ratios amongst duplicate opportunity allocations
+                            Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
+                            System.debug(loggingLevel.ERROR, 'duplicateAllocationPaidUnpaidAmountRatio: ' + duplicateAllocationPaidUnpaidAmountRatio);
 
-                        oppAllocation.Amount__c = newGAUAmtForOpp * duplicateAllocationpaidUnpaidAmountRatio;
-                        if (oppAllocation.Percent__c != null) {
-                            oppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? oppAllocation.Amount__c / context.opportunity.Amount * 100 : 0;
+                            // Not sure why we are multiplying by the duplicateAllocationPaidUnpaidAmountRatio??
+                            // oppAllocation.Amount__c = newGAUAmtForOpp * duplicateAllocationpaidUnpaidAmountRatio;
+
+                            oppAllocation.Amount__c = newGAUAmtForOpp;
+
+                            System.debug(loggingLevel.ERROR, 'oppAllocation.Amount__c ' + oppAllocation.Amount__c);
+
+                            if (oppAllocation.Percent__c != null) {
+                                oppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? oppAllocation.Amount__c / context.opportunity.Amount * 100 : 0;
+                            }
+
+                            System.debug(loggingLevel.ERROR, 'oppAllocation is: ' + oppAllocation);
+
+                            // Assumption: Opportunity Allocations should be maintained with Currency Type from Opportunity Record
+                            if (UserInfo.isMultiCurrencyOrganization()) {
+                                oppAllocation.put('CurrencyIsoCode', context.opportunity.get('CurrencyIsoCode'));
+                            }
+
+                            gauToOpportunityMap.put(gau, oppAllocation);
+                            //add to update
+                            allocationsChanges.objectsToUpdate.add(oppAllocation);
+                        } else {
+                            allocationsChanges.objectsToDelete.add(oppAllocation);
                         }
-
-                        // Assumption: Opportunity Allocations should be maintained with Currency Type from Opportunity Record
-                        if (UserInfo.isMultiCurrencyOrganization()) {
-                            oppAllocation.put('CurrencyIsoCode', context.opportunity.get('CurrencyIsoCode'));
-                        }
-
-                        //add to update
-                        allocationsChanges.objectsToUpdate.add(oppAllocation);
                     }
                 }
             //No corresponding opportunity allocation to payment allocations, insert one
@@ -432,9 +470,13 @@ public class ALLO_PaymentSync_SVC {
     public void syncOpportunityAllocationsToPayments(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
+            System.debug(loggingLevel.ERROR, 'gau is: ' + gau);
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
-            
+            System.debug(loggingLevel.ERROR, 'context.totalOpportunityAllocationsByGAU: ' + context.totalOpportunityAllocationsByGAU);
+            System.debug(loggingLevel.ERROR, 'totalOpportunityAllocations: ' + totalOpportunityAllocations);
+
+            System.debug(loggingLevel.ERROR, 'newTotalPaymentAllocations: ' + newTotalPaymentAllocations);
             // Default Allocation will be handled outside of this loop
             if (gau == UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
                 continue;
@@ -472,37 +514,49 @@ public class ALLO_PaymentSync_SVC {
                     }
                 }
 
+                System.debug(loggingLevel.ERROR, 'newTotalPaymentAllocations: '  + newTotalPaymentAllocations);
+                System.debug(loggingLevel.ERROR, 'currentTotalPaymentAllocations: ' + currentTotalPaymentAllocations);
                 //if desired end amounts are out of sync, update them
                 if (currentTotalPaymentAllocations != newTotalPaymentAllocations) {
                     Set<Id> paymentsWithExistingGAU = new Set<Id>();
+                    Map<Id, Allocation__c> paymentToAllocationMap = new Map<Id, Allocation__c>();
+
                     for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
+                        System.debug(loggingLevel.ERROR, 'payment allocation is: ' + paymentAllocation);
                         npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
+                        System.debug(loggingLevel.ERROR, 'payment is: ' + payment);
 
-                        if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) {
-                            paymentsWithExistingGAU.add(payment.Id);
-                            Decimal unpaidAllocationAmount = newTotalPaymentAllocations - totalPaidPaymentAllocations;
-                            Decimal paymentRatio =  context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
-                            Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
+                        if (!paymentToAllocationMap.containsKey(payment.Id)) {
+                            if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) {
+                                paymentsWithExistingGAU.add(payment.Id);
+                                Decimal unpaidAllocationAmount = newTotalPaymentAllocations - totalPaidPaymentAllocations;
+                                Decimal paymentRatio =  context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
+                                Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
 
-                            // Remove current allocation amount from total as it is changing
-                            removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
+                                // Remove current allocation amount from total as it is changing
+                                removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
 
-                            paymentAllocation.Amount__c = (unpaidAllocationAmount * paymentScale) / (paymentRatio * context.scheduleRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                                paymentAllocation.Amount__c = (unpaidAllocationAmount * paymentScale) / (paymentRatio * context.scheduleRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                                System.debug(LoggingLevel.ERROR, 'new payment allocation amount is: ' + paymentAllocation.Amount__c);
+                                //only add the percent for non-default
+                                if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
+                                    paymentAllocation.Percent__c = paymentAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
+                                }
 
-                             //only add the percent for non-default
-                            if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
-                                paymentAllocation.Percent__c = paymentAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
+                                System.debug(LoggingLevel.ERROR, 'calling add allocation amount to payment');
+                                // Add updated allocation amount to total
+                                addAllocationAmountToPayment(payment.Id, paymentAllocation.Amount__c);
+
+                                // Assumption: Payment Allocations should be maintained with Currency Type from Payment Record
+                                if (UserInfo.isMultiCurrencyOrganization()) {
+                                    paymentAllocation.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
+                                }
+
+                                allocationsChanges.objectsToUpdate.add(paymentAllocation);
+                                paymentToAllocationMap.put(payment.Id, paymentAllocation);
                             }
-
-                            // Add updated allocation amount to total
-                            addAllocationAmountToPayment(payment.Id, paymentAllocation.Amount__c);
-
-                            // Assumption: Payment Allocations should be maintained with Currency Type from Payment Record
-                            if (UserInfo.isMultiCurrencyOrganization()) {
-                                paymentAllocation.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
-                            }
-
-                            allocationsChanges.objectsToUpdate.add(paymentAllocation);
+                        } else {
+                            allocationsChanges.objectsToDelete.add(paymentAllocation);
                         }
                     }
                     // Now do a second pass looking for ones that did not have this allocation...
@@ -607,7 +661,10 @@ public class ALLO_PaymentSync_SVC {
             Decimal allocAmt = (allocatedAmountByPayment.containsKey(payment.Id)) ? allocatedAmountByPayment.get(payment.Id) : 0;
             Decimal paymentAmt = (payment.npe01__Payment_Amount__c != null) ? payment.npe01__Payment_Amount__c : 0;
             Decimal remainder = paymentAmt - allocAmt;
-
+            System.debug(loggingLevel.ERROR, 'payment is: ' + payment);
+            System.debug(loggingLevel.ERROR, 'alloc amt is: ' + allocAmt);
+            System.debug(loggingLevel.ERROR, 'payment amt: ' + paymentAmt);
+            System.debug(loggingLevel.ERROR, 'remainder: ' + remainder);
             List<Allocation__c> defaultAllocs = defaultAllocsByPayment.get(payment.Id);
             Allocation__c defaultAlloc = null;
             if ((defaultAllocs != null) && (defaultAllocs.size() > 0)) {
