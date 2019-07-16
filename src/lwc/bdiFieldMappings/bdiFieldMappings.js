@@ -14,6 +14,9 @@ import getObjectFieldDescribes
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
 import bdiFMUIBackToMapGroup from '@salesforce/label/c.bdiFMUIBackToMapGroup';
 import bdiFMUIDescription from '@salesforce/label/c.bdiFMUIDescription';
+import bdiFMUILongDeployment from '@salesforce/label/c.bdiFMUILongDeployment';
+import bdiFMUILongDeploymentLink from '@salesforce/label/c.bdiFMUILongDeploymentLink';
+import bdiFMUILongDeploymentMessage from '@salesforce/label/c.bdiFMUILongDeploymentMessage';
 import bdiFMUINewFieldMapping from '@salesforce/label/c.bdiFMUINewFieldMapping';
 import bdiFMUINoFieldMappings from '@salesforce/label/c.bdiFMUINoFieldMappings';
 import bdiFMUISourceObject from '@salesforce/label/c.bdiFMUISourceObject';
@@ -155,12 +158,19 @@ export default class bdiFieldMappings extends LightningElement {
         this.deploymentTimer = setTimeout(function() {
             that.isLoading = false;
             fireEvent(this.pageRef, 'closeModal', {});
-            that.showToast(
-                'Field Mapping deployment is taking longer than expected.',
-                'Your deployment ({0}) will continue to process in the background.',
+
+            let url =
+                '/lightning/setup/DeployStatus/page?' +
+                'address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D' +
+                event.deploymentId +
+                '%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp';
+
+            this.showToast(
+                bdiFMUILongDeployment,
+                bdiFMUILongDeploymentMessage + ' {0}.',
                 'warning',
                 'sticky',
-                [event.deploymentId]);
+                [{url, label: bdiFMUILongDeploymentLink}]);
         }, this.deploymentTimeout, that);
     }
 

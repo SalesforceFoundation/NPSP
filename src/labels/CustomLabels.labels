@@ -2470,6 +2470,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Field Label</value>
     </labels>
     <labels>
+        <fullName>bdiFMUILongDeployment</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUILongDeployment</shortDescription>
+        <value>Metadata deployment is taking longer than expected.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUILongDeploymentLink</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUILongDeploymentLink</shortDescription>
+        <value>here</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUILongDeploymentMessage</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUILongDeploymentMessage</shortDescription>
+        <value>Your deployment will continue to process in the background. View the deployment status</value>
+    </labels>
+    <labels>
         <fullName>bdiFMUINewFieldMapping</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>

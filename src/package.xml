@@ -1496,6 +1496,9 @@
         <members>bdiFMUIDescription</members>
         <members>bdiFMUIFieldAPIName</members>
         <members>bdiFMUIFieldLabel</members>
+        <members>bdiFMUILongDeployment</members>
+        <members>bdiFMUILongDeploymentLink</members>
+        <members>bdiFMUILongDeploymentMessage</members>
         <members>bdiFMUINewFieldMapping</members>
         <members>bdiFMUINoFieldMappings</members>
         <members>bdiFMUISearchSourceInputLabel</members>
