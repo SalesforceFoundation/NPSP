@@ -662,7 +662,7 @@ global with sharing class BDI_DataImportService {
                     String.join(invalidFields, ', ')
             };
             String errMessage = String.format(errMsgLabel, errorMsgObjects);
-            LogBDIError(dataImport, errMessage, null);
+            dataImport.FailureInformation__c = errMessage;
         }
         UTIL_DMLService.updateRecords(dataImportsWithFlsExceptions);
     }
