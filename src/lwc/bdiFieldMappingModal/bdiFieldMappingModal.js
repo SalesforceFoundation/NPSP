@@ -399,7 +399,9 @@ export default class bdiFieldMappingModal extends LightningElement {
             missingField = 'Source Field';
             this.hasSourceFieldErrors = true;
         }
-        if (!this.selectedTargetFieldAPIName && !this.isTargetFieldDisabled) {
+        if ((!this.selectedTargetFieldAPIName && !this.isTargetFieldDisabled) ||
+            (!this.selectedTargetFieldAPIName && this.isTargetFieldDisabled && this.selectedSourceFieldAPIName)) {
+
             missingField = 'Target Field';
             this.hasTargetFieldErrors = true;
         }
