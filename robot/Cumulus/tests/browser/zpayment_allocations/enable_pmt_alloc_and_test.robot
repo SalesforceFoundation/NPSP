@@ -18,7 +18,6 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Click Link    &{payment}[Name]    
     Select Window
     Select Tab    Related
-    Capture Page Screenshot
     Verify Allocations    Payment Allocations
     ...    &{def_gau}[Name]=$100.00
     Click Related List Button    Payment Allocations    New
