@@ -23,6 +23,7 @@ from cumulusci.tasks.apex.batch import BatchApexWait
 
 from locators_45 import npsp_lex_locators as locators_45
 from locators_46 import npsp_lex_locators as locators_46
+from StdSuites.Type_Names_Suite import null
 locators_by_api_version = {
     46.0: locators_46,  # Summer '19
     45.0: locators_45,  # Spring '19
@@ -124,12 +125,14 @@ class NPSP(object):
         for i in locators:
             locator = i.format(title)
             if self.check_if_element_exists(locator):
-                self.selenium.set_focus_to_element(locator)
-                button = self.selenium.get_webelement(locator)
-                button.click()
-                time.sleep(5)
-                tab_found = True
-                break
+                buttons = self.selenium.get_webelements(locator)
+                for button in buttons:
+                    if button.is_displayed():
+                        self.salesforce._focus(button)
+                        button.click()
+                        time.sleep(5)
+                        tab_found = True
+                        break
 
         assert tab_found, "tab not found"    
         
@@ -441,6 +444,13 @@ class NPSP(object):
         locator=npsp_lex_locators['modal_field'].format(title,value)
         self.salesforce._populate_field(locator, value)
     
+    def populate_field_with_id(self,id,value):
+        locator=npsp_lex_locators['id'].format(id)
+        if value == 'null':
+            field = self.selenium.get_webelement(locator)
+            self.salesforce._clear(field)
+        else :    
+            self.salesforce._populate_field(locator, value)
         
     def verify_occurrence(self,title,value):
         locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
@@ -641,7 +651,8 @@ class NPSP(object):
 
     def add_gau_allocation(self,field, value):
         locator = npsp_lex_locators["gaus"]["input_field"].format(field)
-        loc = self.selenium.get_webelement(locator).send_keys(value)
+        self.salesforce._populate_field(locator,value)
+#         loc = self.selenium.get_webelement(locator).send_keys(value)
             
         
     def click_save(self, page):
@@ -722,7 +733,25 @@ class NPSP(object):
            locators = npsp_lex_locators['payments']['pays'].format(key)
            list_ele = self.selenium.get_webelements(locators)
            p_count=len(list_ele)
-           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)             
+           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)  
+           
+    def verify_allocations(self,header, **kwargs):
+       """To verify allocations, header is related list
+          key is value in td element, value is value in th element     
+       """
+       for key, value in kwargs.items():
+           locator = npsp_lex_locators['record']['related']['allocations'].format(header,key)
+           ele = self.selenium.get_webelement(locator).text
+           assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)     
+           
+    def verify_gau_allocations(self,header, **kwargs):
+       """To verify allocations, header is related list
+          key is value in 1st td element, value is value in 2nd element     
+       """
+       for key, value in kwargs.items():
+           locator = npsp_lex_locators['gaus']['allocations'].format(header,key)
+           ele = self.selenium.get_webelement(locator).text
+           assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)                      
                 
     def verify_occurrence_payments(self,title,value=None):
         """"""
