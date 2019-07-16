@@ -354,22 +354,31 @@ public class ERR_Handler {
         error.Object_Type__c = objectType;
         error.Context_Type__c = context;
 
+        Id recordId = null;
+
         if (result instanceof Database.SaveResult) {
             Database.SaveResult saveResult = (Database.SaveResult) result;
-            error.Record_URL__c = getRecordURL(saveResult.getId(), objId);
+            recordId = (saveResult.getId() != null) ? saveResult.getId() : objId;
+            error.Record_URL__c = getRecordURL(recordId);
+            error.Record_Id__c = (saveResult.getId() != null) ? saveResult.getId() : objId;
             error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = saveResult.getErrors()[0].getMessage();
         } else if (result instanceof Database.DeleteResult) {
             Database.DeleteResult deleteResult = (Database.DeleteResult) result;
-            error.Record_URL__c = getRecordURL(deleteResult.getId(), objId);
+            recordId = (deleteResult.getId() != null) ? deleteResult.getId() : objId;
+            error.Record_URL__c = getRecordURL(recordId);
             error.Error_Type__c = getStatusCode(deleteResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = deleteResult.getErrors()[0].getMessage();
         } else if (result instanceof Database.UndeleteResult) {
             Database.UndeleteResult undeleteResult = (Database.UndeleteResult) result;
-            error.Record_URL__c = getRecordURL(undeleteResult.getId(), objId);
+            recordId = (undeleteResult.getId() != null) ? undeleteResult.getId() : objId;
+            error.Record_URL__c = getRecordURL(recordId);
             error.Error_Type__c = getStatusCode(undeleteResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = undeleteResult.getErrors()[0].getMessage();
         }
+
+        error.Record_Id__c = recordId;
+
         UTIL_Debug.debug('**** createError() returns error: ' + error);
         return error;
     }
