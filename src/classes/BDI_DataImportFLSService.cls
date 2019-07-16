@@ -80,10 +80,24 @@ public class BDI_DataImportFLSService {
 
             List<SObjectFieldWrapper> invalidFields = new List<SObjectFieldWrapper>();
             for (String dataImportFieldName : dataImport.getPopulatedFieldsAsMap().keySet()) {
+                String relationshipFieldName;
+                if (dataImportFieldName.endsWith('__r')) {
+                    //getPopulatedFieldsAsMap() will return a field name ending in "__r" if a
+                    //lookup field is populated with an in-memory object. Replacing it with
+                    //"__c" ensures that the call to UTIL_Describe.getFieldDescribe will
+                    //succeed and validate the field appropriately.
+                    relationshipFieldName = dataImportFieldName.replace('__r', '__c');
+                }
+
+                String fieldName =
+                        relationshipFieldName != null ?
+                                relationshipFieldName :
+                                dataImportFieldName;
+
                 SObjectField sourceSObjectField =
                         UTIL_Describe.getFieldDescribe(
                                 sourceObjectName,
-                                dataImportFieldName).getSobjectField();
+                                fieldName).getSobjectField();
 
                 BDI_TargetFields targetFields = targetFieldsBySObjectFields.get(sourceSObjectField);
 
