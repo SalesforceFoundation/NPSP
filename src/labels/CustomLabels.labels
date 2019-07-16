@@ -2539,7 +2539,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUISearchTargetInputLabel</shortDescription>
-        <value>Search Target Field by Label or API Name</value>
+        <value>Search for the target field by label or API name</value>
     </labels>
     <labels>
         <fullName>bdiFMUISourceObject</fullName>
