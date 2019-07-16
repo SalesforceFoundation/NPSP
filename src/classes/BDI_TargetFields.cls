@@ -45,10 +45,6 @@ public class BDI_TargetFields {
         SObjectType objectToken;
         SObjectField fieldToken;
 
-        //TODO: move to method description
-        //Convert to object and field tokens,
-        //UTIL_Describe methods will throw exceptions if the input strings do not
-        //resolve to valid SObjects and Fields
         objectToken = UTIL_Describe.getObjectDescribe(objName).getSObjectType();
         fieldToken = UTIL_Describe.getFieldDescribe(objName, fieldName).getSobjectField();
 
