@@ -76,37 +76,55 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     // Map of Display Types
     validTargetTypesBySourceType = {
+        'Address': ['Address'],
+        'Base64': ['Base64'],
         'Boolean': ['Boolean'],
+        'Combobox': ['Combobox'],
         'Currency': ['Currency'],
+        'Datacategorygroupreference': ['Datacategorygroupreference'],
         'Date': ['Date'],
         'Datetime': ['Datetime'],
+        'Double': ['Double'], // Todo: Sometimes include Integer as per the Bdi Mapping Field Types doc
         'Email': ['Email', 'String'],
+        'Encryptedstring': ['Encryptedstring'],
         'Id': ['Id', 'String'],
-        'Integer': ['Integer'],
+        'Integer': ['Integer', 'Double'],
+        'Long': ['Long'],
+        'Multipicklist': ['Multipicklist'],
         'Percent': ['Percent'],
         'Phone': ['Phone', 'String'],
-        'Picklist': ['Picklist'], // Todo: Include Sometimes Boolean as per the Bdi Mapping Field Types Dc
+        'Picklist': ['Picklist'], // Todo: Sometimes include Boolean as per the Bdi Mapping Field Types doc
         'Reference': ['Reference', 'String'],
         'String': ['String', 'Picklist'],
         'Textarea': ['Textarea', 'String'],
+        'Time': ['Time'],
         'Url': ['Url', 'String']
     };
 
     // Map of Labels by Display Type
     labelsByDisplayType = {
+        'Address': 'Address',
+        'Base64': 'Base64',
         'Boolean': 'Checkbox',
+        'Combobox': 'Picklist',
         'Currency': 'Currency',
+        'Datacategorygroupreference': 'DataCategoryGroupReference',
         'Date': 'Date',
         'Datetime': 'Date/Time',
+        'Double': 'Number',
         'Email': 'Email',
+        'Encryptedstring': 'Text (Encrypted)',
         'Id': 'Id',
         'Integer': 'Number',
+        'Long': 'Text Area (Long)',
+        'Multipicklist': 'Picklist (Multi-Select)',
         'Percent': 'Percent',
         'Phone': 'Phone',
         'Picklist': 'Picklist',
         'Reference': 'Lookup Relationship',
         'String': 'Text',
         'Textarea': 'Text Area',
+        'Time': 'Time',
         'Url': 'URL'
     };
 
