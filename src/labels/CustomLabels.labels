@@ -3474,6 +3474,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to modify {0}.</value>
     </labels>
     <labels>
+        <fullName>flsReadAccessError</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>flsReadAccessError</shortDescription>
+        <value>You do not have permissions to access {0}.</value>
+    </labels>
+    <labels>
         <fullName>giftProcessingAccountException</fullName>
         <language>en_US</language>
         <protected>true</protected>

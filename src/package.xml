@@ -70,6 +70,7 @@
         <members>BDI_DataImportCTRL_TEST</members>
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
+        <members>BDI_DataImportFLSService</members>
         <members>BDI_DataImportService</members>
         <members>BDI_DataImportService_TEST</members>
         <members>BDI_DataImport_API</members>
@@ -99,6 +100,7 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BDI_TargetFields</members>
         <members>BGE_BatchGiftEntryTab_CTRL</members>
         <members>BGE_BatchGiftEntryTab_CTRL_TEST</members>
         <members>BGE_BatchGiftEntry_UTIL</members>
@@ -1626,6 +1628,7 @@
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
         <members>flsError</members>
+        <members>flsReadAccessError</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>

@@ -686,7 +686,7 @@ public with sharing class BDI_MigrationMappingUtility {
             this.isObjectAPINameUsable = String.isNotBlank(this.targetObjectAPIName);
         }
 
-        private Boolean isUsable() {
+        public Boolean isUsable() {
             if (Test.isRunningTest()) {
                 checkRequiredFields();
             }
