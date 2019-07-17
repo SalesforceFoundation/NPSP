@@ -86,7 +86,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         'Datacategorygroupreference': ['Datacategorygroupreference'],
         'Date': ['Date'],
         'Datetime': ['Datetime'],
-        'Double': ['Double'], // Todo: Sometimes include Integer as per the Bdi Mapping Field Types doc
+        'Double': ['Double', 'Integer'],
         'Email': ['Email', 'String'],
         'Encryptedstring': ['Encryptedstring'],
         'Id': ['Id', 'String'],
