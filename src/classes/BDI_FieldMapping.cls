@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -50,4 +50,9 @@ public interface BDI_FieldMapping {
             String targetObjectName, 
             List<String> dataImportFields);
 
+    /*******************************************************************************************************
+    * @description Produces a map of fields to target field wrappers that contain mapped target fields
+    * with target object data.
+    */
+    Map<SObjectField, BDI_TargetFields> getTargetFieldsBySourceField();
 }
