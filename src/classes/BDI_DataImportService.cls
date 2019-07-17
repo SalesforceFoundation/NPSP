@@ -43,8 +43,6 @@ global with sharing class BDI_DataImportService {
 
     public BDI_FieldMapping fieldMapper;
 
-    private static Set<String> inaccessibleFields = new Set<String>();
-
     /*******************************************************************************************************
     * @description constructor
     * @param isDryRun whether to run in Dry Run mode or commit records.
@@ -486,6 +484,13 @@ global with sharing class BDI_DataImportService {
         return isDryRun ? BDI_DataImport_API.bdiDryRunValidated : BDI_DataImport_API.bdiImported;
     }
 
+    /**
+     * @description Instance of BDI_FieldLevelSecurityService used to perform
+     * Field Level Security validation and temporarily store results to be used in
+     * further processing (writing exceptions to DataImport records, etc.)
+     */
+    private BDI_DataImportFLSService flsService;
+
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
     * @param apexJobId the apexJob that this is executing under
@@ -502,7 +507,6 @@ global with sharing class BDI_DataImportService {
         SavePoint sp = Database.setSavepoint();
 
         try {
-            this.listDI = dataImports;
             this.diSettings = dataImportSettings;
 
             // list of populated data import fields
@@ -524,6 +528,17 @@ global with sharing class BDI_DataImportService {
             for(Integer i = 0; i < populatedDataImportFields.size(); i++) {
                 populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
+
+            this.flsService = new BDI_DataImportFLSService(
+                    dataImports,
+                    fieldMapper,
+                    getFieldAccessLevelsToValidate()
+            );
+
+            // From this point forward, only operate on the Data Import records that
+            // passed FLS validation.  Records that did not pass FLS validation will be
+            // updated with their respective FLS exceptions at the end of this block
+            this.listDI = flsService.getValidRecords();
 
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
@@ -571,6 +586,8 @@ global with sharing class BDI_DataImportService {
             customPostProcess();
             pl.stop();
 
+            logFlsExceptions(apexJobId);
+
         } catch (Exception e) {
             // we should only hit this exception if a truly unexpected runtime
             // error occurs.  not even database updates/inserts should get here,
@@ -586,7 +603,7 @@ global with sharing class BDI_DataImportService {
             // update all the di's with errors with the error state.
             // those di's without specific errors will get the exception's error
             List<DataImport__c> dataImportErrors = new List<DataImport__c>();
-            for (DataImport__c dataImport : dataImports) {
+            for (DataImport__c dataImport : listDI) {
                 dataImportErrors.add(new DataImport__c(
                     Id = dataImport.Id,
                     Status__c = statusDIFailed(),
@@ -605,6 +622,49 @@ global with sharing class BDI_DataImportService {
             perfLogger.stop();
             perfLogger.save();
         }
+    }
+
+    /**
+     * @description Provides the access levels that should be validated depending on whether
+     * dry run is enabled.
+     */
+    private Set<BDI_DataImportFLSService.AccessLevel> getFieldAccessLevelsToValidate() {
+        Set<BDI_DataImportFLSService.AccessLevel> fieldAccessLevelsToValidate =
+                new Set<BDI_DataImportFLSService.AccessLevel>{
+                        BDI_DataImportFLSService.AccessLevel.VALIDATE_READ
+                };
+
+        if (!isDryRun) {
+            fieldAccessLevelsToValidate.add(
+                    BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE);
+            fieldAccessLevelsToValidate.add(
+                    BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE);
+        }
+        return fieldAccessLevelsToValidate;
+    }
+
+    /**
+     * @description Stamps Data Import records with their FLS exception details.
+     *
+     * @param dataImportsWithFlsExceptions
+     * @param apexJobId
+     */
+    private void logFlsExceptions(Id apexJobId) {
+        List<DataImport__c> dataImportsWithFlsExceptions = flsService.getInvalidRecords();
+        for (DataImport__c dataImport : dataImportsWithFlsExceptions) {
+            dataImport.Status__c = statusDIFailed();
+            dataImport.ApexJobId__c = apexJobId;
+            List<String> invalidFields =
+                    flsService.getQualifiedInvalidFieldNamesById(dataImport.Id);
+            String errMsgLabel = isDryRun ?
+                    System.Label.flsReadAccessError : System.Label.flsError;
+            List<String> errorMsgObjects = new List<String>{
+                    String.join(invalidFields, ', ')
+            };
+            String errMessage = String.format(errMsgLabel, errorMsgObjects);
+            dataImport.FailureInformation__c = errMessage;
+        }
+        UTIL_DMLService.updateRecords(dataImportsWithFlsExceptions);
     }
 
     /*******************************************************************************************************
@@ -735,11 +795,6 @@ global with sharing class BDI_DataImportService {
     private class BDIException extends Exception {}
 
     /*******************************************************************************************************
-    * @description flag to allow us to test out field level security exception
-    */
-    public static Boolean failFieldLevelSecurity = false;
-
-    /*******************************************************************************************************
     * @description returns the target object (api name) for a given Data Import field
     * @param sourceFieldName the api name of the Data Import field
     * @return String the api name of the target object for that field, derived from the help text
@@ -832,36 +887,6 @@ global with sharing class BDI_DataImportService {
         
         Map<String, String> targetFieldByDIField = fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
 
-        // verify that the user has correct FLS access to target field
-        // TODO: Move to its own method?                     
-        for(String dataImportFieldName: targetFieldByDIField.keySet()) {  
-            String targetFieldName = targetFieldByDIField.get(dataImportFieldName);
-
-            if (!Test.isRunningTest() || failFieldLevelSecurity) {
-                DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, targetFieldName);
-                Set<String> setAuditFields = new Set<String>{
-                    'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
-                };
-                Boolean isAuditField = setAuditFields.contains(targetFieldName.toLowerCase());
-                Boolean isCreatable = fieldDescribe.isCreateable();
-                Boolean isUpdateable = fieldDescribe.isUpdateable();
-                Boolean isPopulated = populatedDataImportFields.contains(dataImportFieldName);
-
-                if (failFieldLevelSecurity ||
-                    fieldDescribe == null ||
-                    (!isCreatable && isPopulated) ||
-                    (!isAuditField && !isUpdateable && isPopulated)) {
-                        /***
-                        throw (new FLSException(
-                            String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + targetFieldName }
-                        )));
-                        ****/
-                        System.debug(' *** Adding to inaccessible fields: '+targetObjectName + '.' + targetFieldName);
-                        inaccessibleFields.add(targetObjectName + '.' + targetFieldName);
-                }
-            }
-        }
-
         return targetFieldByDIField;
     }    
 
@@ -874,7 +899,7 @@ global with sharing class BDI_DataImportService {
     * @param mapDIFieldToDstField The field map from a DI field to the destination field
     * @return boolean True if copied, False is not copied.
     */
-    public static Boolean copyDIFieldToDestinationRecord(DataImport__c dataImport, 
+    public static Boolean copyDIFieldToDestinationRecord(DataImport__c dataImport,
         String dataImportField, 
         SObject destinationRecord,
         Map<String, String> mapDIFieldToDstField) {
@@ -884,16 +909,6 @@ global with sharing class BDI_DataImportService {
         // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
         if (value != null && value != false) {
             String destinationField = mapDIFieldToDstField.get(dataImportField);
-
-            String fullFieldName = destinationRecord.getSObjectType().getDescribe().getName() + '.' + 
-                destinationField;
-
-            System.debug(' *** Checking list of inaccessible fields for: '+fullFieldName);
-            if(inaccessibleFields.contains(fullFieldName)) {
-                throw (new FLSException(
-                    String.format(System.Label.flsError, new List<String>{ fullFieldName }
-                )));    
-            }
 
             // if values haven't changed, don't copy it and say the object was modified!
             if (destinationRecord.get(destinationField) == value) {

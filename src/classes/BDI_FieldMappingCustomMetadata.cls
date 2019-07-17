@@ -47,6 +47,48 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
     private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
 
+    /**
+    * @description Reads Data_Import_Field_Mapping__mdt field mappings and produces a map of source field
+    * to target field wrappers.
+    */
+    public Map<SObjectField, BDI_TargetFields> getTargetFieldsBySourceField() {
+
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField =
+                new Map<SObjectField, BDI_TargetFields>();
+
+        for (String dataImportObjectName : fieldMappingsByObjMappingDevName.keySet()) {
+
+            String targetObject =
+                    objMappingsByDevName.get(dataImportObjectName).Object_API_Name__c;
+            List<Data_Import_Field_Mapping__mdt> fieldMappingsForThisDataImportObject =
+                    fieldMappingsByObjMappingDevName.get(dataImportObjectName);
+
+            for (Data_Import_Field_Mapping__mdt dataImportFieldMapping :
+                    fieldMappingsForThisDataImportObject) {
+
+                String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
+                String sourceField =
+                        UTIL_Namespace.StrAllNSPrefix(
+                                dataImportFieldMapping.Source_Field_API_Name__c);
+
+                SObjectField sourceSObjectField =
+                        UTIL_Describe.getFieldDescribe(
+                                sourceObject, sourceField).getSobjectField();
+
+                String targetField = dataImportFieldMapping.Target_Field_API_Name__c;
+
+                if (targetFieldsBySourceField.keySet().contains(sourceSObjectField)) {
+                    targetFieldsBySourceField.get(
+                            sourceSObjectField).addTargetField(targetObject, targetField);
+                } else {
+                    BDI_TargetFields targetFields = new BDI_TargetFields();
+                    targetFields.addTargetField(targetObject, targetField);
+                    targetFieldsBySourceField.put(sourceSObjectField, targetFields);
+                }
+            }
+        }
+        return targetFieldsBySourceField;
+    }
 
     /*******************************************************************************************************
     * @description return singleton instance of the class
