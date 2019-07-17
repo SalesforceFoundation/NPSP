@@ -172,7 +172,7 @@ export default class bdiFieldMappings extends LightningElement {
 
             this.showToast(
                 bdiFMUILongDeployment,
-                bdiFMUILongDeploymentMessage + ' {0}.',
+                bdiFMUILongDeploymentMessage + ' {0}',
                 'warning',
                 'sticky',
                 [{url, label: bdiFMUILongDeploymentLink}]);

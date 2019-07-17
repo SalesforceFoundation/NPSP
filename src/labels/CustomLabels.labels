@@ -2483,7 +2483,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUILongDeploymentLink</shortDescription>
-        <value>view the deployment status here.</value>
+        <value>You can view the deployment status here.</value>
     </labels>
     <labels>
         <fullName>bdiFMUILongDeploymentMessage</fullName>
@@ -2491,7 +2491,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUILongDeploymentMessage</shortDescription>
-        <value>It'll continue to process in the background. Please wait or </value>
+        <value>It'll continue to process in the background. Please wait.</value>
     </labels>
     <labels>
         <fullName>bdiFMUINewFieldMapping</fullName>
