@@ -38,20 +38,26 @@
 * one query were to fail, which is theoretically possible in a huge organization where there may be other jobs
 * executing or other factors at play, the rest of this job will continue. That ensures that our LMO collects as much
 * data as possible. In addition, it can help us identify which specific telemetry data processes are failing.
+* Class is virtual so executeTelemetrySObjectBatch can be overridden during tests
 */
-public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> {
+public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> {
+
+    @TestVisible
+    private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
 
     /**
      * @description List of High Level Telemetry Data Types to be processed asynchronously by this batch job.
      */
     private final List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> telemetryTypes =
         new List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory>{
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Org_Environment,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRdOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRecurringDonations,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog,
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows
         };
@@ -86,28 +92,54 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
     * number of RecurringDonation Installment Opportunities.
     */
     public void finish(Database.BatchableContext info) {
-        Integer cnt = Database.countQuery('SELECT Count() FROM npe03__Recurring_Donation__c LIMIT 1');
-        if (cnt == 1) {
-            Database.executeBatch(
-                new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES
-                ),
+        handleOpportunityBatchExecution();
+        handleRecurringDonationExecution();
+    }
+
+    /**
+    * @description Handles execution of batch job for opportunity counts
+    */
+    private void handleOpportunityBatchExecution() {
+        Boolean hasRecurringDonations = [SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty() == false;
+        Boolean hasPayments = [SELECT Id FROM npe01__OppPayment__c LIMIT 1].isEmpty() == false;
+
+        if (hasRecurringDonations || hasPayments) {
+            executeTelemetrySObjectBatch(
+                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES,
                 UTIL_OrgTelemetry_SObject_BATCH.OPPORTUNITIES_BATCH_SIZE
             );
+        } else {
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
 
-            Database.executeBatch(
-                new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS
-                ),
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), 0);
+            /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+            //featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
+        }
+    }
+
+    /**
+    * @description Handles execution of batch job for recurring donations counts
+    */
+    private void handleRecurringDonationExecution() {
+        Boolean hasRecurringDonations = [SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty() == false;
+
+        if (hasRecurringDonations) {
+            executeTelemetrySObjectBatch(
+                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS,
                 UTIL_OrgTelemetry_SObject_BATCH.RECURRING_DONATIONS_BATCH_SIZE
             );
-
         } else {
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), 0);
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
-
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
-            System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
         }
+    }
+
+    /**
+    * @description Executes Telemetry SObject Batch with given mode and size
+    */
+    private virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+        Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(mode), batchSize);
     }
 }
