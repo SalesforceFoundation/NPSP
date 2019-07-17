@@ -382,27 +382,23 @@ public class ALLO_PaymentSync_SVC {
                 if (newGAUAmtForOpp != totalOpportunityAllocations) {
                     Map<Id, Allocation__c> gauToOpportunityMap = new Map<Id, Allocation__c>();
                     for (Allocation__c oppAllocation : context.opportunityAllocationsByGAU.get(gau)) {
-                        if (!gauToOpportunityMap.containsKey(gau)) {
-                            //we want to keep the ratios amongst duplicate opportunity allocations
-                            Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
+                        //we want to keep the ratios amongst duplicate opportunity allocations
+                        Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
 
-                            oppAllocation.Amount__c = newGAUAmtForOpp * duplicateAllocationpaidUnpaidAmountRatio;
+                        oppAllocation.Amount__c = newGAUAmtForOpp * duplicateAllocationpaidUnpaidAmountRatio;
 
-                            if (oppAllocation.Percent__c != null) {
-                                oppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? oppAllocation.Amount__c / context.opportunity.Amount * 100 : 0;
-                            }
-
-                            // Assumption: Opportunity Allocations should be maintained with Currency Type from Opportunity Record
-                            if (UserInfo.isMultiCurrencyOrganization()) {
-                                oppAllocation.put('CurrencyIsoCode', context.opportunity.get('CurrencyIsoCode'));
-                            }
-
-                            gauToOpportunityMap.put(gau, oppAllocation);
-                            //add to update
-                            allocationsChanges.objectsToUpdate.add(oppAllocation);
-                        } else {
-                            allocationsChanges.objectsToDelete.add(oppAllocation);
+                        if (oppAllocation.Percent__c != null) {
+                            oppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? oppAllocation.Amount__c / context.opportunity.Amount * 100 : 0;
                         }
+
+                        // Assumption: Opportunity Allocations should be maintained with Currency Type from Opportunity Record
+                        if (UserInfo.isMultiCurrencyOrganization()) {
+                            oppAllocation.put('CurrencyIsoCode', context.opportunity.get('CurrencyIsoCode'));
+                        }
+
+                        gauToOpportunityMap.put(gau, oppAllocation);
+                        //add to update
+                        allocationsChanges.objectsToUpdate.add(oppAllocation);
                     }
                 }
             //No corresponding opportunity allocation to payment allocations, insert one
