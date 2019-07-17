@@ -173,12 +173,14 @@ public class BDI_ManageAdvancedMappingCtrl {
         Data_Import_Field_Mapping__mdt[] fieldMappings =
             bdiCMT.fieldMappingsByObjMappingDevName.get(objectName);
 
-        for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
+        if (fieldMappings != null) {
+            for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
 
-            if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldMappingSetname &&
-                fieldMapping.Is_Deleted__c == false) {
+                if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldMappingSetname &&
+                    fieldMapping.Is_Deleted__c == false) {
 
-                fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
+                    fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
+                }
             }
         }
 
