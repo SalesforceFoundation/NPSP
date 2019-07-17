@@ -380,7 +380,6 @@ public class ALLO_PaymentSync_SVC {
 
                 //check if they need updating
                 if (newGAUAmtForOpp != totalOpportunityAllocations) {
-                    Map<Id, Allocation__c> gauToOpportunityMap = new Map<Id, Allocation__c>();
                     for (Allocation__c oppAllocation : context.opportunityAllocationsByGAU.get(gau)) {
                         //we want to keep the ratios amongst duplicate opportunity allocations
                         Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
@@ -396,7 +395,6 @@ public class ALLO_PaymentSync_SVC {
                             oppAllocation.put('CurrencyIsoCode', context.opportunity.get('CurrencyIsoCode'));
                         }
 
-                        gauToOpportunityMap.put(gau, oppAllocation);
                         //add to update
                         allocationsChanges.objectsToUpdate.add(oppAllocation);
                     }
