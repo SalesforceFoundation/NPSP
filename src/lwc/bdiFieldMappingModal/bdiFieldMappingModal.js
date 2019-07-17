@@ -6,6 +6,7 @@ import createDataImportFieldMapping
 
 // Import custom labels
 import bdiBtnClose from '@salesforce/label/c.bdiBtnClose';
+import bdiFieldMapping from '@salesforce/label/c.bdiFieldMapping';
 import bdiFieldMappings from '@salesforce/label/c.bdiFieldMappings';
 import bdiFMUIDatatableMapsTo from '@salesforce/label/c.bdiFMUIDatatableMapsTo';
 import bdiFMUIDataType from '@salesforce/label/c.bdiFMUIDataType';
@@ -26,6 +27,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     customLabels = {
         bdiBtnClose,
+        bdiFieldMapping,
         bdiFieldMappings,
         bdiFMUIDatatableMapsTo,
         bdiFMUIDataType,

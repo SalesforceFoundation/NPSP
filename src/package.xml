@@ -1493,8 +1493,6 @@
         <members>bdiFMUIBackToMapGroup</members>
         <members>bdiFMUIDataType</members>
         <members>bdiFMUIDatatableMapsTo</members>
-        <members>bdiFMUIDeploymentId</members>
-        <members>bdiFMUIDeploymentStatus</members>
         <members>bdiFMUIDescription</members>
         <members>bdiFMUIFieldAPIName</members>
         <members>bdiFMUIFieldLabel</members>
@@ -1506,8 +1504,12 @@
         <members>bdiFMUISearchSourceInputLabel</members>
         <members>bdiFMUISearchTargetInputLabel</members>
         <members>bdiFMUISourceObject</members>
+        <members>bdiFMUISuccessful</members>
         <members>bdiFMUITarget</members>
+        <members>bdiFMUITryAgain</members>
+        <members>bdiFMUIUnsuccessful</members>
         <members>bdiFailed</members>
+        <members>bdiFieldMapping</members>
         <members>bdiFieldMappings</members>
         <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>

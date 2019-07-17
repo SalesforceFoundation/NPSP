@@ -2441,22 +2441,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Maps To</value>
     </labels>
     <labels>
-        <fullName>bdiFMUIDeploymentId</fullName>
-        <categories>Advanced Mapping</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiFMUIDeploymentId</shortDescription>
-        <value>Deployment Id: </value>
-    </labels>
-    <labels>
-        <fullName>bdiFMUIDeploymentStatus</fullName>
-        <categories>Advanced Mapping</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiFMUIDeploymentStatus</shortDescription>
-        <value>Deployment completed with Status: </value>
-    </labels>
-    <labels>
         <fullName>bdiFMUIDescription</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
@@ -2550,6 +2534,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Source (NPSP Data Import Object)</value>
     </labels>
     <labels>
+        <fullName>bdiFMUISuccessful</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISuccessful</shortDescription>
+        <value>successful</value>
+    </labels>
+    <labels>
         <fullName>bdiFMUITarget</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
@@ -2558,12 +2550,36 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Target</value>
     </labels>
     <labels>
+        <fullName>bdiFMUITryAgain</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUITryAgain</shortDescription>
+        <value>Please try again</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIUnsuccessful</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIUnsuccessful</shortDescription>
+        <value>unsuccessful</value>
+    </labels>
+    <labels>
         <fullName>bdiFailed</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFailed</shortDescription>
         <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>bdiFieldMapping</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFieldMapping</shortDescription>
+        <value>Field Mapping</value>
     </labels>
     <labels>
         <fullName>bdiFieldMappings</fullName>
