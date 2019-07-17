@@ -83,13 +83,9 @@ public class ALLO_PaymentSync_SVC {
     * @param Decimal allocAmount amount to update total allocation amount by
     ********************************************************************************************************/
     private void addAllocationAmountToPayment(Id paymentId, Decimal allocAmount) {
-        System.debug(loggingLevel.ERROR, 'inside add allocation amount to payment method');
-        System.debug(loggingLevel.ERROR, 'payment Id: ' + paymentId);
-        System.debug(loggingLevel.ERROR, 'alloc amount: ' + allocAmount);
         Decimal amt = allocatedAmountByPayment.containsKey(paymentId) ? allocatedAmountByPayment.get(paymentId) : 0;
         amt += ((allocAmount != null) ? allocAmount : 0);
         allocatedAmountByPayment.put (paymentId, amt);
-        System.debug(loggingLevel.ERROR, 'after adding allocatedAmountByPayment: ' + allocatedAmountByPayment);
     }
 
     /*******************************************************************************************************
@@ -167,7 +163,6 @@ public class ALLO_PaymentSync_SVC {
             // Create Initial Total of Allocations by Payment, excluding the default amount
             allocatedAmountByPayment.put (payment.Id, calculateTotalAllocationAmountExcludingDefaultGAU(payment.Allocations__r, defaultGAU));
         }
-
         // Retrieve all opportunities, with associated allocations
         Map<Id, Opportunity> opportunitiesWithAllocations = retrieveOpportunitiesWithAllocations(paymentsByOpportunityId.keySet());
 
