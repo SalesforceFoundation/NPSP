@@ -11,7 +11,6 @@ import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
 
 // Import custom labels
-import bdiFieldMapping from '@salesforce/label/c.bdiFieldMapping';
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
 import bdiFMUIBackToMapGroup from '@salesforce/label/c.bdiFMUIBackToMapGroup';
 import bdiFMUIDescription from '@salesforce/label/c.bdiFMUIDescription';
@@ -25,6 +24,7 @@ import bdiFMUISuccessful from '@salesforce/label/c.bdiFMUISuccessful';
 import bdiFMUITarget from '@salesforce/label/c.bdiFMUITarget';
 import bdiFMUITryAgain from '@salesforce/label/c.bdiFMUITryAgain';
 import bdiFMUIUnsuccessful from '@salesforce/label/c.bdiFMUIUnsuccessful';
+import bdiFMUIUpdate from '@salesforce/label/c.bdiFMUIUpdate';
 import stgHelpAdvancedMapping3 from '@salesforce/label/c.stgHelpAdvancedMapping3';
 import stgLabelObject from '@salesforce/label/c.stgLabelObject';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
@@ -193,8 +193,11 @@ export default class bdiFieldMappings extends LightningElement {
 
         const payload = platformEvent.response.data.payload;
         const status = payload.Status__c || payload.npsp__Status__c;
-        const successMessage = `${bdiFieldMapping} ${bdiFMUISuccessful}.`;
-        const failMessage = `${bdiFieldMapping} ${bdiFMUIUnsuccessful}. ${bdiFMUITryAgain}.`;
+        // TODO: Update toasts when we're able to determine create, edit, delete from the platform event
+        const successful = bdiFMUISuccessful.charAt(0).toUpperCase() + bdiFMUISuccessful.slice(1);
+        const unsuccessful = bdiFMUIUnsuccessful.charAt(0).toUpperCase() + bdiFMUIUnsuccessful.slice(1);
+        const successMessage = `${successful} ${bdiFieldMappingsLabel} ${bdiFMUIUpdate}.`;
+        const failMessage = `${unsuccessful} ${bdiFieldMappingsLabel}. ${bdiFMUITryAgain}.`;
         const succeeded = status === 'Succeeded';
 
         this.showToast(

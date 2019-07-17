@@ -1508,6 +1508,7 @@
         <members>bdiFMUITarget</members>
         <members>bdiFMUITryAgain</members>
         <members>bdiFMUIUnsuccessful</members>
+        <members>bdiFMUIUpdate</members>
         <members>bdiFailed</members>
         <members>bdiFieldMapping</members>
         <members>bdiFieldMappings</members>

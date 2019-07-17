@@ -2566,6 +2566,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>unsuccessful</value>
     </labels>
     <labels>
+        <fullName>bdiFMUIUpdate</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIUpdate</shortDescription>
+        <value>update</value>
+    </labels>
+    <labels>
         <fullName>bdiFailed</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
