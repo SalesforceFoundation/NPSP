@@ -67,27 +67,36 @@ public class BDI_ManageAdvancedMappingCtrl {
         'label',
         'qualifiedapiname',
         'id'};
-	
+
     /*******************************************************************************************************
     * @description Map of labels by display types used in the field mapping UI
     */
     private static final Map<String, String> LABELS_BY_DISPLAY_TYPE = new Map<String, String> {
+        'ADDRESS' => 'Address',
+        'BASE64' => 'Base64',
         'BOOLEAN' => 'Checkbox',
+        'COMBOBOX' => 'Picklist',
         'CURRENCY' => 'Currency',
+        'DATACATEGORYGROUPREFERENCE' => 'DataCategoryGroupReference',
         'DATE' => 'Date',
         'DATETIME' => 'Date/Time',
+        'DOUBLE' => 'Number',
         'EMAIL' => 'Email',
+        'ENCRYPTEDSTRING' => 'Text (Encrypted)',
         'ID' => 'Id',
         'INTEGER' => 'Number',
+        'LONG' => 'Text Area (Long)',
+        'MULTIPICKLIST' => 'Picklist (Multi-Select)',
         'PERCENT' => 'Percent',
         'PHONE' => 'Phone',
         'PICKLIST' => 'Picklist',
         'REFERENCE' => 'Lookup Relationship',
         'STRING' => 'Text',
         'TEXTAREA' => 'Text Area',
+        'TIME' => 'Time',
         'URL' => 'URL'
     };
-    
+
     /*******************************************************************************************************
     * @description This is a list of the standard objects we will let users choose from (plus custom objects) 
     * when creating a new object mappping.  This is necessary since there are hundreds of standard objects
@@ -176,8 +185,8 @@ public class BDI_ManageAdvancedMappingCtrl {
         if (fieldMappings != null) {
             for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
 
-                if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldMappingSetname &&
-                    fieldMapping.Is_Deleted__c == false) {
+            if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldMappingSetname &&
+                fieldMapping.Is_Deleted__c == false) {
 
                     fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
                 }
@@ -189,8 +198,8 @@ public class BDI_ManageAdvancedMappingCtrl {
 
     /*******************************************************************************************************
     * @description Converts a JSON string of a DataImportFieldMappingWrapper to an instance of
-    * Data_Import_Field_Mapping__mdt. Replaces the prefix 'xxx_' with the namespace if necessary
-    * and replaces the suffix '_xxx' with '__c' if necessary.
+    * Data_Import_Field_Mapping__mdt. Replaces the prefix 'xxPrefixTokenxx_' with the namespace if necessary
+    * and replaces the suffix '_xxSuffixTokenxx' with '__c' if necessary.
     *
     * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
     *
@@ -198,12 +207,12 @@ public class BDI_ManageAdvancedMappingCtrl {
     */
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
-        fieldMappingString = fieldMappingString.replaceAll('_xxx','__c');
+        fieldMappingString = fieldMappingString.replaceAll('_xxSuffixTokenxx','__c');
 
         if (NAMESPACE == 'npsp') {
-            fieldMappingString = fieldMappingString.replaceAll('xxx_','npsp__');
+            fieldMappingString = fieldMappingString.replaceAll('xxPrefixTokenxx_','npsp__');
         } else {
-            fieldMappingString = fieldMappingString.replaceAll('xxx_','');
+            fieldMappingString = fieldMappingString.replaceAll('xxPrefixTokenxx_','');
         }
 
         try {
@@ -288,12 +297,14 @@ public class BDI_ManageAdvancedMappingCtrl {
 
             String developerName = String.valueOf(sObjectCastedCustomMetadata.get('DeveloperName'));
             String recordName;
+
             if (developerName == null) {
                 recordName = generateRecordName(String.valueOf(sObjectCastedCustomMetadata.get('MasterLabel')));
             } else {
                 recordName = developerName;
             }
-            customMetadata.fullName = sObjectName +'.'+recordName;
+
+            customMetadata.fullName = sObjectName + '.' + recordName;
             customMetadata.label = (String)sObjectCastedCustomMetadata.get('MasterLabel');
 
             schema.SObjectType sObjectType = Schema.getGlobalDescribe().get(sObjectName );
