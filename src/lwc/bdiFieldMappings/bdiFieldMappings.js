@@ -197,7 +197,7 @@ export default class bdiFieldMappings extends LightningElement {
         const successful = bdiFMUISuccessful.charAt(0).toUpperCase() + bdiFMUISuccessful.slice(1);
         const unsuccessful = bdiFMUIUnsuccessful.charAt(0).toUpperCase() + bdiFMUIUnsuccessful.slice(1);
         const successMessage = `${successful} ${bdiFieldMappingsLabel} ${bdiFMUIUpdate}.`;
-        const failMessage = `${unsuccessful} ${bdiFieldMappingsLabel}. ${bdiFMUITryAgain}.`;
+        const failMessage = `${unsuccessful} ${bdiFieldMappingsLabel} ${bdiFMUIUpdate}. ${bdiFMUITryAgain}.`;
         const succeeded = status === 'Succeeded';
 
         this.showToast(
