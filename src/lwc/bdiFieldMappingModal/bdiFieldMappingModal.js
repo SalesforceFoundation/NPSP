@@ -243,6 +243,9 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @param {array} fieldMappings: List of field mappings from bdiFieldMappings
     */
     collectMappedDataImportFields(fieldMappings) {
+        this.mappedDIFieldLabels = [];
+        this.mappedTargetFieldLabels = [];
+
         for (let i = 0; i < fieldMappings.length; i++) {
             let fieldMapping = fieldMappings[i];
 
