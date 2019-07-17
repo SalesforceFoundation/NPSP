@@ -626,10 +626,6 @@ public class ALLO_PaymentSync_SVC {
             Decimal allocAmt = (allocatedAmountByPayment.containsKey(payment.Id)) ? allocatedAmountByPayment.get(payment.Id) : 0;
             Decimal paymentAmt = (payment.npe01__Payment_Amount__c != null) ? payment.npe01__Payment_Amount__c : 0;
             Decimal remainder = paymentAmt - allocAmt;
-            System.debug(loggingLevel.ERROR, 'payment is: ' + payment);
-            System.debug(loggingLevel.ERROR, 'alloc amt is: ' + allocAmt);
-            System.debug(loggingLevel.ERROR, 'payment amt: ' + paymentAmt);
-            System.debug(loggingLevel.ERROR, 'remainder: ' + remainder);
             List<Allocation__c> defaultAllocs = defaultAllocsByPayment.get(payment.Id);
             Allocation__c defaultAlloc = null;
             if ((defaultAllocs != null) && (defaultAllocs.size() > 0)) {
