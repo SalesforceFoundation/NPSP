@@ -69,6 +69,40 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
         additionalFieldMappings.get(targetObjectName).put(sourceFieldName, destinationFieldName);
     }
 
+    /**
+    * @description Reads DataImport help text field mappings and produces a map of source field
+    * to target field wrappers.
+    */
+    public Map<SObjectField, BDI_TargetFields> getTargetFieldsBySourceField() {
+
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = new Map<SObjectField, BDI_TargetFields>();
+
+        BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
+        for (BDI_MigrationMappingUtility.HelpTextFieldMapping helpTextFieldMapping :
+                helper.getAllHelpTextFieldMappings()) {
+
+            if (!helpTextFieldMapping.isUsable()) {
+                continue;
+            }
+            String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
+            String sourceField = helpTextFieldMapping.dataImportFieldAPIName;
+            SObjectField sourceSObjectField =
+                    UTIL_Describe.getFieldDescribe(sourceObject, sourceField).getSobjectField();
+            String targetObject = helpTextFieldMapping.targetObjectAPIName;
+            String targetField = helpTextFieldMapping.targetFieldAPIName;
+
+            if (targetFieldsBySourceField.keySet().contains(sourceSObjectField)) {
+                targetFieldsBySourceField.get(
+                        sourceSObjectField).addTargetField(targetObject, targetField);
+            } else {
+                BDI_TargetFields targetFields = new BDI_TargetFields();
+                targetFields.addTargetField(targetObject, targetField);
+                targetFieldsBySourceField.put(sourceSObjectField, targetFields);
+            }
+        }
+        return targetFieldsBySourceField;
+    }
+
     /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
     * return a map of DI field (key) to mapped field name on the destination record (value). 
