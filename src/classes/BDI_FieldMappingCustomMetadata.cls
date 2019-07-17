@@ -109,18 +109,23 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                     FROM Data_Import_Field_Mapping_Set__mdt
                     WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
                     
-        for (Data_Import_Object_Mapping__mdt diom:[SELECT MasterLabel,
+        for (Data_Import_Object_Mapping__mdt diom:[SELECT Id,
+                                            MasterLabel,
                                             Custom_Mapping_Logic_Class__c,
                                             DeveloperName, 
                                             Data_Import_Object_Mapping_Set__c, 
                                             Imported_Record_Field_Name__c,
                                             Imported_Record_Status_Field_Name__c,
+                                            Is_Deleted__c,
+                                            NamespacePrefix,
                                             Object_API_Name__c,
                                             Predecessor__c,
                                             Relationship_Field__c,
                                             Relationship_To_Predecessor__c
                                     FROM Data_Import_Object_Mapping__mdt
-                                    WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c]) {
+                                    WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c
+                                        AND Is_Deleted__c = false
+                                    ORDER BY MasterLabel ASC]) {
 
             // Removing the npsp namespace since the code is not currently packaged.
             if (removeNPSPNamespace) {

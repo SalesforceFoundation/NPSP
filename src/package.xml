@@ -2829,6 +2829,7 @@
     <types>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
+        <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
         <members>pubsubNoPageRef</members>
         <members>utilPlatformEventListener</members>
