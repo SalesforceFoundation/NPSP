@@ -239,7 +239,8 @@ public class BDI_ManageAdvancedMappingCtrl {
             //that is what is required for the custom metadata creation.  This can't be done with the normal constructor
             //since it requires that the field be an Id
             String tempObjMappingString = 
-                '{ "Data_Import_Object_Mapping_Set__c" : "' + objMappingWrapper.Data_Import_Object_Mapping_Set + '"}';
+                '{ "Data_Import_Object_Mapping_Set__c" : "' + 
+                UTIL_Namespace.StrAllNSPrefix(objMappingWrapper.Data_Import_Object_Mapping_Set) + '"}';
 
             Data_Import_Object_Mapping__mdt objMapping = 
                 (Data_Import_Object_Mapping__mdt)JSON.deserialize(tempObjMappingString, Data_Import_Object_Mapping__mdt.class);  
