@@ -1506,8 +1506,12 @@
         <members>bdiFMUISearchSourceInputLabel</members>
         <members>bdiFMUISearchTargetInputLabel</members>
         <members>bdiFMUISourceObject</members>
+        <members>bdiFMUISuccessful</members>
         <members>bdiFMUITarget</members>
+        <members>bdiFMUITryAgain</members>
+        <members>bdiFMUIUnsuccessful</members>
         <members>bdiFailed</members>
+        <members>bdiFieldMapping</members>
         <members>bdiFieldMappings</members>
         <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>
