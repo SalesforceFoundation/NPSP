@@ -292,7 +292,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         for (integer i=0; i<triggerList.size(); i++) {
             Allocation__c allo = triggerlist[i];
-            
+
             //throw error if allocating at the payment level but default allocation is not enabled
             if (!settings.Default_Allocations_Enabled__c && allo.Payment__c != null) {
                 allo.addError(Label.alloDefaultNotEnabled);
