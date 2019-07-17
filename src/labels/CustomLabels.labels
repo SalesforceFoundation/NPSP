@@ -4103,7 +4103,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionHHAccNoContacts</shortDescription>
-        <value>Consider deleting these unused Household Account records to save space. View these Household Account records by running the Empty Household Accounts report in the NPSP Health Check reports folder.</value>
+        <value>Consider deleting these unused Household Account records to save space. View these Household Account records by running the &lt;b&gt;Empty Household Accounts&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
     </labels>
     <labels>
         <fullName>healthSolutionHHObjNoContacts</fullName>
