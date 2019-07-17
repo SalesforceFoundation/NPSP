@@ -104,7 +104,6 @@ private class UTIL_OrgTelemetry_TEST {
 
     /**
      * @description Test that the NPSP_Settings telemetry data is retrieved.
-     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
     private static void validateNPSPSettingsTelemetry() {
@@ -165,7 +164,114 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageBooleanValue should have been called with the feature IsEnabled_CustomizableRollups'
         );
+    }
 
+    /**
+     * @description Confirms DataCount_ONETIME_Use feature parameter is set to true when custom
+     * installments are enabled
+     */
+    @IsTest
+    private static void validateCustomInstallmentSettingsTelemetryWhenEnabled() {
+        final String CUSTOM_INSTALLMENT_PERIOD = 'Bi-Weekly';
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
+            npe03__Increment__c = 'Weeks',
+            npe03__Value__c = 2,
+            Name = CUSTOM_INSTALLMENT_PERIOD
+        );
+        insert customInstallment;
+
+        Account donorAccount = new Account(Name = 'foo');
+        insert donorAccount;
+
+        insert new npe03__Recurring_Donation__c(
+            Name = 'foo',
+            npe03__Installment_Period__c = CUSTOM_INSTALLMENT_PERIOD,
+            npe03__Date_Established__c= System.today(),
+            npe03__Organization__c = donorAccount.Id,
+            npe03__Amount__c = 20,
+            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
+            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
+        );
+
+        Test.startTest();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
+        Test.stopTest();
+
+        System.assertEquals(
+            1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature DataCount_ONETIME_Use'
+        );
+    }
+
+    /**
+     * @description Confirms DataCount_ONETIME_Use feature parameter is set to true when custom
+     * installments are enabled
+     */
+    @IsTest
+    private static void validateCustomInstallmentSettingsTelemetryWhenDisabled() {
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        Test.startTest();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
+        Test.stopTest();
+
+        System.assertEquals(
+            0,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature DataCount_ONETIME_Use'
+        );
+    }
+
+
+    /**
+     * @description Confirms that the payment opportunities count settings telemetry data is defaulted correctly
+     */
+    @IsTest
+    private static void validateCountOfPaymentsOppsTelemetry() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(
+                npe01__Payments_Enabled__c = true
+            )
+        );
+
+        Test.startTest();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps);
+
+        Test.stopTest();
+
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and defaulted to -1'
+        );
+
+        /*
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and defaulted to -1'
+        );
+        */
     }
 
     /**
