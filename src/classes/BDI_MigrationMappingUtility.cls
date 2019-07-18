@@ -315,16 +315,11 @@ public with sharing class BDI_MigrationMappingUtility {
 
             if (referenceFieldMapping == null && migratedFieldMapping == null) {
                 fieldMapping.setRecordName(null, false);
-
-                queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
-
             } else {
-                if (fieldMappingSetName == MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME &&
-                    migratedFieldMapping != null) {
-
+                if (migratedFieldMapping != null) {
                     fieldMapping.recordName = migratedFieldMapping.DeveloperName;
                 } else {
-                    fieldMapping.recordName = referenceFieldMapping.DeveloperName;
+                    fieldMapping.setRecordName(referenceFieldMapping.DeveloperName, true);
                 }
             }
 
