@@ -108,7 +108,7 @@ public class BDI_ManageAdvancedMappingCtrl {
                                                             'opportunity', 'opportunitylineitem', 
                                                             'order', 'orderitem', 'pricebook2', 
                                                             'pricebookEntry', 'product2', 'task', 
-                                                            'user','opportunitycontactrole','contactrole'};
+                                                            'user','opportunitycontactrole','contactrole','workorder'};
 
     /*******************************************************************************************************
     * @description Name of the default Field Mapping Set
