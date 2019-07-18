@@ -181,55 +181,6 @@ public with sharing class BDI_AdditionalObjectService {
         return objAPINameToObjWraps;
     }
 
-    Map<Id, String> errorMessagesByDataImportId;
-    void logError(BDI_ObjectWrapper objectWrapper, String errorMessage) {
-        DataImport__c dataImport = objectWrapper.dataImport;
-
-        //Set the overall data import record status
-        dataImport.Status__c = BDI_DataImport_API.bdiFailed;
-
-        //Set the import status for this specific additional object
-        String statusField = objectWrapper.objMapping.Imported_Record_Status_Field_Name__c;
-        if (statusField != null) {
-            dataImport.put(statusField, errorMessage.left(255));
-        }
-
-        //Data Import Failure Message handling
-        String errorMessageToAppend;
-        if (objectWrapper.objMapping.Imported_Record_Status_Field_Name__c != null) {
-
-            String importedRecordStatusField = UTIL_Namespace.StrAllNSPrefix(objectWrapper
-                    .objMapping.Imported_Record_Status_Field_Name__c);
-
-            String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
-                    DataImport__c.SObjectType.getDescribe().getName(),
-                    importedRecordStatusField).getLabel();
-
-            errorMessageToAppend = String.join(new
-                    List<String>{importedRecordStatusFieldLabel, errorMessage}, ':\n');
-        } else {
-            errorMessageToAppend = errorMessage;
-        }
-
-        if (errorMessagesByDataImportId == null) {
-            errorMessagesByDataImportId = new Map<Id, String>();
-        }
-
-        String combinedErrorMessage =
-                errorMessagesByDataImportId.get(dataImport.Id);
-
-        if (combinedErrorMessage == null) {
-            errorMessagesByDataImportId.put(dataImport.Id, errorMessageToAppend);
-        } else {
-            errorMessagesByDataImportId.put(dataImport.Id,
-                    String.join(new List<String>{
-                            combinedErrorMessage, errorMessageToAppend
-                    }, '\n\n'));
-        }
-        dataImport.FailureInformation__c = errorMessagesByDataImportId
-                .get(dataImport.Id);
-    }
-
     /*******************************************************************************************************
     * @description Takes a map of SObject api name to the object wrappers for that SObject and either updates 
     *  or inserts the data.
@@ -635,4 +586,68 @@ public with sharing class BDI_AdditionalObjectService {
         return importedRecordFieldNames;
     }
 
+    private void logError(BDI_ObjectWrapper objectWrapper, String errorMessage) {
+        objectWrapper.setDataImportStatus(BDI_DataImport_API.bdiFailed);
+
+        objectWrapper.setImportedRecordStatusError(errorMessage);
+
+        logCombinedFailureInformation(objectWrapper, errorMessage);
+
+        objectWrapper.setFailureInformation(
+                failureInformationByDataImportId.get(objectWrapper.dataImport.Id)
+        );
+    }
+
+    private Map<Id, String> failureInformationByDataImportId;
+
+    private void logCombinedFailureInformation(
+            BDI_ObjectWrapper objectWrapper,
+            String errorMessage) {
+
+        DataImport__c dataImport = objectWrapper.dataImport;
+        String errorMessageToAppend =
+                getFailureInformationErrorMessage(objectWrapper, errorMessage);
+
+        if (failureInformationByDataImportId == null) {
+            failureInformationByDataImportId = new Map<Id, String>();
+        }
+
+        String combinedErrorMessage =
+                failureInformationByDataImportId.get(dataImport.Id);
+
+        if (combinedErrorMessage == null) {
+            failureInformationByDataImportId.put(dataImport.Id, errorMessageToAppend);
+        } else {
+            failureInformationByDataImportId.put(dataImport.Id,
+                    String.join(
+                            new List<String>{
+                                    combinedErrorMessage, errorMessageToAppend
+                            }, '\n\n'));
+        }
+    }
+
+    private String getFailureInformationErrorMessage(
+            BDI_ObjectWrapper objectWrapper,
+            String errorMessage) {
+
+        String errorMessageToAppend;
+        if (objectWrapper.objMapping.Imported_Record_Status_Field_Name__c != null) {
+
+            String importedRecordStatusField = UTIL_Namespace.StrAllNSPrefix(
+                    objectWrapper.objMapping.Imported_Record_Status_Field_Name__c
+            );
+
+            String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
+                    DataImport__c.SObjectType.getDescribe().getName(),
+                    importedRecordStatusField).getLabel();
+
+            errorMessageToAppend = String.join(
+                    new List<String>{
+                            importedRecordStatusFieldLabel, errorMessage
+                    }, ':\n');
+        } else {
+            errorMessageToAppend = errorMessage;
+        }
+        return errorMessageToAppend;
+    }
 }
