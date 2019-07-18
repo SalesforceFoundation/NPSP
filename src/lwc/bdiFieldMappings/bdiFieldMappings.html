@@ -12,10 +12,12 @@
 
         <div class="slds-grid slds-wrap slds-m-bottom_small">
             <div class="slds-size_1-of-2">
-                <button class="slds-text-title_caps slds-button slds-button_extension-back"
+                <lightning-breadcrumbs>
+                    <lightning-breadcrumb
+                        label={customLabels.bdiFMUIBackToMapGroup}
                         onclick={handleNavButton}>
-                    {customLabels.bdiFMUIBackToMapGroup}
-                </button>
+                    </lightning-breadcrumb>
+                </lightning-breadcrumbs>
             </div>
             <div class="slds-size_1-of-2">
                 <lightning-button
