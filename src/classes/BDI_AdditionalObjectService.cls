@@ -181,6 +181,55 @@ public with sharing class BDI_AdditionalObjectService {
         return objAPINameToObjWraps;
     }
 
+    Map<Id, String> errorMessagesByDataImportId;
+    void logError(BDI_ObjectWrapper objectWrapper, String errorMessage) {
+        DataImport__c dataImport = objectWrapper.dataImport;
+
+        //Set the overall data import record status
+        dataImport.Status__c = BDI_DataImport_API.bdiFailed;
+
+        //Set the import status for this specific additional object
+        String statusField = objectWrapper.objMapping.Imported_Record_Status_Field_Name__c;
+        if (statusField != null) {
+            dataImport.put(statusField, errorMessage.left(255));
+        }
+
+        //Data Import Failure Message handling
+        String errorMessageToAppend;
+        if (objectWrapper.objMapping.Imported_Record_Status_Field_Name__c != null) {
+
+            String importedRecordStatusField = UTIL_Namespace.StrAllNSPrefix(objectWrapper
+                    .objMapping.Imported_Record_Status_Field_Name__c);
+
+            String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
+                    DataImport__c.SObjectType.getDescribe().getName(),
+                    importedRecordStatusField).getLabel();
+
+            errorMessageToAppend = String.join(new
+                    List<String>{importedRecordStatusFieldLabel, errorMessage}, ':\n');
+        } else {
+            errorMessageToAppend = errorMessage;
+        }
+
+        if (errorMessagesByDataImportId == null) {
+            errorMessagesByDataImportId = new Map<Id, String>();
+        }
+
+        String combinedErrorMessage =
+                errorMessagesByDataImportId.get(dataImport.Id);
+
+        if (combinedErrorMessage == null) {
+            errorMessagesByDataImportId.put(dataImport.Id, errorMessageToAppend);
+        } else {
+            errorMessagesByDataImportId.put(dataImport.Id,
+                    String.join(new List<String>{
+                            combinedErrorMessage, errorMessageToAppend
+                    }, '\n\n'));
+        }
+        dataImport.FailureInformation__c = errorMessagesByDataImportId
+                .get(dataImport.Id);
+    }
+
     /*******************************************************************************************************
     * @description Takes a map of SObject api name to the object wrappers for that SObject and either updates 
     *  or inserts the data.
@@ -265,10 +314,8 @@ public with sharing class BDI_AdditionalObjectService {
                         if (result.isSuccess()) {
                             objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name__c,
                                 System.label.bdiUpdated);
-                        } else { 
-                            dataImportService.LogBDIError(objWrap.dataImport, 
-                                result.getErrors()[0].getMessage(),
-                                objWrap.objMapping.Imported_Record_Status_Field_Name__c);
+                        } else {
+                            logError(objWrap, result.getErrors()[0].getMessage());
                         }
                     }
                 }        
@@ -301,10 +348,8 @@ public with sharing class BDI_AdditionalObjectService {
                             if (objWrap.objMapping.Relationship_To_Predecessor__c == 'Parent') { 
                                 objWrapsForChildPredecessorUpdate.add(objWrap);
                             }
-                        } else { 
-                            dataImportService.LogBDIError(objWrap.dataImport, 
-                                result.getErrors()[0].getMessage(),
-                                objWrap.objMapping.Imported_Record_Status_Field_Name__c);
+                        } else {
+                            logError(objWrap, result.getErrors()[0].getMessage());
                         }
                     }
                 }
@@ -425,12 +470,10 @@ public with sharing class BDI_AdditionalObjectService {
                 // for all successor objects.
                 if (!result.isSuccess()) {
                     for (BDI_ObjectWrapper objWrap : successorObjWraps) {
-                    
-                        String errorMessage = System.label.bdiAdditionalObjChildNotUpdated + 
-                                                result.getErrors()[0].getMessage();
-                        dataImportService.LogBDIError(objWrap.dataImport, 
-                            errorMessage,
-                            objWrap.objMapping.Imported_Record_Status_Field_Name__c);
+
+                        String errorMessage = System.label.bdiAdditionalObjChildNotUpdated +
+                                result.getErrors()[0].getMessage();
+                        logError(objWrap, errorMessage);
                     }
                 }
             }
@@ -447,9 +490,7 @@ public with sharing class BDI_AdditionalObjectService {
         Boolean result = true;
         if (objWrap.dataImport.get(predecessor.Imported_Record_Field_Name__c) == null) {
             result = false;
-            dataImportService.LogBDIError(objWrap.dataImport, 
-                System.label.bdiAdditionalObjPredNotFound,
-                objWrap.objMapping.Imported_Record_Status_Field_Name__c);
+            logError(objWrap, System.label.bdiAdditionalObjPredNotFound);
         }
         return result;
     }
@@ -504,9 +545,7 @@ public with sharing class BDI_AdditionalObjectService {
 
             } else if (anyNonImportedRecordFieldsPopulated && !allRequiredFieldsPopulated) {
                 requiredFieldErrorMsg = requiredFieldErrorMsg.removeEnd('; ').abbreviate(255);
-                dataImportService.LogBDIError(objWrap.dataImport, 
-                    requiredFieldErrorMsg,
-                    objWrap.objMapping.Imported_Record_Status_Field_Name__c);
+                logError(objWrap, requiredFieldErrorMsg);
             }
         }
 
