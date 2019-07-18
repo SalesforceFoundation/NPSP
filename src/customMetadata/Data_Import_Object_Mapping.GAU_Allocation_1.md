@@ -19,6 +19,10 @@
         <value xsi:type="xsd:string">npsp__GAU_Allocation_1_Import_Status__c</value>
     </values>
     <values>
+        <field>Legacy_Data_Import_Object_Name__c</field>
+        <value xsi:type="xsd:string">GAU_Allocation_1</value>
+    </values>
+    <values>
         <field>Object_API_Name__c</field>
         <value xsi:type="xsd:string">npsp__Allocation__c</value>
     </values>

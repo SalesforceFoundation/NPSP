@@ -19,6 +19,10 @@
         <value xsi:type="xsd:string">npsp__Contact2ImportStatus__c</value>
     </values>
     <values>
+        <field>Legacy_Data_Import_Object_Name__c</field>
+        <value xsi:type="xsd:string">Contact2</value>
+    </values>
+    <values>
         <field>Object_API_Name__c</field>
         <value xsi:type="xsd:string">Contact</value>
     </values>

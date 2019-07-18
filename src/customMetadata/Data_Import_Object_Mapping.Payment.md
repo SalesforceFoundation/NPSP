@@ -19,6 +19,10 @@
         <value xsi:type="xsd:string">npsp__PaymentImportStatus__c</value>
     </values>
     <values>
+        <field>Legacy_Data_Import_Object_Name__c</field>
+        <value xsi:type="xsd:string">Payment</value>
+    </values>
+    <values>
         <field>Object_API_Name__c</field>
         <value xsi:type="xsd:string">npe01__OppPayment__c</value>
     </values>

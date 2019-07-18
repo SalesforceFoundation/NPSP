@@ -19,6 +19,10 @@
         <value xsi:type="xsd:string">npsp__DonationImportStatus__c</value>
     </values>
     <values>
+        <field>Legacy_Data_Import_Object_Name__c</field>
+        <value xsi:type="xsd:string">Opportunity</value>
+    </values>
+    <values>
         <field>Object_API_Name__c</field>
         <value xsi:type="xsd:string">Opportunity</value>
     </values>
