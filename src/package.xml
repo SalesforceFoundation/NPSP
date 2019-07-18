@@ -407,6 +407,9 @@
         <members>TDTM_ObjectDataGateway</members>
         <members>TDTM_ProcessControl</members>
         <members>TDTM_Runnable</members>
+        <members>TDTM_RunnableMutable</members>
+        <members>TDTM_RunnableMutableMock_TEST</members>
+        <members>TDTM_RunnableMutable_TEST</members>
         <members>TDTM_Runnable_TEST</members>
         <members>TDTM_TriggerActionHelper</members>
         <members>TDTM_TriggerHandler</members>
@@ -458,6 +461,7 @@
         <members>UTIL_OrgTelemetry_SObject_BATCH</members>
         <members>UTIL_OrgTelemetry_SObject_BATCH_TEST</members>
         <members>UTIL_OrgTelemetry_SVC</members>
+        <members>UTIL_OrgTelemetry_SVC_TEST</members>
         <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PerfLogger</members>
@@ -2568,9 +2572,11 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>DataCount_ONETIME_Use</members>
         <members>Data_CountBDIRowsLast30Days</members>
         <members>Data_CountBGERowsLast30Days</members>
         <members>Data_CountErrorLog</members>
+        <members>Data_CountOppsWithMultiplePayments</members>
         <members>Data_CountRdOppsAll</members>
         <members>Data_CountRdOppsOpenEnded</members>
         <members>Data_CountRdsWithDiffAmount</members>
