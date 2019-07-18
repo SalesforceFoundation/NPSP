@@ -42,8 +42,12 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     public Data_Import_Field_Mapping_Set__mdt diFieldMappingSet;
     public String fieldMappingSetName;
 
-    public Map<String,Data_Import_Object_Mapping__mdt> objMappingsByDevName = new Map<String,Data_Import_Object_Mapping__mdt>();
-    public Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingDevName = new Map<String,Data_Import_Field_Mapping__mdt[]>();
+    public Map<String,Data_Import_Object_Mapping__mdt> objMappingsByDevName =
+        new Map<String,Data_Import_Object_Mapping__mdt>();
+    public Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingDevName =
+        new Map<String,Data_Import_Field_Mapping__mdt[]>();
+    public Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingLegacyName =
+        new Map<String,Data_Import_Field_Mapping__mdt[]>();
 
     private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
 
@@ -117,9 +121,6 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     public Map<String,String> getFieldMap(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
         Map<String,String> targetFieldByDataImportField = new Map<String,String>();
 
-        Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingLegacyName =
-            getFieldMappingsByObjMappingLegacyName(fieldMappingsByObjMappingDevName);
-
         Data_Import_Field_Mapping__mdt[] diFieldMappings = fieldMappingsByObjMappingLegacyName.get(dataImportObjectName);
 
         if (diFieldMappings != null) {
@@ -130,24 +131,6 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
         }
 
         return targetFieldByDataImportField;
-    }
-
-    private Map<String,Data_Import_Field_Mapping__mdt[]> getFieldMappingsByObjMappingLegacyName(
-        Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingDevName) {
-
-        Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingLegacyName =
-            new Map<String,Data_Import_Field_Mapping__mdt[]>();
-
-        for (String key : fieldMappingsByObjMappingDevName.keySet()) {
-            Data_Import_Field_Mapping__mdt[] fieldMappings = fieldMappingsByObjMappingDevName.get(key);
-            if (fieldMappings.size() > 0) {
-                fieldMappingsByObjMappingLegacyName.put(
-                    fieldMappings[0].Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
-                    fieldMappings);
-            }
-        }
-
-        return fieldMappingsByObjMappingLegacyName;
     }
 
     private String getFieldMappingSetName(){
@@ -225,6 +208,9 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
                 tempDifms.add(difm);
                 fieldMappingsByObjMappingDevName.put(difm.Target_Object_Mapping__r.DeveloperName,tempDifms);
+                fieldMappingsByObjMappingLegacyName.put(
+                    difm.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                    tempDifms);
             }
         }
     }
