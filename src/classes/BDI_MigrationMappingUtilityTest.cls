@@ -449,6 +449,15 @@ private class BDI_MigrationMappingUtilityTest {
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName, Type returnType,
             List<Type> listOfParamTypes, List<String> listOfParamNames, List<Object> listOfArgs) {
 
+            if (stubbedMethodName == 'getObjectMappingSet') {
+                Data_Import_Object_Mapping_Set__mdt objectMappingSet =
+                    new Data_Import_Object_Mapping_Set__mdt(
+                        Label='Migrated Custom Object Mapping Set',
+                        DeveloperName='Migrated_Custom_Object_Mapping_Set');
+
+                return new List<Data_Import_Object_Mapping_Set__mdt>{objectMappingSet};
+            }
+
             if (stubbedMethodName == 'getObjectMappingsBySetDeveloperName') {
                 Data_Import_Object_Mapping__mdt objectMapping1 =
                     new Data_Import_Object_Mapping__mdt(
