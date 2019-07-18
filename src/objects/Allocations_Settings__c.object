@@ -50,6 +50,14 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Payment_Allocation_Two_Way_Sync_Enabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Payment Allocation Two-Way Sync Enabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Payment_Allocations_Enabled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Indicates whether Allocations can be set at the Payment level. If selected, you can manually create Allocation records for each Payment, or let NPSP automatically create Payment Allocation records based on the related Opportunity Allocation settings.</description>

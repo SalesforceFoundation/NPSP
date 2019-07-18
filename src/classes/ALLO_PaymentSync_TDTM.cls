@@ -50,6 +50,12 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newList, List<SObject> oldList,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+        Allocations_Settings__c allocationsSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+
+        if (allocationsSettings.Payment_Allocation_Two_Way_Sync_Enabled__c == false && !Test.isRunningTest()) {
+            return null;
+        }
+
         if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
             return null;
         }

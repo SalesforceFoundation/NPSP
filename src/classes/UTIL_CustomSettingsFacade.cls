@@ -794,6 +794,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         allocationsSettings.Payment_Allocations_Enabled__c = mySettings.Payment_Allocations_Enabled__c;
         allocationsSettings.Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c;
         allocationsSettings.Use_Fiscal_Year_for_Rollups__c = mySettings.Use_Fiscal_Year_for_Rollups__c;
+        allocationsSettings.Payment_Allocation_Two_Way_Sync_Enabled__c = true;
         orgAllocationsSettings = allocationsSettings;
         return allocationsSettings;
     }
