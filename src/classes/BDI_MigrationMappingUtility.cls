@@ -358,8 +358,9 @@ public with sharing class BDI_MigrationMappingUtility {
 
         for (HelpTextFieldMapping helpTextFieldMapping : helpTextFieldMappings) {
 
-            Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(
-                helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
+            String unnamespacedDIFieldName =
+                UTIL_Namespace.removeNSPrefixNpspOnly(helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
+            Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(unnamespacedDIFieldName);
 
             Boolean isException = false;
             if (helpTextFieldMapping.helpText != null) {
@@ -543,18 +544,18 @@ public with sharing class BDI_MigrationMappingUtility {
             Map<String, Object> fieldValues =
                 (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(clone));
 
+            fieldValues.remove(UTIL_Namespace.StrAllNSPrefix('attributes'));
+            fieldValues.remove(UTIL_Namespace.StrAllNSPrefix('DeveloperName'));
+            fieldValues.remove(UTIL_Namespace.StrAllNSPrefix('Label'));
+
             fieldValues.put(
-                'Data_Import_Object_Mapping_Set__c',
+                UTIL_Namespace.StrAllNSPrefix('Data_Import_Object_Mapping_Set__c'),
                 MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
 
             fieldValues.put(
-                'Legacy_Data_Import_Object_Name__c',
+                UTIL_Namespace.StrAllNSPrefix('Legacy_Data_Import_Object_Name__c'),
                 clone.DeveloperName
             );
-
-            fieldValues.remove('attributes');
-            fieldValues.remove('DeveloperName');
-            fieldValues.remove('Label');
 
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.label = clone.label.left(40);

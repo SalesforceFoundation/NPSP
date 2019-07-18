@@ -117,7 +117,7 @@ public class BDI_MigrationMappingHelper {
         for (Data_Import_Object_Mapping__mdt objectMapping : existingObjectMappings) {
             String legacyDataImportObjectName = objectMapping.Legacy_Data_Import_Object_Name__c;
             String key =
-                legacyDataImportObjectName != null ? legacyDataImportObjectName: objectMapping.DeveloperName;
+                legacyDataImportObjectName != null ? legacyDataImportObjectName : objectMapping.DeveloperName;
 
             objectMappingsByDeveloperName.put(key, objectMapping);
         }
