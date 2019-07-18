@@ -71,6 +71,7 @@
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
         <members>BDI_DataImportFLSService</members>
+        <members>BDI_DataImportFLSService_TEST</members>
         <members>BDI_DataImportService</members>
         <members>BDI_DataImportService_TEST</members>
         <members>BDI_DataImport_API</members>
@@ -1495,8 +1496,6 @@
         <members>bdiFMUIBackToMapGroup</members>
         <members>bdiFMUIDataType</members>
         <members>bdiFMUIDatatableMapsTo</members>
-        <members>bdiFMUIDeploymentId</members>
-        <members>bdiFMUIDeploymentStatus</members>
         <members>bdiFMUIDescription</members>
         <members>bdiFMUIFieldAPIName</members>
         <members>bdiFMUIFieldLabel</members>
@@ -1512,6 +1511,7 @@
         <members>bdiFMUITarget</members>
         <members>bdiFMUITryAgain</members>
         <members>bdiFMUIUnsuccessful</members>
+        <members>bdiFMUIUpdate</members>
         <members>bdiFailed</members>
         <members>bdiFieldMapping</members>
         <members>bdiFieldMappings</members>

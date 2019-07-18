@@ -6,6 +6,7 @@ import createDataImportFieldMapping
 
 // Import custom labels
 import bdiBtnClose from '@salesforce/label/c.bdiBtnClose';
+import bdiFieldMapping from '@salesforce/label/c.bdiFieldMapping';
 import bdiFieldMappings from '@salesforce/label/c.bdiFieldMappings';
 import bdiFMUIDatatableMapsTo from '@salesforce/label/c.bdiFMUIDatatableMapsTo';
 import bdiFMUIDataType from '@salesforce/label/c.bdiFMUIDataType';
@@ -26,6 +27,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     customLabels = {
         bdiBtnClose,
+        bdiFieldMapping,
         bdiFieldMappings,
         bdiFMUIDatatableMapsTo,
         bdiFMUIDataType,
@@ -84,7 +86,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         'Datacategorygroupreference': ['Datacategorygroupreference'],
         'Date': ['Date'],
         'Datetime': ['Datetime'],
-        'Double': ['Double'], // Todo: Sometimes include Integer as per the Bdi Mapping Field Types doc
+        'Double': ['Double', 'Integer'],
         'Email': ['Email', 'String'],
         'Encryptedstring': ['Encryptedstring'],
         'Id': ['Id', 'String'],
@@ -241,6 +243,9 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @param {array} fieldMappings: List of field mappings from bdiFieldMappings
     */
     collectMappedDataImportFields(fieldMappings) {
+        this.mappedDIFieldLabels = [];
+        this.mappedTargetFieldLabels = [];
+
         for (let i = 0; i < fieldMappings.length; i++) {
             let fieldMapping = fieldMappings[i];
 
