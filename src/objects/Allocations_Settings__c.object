@@ -50,6 +50,14 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>LastJobStartTimePaymentAllocations__c</fullName>
+        <description>The last time the Payment Allocations batch job ran successfully</description>
+        <externalId>false</externalId>
+        <label>Last Job Start Time Payment Allocations</label>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
         <fullName>Payment_Allocations_Enabled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Indicates whether Allocations can be set at the Payment level. If selected, you can manually create Allocation records for each Payment, or let NPSP automatically create Payment Allocation records based on the related Opportunity Allocation settings.</description>
