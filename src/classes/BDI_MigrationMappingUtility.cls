@@ -157,6 +157,11 @@ public with sharing class BDI_MigrationMappingUtility {
     public List<DataImportFieldMapping> dataImportFieldMappings = new List<DataImportFieldMapping>();
 
     /*******************************************************************************************************
+    * @description Map of valid Object Fields by Object Name
+    */
+    public static Map<String, Set<String>> validFieldsByObjectName;
+
+    /*******************************************************************************************************
     * @description Name of the Data Import Field Mapping Set to use
     */
     public String fieldMappingSetName {
@@ -242,7 +247,6 @@ public with sharing class BDI_MigrationMappingUtility {
         queuedMetadataTypesForDeploy.clear();
 
         if (!Test.isRunningTest()) {
-            badHelpTextMappings.clear();
             populateListsFromHelpTextMappings();
         }
 
@@ -678,12 +682,15 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         private void checkRequiredFields() {
-            this.isFieldNameUsable = String.isNotBlank(this.targetFieldAPIName);
             this.isObjectNameUsable = String.isNotBlank(this.dataImportObjectName);
             if (String.isNotBlank(this.dataImportObjectName)) {
                 this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
             }
             this.isObjectAPINameUsable = String.isNotBlank(this.targetObjectAPIName);
+            if (this.isObjectAPINameUsable && String.isNotBlank(this.targetFieldAPIName)) {
+                Set<String> validFields = getValidFieldsByObjectName(this.targetObjectAPIName);
+                this.isFieldNameUsable = validFields.contains(this.targetFieldAPIName.toLowerCase());
+            }
         }
 
         public Boolean isUsable() {
@@ -697,7 +704,23 @@ public with sharing class BDI_MigrationMappingUtility {
             if (Test.isRunningTest()) {
                 checkRequiredFields();
             }
-            return this.isFieldNameUsable && this.isObjectNameUsable && !this.isObjectAPINameUsable;
+            return this.isObjectNameUsable && String.isNotBlank(this.targetFieldAPIName);
+        }
+
+        public Set<String> getValidFieldsByObjectName(String objectName) {
+            if (validFieldsByObjectName == null) {
+                validFieldsByObjectName = new Map<String, Set<String>>();
+            }
+
+            if (validFieldsByObjectName.get(objectName) == null) {
+                SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
+                Set<String> validFields = objectType.getDescribe().fields.getMap().keySet();
+                validFieldsByObjectName.put(objectName, validFields);
+
+                return validFields;
+            } else {
+                return validFieldsByObjectName.get(objectName);
+            }
         }
 
         /****************************************************************************************************

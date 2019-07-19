@@ -174,7 +174,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
             } catch (Exception e) {
                 Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
                 addPageMessage(ApexPages.Severity.ERROR, Label.bdiErrorDeploymentFailed + ' ' + e.getMessage());
 
                 isPolling = false;
@@ -198,7 +197,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                     String.valueOf(Metadata.DeployStatus.Succeeded));
             addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             addPageMessage(ApexPages.Severity.ERROR,
                 Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage());
 
@@ -221,7 +219,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         try {
             upsert dataImportSettings;
         } catch (Exception e) {
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,
                 Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage()));
         }
@@ -244,7 +241,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
             if (isSuccess) {
                 isPolling = false;
-                addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
+                successMessage();
             } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
                 addPageMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
@@ -256,7 +253,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             // DeploymentContainer was empty which means we're using our standard field mapping set
             // Org had no conflicting field mappings nor any net new field mappings in their Data Import help text
             isPolling = false;
-            addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
+            successMessage();
         }
 
         if (timeoutCount > MAX_TIME_OUT) {
@@ -267,6 +264,19 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         }
 
         return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Display successful enablement of Advanced Mapping based on if there were some invalid
+    * help text mappings
+    */
+    private void successMessage() {
+        if (migrationMappingUtility.badHelpTextMappings.size() > 0) {
+            addPageMessage(ApexPages.Severity.WARNING,
+                'Custom Metadata mapping is enabled, but we found some invalid help text mappings that we couldn\'t migrate. Please look at the table below.');
+        } else {
+            addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
+        }
     }
 
     /*******************************************************************************************************
