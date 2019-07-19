@@ -44,15 +44,15 @@ const actions = [
 
 const columns = [
     { label: bdiFMUIFieldLabel, fieldName: 'xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx', type: 'text', sortable: true },
-    { label: bdiFMUIFieldAPIName, fieldName: 'xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx', type: 'text' },
-    { label: bdiFMUIDataType, fieldName: 'Source_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
+    { label: bdiFMUIFieldAPIName, fieldName: 'xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx', type: 'text', sortable: true},
+    { label: bdiFMUIDataType, fieldName: 'Source_Field_Display_Type_Label', type: 'text', initialWidth: 125, sortable: true },
         {
             label: bdiFMUIDatatableMapsTo, fieldName: '', type: 'text', fixedWidth: 95,
             cellAttributes: { alignment: 'center', iconName: { fieldName: 'Maps_To_Icon' } }
         },
-    { label: bdiFMUIFieldLabel, fieldName: 'xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx', type: 'text' },
-    { label: bdiFMUIFieldAPIName, fieldName: 'xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx', type: 'text' },
-    { label: bdiFMUIDataType, fieldName: 'Target_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
+    { label: bdiFMUIFieldLabel, fieldName: 'xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx', type: 'text', sortable: true },
+    { label: bdiFMUIFieldAPIName, fieldName: 'xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx', type: 'text', sortable: true },
+    { label: bdiFMUIDataType, fieldName: 'Target_Field_Display_Type_Label', type: 'text', initialWidth: 125, sortable: true },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
 
@@ -77,6 +77,8 @@ export default class bdiFieldMappings extends LightningElement {
     @track displayFieldMappings = false;
     @track isLoading = true;
     @track columns = columns;
+    @track sortedBy;
+    @track sortDirection;
     @track fieldMappingSetName;
     @track fieldMappings;
 
@@ -141,9 +143,10 @@ export default class bdiFieldMappings extends LightningElement {
                 });
 
             if (this.fieldMappings && this.fieldMappings.length > 0) {
-                this.fieldMappings = this.sortBy(
+                this.fieldMappings = this.sortData(
                     this.fieldMappings,
-                    'xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx');
+                    'xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx',
+                    'asc');
             }
 
             this.isLoading = false;
@@ -291,13 +294,35 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sorts a list by a property
+    * @description Handles the onsort event from the lightning:datatable
+    *
+    * @param {object} event: Event holding column details of the action
+    */
+    handleColumnSorting(event) {
+        this.sortedBy = event.detail.fieldName;
+        this.sortedDirection = event.detail.sortDirection;
+        this.fieldMappings = this.sortData(this.fieldMappings, this.sortedBy, this.sortedDirection);
+    }
+
+    /*******************************************************************************
+    * @description Sorts the given list by field name and direction
     *
     * @param {array} list: List to be sorted
-    * @param {string} sortedBy: Property to sort by
+    * @param {string} fieldName: Property to sort by
+    * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
     */
-    sortBy(list, sortedBy) {
-        return list.sort((a, b) => { return (a[sortedBy] > b[sortedBy]) ? 1 : -1} );
+    sortData(list, fieldName, sortDirection) {
+        const data = JSON.parse(JSON.stringify(list));
+        const key =(a) => a[fieldName];
+        const reverse = sortDirection === 'asc' ? 1 : -1;
+
+        data.sort((a,b) => {
+            let valueA = key(a) ? key(a).toLowerCase() : '';
+            let valueB = key(b) ? key(b).toLowerCase() : '';
+            return reverse * ((valueA > valueB) - (valueB > valueA));
+        });
+
+        return data;
     }
 
     /*******************************************************************************
