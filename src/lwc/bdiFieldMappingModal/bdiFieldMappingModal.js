@@ -197,6 +197,8 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.hasSourceFieldErrors = false;
             this.hasTargetFieldErrors = false;
             this.objectMapping = event.objectMapping;
+            this.diFieldDescribes = event.diFieldDescribes;
+            this.targetObjectFieldDescribes = event.targetObjectFieldDescribes;
 
             this.collectMappedDataImportFields(event.fieldMappings);
 

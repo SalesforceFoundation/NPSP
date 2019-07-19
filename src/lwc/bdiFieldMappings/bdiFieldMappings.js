@@ -9,6 +9,8 @@ import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
+import getUnmappedDataImportFieldDescribes
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getUnmappedDataImportFieldDescribes';
 
 // Import custom labels
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
@@ -117,10 +119,8 @@ export default class bdiFieldMappings extends LightningElement {
             this.isLoading = true;
 
             // Get all the data import field describes
-            if (!this.diFieldDescribes) {
-                this.diFieldDescribes =
-                    await getObjectFieldDescribes({objectName: 'DataImport__c'});
-            }
+            this.diFieldDescribes =
+                await getUnmappedDataImportFieldDescribes();
 
             // Get all the target object field describes based on the currently
             // selected object mapping
@@ -170,7 +170,7 @@ export default class bdiFieldMappings extends LightningElement {
                 event.deploymentId +
                 '%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp';
 
-            this.showToast(
+            that.showToast(
                 bdiFMUILongDeployment,
                 bdiFMUILongDeploymentMessage + ' {0}',
                 'warning',
@@ -232,7 +232,9 @@ export default class bdiFieldMappings extends LightningElement {
         fireEvent(this.pageRef, 'openModal', {
             objectMapping: this.objectMapping,
             row: undefined,
-            fieldMappings: this.fieldMappings
+            fieldMappings: this.fieldMappings,
+            diFieldDescribes: this.diFieldDescribes,
+            targetObjectFieldDescribes: this.targetObjectFieldDescribes,
         });
     }
 
