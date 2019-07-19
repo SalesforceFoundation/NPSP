@@ -857,7 +857,7 @@ class NPSP(object):
             try:
                 self.selenium.wait_until_element_is_visible(locator)
                 break
-            except ElementNotFound:
+            except Exception:
                 time.sleep(15)    
 
     def get_npsp_settings_value(self,field_name): 
