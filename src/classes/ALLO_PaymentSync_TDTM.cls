@@ -52,14 +52,19 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
 
         Allocations_Settings__c allocationsSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
-        if (allocationsSettings.Payment_Allocation_Two_Way_Sync_Enabled__c == false && !Test.isRunningTest()) {
-            return null;
-        }
 
         if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
             return null;
         }
         if (!UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c) {
+            return null;
+        }
+
+        // Interim: The exclusion to this for tests is so that existing unit tests
+        // in external packages will not fail because they are expecting this to be present.
+        // Once the Abacus tests are refactored and the Payment Allocations Two Way Sync tests
+        // are updated, this part of the condition will be removed.
+        if (allocationsSettings.Payment_Allocation_Two_Way_Sync_Enabled__c == false && !Test.isRunningTest()) {
             return null;
         }
 
