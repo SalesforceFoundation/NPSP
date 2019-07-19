@@ -289,6 +289,8 @@
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
+        <members>OPP_StageMappingCMT</members>
+        <members>OPP_StageMappingCMT_TEST</members>
         <members>OPP_StageMappingUtil</members>
         <members>OPP_StageMappingUtil_TEST</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
