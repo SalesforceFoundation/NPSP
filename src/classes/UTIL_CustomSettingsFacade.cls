@@ -627,7 +627,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         allosettings.Payment_Allocations_Enabled__c = false;
         allosettings.Rollup_N_Day_Value__c = 365;
         allosettings.Use_Fiscal_Year_for_Rollups__c = false;
-        allosettings.Payment_Allocation_Two_Way_Sync_Enabled__c = false;
+        allosettings.Payment_Allocation_Two_Way_Sync__c = false;
     }
 
     private static void configDataImportSettings(Data_Import_Settings__c dis) {
@@ -795,7 +795,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         allocationsSettings.Payment_Allocations_Enabled__c = mySettings.Payment_Allocations_Enabled__c;
         allocationsSettings.Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c;
         allocationsSettings.Use_Fiscal_Year_for_Rollups__c = mySettings.Use_Fiscal_Year_for_Rollups__c;
-        allocationsSettings.Payment_Allocation_Two_Way_Sync_Enabled__c = mySettings.Payment_Allocation_Two_Way_Sync_Enabled__c;
+        allocationsSettings.Payment_Allocation_Two_Way_Sync__c = mySettings.Payment_Allocation_Two_Way_Sync__c;
         orgAllocationsSettings = allocationsSettings;
         return allocationsSettings;
     }

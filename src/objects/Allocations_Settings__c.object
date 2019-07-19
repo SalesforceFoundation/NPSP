@@ -50,12 +50,12 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Payment_Allocation_Two_Way_Sync_Enabled__c</fullName>
+        <fullName>Payment_Allocation_Two_Way_Sync__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Indicates whether Payment Allocations and Opportunity Allocations are kept in sync. If selected, Opportunity Allocations are updated when Payment Allocations are updated, and vice versa, Payment Allocations are updated when Opportunity Allocations are updated.</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether Opportunity Allocations are updated when Payment Allocations are updated, and vice versa, Payment Allocations are updated when Opportunity Allocations are updated.</inlineHelpText>
-        <label>Payment Allocation Two-Way Sync Enabled</label>
+        <label>Payment Allocation Two-Way Sync</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>

@@ -64,7 +64,7 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
         // in external packages will not fail because they are expecting this to be present.
         // Once the Abacus tests are refactored and the Payment Allocations Two Way Sync tests
         // are updated, this part of the condition will be removed.
-        if (allocationsSettings.Payment_Allocation_Two_Way_Sync_Enabled__c == false && !Test.isRunningTest()) {
+        if (allocationsSettings.Payment_Allocation_Two_Way_Sync__c == false && !Test.isRunningTest()) {
             return null;
         }
 
