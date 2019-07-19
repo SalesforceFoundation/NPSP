@@ -58,11 +58,11 @@ private class BDI_MigrationMappingUtilityTest {
         util.migrateHelpTextToCustomMetadata();
 
         if (util.fieldMappingSetName == BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME) {
-            System.assertEquals(6, util.queuedMetadataTypesForDeploy.size(),
-                'We have 6 metadata records queued for deployment.');
+            System.assertEquals(8, util.queuedMetadataTypesForDeploy.size(),
+                'We have 8 metadata records queued for deployment.');
         } else {
-            System.assertEquals(7, util.queuedMetadataTypesForDeploy.size(),
-                'We have 7 metadata records queued for deployment including the custom field mapping set.');
+            System.assertEquals(9, util.queuedMetadataTypesForDeploy.size(),
+                'We have 9 metadata records queued for deployment including the custom field mapping set.');
         }
 
         System.assertEquals(2, util.badHelpTextMappings.size(),
@@ -136,8 +136,8 @@ private class BDI_MigrationMappingUtilityTest {
 
         util.migrateHelpTextToCustomMetadata();
 
-        System.assertEquals(6, util.queuedMetadataTypesForDeploy.size(),
-            'We have 6 metadata records queued for deployment.');
+        System.assertEquals(8, util.queuedMetadataTypesForDeploy.size(),
+            'We have 8 metadata records queued for deployment.');
 
         System.assertEquals(2, util.badHelpTextMappings.size(),
             'We have 2 bad help text field mappings.');
@@ -171,11 +171,11 @@ private class BDI_MigrationMappingUtilityTest {
         util.migrateHelpTextToCustomMetadata();
 
         if (util.fieldMappingSetName == BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME) {
-            System.assertEquals(4, util.queuedMetadataTypesForDeploy.size(),
-                'We have 4 metadata records queued for deployment.');
+            System.assertEquals(6, util.queuedMetadataTypesForDeploy.size(),
+                'We have 6 metadata records queued for deployment.');
         } else {
-            System.assertEquals(5, util.queuedMetadataTypesForDeploy.size(),
-                'We have 5 metadata records queued for deployment including the custom field mapping set.');
+            System.assertEquals(7, util.queuedMetadataTypesForDeploy.size(),
+                'We have 7 metadata records queued for deployment including the custom field mapping set.');
         }
     }
 
