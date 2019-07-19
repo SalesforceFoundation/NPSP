@@ -149,7 +149,7 @@ public with sharing class BDI_MigrationMappingUtility {
     * @description Map of migrated Data Import Object Mapping developer names by legacy data import object
     * names
     */
-    private Map<String, String> legacyDataImportObjectNameByDeveloperName = new Map<String, String>();
+    private Map<String, String> legacyDataImportObjectNameByDeveloperName;
 
     /*******************************************************************************************************
     * @description List of bad/malformed help text mappings
@@ -252,6 +252,7 @@ public with sharing class BDI_MigrationMappingUtility {
     public void cloneObjectMappings() {
 
         queuedMetadataTypesForDeploy.clear();
+        legacyDataImportObjectNameByDeveloperName = new Map<String, String>();
 
         Data_Import_Object_Mapping_Set__mdt[] migratedObjectMappingSets =
             helper.getObjectMappingSet(MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
@@ -263,24 +264,47 @@ public with sharing class BDI_MigrationMappingUtility {
         Map<String, Data_Import_Object_Mapping__mdt> existingMigratedObjectMappings =
             helper.getObjectMappingsBySetDeveloperName(MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
 
+        DataImportObjectMapping[] objectMappings = new List<DataImportObjectMapping>();
+        Map<String, String> developerNamesByPredecessor = new Map<String, String>();
+
         for (String name : referenceObjectMappingsByDeveloperName.keySet()) {
+
+            String legacyDataImportObjectName;
+            String developerName;
+            Data_Import_Object_Mapping__mdt referenceObjectMapping =
+                referenceObjectMappingsByDeveloperName.get(name);
             Data_Import_Object_Mapping__mdt existingMigratedObjectMapping =
                 existingMigratedObjectMappings.get(name);
+            DataImportObjectMapping objectMappingWrapper;
 
             if (existingMigratedObjectMapping == null) {
-                Data_Import_Object_Mapping__mdt objectMapping = referenceObjectMappingsByDeveloperName.get(name);
-                Metadata.CustomMetadata customMd = new DataImportObjectMapping(objectMapping).getMetadataRecord();
-
-                queuedMetadataTypesForDeploy.add(customMd);
-
-                legacyDataImportObjectNameByDeveloperName.put(
-                    objectMapping.Legacy_Data_Import_Object_Name__c,
-                    customMd.fullName.split('\\.')[1]);
+                objectMappingWrapper = new DataImportObjectMapping(referenceObjectMapping);
+                legacyDataImportObjectName =
+                    referenceObjectMapping.Legacy_Data_Import_Object_Name__c;
+                developerName = objectMappingWrapper.uniqueRecordName;
             } else {
-                legacyDataImportObjectNameByDeveloperName.put(
-                    existingMigratedObjectMapping.Legacy_Data_Import_Object_Name__c,
-                    existingMigratedObjectMapping.DeveloperName);
+                objectMappingWrapper = new DataImportObjectMapping(existingMigratedObjectMapping);
+                legacyDataImportObjectName =
+                    existingMigratedObjectMapping.Legacy_Data_Import_Object_Name__c;
+                developerName = existingMigratedObjectMapping.DeveloperName;
+                objectMappingWrapper.uniqueRecordName = existingMigratedObjectMapping.DeveloperName;
             }
+
+            objectMappings.add(objectMappingWrapper);
+            legacyDataImportObjectNameByDeveloperName.put(legacyDataImportObjectName, developerName);
+            developerNamesByPredecessor.put(legacyDataImportObjectName, developerName);
+        }
+
+        for (DataImportObjectMapping objectMappingWrapper : objectMappings) {
+
+            if (objectMappingWrapper.objectMapping.Predecessor__c != null &&
+                developerNamesByPredecessor.get(objectMappingWrapper.predecessor) != null) {
+
+                objectMappingWrapper.objectMapping.Predecessor__c =
+                    developerNamesByPredecessor.get(objectMappingWrapper.predecessor);
+            }
+
+            queuedMetadataTypesForDeploy.add(objectMappingWrapper.getMetadataRecord());
         }
     }
 
@@ -522,19 +546,24 @@ public with sharing class BDI_MigrationMappingUtility {
 
     public class DataImportObjectMapping {
         Data_Import_Object_Mapping__mdt objectMapping;
+        String uniqueRecordName;
+        String predecessor;
 
         public DataImportObjectMapping() {}
 
         public DataImportObjectMapping(Data_Import_Object_Mapping__mdt objectMapping) {
             this.objectMapping = objectMapping;
+            this.predecessor = objectMapping.Predecessor__c;
+            if (objectMapping.Predecessor__c == null) {
+                objectMapping.Relationship_To_Predecessor__c = null;
+            }
+            this.uniqueRecordName = generateUniqueRecordName(objectMapping.DeveloperName);
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
             String mdTypeName = 'Data_Import_Object_Mapping__mdt';
 
             Data_Import_Object_Mapping__mdt clone = objectMapping.clone();
-
-            String uniqueDeveloperName = generateUniqueRecordName(clone.DeveloperName);
 
             Map<String, Object> fieldValues =
                 (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(clone));
@@ -554,7 +583,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.label = clone.label.left(40);
-            customMd.fullName = mdTypeName + '.' + uniqueDeveloperName.left(40);
+            customMd.fullName = mdTypeName + '.' + uniqueRecordName.left(40);
             customMd.protected_x = false;
 
             customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);

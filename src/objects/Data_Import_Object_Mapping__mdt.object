@@ -76,7 +76,7 @@
         <description>The legacy Data Import object name of the object this Data Import Object Mapping is based on.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The API name of the object that this Data Import Object Mapping is based on.</inlineHelpText>
+        <inlineHelpText>The legacy Data Import object name of the object this Data Import Object Mapping is based on.</inlineHelpText>
         <label>Legacy Data Import Object Name</label>
         <length>255</length>
         <required>false</required>
