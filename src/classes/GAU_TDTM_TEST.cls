@@ -35,6 +35,10 @@
 */
 @isTest
 private with sharing class GAU_TDTM_TEST {
+
+    /*******************************************************************************************************
+     * @description Confirms GAUs are dispatched to integration gateway on before delete
+     */
     @isTest
     private static void shouldDispatchGAUsToIntegrationGatewayOnBeforeDelete() {
         List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c> {
@@ -65,5 +69,25 @@ private with sharing class GAU_TDTM_TEST {
 
         System.assertEquals(gaus, paramsForMethod.get('triggerOld'),
             'The triggerOld parameter should contain the data from the oldList parameter');
+    }
+
+    /*******************************************************************************************************
+     * @description Confirms GAUs can be deleted (mainly to get coverage for the trigger)
+     */
+    @isTest
+    private static void shouldDeleteGAUs() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c> {
+            new General_Accounting_Unit__c(Name = 'TEST_GAU'),
+            new General_Accounting_Unit__c(Name = 'TEST_GAU1'),
+            new General_Accounting_Unit__c(Name = 'TEST_GAU2')
+        };
+
+        insert gaus;
+
+        Test.startTest();
+        delete gaus;
+        Test.stopTest();
+
+        System.assert([SELECT Id FROM General_Accounting_Unit__c].isEmpty(), 'The GAUs should have been deleted');
     }
 }
