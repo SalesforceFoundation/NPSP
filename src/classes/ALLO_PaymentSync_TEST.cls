@@ -259,8 +259,8 @@ private with sharing  class ALLO_PaymentSync_TEST {
         System.assertEquals(null, queryAllocations[2].Opportunity__c, 'Only Payment allocations should have been created');
 
         //original payment allocations
-        assertAllocation(queryAllocations[0], 300, gaus[1].Id, false);
-        assertAllocation(queryAllocations[1], 500, gaus[0].Id, false);
+        assertAllocation(queryAllocations[1], 300, gaus[1].Id, false);
+        assertAllocation(queryAllocations[2], 500, gaus[0].Id, false);
     }
 
     /*******************************************************************************************************

@@ -86,11 +86,22 @@
         <label>General Accounting Unit</label>
         <lookupFilter>
             <active>true</active>
+            <booleanFilter>(1 AND 2) OR 3</booleanFilter>
             <errorMessage>Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit.</errorMessage>
             <filterItems>
                 <field>General_Accounting_Unit__c.Active__c</field>
                 <operation>equals</operation>
                 <value>True</value>
+            </filterItems>
+            <filterItems>
+                <field>$Source.Payment__c</field>
+                <operation>equals</operation>
+                <value></value>
+            </filterItems>
+            <filterItems>
+                <field>$Source.Payment__c</field>
+                <operation>notEqual</operation>
+                <value></value>
             </filterItems>
             <infoMessage>You must select an active General Accounting Unit for this Allocation.</infoMessage>
             <isOptional>false</isOptional>
