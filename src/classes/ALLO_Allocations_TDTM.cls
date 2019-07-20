@@ -432,10 +432,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (!setPmtIds.isEmpty()) {
                 for (npe01__OppPayment__c pmt : listPmts) {
 
-                    if (pmt.npe01__Written_Off__c) {
-                        continue;
-                    }
-
                     //we have allocations for this payment
                     if (setPmtIds.contains(pmt.Id)) {
                         //this pmt has allocations, check for default cases
@@ -521,8 +517,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     if (mapWrapper.containsKey(opp.Id)){
                         alloWrapper oppWrap = mapWrapper.get(opp.Id);
                         dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.listAllo);
-                        if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo!=null)
+                        if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo!=null) {
                             dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
+                        }
                     }
                 }
 
@@ -559,9 +556,17 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 List<Allocation__c> listAlloForInsert = new List<Allocation__c>();
 
                 //add only allocations to active GAUs
-                for (Allocation__c allo : wrap.listAllo.deepclone())
-                    if (allo.General_Accounting_Unit__r.Active__c)
+                for (Allocation__c allo : wrap.listAllo.deepclone()) {
+
+                    // If it's a payment, don't filter out the active allocations. 
+                    if (sObj instanceof npe01__OppPayment__c) {
                         listAlloForInsert.add(allo);
+                    } else {
+                        if (allo.General_Accounting_Unit__r.Active__c) {
+                            listAlloForInsert.add(allo);
+                        }
+                    }
+                }
 
                 Decimal amount = (Decimal)(sObj instanceof Opportunity ? sObj.get('Amount') : sObj.get('npe01__Payment_Amount__c'));
                 Decimal remainder = amount;
