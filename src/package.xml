@@ -229,6 +229,8 @@
         <members>ERR_Notifier_TEST</members>
         <members>ERR_ParentAccountUpdater2_TEST</members>
         <members>ERR_ParentAccountUpdater_TEST</members>
+        <members>GAU_TDTM</members>
+        <members>GAU_TDTM_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -439,6 +441,8 @@
         <members>UTIL_IScheduled</members>
         <members>UTIL_IntegrationConfig</members>
         <members>UTIL_IntegrationConfig_TEST</members>
+        <members>UTIL_IntegrationGateway</members>
+        <members>UTIL_IntegrationGateway_TEST</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
         <members>UTIL_LightningComponentSupport</members>
@@ -590,6 +594,7 @@
         <members>TDTM_Contact</members>
         <members>TDTM_EngagementPlan</members>
         <members>TDTM_EngagementPlanTask</members>
+        <members>TDTM_GeneralAccountingUnit</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Level</members>
