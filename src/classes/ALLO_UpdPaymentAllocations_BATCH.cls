@@ -48,22 +48,36 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     private Integer reviewCnt;
     private Boolean paymentAllocConfigurationValid;
 
-    public ALLO_UpdPaymentAllocations_BATCH() {
+   /**
+     * Constructor (takes no arguments)
+     */
+     public ALLO_UpdPaymentAllocations_BATCH() {
         super();
         initialize();
     }
 
+    /**
+     * Constructor (takes batchSize as parameters)
+     * @param  batchSize Controls the number of records that can be processed in a batch
+     */
     public ALLO_UpdPaymentAllocations_BATCH(Integer batchSize) {
         super(batchSize);
         initialize();
     }
 
-
+    /**
+     * Constructor (takes batchSize, additionalWhere as parameters)
+     * @param  batchSize Controls the number of records that can be processed in a batch
+     * @param  additionalWhereClause Any additional whereclause fragment to add to the batch job
+     */
     public ALLO_UpdPaymentAllocations_BATCH(Integer batchSize, String additionalWhereClause) {
         super(batchSize, additionalWhereClause);
         initialize();
     }
 
+    /**
+     * @description Sets up various tracking/usage variables, and looks up the current boundary timestamp (or defaults it if not already present)
+     */
     private void initialize() {
         this.recCnt = 0;
         this.reviewCnt = 0;
@@ -73,9 +87,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     }
 
     /**
-     * Overridable method called from the start method for any implementing classes logic just prior to execution of start.  firstChunk will be true
-     * if running in non LDV mode, or if it is the first chunk of the batch.  This can be used to trigger logic at the start of the batch, including
-     * recording a timestamp for last executed to use in future batches
+     * @description Called on Batches start.  Used to capture the jobStart timestamp, and to validate the Payment Allocations configuration
      * @param bc BatchableContext provided by Salesforce
      * @param firstChunk Boolean indicating this is the first execution of the start method.
      */
@@ -86,6 +98,11 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
         this.paymentAllocConfigurationValid = validatePaymentAllocationsConfiguration();
     }
 
+    /**
+     * @description Validates that Payment Allocations are configured correctly.  Returns false if not correct.  Also logs an error.
+     * Returns true, if there are no Payment Allocation configuration Issues
+     * @returns Boolean true if Payment Allocations Config is valid, and false otherwise
+     */
     private Boolean validatePaymentAllocationsConfiguration() {
         List<String> paCfgProblems = ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();
         if (paCfgProblems.size() > 0) {
@@ -100,6 +117,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
 
     /**
      * @description Actual processing occurs in this method
+     * @param bc BatchableContext
      * @param records The list of records returned for this batch, filtered for any additionalWhere clause added, and including the fields/subqueries configured for this batch
      */
     public override void doExecute(Database.BatchableContext bc, List<SObject>records ) {
@@ -115,6 +133,12 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     }
 
 
+    /**
+     * @description Takes a set of Ids, and adds additional record Ids to it from the list of records
+     * @param Set<Id> ids The set of Ids to add to
+     * @param List<SObject> records The records to be added to the Set of Ids
+     * @return Set<Id> the updated Set of Ids
+     */
     private Set<Id> addIdsForRecords(Set<Id> ids, List<SObject> records) {
 
         for (SObject rec : records) {
@@ -124,14 +148,15 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     }
 
     /**
-     * @description Required to set the main object the batch executes against
+     * @description In this case, the main driver will be the Opportunity
+     * @return Opportunity's SObjectType
      */
     public override SObjectType getSObjectType() {
         return Opportunity.getSObjectType();
     }
 
     /**
-     * Returns Full Query's Field List
+     * @description Returns Full Query's Field List
      * @return String SOQL Query fragment consisting of fields and subqueries to retrieve, part between outer select and from
      */
     public override String getSOQLFullQueryFieldList() {
@@ -155,7 +180,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     }
 
     /**
-     * Overridable If Payment Allocations Configuration is Invalid, it will short circuit the batch so it does not process any records
+     * @description If Payment Allocations Configuration is Invalid, it will short circuit the batch so it does not process any records
      * @return String Where clause
      */
     public override String getWhereClause() {
@@ -164,8 +189,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     }
 
     /**
-     * @description Called on completion of the batch job.  If this is running LDV Mode it may be called more than once.  All but the last invocation will
-     * have an isComplete value of false.  This method isd similar in nature/roughly equivalent to the finish method of a standard Apex Batch job
+     * @description Records the most recent time this job started.  This is set only in the final iteration.
      * @param bc BatchableContext
      * @param isComplete boolean value that indicates whether or not this is the final invocation, or will be executing against additional chunks
      */
