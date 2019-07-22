@@ -25,7 +25,6 @@ Add New Contact to Existing Household
     Click Button       title=Save
     Unselect Frame
     Wait Until Page Contains    Account Owner
-    Capture Page SCreenshot
     Wait For Record To Update    &{contact}[AccountId]    &{contact}[LastName] and ${last_name} Household
     Select Tab    Related
     Load Related List    Contacts
