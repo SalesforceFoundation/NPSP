@@ -36,6 +36,11 @@
 */
 public class BDI_ManageAdvancedMappingCtrl {
 
+    /** @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed) */
+    public string getNamespacePrefix() {
+        return UTIL_Namespace.getNamespace();
+    }
+
     /*******************************************************************************************************
     * @description Instance of BDI_FieldMappingCustomMetadata
     */
