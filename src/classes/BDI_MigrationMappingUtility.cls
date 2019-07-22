@@ -554,7 +554,8 @@ public with sharing class BDI_MigrationMappingUtility {
         public DataImportObjectMapping(Data_Import_Object_Mapping__mdt objectMapping) {
             this.objectMapping = objectMapping;
             this.predecessor = objectMapping.Predecessor__c;
-            if (objectMapping.Predecessor__c == null) {
+            if (objectMapping.Predecessor__c == null &&
+                objectMapping.Relationship_To_Predecessor__c == null) {
                 objectMapping.Relationship_To_Predecessor__c = null;
             }
             this.uniqueRecordName = generateUniqueRecordName(objectMapping.DeveloperName);
