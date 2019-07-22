@@ -46,6 +46,8 @@ public with sharing class UTIL_Query {
 
     /** @description Operator AND used in the WHERE clause */
     private static final String AND_OPERATOR = ' AND ';
+    /** @description SELECT field to be returned if requested and the Org is a Multi Currency Enabled Org */
+    private static final String CURRENCYISOCODE_FIELD = 'CurrencyIsoCode';
 
     /** @description Contains field names used in the SOQL' SELECT segment */
     private String[] selectFields = new String[0];
@@ -82,6 +84,17 @@ public with sharing class UTIL_Query {
     */
     public UTIL_Query withSelectFields(String[] fieldNames) {
         selectFields.addAll(fieldNames);            
+        return this;
+    }
+
+    /*********************************************************************************************************
+    * @description Registers the CurrencyIsoCode Field as part of SELECT field list if in a MultiCurrency Org
+    * @return UTIL_Query The instance of the Query builder
+    */
+    public UTIL_Query withMultiCurrencyField() {
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            selectFields.add(CURRENCYISOCODE_FIELD);
+        }
         return this;
     }
 

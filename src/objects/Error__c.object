@@ -145,6 +145,29 @@
         <type>LongTextArea</type>
         <visibleLines>10</visibleLines>
     </fields>
+     <fields>
+        <fullName>Record_Id__c</fullName>
+        <description>The Salesforce Id of the record associated with this error.</description>
+        <externalId>true</externalId>
+        <inlineHelpText>The Salesforce Id of the record associated with this error.</inlineHelpText>
+        <label>Record Id</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Retry_Pending__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If checked, the record entered in Record Id will be reprocessed in the next available scheduled process. If the reprocessing is successful, this field is then unchecked.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If checked, the record entered in Record Id will be reprocessed in the next available scheduled process.</inlineHelpText>
+        <label>Retry Pending?</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
     <label>Error</label>
     <nameField>
         <displayFormat>{000000}</displayFormat>

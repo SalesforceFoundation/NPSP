@@ -356,4 +356,29 @@ private class UTIL_Query_TEST {
         System.assertEquals(expectedSoql, soql, 'SOQL should not include toLabel for Salutation field');
     }
 	
+    /*********************************************************************************************************
+    @description
+        Tests SOQL builder for whenMultiCurrencyField()
+    verify:
+        The SOQL contains CurrencyISOCode if in a Multi Currency Org
+    **********************************************************************************************************/
+    @isTest
+    private static void testSoqlIncludesMultiCurrencyOrgIfMultiCurrencyEnabled() {
+        String[] selectFields = new String[]{
+            'Id', 'Amount'
+        };
+
+        String soql = new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withMultiCurrencyField()
+            .withFrom('Opportunity')
+            .build();
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            System.assert(soql.contains('CurrencyIsoCode'), 'Multi Currency Org: CurrencyIsoCode should be present. SOQL: ' + soql);
+        } else {
+            System.assert(!soql.contains('CurrencyIsoCode'), 'Not a Multi Currency Org: CurrencyIsoCode should NOT be present. SOQL: ' + soql);
+        }
+    }
+
 }
