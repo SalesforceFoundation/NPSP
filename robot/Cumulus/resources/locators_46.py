@@ -27,7 +27,7 @@ npsp_lex_locators={
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
             'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
-            'title':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]',
+            'title':'//div[contains(@class, "slds-card")]/header//a[./span[text()="{}"]]',
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
             'item':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//h3//a",
             'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
@@ -120,6 +120,7 @@ npsp_lex_locators={
         'record':'//tbody//a[text()= "{}"]',
         'button': "css: div.windowViewMode-normal ul.forceActionsContainer.oneActionsRibbon a[title='{}']",
         'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
+        'field-value':'//tbody/tr[./th//a[text()="{}"]]/td[.//span[text()="{}"]]',
         
     },
     'engagement_plan':{
