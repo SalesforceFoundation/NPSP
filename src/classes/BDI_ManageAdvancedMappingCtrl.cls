@@ -35,6 +35,11 @@
 * @description Visualforce page Controller for the Manage Advanced Mappings VF page
 */
 public class BDI_ManageAdvancedMappingCtrl {
+    
+    /** @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed) */
+    public string getNamespacePrefix() {
+        return UTIL_Namespace.getNamespace();
+    }
 
     /*******************************************************************************************************
     * @description Instance of BDI_FieldMappingCustomMetadata
@@ -223,7 +228,7 @@ public class BDI_ManageAdvancedMappingCtrl {
 
 
     /*******************************************************************************************************
-    * @description Converts a JSON string of a DataImporObjectMappingWrapper to an instance of
+    * @description Converts a JSON string of a DataImportObjectMappingWrapper to an instance of
     * Data_Import_Object_Mapping__mdt. 
     *
     * @param objectMappingString: DataImportFieldMappingWrapper as JSON
