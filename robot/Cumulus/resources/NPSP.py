@@ -851,14 +851,16 @@ class NPSP(object):
         while True:
             i += 1
             if i > 14:
+                self.selenium.capture_page_screenshot()
                 raise AssertionError(
                     "Timed out waiting for batch with locator {} to load.".format(locator)
                 )
-            try:
-                self.selenium.wait_until_element_is_visible(locator)
-                break
-            except Exception:
-                time.sleep(15)    
+            else:    
+                try:
+                    self.selenium.wait_until_element_is_visible(locator)
+                    break
+                except Exception:
+                    time.sleep(15)    
 
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
