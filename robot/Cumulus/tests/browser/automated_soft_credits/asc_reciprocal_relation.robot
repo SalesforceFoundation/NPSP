@@ -43,7 +43,6 @@ Test Case 2
     Select Tab  Related
     Click Related Item Link    Relationships    &{contact1}[FirstName] &{contact1}[LastName]
     Click Button    title=Edit Related Opportunity Contact Role
-    Capture Page Screenshot
     Wait For Locator  record.edit_form
     Click Dropdown            Related Opportunity Contact Role
     Click link    title:Soft Credit
