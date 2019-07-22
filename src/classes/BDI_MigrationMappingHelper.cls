@@ -109,7 +109,7 @@ public class BDI_MigrationMappingHelper {
                     Legacy_Data_Import_Object_Name__c
             FROM Data_Import_Object_Mapping__mdt
             WHERE Data_Import_Object_Mapping_Set__r.DeveloperName = :developerName
-            AND Is_Deleted__c = false];
+                AND Is_Deleted__c = false];
 
         Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName = 
             new Map<String, Data_Import_Object_Mapping__mdt>();
