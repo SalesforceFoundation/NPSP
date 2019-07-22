@@ -2,8 +2,7 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
-Suite Teardown    Capture Screenshot and Delete Records and Close Browser
-# Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
  
 *** Test Cases ***    
@@ -45,8 +44,8 @@ Test Case 2
     Click Related Item Link    Relationships    &{contact1}[FirstName] &{contact1}[LastName]
     Click Button    title=Edit Related Opportunity Contact Role
     Capture Page Screenshot
-    Wait For Locator  record.flexipage_edit_form
-    Click Flexipage Dropdown            Related Opportunity Contact Role
+    Wait For Locator  record.edit_form
+    Click Dropdown            Related Opportunity Contact Role
     Click link    title:Soft Credit
     Click Button    Save
     &{opportunity} =  API Create Opportunity    &{contact1}[AccountId]    Donation    Name=Reciprocal test $500 donation    Amount=500    ${ns}Primary_Contact__c=&{contact1}[Id]  
