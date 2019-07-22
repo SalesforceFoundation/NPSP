@@ -1363,7 +1363,9 @@
         <members>alloBtnSaveAndClose</members>
         <members>alloCampaignExceedsOppAmount</members>
         <members>alloCantAllocateNothing</members>
+        <members>alloDefaultGAUDoesNotExist</members>
         <members>alloDefaultGAUMissing</members>
+        <members>alloDefaultGAUNotActive</members>
         <members>alloDefaultNotEnabled</members>
         <members>alloDefaultNotPercent</members>
         <members>alloDeleteRow</members>
@@ -1378,6 +1380,7 @@
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
         <members>alloPaidPmtsExceedsOpp</members>
+        <members>alloPaymentAllocationBatchConfigError</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPaymentOverallocatedError</members>
         <members>alloPercentExceed100</members>
