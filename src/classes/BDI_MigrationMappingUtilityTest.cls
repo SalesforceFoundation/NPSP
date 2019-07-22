@@ -195,10 +195,10 @@ private class BDI_MigrationMappingUtilityTest {
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
         util.populateListsFromHelpTextMappings();
 
-        System.assertEquals(2, util.badHelpTextMappings.size(),
-            'We have 2 bad help text mappings.');
-        System.assertEquals(5, util.dataImportFieldMappings.size(),
-            'We have 5 good help text mappings.');
+        System.assertEquals(5, util.badHelpTextMappings.size(),
+            'We have 5 bad help text mappings.');
+        System.assertEquals(2, util.dataImportFieldMappings.size(),
+            'We have 2 good help text mappings.');
     }
 
     /*******************************************************************************************************
