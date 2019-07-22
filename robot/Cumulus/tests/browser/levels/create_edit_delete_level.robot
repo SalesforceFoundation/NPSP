@@ -2,8 +2,7 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
-Suite Teardown    Capture Screenshot and Delete Records and Close Browser
-# Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 *** Variables ***
 ${level_name}
