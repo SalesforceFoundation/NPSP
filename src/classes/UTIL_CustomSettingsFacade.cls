@@ -627,6 +627,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         allosettings.Payment_Allocations_Enabled__c = false;
         allosettings.Rollup_N_Day_Value__c = 365;
         allosettings.Use_Fiscal_Year_for_Rollups__c = false;
+        allosettings.LastJobStartTimePaymentAllocations__c = null;
     }
 
     private static void configDataImportSettings(Data_Import_Settings__c dis) {
@@ -794,6 +795,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         allocationsSettings.Payment_Allocations_Enabled__c = mySettings.Payment_Allocations_Enabled__c;
         allocationsSettings.Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c;
         allocationsSettings.Use_Fiscal_Year_for_Rollups__c = mySettings.Use_Fiscal_Year_for_Rollups__c;
+        allocationsSettings.LastJobStartTimePaymentAllocations__c = mySettings.LastJobStartTimePaymentAllocations__c;
         orgAllocationsSettings = allocationsSettings;
         return allocationsSettings;
     }

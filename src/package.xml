@@ -41,6 +41,7 @@
         <members>ADV_PackageInfo_SVC</members>
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
+        <members>ALLO_AllocationsUtil</members>
         <members>ALLO_Allocations_TDTM</members>
         <members>ALLO_Allocations_TEST</members>
         <members>ALLO_MakeDefaultAllocations_BATCH</members>
@@ -53,6 +54,8 @@
         <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
+        <members>ALLO_UpdPaymentAllocations_BATCH</members>
+        <members>ALLO_UpdPaymentAllocations_ERR_BATCH</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -231,6 +234,8 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
+        <members>GAU_TDTM</members>
+        <members>GAU_TDTM_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -444,6 +449,8 @@
         <members>UTIL_IScheduled</members>
         <members>UTIL_IntegrationConfig</members>
         <members>UTIL_IntegrationConfig_TEST</members>
+        <members>UTIL_IntegrationGateway</members>
+        <members>UTIL_IntegrationGateway_TEST</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
         <members>UTIL_LightningComponentSupport</members>
@@ -597,6 +604,7 @@
         <members>TDTM_Contact</members>
         <members>TDTM_EngagementPlan</members>
         <members>TDTM_EngagementPlanTask</members>
+        <members>TDTM_GeneralAccountingUnit</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Level</members>
@@ -749,6 +757,7 @@
         <members>Allocations_Settings__c.Default__c</members>
         <members>Allocations_Settings__c.Excluded_Opp_RecTypes__c</members>
         <members>Allocations_Settings__c.Excluded_Opp_Types__c</members>
+        <members>Allocations_Settings__c.LastJobStartTimePaymentAllocations__c</members>
         <members>Allocations_Settings__c.Payment_Allocations_Enabled__c</members>
         <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
@@ -1359,7 +1368,9 @@
         <members>alloBtnSaveAndClose</members>
         <members>alloCampaignExceedsOppAmount</members>
         <members>alloCantAllocateNothing</members>
+        <members>alloDefaultGAUDoesNotExist</members>
         <members>alloDefaultGAUMissing</members>
+        <members>alloDefaultGAUNotActive</members>
         <members>alloDefaultNotEnabled</members>
         <members>alloDefaultNotPercent</members>
         <members>alloDeleteRow</members>
@@ -1374,6 +1385,7 @@
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
         <members>alloPaidPmtsExceedsOpp</members>
+        <members>alloPaymentAllocationBatchConfigError</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPaymentOverallocatedError</members>
         <members>alloPercentExceed100</members>
