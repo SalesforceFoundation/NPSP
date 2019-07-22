@@ -1730,6 +1730,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You can't create Allocations for an Opportunity with a blank or zero amount.</value>
     </labels>
     <labels>
+        <fullName>alloDefaultGAUDoesNotExist</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>The record selected for the Default General Accounting Unit does not exist.</shortDescription>
+        <value>The value entered for the Default General Accounting Unit does not exist.</value>
+    </labels>
+    <labels>
         <fullName>alloDefaultGAUMissing</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -1737,6 +1745,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Default Allocations are enabled, but no default GAU is selected.</shortDescription>
         <value>You've selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</value>
     </labels>
+    <labels>
+        <fullName>alloDefaultGAUNotActive</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The default General Accounting Unit selected is no longer active.</shortDescription>
+        <value>The value you selected for the Default General Accounting Unit ({0}) is not active.</value>
+    </labels>
+
     <labels>
         <fullName>alloDefaultNotEnabled</fullName>
         <categories>Allocation, Error</categories>
@@ -1849,6 +1866,16 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>alloPaidPmtsExceedsOpp</shortDescription>
         <value>The total allocation of paid payments cannot exceed the opportunity allocation for a GAU.</value>
     </labels>
+
+    <labels>
+        <fullName>alloPaymentAllocationBatchConfigError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>One or more errors were found in the Payment Allocation Configuration.</shortDescription>
+        <value>One or more errors were found in the Payment Allocation Configuration: </value>
+    </labels>
+
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>
         <categories>Allocation, Error</categories>
