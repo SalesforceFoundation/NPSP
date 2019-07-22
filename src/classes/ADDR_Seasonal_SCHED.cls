@@ -35,7 +35,8 @@
 */ 
 public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedulable {
 
-    private static final Integer BATCH_SIZE = 10;
+    private static final Integer BATCH_SIZE = (UTIL_CustomSettingsFacade.getHouseholdsSettings().Seasonal_Addresses_Batch_Size__c != null) ?
+            UTIL_CustomSettingsFacade.getHouseholdsSettings().Seasonal_Addresses_Batch_Size__c.intValue() : 10;
 
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job
