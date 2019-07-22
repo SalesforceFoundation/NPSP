@@ -6,13 +6,8 @@ import createDataImportObjectMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportObjectMapping';
 import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
 
-/*
-const normalActions = [
-    { label: 'View Field Mappings', name: 'goToFieldMappings' },
-    { label: 'Edit', name: 'edit' },
-    { label: 'Delete', name: 'delete' },
-];
-*/
+import stgUnknownError from '@salesforce/label/c.stgUnknownError';
+
 export default class bdiObjectMappings extends LightningElement {
     @track displayObjectMappings = true;
     @track isLoading = true;
@@ -25,17 +20,7 @@ export default class bdiObjectMappings extends LightningElement {
     deploymentTimer;
     deploymentTimeout = 10000;
 
-    @api diObjectMappingSetId;
-
-    @api
-    refresh() {
-        console.log('in refresh outside of displayObjectMappings check.');
-        if (this.displayObjectMappings) {
-            console.log('in refresh');
-            this.isLoading = true;
-            this.retrieveObjectMappings();
-        }
-    }
+    diObjectMappingSetDevName;
 
     constructor() {
         super();
@@ -50,24 +35,37 @@ export default class bdiObjectMappings extends LightningElement {
             {type: 'action', typeAttributes: { rowActions: this.getRowActions }}];
     }
 
-    handleNavButton() {
-        fireEvent(this.pageRef, 'showfieldmappings');
-    }
-
+    /*******************************************************************************
+    * @description Called when the component is first loaded to set up listeners and 
+    * prepare data.
+    */
     connectedCallback() {
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
         registerListener('deploymentResponse', this.handleDeploymentResponse, this);
         registerListener('startDeploymentTimeout', this.handleDeploymentTimeout, this);
-        registerListener('deleteRowFromTable', this.handleDeleteRowFromTable, this);
         registerListener('refresh', this.refresh, this);
 
         this.retrieveObjectMappings();
         this.retrieveObjectOptions();
     }
 
+    /*******************************************************************************
+    * @description Called when the component is unloaded to unregister event listeners.
+    */
     disconnectedCallback() {
         unregisterAllListeners(this);
+    }
+
+    /*******************************************************************************
+    * @description Refreshes object mappings data.  Usually called after save/delete.
+    */
+    @api
+    refresh() {
+        if (this.displayObjectMappings) {
+            this.isLoading = true;
+            this.retrieveObjectMappings();
+        }
     }
 
     /*******************************************************************************
@@ -75,16 +73,15 @@ export default class bdiObjectMappings extends LightningElement {
     * a list of all non-deleted object mappings
     */
     retrieveObjectMappings() {
-        console.log('in retrieveObjectMappings');
         getObjectMappings()
             .then((data) => {
                 this.objectMappings = data;
-                this.diObjectMappingSetId = this.objectMappings[0].Data_Import_Object_Mapping_Set;
+                this.diObjectMappingSetDevName = this.objectMappings[0].Data_Import_Object_Mapping_Set_Dev_Name;
                 this.isLoading = false;
             })
             .catch((error) => {
-                console.log(error);
                 this.isLoading = false;
+                this.handleError(error);
             });
     }
 
@@ -99,6 +96,7 @@ export default class bdiObjectMappings extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
+                this.handleError(error);
             });
     }
     
@@ -118,6 +116,7 @@ export default class bdiObjectMappings extends LightningElement {
         this.objectMapping = event.objectMapping;
         this.displayObjectMappings = false;
     }
+
     /*******************************************************************************
     * @description Opens the object mapping modal passing in the relevant details
     */
@@ -134,33 +133,27 @@ export default class bdiObjectMappings extends LightningElement {
     * @param event: Event containing row details of the action
     */
     handleRowAction(event) {
-        console.log('bdiObjectMappings | handleRowAction()');
         const actionName = event.detail.action.name;
         const row = event.detail.row;
         let rowString;
         switch (actionName) {
             case 'goToFieldMappings':
-                console.log('GOTOFIELDMAPPING ACTION');
                 fireEvent(this.pageRef,'showfieldmappings', {objectMapping:row});
                 break;
 
             case 'delete':
-                console.log('DELETE ACTION');
-                console.log(this.log(row));
                 this.isLoading = true;
                 
                 row.Is_Deleted = true;
-                row.Data_Import_Object_Mapping_Set = 'Default_Object_Mapping_Set';
+                row.Data_Import_Object_Mapping_Set = this.diObjectMappingSetDevName;
 
                 rowString = JSON.stringify(row);
 
                 createDataImportObjectMapping({objectMappingString: rowString})
                     .then((deploymentId) => {
-                        console.log('Delete deployment Id is: ' + deploymentId);
                         this.handleDeleteDeploymentId(deploymentId);
                     })
                     .catch((error) => {
-                        console.log(error);
                         this.isLoading = false;
                         this.showToast(
                             'Error',
@@ -172,8 +165,6 @@ export default class bdiObjectMappings extends LightningElement {
                 break;
 
             case 'edit':
-                console.log('EDIT ACTION');
-                console.log('Row: ', this.log(row));
                 fireEvent(this.pageRef,'openModal', {
                     row: row });
                 break;
@@ -182,44 +173,25 @@ export default class bdiObjectMappings extends LightningElement {
         }
     }
 
-
-
-    handleDeleteRowFromDatatable(row) {
-        const { DeveloperName } = row;
-        const index = this.findRowIndexById(DeveloperName);
-        if (index !== -1) {
-            this.objectMappings = this.objectMappings
-                .slice(0, index)
-                .concat(this.objectMappings.slice(index + 1));
-        }
-    }
-    
-    findRowIndexById(DeveloperName) {
-        let ret = -1;
-        this.objectMappings.some((row, index) => {
-            if (row.DeveloperName === DeveloperName) {
-                ret = index;
-                return true;
-            }
-            return false;
-        });
-        return ret;
-    }
-    
+    /*******************************************************************************
+    * @description Dynamically gets the appropriate row actions depending on whether 
+    * it is a core object mapping.
+    */
     getRowActions(row, doneCallback) {
         const actions = [
             { label: 'View Field Mappings', name: 'goToFieldMappings' }
         ];
 
-        if(row.Relationship_To_Predecessor !== 'No Predecessor'){
+        if (row.Relationship_To_Predecessor !== 'No Predecessor') {
             actions.push({ label: 'Edit', name: 'edit' });
             actions.push({ label: 'Delete', name: 'delete' });
         }
+
         setTimeout(() => {
             doneCallback(actions); 
         }, 0);
     }
-
+    
     /*******************************************************************************
     * @description Handles the timeout toast of deployments whenever a deployment
     * that's registered with platformEventListener takes 10 seconds or longer to
@@ -228,10 +200,8 @@ export default class bdiObjectMappings extends LightningElement {
     handleDeploymentTimeout(event) {
         if (this.displayObjectMappings) {
             let that = this;
-            console.log('inHandleDeploymentTimeout');
             this.deploymentTimer = setTimeout(function() {
                 that.isLoading = false;
-                console.log('ObjectMapping isLoading set to false on timeout');
                 fireEvent(this.pageRef, 'closeModal', {});
                 that.showToast(
                     'Mapping Group deployment is taking longer than expected.',
@@ -245,15 +215,15 @@ export default class bdiObjectMappings extends LightningElement {
 
     /*******************************************************************************
     * @description Listens for an event from the platformEventListener component.
-    * Upon receiving an event refreshes the field mappings records, closes the modal,
+    * Upon receiving an event refreshes the object mappings records, closes the modal,
     * and creates a toast.
     *
     * @param {object} platformEvent: Object containing the platform event payload
     */
     handleDeploymentResponse(platformEvent) {
-        console.log('In handleDeploymentResponse');
+
         if (this.displayObjectMappings) {
-            console.log('In handleDeploymentResponse displayObjectMappings is true');
+
             clearTimeout(this.deploymentTimer);
             fireEvent(this.pageRef, 'refresh', {});
             fireEvent(this.pageRef, 'closeModal', {});
@@ -262,20 +232,12 @@ export default class bdiObjectMappings extends LightningElement {
             const status = payload.Status__c || payload.npsp__Status__c;
             const deploymentId = payload.DeploymentId__c || payload.npsp__DeploymentId__c;
 
-            /*
-            this.showToast(
-                'Deployment completed with Status: ' + status,
-                'Deployment Id: ' + deploymentId,
-                'success');
-                */
             if (status === 'Succeeded') {
                 this.showToast(
                     'Deployment completed with Status: ' + status,
                     'Deployment Id: ' + deploymentId,
                     'success');
             } else {
-                console.log('In handleDeploymentResponse displayObjectMappings is true');
-                console.log
                 this.showToast(
                     'Deployment completed with Status: ' + status,
                     'Deployment Id: ' + deploymentId,
@@ -326,17 +288,18 @@ export default class bdiObjectMappings extends LightningElement {
         this.dispatchEvent(event);
     }
 
-    // TODO: Delete later
     /*******************************************************************************
-    * @description Parse proxy objects for debugging, mutating, etc
+    * @description Creates and dispatches an error toast
     *
-    * @param object: Object to be parsed
+    * @param {object} error: Event holding error details
     */
-    log(object) {
-        return JSON.parse(JSON.stringify(object));
-    }
-
-    logBold(string) {
-        return console.log('%c ' + string, 'font-weight: bold; font-size: 16px;');
+    handleError(error) {
+        if (error && error.status && error.body) {
+            this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
+        } else if (error && error.name && error.message) {
+            this.showToast(`${error.name}`, error.message, 'error', 'sticky');
+        } else {
+            this.showToast(stgUnknownError, '', 'error', 'sticky');
+        }
     }
 }

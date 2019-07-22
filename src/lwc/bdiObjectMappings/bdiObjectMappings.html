@@ -1,36 +1,21 @@
 <template>
-    <style>
-        .slds-button_extension-back {
-            height: 40px;
-            color: #006DCC;
-            font-family: "Salesforce Sans";
-            font-size: 13px;
-            line-height: 40px;
-            font-weight: 300;
-        }
-    </style>
     <template if:true={displayObjectMappings}>
         
         <c-bdi-object-mapping-modal
             is-modal-open={isModalOpen}
             object-options={objectOptions}
             object-mappings={objectMappings}
-            di-object-mapping-set-id={diObjectMappingSetId}>
+            di-object-mapping-set-dev-name={diObjectMappingSetDevName}>
         </c-bdi-object-mapping-modal>
 
         <div class="slds-grid slds-wrap slds-m-bottom_small">
-            <div class="slds-size_1-of-2 slds-m-bottom_small">
-                <a class="slds-text-title_caps slds-button slds-button_extension-back"
-                    href="/lightning/n/NPSP_Settings">
-                    Back to NPSP Settings
-                </a>
-                <!--
-                <lightning-button
-                    variant="base"
-                    label="BACK TO NPSP SETTINGS"
-                    onclick={handleNavButton}>
-                </lightning-button>
-                -->
+            <div class="slds-size_1-of-2">
+                <lightning-breadcrumbs>
+                    <lightning-breadcrumb
+                        label="Back to NPSP Settings"
+                        href="/lightning/n/NPSP_Settings">
+                    </lightning-breadcrumb>
+                </lightning-breadcrumbs>
             </div>
             <div class="slds-size_1-of-2 slds-m-bottom_small">
                 <lightning-button
@@ -51,7 +36,10 @@
                     of the same type and relate them to each other.
                     </p>
 
-                    <p class="slds-text-body_small">Find complete Advanced Mapping setup documentation here.</p>
+                    <p class="slds-text-body_small">
+                        <span>Find complete Advanced Mapping setup documentation </span>
+                        <a href="https://powerofus.force.com/" target="_blank">here</a>.
+                    </p>
             </div>
             <div class="slds-size_1-of-1 slds-m-bottom_small">
                 <div class="slds-grid slds-wrap">

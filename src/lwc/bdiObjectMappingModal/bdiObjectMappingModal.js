@@ -6,17 +6,43 @@ import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
 import getRelationshipFieldOptions
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getRelationshipFieldOptions';
+import getMappedDISourceFields
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getMappedDISourceFields';
 import { registerListener, unregisterAllListeners, fireEvent }
     from 'c/pubsubNoPageRef';
 
+// Import Custom Labels
+import bdiBtnClose from '@salesforce/label/c.bdiBtnClose';
+import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
 export default class bdiObjectMappingModal extends LightningElement {
+
+    customLabels = {
+        bdiBtnClose,
+        stgUnknownError
+    };
+
+    excludedDIFields = ['ownerid',
+                    'ApexJobId__c',
+                    'Campaign_Member_Status__c',
+                    'DonationCampaignImportStatus__c',
+                    'DonationCampaignImported__c',
+                    'Donation_Campaign_Name__c',
+                    'Donation_Donor__c',
+                    'Donation_Possible_Matches__c',
+                    'FailureInformation__c',
+                    'ImportedDate__c',
+                    'NPSP_Data_Import_Batch__c',
+                    'Payment_Possible_Matches__c',
+                    'Status__c'];
+
     @api objectMappings;
     @api objectOptions;
     @api isModalOpen = false;
-    @api diObjectMappingSetId;
+    @api diObjectMappingSetDevName;
 
     @track isLoading;
+    @track inSave = false;
     @track row;
 
     @track modalTitle;
@@ -26,57 +52,92 @@ export default class bdiObjectMappingModal extends LightningElement {
     @track objectMappingOptions;
     @track relationshipFieldOptions;
 
-    @track hasObjectNameErrors;
+    alreadyMappedDIFieldsMap;
+    dataImportFieldData;
+    dataImportFieldMappingSourceNames;
 
     constructor() {
         super();
-        //this.escapeFunction = this.escapeFunction.bind(this);
+        this.escapeFunction = this.escapeFunction.bind(this);
     }
 
+    /*******************************************************************************
+    * @description Determines whether the relationship field (ie 'Through this field') field
+    * is disabled or not based on whether there are relationship field options and if it is post-save
+    * or if theres is already a relationship field value.
+    */
     get isRelationshipFieldDisabled() {
-        console.log('In isRelationshipField disabled');
-        if (this.row.Relationship_Field || this.relationshipFieldOptions ) {
-            console.log('returning false');
+        if (this.row.Relationship_Field || this.relationshipFieldOptions || this.inSave) {
             return false;
         }
-        console.log('returning true');
         return true;
     }
-
+    /*******************************************************************************
+    * @description Dynamically determines style classes for the section.
+    */
     get sectionClasses() {
         return this.isModalOpen ? 'slds-modal slds-fade-in-open' : 'slds-modal slds-hidden';
     }
-
+    /*******************************************************************************
+    * @description Dynamically determines style classes for the backdrop.
+    */
     get backdropClasses() {
         return this.isModalOpen ? 'slds-backdrop slds-backdrop_open' : 'slds-backdrop';
     }
 
+    /*******************************************************************************
+    * @description Method called when the component is first instantiated
+    */
     connectedCallback() {
         document.addEventListener("keydown", this.escapeFunction, false);
+
         registerListener('openModal', this.handleOpenModal, this);
         registerListener('closeModal', this.handleCloseModal, this);
         registerListener('objectNameChange',this.handleObjectAPINameChange,this);
+
         this.setDefaultValues();
-        console.log('In connected Callback');
-        this.handleGetDataImportFieldDescribes();
-        console.log('In connected Callback after describes');
+        this.getDataImportFieldDescribes();
+        this.getDataImportMappedFields();
     }
 
+    /*******************************************************************************
+    * @description Gets the list of Data Import field names that have already been 
+    * mapped to field mappings.
+    */
+    getDataImportMappedFields() {
+        getMappedDISourceFields()
+            .then((data) => {
+                this.dataImportFieldMappingSourceNames = data;
+            })
+            .catch((error) => {
+                this.isLoading = false;
+                this.handleError(error);
+            });
+    }
+
+    /*******************************************************************************
+    * @description Method called when the component is removed.
+    */
     disconnectedCallback() {
-        this.logBold('Modal | disconnectedCallback()');
         document.removeEventListener("keydown", this.escapeFunction, false);
         unregisterAllListeners(this);
     }
 
+    /*******************************************************************************
+    * @description Handles escape key press and closes the modal
+    */
     escapeFunction(event) {
         if (event.keyCode === 27) {
             this.handleCloseModal();
         }
     }
 
+    /*******************************************************************************
+    * @description Handles the close modal press and resets the row values to default
+    */
     handleCloseModal() {
-        console.log('In bdiObjectMappings handleCloseModal');
         this.isModalOpen = false;
+        this.setDefaultValues();    
     }
 
     /*******************************************************************************
@@ -86,13 +147,11 @@ export default class bdiObjectMappingModal extends LightningElement {
     * @param event: Event containing row details or lack of row details
     */
     handleOpenModal(event) {
-        this.logBold('bdiObjectMappingModal | handleOpenModal()');
         this.isModalOpen = true;
         this.isLoading = true;
         let that = this;
         let data = event;
         
-        console.log('before load modal data');
         setTimeout(function() {
             that.loadModalData(data);
         }, 1, [that, data]);
@@ -104,243 +163,368 @@ export default class bdiObjectMappingModal extends LightningElement {
     * @param data: Event data containing row details or lack of row details
     */
     loadModalData(data) {
-        this.logBold('bdiObjectMappingModal | loadModalData()');
+        try {
+            this.getObjectMappingOptions();
+            if (data.row) {
+                // Edit Mode
+                this.row = JSON.parse(JSON.stringify(data.row));
+                this.row.Data_Import_Object_Mapping_Set = this.diObjectMappingSetDevName;
+                this.modalTitle = 'Edit Mapping Group';
 
-        this.getObjectMappingOptions();
-        console.log('mapping data.row');
-        console.log(data.row);
-        if (data.row) {
-            // Edit
-            console.log('Edit');        
-            this.row = JSON.parse(JSON.stringify(data.row));
-            this.row.Data_Import_Object_Mapping_Set = 'Default_Object_Mapping_Set';
-            this.modalTitle = 'Edit Mapping Group';
-            console.log(this.row);
-            this.getRelationshipFieldOptions();
+                this.getRelationshipFieldOptions();
 
-        } else {
-            //New Object mapping
-            this.setDefaultValues();
-            this.modalTitle = 'Create Mapping Group';
+            } else {
+                // New Object mapping Mode
+                this.setDefaultValues();
+                this.modalTitle = 'Create Mapping Group';
+            }
+            this.refreshImportRecordFieldOptions();
+
+            this.isLoading = false;
+        } catch(error) {
+            this.handleError(error);
         }
-
-        console.log('Set isLoading to false');
-        this.isLoading = false;
     }
 
+    /*******************************************************************************
+    * @description Resets the values of the row to the default values
+    */
     setDefaultValues() {
         this.row = {Id: null,
             MasterLabel: null,
             Custom_Mapping_Logic_Class: null,
             DeveloperName: null, 
-            Data_Import_Object_Mapping_Set: 'Default_Object_Mapping_Set', 
+            Data_Import_Object_Mapping_Set: this.diObjectMappingSetDevName, 
             Imported_Record_Field_Name: null,
-            //Imported_Record_Field_Name_Label: null,
             Imported_Record_Status_Field_Name: null,
-            //Imported_Record_Status_Field_Name_Label: '',
             Object_API_Name: null,
             Predecessor: null,
-            //Predecessor_Label: '',
             Relationship_Field: null,
-            //Relationship_Field_Label: '',
             Relationship_To_Predecessor: null };
     }
 
+    /*******************************************************************************
+    * @description Handles the save event and calls the processing of the save
+    */
     handleSave() {
-        this.logBold('bdiObjectMappingModal | handleSave()');
         this.isLoading = true;
+        this.inSave = true;
+        let that = this;
+        
+        setTimeout(function() {
+            that.processSave();
+        }, 1, [that]);
+    }
+
+    /*******************************************************************************
+    * @description Validates the fields and then calls the controller method to insert
+    *  a new Object Mapping.
+    */
+    processSave() {
         let rowString;
-        console.log('in handle save row is:');
-        console.log(this.row);
-        if (this.row) {
 
-            console.log('in handle save row after mapping:');
-            console.log(this.row);
+        try {
+            if (this.row) {
+                if (this.validateFields()) {
 
-            rowString = JSON.stringify(this.row);
-
-            createDataImportObjectMapping({objectMappingString: rowString})
-            .then((deploymentId) => {
-                console.log('post createDataImportObjectMapping with data');
-                //console.log(this.log(data));
-                console.log('deployment Id: ' + deploymentId);
-                this.handleDeploymentId(deploymentId);
-            })
-            .catch((error) => {
-                console.log('Error Encountered during object save');
-                console.log(this.log(error));
-                console.log(error);
-                this.isLoading = false;
-                if (error && error.body) {
-                    this.showToast(
-                        'Error',
-                        '{0}. {1}. {2}.',
-                        'error',
-                        'sticky',
-                        [error.body.exceptionType, error.body.message, error.body.stackTrace]);
+                    rowString = JSON.stringify(this.row);
+        
+                    createDataImportObjectMapping({objectMappingString: rowString})
+                    .then((deploymentId) => {
+                        this.handleDeploymentId(deploymentId);
+                    })
+                    .catch((error) => {
+                        this.isLoading = false;
+                        this.handleError(error);
+                    });
+                } else {
+                    this.isLoading = false;
                 }
-            });
-        } 
+            } else {
+                this.isLoading = false;
+            }
+        } catch(error) {
+            this.handleError(error);
+        }
+    }
+
+    /*******************************************************************************
+    * @description Checks whether fields are valid, and returns false if they are not.
+    * Also displays error toast if any fields are not valid.
+    * @return {boolean} Whether or not the fields are valid.
+    */
+    validateFields() {
+
+        let result = [...this.template.querySelectorAll('lightning-combobox,lightning-input')]
+        .reduce((validSoFar, inputCmp) => {
+                    inputCmp.reportValidity();
+                    let inputValid = inputCmp.checkValidity();
+                    return validSoFar && inputValid;
+        }, true);
+
+        if (!result) {
+            this.showToast(
+                'Error',
+                'Missing one or more required fields',
+                'error',
+                'dismissable',
+                null);
+        }
+
+        return result;
     }
 
     /*******************************************************************************
     * @description Creates and dispatches a CustomEvent 'deployment' letting the
     * platformEventListener know that we have an id to register and monitor. After
-    * dispatching the CustomEvent, start the deployment timeout on bdiFieldMappings.
+    * dispatching the CustomEvent, start the deployment timeout on bdiObjectMappings.
     *
     * @param {string} deploymentId: Custom Metadata Deployment Id
     */
     handleDeploymentId(deploymentId) {
-        console.log('Inside handleDeploymentId');
+
         const deploymentEvent = new CustomEvent('deployment', {
             bubbles: true,
             composed: true,
             detail: {deploymentId}
         });
         this.dispatchEvent(deploymentEvent);
-        console.log('Inside handleDeploymentId after dispatch event');
+
         fireEvent(this.pageRef, 'startDeploymentTimeout', { deploymentId: deploymentId });
     }
 
+    /*******************************************************************************
+    * @description Takes the object mappings that have been passed through from the 
+    * bdiObjectMappings component and turns them into picklist options for selecting
+    * the predecessor object mapping.  Right now they are filtered to exclude anything
+    * is not a core object (ie created by the existing bdi code) but in the future could 
+    * allow users to select from any object mapping.
+    */
     getObjectMappingOptions() {
         this.objectMappingOptions = [];
+
         for (let i = 0; i < this.objectMappings.length; i++) {
             if (this.objectMappings[i].Relationship_To_Predecessor === 'No Predecessor') {
                 let objMappingOption = {
-                    label: this.objectMappings[i].MasterLabel + ' (' + this.objectMappings[i].DeveloperName + ')',
+                    label: this.objectMappings[i].MasterLabel,
                     value: this.objectMappings[i].DeveloperName
                 }
                 this.objectMappingOptions.push(objMappingOption);
             }
-
         }
     }
 
+    /*******************************************************************************
+    * @description Dynamically determines what the valid relationship fields options are
+    * for the picklist based on the values of the Object API Name field, the Relationship_To_Predcessor
+    *  and the Predecessor object mapping.
+    */
     getRelationshipFieldOptions() {
         var objectName;
         var lookupToObjectName;
         var predecessor;
-        if (this.row.Object_API_Name && this.row.Relationship_To_Predecessor && this.row.Predecessor) {
-            
-            //Find the predecessor so we know how to filter the options.
-            for (let i = 0; i < this.objectMappings.length; i++) {
-                if (this.objectMappings[i].DeveloperName === this.row.Predecessor) {
-                    predecessor = this.objectMappings[i];
-                }
-            }
-
-            //Set the objects to be queried based on the type of relationship to predecessor.
-            if (this.row.Relationship_To_Predecessor === 'Parent') {
-                objectName = predecessor.Object_API_Name;
-                lookupToObjectName = this.row.Object_API_Name;
+        try {
+            if (this.row.Object_API_Name && this.row.Relationship_To_Predecessor && this.row.Predecessor) {
                 
-            } else if (this.row.Relationship_To_Predecessor === 'Child') {
-                objectName = this.row.Object_API_Name;
-                lookupToObjectName = predecessor.Object_API_Name;
-            }
-    
-            if (objectName) {
-                this.isLoading = true;
-                getRelationshipFieldOptions({objectName: objectName, 
-                                            lookupToObjectName: lookupToObjectName})
-                .then((data) => {
-
-                    //If there are no valid options then null out the values in the list.
-                    if (data.length === 0){
-                        this.relationshipFieldOptions = null;
-                        this.isLoading = false;
-                        this.showToast(
-                            'Warning',
-                            'There are no valid lookup fields to choose from for this combination ' +
-                            '\'of Object Name\', \'Is Child/Parent\', and \'Of This Mapping Group\'.  Please change '+
-                            'one of those fields to try again.',
-                            'warning',
-                            'sticky',
-                            null);
-                        return;
+                //Find the predecessor so we know how to filter the options.
+                for (let i = 0; i < this.objectMappings.length; i++) {
+                    if (this.objectMappings[i].DeveloperName === this.row.Predecessor) {
+                        predecessor = this.objectMappings[i];
                     }
-                    this.relationshipFieldOptions = [];
+                }
 
-                    for (let i = 0; i < data.length; i++) {
-                        let fieldInfo = data[i];
-                        
-                        let relFieldOption = {
-                            label: fieldInfo.label + ' (' + fieldInfo.value + ')',
-                            value: fieldInfo.value
+                //Set the objects to be queried based on the type of relationship to predecessor.
+                if (this.row.Relationship_To_Predecessor === 'Parent') {
+                    objectName = predecessor.Object_API_Name;
+                    lookupToObjectName = this.row.Object_API_Name;
+                    
+                } else if (this.row.Relationship_To_Predecessor === 'Child') {
+                    objectName = this.row.Object_API_Name;
+                    lookupToObjectName = predecessor.Object_API_Name;
+                }
+        
+                if (objectName) {
+                    this.isLoading = true;
+                    getRelationshipFieldOptions({objectName: objectName, 
+                                                lookupToObjectName: lookupToObjectName})
+                    .then((data) => {
+                        let relField = this.template.querySelector("[data-id='throughThisField']");
+
+                        //If there are no valid options then null out the values in the list.
+                        //Also null out any value in the Relationship Field since it must be invalid.
+                        if (data.length === 0){
+                            this.relationshipFieldOptions = null;
+                            this.row.Relationship_Field = null;
+                            this.isLoading = false;
+                            
+                            relField.setCustomValidity('Error: There are no valid relationship fields for the chosen '+
+                                        'combination of "Object Name", "Is Child/Parent", and "Of This Mapping Group"');
+                            relField.reportValidity();
+
+                            return;
                         }
-                        this.relationshipFieldOptions.push(relFieldOption);
-                    }
+                        relField.setCustomValidity('');
 
-                    this.isLoading = false;
-                })
-                .catch((error) => {
-                    this.isLoading = false;
-                    console.log(error);
-                });
+                        this.relationshipFieldOptions = [];
+
+                        for (let i = 0; i < data.length; i++) {
+                            let fieldInfo = data[i];
+                            
+                            let relFieldOption = {
+                                label: fieldInfo.label + ' (' + fieldInfo.value + ')',
+                                value: fieldInfo.value
+                            }
+                            this.relationshipFieldOptions.push(relFieldOption);
+                        }
+
+                        this.isLoading = false;
+                    })
+                    .catch((error) => {
+                        this.isLoading = false;
+                        this.handleError(error);
+                    });
+                }
+
+            } else {
+                //Clearing out the relationship field options, and clearing any value in the
+                //Relationship Field so that it cannot be saved with a bad value.
+                this.relationshipFieldOptions = null;
+                this.row.Relationship_Field = null;
             }
-
-        } else {
-            this.relationshipFieldOptions = null;
+        } catch(error) {
+            this.handleError(error);
         }
     }
 
-   handleGetDataImportFieldDescribes() {
-    getObjectFieldDescribes({objectName: 'DataImport__c'})
-        .then((data) => {
-            this.diImportRecordFieldOptions = [];
-            this.diImportRecordStatusFieldOptions = [];
+    /*******************************************************************************
+    * @description Retrieves the field descriptions for the fields on the Data Import Object
+    * and then calls 'refreshImportRecordFieldOptions' which determines which fields are available
+    * for the ImportedRecordFieldName and ImportedRecordStatusField Name picklists.
+    */    
+    getDataImportFieldDescribes() {
+        getObjectFieldDescribes({objectName: 'DataImport__c'})
+            .then((data) => {
+                this.dataImportFieldData = data;
+                this.refreshImportRecordFieldOptions();
+            })
+            .catch((error) => {
+                this.handleError(error);
+            });
+    }
 
-            let diFieldsByLabel = {}, diFieldsByAPIName = {};
+    /*******************************************************************************
+    * @description Generates the picklist options for the for the ImportedRecordFieldName 
+    * and ImportedRecordStatusField Name picklists.  It does this by by filtering the list
+    * of Data Import fields to exclude those that are already mapped either to field or
+    * object mappings as well as filtering by field type.
+    */  
+    refreshImportRecordFieldOptions() {
+        this.diImportRecordFieldOptions = [];
+        this.diImportRecordStatusFieldOptions = [];
 
-            for (let i = 0; i < data.length; i++) {
-                console.log('data label is: ' + data[i].label);
-                console.log('data displayType is: ' + data[i].displayType);
-                let labelOption = {
-                    label: data[i].label + ' (' + data[i].value + ')',
-                    value: data[i].value
+        let fieldsToExclude = this.getAlreadyMappedDIFields(); 
+        if (fieldsToExclude && this.dataImportFieldData) {
+            
+            for (let i = 0; i < this.dataImportFieldData.length; i++) {
+                let fieldData = this.dataImportFieldData[i];
+
+                if (!fieldsToExclude.has(fieldData.value.toLowerCase())) {
+                    let labelOption = {
+                        label: fieldData.label + ' (' + fieldData.value + ')',
+                        value: fieldData.value
+                    }
+        
+                    if (fieldData.value !== this.row.Imported_Record_Status_Field_Name &&
+                        (fieldData.displayType === 'REFERENCE' || fieldData.displayType === 'STRING')) {
+                        this.diImportRecordFieldOptions.push(labelOption);
+                    }
+        
+                    if (fieldData.value !== this.row.Imported_Record_Field_Name &&
+                        (fieldData.displayType === 'TEXTAREA' || fieldData.displayType === 'STRING')) {
+                        this.diImportRecordStatusFieldOptions.push(labelOption);
+                    }
                 }
-
-                if (data[i].displayType === 'REFERENCE' || data[i].displayType === 'STRING') {
-                    this.diImportRecordFieldOptions.push(labelOption);
-                }
-
-                if (data[i].displayType === 'TEXTAREA' || data[i].displayType === 'STRING') {
-                    this.diImportRecordStatusFieldOptions.push(labelOption);
-                }
-
-                diFieldsByLabel[labelOption.label] = data[i];
-                diFieldsByAPIName[labelOption.value] = data[i];
             }
 
-            this.diFieldsByLabel = diFieldsByLabel;
-            this.diFieldsByAPIName = diFieldsByAPIName;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+            let importedRecordField = this.template.querySelector("[data-id='importedRecordFieldName']");
+            let importedRecordStatusField = this.template.querySelector("[data-id='importedRecordStatusFieldName']");
+
+            if (this.diImportRecordFieldOptions.length === 0) {
+                importedRecordField.setCustomValidity('Error: There are no unmapped fields on the ' + 
+                                    'Data Import object to use for the Imported Record Field Name. ' +
+                                    'Create new fields on the Data Import object if needed.');
+                importedRecordField.reportValidity();
+            } else {
+                importedRecordField.setCustomValidity('');
+            }
+
+            if (this.diImportRecordStatusFieldOptions.length === 0) {
+                importedRecordStatusField.setCustomValidity('Error: There are no unmapped fields on the ' + 
+                                    'Data Import object to use for the Imported Record Status Field Name. ' +
+                                    'Create new fields on the Data Import object if needed.');
+                importedRecordStatusField.reportValidity();
+            } else {
+                importedRecordStatusField.setCustomValidity('');
+            }
+
+            
+            
+        }
     }
 
-
-    // TODO: Delete later
     /*******************************************************************************
-    * @description Parse proxy objects for debugging, mutating, etc
-    *
-    * @param object: Object to be parsed
+    * @description Returns or creates and returns a map of all DI fields already mapped to import 
+    * record fields or that are used in field mappings.  Also includes a static list of miscellaneous
+    * fields that should always be excluded.             
     */
-    log(obj) {
-       return JSON.parse(JSON.stringify(obj));
+    getAlreadyMappedDIFields() {
+        if (this.objectMappings && this.dataImportFieldMappingSourceNames) {
+
+            this.alreadyMappedDIFieldsMap = new Map();
+
+            // Making some baseline exclusions for DI system fields.
+            for (let i = 0; i < this.excludedDIFields.length; i++) {
+                this.alreadyMappedDIFieldsMap.set(this.excludedDIFields[i].toLowerCase(),'');
+            }
+
+            // Add all of the DI field names used for Imported record info
+            for (let i = 0; i < this.objectMappings.length; i++) {
+                let tempObjMapping = this.objectMappings[i];
+
+                if (tempObjMapping.Imported_Record_Field_Name 
+                    && tempObjMapping.Imported_Record_Field_Name !== this.row.Imported_Record_Field_Name) {
+                    this.alreadyMappedDIFieldsMap.set(tempObjMapping.Imported_Record_Field_Name.toLowerCase(),
+                    tempObjMapping.MasterLabel);
+                }
+
+                if (tempObjMapping.Imported_Record_Status_Field_Name
+                    && tempObjMapping.Imported_Record_Status_Field_Name !== this.row.Imported_Record_Status_Field_Name) {
+                    this.alreadyMappedDIFieldsMap.set(tempObjMapping.Imported_Record_Status_Field_Name.toLowerCase(),
+                    tempObjMapping.MasterLabel);
+                }
+            }
+
+            // Add all the field names that have been mapped in field mappings
+            for (let i = 0; i < this.dataImportFieldMappingSourceNames.length; i++) {
+                this.alreadyMappedDIFieldsMap.set(this.dataImportFieldMappingSourceNames[i],'');
+            }
+        }
+        return this.alreadyMappedDIFieldsMap;
     }
 
-    logBold(string) {
-        return console.log('%c ' + string, 'font-weight: bold; font-size: 16px;');
-    }
-    // TODO: END
-
+    /*******************************************************************************
+    * @description Handles the change of the Object API Name field, and refreshes the
+    * relationshipFieldOptions.           
+    */
     handleObjectAPINameChange(event){
         this.row.Object_API_Name = event.detail.value;
         this.getRelationshipFieldOptions();
     }
 
+    /*******************************************************************************
+    * @description Handles the change of the Relationship to Predecessor field, and refreshes the
+    * relationshipFieldOptions.           
+    */
     handleRelationshipToPredChange(event) {
         this.row.Relationship_To_Predecessor = event.detail.value;
         this.getRelationshipFieldOptions();
@@ -350,23 +534,44 @@ export default class bdiObjectMappingModal extends LightningElement {
         this.row.MasterLabel = event.detail.value;
     }
 
+    /*******************************************************************************
+    * @description Handles the change of the Predecessor field, and refreshes the
+    * relationshipFieldOptions.           
+    */
     handlePredecessorChange(event) {
         this.row.Predecessor = event.detail.value;
         this.getRelationshipFieldOptions();
     }
 
+    /*******************************************************************************
+    * @description Handles the change of the Relationship field.
+    */
     handleRelationshipFieldChange(event) {
         this.row.Relationship_Field = event.detail.value;
     }
 
+    /*******************************************************************************
+    * @description Handles the change of the Imported Record Field Name field, and refreshes the
+    * Imported Record field options.           
+    */
     handleImportedRecordFieldNameChange(event) {
         this.row.Imported_Record_Field_Name = event.detail.value;
+        this.refreshImportRecordFieldOptions();
     }
 
+    /*******************************************************************************
+    * @description Handles the change of the Imported Record Status Field Name field, and refreshes the
+    * Imported Record field options.           
+    */
     handleImportedRecordStatusFieldNameChange(event) {
         this.row.Imported_Record_Status_Field_Name = event.detail.value;
+        this.refreshImportRecordFieldOptions();
     }
 
+    /*******************************************************************************
+    * @description Defines the options available to the relationship to predecessor
+    * field.        
+    */
     get predRelationshipOptions() {
         return [
             { label: 'Child', value: 'Child' },
@@ -402,7 +607,6 @@ export default class bdiObjectMappingModal extends LightningElement {
     * @param {object} error: Event holding error details
     */
     handleError(error) {
-        console.log('Error: ', error);
         if (error && error.status && error.body) {
             this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {
@@ -411,16 +615,4 @@ export default class bdiObjectMappingModal extends LightningElement {
             this.showToast(stgUnknownError, '', 'error', 'sticky');
         }
     }
-
-    /*******************************************************************************
-    * @description Sorts a list by a property
-    *
-    * @param {array} list: List to be sorted
-    * @param {string} sortedBy: Property to sort by
-    */
-    sortBy(list, sortedBy) {
-        return list.sort((a, b) => { return (a[sortedBy] > b[sortedBy]) ? 1 : -1} );
-    }
-
-
 }
