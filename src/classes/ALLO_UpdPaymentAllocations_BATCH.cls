@@ -36,6 +36,8 @@
 */
 public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH {
 
+    public class AlloPaymentAllocationBatchException extends Exception { }
+
     public static final String PROCESS_NAME = 'Payment Allocations Batch';
 
     private static Allocations_Settings__c allocationsSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
@@ -44,6 +46,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     private DateTime boundary;
     private Integer recCnt;
     private Integer reviewCnt;
+    private Boolean paymentAllocConfigurationValid;
 
     public ALLO_UpdPaymentAllocations_BATCH() {
         super();
@@ -66,6 +69,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
         this.reviewCnt = 0;
         this.boundary = (allocationsSettings != null && allocationsSettings.LastJobStartTimePaymentAllocations__c != null) ?
                         allocationsSettings.LastJobStartTimePaymentAllocations__c : System.now().addYears(-1);
+
     }
 
     /**
@@ -79,6 +83,19 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
         if (this.jobStart == null) {
             this.jobStart = System.now();
         }
+        this.paymentAllocConfigurationValid = validatePaymentAllocationsConfiguration();
+    }
+
+    private Boolean validatePaymentAllocationsConfiguration() {
+        List<String> paCfgProblems = ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();
+        if (paCfgProblems.size() > 0) {
+            String errorMsg = System.Label.alloPaymentAllocationBatchConfigError + '\r\n' + String.join(paCfgProblems, '\r\n');
+            AlloPaymentAllocationBatchException apabe = new AlloPaymentAllocationBatchException(errorMsg);
+
+            ERR_Handler.processError(apabe, PROCESS_NAME);
+        }
+        // Valid if no messages added
+        return (paCfgProblems.size() == 0);
     }
 
     /**
@@ -88,10 +105,12 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     public override void doExecute(Database.BatchableContext bc, List<SObject>records ) {
         this.recCnt += records.size();
 
+
+
         Set<Id> oppIds = addIdsForRecords(new Set<Id>(), records);
+        ALLO_AllocationsUtil.RecordsForReview recs = ALLO_AllocationsUtil.determineRecordsRequiringReview(oppIds, boundary);
 
-
-
+        this.reviewCnt += recs.oppsById.size();
 
     }
 
@@ -136,11 +155,12 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     }
 
     /**
-     * Overridable test Where Clause to add to the inner query, or non LDV query, if not running in LDV/Chunking mode
-     * @return String ''
+     * Overridable If Payment Allocations Configuration is Invalid, it will short circuit the batch so it does not process any records
+     * @return String Where clause
      */
     public override String getWhereClause() {
-        return '';
+
+        return (!this.paymentAllocConfigurationValid) ? 'Name=\'\'' : '';
     }
 
     /**
@@ -152,6 +172,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     public override void doFinish(Database.BatchableContext bc , Boolean isComplete) {
         if (isComplete) {
             System.debug('Record Count for ' + Opportunity.getSObjectType().getDescribe().getName() + ':' + recCnt);
+            System.debug('Review Count for ' + Opportunity.getSObjectType().getDescribe().getName() + ':' + reviewCnt);
 
             allocationsSettings.LastJobStartTimePaymentAllocations__c = this.jobStart;
             upsert allocationsSettings;
