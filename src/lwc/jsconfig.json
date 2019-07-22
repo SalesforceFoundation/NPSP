@@ -22,6 +22,9 @@
             ],
             "c/utilStencil": [
                 "utilStencil/utilStencil.js"
+            ],
+            "c/bdiObjectMappingModal": [
+                "bdiObjectMappingModal/bdiObjectMappingModal.js"
             ]
         },
         "experimentalDecorators": true
