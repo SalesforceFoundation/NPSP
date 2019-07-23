@@ -267,10 +267,11 @@ public class BDI_Donations {
                 continue;
             }
 
-            // If the donation was created on a previous run, consider the donation import
-            // process finished for this Data Import record.
+            // If the donation was created or matched on a previous run, consider the
+            // donation validated for this Data Import record.
             if (dataImport.DonationImported__c != null
-                    && dataImport.DonationImportStatus__c == System.Label.bdiCreated) {
+                    && (dataImport.DonationImportStatus__c == System.Label.bdiCreated
+                    || dataImport.DonationImportStatus__c == System.Label.bdiMatched)) {
                 continue;
             }
                 
