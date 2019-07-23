@@ -8,6 +8,7 @@ import getRelationshipFieldOptions
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getRelationshipFieldOptions';
 import getMappedDISourceFields
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getMappedDISourceFields';
+
 import { registerListener, unregisterAllListeners, fireEvent }
     from 'c/pubsubNoPageRef';
 
@@ -23,18 +24,18 @@ export default class bdiObjectMappingModal extends LightningElement {
     };
 
     excludedDIFields = ['ownerid',
-                    'ApexJobId__c',
-                    'Campaign_Member_Status__c',
-                    'DonationCampaignImportStatus__c',
-                    'DonationCampaignImported__c',
-                    'Donation_Campaign_Name__c',
-                    'Donation_Donor__c',
-                    'Donation_Possible_Matches__c',
-                    'FailureInformation__c',
-                    'ImportedDate__c',
-                    'NPSP_Data_Import_Batch__c',
-                    'Payment_Possible_Matches__c',
-                    'Status__c'];
+                    'npsp__ApexJobId__c',
+                    'npsp__Campaign_Member_Status__c',
+                    'npsp__DonationCampaignImportStatus__c',
+                    'npsp__DonationCampaignImported__c',
+                    'npsp__Donation_Campaign_Name__c',
+                    'npsp__Donation_Donor__c',
+                    'npsp__Donation_Possible_Matches__c',
+                    'npsp__FailureInformation__c',
+                    'npsp__ImportedDate__c',
+                    'npsp__NPSP_Data_Import_Batch__c',
+                    'npsp__Payment_Possible_Matches__c',
+                    'npsp__Status__c'];
 
     @api objectMappings;
     @api objectOptions;
@@ -55,6 +56,8 @@ export default class bdiObjectMappingModal extends LightningElement {
     alreadyMappedDIFieldsMap;
     dataImportFieldData;
     dataImportFieldMappingSourceNames;
+
+    @api namespace;
 
     constructor() {
         super();
@@ -356,13 +359,14 @@ export default class bdiObjectMappingModal extends LightningElement {
                             this.relationshipFieldOptions = null;
                             this.row.Relationship_Field = null;
                             this.isLoading = false;
-                            
+
                             relField.setCustomValidity('Error: There are no valid relationship fields for the chosen '+
                                         'combination of "Object Name", "Is Child/Parent", and "Of This Mapping Group"');
                             relField.reportValidity();
 
                             return;
                         }
+
                         relField.setCustomValidity('');
 
                         this.relationshipFieldOptions = [];
@@ -449,26 +453,27 @@ export default class bdiObjectMappingModal extends LightningElement {
             let importedRecordField = this.template.querySelector("[data-id='importedRecordFieldName']");
             let importedRecordStatusField = this.template.querySelector("[data-id='importedRecordStatusFieldName']");
 
-            if (this.diImportRecordFieldOptions.length === 0) {
-                importedRecordField.setCustomValidity('Error: There are no unmapped fields on the ' + 
-                                    'Data Import object to use for the Imported Record Field Name. ' +
-                                    'Create new fields on the Data Import object if needed.');
-                importedRecordField.reportValidity();
-            } else {
-                importedRecordField.setCustomValidity('');
+            if (importedRecordField) {
+                if (this.diImportRecordFieldOptions.length === 0) {
+                    importedRecordField.setCustomValidity('Error: There are no unmapped fields on the ' + 
+                                        'Data Import object to use for the Imported Record Field Name. ' +
+                                        'Create new fields on the Data Import object if needed.');
+                    importedRecordField.reportValidity();
+                } else {
+                    importedRecordField.setCustomValidity('');
+                }
             }
 
-            if (this.diImportRecordStatusFieldOptions.length === 0) {
-                importedRecordStatusField.setCustomValidity('Error: There are no unmapped fields on the ' + 
-                                    'Data Import object to use for the Imported Record Status Field Name. ' +
-                                    'Create new fields on the Data Import object if needed.');
-                importedRecordStatusField.reportValidity();
-            } else {
-                importedRecordStatusField.setCustomValidity('');
+            if (importedRecordStatusField) {
+                if (this.diImportRecordStatusFieldOptions.length === 0) {
+                    importedRecordStatusField.setCustomValidity('Error: There are no unmapped fields on the ' + 
+                                        'Data Import object to use for the Imported Record Status Field Name. ' +
+                                        'Create new fields on the Data Import object if needed.');
+                    importedRecordStatusField.reportValidity();
+                } else {
+                    importedRecordStatusField.setCustomValidity('');
+                }
             }
-
-            
-            
         }
     }
 
@@ -484,7 +489,13 @@ export default class bdiObjectMappingModal extends LightningElement {
 
             // Making some baseline exclusions for DI system fields.
             for (let i = 0; i < this.excludedDIFields.length; i++) {
-                this.alreadyMappedDIFieldsMap.set(this.excludedDIFields[i].toLowerCase(),'');
+                let field = this.excludedDIFields[i].toLowerCase();
+
+                if (this.namespace !== 'npsp') {
+                    field.replace('npsp__','');
+                }
+
+                this.alreadyMappedDIFieldsMap.set(field,'');
             }
 
             // Add all of the DI field names used for Imported record info

@@ -1,10 +1,12 @@
-import { LightningElement, track, wire, api } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getObjectMappings from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectMappings';
 import getObjectOptions from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectOptions';
 import createDataImportObjectMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportObjectMapping';
 import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
+import getNamespacePrefix
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespacePrefix';
 
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
@@ -16,6 +18,9 @@ export default class bdiObjectMappings extends LightningElement {
     @api objectMapping;
     @api objectOptions;
     @track objectMappings;
+
+    namespace;
+    @track npspSettingsURL = '/lightning/n/npsp__NPSP_Settings';  
 
     deploymentTimer;
     deploymentTimeout = 10000;
@@ -48,6 +53,7 @@ export default class bdiObjectMappings extends LightningElement {
 
         this.retrieveObjectMappings();
         this.retrieveObjectOptions();
+        this.getPackageNamespace();
     }
 
     /*******************************************************************************
@@ -55,6 +61,25 @@ export default class bdiObjectMappings extends LightningElement {
     */
     disconnectedCallback() {
         unregisterAllListeners(this);
+    }
+
+    /*******************************************************************************
+    * @description retrieves the namespace prefix
+    */
+    getPackageNamespace() {
+        getNamespacePrefix()
+            .then((data) => {
+                this.namespace = data;
+
+                //if we are not in a namespaced npsp org then remove the prefix from
+                //the page url.
+                if (this.namespace !== 'npsp') {
+                    this.npspSettingsURL = this.npspSettingsURL.replace('npsp__','');
+                }
+            })
+            .catch((error) => {
+                this.handleError(error);
+            });        
     }
 
     /*******************************************************************************

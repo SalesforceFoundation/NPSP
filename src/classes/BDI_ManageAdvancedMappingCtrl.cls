@@ -37,7 +37,8 @@
 public class BDI_ManageAdvancedMappingCtrl {
     
     /** @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed) */
-    public string getNamespacePrefix() {
+    @AuraEnabled(cacheable=true)
+    public static string getNamespacePrefix() {
         return UTIL_Namespace.getNamespace();
     }
 
@@ -241,12 +242,16 @@ public class BDI_ManageAdvancedMappingCtrl {
             DataImportObjectMappingWrapper objMappingWrapper = 
                 (DataImportObjectMappingWrapper)JSON.deserialize(objectMappingString, DataImportObjectMappingWrapper.class);
 
+            String diObjMappingSetFieldName = 'npsp__Data_Import_Object_Mapping_Set__c';
+            if (NAMESPACE != 'npsp') {
+                diObjMappingSetFieldName.replaceFirst('npsp__','');
+            }
+
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since 
             //that is what is required for the custom metadata creation.  This can't be done with the normal constructor
             //since it requires that the field be an Id
             String tempObjMappingString = 
-                '{ "Data_Import_Object_Mapping_Set__c" : "' + 
-                UTIL_Namespace.StrAllNSPrefix(objMappingWrapper.Data_Import_Object_Mapping_Set) + '"}';
+                '{ "'+ diObjMappingSetFieldName+'" : "' + objMappingWrapper.Data_Import_Object_Mapping_Set + '"}';
 
             Data_Import_Object_Mapping__mdt objMapping = 
                 (Data_Import_Object_Mapping__mdt)JSON.deserialize(tempObjMappingString, Data_Import_Object_Mapping__mdt.class);  

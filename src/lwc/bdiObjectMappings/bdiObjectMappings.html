@@ -5,7 +5,8 @@
             is-modal-open={isModalOpen}
             object-options={objectOptions}
             object-mappings={objectMappings}
-            di-object-mapping-set-dev-name={diObjectMappingSetDevName}>
+            di-object-mapping-set-dev-name={diObjectMappingSetDevName}
+            namespace={namespace}>
         </c-bdi-object-mapping-modal>
 
         <div class="slds-grid slds-wrap slds-m-bottom_small">
@@ -13,7 +14,7 @@
                 <lightning-breadcrumbs>
                     <lightning-breadcrumb
                         label="Back to NPSP Settings"
-                        href="/lightning/n/NPSP_Settings">
+                        href={npspSettingsURL}>
                     </lightning-breadcrumb>
                 </lightning-breadcrumbs>
             </div>
