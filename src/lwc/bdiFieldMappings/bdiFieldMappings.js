@@ -11,7 +11,6 @@ import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
 
 // Import custom labels
-import bdiFieldMapping from '@salesforce/label/c.bdiFieldMapping';
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
 import bdiFMUIBackToMapGroup from '@salesforce/label/c.bdiFMUIBackToMapGroup';
 import bdiFMUIDescription from '@salesforce/label/c.bdiFMUIDescription';
@@ -44,15 +43,15 @@ const actions = [
 ];
 
 const columns = [
-    { label: bdiFMUIFieldLabel, fieldName: 'xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx', type: 'text', sortable: true },
-    { label: bdiFMUIFieldAPIName, fieldName: 'xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx', type: 'text' },
+    { label: bdiFMUIFieldLabel, fieldName: 'Source_Field_Label', type: 'text', sortable: true },
+    { label: bdiFMUIFieldAPIName, fieldName: 'Source_Field_API_Name', type: 'text' },
     { label: bdiFMUIDataType, fieldName: 'Source_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
         {
             label: bdiFMUIDatatableMapsTo, fieldName: '', type: 'text', fixedWidth: 95,
             cellAttributes: { alignment: 'center', iconName: { fieldName: 'Maps_To_Icon' } }
         },
-    { label: bdiFMUIFieldLabel, fieldName: 'xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx', type: 'text' },
-    { label: bdiFMUIFieldAPIName, fieldName: 'xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx', type: 'text' },
+    { label: bdiFMUIFieldLabel, fieldName: 'Target_Field_Label', type: 'text' },
+    { label: bdiFMUIFieldAPIName, fieldName: 'Target_Field_API_Name', type: 'text' },
     { label: bdiFMUIDataType, fieldName: 'Target_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
@@ -144,9 +143,7 @@ export default class bdiFieldMappings extends LightningElement {
                 });
 
             if (this.fieldMappings && this.fieldMappings.length > 0) {
-                this.fieldMappings = this.sortBy(
-                    this.fieldMappings,
-                    'xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx');
+                this.fieldMappings = this.sortBy(this.fieldMappings, 'Source_Field_Label');
             }
 
             this.isLoading = false;
@@ -259,7 +256,7 @@ export default class bdiFieldMappings extends LightningElement {
 
             case 'delete':
                 this.isLoading = true;
-                row.xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx = true;
+                row.Is_Deleted = true;
 
                 createDataImportFieldMapping({fieldMappingString: JSON.stringify(row)})
                     .then((deploymentId) => {
