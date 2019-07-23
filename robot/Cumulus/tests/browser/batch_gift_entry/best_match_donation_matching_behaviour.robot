@@ -34,6 +34,7 @@ Best Match Donation Matching Behaviour
     Click BGE Button       Save
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
+    Scroll Page To Location    0    0
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=200
