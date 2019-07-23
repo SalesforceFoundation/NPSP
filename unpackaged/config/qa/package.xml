@@ -69,6 +69,7 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set.Migrated_Custom_Field_Mapping_Set</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_2cb21281d</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_37b322bd6</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Number_21e98c57a</members>
