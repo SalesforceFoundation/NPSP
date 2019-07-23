@@ -209,13 +209,20 @@ public class BDI_ManageAdvancedMappingCtrl {
             DataImportFieldMappingWrapper fieldMappingWrapper =
                 (DataImportFieldMappingWrapper)JSON.deserialize(fieldMappingString, DataImportFieldMappingWrapper.class);
 
+            String diFieldMappingSetFieldName = 'npsp__Data_Import_Field_Mapping_Set__c';
+            String targetObjectMappingFieldName = 'npsp__Target_Object_Mapping__c';
+            if (NAMESPACE != 'npsp') {
+                diFieldMappingSetFieldName.replaceFirst('npsp__', '');
+                targetObjectMappingFieldName.replaceFirst('npsp__', '');
+            }
+
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since
             //that is what is required for the custom metadata creation.  This can't be done with the normal constructor
             //since it requires that the field be an Id
             String tempFieldMappingString =
-                '{ "Data_Import_Field_Mapping_Set__c" : "' +
+                '{ "' + diFieldMappingSetFieldName + '" : "' +
                 UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Data_Import_Field_Mapping_Set) + '",' +
-                '"Target_Object_Mapping__c": "' +
+                '"' + targetObjectMappingFieldName + '": "' +
                 UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Target_Object_Mapping)  + '"}';
 
             Data_Import_Field_Mapping__mdt fieldMapping =
