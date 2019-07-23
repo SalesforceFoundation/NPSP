@@ -46,6 +46,14 @@
         <members>%%%NAMESPACE%%%DataImport__c.WO_SuggestedMaintenanceDate__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WorkOrderImportStatus__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WorkOrderImported__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_picklist__c</members>
+        <members>Opportunity.custom_currency__c</members>
+        <members>Opportunity.custom_date__c</members>
+        <members>Opportunity.custom_lookup__c</members>
+        <members>Opportunity.custom_number__c</members>
+        <members>Opportunity.custom_picklist__c</members>
+        <members>Opportunity.custom_text__c</members>
+        <members>Opportunity.custom_textarea__c</members>
         <members>npe01__OppPayment__c.custom_email__c</members>
         <members>npe01__OppPayment__c.custom_multipick__c</members>
         <members>npe01__OppPayment__c.custom_phone__c</members>
@@ -53,6 +61,9 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>Account</members>
+        <members>Contact</members>
+        <members>Opportunity</members>
         <members>CustomObject1__c</members>
         <members>CustomObject3__c</members>
         <name>CustomObject</name>
