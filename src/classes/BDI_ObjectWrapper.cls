@@ -51,4 +51,19 @@ public with sharing class BDI_ObjectWrapper {
         this.fieldMappings = fieldMappings;
         this.dataImport = dataImport;
     }
+
+    public void setDataImportStatus(String status) {
+        dataImport.Status__c = status;
+    }
+
+    public void setImportedRecordStatusError(String errorMessage) {
+        String statusField = objMapping.Imported_Record_Status_Field_Name__c;
+        if (statusField != null && errorMessage != null) {
+            dataImport.put(statusField, errorMessage.left(255));
+        }
+    }
+
+    public void setFailureInformation(String failureInformation) {
+        dataImport.FailureInformation__c = failureInformation;
+    }
 }
