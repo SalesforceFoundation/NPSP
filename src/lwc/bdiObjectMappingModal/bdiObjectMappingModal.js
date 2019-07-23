@@ -492,7 +492,7 @@ export default class bdiObjectMappingModal extends LightningElement {
                 let field = this.excludedDIFields[i].toLowerCase();
 
                 if (this.namespace !== 'npsp') {
-                    field.replace('npsp__','');
+                    field = field.replace('npsp__','');
                 }
 
                 this.alreadyMappedDIFieldsMap.set(field,'');

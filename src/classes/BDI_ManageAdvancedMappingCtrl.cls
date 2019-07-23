@@ -212,8 +212,8 @@ public class BDI_ManageAdvancedMappingCtrl {
             String diFieldMappingSetFieldName = 'npsp__Data_Import_Field_Mapping_Set__c';
             String targetObjectMappingFieldName = 'npsp__Target_Object_Mapping__c';
             if (NAMESPACE != 'npsp') {
-                diFieldMappingSetFieldName.replaceFirst('npsp__', '');
-                targetObjectMappingFieldName.replaceFirst('npsp__', '');
+                diFieldMappingSetFieldName = diFieldMappingSetFieldName.replaceFirst('npsp__', '');
+                targetObjectMappingFieldName = targetObjectMappingFieldName.replaceFirst('npsp__', '');
             }
 
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since
@@ -259,7 +259,7 @@ public class BDI_ManageAdvancedMappingCtrl {
 
             String diObjMappingSetFieldName = 'npsp__Data_Import_Object_Mapping_Set__c';
             if (NAMESPACE != 'npsp') {
-                diObjMappingSetFieldName.replaceFirst('npsp__','');
+                diObjMappingSetFieldName = diObjMappingSetFieldName.replaceFirst('npsp__','');
             }
 
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since 
