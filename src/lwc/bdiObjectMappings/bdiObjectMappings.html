@@ -1,38 +1,73 @@
 <template>
-    <style>
-        .slds-button_extension-back {
-            height: 40px;
-            color: #006DCC;
-            font-family: "Salesforce Sans";
-            font-size: 13px;
-            line-height: 40px;
-            font-weight: 300;
-        }
-    </style>
     <template if:true={displayObjectMappings}>
+        
+        <c-bdi-object-mapping-modal
+            is-modal-open={isModalOpen}
+            object-options={objectOptions}
+            object-mappings={objectMappings}
+            di-object-mapping-set-dev-name={diObjectMappingSetDevName}
+            namespace={namespace}>
+        </c-bdi-object-mapping-modal>
+
         <div class="slds-grid slds-wrap slds-m-bottom_small">
-            <div class="slds-size_1-of-1">
-                <a class="slds-text-title_caps slds-button slds-button_extension-back"
-                    href="/lightning/n/NPSP_Settings">
-                    Back to NPSP Settings
-                </a>
+            <div class="slds-size_1-of-2">
+                <lightning-breadcrumbs>
+                    <lightning-breadcrumb
+                        label="Back to NPSP Settings"
+                        href={npspSettingsURL}>
+                    </lightning-breadcrumb>
+                </lightning-breadcrumbs>
+            </div>
+            <div class="slds-size_1-of-2 slds-m-bottom_small">
+                <lightning-button
+                    label="Create New Mapping Group"
+                    title="Create New Mapping Group"
+                    onclick={handleOpenModal}
+                    class="slds-m-left_x-small slds-float_right">
+                </lightning-button>
+            </div>
+            <div class="slds-size_1-of-1 slds-m-bottom_large">
+                <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">Data Import Advanced Mapping</h1>
+                <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">Mapping Groups</h2>
+
+                    <p class="slds-text-body_small slds-m-bottom_small">
+                    Mapping Groups are groups of field mappings which tell the NPSP Data Import tool what types of records to 
+                    create or update.  NPSP is able to link records within a single row of your import to one another because
+                    fields mappings are grouped in Mapping Groups in this way.  In addition, users can create multiple records
+                    of the same type and relate them to each other.
+                    </p>
+
+                    <p class="slds-text-body_small">
+                        <span>Find complete Advanced Mapping setup documentation </span>
+                        <a href="https://powerofus.force.com/" target="_blank">here</a>.
+                    </p>
+            </div>
+            <div class="slds-size_1-of-1 slds-m-bottom_small">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size_1-of-1 slds-m-top_x-small">
+                        <tempate if:true={isLoading}>
+                            <lightning-spinner></lightning-spinner>
+                        </tempate>
+                        <lightning-datatable
+                            key-field="id"
+                            data={objectMappings}
+                            columns={columns}
+                            hide-checkbox-column
+                            onrowaction={handleRowAction}>
+                        </lightning-datatable>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size_1-of-2">
+            </div>
+            <div class="slds-size_1-of-2">
+                <lightning-button
+                    label="Create New Mapping Group"
+                    title="Create New Mapping Group"
+                    onclick={handleOpenModal}
+                    class="slds-m-left_x-small slds-float_right">
+                </lightning-button>
             </div>
         </div>
-        <div class="slds-m-vertical_medium">
-                <template if:true={objectMappings.data}>
-                    <lightning-datatable
-                        key-field="Id"
-                        columns={columns}
-                        data={objectMappings.data}
-                        hide-checkbox-column=true
-                        onrowaction={handleRowAction}>
-                    </lightning-datatable>
-                </template>
-                <template if:true={objectMappings.error}>
-                    <!-- handle Apex error -->
-                </template>
-            </div>
-    </template>
-
-
+    </template>   
 </template>

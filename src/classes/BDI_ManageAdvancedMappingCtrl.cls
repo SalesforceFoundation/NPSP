@@ -35,9 +35,10 @@
 * @description Visualforce page Controller for the Manage Advanced Mappings VF page
 */
 public class BDI_ManageAdvancedMappingCtrl {
-
+    
     /** @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed) */
-    public string getNamespacePrefix() {
+    @AuraEnabled(cacheable=true)
+    public static string getNamespacePrefix() {
         return UTIL_Namespace.getNamespace();
     }
 
@@ -56,9 +57,6 @@ public class BDI_ManageAdvancedMappingCtrl {
     */
     private static final String UTILITY_FORWARD_SLDS_ICON = 'utility:forward';
 
-    /*******************************************************************************************************
-    * @description Name of default packaged Object Mapping Set
-    */
     private static final Set<String> IGNORE_FIELDS = new Set<String> {
         'developername',
         'masterlabel',
@@ -98,6 +96,19 @@ public class BDI_ManageAdvancedMappingCtrl {
     };
 
     /*******************************************************************************************************
+    * @description This is a list of the standard objects we will let users choose from (plus custom objects) 
+    * when creating a new object mappping.  This is necessary since there are hundreds of standard objects
+    * and including them all would negatively impact performance and make the list unusable.
+    */ 
+    private static final Set<String> STANDARD_OBJECT_WHITELIST = new Set<String>{'account', 'asset', 'assetrelationship', 
+                                                            'campaign', 'campaignmember', 'case', 
+                                                            'contact', 'contract', 'event', 'lead', 
+                                                            'opportunity', 'opportunitylineitem', 
+                                                            'order', 'orderitem', 'pricebook2', 
+                                                            'pricebookEntry', 'product2', 'task', 
+                                                            'user','opportunitycontactrole','contactrole','workorder'};
+
+    /*******************************************************************************************************
     * @description Name of the default Field Mapping Set
     *
     * @return String: Default Field Mapping Set name
@@ -108,13 +119,20 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
-    * @description Gets all the existing Data Import Object Mapping records.
-    *
+    * @description Gets all the existing Data Import Object Mapping records and wraps them for use in the 
+    * component
     * @return List: List of Data Import Object Mapping
     */
-    @AuraEnabled(cacheable=true)
-    public static Data_Import_Object_Mapping__mdt[] getObjectMappings(){
-        return bdiCMT.objMappingsByDevName.values();
+    @AuraEnabled(cacheable=false)
+    public static DataImportObjectMappingWrapper[] getObjectMappings(){
+
+        DataImportObjectMappingWrapper[] objMappingWrappers = new DataImportObjectMappingWrapper[]{};
+        Data_Import_Object_Mapping__mdt[] objMappings = bdiCMT.objMappingsByDevName.values();
+
+        for (Data_Import_Object_Mapping__mdt objMapping : objMappings) {
+            objMappingWrappers.add(new DataImportObjectMappingWrapper(objMapping));
+        }
+        return objMappingWrappers;
     }
 
     /*******************************************************************************************************
@@ -126,7 +144,6 @@ public class BDI_ManageAdvancedMappingCtrl {
     */
     @AuraEnabled
     public static FieldInfo[] getObjectFieldDescribes(String objectName) {
-        Map<String, String> useableDFRs = new Map<String, String>();
         FieldInfo[] fieldInfos = new List<FieldInfo>();
 
         objectName = UTIL_Namespace.StrAllNSPrefix(objectName);
@@ -135,7 +152,11 @@ public class BDI_ManageAdvancedMappingCtrl {
             UTIL_Describe.getAllFieldsDescribe(objectName);
 
         for (String key : fieldDescribes.keySet()) {
-            fieldInfos.add(new FieldInfo(fieldDescribes.get(key)));
+            //Only include fields that are updateable by the current user
+            //This will filter out System / formula fields
+            if (fieldDescribes.get(key).isUpdateable()) {
+                fieldInfos.add(new FieldInfo(fieldDescribes.get(key)));
+            }
         }
 
         return fieldInfos;
@@ -217,8 +238,7 @@ public class BDI_ManageAdvancedMappingCtrl {
 
     /*******************************************************************************************************
     * @description Converts a JSON string of a DataImportFieldMappingWrapper to an instance of
-    * Data_Import_Field_Mapping__mdt. Replaces the prefix 'xxPrefixTokenxx_' with the namespace if necessary
-    * and replaces the suffix '_xxSuffixTokenxx' with '__c' if necessary.
+    * Data_Import_Field_Mapping__mdt.
     *
     * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
     *
@@ -226,22 +246,86 @@ public class BDI_ManageAdvancedMappingCtrl {
     */
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
-        fieldMappingString = fieldMappingString.replaceAll('_xxSuffixTokenxx','__c');
+        try {
+            DataImportFieldMappingWrapper fieldMappingWrapper =
+                (DataImportFieldMappingWrapper)JSON.deserialize(fieldMappingString, DataImportFieldMappingWrapper.class);
 
-        if (NAMESPACE == 'npsp') {
-            fieldMappingString = fieldMappingString.replaceAll('xxPrefixTokenxx_','npsp__');
-        } else {
-            fieldMappingString = fieldMappingString.replaceAll('xxPrefixTokenxx_','');
+            String diFieldMappingSetFieldName = 'npsp__Data_Import_Field_Mapping_Set__c';
+            String targetObjectMappingFieldName = 'npsp__Target_Object_Mapping__c';
+            if (NAMESPACE != 'npsp') {
+                diFieldMappingSetFieldName.replaceFirst('npsp__', '');
+                targetObjectMappingFieldName.replaceFirst('npsp__', '');
+            }
+
+            //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since
+            //that is what is required for the custom metadata creation.  This can't be done with the normal constructor
+            //since it requires that the field be an Id
+            String tempFieldMappingString =
+                '{ "' + diFieldMappingSetFieldName + '" : "' +
+                UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Data_Import_Field_Mapping_Set) + '",' +
+                '"' + targetObjectMappingFieldName + '": "' +
+                UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Target_Object_Mapping)  + '"}';
+
+            Data_Import_Field_Mapping__mdt fieldMapping =
+                (Data_Import_Field_Mapping__mdt)JSON.deserialize(tempFieldMappingString, Data_Import_Field_Mapping__mdt.class);
+
+            fieldMapping.MasterLabel = fieldMappingWrapper.MasterLabel;
+            fieldMapping.DeveloperName = fieldMappingWrapper.DeveloperName;
+            fieldMapping.Is_Deleted__c = fieldMappingWrapper.Is_Deleted;
+            fieldMapping.Required__c = fieldMappingWrapper.Required;
+            fieldMapping.Source_Field_API_Name__c = fieldMappingWrapper.Source_Field_API_Name;
+            fieldMapping.Target_Field_API_Name__c = fieldMappingWrapper.Target_Field_API_Name;
+
+            String deploymentId = enqueueMetadataRecords(fieldMapping);
+            return deploymentId;
+        } catch(Exception e) {
+            throw e;
         }
+    }
+
+
+    /*******************************************************************************************************
+    * @description Converts a JSON string of a DataImportObjectMappingWrapper to an instance of
+    * Data_Import_Object_Mapping__mdt. 
+    *
+    * @param objectMappingString: DataImportFieldMappingWrapper as JSON
+    * @return String: Deployment Id
+    */
+    @AuraEnabled(cacheable=true)
+    public static String createDataImportObjectMapping(String objectMappingString) {
 
         try {
-            Data_Import_Field_Mapping__mdt difm =
-                (Data_Import_Field_Mapping__mdt)JSON.deserialize(
-                    fieldMappingString, Data_Import_Field_Mapping__mdt.class);
+            DataImportObjectMappingWrapper objMappingWrapper = 
+                (DataImportObjectMappingWrapper)JSON.deserialize(objectMappingString, DataImportObjectMappingWrapper.class);
 
-            String deploymentId = enqueueMetadataRecords(difm);
+            String diObjMappingSetFieldName = 'npsp__Data_Import_Object_Mapping_Set__c';
+            if (NAMESPACE != 'npsp') {
+                diObjMappingSetFieldName.replaceFirst('npsp__','');
+            }
 
+            //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since 
+            //that is what is required for the custom metadata creation.  This can't be done with the normal constructor
+            //since it requires that the field be an Id
+            String tempObjMappingString = 
+                '{ "'+ diObjMappingSetFieldName+'" : "' + objMappingWrapper.Data_Import_Object_Mapping_Set + '"}';
+
+            Data_Import_Object_Mapping__mdt objMapping = 
+                (Data_Import_Object_Mapping__mdt)JSON.deserialize(tempObjMappingString, Data_Import_Object_Mapping__mdt.class);  
+
+            objMapping.MasterLabel = objMappingWrapper.MasterLabel;
+            objMapping.DeveloperName = objMappingWrapper.DeveloperName;
+            objMapping.Object_API_Name__c = objMappingWrapper.Object_API_Name;
+            objMapping.Custom_Mapping_Logic_Class__c = objMappingWrapper.Custom_Mapping_Logic_Class;
+            objMapping.Imported_Record_Field_Name__c = objMappingWrapper.Imported_Record_Field_Name;
+            objMapping.Imported_Record_Status_Field_Name__c = objMappingWrapper.Imported_Record_Status_Field_Name;
+            objMapping.Is_Deleted__c = objMappingWrapper.Is_Deleted;
+            objMapping.Predecessor__c = objMappingWrapper.Predecessor;
+            objMapping.Relationship_Field__c = objMappingWrapper.Relationship_Field;
+            objMapping.Relationship_To_Predecessor__c = objMappingWrapper.Relationship_To_Predecessor;
+
+            String deploymentId = enqueueMetadataRecords(objMapping);
             return deploymentId;
+
         } catch (Exception e) {
             throw e;
         }
@@ -372,26 +456,23 @@ public class BDI_ManageAdvancedMappingCtrl {
 
     /*******************************************************************************************************
     * @description Data_Import_Field_Mapping__mdt wrapper class used in the Field Mapping UI and for
-    * building corresponding custom metadata type records. Attributes have prefix 'xxPrefixTokenxx_' and
-    * suffix '_xxSuffixTokenxx' because we build instances of DataImportFieldMappingWrapper in the
-    * lightning web component and later replace the prefix with the namespace and the suffix with '__c'
-    * and deserialize to Data_Import_Field_Mapping__mdt.
+    * building corresponding custom metadata type records.
     */
     public class DataImportFieldMappingWrapper {
         @AuraEnabled public String DeveloperName;
         @AuraEnabled public String MasterLabel;
         @AuraEnabled public String Label;
         @AuraEnabled public String Maps_To_Icon;
-        @AuraEnabled public String xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx;
-        @AuraEnabled public String xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx;
-        @AuraEnabled public String xxPrefixTokenxx_Source_Field_Data_Type_xxSuffixTokenxx;
-        @AuraEnabled public String xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx;
-        @AuraEnabled public String xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx;
-        @AuraEnabled public String xxPrefixTokenxx_Target_Field_Data_Type_xxSuffixTokenxx;
-        @AuraEnabled public String xxPrefixTokenxx_Data_Import_Field_Mapping_Set_xxSuffixTokenxx;
-        @AuraEnabled public String xxPrefixTokenxx_Target_Object_Mapping_xxSuffixTokenxx;
-        @AuraEnabled public String xxPrefixTokenxx_Required_xxSuffixTokenxx;
-        @AuraEnabled public Boolean xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx;
+        @AuraEnabled public String Source_Field_Label;
+        @AuraEnabled public String Source_Field_API_Name;
+        @AuraEnabled public String Source_Field_Data_Type;
+        @AuraEnabled public String Target_Field_Label;
+        @AuraEnabled public String Target_Field_API_Name;
+        @AuraEnabled public String Target_Field_Data_Type;
+        @AuraEnabled public String Data_Import_Field_Mapping_Set;
+        @AuraEnabled public String Target_Object_Mapping;
+        @AuraEnabled public String Required;
+        @AuraEnabled public Boolean Is_Deleted;
         @AuraEnabled public String Source_Field_Display_Type_Label;
         @AuraEnabled public String Target_Field_Display_Type_Label;
 
@@ -423,34 +504,22 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.DeveloperName = fieldMapping.DeveloperName;
             this.MasterLabel = fieldMapping.MasterLabel;
             this.Label =fieldMapping.MasterLabel;
-            this.xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx =
-                sourceFieldDescribe.label;
-            this.xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx =
-                fieldMapping.Source_Field_API_Name__c;
-            this.xxPrefixTokenxx_Source_Field_Data_Type_xxSuffixTokenxx =
-                String.valueOf(sourceFieldDescribe.type);
-            this.Source_Field_Display_Type_Label =
-                LABELS_BY_DISPLAY_TYPE.get(this.xxPrefixTokenxx_Source_Field_Data_Type_xxSuffixTokenxx);
+            this.Source_Field_Label = sourceFieldDescribe.label;
+            this.Source_Field_API_Name = fieldMapping.Source_Field_API_Name__c;
+            this.Source_Field_Data_Type = String.valueOf(sourceFieldDescribe.type);
+            this.Source_Field_Display_Type_Label = LABELS_BY_DISPLAY_TYPE.get(this.Source_Field_Data_Type);
 
-            this.xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx =
-                targetFieldDescribe.label;
-            this.xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx =
-                fieldMapping.Target_Field_API_Name__c;
-            this.xxPrefixTokenxx_Target_Field_Data_Type_xxSuffixTokenxx =
-                String.valueOf(targetFieldDescribe.type);
-            this.Target_Field_Display_Type_Label =
-                LABELS_BY_DISPLAY_TYPE.get(this.xxPrefixTokenxx_Target_Field_Data_Type_xxSuffixTokenxx);
+            this.Target_Field_Label = targetFieldDescribe.label;
+            this.Target_Field_API_Name = fieldMapping.Target_Field_API_Name__c;
+            this.Target_Field_Data_Type = String.valueOf(targetFieldDescribe.type);
+            this.Target_Field_Display_Type_Label = LABELS_BY_DISPLAY_TYPE.get(this.Target_Field_Data_Type);
 
             this.Maps_To_Icon = UTILITY_FORWARD_SLDS_ICON;
 
-            this.xxPrefixTokenxx_Data_Import_Field_Mapping_Set_xxSuffixTokenxx =
-                fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
-            this.xxPrefixTokenxx_Target_Object_Mapping_xxSuffixTokenxx =
-                fieldMapping.Target_Object_Mapping__r.DeveloperName;
-            this.xxPrefixTokenxx_Required_xxSuffixTokenxx =
-                fieldMapping.Required__c;
-            this.xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx =
-                fieldMapping.Is_Deleted__c;
+            this.Data_Import_Field_Mapping_Set = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
+            this.Target_Object_Mapping = fieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.Required = fieldMapping.Required__c;
+            this.Is_Deleted = fieldMapping.Is_Deleted__c;
         }
     }
 
@@ -490,7 +559,6 @@ public class BDI_ManageAdvancedMappingCtrl {
 
             if (!saveResult.isSuccess()) {
                 for (Database.Error error : saveResult.getErrors()) {
-                    //TODO: collaborate with docs on label/text value in the event that a deployment fails
                     throw new AuraHandledException('Error returned: ' +
                             error.getStatusCode() + ' - ' +
                             error.getMessage());
@@ -499,4 +567,158 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Wrapper class for the Data Import Object Mapping object.
+    */
+    public class DataImportObjectMappingWrapper {
+        @AuraEnabled public String DeveloperName;
+        @AuraEnabled public String MasterLabel;
+        @AuraEnabled public String Custom_Mapping_Logic_Class;
+        @AuraEnabled public String Data_Import_Object_Mapping_Set;
+        @AuraEnabled public String Data_Import_Object_Mapping_Set_Dev_Name;
+        @AuraEnabled public String Imported_Record_Field_Name;
+        @AuraEnabled public String Imported_Record_Status_Field_Name;
+        @AuraEnabled public Boolean Is_Deleted;
+        @AuraEnabled public String Object_API_Name;
+        @AuraEnabled public String Predecessor;
+        @AuraEnabled public String Relationship_Field;
+        @AuraEnabled public String Relationship_To_Predecessor;
+
+        public DataImportObjectMappingWrapper(Data_Import_Object_Mapping__mdt objectMapping) {
+
+            this.MasterLabel = objectMapping.MasterLabel;
+            this.DeveloperName = objectMapping.DeveloperName;
+            this.Custom_Mapping_Logic_Class = objectMapping.Custom_Mapping_Logic_Class__c;
+            this.Data_Import_Object_Mapping_Set = objectMapping.Data_Import_Object_Mapping_Set__c;
+            this.Data_Import_Object_Mapping_Set_Dev_Name = objectMapping.Data_Import_Object_Mapping_Set__r.DeveloperName;
+            this.Imported_Record_Field_Name = objectMapping.Imported_Record_Field_Name__c;
+            this.Imported_Record_Status_Field_Name = objectMapping.Imported_Record_Status_Field_Name__c;
+            this.Is_Deleted = objectMapping.Is_Deleted__c;
+            this.Object_API_Name = objectMapping.Object_API_Name__c;
+            this.Predecessor = objectMapping.Predecessor__c;
+            this.Relationship_Field = objectMapping.Relationship_Field__c;
+            this.Relationship_To_Predecessor = objectMapping.Relationship_To_Predecessor__c;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a list of combobox options for the valid objects to chooose from.
+    * @return objectOptions List of combobox options for the valid objects to chooose from.
+    */
+    @AuraEnabled(cacheable=true)
+    public static List<ComboboxOption> getObjectOptions(){
+        List<ComboboxOption> objectOptions = new List<ComboboxOption>();
+        Map<String, Schema.SObjectType> allObjectMap = Schema.getGlobalDescribe(); 
+        List<String> filteredObjectNames = new List<String>();
+
+        // Removing custom metadata types and knowledge article versions from the list of object names
+        // Also restricting to only an predefined list of standard objects to keep the list manageable
+        for (String objectName : allObjectMap.keySet()) { 
+            if (!objectName.endsWith('__mdt') && !objectName.endsWith('__kav') 
+                && (objectName.endsWith('__c') || STANDARD_OBJECT_WHITELIST.contains(objectName))) {
+                filteredObjectNames.add(objectName);
+            }
+        }
+
+        List<Schema.DescribeSObjectResult> objectDescribeResults = new List<Schema.DescribeSObjectResult>();
+        objectDescribeResults = Schema.describeSObjects(filteredObjectNames);
+
+        // Create a temporary list of every non-custom setting and non-custom metadata object
+        // to a list of objects to choose from.
+        for (Schema.DescribeSObjectResult eachObject : objectDescribeResults) {
+            if (!eachObject.isCustomSetting()) {
+                String objectName = eachObject.getName();
+                String objectLabel = eachObject.getLabel();
+                objectOptions.add(new ComboboxOption(objectLabel + ' (' + objectName + ')', objectName));
+            }
+        }
+
+        objectOptions.sort();
+
+        return objectOptions;
+    }
+
+    /*******************************************************************************************************
+    * @description Simple class for combobox options.
+    */
+    public class ComboboxOption implements Comparable{
+        @AuraEnabled
+        public String label {get;set;}
+        @AuraEnabled
+        public String value {get;set;}  
+
+        public ComboboxOption(String label, String value) {
+            this.label = label;
+            this.value = value;
+        }
+
+        public Integer compareTo(Object compareTo) {
+            ComboboxOption compareToOption = (ComboboxOption)compareTo;
+            if (label == compareToOption.label) return 0;
+            if (label > compareToOption.label) return 1;
+            return -1;        
+        }         
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a list of field info objects for valid relationship field options.
+    * @return fieldInfos field info objects that contain label and value info.
+    */
+    @AuraEnabled(cacheable=true)
+    public static FieldInfo[] getRelationshipFieldOptions(String objectName, String lookupToObjectName) {
+        FieldInfo[] fieldInfos = new List<FieldInfo>();
+
+        Map<String, Schema.DescribeFieldResult> fieldDescribes =
+            UTIL_Describe.getAllFieldsDescribe(objectName);
+
+        for (String key : fieldDescribes.keySet()) {
+            Schema.DescribeFieldResult dfr = fieldDescribes.get(key);
+
+            if (dfr.getType().name() == 'REFERENCE' && fieldDescribes.get(key).isUpdateable()) {
+
+                List<Schema.sObjectType> objTypes = dfr.getReferenceTo();
+
+                //Get sObjectType of the object being looked up to for comparison purposes.
+                Schema.SObjectType lookupToObjectType = 
+                    Schema.getGlobalDescribe().get(lookupToObjectName.toLowerCase());
+
+                if (objTypes != null) {
+                    for (Schema.sObjectType objType : objTypes) {
+                        if (objType == lookupToObjectType) {
+                            fieldInfos.add(new FieldInfo(dfr));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return fieldInfos;
+    }
+
+
+    /*******************************************************************************************************
+    * @description Returns a unique set of Data Import field names that have already been mapped 
+    * to a target field, and are therefore not eligible for re-use.
+    * @return mappedFieldNamesList format set of strings
+    */
+    @AuraEnabled(cacheable=true)
+    public static List<String> getMappedDISourceFields() {
+
+        Set<String> mappedFieldNamesSet = new Set<String>();
+
+        if (bdiCMT.fieldMappingsByObjMappingDevName != null) {
+            for (String objMappingDevName : bdiCMT.fieldMappingsByObjMappingDevName.keySet()) {
+                Data_Import_Field_Mapping__mdt[] fieldMappings =
+                    bdiCMT.fieldMappingsByObjMappingDevName.get(objMappingDevName);
+
+                if (fieldMappings != null) {
+                    for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
+                        mappedFieldNamesSet.add(fieldMapping.Source_Field_API_Name__c.toLowerCase());
+                    }
+                }
+            }
+        }
+        List<String> mappedFieldNamesList = new List<String>(mappedFieldNamesSet);
+        return mappedFieldNamesList;
+    }
 }// BDI_ManageAdvancedMappingCtrl
