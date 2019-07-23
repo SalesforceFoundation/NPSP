@@ -466,7 +466,9 @@ public with sharing class ADDR_Addresses_TEST2 {
 
         // run the scheduled batch directly
         Test.startTest();
-        Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
+        final Integer BATCH_SIZE = (UTIL_CustomSettingsFacade.getHouseholdsSettings().Seasonal_Addresses_Batch_Size__c != null) ?
+            UTIL_CustomSettingsFacade.getHouseholdsSettings().Seasonal_Addresses_Batch_Size__c.intValue() : 10;
+        Database.executeBatch(new ADDR_Seasonal_SCHED(), BATCH_SIZE);
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address and it's new!
@@ -545,7 +547,9 @@ public with sharing class ADDR_Addresses_TEST2 {
 
         // run the scheduled batch directly
         Test.startTest();
-        Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
+        final Integer BATCH_SIZE = (UTIL_CustomSettingsFacade.getHouseholdsSettings().Seasonal_Addresses_Batch_Size__c != null) ?
+            UTIL_CustomSettingsFacade.getHouseholdsSettings().Seasonal_Addresses_Batch_Size__c.intValue() : 10;
+        Database.executeBatch(new ADDR_Seasonal_SCHED(), BATCH_SIZE);
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address and it's the old default!
