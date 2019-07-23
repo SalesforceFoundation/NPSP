@@ -278,12 +278,12 @@ public with sharing class BDI_MigrationMappingUtility {
             DataImportObjectMapping objectMappingWrapper;
 
             if (existingMigratedObjectMapping == null) {
-                objectMappingWrapper = new DataImportObjectMapping(referenceObjectMapping);
+                objectMappingWrapper = new DataImportObjectMapping(referenceObjectMapping, true);
                 legacyDataImportObjectName =
                     referenceObjectMapping.Legacy_Data_Import_Object_Name__c;
                 developerName = objectMappingWrapper.uniqueRecordName;
             } else {
-                objectMappingWrapper = new DataImportObjectMapping(existingMigratedObjectMapping);
+                objectMappingWrapper = new DataImportObjectMapping(existingMigratedObjectMapping, false);
                 legacyDataImportObjectName =
                     existingMigratedObjectMapping.Legacy_Data_Import_Object_Name__c;
                 developerName = existingMigratedObjectMapping.DeveloperName;
@@ -548,10 +548,12 @@ public with sharing class BDI_MigrationMappingUtility {
         Data_Import_Object_Mapping__mdt objectMapping;
         String uniqueRecordName;
         String predecessor;
+        Boolean isReference;
 
         public DataImportObjectMapping() {}
 
-        public DataImportObjectMapping(Data_Import_Object_Mapping__mdt objectMapping) {
+        public DataImportObjectMapping(Data_Import_Object_Mapping__mdt objectMapping, Boolean isReference) {
+            this.isReference = isReference;
             this.objectMapping = objectMapping;
             this.predecessor = objectMapping.Predecessor__c;
             if (objectMapping.Predecessor__c == null &&
@@ -579,7 +581,7 @@ public with sharing class BDI_MigrationMappingUtility {
 
             fieldValues.put(
                 UTIL_Namespace.StrAllNSPrefix('Legacy_Data_Import_Object_Name__c'),
-                clone.DeveloperName
+                (isReference ? clone.DeveloperName : clone.Legacy_Data_Import_Object_Name__c)
             );
 
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
