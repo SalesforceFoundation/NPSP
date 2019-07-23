@@ -2417,12 +2417,185 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Donation information matched against multiple Payments, so the NPSP Data Importer did not import it. The Payment Possible Matches field contains the Salesforce Ids of the matched Payments.</value>
     </labels>
     <labels>
+        <fullName>bdiFMUIBackToMapGroup</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIBackToMapGroup</shortDescription>
+        <value>Back to Mapping Group</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDataType</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIDataType</shortDescription>
+        <value>Data Type</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDatatableMapsTo</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIDatatableMapsTo</shortDescription>
+        <value>Maps To</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDescription</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIDescription</shortDescription>
+        <value>
+            Connect the field you created on the NPSP Data Import object to the field on your target object in
+            the grid below. You can find fields by Field Label or the Field API Name.
+            Fields on the NPSP Data Import object must map to compatible field types on your target object.
+            When you select an NPSP Data Import field, only the compatible target fields will be available.
+        </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIFieldAPIName</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIFieldAPIName</shortDescription>
+        <value>Field API Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIFieldLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIFieldLabel</shortDescription>
+        <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUILongDeployment</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUILongDeployment</shortDescription>
+        <value>Modifying this Field Mapping is taking longer than expected.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUILongDeploymentLink</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUILongDeploymentLink</shortDescription>
+        <value>You can view the deployment status here.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUILongDeploymentMessage</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUILongDeploymentMessage</shortDescription>
+        <value>It'll continue to process in the background. Please wait.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUINewFieldMapping</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUINewFieldMapping</shortDescription>
+        <value>Create New Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUINoFieldMappings</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUINoFieldMappings</shortDescription>
+        <value>There are no Field Mappings for this Mapping Group yet, </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISearchSourceInputLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISearchSourceInputLabel</shortDescription>
+        <value>Search for the source field by label or API name.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISearchTargetInputLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISearchTargetInputLabel</shortDescription>
+        <value>Search for the target field by label or API name.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISourceObject</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISourceObject</shortDescription>
+        <value>Source (NPSP Data Import Object)</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISuccessful</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISuccessful</shortDescription>
+        <value>successful</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUITarget</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUITarget</shortDescription>
+        <value>Target</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUITryAgain</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUITryAgain</shortDescription>
+        <value>Please try again</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIUnsuccessful</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIUnsuccessful</shortDescription>
+        <value>unsuccessful</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIUpdate</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUIUpdate</shortDescription>
+        <value>update</value>
+    </labels>
+    <labels>
         <fullName>bdiFailed</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFailed</shortDescription>
         <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>bdiFieldMapping</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFieldMapping</shortDescription>
+        <value>Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>bdiFieldMappings</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFieldMappings</shortDescription>
+        <value>Field Mappings</value>
     </labels>
     <labels>
         <fullName>bdiHouseholdModelRequired</fullName>
@@ -3307,6 +3480,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>flsError</shortDescription>
         <value>You do not have permissions to modify {0}.</value>
+    </labels>
+    <labels>
+        <fullName>flsReadAccessError</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>flsReadAccessError</shortDescription>
+        <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>
@@ -5757,6 +5938,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Allocation Type</value>
     </labels>
     <labels>
+        <fullName>stgBDIGoToSetup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgBDIGoToSetup</shortDescription>
+        <value>Configure Advanced Mapping</value>
+    </labels>
+    <labels>
         <fullName>stgBtnBack</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5851,6 +6040,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgBtnHHAutoName</shortDescription>
         <value>Refresh All Household Names</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNew</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNew</shortDescription>
+        <value>New</value>
     </labels>
     <labels>
         <fullName>stgBtnNewAutoRel</fullName>

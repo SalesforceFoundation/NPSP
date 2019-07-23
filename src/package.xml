@@ -70,6 +70,7 @@
         <members>BDI_DataImportCTRL_TEST</members>
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
+        <members>BDI_DataImportFLSService</members>
         <members>BDI_DataImportService</members>
         <members>BDI_DataImportService_TEST</members>
         <members>BDI_DataImport_API</members>
@@ -86,6 +87,7 @@
         <members>BDI_FieldMappingHelpText</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
+        <members>BDI_ManageAdvancedMappingCtrl</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_MigrationMappingHelper</members>
         <members>BDI_MigrationMappingHelperTest</members>
@@ -98,6 +100,7 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BDI_TargetFields</members>
         <members>BGE_BatchGiftEntryTab_CTRL</members>
         <members>BGE_BatchGiftEntryTab_CTRL_TEST</members>
         <members>BGE_BatchGiftEntry_UTIL</members>
@@ -524,6 +527,7 @@
         <members>BDI_BatchOverride</members>
         <members>BDI_DataImport</members>
         <members>BDI_DataImportDeleteBTN</members>
+        <members>BDI_ManageAdvancedMapping</members>
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
@@ -614,6 +618,8 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>BDI_ManageAdvancedMapping</members>
+        <members>BDI_ManageAdvancedMappingContainer</members>
         <members>BGE_BatchGiftEntryTab</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
@@ -1117,6 +1123,9 @@
         <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
         <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
         <members>Data_Import_Object_Mapping__mdt.Relationship_To_Predecessor__c</members>
+        <members>DeploymentEvent__e.CompletedDate__c</members>
+        <members>DeploymentEvent__e.DeploymentId__c</members>
+        <members>DeploymentEvent__e.Status__c</members>
         <members>Filter_Group__mdt.Description__c</members>
         <members>Filter_Group__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Constant__c</members>
@@ -1483,7 +1492,28 @@
         <members>bdiErrorNonHHAccountContactWithAdv</members>
         <members>bdiErrorOneToOneMultiContact</members>
         <members>bdiErrorPaymentMultiMatch</members>
+        <members>bdiFMUIBackToMapGroup</members>
+        <members>bdiFMUIDataType</members>
+        <members>bdiFMUIDatatableMapsTo</members>
+        <members>bdiFMUIDescription</members>
+        <members>bdiFMUIFieldAPIName</members>
+        <members>bdiFMUIFieldLabel</members>
+        <members>bdiFMUILongDeployment</members>
+        <members>bdiFMUILongDeploymentLink</members>
+        <members>bdiFMUILongDeploymentMessage</members>
+        <members>bdiFMUINewFieldMapping</members>
+        <members>bdiFMUINoFieldMappings</members>
+        <members>bdiFMUISearchSourceInputLabel</members>
+        <members>bdiFMUISearchTargetInputLabel</members>
+        <members>bdiFMUISourceObject</members>
+        <members>bdiFMUISuccessful</members>
+        <members>bdiFMUITarget</members>
+        <members>bdiFMUITryAgain</members>
+        <members>bdiFMUIUnsuccessful</members>
+        <members>bdiFMUIUpdate</members>
         <members>bdiFailed</members>
+        <members>bdiFieldMapping</members>
+        <members>bdiFieldMappings</members>
         <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>
         <members>bdiImported</members>
@@ -1599,6 +1629,7 @@
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
         <members>flsError</members>
+        <members>flsReadAccessError</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
@@ -1906,6 +1937,7 @@
         <members>stgAddrMustChooseClass</members>
         <members>stgAddrPermissionDenied</members>
         <members>stgAllocationLevel</members>
+        <members>stgBDIGoToSetup</members>
         <members>stgBtnBack</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
@@ -1918,6 +1950,7 @@
         <members>stgBtnCreateUDR</members>
         <members>stgBtnEdit</members>
         <members>stgBtnHHAutoName</members>
+        <members>stgBtnNew</members>
         <members>stgBtnNewAutoRel</members>
         <members>stgBtnNewONS</members>
         <members>stgBtnNewPaymentMap</members>
@@ -2365,6 +2398,7 @@
         <members>Data_Import_Field_Mapping__mdt</members>
         <members>Data_Import_Object_Mapping_Set__mdt</members>
         <members>Data_Import_Object_Mapping__mdt</members>
+        <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Rollup__mdt</members>
@@ -2604,6 +2638,7 @@
         <members>Trigger_Handler__c-iw</members>
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
+        <members>DeploymentEvent__e-en_US</members>
         <members>Filter_Group__mdt-de</members>
         <members>Filter_Group__mdt-en_US</members>
         <members>Filter_Group__mdt-es</members>
@@ -2798,6 +2833,16 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>bdiFieldMappingModal</members>
+        <members>bdiFieldMappings</members>
+        <members>bdiObjectMappings</members>
+        <members>pubsubNoPageRef</members>
+        <members>utilPlatformEventListener</members>
+        <members>utilSearchableCombobox</members>
+        <members>utilStencil</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
@@ -2924,5 +2969,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>43.0</version>
+    <version>46.0</version>
 </Package>

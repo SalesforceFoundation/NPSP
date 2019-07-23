@@ -1,0 +1,9 @@
+.slds-modal__container_extension {
+    border-radius: 0.25rem;
+    position: relative;
+    overflow: visible;
+}
+
+.slds-modal_content_extension {
+    overflow: visible;
+}
