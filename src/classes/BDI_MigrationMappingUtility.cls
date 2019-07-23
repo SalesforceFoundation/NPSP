@@ -668,16 +668,19 @@ public with sharing class BDI_MigrationMappingUtility {
             this.helpText = dfr.getInlineHelpText();
 
             if (this.helpText != null) {
+
                 List<String> parts = helpText.split('\\.', 2);
-                this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
-                this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
+                if (parts.size() >= 2) {
+                    this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
+                    this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
 
-                if (NAMESPACE != 'npsp') {
-                    this.targetFieldAPIName =
-                        UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                    if (NAMESPACE != 'npsp') {
+                        this.targetFieldAPIName =
+                            UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                    }
+
+                    checkRequiredFields();
                 }
-
-                checkRequiredFields();
             }
         }
 
