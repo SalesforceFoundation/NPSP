@@ -944,6 +944,76 @@ private class BDI_AdditionalObjectServiceTest {
     }
 
     @isTest
+    static void givenAdditionalObjectsFailWhenProcessedThenAssertFailureInformation() {
+        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'testGAU');
+        insert testGAU;
+
+        DataImport__c singleErrorDataImport = new DataImport__c(
+                Account1_Name__c = 'a0',
+                Donation_Donor__c = 'Account1',
+                Donation_Amount__c = 100,
+                Donation_Date__c = Date.today(),
+                GAU_Allocation_1_GAU__c = testGAU.Id,
+                GAU_Allocation_1_Percent__c = 110
+        );
+
+        DataImport__c doubleErrorDataImport = new DataImport__c(
+                Account1_Name__c = 'a1',
+                Donation_Donor__c = 'Account1',
+                Donation_Amount__c = 100,
+                Donation_Date__c = Date.today(),
+                GAU_Allocation_1_GAU__c = testGAU.Id,
+                GAU_Allocation_1_Percent__c = 110,
+                Opportunity_Contact_Role_1_Role__c = 'testOCRole'
+        );
+        insert new List<DataImport__c>{
+                singleErrorDataImport, doubleErrorDataImport
+        };
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImportService dataImportService =
+                new BDI_DataImportService(
+                        false,
+                        BDI_FieldMappingCustomMetadata.getInstance());
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
+
+        Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        List<DataImport__c> dataImports = [
+                SELECT
+                        Status__c,
+                        FailureInformation__c,
+                        GAU_Allocation_1_Import_Status__c,
+                        Opportunity_Contact_Role_1_ImportStatus__c
+                FROM DataImport__c
+                WHERE Id = :singleErrorDataImport.Id
+                OR Id = :doubleErrorDataImport.Id
+        ];
+
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiFailed, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.GAU_Allocation_1_Import_Status__c);
+            System.assertNotEquals(null, dataImport.FailureInformation__c);
+            System.assert(dataImport.FailureInformation__c.contains(dataImport
+                    .GAU_Allocation_1_Import_Status__c),
+                    'The Data Import Failure Information field should contain ' +
+                            'the GAU Allocation error message.');
+
+            if (dataImport.Id == doubleErrorDataImport.Id) {
+                System.assertNotEquals(null,
+                        dataImport.Opportunity_Contact_Role_1_ImportStatus__c);
+                System.assert(dataImport.FailureInformation__c.contains(
+                        dataImport.Opportunity_Contact_Role_1_ImportStatus__c),
+                        'The Data Import Failure Information field should contain both the ' +
+                                'GAU Allocation and Opportunity Contact Role error messages.');
+            }
+        }
+    }
+
+    @isTest
     static void givenOppHasBeenImportedWhenReprocessedThenAssertAdditionalObjectsImported() {
         //Setup: use Advanced Field Mapping with Donation Matching Behavior set to "Single
         // Match or Create"
