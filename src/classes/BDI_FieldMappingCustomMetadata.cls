@@ -151,7 +151,8 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                     FROM Data_Import_Field_Mapping_Set__mdt
                     WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
                     
-        for (Data_Import_Object_Mapping__mdt diom:[SELECT Custom_Mapping_Logic_Class__c,
+        for (Data_Import_Object_Mapping__mdt diom:[SELECT MasterLabel,
+                                            Custom_Mapping_Logic_Class__c,
                                             DeveloperName, 
                                             Data_Import_Object_Mapping_Set__c, 
                                             Imported_Record_Field_Name__c,
@@ -175,13 +176,17 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
         }
 
         if (objMappingsByDevName != null && objMappingsByDevName.size() > 0) {
-            for (Data_Import_Field_Mapping__mdt difm:[SELECT DeveloperName,
+            for (Data_Import_Field_Mapping__mdt difm:[SELECT MasterLabel,
+                                                    DeveloperName,
                                                     Data_Import_Field_Mapping_Set__c,
+                                                    Data_Import_Field_Mapping_Set__r.DeveloperName,
                                                     Required__c,
                                                     Source_Field_API_Name__c,
                                                     Target_Field_API_Name__c,
                                                     Target_Object_Mapping__c,
-                                                    Target_Object_Mapping__r.DeveloperName
+                                                    Target_Object_Mapping__r.DeveloperName,
+                                                    Target_Object_Mapping__r.Object_API_Name__c,
+                                                    Is_Deleted__c
                                         FROM Data_Import_Field_Mapping__mdt
                                         WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName]) {
 

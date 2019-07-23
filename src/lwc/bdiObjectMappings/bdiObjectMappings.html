@@ -1,0 +1,38 @@
+<template>
+    <style>
+        .slds-button_extension-back {
+            height: 40px;
+            color: #006DCC;
+            font-family: "Salesforce Sans";
+            font-size: 13px;
+            line-height: 40px;
+            font-weight: 300;
+        }
+    </style>
+    <template if:true={displayObjectMappings}>
+        <div class="slds-grid slds-wrap slds-m-bottom_small">
+            <div class="slds-size_1-of-1">
+                <a class="slds-text-title_caps slds-button slds-button_extension-back"
+                    href="/lightning/n/NPSP_Settings">
+                    Back to NPSP Settings
+                </a>
+            </div>
+        </div>
+        <div class="slds-m-vertical_medium">
+                <template if:true={objectMappings.data}>
+                    <lightning-datatable
+                        key-field="Id"
+                        columns={columns}
+                        data={objectMappings.data}
+                        hide-checkbox-column=true
+                        onrowaction={handleRowAction}>
+                    </lightning-datatable>
+                </template>
+                <template if:true={objectMappings.error}>
+                    <!-- handle Apex error -->
+                </template>
+            </div>
+    </template>
+
+
+</template>

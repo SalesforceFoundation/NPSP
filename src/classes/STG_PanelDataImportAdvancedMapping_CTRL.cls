@@ -37,6 +37,11 @@
 public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
+    * @description URL of the Advanced Mapping Custom UI aura component container
+    */
+    public static final String COMPONENT_URL = '/lightning/cmp/c__BDI_ManageAdvancedMapping';
+
+    /*********************************************************************************************************
     * @description Returns the string Id of the Data Import Advanced Mapping panel
     */
     public override String idPanel() { return 'idPanelDataImportAdvancedMapping'; }
@@ -126,6 +131,18 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         this.migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
         refreshCustomSettings();
         setDeploymentStatus();
+    }
+
+    /*******************************************************************************************************
+    * @description Action Method to navigate to separate VF page that contains custom Advanced Mapping UI in
+    * Aura and Lightning
+    *
+    * @return PageReference
+    */
+    public PageReference navigate(){
+        PageReference advancedMapping = new PageReference(COMPONENT_URL);
+        advancedMapping.setRedirect(true);
+        return advancedMapping;
     }
 
     /*******************************************************************************************************
