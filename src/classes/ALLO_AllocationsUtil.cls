@@ -52,12 +52,59 @@ public class ALLO_AllocationsUtil {
         OPP_ALLOC_SYNC_NONFINALIZED
     }
 
+    /** @description Caches PROCESS_EXCLUSIONS */
+    private static Map<PROCESS_DEF, Set<PROCESS_DEF>> PROCESS_EXCLUSIONS;
+
+    /** @description Manages Record Exclusions for downstream processes, so it can process as much as possible while skipping what it has to */
+    public class RecordExclusions {
+        private Map<Id, Set<PROCESS_DEF>> exclusionsByRecordId = new Map<Id, Set<PROCESS_DEF>>();
+
+        /**
+          * @description Adds an exclusion for the specified record.
+          * @param Id recordId The Id of the record to add an Exclusion for
+          * @param PROCESS_DEF exclusion The exclusion to add
+          */
+        public void addExclusion(Id recordId, PROCESS_DEF exclusion) {
+            if (!this.exclusionsByRecordId.containsKey(recordId)) {
+                this.exclusionsByRecordId.put(recordId, new Set<PROCESS_DEF> {exclusion});
+            } else {
+                this.exclusionsByRecordId.get(recordId).add(exclusion);
+            }
+        }
+
+        /**
+          * @description Adds a set of exclusions for the specified record.
+          * @param Id recordId The Id of the record to add an Exclusion for
+          * @param Set<PROCESS_DEF> exclusions The exclusions to add
+          */
+        public void addExclusions(Id recordId, Set<PROCESS_DEF> exclusions) {
+            Set<PROCESS_DEF> recordExclusions = (this.exclusionsByRecordId.containsKey(recordId)) ? new Set<PROCESS_DEF>() : this.exclusionsByRecordId.get(recordId);
+
+            for (PROCESS_DEF excl : exclusions) {
+                recordExclusions.add(excl);
+            }
+
+            if (!this.exclusionsByRecordId.containsKey(recordId)) {
+                this.exclusionsByRecordId.put(recordId, recordExclusions);
+            }
+        }
+
+        /**
+          * @description Checks to see if an exclusion is present for a record
+          * @param Id recordId The Id of the record
+          * @param PROCESS_DEF exclusion The exclusions to check for
+          */
+        public boolean hasExclusion(Id recordId, PROCESS_DEF exclusion) {
+            return (this.exclusionsByRecordId(recordId) && this.exclusionsByRecordId.get(recordId).contains(exclusion));
+        }
+    }
+
     /** @description Envelope of Changes to Allocations, along with any functional errors by Opportunity or Payment Id */
     public class AllocationResults {
-        public List<Allocation__c> allocationsForInsert;
-        public List<Allocation__c> allocationsForUpdate;
-        public List<Allocation__c> allocationsForDelete;
-        public Map<String, String> errorsByRecordId;
+        public List<Allocation__c> allocationsForInsert= new List<Allocation__c>();
+        public List<Allocation__c> allocationsForUpdate= new List<Allocation__c>();
+        public List<Allocation__c> allocationsForDelete= new List<Allocation__c>();
+        public Map<String, String> errorsByRecordId = new Map<String, String>();
     }
 
     /**
@@ -68,11 +115,12 @@ public class ALLO_AllocationsUtil {
     public class RecordsForReview {
         public List<Opportunity> opps = new List<Opportunity>();
         public Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>();
+        public Map<Id, Id> paymentIdsToOppIds = new Map<Id, Id>();
         public Map<Id, List<Allocation__c>> oppsAllocations = new Map<Id, List<Allocation__c>>();
         public Map<Id, List<Allocation__c>> paymentAllocations = new Map<Id, List<Allocation__c>>();
-
         public Map<Id, List<Allocation__c>> recurringDonationAllocations = new Map<Id, List<Allocation__c>>();
         public Map<Id, List<Allocation__c>> campaignAllocations = new Map<Id, List<Allocation__c>>();
+        public ERR_RecordError recErrs;
 
         /**
           * @description Adds the Allocation to the appropriate map.  It picks the appropriate parent allocation
@@ -117,6 +165,28 @@ public class ALLO_AllocationsUtil {
 
             return false;
         }
+
+        /** @description Initialize errors for Process using the records flagged for review.  It will retrieve any
+          * existing errors so we can update them if more errors for that record and process.
+          * @param String processName The processName/context the record errors are recorded under
+          */
+        public void initializeErrors(String processName) {
+            // Initialize the Record Errors
+            this.recErrs = new ERR_RecordError(processName);
+
+            // Build SObjects List to retrieve existing records
+            List<SObject> sObjs = new List<SObject>();
+            for (Opportunity opp : this.oppsById.values()) {
+                sObjs.add(opp);
+                for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
+                    sObjs.add(payment);
+                }
+            }
+
+            // Retrieve any errors already in the System
+            this.recErrs.retrieveExistingErrorsFor(sObjs);
+        }
+
     }
 
     /**
@@ -152,7 +222,7 @@ public class ALLO_AllocationsUtil {
      * null, all records are considered to be updated.
      * @return RecordsForReview the Opportunity records requiring review and additional/processing
      */
-    public static RecordsForReview determineRecordsRequiringReview(Set<Id> oppIds, Datetime boundary) {
+    public static RecordsForReview determineRecordsRequiringReview(String processName, Set<Id> oppIds, Datetime boundary) {
         RecordsForReview recsForReview = new RecordsForReview();
 
         Map<Id, Opportunity> oppsById = retrieveOpportunities(oppIds);
@@ -214,7 +284,214 @@ public class ALLO_AllocationsUtil {
         removeIfNotForReview(recsForReview.paymentAllocations, paymentIdToOppId, recsForReview.oppsById);
         removeIfNotForReview(recsForReview.oppsAllocations, recsForReview.oppsById);
 
+        // Build SObjects List to retrieve existing records, as well as the Payment to Opportunity Id map
+        List<SObject> sObjs = new List<SObject>();
+        for (Opportunity opp : recsForReview.oppsById.values()) {
+            sObjs.add(opp);
+            for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
+                sObjs.add(payment);
+                recsForReview.paymentIdsToOppIds.put (payment.Id, opp.Id);
+            }
+        }
+
+        recsForReview.recErrs.retrieveExistingErrorsFor(sObjs);
+
+        recErrs.initializeErrors(processName);
+
         return recsForReview;
+    }
+
+    /**
+     * @description processes Opportunities and their allocations:
+     * 1) Resizes existing percentage based allocations for Amount changes
+     * 2) Adds/updates/removes the default allocation if enabled, and as appropriate
+     * 3) Creates allocations from parent (if no allocations are present, and record has a parent)
+     * 4) Clears allocations if amount goes to null/0
+     * 5) Records errors if allocations become invalid for the Opportunity
+     * 6) Adds record exclusions if cannot proceed with downstream steps, based on record state
+     * 7) Validates changes, logs errors if allocations are now invalid
+     * NO DML is processed in this method.  It is instead returned to the caller for processing
+     * @param Map<Id, Opportunity> opps The opportunities to process
+     * @param Map<Id, List<Allocation__c>> oppsAllocations The Allocations associated with the Opportunity
+     * @param Map<Id, List<Allocation__c>> campaignAllocations The Allocations associated with (parent Campaigns, if any)
+     * @param Map<Id, List<Allocation__c>> recurringDonationAllocations The Allocations associated with (parent Recurring Donations, if any)
+     * @param RecordExclusions recExclusions Map of records to any exclusions they might have
+     * @return AllocationResults The DML to process, along with any errors identified
+     */
+    public static AllocationResults processOpportunityAllocations(Map<Id, Opportunity> opps, Map<Id, List<Allocation__c>> oppsAllocations, Map<Id, List<Allocation__c>> campaignAllocations, Map<Id, List<Allocation__c>> recurringDonationAllocations, RecordExclusions recExclusions) {
+        AllocationResults allocResults = new AllocationResults();
+
+        //TODO Implememnt
+
+
+        return allocResults;
+    }
+
+    /**
+     * @description processes Payments and their allocations:
+     * 1) Resizes existing percentage based allocations for Amount changes
+     * 2) Adds/updates/removes the default allocation if enabled, and as appropriate
+     * 3) Creates allocations from parent
+     * 4) Clears allocations if amount goes to null/0
+     * 5) Records errors if allocations become invalid for the Payment
+     * 6) Adds record exclusions if cannot proceed with downstream steps, based on record state
+     * 7) Validates changes, logs errors if allocations are now invalid
+     * NO DML is processed in this method.  It is instead returned to the caller for processing
+     * @param Map<Id, Opportunity> opps The opportunities to process
+     * @param Map<Id, List<Allocation__c>> oppsAllocations The Allocations associated with the Opportunity
+     * @param Map<Id, List<Allocation__c>> pmtsAllocations The Payment Allocations for the Payments associated with these Opportunities
+     * @param RecordExclusions recExclusions Map of records to any exclusions they might have
+     * @return AllocationResults The DML to process, along with any errors identified
+     */
+    public static AllocationResults processPaymentAllocations(Map<Id, Opportunity> opps, Map<Id, List<Allocation__c>> oppsAllocations, Map<Id, List<Allocation__c>> pmtsAllocations, RecordExclusions recExclusions) {
+        AllocationResults allocResults = new AllocationResults();
+
+        //TODO Implememnt
+
+        return allocResults;
+    }
+
+    /**
+     * @description Processes the DML for the Allocation Results and updates the RecordsForReview and recExclusions
+     * @param AllocationResults allocResults The DML to process, along with any errors identified
+     * @param RecordsForReview recs the Opportunity records and associated Allocations requiring review and additional/processing
+     * @param RecordExclusions recExclusions Map of records to any exclusions they might have
+     */
+    public static void processAllocationResults(PROCESS_DEF process, AllocationResults allocResults, RecordsForReview recs, RecordExclusions recExclusions) {
+        List<Database.DeleteResult> deletes = null;
+        List<Database.SaveResult> inserts = null;
+        List<Database.SaveResult> updates = null;
+
+        // These are shells to pass to the ERR_RecordError addDML Errors method, so it can set the Object Type
+        SObject oppObjType = new Opportunity();
+        SObject paymentObjType = new npe01__OppPayment__c();
+        Set<PROCESS_DEF> processExclusions = getProcessExclusionsFor(process);
+
+        // Process Deletions
+        if (allocResults.allocationsForDelete != null && allocResults.allocationsForDelete.size() > 0) {
+            deletes = Database.delete(allocResults.allocationsForDelete, false);
+        }
+
+        // Process Inserts
+        if (allocResults.allocationsForInsert != null && allocResults.allocationsForInsert.size() > 0) {
+            inserts = Database.insert(allocResults.allocationsForInsert, false);
+        }
+
+        // Process Updates
+        if (allocResults.allocationsForUpdates != null && allocResults.allocationsForUpdate.size() > 0) {
+            updates = Database.update(allocResults.allocationsForUpdate, false);
+        }
+
+        // Handle Deletes and Update Maps and Errors
+        if (deletes != null) {
+            for (Integer i=0; i < deletes.size(); i++) {
+                Allocation__c deletedAlloc = allocResults.allocationsForDelete[i];
+                Database.DeleteResult delResult = deletes[i];
+                if (deletedAlloc.Opportunity__c != null) {
+                    if (delResult.isSuccess()) {
+                        deleteFromAllocationsList(recs.oppsAllocations.get(deletedAlloc.Opportunity__c), deletedAlloc);
+                    } else {
+                        recs.recErrs.addError(deletedAlloc.Opportunity__c, delResult, oppObjType);
+                        recExclusions.addExclusions(deletedAlloc.Opportunity__c, processExclusions);
+                    }
+
+                } else if (deletedAlloc.Payment__c != null) {
+                    if (delResult.isSuccess()) {
+                        deleteFromAllocationsList(recs.paymentAllocations.get(deletedAlloc.Payment__c), deletedAlloc);
+                    } else {
+                        recs.recErrs.addError(deletedAlloc.Payment__c, delResult, paymentObjType);
+                        recExclusions.addExclusions(recs.paymentIdsToOppIds.get(deletedAlloc.Payment__c), processExclusions);
+                    }
+                }
+            }
+        }
+
+        // Handle Inserts and Update Maps and Errors
+        if (inserts != null) {
+            for (Integer i=0; i < inserts.size(); i++) {
+                Allocation__c insertedAlloc = allocResults.allocationsForInsert[i];
+                Database.InsertResult insResult = inserts[i];
+                if (insertedAlloc.Opportunity__c != null) {
+                    if (insResult.isSuccess()) {
+                        insertIntoAllocationsList(recs.oppAllocations.get(insertedAlloc.Opportunity__c), insertedAlloc);
+                    } else {
+                        recs.recErrs.addError(insertedAlloc.Opportunity__c, insResult, oppObjType);
+                        recExclusions.addExclusions(insertedAlloc.Opportunity__c, processExclusions);
+                    }
+                } else if (insertedAlloc.Payment__c != null) {
+                    if (insResult.isSuccess()) {
+                        insertIntoAllocationsList(recs.paymentAllocations.get(insertedAlloc.Payment__c), insertedAlloc);
+                    } else {
+                        recs.recErrs.addError(insertedAlloc.Payment__c, insResult, paymentObjType);
+                        recExclusions.addExclusions(recs.paymentIdsToOppIds.get(insertedAlloc.Payment__c), processExclusions);
+                    }
+                }
+            }
+        }
+
+        // Handle Updates and Update Maps and Errors
+        if (updates != null) {
+            for (Integer i=0; i < updates.size(); i++) {
+                Allocation__c updatedAlloc = allocResults.allocationsForUpdate[i];
+                Database.UpdateResult updResult = updates[i];
+                if (updatedAlloc.Opportunity__c != null) {
+                    if (updResult.isSuccess()) {
+                        updateInAllocationsList(recs.oppAllocations.get(updatedAlloc.Opportunity__c), updatedAlloc);
+                    } else {
+                        recs.recErrs.addError(updatedAlloc.Opportunity__c, updResult, oppObjType);
+                        recExclusions.addExclusions(updatedAlloc.Opportunity__c, processExclusions);
+                    }
+                } else if (updatedAlloc.Payment__c != null) {
+                    if (updResult.isSuccess()) {
+                        updateInAllocationsList(recs.paymentAllocations.get(updatedAlloc.Payment__c), updatedAlloc);
+                    } else {
+                        recs.recErrs.addError(updatedAlloc.Payment__c, updResult, paymentObjType);
+                        recExclusions.addExclusions(recs.paymentIdsToOppIds.get(updatedAlloc.Payment__c), processExclusions);
+                    }
+                }
+            }
+        }
+
+        // Functional errors
+        if (allocResults.errorsByRecordId != null && allocResults.errorsByRecordId.size()) {
+            recs.recErrs.addErrors(errorsByRecordId, oppObjType);
+            for (String recordId : errorsByRecordId.keyset()) {
+
+            }
+        }
+
+    }
+
+    /**
+     * @description Disables the following Allocation Triggers, on the Allocation, Opportunity,
+     * and npe01__OppPayment__c objects: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM (in
+     * memory only)
+     */
+    public static void disableAllocationTriggers() {
+        updateAllocationTriggersState(false);
+    }
+
+    /**
+     * @description Enables the following Allocation Triggers, on the Allocation, Opportunity,
+     * and npe01__OppPayment__c objects: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM (in
+     * memory only)
+     */
+    public static void enableAllocationTriggers() {
+        updateAllocationTriggersState(true);
+    }
+
+
+
+    /**
+     * @description Updates the state of the Allocation triggers in the in memory cache, enabling or disabling the
+     * trigger.  The following triggers are enabled/disabled by this method: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM.
+     * @param Boolean state - If true, they are active, if false, they are inactive.
+     */
+    private static void updateAllocationTriggersState(Boolean state) {
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_Allocations_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'ALLO_Allocations_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'ALLO_Allocations_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_PaymentSync_TDTM', state);
     }
 
     /**
@@ -323,34 +600,43 @@ public class ALLO_AllocationsUtil {
      *@return  Map<PROCESS_DEFINITION, Set<PROCESS_DEFINITION>>
      */
     public static Map<PROCESS_DEF, Set<PROCESS_DEF>> getProcessExclusions() {
-        return new Map<PROCESS_DEF, SET<PROCESS_DEF>> {
-            PROCESS_DEF.OPP_AMT_UPD =>
-                new Set<PROCESS_DEF>    {PROCESS_DEF.OPP_ALLOC_UPD,
-                                        PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
-            PROCESS_DEF.OPP_ALLOC_UPD =>
-                new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_INITIALIZE,
-                                        PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
-            PROCESS_DEF.PMT_ALLOC =>
-                new Set<PROCESS_DEF>    {PROCESS_DEF.ALL},
-            PROCESS_DEF.PMT_ALLOC_ZERO_OUT =>
-                new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
-            PROCESS_DEF.PMT_ALLOC_RECALC =>
-                new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED},
-            PROCESS_DEF.PMT_ALLOC_INITIALIZE =>
-                new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
-            PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC =>
-                new Set<PROCESS_DEF>    {PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                        PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED}
-        };
+
+        if (PROCESS_EXCLUSIONS = null) {
+            PROCESS_EXCLUSIONS = new Map<PROCESS_DEF, SET<PROCESS_DEF>> {
+                PROCESS_DEF.OPP_AMT_UPD =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.OPP_ALLOC_UPD,
+                                            PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
+                PROCESS_DEF.OPP_ALLOC_UPD =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_INITIALIZE,
+                                            PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
+                PROCESS_DEF.PMT_ALLOC =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.ALL},
+                PROCESS_DEF.PMT_ALLOC_ZERO_OUT =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
+                PROCESS_DEF.PMT_ALLOC_RECALC =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED},
+                PROCESS_DEF.PMT_ALLOC_INITIALIZE =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
+                PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED}
+            };
+        }
+
+        return PROCESS_EXCLUSIONS;
+    }
+
+    private static Set<PROCESS_DEF> getProcessExclusionsFor(PROCESS_DEF process) {
+        return getProcessExclusions().get(process);
     }
 
     /**
@@ -460,6 +746,8 @@ public class ALLO_AllocationsUtil {
      * Rule 6 - If MultiCurrencyOrg, and Allocation CurrencyIsoCode and Parent CurrencyIsoCode are different
      * Rule 7 - Payment Allocations Only: Parent Amount is 0/null, and Allocation Amount is Not Equal to 0
      * Rule 8 - Payment Allocations Only: Parent Amount is not 0/null, but Allocation Amount equals 0
+     * Rule 9 - Sum of Allocations != Parent Amount
+     * Rule 10 - Parent Allocations have changed (Not Implemented)
      * @param SObject parentSObj Parent of the Allocations
      * @param List<Allocation__c> allocations Allocations associated with the parentSObj that need to be checked to see if review is required
      * @param DateTime boundary Records older than this timestamp should not be considered modified since the last execution.  If null, will reprocess
@@ -502,6 +790,8 @@ public class ALLO_AllocationsUtil {
             return true;
         }
 
+        Decimal allocAmount = 0;
+
         // Check individual allocations next
         for (Allocation__c alloc :allocations)  {
             // Modified since last execution
@@ -509,6 +799,7 @@ public class ALLO_AllocationsUtil {
                 return true;
             }
 
+            allocAmount += alloc.Amount__c;
 
             if (UserInfo.isMultiCurrencyOrganization()) { // Only check if CurrencyIsoCode is different if Multi Currency Organization
                 String alloCurrencyIsoCode = (String) alloc.get('CurrencyIsoCode');
@@ -527,6 +818,11 @@ public class ALLO_AllocationsUtil {
                     return true;
                 }
             }
+        }
+
+        // Total of Allocations and Parent Amount should match
+        if (amount != null && allocAmount != amount) {
+            return true;
         }
 
         // Positive checks exhausted.

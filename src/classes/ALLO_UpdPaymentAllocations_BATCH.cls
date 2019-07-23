@@ -123,15 +123,34 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     public override void doExecute(Database.BatchableContext bc, List<SObject>records ) {
         this.recCnt += records.size();
 
-
-
         Set<Id> oppIds = addIdsForRecords(new Set<Id>(), records);
-        ALLO_AllocationsUtil.RecordsForReview recs = ALLO_AllocationsUtil.determineRecordsRequiringReview(oppIds, boundary);
+        ALLO_AllocationsUtil.RecordsForReview recs = ALLO_AllocationsUtil.determineRecordsRequiringReview(PROCESS_NAME, oppIds, boundary);
+
+        Map<ALLO_AllocationsUtils.PROCESS_DEF, Set<ALLO_AllocationsUtils.PROCESS_DEF>> processExclusionsMap = ALLO_AllocationsUtils.getProcessExclusions();
 
         this.reviewCnt += recs.oppsById.size();
 
-    }
+        // Disable Allocation Triggers prior to making any DML Updates
+        ALLO_AllocationsUtil.disableAllocationTriggers();
 
+        // Will track exclusions across processes
+        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUtil.RecordExclusions();
+
+        // Process Opportunity Allocations
+        ALLO_AllocationsUtil.AllocationResults allocResults = ALLO_AllocationsUtil.processOpportunityAllocations(recs.oppsById, recs.oppsAllocations, recs.campaignAllocations, recs.recurringDonationAllocations, recExcl);
+
+        // Process Opportunity Allocation Results
+        ALLO_AllocationsUtil.processAllocationResults(allocResults, recs, recExcl);
+
+        // Process Payment Allocations
+        allocResults = ALLO_AllocationsUtil.processPaymentAllocations(recs.oppsById, recs.oppsAllocations, recs.paymentAllocations, recExcl);
+
+        // Process Payment Allocations Results
+        ALLO_AllocationsUtil.processAllocationResults(allocResults, recs, recExcl);
+
+        // Enable Allocation Triggers after all updates are complete
+        ALLO_AllocationsUtil.enableAllocationTriggers();
+    }
 
     /**
      * @description Takes a set of Ids, and adds additional record Ids to it from the list of records
