@@ -496,15 +496,13 @@ class NPSP(object):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
-            self.selenium.wait_until_page_contains_element(locator)
-            self.selenium.page_should_contain_element(locator)
+            self.selenium.wait_until_page_contains_element(locator,error="could not find field with specified value on the page")
      
     def verify_related_object_field_values(self, **kwargs):
         """verifies the specified field,value pairs in the related object page (table format)""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['object']['field-value'].format(name,value)
-            self.selenium.wait_until_page_contains_element(locator)
-            self.selenium.page_should_contain_element(locator)
+            self.selenium.wait_until_page_contains_element(locator,error="could not find field with specified value on the page")
                     
     def page_contains_record(self,title):   
         """Validates if the specified record is present on the page"""   
