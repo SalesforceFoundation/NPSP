@@ -4103,7 +4103,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionHHAccNoContacts</shortDescription>
-        <value>Consider deleting these unused Household object records to save space. If you have completed a conversion to the Household Account model and no longer need the data on the Household object records, you can safely delete them. View these Household object records by running the Empty Household Objects report in the NPSP Health Check reports folder.</value>
+        <value>Consider deleting these unused Household Account records to save space. View these Household Account records by running the &lt;b&gt;Empty Household Accounts&lt;/b&gt; report in the NPSP Health Check reports folder.</value>
     </labels>
     <labels>
         <fullName>healthSolutionHHObjNoContacts</fullName>
