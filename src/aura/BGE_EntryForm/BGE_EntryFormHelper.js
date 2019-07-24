@@ -90,20 +90,34 @@
     },
 
     /**
-     * @description: queries open donations for upcoming donations
+     * @description: Gets open donations without any Payments and unpaid Payments
+     * for use in the Donation Selector component.
      * @return: void
      */
-    queryOpenDonations: function(component, donorId) {
+    getOpportunitiesWithOppPayments: function(component, recordId) {
         const donorType = component.get('v.donorType');
 
-        let action = component.get('c.getOpenDonations');
-        action.setParams({donorId: donorId, donorType: donorType});
+        let action = component.get('c.getOpportunitiesWithOppPayments');
+        action.setParams({donorId: recordId});
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
-                const openDonations = JSON.parse(response.getReturnValue());
-                component.set('v.openOpportunities', openDonations.openOpportunities);
-                component.set('v.unpaidPayments', openDonations.unpaidPayments);
+                const opportunitiesWithPayments = JSON.parse(response.getReturnValue());
+                let openOpportunitiesWithoutAnyOpenPayments = [];
+                let unpaidPayments = [];
+                opportunitiesWithPayments.forEach(function (opportunityWrapper) {
+                        if (opportunityWrapper.hasPayments === false ||
+                            opportunityWrapper.unpaidPayments.length === 0) {
+                            openOpportunitiesWithoutAnyOpenPayments.push(opportunityWrapper);
+                        }
+
+                        opportunityWrapper.unpaidPayments.forEach(function (payment) {
+                            unpaidPayments.push(payment);
+                        });
+                    }
+                );
+                component.set('v.unpaidPayments', unpaidPayments);
+                component.set('v.openOpportunities', openOpportunitiesWithoutAnyOpenPayments);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
