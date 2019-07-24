@@ -687,6 +687,8 @@ public with sharing class BDI_MigrationMappingUtility {
         private List<String> splitHelpText(String helpText) {
             String symbol;
             Boolean hasSpecialChar = helpText.containsAny('$&+,:;=?@#|\'<>.-^*()%!_');
+            Boolean hasDataImportNames =
+                helpText.containsAny('Account1Account2AddressContact1Contact2HouseholdOpportunityDonationPaymentGAURole');
 
             if (hasSpecialChar == true) {
                 String[] specialCharacters =
@@ -703,6 +705,14 @@ public with sharing class BDI_MigrationMappingUtility {
                             return parts;
                         }
                     }
+                }
+            }
+
+            if (hasDataImportNames == true) {
+                Integer countWhitespaces = helpText.countMatches(' ');
+
+                if (countWhitespaces <= 4) {
+                    return helpText.split('', 2);
                 }
             }
 
