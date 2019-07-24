@@ -31,5 +31,5 @@ trigger TDTM_Batch on Batch__c (after delete, after insert, after undelete,
     after update, before delete, before insert, before update) {
 
     TDTM_Config_API.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete,
-        Trigger.isUndelete, Trigger.new, Trigger.old, Schema.SObjectType.General_Accounting_Unit__c);
+        Trigger.isUndelete, Trigger.new, Trigger.old, Schema.SObjectType.Batch__c);
 }

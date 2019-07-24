@@ -31,5 +31,5 @@ trigger TDTM_GrantDeadline on Grant_Deadline__c (after delete, after insert, aft
     after update, before delete, before insert, before update) {
 
     TDTM_Config_API.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete,
-        Trigger.isUndelete, Trigger.new, Trigger.old, Schema.SObjectType.General_Accounting_Unit__c);
+        Trigger.isUndelete, Trigger.new, Trigger.old, Schema.SObjectType.Grant_Deadline__c);
 }

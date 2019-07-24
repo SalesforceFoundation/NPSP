@@ -31,5 +31,5 @@ trigger TDTM_DataImport on DataImport__c (after delete, after insert, after unde
     after update, before delete, before insert, before update) {
 
     TDTM_Config_API.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete,
-        Trigger.isUndelete, Trigger.new, Trigger.old, Schema.SObjectType.General_Accounting_Unit__c);
+        Trigger.isUndelete, Trigger.new, Trigger.old, Schema.SObjectType.DataImport__c);
 }
