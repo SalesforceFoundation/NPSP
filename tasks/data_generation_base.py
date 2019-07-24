@@ -16,6 +16,7 @@ from sqlalchemy.orm import create_session
 
 
 class BatchDataTask(BaseSalesforceApiTask):
+    """Abstract base class for any class that generates data using a SQL DB."""
     task_docs = """
     Use the `num_records` option to specify how many records to generate.
     Use the `mappings` option to specify a mapping file.

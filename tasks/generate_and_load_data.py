@@ -8,6 +8,7 @@ from cumulusci.core.utils import import_global
 
 
 class GenerateAndLoadData(BaseSalesforceApiTask):
+    """ Orchestrate creating tempfiles, generating data, loading data, cleaning up tempfiles."""
     task_docs = """
     Use the `num_records` option to specify how many records to generate.
     Use the `mappings` option to specify a mapping file.
