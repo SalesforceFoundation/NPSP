@@ -262,14 +262,22 @@ export default class bdiObjectMappingModal extends LightningElement {
         .reduce((validSoFar, inputCmp) => {
                     //Special validation to make sure label name is not reused within the same Object Mapping set
                     if (inputCmp.name === 'masterLabel' && this.row.MasterLabel && this.objectMappings) {
+                        let dupeFound = false;
+
                         for (let i = 0; i < this.objectMappings.length; i++) {
                             let tempObjMapping = this.objectMappings[i];
+
                             //If the labels are the same, but the Ids are not then throw an error
-                            if (tempObjMapping.MasterLabel === this.row.MasterLabel 
+                            if (tempObjMapping.MasterLabel === this.row.MasterLabel
                                 && tempObjMapping.Id !== this.row.Id) {
+
+                                dupeFound = true;
                                 inputCmp.setCustomValidity('Error: This name is already in use, ' +  
                                                             'please choose another.');
                             }
+                        }
+                        if(!dupeFound){
+                            inputCmp.setCustomValidity('');
                         }
                     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <label>Payment</label>
-    <protected>false</protected>
+    <protected>true</protected>
     <values>
         <field>Custom_Mapping_Logic_Class__c</field>
         <value xsi:nil="true"/>
@@ -17,6 +17,10 @@
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
         <value xsi:type="xsd:string">npsp__PaymentImportStatus__c</value>
+    </values>
+    <values>
+        <field>Legacy_Data_Import_Object_Name__c</field>
+        <value xsi:type="xsd:string">Payment</value>
     </values>
     <values>
         <field>Object_API_Name__c</field>
