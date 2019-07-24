@@ -9,7 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Create a new account and enter payment information
     #Create a new account and enter payment information, then process batch
-    [tags]  unstable
+    [tags]  stable
     Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
@@ -47,12 +47,13 @@ Create a new account and enter payment information
     SeleniumLibrary.Element Text Should Be    //td[@data-label="Donation"]//lightning-formatted-url    ${Empty}
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Locator    data_imports.status    Completed
+    Wait For Batch To Complete    data_imports.status    Completed
     Click Button With Value   Close
+    Wait Until Element Is Visible    text:All Gifts
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
-    Select Window    ${value} | Salesforce    5
+    Select Window    ${value} | Salesforce    7
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     ${opp_id} =           Get Current Record Id

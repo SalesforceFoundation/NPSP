@@ -33,20 +33,172 @@
 * @group Utilities
 * @description Unit Tests related to the org telemetry class
 */
-@IsTest(IsParallel=false)
+@IsTest
 private class UTIL_OrgTelemetry_Batch_TEST {
+    private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
 
     /**
-     * @description Submits the telemetry batch job to execute. This will only execute a single child iteration
-     * and not the entire set of data. It's not possible to determine if the job actually completed.
-     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
-     * This specific test needs to be in a separate test class to avoid an internal error that is thrown when
-     * testing along side other methods that call the same featureParameter value used by this test.
+     * @description Confirms that when there are no Recurring Donations, the finish method sets
+     * telemetry and does not queue up the batch job
      */
-    @IsTest
-    static void validateTelemetryBatchJob() {
-        Test.startTest();
-        UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
-        Test.stopTest();
+    @isTest
+    private static void shouldHandleNoRecurringDonationsToCount() {
+        MockTelemetryBatch batch = new MockTelemetryBatch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        System.assertEquals(null, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS),
+            'The RECURRING_DONATIONS should not be executed');
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, 0);
+    }
+
+    /**
+     * @description Confirms that when there are Recurring Donations, the finish method does not set
+     * telemetry and does queue up the batch job
+     */
+    @isTest
+    private static void shouldHandleRecurringDonationsToCount() {
+        Account donorAccount = new Account(Name = 'foo');
+        insert donorAccount;
+
+        insert new npe03__Recurring_Donation__c(
+            Name = 'foo',
+            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
+            npe03__Date_Established__c= System.today(),
+            npe03__Organization__c = donorAccount.Id,
+            npe03__Amount__c = 20,
+            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
+            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
+        );
+
+        MockTelemetryBatch batch = new MockTelemetryBatch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        System.assertEquals(1, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS),
+            'The RECURRING_DONATIONS batch should be executed');
+
+        System.assertEquals(1, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
+            'The OPPORTUNITIES batch should be executed');
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, null);
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, null);
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+        //assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, null);
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, null);
+    }
+
+    /**
+     * @description Confirms that when there are no Payments, the finish method sets
+     * telemetry and does not queue up the batch job
+     */
+    @isTest
+    private static void shouldHandleNoPayments() {
+        MockTelemetryBatch batch = new MockTelemetryBatch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        System.assertEquals(null, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
+            'The OPPORTUNITIES batch should not be executed');
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, 0);
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+        //assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, 0);
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, 0);
+    }
+
+    /**
+     * @description Confirms that when there are Opportunities with a mulitple payments and auto payments are enabled,
+     * the batch job is queued. Using shouldExecutePaymentsTelemetryBatch to test instead of finish to prevent internal
+     * error that gets thrown when multiple tests in the same class set a FeatureParameter
+     */
+    @isTest
+    private static void shouldHandlePaymentsToCount() {
+        setupOppWithPayments(2);
+
+        MockTelemetryBatch batch = new MockTelemetryBatch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        System.assertEquals(1, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
+            'The OPPORTUNITIES batch should be executed');
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments, null);
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+        //assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled, null);
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, null);
+    }
+
+    /**
+     * @description Asserts on the provided telemetry integer metric
+     */
+    private static void assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName metric, Integer expectedValue) {
+        String metricName = metric.name();
+        String messsage = expectedValue == null ?
+            'The feature parameter metric ' + metricName + ' should not be set'
+            : 'The feature parameter metric ' + metricName + ' should be set correctly';
+
+        System.assertEquals(
+            expectedValue,
+            featureManagementMock.packageIntegerValuesByName.get(metricName),
+            messsage
+        );
+    }
+
+    /**
+     * @description Creates an opportunity with specified number of payments
+     */
+    private static void setupOppWithPayments(Integer numPayments) {
+        Opportunity opp = new Opportunity(
+            Name = 'Test Opp ',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = Date.today()
+        );
+
+        insert opp;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
+        for (Integer i = 0; i < numPayments; i++) {
+            payments.add(new npe01__OppPayment__c(npe01__Payment_Amount__c = 100, npe01__Opportunity__c = opp.Id));
+        }
+        insert payments;
+    }
+
+    /**
+     * @description Mock implementation of UTIL_OrgTelemetry_BATCH that overrides executeTelemetrySObjectBatch
+     * to prevent UTIL_OrgTelemetry_SObject_BATCH from running. Running the UTIL_OrgTelemetry_SObject_BATCH 
+     * batch can can cause an internal error to get thrown due to tests in the same class both trying 
+     * to set the same FeatureParameter.
+     */
+    private class MockTelemetryBatch extends UTIL_OrgTelemetry_BATCH {
+        private Map<UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode, Integer> countByBatchMode = 
+            new Map<UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode, Integer>();
+
+        private virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+            if (!countByBatchMode.containsKey(mode)) {
+                countByBatchMode.put(mode, 0);
+            }
+            Integer currentCount = countByBatchMode.get(mode);
+            countByBatchMode.put(mode, currentCount + 1);
+        }
     }
 }
