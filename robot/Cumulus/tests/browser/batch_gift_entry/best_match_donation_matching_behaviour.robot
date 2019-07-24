@@ -10,7 +10,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Best Match Donation Matching Behaviour
-    #Enter a donation for an account that has an exact payment match, don't select the match, and process batch
+    
     [tags]  stable
     Set Window Size    1024    768  
     Select App Launcher Tab   Batch Gift Entry
@@ -35,22 +35,25 @@ Best Match Donation Matching Behaviour
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
     Scroll Page To Location    0    0
+    Populate Field By Placeholder    Search Accounts    &{account}[Name]
+    Click Element With Locator   bge.modal-link    &{account}[Name]
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=200
     Click Element With Locator    bge.field-input    Donation Date
     Click BGE Button    Today
     Click BGE Button       Save
+    Sleep    2
     Verify Row Count    2
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Batch To Complete    data_imports.status    Completed
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
-    Sleep    2
-    @{value}    Return Locator Value    bge.value    Donation
+    @{value}    Return List    bge.value    Donation
     #Click Link    ${value}
     Click Link With Text    @{value}[0]
+    # Verify that a new payment and opportunity are created for the gift in closed won stage
     Select Window    @{value}[0] | Salesforce    7
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
@@ -66,6 +69,7 @@ Best Match Donation Matching Behaviour
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Confirm Value    Close Date    ${opp_date}    Y 
     Confirm Value    Stage    Closed Won    Y
+    # Verify that the gift matched to existing opportunity and updated it to closed won status and payment is paid
     Go To Record Home    &{opp_match}[Id]
     Confirm Value    Amount    $100.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
@@ -80,6 +84,7 @@ Best Match Donation Matching Behaviour
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True  
+    # Verify that the opportunity that does not match is still in prospecting stage
     Go To Record Home    &{opp_dont_match}[Id]
     Confirm Value    Amount    $50.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
