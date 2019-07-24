@@ -71,6 +71,7 @@
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
         <members>BDI_DataImportFLSService</members>
+        <members>BDI_DataImportFLSService_TEST</members>
         <members>BDI_DataImportService</members>
         <members>BDI_DataImportService_TEST</members>
         <members>BDI_DataImport_API</members>
@@ -1119,6 +1120,7 @@
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Is_Deleted__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Legacy_Data_Import_Object_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Object_API_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
         <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
@@ -2835,6 +2837,7 @@
     <types>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
+        <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
         <members>pubsubNoPageRef</members>
         <members>utilPlatformEventListener</members>

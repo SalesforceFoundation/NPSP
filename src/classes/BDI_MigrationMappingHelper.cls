@@ -38,6 +38,18 @@
 public class BDI_MigrationMappingHelper {
 
     /*******************************************************************************************************
+    * @description Get a list of by Data Import Object Mapping Set by Developer Name
+    *
+    * @param developerName: String name of the Data Import Object Mapping Set
+    * @return List<Data_Import_Object_Mapping_Set__mdt>
+    */
+    public List<Data_Import_Object_Mapping_Set__mdt> getObjectMappingSet(String developerName) {
+        List<Data_Import_Object_Mapping_Set__mdt> sets =
+            [SELECT Id FROM Data_Import_Object_Mapping_Set__mdt WHERE DeveloperName = :developerName];
+        return sets;
+    }
+
+    /*******************************************************************************************************
     * @description Get a list of by Data Import Field Mapping Set by Developer Name
     *
     * @param developerName: String name of the Data Import Field Mapping Set
@@ -93,15 +105,17 @@ public class BDI_MigrationMappingHelper {
                     Predecessor__c,
                     Relationship_Field__c, 
                     Relationship_To_Predecessor__c, 
-                    Is_Deleted__c
+                    Is_Deleted__c,
+                    Legacy_Data_Import_Object_Name__c
             FROM Data_Import_Object_Mapping__mdt
-            WHERE Data_Import_Object_Mapping_Set__r.DeveloperName = :developerName];
+            WHERE Data_Import_Object_Mapping_Set__r.DeveloperName = :developerName
+                AND Is_Deleted__c = false];
 
         Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName = 
             new Map<String, Data_Import_Object_Mapping__mdt>();
 
         for (Data_Import_Object_Mapping__mdt objectMapping : existingObjectMappings) {
-            objectMappingsByDeveloperName.put(objectMapping.DeveloperName, objectMapping);
+            objectMappingsByDeveloperName.put(objectMapping.Legacy_Data_Import_Object_Name__c, objectMapping);
         }
 
         return objectMappingsByDeveloperName;
@@ -130,10 +144,12 @@ public class BDI_MigrationMappingHelper {
                     Target_Object_Mapping__c,
                     Target_Object_Mapping__r.Object_API_Name__c,
                     Target_Object_Mapping__r.DeveloperName,
+                    Target_OBject_Mapping__r.Legacy_Data_Import_Object_Name__c,
                     Target_Object_Mapping__r.MasterLabel,
                     Is_Deleted__c
             FROM Data_Import_Field_Mapping__mdt
-            WHERE Data_Import_Field_Mapping_Set__r.DeveloperName = :developerName];
+            WHERE Data_Import_Field_Mapping_Set__r.DeveloperName = :developerName
+            AND Is_Deleted__c = false];
 
         Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsBySourceFieldName =
             new Map<String, Data_Import_Field_Mapping__mdt>();
@@ -150,7 +166,7 @@ public class BDI_MigrationMappingHelper {
             fieldMappingsBySourceFieldName.put(
                 fieldMapping.Target_Object_Mapping__r.Object_API_Name__c
                 + '.'
-                + fieldMapping.Target_Object_Mapping__r.DeveloperName
+                + fieldMapping.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c
                 + '.'
                 + fieldMapping.Source_Field_API_Name__c,
                 fieldMapping);

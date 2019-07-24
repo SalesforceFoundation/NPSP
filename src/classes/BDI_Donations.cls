@@ -146,7 +146,7 @@ public class BDI_Donations {
 
         // get the list of DI records that have donations to process
         List<DataImport__c> dataImportDonations = validateDonationsToProcess(matchBehavior);
-        
+
         // call the extension to match against existing donations
         if (matchBehavior != BDI_DataImport_API.DoNotMatch) {
             BDI_PerfLogger.PerfLog logger = BDI_DataImportService.perfLogger.newPerfLog('iMatchDonations.match');
@@ -255,7 +255,7 @@ public class BDI_Donations {
     private List<DataImport__c> validateDonationsToProcess(String matchBehavior) {
         List<DataImport__c> dataImportDonations = new List<DataImport__c>();
         for (DataImport__c dataImport : bdi.listDI) {
-            
+
             // skip di's that already have an error
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                continue;
@@ -264,6 +264,14 @@ public class BDI_Donations {
             // skip di's that have an OppId or PaymentId, but we were told to do no matching.  in this case
             // they must have already been created for this di on a previous run, and we don't want to create another.
             if ((dataImport.DonationImported__c != null || dataImport.PaymentImported__c != null) && matchBehavior == BDI_DataImport_API.DoNotMatch) {
+                continue;
+            }
+
+            // If the donation was created or matched on a previous run, consider the
+            // donation validated for this Data Import record.
+            if (dataImport.DonationImported__c != null
+                    && (dataImport.DonationImportStatus__c == System.Label.bdiCreated
+                    || dataImport.DonationImportStatus__c == System.Label.bdiMatched)) {
                 continue;
             }
                 
