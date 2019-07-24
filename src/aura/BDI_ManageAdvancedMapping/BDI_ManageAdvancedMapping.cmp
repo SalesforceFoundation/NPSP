@@ -1,10 +1,4 @@
 <aura:component implements="lightning:isUrlAddressable">
-    <style>
-        .slds-template_default {
-            padding: 0rem;
-        }
-    </style>
-
     <div class="slds-grid slds-wrap slds-grid_extension">
         <div class="slds-size_1-of-1 slds-card slds-p-vertical_large slds-p-horizontal_large slds-size_1-of-1_outer-container">
             <c:bdiObjectMappings ondeployment="{!c.handleDeploymentNotification}"/>

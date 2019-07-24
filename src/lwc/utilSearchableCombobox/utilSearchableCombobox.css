@@ -1,6 +1,5 @@
 .custom-search-result-box {
-    position: absolute;
-    width: 87%;
+    width: 100%;
     padding: 0.25rem 0;
     transform: translateY(0);
     clip: rect(0px, 2000px, 2000px, -10px);
