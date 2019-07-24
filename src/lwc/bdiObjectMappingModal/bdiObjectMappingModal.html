@@ -1,0 +1,159 @@
+<template>
+    <template if:true={isModalOpen}>
+        <section role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class={sectionClasses}>
+
+            <div class="slds-modal__container">
+
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading">
+                    </lightning-spinner>
+                </template>
+
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    title={customLabels.bdiBtnClose}>
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text={customLabels.bdiBtnClose}
+                            variant="inverse"
+                            size="small"
+                            onclick={handleCloseModal}>
+                        </lightning-icon>
+                        <span class="slds-assistive-text">{customLabels.bdiBtnClose}</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{modalTitle}</h2>
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-section slds-is-open slds-m-bottom_small">
+                                <lightning-input
+                                    class="slds-m-bottom_small"
+                                    label="Mapping Group Name"
+                                    type="text"
+                                    name="masterLabel"
+                                    value={row.MasterLabel}
+                                    onchange={handleMasterLabelChange}
+                                    field-level-help="Enter a descriptive name for the mapping group."
+                                    required>
+                                </lightning-input>
+                                <div class="slds-size_1-of-1 slds-m-vertical_medium">
+                                    <h3 class="slds-text-align_center"><i>For</i></h3>
+                                </div>
+
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="objectName"
+                                    label="Object Name"
+                                    value={row.Object_API_Name}
+                                    placeholder="Select Object"
+                                    options={objectOptions}
+                                    onchange={handleObjectAPINameChange}
+                                    field-level-help="The API name for the object that will be created
+                                                        by this mapping group."
+                                    required>
+                                </lightning-combobox>
+
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="relationshipToPredecessor"
+                                    label="Is Child/Parent"
+                                    value={row.Relationship_To_Predecessor}
+                                    placeholder="Select Relationship"
+                                    options={predRelationshipOptions}
+                                    onchange={handleRelationshipToPredChange}
+                                    field-level-help="Whether the record to be created is a parent or child
+                                                    of the mapping group which this group is dependent on."
+                                    required>
+                                </lightning-combobox>
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="ofThisMappingGroup"
+                                    label="Of This Mapping Group"
+                                    value={row.Predecessor}
+                                    placeholder="Select Mapping Group"
+                                    options={objectMappingOptions}
+                                    onchange={handlePredecessorChange}
+                                    field-level-help="The mapping group that must exist
+                                                    before this record can be created (either Parent or Child)."
+                                    required>
+                                </lightning-combobox>
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    placeholder="Select Field"
+                                    label="Through This Field"
+                                    name="throughThisField"
+                                    data-id="throughThisField"
+                                    options={relationshipFieldOptions}
+                                    value={row.Relationship_Field}
+                                    onchange={handleRelationshipFieldChange}
+                                    disabled={isRelationshipFieldDisabled}
+                                    field-level-help="Placeholder"
+                                    required>
+                                </lightning-combobox>
+                                <div class="slds-size_1-of-1 slds-m-top_large">
+                                    <h3 class="slds-text-heading_small slds-text-heading_small_extension">
+                                        <span class="slds-truncate"
+                                                title="Import Details">
+                                                Import Details
+                                        </span>
+                                    </h3>
+                                </div>
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="importedRecordFieldName"
+                                    data-id="importedRecordFieldName"
+                                    label="Imported Record Field Name"
+                                    value={row.Imported_Record_Field_Name}
+                                    placeholder="Select Field"
+                                    options={diImportRecordFieldOptions}
+                                    onchange={handleImportedRecordFieldNameChange}
+                                    dropdown-alignment="bottom-left"
+                                    field-level-help="The Field API Name on the NPSP Data Import object where the
+                                                        ID for the imported record will be placed when the import is successful.
+                                                    This is also where the code will verify if this record was imported or matched."
+                                    required>
+                                </lightning-combobox>
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="importedRecordStatusFieldName"
+                                    data-id="importedRecordStatusFieldName"
+                                    label="Imported Record Status Field Name"
+                                    placeholder="Select Field"
+                                    options={diImportRecordStatusFieldOptions}
+                                    value={row.Imported_Record_Status_Field_Name}
+                                    onchange={handleImportedRecordStatusFieldNameChange}
+                                    dropdown-alignment="bottom-left"
+                                    field-level-help="The Field API Name where the success or failure of the import
+                                                            will be recorded for an NPSP Data Import record."
+                                    required>
+                                </lightning-combobox>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral"
+                            onclick={handleCloseModal}>
+                        Cancel
+                    </button>
+                    <button class="slds-button slds-button_brand"
+                            onclick={handleSave}>
+                        Save
+                    </button>
+                </footer>
+
+            </div>
+        </section>
+
+        <div class={backdropClasses}></div>
+    </template>
+</template>

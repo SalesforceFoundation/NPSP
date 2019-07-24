@@ -205,22 +205,14 @@ export default class bdiFieldMappingModal extends LightningElement {
             if (this.row) {
                 // Edit row
                 this.modalMode = 'edit';
-                this.selectedSourceFieldLabel =
-                    this.row.xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx;
-                this.selectedSourceFieldAPIName =
-                    this.row.xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx;
-                this.selectedTargetFieldAPIName =
-                    this.row.xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx;
-                this.selectedTargetFieldLabel =
-                    this.row.xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx;
-                this.selectedSourceFieldDisplayType =
-                    this.toTitleCase(this.row.xxPrefixTokenxx_Source_Field_Data_Type_xxSuffixTokenxx);
-                this.selectedTargetFieldDisplayType =
-                    this.toTitleCase(this.row.xxPrefixTokenxx_Target_Field_Data_Type_xxSuffixTokenxx);
-                this.selectedSourceFieldDisplayTypeLabel =
-                    this.row.Source_Field_Display_Type_Label;
-                this.selectedTargetFieldDisplayTypeLabel =
-                    this.row.Target_Field_Display_Type_Label;
+                this.selectedSourceFieldLabel = this.row.Source_Field_Label;
+                this.selectedSourceFieldAPIName = this.row.Source_Field_API_Name;
+                this.selectedTargetFieldAPIName = this.row.Target_Field_API_Name;
+                this.selectedTargetFieldLabel = this.row.Target_Field_Label;
+                this.selectedSourceFieldDisplayType = this.toTitleCase(this.row.Source_Field_Data_Type);
+                this.selectedTargetFieldDisplayType = this.toTitleCase(this.row.Target_Field_Data_Type);
+                this.selectedSourceFieldDisplayTypeLabel = this.row.Source_Field_Display_Type_Label;
+                this.selectedTargetFieldDisplayTypeLabel = this.row.Target_Field_Display_Type_Label;
             } else {
                 // New row
                 this.modalMode = 'new';
@@ -249,8 +241,8 @@ export default class bdiFieldMappingModal extends LightningElement {
         for (let i = 0; i < fieldMappings.length; i++) {
             let fieldMapping = fieldMappings[i];
 
-            this.mappedDIFieldLabels.push(fieldMapping.xxPrefixTokenxx_Source_Field_Label_xxSuffixTokenxx);
-            this.mappedTargetFieldLabels.push(fieldMapping.xxPrefixTokenxx_Target_Field_Label_xxSuffixTokenxx);
+            this.mappedDIFieldLabels.push(fieldMapping.Source_Field_Label);
+            this.mappedTargetFieldLabels.push(fieldMapping.Target_Field_Label);
         }
     }
 
@@ -381,23 +373,22 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 if (this.row) {
                     // Set source and target fields
-                    this.row.xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx =
+                    this.row.Source_Field_API_Name =
                         this.selectedSourceFieldAPIName;
-                    this.row.xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx =
+                    this.row.Target_Field_API_Name =
                         this.selectedTargetFieldAPIName;
                     rowDetails = JSON.stringify(this.row);
                 } else {
                     // New Field Mapping
                     rowDetails = JSON.stringify({
                         DeveloperName: null,
-                        Label: this.selectedSourceFieldLabel,
                         MasterLabel: this.selectedSourceFieldLabel,
-                        xxPrefixTokenxx_Data_Import_Field_Mapping_Set_xxSuffixTokenxx: this.fieldMappingSetName,
-                        xxPrefixTokenxx_Is_Deleted_xxSuffixTokenxx: false,
-                        xxPrefixTokenxx_Required_xxSuffixTokenxx: 'No',
-                        xxPrefixTokenxx_Source_Field_API_Name_xxSuffixTokenxx: this.selectedSourceFieldAPIName,
-                        xxPrefixTokenxx_Target_Field_API_Name_xxSuffixTokenxx: this.selectedTargetFieldAPIName,
-                        xxPrefixTokenxx_Target_Object_Mapping_xxSuffixTokenxx: this.objectMapping.DeveloperName
+                        Data_Import_Field_Mapping_Set: this.fieldMappingSetName,
+                        Is_Deleted: false,
+                        Required: 'No',
+                        Source_Field_API_Name: this.selectedSourceFieldAPIName,
+                        Target_Field_API_Name: this.selectedTargetFieldAPIName,
+                        Target_Object_Mapping: this.objectMapping.DeveloperName
                     });
                 }
 
