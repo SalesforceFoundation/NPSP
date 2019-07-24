@@ -259,7 +259,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
         }
 
-        if (timeoutCount > MAX_TIME_OUT) {
+        if (timeoutCount > MAX_TIME_OUT && isPolling == true) {
             isPolling = false;
             addPageMessage(ApexPages.Severity.WARNING,
                 Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);

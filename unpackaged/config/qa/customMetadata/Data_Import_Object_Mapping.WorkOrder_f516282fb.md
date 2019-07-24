@@ -8,7 +8,7 @@
     </values>
     <values>
         <field>Data_Import_Object_Mapping_Set__c</field>
-        <value xsi:type="xsd:string">Default_Object_Mapping_Set</value>
+        <value xsi:type="xsd:string">Migrated_Custom_Object_Mapping_Set</value>
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>

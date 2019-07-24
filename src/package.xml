@@ -1120,6 +1120,7 @@
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Is_Deleted__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Legacy_Data_Import_Object_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Object_API_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
         <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
