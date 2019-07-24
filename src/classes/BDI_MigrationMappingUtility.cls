@@ -669,8 +669,8 @@ public with sharing class BDI_MigrationMappingUtility {
 
             if (this.helpText != null) {
 
-                List<String> parts = helpText.split('\\.', 2);
-                if (parts.size() >= 2) {
+                List<String> parts = splitHelpText(this.helpText);
+                if (parts != null) {
                     this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
                     this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
 
@@ -682,6 +682,31 @@ public with sharing class BDI_MigrationMappingUtility {
                     checkRequiredFields();
                 }
             }
+        }
+
+        private List<String> splitHelpText(String helpText) {
+            String symbol;
+            Boolean hasSpecialChar = helpText.containsAny('$&+,:;=?@#|\'<>.-^*()%!_');
+
+            if (hasSpecialChar == true) {
+                String[] specialCharacters =
+                    new List<String>{'$', '&', '\\+', ',', ':', ';', '=', '\\?', '@',
+                                     '#', '\\|', '\'', '<', '>', '\\.', '-', '^', '\\*',
+                                     '\\(', '\\)', '%', '!', '_'};
+
+                for (String sc : specialCharacters) {
+                    List<String> parts = helpText.split(sc, 2);
+                    Integer countWhitespaces = helpText.countMatches(' ');
+
+                    if (parts.size() >= 2 && countWhitespaces <= 4) {
+                        if (String.isNotBlank(parts[0]) && String.isNotBlank(parts[1])) {
+                            return parts;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         private void checkRequiredFields() {
