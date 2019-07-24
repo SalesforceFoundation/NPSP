@@ -69,6 +69,34 @@ private class BDI_ManageAdvancedMappingCtrlTest {
     private static final String CONTACT_OBJECT = 'Contact';
 
     /*******************************************************************************************************
+    * @description Instance of Data_Import_Field_Mapping__mdt as JSON
+    */
+    private static final String FIELD_MAPPING_MDT =
+        '{"DeveloperName":null,' +
+        '"MasterLabel":"Account1 Test Field",' +
+        '"Data_Import_Field_Mapping_Set":"Migrated_Custom_Field_Mapping_Set",' +
+        '"Is_Deleted":false,' +
+        '"Required":"No",' +
+        '"Source_Field_API_Name":"Account1_Test_Field__c",' +
+        '"Target_Field_API_Name":"Test_Field__c",' +
+        '"Target_Object_Mapping":"Account1"}';
+
+    /*******************************************************************************************************
+    * @description Instance of Data_Import_Object_Mapping__mdt as JSON
+    */
+    private static final String OBJECT_MAPPING_MDT =
+        '{"MasterLabel":"Account3",' +
+        '"DeveloperName":null,' +
+        '"Object_API_Name":"Account",' +
+        '"Custom_Mapping_Logic_Class":null,' +
+        '"Imported_Record_Field_Name":null,' +
+        '"Imported_Record_Status_Field_Name":null,' +
+        '"Is_Deleted":false,' +
+        '"Predecessor":"No Predecessor",' +
+        '"Relationship_Field":null,' +
+        '"Relationship_To_Predecessor":null}';
+
+    /*******************************************************************************************************
     * @description Test that we get the current namespace
     */
     @isTest
@@ -145,6 +173,131 @@ private class BDI_ManageAdvancedMappingCtrlTest {
                 DEFAULT_FIELD_MAPPING_SET_NAME);
 
         System.assertEquals(account1FieldMappings.size(), account1FieldMappingWrappers.size());
+    }
+
+    /*******************************************************************************************************
+    * @description Test that we're able to create an instance of Data_Import_Field_Mapping__mdt from
+    * JSON string
+    */
+    @isTest
+    static void shouldCreateDataImportFieldMappingMetadata() {
+        String dataImportFieldMappingMdt =
+            BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping(FIELD_MAPPING_MDT);
+
+        Data_Import_Field_Mapping__mdt fieldMapping =
+            (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                dataImportFieldMappingMdt,
+                Data_Import_Field_Mapping__mdt.class);
+
+        System.assert(fieldMapping != null);
+        System.assertEquals(
+            'Account1 Test Field',
+            fieldMapping.MasterLabel,
+            'Field Mapping MasterLabel is Account1 Test Field');
+        System.assertEquals(
+            'No',
+            fieldMapping.Required__c,
+            'Field Mapping Required__c is \'No\'');
+        System.assertEquals(
+            false,
+            fieldMapping.Is_Deleted__c,
+            'Field Mapping Is_Deleted__c is false');
+        System.assertEquals(
+            'Account1_Test_Field__c',
+            fieldMapping.Source_Field_API_Name__c,
+            'Field Mapping Source_Field_API_Name__c is Account1_Test_Field__c');
+        System.assertEquals(
+            'Test_Field__c',
+            fieldMapping.Target_Field_API_Name__c,
+            'Field Mapping Target_Field_API_Name__c is Test_Field__c');
+        System.assertEquals(
+            'Account1',
+            fieldMapping.Target_Object_Mapping__c,
+            'Field Mapping Target_Object_Mapping__c is Account1');
+    }
+
+    /*******************************************************************************************************
+    * @description Test that we're able to create an instance of Data_Import_Object_Mapping__mdt from
+    * JSON string
+    */
+    @isTest
+    static void shouldCreateDataImportObjectMappingMetadata() {
+        String dataImportObjectMapping =
+            BDI_ManageAdvancedMappingCtrl.createDataImportObjectMapping(OBJECT_MAPPING_MDT);
+
+        Data_Import_Object_Mapping__mdt objectMapping =
+            (Data_Import_Object_Mapping__mdt)JSON.deserialize(
+                dataImportObjectMapping,
+                Data_Import_Object_Mapping__mdt.class);
+
+        System.assert(objectMapping != null);
+        System.assertEquals(
+            'Account3',
+            objectMapping.MasterLabel,
+            'Object Mapping MasterLabel is Account3');
+        System.assertEquals(
+            null,
+            objectMapping.DeveloperName,
+            'Object Mapping DeveloperName is null');
+        System.assertEquals(
+            'Account',
+            objectMapping.Object_API_Name__c,
+            'Object Mapping Object_API_Name__c is Account');
+        System.assertEquals(
+            null,
+            objectMapping.Custom_Mapping_Logic_Class__c,
+            'Object Mapping Custom_Mapping_Logic_Class__c is null');
+        System.assertEquals(
+            null,
+            objectMapping.Imported_Record_Field_Name__c,
+            'Object Mapping Imported_Record_Field_Name__c is null');
+        System.assertEquals(
+            null,
+            objectMapping.Imported_Record_Status_Field_Name__c,
+            'Object Mapping Imported_Record_Status_Field_Name__c is null');
+        System.assertEquals(
+            false,
+            objectMapping.Is_Deleted__c,
+            'Object Mapping Is_Deleted__c is false');
+        System.assertEquals(
+            'No Predecessor',
+            objectMapping.Predecessor__c,
+            'Object Mapping Predecessor__c is \'No Predecessor\'');
+        System.assertEquals(
+            null,
+            objectMapping.Relationship_Field__c,
+            'Object Mapping Relationship_Field__c is null');
+        System.assertEquals(
+            null,
+            objectMapping.Relationship_To_Predecessor__c,
+            'Object Mapping Relationship_To_Predecessor__c is null');
+    }
+
+    /*******************************************************************************************************
+    * @description Test that we're able to create a Deployment Container containing Custom Metadata records
+    */
+    @isTest
+    static void shouldCreateDeploymentContainerWithCustomMetadataRecords() {
+        Data_Import_Object_Mapping__mdt objectMapping =
+            (Data_Import_Object_Mapping__mdt)JSON.deserialize(
+                BDI_ManageAdvancedMappingCtrl.createDataImportObjectMapping(OBJECT_MAPPING_MDT),
+                Data_Import_Object_Mapping__mdt.class);
+        Data_Import_Field_Mapping__mdt fieldMapping =
+            (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping(FIELD_MAPPING_MDT),
+                Data_Import_Field_Mapping__mdt.class);
+
+        sObject[] customMetadataList = new List<sObject>{objectMapping, fieldMapping};
+        String deploymentContainerString =
+            BDI_ManageAdvancedMappingCtrl.enqueueMetadataRecords(customMetadataList);
+
+        Metadata.DeployContainer deploymentContainer =
+            (Metadata.DeployContainer)JSON.deserialize(
+                deploymentContainerString,
+                Metadata.DeployContainer.class);
+
+        Metadata.Metadata[] metadataList = deploymentContainer.getMetadata();
+        System.assertEquals(metadataList.size(), 2);
     }
 
     static Set<String> getCreatableFields(Map<String, Schema.SObjectField> fieldMap) {

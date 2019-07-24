@@ -250,6 +250,10 @@ public class BDI_ManageAdvancedMappingCtrl {
             fieldMapping.Source_Field_API_Name__c = fieldMappingWrapper.Source_Field_API_Name;
             fieldMapping.Target_Field_API_Name__c = fieldMappingWrapper.Target_Field_API_Name;
 
+            if (Test.isRunningTest()) {
+                return JSON.serialize(fieldMapping);
+            }
+
             String deploymentId = enqueueMetadataRecords(fieldMapping);
             return deploymentId;
         } catch(Exception e) {
@@ -296,6 +300,10 @@ public class BDI_ManageAdvancedMappingCtrl {
             objMapping.Predecessor__c = objMappingWrapper.Predecessor;
             objMapping.Relationship_Field__c = objMappingWrapper.Relationship_Field;
             objMapping.Relationship_To_Predecessor__c = objMappingWrapper.Relationship_To_Predecessor;
+
+            if (Test.isRunningTest()) {
+                return JSON.serialize(objMapping);
+            }
 
             String deploymentId = enqueueMetadataRecords(objMapping);
             return deploymentId;
@@ -378,6 +386,10 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
 
         DeploymentCallback callback = new DeploymentCallback();
+
+        if (Test.isRunningTest()) {
+            return JSON.serialize(deployContainer);
+        }
 
         Id jobId = Metadata.Operations.enqueueDeployment(deployContainer, callback);
 
