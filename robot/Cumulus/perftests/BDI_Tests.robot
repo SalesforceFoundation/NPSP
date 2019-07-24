@@ -15,7 +15,6 @@ Suite Setup       Run Task Class   tasks.generate_and_load_data.GenerateAndLoadD
 ...                 num_records=${count/2}
 ...                 mapping=datasets/bdi_benchmark/mapping.yml
 ...                 data_generation_task=tasks.generate_bdi_data.GenerateBDIData
-...                 database_url=sqlite:////tmp/temp_db.db
 
 *** Test Cases ***
 
