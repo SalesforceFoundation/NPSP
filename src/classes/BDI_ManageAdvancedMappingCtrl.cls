@@ -545,6 +545,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     * @description Wrapper class for the Data Import Object Mapping object.
     */
     public class DataImportObjectMappingWrapper {
+        @AuraEnabled public Id Id;
         @AuraEnabled public String DeveloperName;
         @AuraEnabled public String MasterLabel;
         @AuraEnabled public String Custom_Mapping_Logic_Class;
@@ -560,7 +561,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String Relationship_To_Predecessor;
 
         public DataImportObjectMappingWrapper(Data_Import_Object_Mapping__mdt objectMapping) {
-
+            this.Id = objectMapping.Id;
             this.MasterLabel = objectMapping.MasterLabel;
             this.DeveloperName = objectMapping.DeveloperName;
             this.Custom_Mapping_Logic_Class = objectMapping.Custom_Mapping_Logic_Class__c;
