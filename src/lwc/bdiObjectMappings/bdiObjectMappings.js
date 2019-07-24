@@ -33,7 +33,7 @@ export default class bdiObjectMappings extends LightningElement {
             {label: 'Mapping Group Name', fieldName: 'MasterLabel', type: 'text'},
             {label: 'Object API Name', fieldName: 'Object_API_Name', type: 'text'},
             {label: 'Is Child/Parent', fieldName: 'Relationship_To_Predecessor', type: 'text', fixedWidth: 150},
-            {label: 'Of This Mapping Group', fieldName: 'Predecessor', type: 'text'},
+            {label: 'Of This Mapping Group', fieldName: 'Predecessor_Label_Name', type: 'text'},
             {label: 'Through This Field', fieldName: 'Relationship_Field', type: 'text'},
             {label: 'Imported Record Field Name', fieldName: 'Imported_Record_Field_Name', type: 'text'},
             {label: 'Imported Record Status Field Name', fieldName: 'Imported_Record_Status_Field_Name', type: 'text'},

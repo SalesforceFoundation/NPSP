@@ -129,9 +129,23 @@ public class BDI_ManageAdvancedMappingCtrl {
         DataImportObjectMappingWrapper[] objMappingWrappers = new DataImportObjectMappingWrapper[]{};
         Data_Import_Object_Mapping__mdt[] objMappings = bdiCMT.objMappingsByDevName.values();
 
+        Map<String,DataImportObjectMappingWrapper> objMappingWrappersByDevName = new Map<String,DataImportObjectMappingWrapper>();
+
         for (Data_Import_Object_Mapping__mdt objMapping : objMappings) {
-            objMappingWrappers.add(new DataImportObjectMappingWrapper(objMapping));
+            DataImportObjectMappingWrapper objMappingWrapper = new DataImportObjectMappingWrapper(objMapping);
+            objMappingWrappers.add(objMappingWrapper);
+            objMappingWrappersByDevName.put(objMappingWrapper.DeveloperName, objMappingWrapper);
         }
+
+        //Assign the label name field for the predecessor using the constructed map by dev name.
+        for (DataImportObjectMappingWrapper objMappingWrapper : objMappingWrappers) {
+
+            DataImportObjectMappingWrapper predecessorObjMappingWrapper = objMappingWrappersByDevName.get(objMappingWrapper.Predecessor);
+            if(predecessorObjMappingWrapper != null) {
+                objMappingWrapper.Predecessor_Label_Name = predecessorObjMappingWrapper.MasterLabel;
+            }
+        }
+
         return objMappingWrappers;
     }
 
@@ -152,9 +166,10 @@ public class BDI_ManageAdvancedMappingCtrl {
             UTIL_Describe.getAllFieldsDescribe(objectName);
 
         for (String key : fieldDescribes.keySet()) {
-            //Only include fields that are updateable by the current user
+
+            //Only include fields that are createable by the current user
             //This will filter out System / formula fields
-            if (fieldDescribes.get(key).isUpdateable()) {
+            if (fieldDescribes.get(key).isCreateable()) {
                 fieldInfos.add(new FieldInfo(fieldDescribes.get(key)));
             }
         }
@@ -540,6 +555,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public Boolean Is_Deleted;
         @AuraEnabled public String Object_API_Name;
         @AuraEnabled public String Predecessor;
+        @AuraEnabled public String Predecessor_Label_Name;
         @AuraEnabled public String Relationship_Field;
         @AuraEnabled public String Relationship_To_Predecessor;
 
@@ -633,7 +649,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         for (String key : fieldDescribes.keySet()) {
             Schema.DescribeFieldResult dfr = fieldDescribes.get(key);
 
-            if (dfr.getType().name() == 'REFERENCE' && fieldDescribes.get(key).isUpdateable()) {
+            if (dfr.getType().name() == 'REFERENCE' && fieldDescribes.get(key).isCreateable() ) {
 
                 List<Schema.sObjectType> objTypes = dfr.getReferenceTo();
 

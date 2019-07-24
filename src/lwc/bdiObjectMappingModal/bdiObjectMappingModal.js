@@ -260,6 +260,19 @@ export default class bdiObjectMappingModal extends LightningElement {
 
         let result = [...this.template.querySelectorAll('lightning-combobox,lightning-input')]
         .reduce((validSoFar, inputCmp) => {
+                    //Special validation to make sure label name is not reused within the same Object Mapping set
+                    if (inputCmp.name === 'masterLabel' && this.row.MasterLabel && this.objectMappings) {
+                        for (let i = 0; i < this.objectMappings.length; i++) {
+                            let tempObjMapping = this.objectMappings[i];
+                            //If the labels are the same, but the Ids are not then throw an error
+                            if (tempObjMapping.MasterLabel === this.row.MasterLabel 
+                                && tempObjMapping.Id !== this.row.Id) {
+                                inputCmp.setCustomValidity('Error: This name is already in use, ' +  
+                                                            'please choose another.');
+                            }
+                        }
+                    }
+
                     inputCmp.reportValidity();
                     let inputValid = inputCmp.checkValidity();
                     return validSoFar && inputValid;
@@ -268,7 +281,7 @@ export default class bdiObjectMappingModal extends LightningElement {
         if (!result) {
             this.showToast(
                 'Error',
-                'Missing one or more required fields',
+                'Invalid values in one or more fields.',
                 'error',
                 'dismissable',
                 null);
@@ -363,7 +376,7 @@ export default class bdiObjectMappingModal extends LightningElement {
                             relField.setCustomValidity('Error: There are no valid relationship fields for the chosen '+
                                         'combination of "Object Name", "Is Child/Parent", and "Of This Mapping Group"');
                             relField.reportValidity();
-
+                            
                             return;
                         }
 
