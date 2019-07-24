@@ -32,7 +32,7 @@
 * @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Unit Test for the Migration Mapping Utility
+* @description Unit Test for BDI_ManageAdvancedMappingCtrl
 */
 
 @IsTest
