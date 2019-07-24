@@ -45,7 +45,7 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
                 npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
                 if (householdSettings.Seasonal_Addresses_Batch_Size__c == null
-                    || householdSettings.Seasonal_Addresses_Batch_Size__c < 0
+                    || householdSettings.Seasonal_Addresses_Batch_Size__c <= 0
                 ){
                     batchSize = DEFAULT_BATCH_SIZE;
                 } else {

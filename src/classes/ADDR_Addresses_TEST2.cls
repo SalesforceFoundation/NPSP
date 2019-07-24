@@ -1649,6 +1649,17 @@ public with sharing class ADDR_Addresses_TEST2 {
     }
 
     /*********************************************************************************************************
+    * @description Confirms default value is used if Seasonal_Addresses_Batch_Size__c is zero
+    **********************************************************************************************************/
+    @isTest
+    private static void batchSizeShouldUseDefaultIfSeasonalAddressBatchSizeIsZero() {
+        setSeasonalAddressBatchSize(0);
+        System.assertEquals(ADDR_Seasonal_SCHED.DEFAULT_BATCH_SIZE, new ADDR_Seasonal_SCHED().batchSize,
+            'The default batch size should be used'
+        );
+    }
+
+    /*********************************************************************************************************
     * @description Confirms default value is used if Seasonal_Addresses_Batch_Size__c is null
     **********************************************************************************************************/
     @isTest
