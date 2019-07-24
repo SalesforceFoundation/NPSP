@@ -32,6 +32,6 @@
     </values>
     <values>
         <field>Relationship_To_Predecessor__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">No Predecessor</value>
     </values>
 </CustomMetadata>
