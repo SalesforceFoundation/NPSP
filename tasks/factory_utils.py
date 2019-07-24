@@ -2,9 +2,14 @@ from factory import enums
 from collections import namedtuple
 import gc
 
+
+#  Factoryboy uses "__" and Salesforce uses "__". Luckily Factoryboy makes
+#  theirs easy to override!
 enums.SPLITTER = "____"
 
 
+# More flexible than FactoryBoy's sequences because you can create and 
+# destroy them where-ever you want.
 class Adder:
     def __init__(self, x=0):
         self.x = x
@@ -16,7 +21,7 @@ class Adder:
     def reset(self, x):
         self.x = x
 
-
+#  Boilerplate that every factory would need to deal with.
 def SessionBase(session):
     class BaseMeta:
         sqlalchemy_session = session
@@ -24,7 +29,8 @@ def SessionBase(session):
 
     return BaseMeta
 
-
+# Thin collector for the factories and a place to try to achieve better  
+# scalability than the create_batch function from FactoryBoy.
 class Factories:
     unflushed_record_counter = 0
 
