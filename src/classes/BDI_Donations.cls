@@ -597,7 +597,7 @@ public class BDI_Donations {
         setPmtFields.addAll(dataImportFieldToPaymentField.values());
 
         String soql = 'SELECT ' + String.join(new List<String>(setPmtFields), ',');
-        soql += ' FROM npe01__OppPayment__c WHERE ' +
+        soql += ' FROM npe01__OppPayment__c WHERE ' + 
                 'npe01__Written_Off__c = false ' +
                 'AND npe01__Opportunity__c in :' + eligibleOpportunitiesVariableName;
 
