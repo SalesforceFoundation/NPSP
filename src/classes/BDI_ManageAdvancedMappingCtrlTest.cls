@@ -46,17 +46,27 @@ private class BDI_ManageAdvancedMappingCtrlTest {
     /*******************************************************************************************************
     * @description Name of test Data Import Field Mapping Set
     */
-    private static String DEFAULT_FIELD_MAPPING_SET_NAME = 'Default_Field_Mapping_Set';
+    private static final String DEFAULT_FIELD_MAPPING_SET_NAME = 'Default_Field_Mapping_Set';
 
     /*******************************************************************************************************
     * @description Name of test Data Import Field Mapping Set
     */
-    private static String DEFAULT_OBJECT_MAPPING_SET_NAME = 'Default_Object_Mapping_Set';
+    private static final String DEFAULT_OBJECT_MAPPING_SET_NAME = 'Default_Object_Mapping_Set';
 
     /*******************************************************************************************************
     * @description Name of default Account1 Data Import Object Mapping
     */
-    private static String ACCOUNT1 = 'Account1';
+    private static final String ACCOUNT1 = 'Account1';
+
+    /*******************************************************************************************************
+    * @description Account object name
+    */
+    private static final String ACCOUNT_OBJECT = 'Account';
+
+    /*******************************************************************************************************
+    * @description Contact object name
+    */
+    private static final String CONTACT_OBJECT = 'Contact';
 
     /*******************************************************************************************************
     * @description Test that we get the current namespace
@@ -99,7 +109,7 @@ private class BDI_ManageAdvancedMappingCtrlTest {
     }
 
     /*******************************************************************************************************
-    * @description Test that we create the correct number of Field Info wrappers for a given object
+    * @description Test that we create the correct number of Field Info wrappers for the given objects
     */
     @isTest
     static void shouldGetCorrectNumberOfObjectMappingFieldInfosForGivenObject() {
@@ -110,17 +120,17 @@ private class BDI_ManageAdvancedMappingCtrlTest {
         Set<String> creatableContactFields = getCreatableFields(contactFieldMap);
 
         BDI_ManageAdvancedMappingCtrl.FieldInfo[] accountFieldInfos =
-            BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes('Account');
+            BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes(ACCOUNT_OBJECT);
 
         BDI_ManageAdvancedMappingCtrl.FieldInfo[] contactFieldInfos =
-            BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes('Contact');
+            BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes(CONTACT_OBJECT);
 
         System.assertEquals(creatableAccountFields.size(), accountFieldInfos.size());
         System.assertEquals(creatableContactFields.size(), contactFieldInfos.size());
     }
 
     /*******************************************************************************************************
-    * @description Test that we create the correct number of Field Info wrappers for a given object
+    * @description Test that we create the correct number of Field Info wrappers for the given object
     */
     @isTest
     static void shouldGetCorrectNumberOfFieldMappingWrappersForGivenObjectMapping() {
