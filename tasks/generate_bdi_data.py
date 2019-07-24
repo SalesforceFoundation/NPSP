@@ -10,6 +10,7 @@ START_DATE = date(2019, 1, 1)  # Per https://salesforce.quip.com/gLfGAPtqVzUS
 
 
 class GenerateBDIData(BatchDataTask):
+    """Generate data specific to the Honeybees test cases"""
     def generate_data(self, session, engine, base, num_records):
         """ Per
         https://salesforce.quip.com/gLfGAPtqVzUS
