@@ -15,11 +15,12 @@ class GenerateBDIData(BatchDataTask):
         """ Per
         https://salesforce.quip.com/gLfGAPtqVzUS
         """
+        print("NUMRECORDS", num_records)
         factories = make_factories(session, base.classes, SQLAlchemyModelFactory)
-        batch_size = math.floor(num_records / 10)  # 5000 / 10 = 50 as per https://salesforce.quip.com/gLfGAPtqVzUS#WNbACAukQAl
+        batch_size = math.floor(num_records / 20)  # 10000 / 20 = 500 as per https://salesforce.quip.com/gLfGAPtqVzUS#WNbACAukQAl
         make_preexisting_records(batch_size, factories)  # Per https://salesforce.quip.com/gLfGAPtqVzUS#WNbACAukQAl
         make_matching_import_records(batch_size, factories)  # Per https://salesforce.quip.com/gLfGAPtqVzUS#WNbACAHSe1L
-        batch_size = math.floor(num_records / 4)  # 5000 / 4 = 250 as per https://salesforce.quip.com/gLfGAPtqVzUS#WNbACAiNcVf
+        batch_size = math.floor(num_records / 8)  # 10000 / 8 = 1250 as per https://salesforce.quip.com/gLfGAPtqVzUS#WNbACAiNcVf
         make_nonmatching_import_records(batch_size, factories)  # Per https://salesforce.quip.com/gLfGAPtqVzUS#WNbACAiNcVf
 
 
