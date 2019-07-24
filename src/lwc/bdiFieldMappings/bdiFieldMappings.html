@@ -69,7 +69,10 @@
                                 data={fieldMappings}
                                 columns={columns}
                                 hide-checkbox-column
-                                onrowaction={handleRowAction}>
+                                onrowaction={handleRowAction}
+                                sorted-by={sortedBy}
+                                sorted-direction={sortedDirection}
+                                onsort={handleColumnSorting}>
                             </lightning-datatable>
                             <template if:true={noFieldMappings}>
                                 <p class="slds-p-around_medium">
