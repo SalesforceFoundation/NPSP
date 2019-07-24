@@ -11,8 +11,11 @@ ${count} =   ${10000}       # use a multiple of 20
 
 Resource  cumulusci/robotframework/CumulusCI.robot
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup       Run Task Class   tasks.generate_bdi_data.GenerateBDIData
-...            num_records=${count/2}  mapping_yaml=datasets/bdi_benchmark/mapping.yml
+Suite Setup       Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
+...                 num_records=${count/2}
+...                 mapping=datasets/bdi_benchmark/mapping.yml
+...                 data_generation_task=tasks.generate_bdi_data.GenerateBDIData
+...                 database_url=sqlite:////tmp/temp_db.db
 
 *** Test Cases ***
 
