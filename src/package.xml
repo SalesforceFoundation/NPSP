@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -589,12 +589,16 @@
         <members>TDTM_Address</members>
         <members>TDTM_Affiliation</members>
         <members>TDTM_Allocation</members>
+        <members>TDTM_Batch</members>
         <members>TDTM_Campaign</members>
         <members>TDTM_CampaignMember</members>
         <members>TDTM_Contact</members>
+        <members>TDTM_DataImport</members>
+        <members>TDTM_DataImportBatch</members>
         <members>TDTM_EngagementPlan</members>
         <members>TDTM_EngagementPlanTask</members>
         <members>TDTM_GeneralAccountingUnit</members>
+        <members>TDTM_GrantDeadline</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Level</members>
