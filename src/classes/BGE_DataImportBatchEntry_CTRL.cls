@@ -127,62 +127,109 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves all open Opportunities and unpaid Payments for the selected Donor (Account or Contact)
-    * @return JSON stringified Map<String, List<SObject>> of all openOpportunities and unpaidPayments for the given donor
+    * @description Retrieves all open Opportunities and related Payments for the selected Donor (Account or Contact)
+    * @return JSON string of all open Opportunities and related Payments for the given donor
     */
     @AuraEnabled
-    public static String getOpenDonations(Id donorId, String donorType) {
+    public static String getOpportunitiesWithOppPayments(Id donorId) {
+        Schema.SObjectType token = donorId.getSobjectType();
+
         String relationshipField;
-        if (donorType == 'Account1') {
+        if (token == Account.SObjectType) {
             relationshipField = 'AccountId';
-        } else if (donorType == 'Contact1') {
+        } else if (token == Contact.SObjectType) {
             relationshipField = 'Primary_Contact__c';
+        } else {
+            throw new AuraHandledException('SObjectType ' + token + ' is not supported.');
         }
 
-        String opportunitySOQL = 'SELECT Id, ' +
-                                'Name, ' +
-                                'StageName, ' +
-                                'Amount ' +
-                                'FROM Opportunity ' +
-                                'WHERE ' + relationshipField + ' = :donorId ' +
-                                'AND IsClosed = false';
-
-        String paymentSOQL = 'SELECT Id, ' +
-                                'Name, ' +
-                                'npe01__Scheduled_Date__c, ' +
-                                'npe01__Opportunity__r.Name, ' +
-                                'npe01__Opportunity__c, ' +
-                                'npe01__Payment_Amount__c ' +
-                                'FROM npe01__OppPayment__c ' +
-                                'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
-                                'AND npe01__Opportunity__r.IsClosed = false ' +
-                                'AND npe01__Written_Off__c = false ' +
-                                'AND npe01__Paid__c = false';
+        String query = 'SELECT Id, ' +
+                'Name, ' +
+                'StageName, ' +
+                'Amount, ' +
+                    '(SELECT Id, ' +
+                    'Name, ' +
+                    'npe01__Scheduled_Date__c, ' +
+                    'npe01__Opportunity__r.Name, ' +
+                    'npe01__Opportunity__c, ' +
+                    'npe01__Payment_Amount__c,' +
+                    'npe01__Paid__c, ' +
+                    'npe01__Written_Off__c ' +
+                    'FROM npe01__OppPayment__r ' +
+                    'WHERE npe01__Written_Off__c = false) ' +
+                'FROM Opportunity ' +
+                'WHERE ' + relationshipField + ' = :donorId ' +
+                'AND IsClosed = false';
 
         try {
-            List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
-            List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
-
-            Map<Id, Opportunity> openOpportunitiesById = new Map<Id, Opportunity>(openOpportunities);
-
-            // openOpportunities should only include opps with NO UNPAID PAYMENTS for BDI to process donations correctly
-            for (npe01__OppPayment__c payment : unpaidPayments) {
-                Id idOfCurrentOpportunity = payment.npe01__Opportunity__c;
-                if (openOpportunitiesById.containsKey(idOfCurrentOpportunity)) {
-                    openOpportunitiesById.remove(idOfCurrentOpportunity);
-                }
+            List<OpportunityWrapper> opportunityWrappers = new List<OpportunityWrapper>();
+            for (Opportunity opportunity : Database.query(query)) {
+                opportunityWrappers.add(new OpportunityWrapper(opportunity));
             }
-
-            Map<String, List<SObject>> response = new Map<String, List<SObject>>{
-                'openOpportunities' => openOpportunitiesById.values(),
-                'unpaidPayments' => unpaidPayments
-            };
-            return JSON.serialize(response);
+            return JSON.serialize(opportunityWrappers);
         } catch (Exception ex){
             throw new AuraHandledException('ERROR: ' + ex.getMessage());
         }
     }
 
+    /**
+    * @description Wrapper class used to hold only the information needed in the
+    * component for each Opportunity.  The component does not need to store any of
+    * the paid or written-off Payments for a donor, but it does need to know if the Donation
+    * has related Payments that have not been written-off. In that case the User should not
+    * be able to update the Opportunity in the BGE Donation Selector.
+    */
+    @TestVisible
+    private class OpportunityWrapper {
+        @TestVisible Opportunity opportunity {get; private set;}
+        @TestVisible List<npe01__OppPayment__c> unpaidPayments {get; private set;}
+        @TestVisible Boolean hasNonWrittenOffPayments {get; private set;}
+
+        private OpportunityWrapper(Opportunity opportunity) {
+            this.opportunity = opportunity;
+            initialize();
+        }
+
+        private void initialize() {
+            if (unpaidPayments == null) {
+                unpaidPayments = new List<npe01__OppPayment__c>();
+            }
+
+            if (opportunity.npe01__OppPayment__r.isEmpty()) {
+                hasNonWrittenOffPayments = false;
+                return;
+            }
+
+            for (npe01__OppPayment__c oppPayment : opportunity.npe01__OppPayment__r) {
+                if (hasNonWrittenOffPayments == null
+                        && oppPayment.npe01__Written_Off__c == false) {
+                    hasNonWrittenOffPayments = true;
+                }
+
+                if (isAvailableForUpdate(oppPayment)) {
+                    unpaidPayments.add(oppPayment);
+                } else {
+                    continue;
+                }
+            }
+
+            //If hasNonWrittenOffPayments is null after looping all of the Payments,
+            //then all of the Opp's Payments are written-off, and hasNonWrittenOffPayments can
+            //be set to false, as this Opp should be treated in the BGE Donation Selector UI
+            //as if it has 0 Payments.
+            if (hasNonWrittenOffPayments == null) {
+                hasNonWrittenOffPayments = false;
+            }
+        }
+
+        private Boolean isAvailableForUpdate(npe01__OppPayment__c oppPayment) {
+            if (oppPayment.npe01__Paid__c || oppPayment.npe01__Written_Off__c) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 
     /*******************************************************************************************************
     * @description runs BDI Dry Run against a given Id based on the processing settings of a given batch
