@@ -388,8 +388,10 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
         metadataToInsert = Opp_StageMappingCMT.createPledgedOppStageToStateRecord(metadataToInsert);
         metadataToInsert = Opp_StageMappingCMT.createFinalizedOppStageToStateRecord(metadataToInsert);
-        
-        Opp_StageMappingCMT.deployOppStageToStateMetadata(metadataToInsert, params);
+
+        if (!metadataToInsert.isEmpty()) {
+            Opp_StageMappingCMT.deployOppStageToStateMetadata(metadataToInsert, params);
+        }
     }
 
     /*******************************************************************************************************
