@@ -137,7 +137,7 @@
         <fullName>C1_text2__c</fullName>
         <externalId>false</externalId>
         <label>C1_text2</label>
-        <length>10</length>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -147,7 +147,7 @@
         <fullName>C1_text__c</fullName>
         <externalId>false</externalId>
         <label>C1_text</label>
-        <length>10</length>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

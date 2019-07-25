@@ -75,7 +75,6 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set.Migrated_Custom_Field_Mapping_Set</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_2cb21281d</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_37b322bd6</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Number_21e98c57a</members>
@@ -103,7 +102,6 @@
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_RecommendedCrewSize_3cc44b330</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_Subject_7d6b4fcfb</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_SuggestedMaintenanceDate_9ea67eb8e</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set.Migrated_Custom_Object_Mapping_Set</members>
         <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.CustomObject1_7b96c6e1b</members>
         <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.CustomObject3_f3f9b20ad</members>
         <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.WorkOrder_f516282fb</members>

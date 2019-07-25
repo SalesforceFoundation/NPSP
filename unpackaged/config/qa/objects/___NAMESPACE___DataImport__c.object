@@ -14,7 +14,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Account1.custom_acc_text__c</inlineHelpText>
         <label>custom_acc_text</label>
-        <length>10</length>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -422,7 +422,7 @@
         <fullName>WorkOrderImportStatus__c</fullName>
         <externalId>false</externalId>
         <label>WorkOrderImportStatus</label>
-        <length>10</length>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
