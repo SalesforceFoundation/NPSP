@@ -304,9 +304,9 @@
         <type>Url</type>
     </fields>
     <fields>
-        <fullName>CO2_Currency2__c</fullName>
+        <fullName>CO1_Currency2__c</fullName>
         <externalId>false</externalId>
-        <label>CO2 Currency2</label>
+        <label>CO1 Currency2</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>

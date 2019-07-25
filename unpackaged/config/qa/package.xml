@@ -35,7 +35,7 @@
         <members>%%%NAMESPACE%%%DataImport__c.CO1_text2__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_textarea__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_url__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.CO2_Currency2__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_Currency2__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Currency__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Date__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Number__c</members>
