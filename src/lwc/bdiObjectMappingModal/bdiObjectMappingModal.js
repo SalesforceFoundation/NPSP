@@ -13,14 +13,70 @@ import { registerListener, unregisterAllListeners, fireEvent }
     from 'c/pubsubNoPageRef';
 
 // Import Custom Labels
+import bdiOMUIChildParentLabel from '@salesforce/label/c.bdiOMUIChildParentLabel';
+import bdiOMUIGroupNameLabel from '@salesforce/label/c.bdiOMUIGroupNameLabel';
+import bdiOMUIImportStatusLabel from '@salesforce/label/c.bdiOMUIImportStatusLabel';
+import bdiOMUILinkToRecordLabel from '@salesforce/label/c.bdiOMUILinkToRecordLabel';
+import bdiOMUIObjectNameLabel from '@salesforce/label/c.bdiOMUIObjectNameLabel';
+import bdiOMUIOfGroupLabel from '@salesforce/label/c.bdiOMUIOfGroupLabel';
+import bdiOMUIThroughFieldLabel from '@salesforce/label/c.bdiOMUIThroughFieldLabel';
+import bdiFMUISuccessful from '@salesforce/label/c.bdiFMUISuccessful';
+import bdiFMUIUnsuccessful from '@salesforce/label/c.bdiFMUIUnsuccessful';
+import bdiFMUITryAgain from '@salesforce/label/c.bdiFMUITryAgain';
+
 import bdiBtnClose from '@salesforce/label/c.bdiBtnClose';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
+import bdiOMUIImportDetailsTitle from '@salesforce/label/c.bdiOMUIImportDetailsTitle';
+
+import bdiOMUIChildParentHelp from '@salesforce/label/c.bdiOMUIChildParentHelp';
+import bdiOMUICreateModalTitle from '@salesforce/label/c.bdiOMUICreateModalTitle';
+import bdiOMUIEditModalTitle from '@salesforce/label/c.bdiOMUIEditModalTitle';
+import bdiOMUIGroupNameHelp from '@salesforce/label/c.bdiOMUIGroupNameHelp';
+import bdiOMUIImportStatusHelp from '@salesforce/label/c.bdiOMUIImportStatusHelp';
+import bdiOMUILinkToRecordHelp from '@salesforce/label/c.bdiOMUILinkToRecordHelp';
+import bdiOMUIObjectNameHelp from '@salesforce/label/c.bdiOMUIObjectNameHelp';
+import bdiOMUIOfGroupHelp from '@salesforce/label/c.bdiOMUIOfGroupHelp';
+import bdiOMUIThroughFieldHelp from '@salesforce/label/c.bdiOMUIThroughFieldHelp';
+import bdiOMUIErrorNoValidThroughThisField from '@salesforce/label/c.bdiOMUIErrorNoValidThroughThisField';
+import bdiOMUIErrorDupeName from '@salesforce/label/c.bdiOMUIErrorDupeName';
+import bdiOMUIErrorInvalidValues from '@salesforce/label/c.bdiOMUIErrorInvalidValues';
+import bdiOMUIErrorNoUnmappedFieldsPt1 from '@salesforce/label/c.bdiOMUIErrorNoUnmappedFieldsPt1';
+import bdiOMUIErrorNoUnmappedFieldsPt2 from '@salesforce/label/c.bdiOMUIErrorNoUnmappedFieldsPt2';
+import stgBtnCancel from '@salesforce/label/c.stgBtnCancel';
+import stgBtnSave from '@salesforce/label/c.stgBtnSave';
 
 export default class bdiObjectMappingModal extends LightningElement {
-
+    
     customLabels = {
+        bdiOMUIChildParentLabel,
+        bdiOMUIGroupNameLabel,
+        bdiOMUIImportStatusLabel,
+        bdiOMUILinkToRecordLabel,
+        bdiOMUIObjectNameLabel,
+        bdiOMUIOfGroupLabel,
+        bdiOMUIThroughFieldLabel,
+        bdiFMUISuccessful,
+        bdiFMUIUnsuccessful,
+        bdiFMUITryAgain,
         bdiBtnClose,
-        stgUnknownError
+        stgUnknownError,
+        bdiOMUIImportDetailsTitle,
+        bdiOMUIChildParentHelp,
+        bdiOMUICreateModalTitle,
+        bdiOMUIEditModalTitle,
+        bdiOMUIGroupNameHelp,
+        bdiOMUIImportStatusHelp,
+        bdiOMUILinkToRecordHelp,
+        bdiOMUIObjectNameHelp,
+        bdiOMUIOfGroupHelp,
+        bdiOMUIThroughFieldHelp,
+        bdiOMUIErrorNoValidThroughThisField,
+        bdiOMUIErrorDupeName,
+        bdiOMUIErrorInvalidValues,
+        bdiOMUIErrorNoUnmappedFieldsPt1,
+        bdiOMUIErrorNoUnmappedFieldsPt2,
+        stgBtnCancel,
+        stgBtnSave
     };
 
     excludedDIFields = ['ownerid',
@@ -172,14 +228,14 @@ export default class bdiObjectMappingModal extends LightningElement {
                 // Edit Mode
                 this.row = JSON.parse(JSON.stringify(data.row));
                 this.row.Data_Import_Object_Mapping_Set = this.diObjectMappingSetDevName;
-                this.modalTitle = 'Edit Mapping Group';
+                this.modalTitle = this.customLabels.bdiOMUIEditModalTitle;
 
                 this.getRelationshipFieldOptions();
 
             } else {
                 // New Object mapping Mode
                 this.setDefaultValues();
-                this.modalTitle = 'Create Mapping Group';
+                this.modalTitle = this.customLabels.bdiOMUICreateModalTitle;
             }
             this.refreshImportRecordFieldOptions();
 
@@ -272,8 +328,7 @@ export default class bdiObjectMappingModal extends LightningElement {
                                 && tempObjMapping.Id !== this.row.Id) {
 
                                 dupeFound = true;
-                                inputCmp.setCustomValidity('Error: This name is already in use, ' +  
-                                                            'please choose another.');
+                                inputCmp.setCustomValidity(this.customLabels.bdiOMUIErrorDupeName);
                             }
                         }
                         if(!dupeFound){
@@ -289,7 +344,7 @@ export default class bdiObjectMappingModal extends LightningElement {
         if (!result) {
             this.showToast(
                 'Error',
-                'Invalid values in one or more fields.',
+                this.customLabels.bdiOMUIErrorInvalidValues,
                 'error',
                 'dismissable',
                 null);
@@ -381,8 +436,7 @@ export default class bdiObjectMappingModal extends LightningElement {
                             this.row.Relationship_Field = null;
                             this.isLoading = false;
 
-                            relField.setCustomValidity('Error: There are no valid relationship fields for the chosen '+
-                                        'combination of "Object Name", "Is Child/Parent", and "Of This Mapping Group"');
+                            relField.setCustomValidity(this.customLabels.bdiOMUIErrorNoValidThroughThisField);
                             relField.reportValidity();
                             
                             return;
@@ -476,9 +530,9 @@ export default class bdiObjectMappingModal extends LightningElement {
 
             if (importedRecordField) {
                 if (this.diImportRecordFieldOptions.length === 0) {
-                    importedRecordField.setCustomValidity('Error: There are no unmapped fields on the ' + 
-                                        'Data Import object to use for the Imported Record Field Name. ' +
-                                        'Create new fields on the Data Import object if needed.');
+                    importedRecordField.setCustomValidity(this.customLabels.bdiOMUIErrorNoUnmappedFieldsPt1 + 
+                                                        ' ' + this.customLabels.bdiOMUILinkToRecordLabel + 
+                                                        this.customLabels.bdiOMUIErrorNoUnmappedFieldsPt2);
                     importedRecordField.reportValidity();
                 } else {
                     importedRecordField.setCustomValidity('');
@@ -487,9 +541,9 @@ export default class bdiObjectMappingModal extends LightningElement {
 
             if (importedRecordStatusField) {
                 if (this.diImportRecordStatusFieldOptions.length === 0) {
-                    importedRecordStatusField.setCustomValidity('Error: There are no unmapped fields on the ' + 
-                                        'Data Import object to use for the Imported Record Status Field Name. ' +
-                                        'Create new fields on the Data Import object if needed.');
+                    importedRecordStatusField.setCustomValidity(this.customLabels.bdiOMUIErrorNoUnmappedFieldsPt1 + 
+                        ' ' + this.customLabels.bdiOMUIImportStatusLabel + 
+                        this.customLabels.bdiOMUIErrorNoUnmappedFieldsPt2);
                     importedRecordStatusField.reportValidity();
                 } else {
                     importedRecordStatusField.setCustomValidity('');
