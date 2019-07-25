@@ -12,7 +12,7 @@ Suite Teardown  Run keywords
 *** Test Cases ***
 
 Create Payment Allocations and Verify Opportunity Allocations Sync
-    [tag]    unstable
+    [tags]    unstable
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
     Load Related List    GAU Allocations
@@ -38,7 +38,7 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     ...    &{gau}[Name]=$40.00
 
 Update GAU Allocations and Verify Payment Allocations Sync
-    [tag]    unstable
+    [tags]    unstable
     Click Special Related List Button  GAU Allocations    Manage Allocations
     Choose Frame    Manage Allocations
     Add GAU Allocation    Percent 0    60
