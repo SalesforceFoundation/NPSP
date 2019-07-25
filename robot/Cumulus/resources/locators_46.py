@@ -184,6 +184,7 @@ npsp_lex_locators={
         'name':'//div[contains(@class,"BGE_DataImportBatchEntry")]//tbody/tr/th//a',
         'locate_dropdown':'//div[contains(@class,"BGE_DataImportBatchEntry")]//tbody/tr[{}]/td[6]//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
         'gift-amount':'//div[./label[text()="{}"]]',
+        'modal-link':'//tbody/tr/td/a[text()="{}"]',
         },    
     'bge-lists':{
         'list1':"//div[./label[text()='{}']]/div//select",
