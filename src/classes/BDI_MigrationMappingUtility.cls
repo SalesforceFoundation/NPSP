@@ -170,6 +170,11 @@ public with sharing class BDI_MigrationMappingUtility {
     public List<DataImportFieldMapping> dataImportFieldMappings = new List<DataImportFieldMapping>();
 
     /*******************************************************************************************************
+    * @description Map of valid Object Fields by Object Name
+    */
+    public static Map<String, Set<String>> validFieldsByObjectName;
+
+    /*******************************************************************************************************
     * @description Name of the Data Import Field Mapping Set to use
     */
     public String fieldMappingSetName {
@@ -317,7 +322,6 @@ public with sharing class BDI_MigrationMappingUtility {
         cloneObjectMappings();
 
         if (!Test.isRunningTest()) {
-            badHelpTextMappings.clear();
             populateListsFromHelpTextMappings();
         }
 
@@ -833,26 +837,67 @@ public with sharing class BDI_MigrationMappingUtility {
             this.isRequired = dfr.isNillable() ? 'No' : 'Yes';
 
             if (this.helpText != null) {
-                List<String> parts = helpText.split('\\.', 2);
-                this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
-                this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
 
-                if (NAMESPACE != 'npsp') {
-                    this.targetFieldAPIName =
-                        UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                List<String> parts = splitHelpText(this.helpText);
+                if (parts != null) {
+                    this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
+                    this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
+
+                    if (NAMESPACE != 'npsp') {
+                        this.targetFieldAPIName =
+                            UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                    }
+
+                    checkRequiredFields();
                 }
-
-                checkRequiredFields();
             }
         }
 
+        private List<String> splitHelpText(String helpText) {
+            String symbol;
+            Boolean hasSpecialChar = helpText.containsAny('$&+,:;=?@#|\'<>.-^*()%!_');
+            Boolean hasDataImportNames =
+                helpText.containsAny('Account1Account2AddressContact1Contact2HouseholdOpportunityDonationPaymentGAURole');
+
+            if (hasSpecialChar == true) {
+                String[] specialCharacters =
+                    new List<String>{'$', '&', '\\+', ',', ':', ';', '=', '\\?', '@',
+                                     '#', '\\|', '\'', '<', '>', '\\.', '-', '^', '\\*',
+                                     '\\(', '\\)', '%', '!', '_'};
+
+                for (String sc : specialCharacters) {
+                    List<String> parts = helpText.split(sc, 2);
+                    Integer countWhitespaces = helpText.countMatches(' ');
+
+                    if (parts.size() >= 2 && countWhitespaces <= 4) {
+                        if (String.isNotBlank(parts[0]) && String.isNotBlank(parts[1])) {
+                            return parts;
+                        }
+                    }
+                }
+            }
+
+            if (hasDataImportNames == true) {
+                Integer countWhitespaces = helpText.countMatches(' ');
+
+                if (countWhitespaces <= 4) {
+                    return helpText.split('', 2);
+                }
+            }
+
+            return null;
+        }
+
         private void checkRequiredFields() {
-            this.isFieldNameUsable = String.isNotBlank(this.targetFieldAPIName);
             this.isObjectNameUsable = String.isNotBlank(this.dataImportObjectName);
             if (String.isNotBlank(this.dataImportObjectName)) {
                 this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
             }
             this.isObjectAPINameUsable = String.isNotBlank(this.targetObjectAPIName);
+            if (this.isObjectAPINameUsable && String.isNotBlank(this.targetFieldAPIName)) {
+                Set<String> validFields = getValidFieldsByObjectName(this.targetObjectAPIName);
+                this.isFieldNameUsable = validFields.contains(this.targetFieldAPIName.toLowerCase());
+            }
         }
 
         public Boolean isUsable() {
@@ -866,7 +911,23 @@ public with sharing class BDI_MigrationMappingUtility {
             if (Test.isRunningTest()) {
                 checkRequiredFields();
             }
-            return this.isFieldNameUsable && this.isObjectNameUsable && !this.isObjectAPINameUsable;
+            return this.isObjectNameUsable && String.isNotBlank(this.targetFieldAPIName);
+        }
+
+        public Set<String> getValidFieldsByObjectName(String objectName) {
+            if (validFieldsByObjectName == null) {
+                validFieldsByObjectName = new Map<String, Set<String>>();
+            }
+
+            if (validFieldsByObjectName.get(objectName) == null) {
+                SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
+                Set<String> validFields = objectType.getDescribe().fields.getMap().keySet();
+                validFieldsByObjectName.put(objectName, validFields);
+
+                return validFields;
+            } else {
+                return validFieldsByObjectName.get(objectName);
+            }
         }
 
         /****************************************************************************************************
