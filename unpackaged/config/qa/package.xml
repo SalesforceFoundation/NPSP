@@ -99,6 +99,8 @@
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Picklist_445f63ff6</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Picklist_e38aa0476</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Text_3532e6023</members>
+        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_MaintenancePlan_0395868c1</members>
+        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_MinimumCrewSize_5c6970260</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_RecommendedCrewSize_3cc44b330</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_Subject_7d6b4fcfb</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_SuggestedMaintenanceDate_9ea67eb8e</members>

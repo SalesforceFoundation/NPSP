@@ -390,6 +390,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>WO_MinimumCrewSize__c</fullName>
+        <externalId>false</externalId>
+        <label>WO MinimumCrewSize</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>WO_RecommendedCrewSize__c</fullName>
         <externalId>false</externalId>
         <label>WO RecommendedCrewSize</label>
@@ -399,6 +410,18 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>WO_MaintenancePlan__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>WO MaintenancePlan</label>
+        <referenceTo>WorkOrder</referenceTo>
+        <relationshipLabel>Maintenance Plans</relationshipLabel>
+        <relationshipName>MaintenancePlans</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>WO_Subject__c</fullName>
