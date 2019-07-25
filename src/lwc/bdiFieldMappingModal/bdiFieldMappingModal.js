@@ -13,8 +13,12 @@ import bdiFMUIDataType from '@salesforce/label/c.bdiFMUIDataType';
 import bdiFMUIFieldLabel from '@salesforce/label/c.bdiFMUIFieldLabel';
 import bdiFMUISearchSourceInputLabel from '@salesforce/label/c.bdiFMUISearchSourceInputLabel';
 import bdiFMUISearchTargetInputLabel from '@salesforce/label/c.bdiFMUISearchTargetInputLabel';
+import bdiFMUISourceFieldLabelHelp from '@salesforce/label/c.bdiFMUISourceFieldLabelHelp';
+import bdiFMUISourceFieldDataTypeHelp from '@salesforce/label/c.bdiFMUISourceFieldDataTypeHelp';
 import bdiFMUISourceObject from '@salesforce/label/c.bdiFMUISourceObject';
 import bdiFMUITarget from '@salesforce/label/c.bdiFMUITarget';
+import bdiFMUITargetFieldLabelHelp from '@salesforce/label/c.bdiFMUITargetFieldLabelHelp';
+import bdiFMUITargetFieldDataTypeHelp from '@salesforce/label/c.bdiFMUITargetFieldDataTypeHelp';
 import labelMessageLoading from '@salesforce/label/c.labelMessageLoading';
 import stgBtnCancel from '@salesforce/label/c.stgBtnCancel';
 import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
@@ -34,8 +38,12 @@ export default class bdiFieldMappingModal extends LightningElement {
         bdiFMUIFieldLabel,
         bdiFMUISearchSourceInputLabel,
         bdiFMUISearchTargetInputLabel,
+        bdiFMUISourceFieldLabelHelp,
+        bdiFMUISourceFieldDataTypeHelp,
         bdiFMUISourceObject,
         bdiFMUITarget,
+        bdiFMUITargetFieldLabelHelp,
+        bdiFMUITargetFieldDataTypeHelp,
         labelMessageLoading,
         stgBtnCancel,
         stgBtnEdit,

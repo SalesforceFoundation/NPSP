@@ -63,6 +63,7 @@
                                     selected-field-value={selectedSourceFieldAPIName}
                                     options={sourceFieldLabelOptions}
                                     parent-listener-event-name="sourceFieldLabelChange"
+                                    field-level-help={customLabels.bdiFMUISourceFieldLabelHelp}
                                     has-errors={hasSourceFieldErrors}>
                                 </c-util-searchable-combobox>
 
@@ -73,7 +74,8 @@
                                         type="text"
                                         read-only="true"
                                         value={selectedSourceFieldDisplayTypeLabel}
-                                        class="slds-p-top_x-small">
+                                        class="slds-p-top_x-small"
+                                        field-level-help={customLabels.bdiFMUISourceFieldDataTypeHelp}>
                                     </lightning-input>
                                 </template>
 
@@ -102,6 +104,7 @@
                                     selected-field-value={selectedTargetFieldAPIName}
                                     options={targetFieldLabelOptions}
                                     parent-listener-event-name="targetFieldLabelChange"
+                                    field-level-help={customLabels.bdiFMUITargetFieldLabelHelp}
                                     disabled={isTargetFieldDisabled}
                                     has-errors={hasTargetFieldErrors}>
                                 </c-util-searchable-combobox>
@@ -113,7 +116,8 @@
                                         type="text"
                                         read-only="true"
                                         value={selectedTargetFieldDisplayTypeLabel}
-                                        class="slds-p-top_x-small">
+                                        class="slds-p-top_x-small"
+                                        field-level-help={customLabels.bdiFMUITargetFieldDataTypeHelp}>
                                     </lightning-input>
                                 </template>
 

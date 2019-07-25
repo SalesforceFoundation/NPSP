@@ -1507,9 +1507,13 @@
         <members>bdiFMUINoFieldMappings</members>
         <members>bdiFMUISearchSourceInputLabel</members>
         <members>bdiFMUISearchTargetInputLabel</members>
+        <members>bdiFMUISourceFieldDataTypeHelp</members>
+        <members>bdiFMUISourceFieldLabelHelp</members>
         <members>bdiFMUISourceObject</members>
         <members>bdiFMUISuccessful</members>
         <members>bdiFMUITarget</members>
+        <members>bdiFMUITargetFieldDataTypeHelp</members>
+        <members>bdiFMUITargetFieldLabelHelp</members>
         <members>bdiFMUITryAgain</members>
         <members>bdiFMUIUnsuccessful</members>
         <members>bdiFMUIUpdate</members>
