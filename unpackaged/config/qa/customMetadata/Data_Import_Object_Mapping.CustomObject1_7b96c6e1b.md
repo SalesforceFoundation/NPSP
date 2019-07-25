@@ -20,7 +20,7 @@
     </values>
     <values>
         <field>Legacy_Data_Import_Object_Name__c</field>
-        <value xsi:type="xsd:boolean">CustomObject1_7b96c6e1b</value>
+        <value xsi:type="xsd:string">CustomObject1_7b96c6e1b</value>
     </values>
     <values>
         <field>Is_Deleted__c</field>

@@ -24,7 +24,7 @@
     </values>
     <values>
         <field>Legacy_Data_Import_Object_Name__c</field>
-        <value xsi:type="xsd:boolean">CustomObject3_f3f9b20ad</value>
+        <value xsi:type="xsd:string">CustomObject3_f3f9b20ad</value>
     </values>
     <values>
         <field>Object_API_Name__c</field>
