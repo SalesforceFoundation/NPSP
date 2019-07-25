@@ -1984,6 +1984,7 @@
         <members>stgDIFMNonAdminError</members>
         <members>stgDefaultValue</members>
         <members>stgDeploymentCustomMetadataMappingEnabled</members>
+        <members>stgDeploymentHasInvalidHelpTextMappings</members>
         <members>stgDeploymentHelpTextMappingEnabled</members>
         <members>stgDeploymentInProgress</members>
         <members>stgDeploymentTimedOut</members>

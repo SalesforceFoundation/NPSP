@@ -273,7 +273,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     private void successMessage() {
         if (migrationMappingUtility.badHelpTextMappings.size() > 0) {
             addPageMessage(ApexPages.Severity.WARNING,
-                'Custom Metadata mapping is enabled, but we found some invalid help text mappings that we couldn\'t migrate. Please look at the table below.');
+                Label.stgDeploymentHasInvalidHelpTextMappings);
         } else {
             addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
         }
