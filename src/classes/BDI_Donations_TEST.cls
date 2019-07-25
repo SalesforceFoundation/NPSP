@@ -2367,12 +2367,16 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
-            Donation_Amount__c=1100,
-            Donation_Date__c=System.Today(),
-            Donation_Donor__c='contact1',
-            Payment_Method__c = 'Check'
-            );
+        insert new DataImport__c(
+                Contact1_Firstname__c = 'c0',
+                Contact1_Lastname__c = 'c0',
+                Contact1_Personal_Email__c = 'c0@c0.com',
+                Donation_Amount__c = 1100,
+                Donation_Date__c = System.Today(),
+                Donation_Donor__c = 'contact1',
+                Payment_Method__c = 'Check',
+                Donation_Description__c = 'Opp was updated.'
+        );
             
         donationMatchRules(
             UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
@@ -2708,7 +2712,7 @@ public with sharing class BDI_Donations_TEST {
                     shouldAssertImportedPayment = false;
                 }
                 when 11 {
-                    shouldImportFail = true;
+                    shouldImportFail = false;
                     shouldAssertImportedPayment = false;
                 }
             }
@@ -2732,6 +2736,52 @@ public with sharing class BDI_Donations_TEST {
 	        // verify we matched an existing opp (no new opp created)
 	        list<Opportunity> listOppX = [select Id, Name, Amount, Primary_Contact__c from Opportunity];
 	        system.assertEquals(listOpp.size(), listOppX.size());
+
+            if (imatch == 11) {
+                Opportunity oppWithWrittenOffPmt = [
+                        SELECT Amount,
+                                CloseDate,
+                                IsClosed,
+                                IsWon,
+                                Description, (
+                                SELECT Id,
+                                        npe01__Payment_Amount__c,
+                                        npe01__Scheduled_Date__c,
+                                        npe01__Written_Off__c,
+                                        npe01__Paid__c
+                                FROM npe01__OppPayment__r
+                                WHERE Id = :listPmt[6].Id
+                        )
+                        FROM Opportunity
+                        WHERE Name = 'Opp11'
+                        LIMIT 1
+                ];
+
+                System.assertEquals('Opp was updated.', oppWithWrittenOffPmt.Description,
+                        'The Opportunity.Description field should have been updated.');
+                System.assert(oppWithWrittenOffPmt.IsClosed,
+                        'The Opportunity should now be Closed/Won.');
+                System.assert(oppWithWrittenOffPmt.IsWon,
+                        'The Opportunity should now be Closed/Won.');
+
+                System.assertEquals(listOpp[11].Amount, oppWithWrittenOffPmt.Amount,
+                        'The Opportunity.Amount field should not have been updated.');
+                System.assertEquals(listOpp[11].CloseDate, oppWithWrittenOffPmt.CloseDate,
+                        'The Opportunity.CloseDate field should not have been updated.');
+
+                System.assertEquals(listPmt[6].npe01__Payment_Amount__c,
+                        oppWithWrittenOffPmt.npe01__OppPayment__r[0].npe01__Payment_Amount__c,
+                        'The written-off Payment should be unchanged.');
+                System.assertEquals(listPmt[6].npe01__Scheduled_Date__c,
+                        oppWithWrittenOffPmt.npe01__OppPayment__r[0].npe01__Scheduled_Date__c,
+                        'The written-off Payment should be unchanged.');
+                System.assertEquals(listPmt[6].npe01__Written_Off__c,
+                        oppWithWrittenOffPmt.npe01__OppPayment__r[0].npe01__Written_Off__c,
+                        'The written-off Payment should be unchanged.');
+                System.assertEquals(listPmt[6].npe01__Paid__c,
+                        oppWithWrittenOffPmt.npe01__OppPayment__r[0].npe01__Paid__c,
+                        'The written-off Payment should be unchanged.');
+            }
         }
     }
 
