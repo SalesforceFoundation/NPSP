@@ -506,5 +506,66 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
-    </fields>      
+    </fields>
+    <fields>
+        <fullName>ASC_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>ASC Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>ASC_Role__c</fullName>
+        <externalId>false</externalId>
+        <label>ASC Role</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Option1</fullName>
+                    <default>false</default>
+                    <label>Option1</label>
+                </value>
+                <value>
+                    <fullName>Option2</fullName>
+                    <default>false</default>
+                    <label>Option2</label>
+                </value>
+                <value>
+                    <fullName>Option3</fullName>
+                    <default>false</default>
+                    <label>Option3</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>AccountSoftCreditsImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>AccountSoftCreditsImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AccountSoftCreditsImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>AccountSoftCreditsImported</label>
+        <referenceTo>Account_Soft_Credit__c</referenceTo>
+        <relationshipLabel>Account Soft Credits</relationshipLabel>
+        <relationshipName>Account_Soft_Credits</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
 </CustomObject>

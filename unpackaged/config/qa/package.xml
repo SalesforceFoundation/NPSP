@@ -42,6 +42,8 @@
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Phone__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Picklist__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Text__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WO_MaintenancePlan__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WO_MinimumCrewSize__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WO_RecommendedCrewSize__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WO_Subject__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WO_SuggestedMaintenanceDate__c</members>
@@ -75,6 +77,8 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.ASC_Amount_cac3e1cd0</members>
+        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.ASC_Role_f8860e39d</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_2cb21281d</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_37b322bd6</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Number_21e98c57a</members>
@@ -104,6 +108,7 @@
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_RecommendedCrewSize_3cc44b330</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_Subject_7d6b4fcfb</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_SuggestedMaintenanceDate_9ea67eb8e</members>
+        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.AccountSoftCredits_ee5babc24</members>
         <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.CustomObject1_7b96c6e1b</members>
         <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.CustomObject3_f3f9b20ad</members>
         <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.WorkOrder_f516282fb</members>
