@@ -12,7 +12,7 @@
     </values>
     <values>
         <field>Legacy_Data_Import_Object_Name__c</field>
-        <value xsi:type="xsd:boolean">AccountSoftCredits_ee5babc24</value>
+        <value xsi:type="xsd:string">AccountSoftCredits_ee5babc24</value>
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
