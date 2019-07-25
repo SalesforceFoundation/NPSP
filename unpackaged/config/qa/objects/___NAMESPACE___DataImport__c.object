@@ -465,7 +465,7 @@
     <fields>
         <fullName>CustomObject3ImportStatus__c</fullName>
         <externalId>false</externalId>
-        <label>CustomObject1ImportStatus</label>
+        <label>CustomObject3ImportStatus</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
