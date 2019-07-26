@@ -519,7 +519,9 @@
     </fields>
     <fields>
         <fullName>ASC_Role__c</fullName>
+        <description>The role associated with this soft credit. The role describes how the Account was involved with the Opportunity.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The role associated with this soft credit. The role describes how the Account was involved with the Opportunity.</inlineHelpText>
         <label>ASC Role</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -529,19 +531,19 @@
             <valueSetDefinition>
                 <sorted>false</sorted>
                 <value>
-                    <fullName>Option1</fullName>
+                    <fullName>Donation Source</fullName>
                     <default>false</default>
-                    <label>Option1</label>
+                    <label>Donation Source</label>
                 </value>
                 <value>
-                    <fullName>Option2</fullName>
+                    <fullName>Influencer</fullName>
                     <default>false</default>
-                    <label>Option2</label>
+                    <label>Influencer</label>
                 </value>
                 <value>
-                    <fullName>Option3</fullName>
+                    <fullName>Match</fullName>
                     <default>false</default>
-                    <label>Option3</label>
+                    <label>Match</label>
                 </value>
             </valueSetDefinition>
         </valueSet>
