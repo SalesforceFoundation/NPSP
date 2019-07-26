@@ -119,6 +119,12 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
+    * @description List of Platform Events created from Metadata deployments
+    */
+    @TestVisible
+    private static DeploymentEvent__e[] deploymentEvents = new List<DeploymentEvent__e>();
+
+    /*******************************************************************************************************
     * @description Gets all the existing Data Import Object Mapping records and wraps them for use in the 
     * component
     * @return List: List of Data Import Object Mapping
@@ -216,7 +222,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     *
     * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
     *
-    * @return String: Deployment Id
+    * @return String: Deployment Id or Data_Import_Field_Mapping__mdt instance JSON when in tests
     */
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
@@ -250,6 +256,10 @@ public class BDI_ManageAdvancedMappingCtrl {
             fieldMapping.Source_Field_API_Name__c = fieldMappingWrapper.Source_Field_API_Name;
             fieldMapping.Target_Field_API_Name__c = fieldMappingWrapper.Target_Field_API_Name;
 
+            if (Test.isRunningTest()) {
+                return JSON.serialize(fieldMapping);
+            }
+
             String deploymentId = enqueueMetadataRecords(fieldMapping);
             return deploymentId;
         } catch(Exception e) {
@@ -263,7 +273,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     * Data_Import_Object_Mapping__mdt. 
     *
     * @param objectMappingString: DataImportFieldMappingWrapper as JSON
-    * @return String: Deployment Id
+    * @return String: Deployment Id or Data_Import_Object_Mapping__mdt instance JSON when in tests
     */
     @AuraEnabled(cacheable=true)
     public static String createDataImportObjectMapping(String objectMappingString) {
@@ -296,6 +306,10 @@ public class BDI_ManageAdvancedMappingCtrl {
             objMapping.Predecessor__c = objMappingWrapper.Predecessor;
             objMapping.Relationship_Field__c = objMappingWrapper.Relationship_Field;
             objMapping.Relationship_To_Predecessor__c = objMappingWrapper.Relationship_To_Predecessor;
+
+            if (Test.isRunningTest()) {
+                return JSON.serialize(objMapping);
+            }
 
             String deploymentId = enqueueMetadataRecords(objMapping);
             return deploymentId;
@@ -378,6 +392,10 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
 
         DeploymentCallback callback = new DeploymentCallback();
+
+        if (Test.isRunningTest()) {
+            return JSON.serialize(deployContainer);
+        }
 
         Id jobId = Metadata.Operations.enqueueDeployment(deployContainer, callback);
 
@@ -529,6 +547,7 @@ public class BDI_ManageAdvancedMappingCtrl {
                     CompletedDate__c = deployResult.completedDate
             );
 
+            deploymentEvents.add(de);
             Database.SaveResult saveResult = EventBus.publish(de);
 
             if (!saveResult.isSuccess()) {

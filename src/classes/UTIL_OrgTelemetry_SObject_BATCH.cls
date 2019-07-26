@@ -56,6 +56,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * A batch size of 200 allows each Recurring Donation to have 250 opportunities (i.e. 50,000 records SOQL limit)
      */
     public static final Integer RECURRING_DONATIONS_BATCH_SIZE = 200;
+
     /**
      * @description BatchJobMode is to add support for other query types in this same batch job
      * that aren't yet needed, but may be in the future
@@ -92,6 +93,12 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     @TestVisible
     private Integer rdDiffCount = 0;
 
+    @TestVisible
+    private Integer oppsWithMultiplePaymentsCount = 0;
+
+    @TestVisible
+    private Integer oppsWithPayments = 0;
+
     private final String recurringDonationOpenStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
 
     /**
@@ -120,7 +127,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         String soqlQuery = 'SELECT Id FROM Account LIMIT 0';
         switch on (jobMode) {
             when OPPORTUNITIES {
-                soqlQuery = 'SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c FROM Opportunity WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
+                soqlQuery = 'SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c, npe01__Number_of_Payments__c FROM Opportunity WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
             when RECURRING_DONATIONS {
@@ -170,6 +177,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private void handleOpportunityJobMode(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             getOppRecurringDonationsCounts(opp);
+            countOppsWithPayments(opp);
         }
     }
 
@@ -246,6 +254,19 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
+     * @description Handles payment counts
+     */
+    private void countOppsWithPayments(Opportunity opp) {
+        if (opp.npe01__Number_of_Payments__c > 1) {
+            oppsWithMultiplePaymentsCount++;
+            oppsWithPayments++;
+
+        } else if (opp.npe01__Number_of_Payments__c > 0) {
+            oppsWithPayments++;
+        }
+    }
+
+    /**
      * @description When the entire batch job is done, submit the final count variables to the LMO
      */
     public void finish(Database.BatchableContext context) {
@@ -264,16 +285,48 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         } else {
             switch on (jobMode) {
                 when OPPORTUNITIES {
-                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), rdOpenStatusOppsCount);
-                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), rdAllOppsCount);
+                    setRecurringDonationOppsCounts();
+                    setPaymentCounts();
                 }
 
                 when RECURRING_DONATIONS {
-                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), rdAllCount);
-                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), rdDiffCount);
+                    setRecurringDonationsCounts();
                 }
             }
         }
+    }
+
+    /**
+     * @description Sets counts related to recurring donation opportunities in LMO
+     */
+    private void setRecurringDonationOppsCounts() {
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), rdOpenStatusOppsCount);
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), rdAllOppsCount);
+    }
+
+    /**
+     * @description Sets counts related to recurring donations in LMO
+     */
+    private void setRecurringDonationsCounts() {
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), rdAllCount);
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), rdDiffCount);
+    }
+
+    /**
+     * @description Sets counts related to payments in LMO
+     */
+    private void setPaymentCounts() {
+        STG_SettingsService stgSvc = new STG_SettingsService();
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), oppsWithMultiplePaymentsCount);
+
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled
+        if (stgSvc.stgCon.npe01__Payments_Enabled__c) {
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
+        } else {
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), oppsWithPayments);
+        }
+        */
     }
 
     /** @description Returns whether or not another batch should be chained*/

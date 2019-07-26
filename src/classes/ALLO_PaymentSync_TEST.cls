@@ -259,8 +259,8 @@ private with sharing  class ALLO_PaymentSync_TEST {
         System.assertEquals(null, queryAllocations[2].Opportunity__c, 'Only Payment allocations should have been created');
 
         //original payment allocations
-        assertAllocation(queryAllocations[0], 300, gaus[1].Id, false);
-        assertAllocation(queryAllocations[1], 500, gaus[0].Id, false);
+        assertAllocation(queryAllocations[1], 300, gaus[1].Id, false);
+        assertAllocation(queryAllocations[2], 500, gaus[0].Id, false);
     }
 
     /*******************************************************************************************************
@@ -616,6 +616,220 @@ private with sharing  class ALLO_PaymentSync_TEST {
         }
         System.assert(error != null && error.contains(System.Label.alloPmtOppSingleTransaction),
             'Inserting or updating opportunity and payment allocations for the same opportunity failed to cause the expected exception.');
+    }
+
+    /*******************************************************************************************************
+    * @description Test when an opportunity is over scheduled, has payment level allocations changed to the non default GAU,
+    * then opportunity level allocations is increased. This validates that the payment allocation gets scaled properly
+    * when over scheduled. Setting the opportunity allocation to an increased amount validates that the scaling happens properly when going
+    * from the opportunity to the payment. Updating the opportunity level allocation should also overwrite the
+    * payment level allocations.
+    ********************************************************************************************************/
+    @isTest
+    private static void testAllocationAmountIncreasedOnOpportunityOverScheduled() {
+        setupForTests();
+        makePayments(5000, 10);
+        makeGAUs(2);
+        Id GAUId = gaus[1].Id;
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Percent__c = 50, General_Accounting_Unit__c = GAUId));
+
+        insert alloForInsert;
+
+        Allocation__c oppAllocation = [select Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Opportunity__c = :opportunity.Id
+                       AND General_Accounting_Unit__c =: GAUId
+                       order by Amount__c DESC];
+
+        System.assert(oppAllocation.Percent__c == 5, 'This is the opportunity allocation amount: ' + oppAllocation.percent__c);
+
+        oppAllocation.Percent__c = 50;
+        Test.startTest();
+        update oppAllocation;
+
+        Allocation__c paymentAllocation = [select Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Payment__c = :payments[0].Id
+                       AND General_Accounting_Unit__c =: GAUId
+                       order by Amount__c DESC];
+
+        System.assert(paymentAllocation.Percent__c == 50, 'The allocation percent is incorrect. It should be 50, but it is actually: ' + paymentAllocation);
+        Test.stopTest();
+    }
+
+    /*******************************************************************************************************
+    * @description Test when an opportunity is under scheduled, has payment level allocations changed to the non default GAU,
+    * then the opportunity level allocations is increased. This validates that the allocations are properly scaled when under scheduled.
+    * Setting the opportunity level allocation to an increased amount validates that it is properly scaled going
+    * from the opportunity to the payment. Updating the opportunity level allocation should also overwrite the payment level allocations.
+    ********************************************************************************************************/
+    @isTest
+    private static void testAllocationAmountIncreasedOnOpportunityUnderScheduled() {
+        setupForTests();
+        makePayments(600, 10);
+        makeGAUs(2);
+        Id GAUId = gaus[1].Id;
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Percent__c = 50, General_Accounting_Unit__c = GAUId));
+
+        insert alloForInsert;
+
+        Allocation__c oppAllocation = [select Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Opportunity__c = :opportunity.Id
+                       AND General_Accounting_Unit__c =: GAUId
+                       order by Amount__c DESC];
+
+        System.assert(oppAllocation.Percent__c == 5, 'This is the opportunity allocation amount: ' + oppAllocation.percent__c);
+
+        oppAllocation.Percent__c = 50;
+
+        Test.startTest();
+        update oppAllocation;
+
+        Allocation__c paymentAllocation = [select Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Payment__c = :payments[0].Id
+                       AND General_Accounting_Unit__c =: GAUId
+                       order by Amount__c DESC];
+
+        System.assert(paymentAllocation.Percent__c == 50, 'The allocation percent is incorrect. It should be 50, but it is actually: ' + paymentAllocation);
+        Test.stopTest();
+    }
+
+    /*******************************************************************************************************
+    * @description Test when an opportunity is under scheduled, has payment level allocations changed to the non default GAU,
+    * then the opportunity level allocation is decreased. This validates that the allocations are properly scaled
+    * when under scheduled. Setting the opportunity level allocation to a lower amount validates that it is scaled
+    * properly when decreasing the amount, going from the opportunity to the payment.
+    * Updating the opportunity level allocation should also overwrite the payment level allocations.
+    ********************************************************************************************************/
+    @isTest
+    private static void testAllocationAmountDecreasedOnOpportunityUnderScheduled() {
+        setupForTests();
+        makePayments(600, 10);
+        makeGAUs(2);
+        Id GAUId = gaus[1].Id;
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Percent__c = 50, General_Accounting_Unit__c = GAUId));
+
+        insert alloForInsert;
+
+        Allocation__c oppAllocation = [select Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Opportunity__c = :opportunity.Id
+                       AND General_Accounting_Unit__c =: GAUId
+                       order by Amount__c DESC];
+
+        System.assert(oppAllocation.Percent__c == 5, 'This is the opportunity allocation amount: ' + oppAllocation.percent__c);
+
+        oppAllocation.Percent__c = 2;
+
+        Test.startTest();
+        update oppAllocation;
+
+        Allocation__c paymentAllocation = [select Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Payment__c = :payments[0].Id
+                       AND General_Accounting_Unit__c =: GAUId
+                       order by Amount__c DESC];
+
+        System.assert(paymentAllocation.Percent__c == 2, 'The allocation percent is incorrect. It should be 2, but it is actually: ' + paymentAllocation);
+        Test.stopTest();
+    }
+
+    /*******************************************************************************************************
+    * @description Test when an opportunity is over scheduled, has payment level allocations changed,
+    * then opportunity level allocations decreases. This validates that the payment allocation gets scaled properly
+    * when over scheduled. Setting the opportunity allocation to a lower amount validates that the scaling happens properly when going
+    * from the opportunity to the payment. Updating the opportunity level allocation should also overwrite the
+    * payment level allocations.
+    ********************************************************************************************************/
+    @isTest
+    private static void testAllocationAmountDecreasedOnOpportunityOverScheduled() {
+        setupForTests();
+        makePayments(5000, 10);
+        makeGAUs(2);
+        Id GAUId = gaus[1].Id;
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Percent__c = 50, General_Accounting_Unit__c = GAUId));
+
+        insert alloForInsert;
+
+        Allocation__c oppAllocation = [select Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Opportunity__c = :opportunity.Id
+                       AND General_Accounting_Unit__c =: GAUId
+                       order by Amount__c DESC];
+
+        System.assert(oppAllocation.Percent__c == 5, 'This is the opportunity allocation amount: ' + oppAllocation.percent__c);
+
+        oppAllocation.Percent__c = 2;
+
+        Test.startTest();
+        update oppAllocation;
+
+        Allocation__c paymentAllocation = [select Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Payment__c = :payments[0].Id
+                       AND General_Accounting_Unit__c =: GAUId
+                       order by Amount__c DESC];
+
+        System.assert(paymentAllocation.Percent__c == 2, 'The allocation percent is incorrect. It should be 2, but it is actually: ' + paymentAllocation);
+        Test.stopTest();
     }
 
     private static void setupForTests() {
