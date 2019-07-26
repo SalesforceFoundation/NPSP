@@ -301,6 +301,9 @@ private class BDI_ManageAdvancedMappingCtrlTest {
         System.assertEquals(metadataList.size(), 2);
     }
 
+    /*******************************************************************************************************
+    * @description Helper method to collect isCreatable fields
+    */
     static Set<String> getCreatableFields(Map<String, Schema.SObjectField> fieldMap) {
         Set<String> creatableFields = new Set<String>();
         if (fieldMap != null) {
@@ -312,5 +315,14 @@ private class BDI_ManageAdvancedMappingCtrlTest {
             }
         }
         return creatableFields;
+    }
+
+    /*******************************************************************************************************
+    * @description DeployCallbackContext subclass for testing that returns jobId
+    */
+    public class TestingDeployCallbackContext extends Metadata.DeployCallbackContext {
+        public override Id getCallbackJobId() {
+            return '000000000122345';
+        }
     }
 }

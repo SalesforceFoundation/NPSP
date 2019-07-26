@@ -119,6 +119,12 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
+    * @description List of Platform Events created from Metadata deployments
+    */
+    @TestVisible
+    private static DeploymentEvent__e[] deploymentEvents = new List<DeploymentEvent__e>();
+
+    /*******************************************************************************************************
     * @description Gets all the existing Data Import Object Mapping records and wraps them for use in the 
     * component
     * @return List: List of Data Import Object Mapping
@@ -541,6 +547,7 @@ public class BDI_ManageAdvancedMappingCtrl {
                     CompletedDate__c = deployResult.completedDate
             );
 
+            deploymentEvents.add(de);
             Database.SaveResult saveResult = EventBus.publish(de);
 
             if (!saveResult.isSuccess()) {
