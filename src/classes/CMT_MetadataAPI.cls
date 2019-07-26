@@ -150,6 +150,14 @@ public class CMT_MetadataAPI {
         Metadata.DeployResult deployResult;
     }
 
+    /**
+     * @return A 10 character unique 'jobId' to use for deploying metadata
+     */
+    public static String getUniqueJobId() {
+        return UserInfo.getUserId().left(15).right(4).toUpperCase() +
+                String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
+    }
+
 
     /******************************************************************************************************************
      * @description Interface for Metadata Callback Handler
@@ -206,7 +214,7 @@ public class CMT_MetadataAPI {
 
             if (isSuccess) {
                 if (!Test.isRunningTest()) {
-                    UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+                    UTIL_OrgTelemetry_SVC.asyncProcessCMTChange(buildChangedMetadata(result));
                 }
 
                 if (callbackHandler != null) {
@@ -217,6 +225,28 @@ public class CMT_MetadataAPI {
                     callbackHandler.performErrorHandler(callbackParams, JSON.serializePretty(statusMap).left(255));
                 }
             }
+        }
+
+        /**
+         * @description This method iterates through the successful deployments and grabs the 
+         * object name. It will then pass into the UTIL_OrgTelemetry_SVC class to determine
+         * whether or not to run the telemetry code. 
+         */
+        private Set<String> buildChangedMetadata(Metadata.DeployResult result) {
+            Set<String> metadataObjectTypeSet = new Set<String>();
+
+            for (integer i = 0; i < result.details.componentSuccesses.size(); i++) {
+                        
+                // Metadata full name for a custom metadata is in this format:
+                // metadataObject.recordName
+                // Example:
+                // Opportunity_Stage_To_State_Mapping__mdt.FINALIZED
+                String metadataFullName = result.details.componentSuccesses[i].fullName.toLowerCase();
+
+                metadataObjectTypeSet.add(metadataFullName);
+            }
+
+            return metadataObjectTypeSet;
         }
     }
 }

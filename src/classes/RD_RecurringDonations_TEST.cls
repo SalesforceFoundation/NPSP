@@ -198,8 +198,39 @@ public class RD_RecurringDonations_TEST {
         installments3 = getOpps(r2.id);
         System.assertEquals(false,installments3[0].IsDeleted, 'Record should be undeleted.');
     }
-    
-    
+
+    @isTest
+    private static void shouldDispatchRDsToIntegrationGatewayOnBeforeDelete() {
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c> {
+            buildRecurringDonationMonthlyInstallment(null),
+            buildRecurringDonationMonthlyInstallment(null),
+            buildRecurringDonationMonthlyInstallment(null)
+        };
+
+        UTIL_UnitTestData_TEST.setMockIds(rds);
+
+        RD_RecurringDonations_TDTM tdtm = new RD_RecurringDonations_TDTM();
+        UTIL_IntegrationGateway_TEST.Stub gatewayStub = new UTIL_IntegrationGateway_TEST.Stub();
+        tdtm.integrationGateway = (UTIL_IntegrationGateway) Test.createStub(UTIL_IntegrationGateway.class, gatewayStub);
+
+        Test.startTest();
+        tdtm.run(
+            null,
+            rds,
+            TDTM_Runnable.Action.BeforeDelete,
+            npe03__Recurring_Donation__c.SObjectType.getDescribe()
+        );
+        Test.stopTest();
+
+        System.assert(gatewayStub.paramsByMethodName.containsKey('handleBeforeDelete'),
+            'handleBeforeDelete should have been called on the integration gateway');
+
+        Map<String, Object> paramsForMethod = gatewayStub.paramsByMethodName.get('handleBeforeDelete');
+
+        System.assertEquals(rds, paramsForMethod.get('triggerOld'),
+            'The triggerOld parameter should contain the data from the oldList parameter');
+    }
+
     @isTest
     private static void contactRolesOnOppsBucket() {
         //skip the test if Advancement is installed - Bucket Account not supported in ADV

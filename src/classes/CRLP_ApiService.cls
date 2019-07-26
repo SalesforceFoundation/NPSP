@@ -361,7 +361,6 @@ public without sharing class CRLP_ApiService {
          */
         public Boolean hasChanged() {
             if (isNew) {
-                System.debug('has changed new');
                 return true;
             }
 
@@ -369,7 +368,6 @@ public without sharing class CRLP_ApiService {
                 if (cmtRollup.recordName == rlp.DeveloperName) {
                     if (cmtRollup.isDifferent(rlp)) {
                         oldRollupType = new CRLP_RollupCMT.Rollup(rlp).getRollupType();
-                        system.debug('rollup has changed' + rlp.DeveloperName);
                         return true;
                     }
                     break;
@@ -445,7 +443,6 @@ public without sharing class CRLP_ApiService {
                     existingGroup.withRules(rulesByGroupId.get(existingGroup.recordId))
                 )) {
                     hasChanged = true;
-                    System.debug('has changed ' + cmtFilterGroup);
                 }
 
                 break;
@@ -494,15 +491,16 @@ public without sharing class CRLP_ApiService {
         * @description success handler - will call the ApiService to set rollup as stale 
         **/
         public void performSuccessHandler(Map<String, Object> callbackParams, String status) {
+            updateDeploymentStatus(status, true);
 
             if (callbackParams == null || callbackParams.isEmpty()) {
                 return;
             }
 
-            updateDeploymentStatus(status, true);
-
             try {
-                new CRLP_ApiService().setRollupStateAsStale( (Set<String>)callbackParams.get(CallableApiParameters.PARAM_ROLLUP_TYPES) );
+                new CRLP_ApiService().setRollupStateAsStale(
+                    (Set<String>)callbackParams.get(CallableApiParameters.PARAM_ROLLUP_TYPES)
+                );
             } catch (Exception ex) {
                 logError(ex);
             }
@@ -522,10 +520,11 @@ public without sharing class CRLP_ApiService {
         */
         private void updateDeploymentStatus(String status, Boolean isSuccess) {
             Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+            
             crlpSettings.CMT_API_Status__c = status;
             crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
-            update crlpSettings;
 
+            update crlpSettings;
         }
 
         /**

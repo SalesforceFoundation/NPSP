@@ -247,6 +247,8 @@
         <members>ERR_Notifier_TEST</members>
         <members>ERR_ParentAccountUpdater2_TEST</members>
         <members>ERR_ParentAccountUpdater_TEST</members>
+        <members>GAU_TDTM</members>
+        <members>GAU_TDTM_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -307,6 +309,8 @@
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
+        <members>OPP_StageMappingCMT</members>
+        <members>OPP_StageMappingCMT_TEST</members>
         <members>OPP_StageMappingUtil</members>
         <members>OPP_StageMappingUtil_TEST</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
@@ -422,6 +426,9 @@
         <members>TDTM_ObjectDataGateway</members>
         <members>TDTM_ProcessControl</members>
         <members>TDTM_Runnable</members>
+        <members>TDTM_RunnableMutable</members>
+        <members>TDTM_RunnableMutableMock_TEST</members>
+        <members>TDTM_RunnableMutable_TEST</members>
         <members>TDTM_Runnable_TEST</members>
         <members>TDTM_TriggerActionHelper</members>
         <members>TDTM_TriggerHandler</members>
@@ -455,6 +462,8 @@
         <members>UTIL_IScheduled</members>
         <members>UTIL_IntegrationConfig</members>
         <members>UTIL_IntegrationConfig_TEST</members>
+        <members>UTIL_IntegrationGateway</members>
+        <members>UTIL_IntegrationGateway_TEST</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
         <members>UTIL_LightningComponentSupport</members>
@@ -470,6 +479,7 @@
         <members>UTIL_OrgTelemetry_SObject_BATCH</members>
         <members>UTIL_OrgTelemetry_SObject_BATCH_TEST</members>
         <members>UTIL_OrgTelemetry_SVC</members>
+        <members>UTIL_OrgTelemetry_SVC_TEST</members>
         <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PerfLogger</members>
@@ -607,6 +617,7 @@
         <members>TDTM_Contact</members>
         <members>TDTM_EngagementPlan</members>
         <members>TDTM_EngagementPlanTask</members>
+        <members>TDTM_GeneralAccountingUnit</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Level</members>
@@ -1137,6 +1148,8 @@
         <members>Filter_Rule__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Object__c</members>
         <members>Filter_Rule__mdt.Operator__c</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
         <members>Rollup__mdt.Active__c</members>
         <members>Rollup__mdt.Amount_Field__c</members>
         <members>Rollup__mdt.Amount_Object__c</members>
@@ -2404,6 +2417,7 @@
         <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt</members>
         <members>Rollup__mdt</members>
         <name>CustomObject</name>
     </types>
@@ -2606,6 +2620,13 @@
         <members>Opportunity_Naming_Settings__c-iw</members>
         <members>Opportunity_Naming_Settings__c-ja</members>
         <members>Opportunity_Naming_Settings__c-nl_NL</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-fr</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-iw</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
         <members>Package_Settings__c-de</members>
         <members>Package_Settings__c-en_US</members>
         <members>Package_Settings__c-es</members>
@@ -2759,9 +2780,11 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>DataCount_ONETIME_Use</members>
         <members>Data_CountBDIRowsLast30Days</members>
         <members>Data_CountBGERowsLast30Days</members>
         <members>Data_CountErrorLog</members>
+        <members>Data_CountOppsWithMultiplePayments</members>
         <members>Data_CountRdOppsAll</members>
         <members>Data_CountRdOppsOpenEnded</members>
         <members>Data_CountRdsWithDiffAmount</members>
@@ -2828,6 +2851,7 @@
         <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>
