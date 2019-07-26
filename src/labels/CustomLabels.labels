@@ -2420,7 +2420,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIBackToMapGroup</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIBackToMapGroup</shortDescription>
         <value>Back to Mapping Group</value>
     </labels>
@@ -2428,7 +2428,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIDataType</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIDataType</shortDescription>
         <value>Data Type</value>
     </labels>
@@ -2436,7 +2436,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIDatatableMapsTo</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIDatatableMapsTo</shortDescription>
         <value>Maps To</value>
     </labels>
@@ -2444,7 +2444,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIDescription</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIDescription</shortDescription>
         <value>
             Connect the field you created on the NPSP Data Import object to the field on your target object in
@@ -2457,7 +2457,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIFieldAPIName</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIFieldAPIName</shortDescription>
         <value>Field API Name</value>
     </labels>
@@ -2465,7 +2465,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIFieldLabel</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIFieldLabel</shortDescription>
         <value>Field Label</value>
     </labels>
@@ -2473,7 +2473,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUILongDeployment</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUILongDeployment</shortDescription>
         <value>Modifying this Field Mapping is taking longer than expected.</value>
     </labels>
@@ -2481,7 +2481,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUILongDeploymentLink</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUILongDeploymentLink</shortDescription>
         <value>You can view the deployment status here.</value>
     </labels>
@@ -2489,7 +2489,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUILongDeploymentMessage</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUILongDeploymentMessage</shortDescription>
         <value>It'll continue to process in the background. Please wait.</value>
     </labels>
@@ -2497,7 +2497,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUINewFieldMapping</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUINewFieldMapping</shortDescription>
         <value>Create New Field Mapping</value>
     </labels>
@@ -2513,7 +2513,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUISearchSourceInputLabel</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUISearchSourceInputLabel</shortDescription>
         <value>Search for the source field by label or API name.</value>
     </labels>
@@ -2521,7 +2521,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUISearchTargetInputLabel</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUISearchTargetInputLabel</shortDescription>
         <value>Search for the target field by label or API name.</value>
     </labels>
@@ -2537,7 +2537,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUISuccessful</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUISuccessful</shortDescription>
         <value>successful</value>
     </labels>
@@ -2545,7 +2545,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUITarget</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUITarget</shortDescription>
         <value>Target</value>
     </labels>
@@ -2553,7 +2553,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUITryAgain</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUITryAgain</shortDescription>
         <value>Please try again</value>
     </labels>
@@ -2561,7 +2561,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIUnsuccessful</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIUnsuccessful</shortDescription>
         <value>unsuccessful</value>
     </labels>
@@ -2569,7 +2569,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIUpdate</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIUpdate</shortDescription>
         <value>update</value>
     </labels>
@@ -2585,7 +2585,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFieldMapping</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFieldMapping</shortDescription>
         <value>Field Mapping</value>
     </labels>
@@ -2593,7 +2593,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFieldMappings</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFieldMappings</shortDescription>
         <value>Field Mappings</value>
     </labels>

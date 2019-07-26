@@ -260,7 +260,11 @@ export default class bdiObjectMappings extends LightningElement {
             { label: bdiOMUIViewFieldMappingsLabel, name: 'goToFieldMappings' }
         ];
 
-        if (row.Relationship_To_Predecessor !== 'No Predecessor') {
+        if (row.Relationship_To_Predecessor !== 'No Predecessor'
+            && row.MasterLabel !== 'Opportunity Contact Role 1' 
+            && row.MasterLabel !== 'Opportunity Contact Role 2' 
+            && row.MasterLabel !== 'GAU Allocation 1' 
+            && row.MasterLabel !== 'GAU Allocation 2') {
             actions.push({ label: stgBtnEdit, name: 'edit' });
             actions.push({ label: bgeActionDelete, name: 'delete' });
         }
