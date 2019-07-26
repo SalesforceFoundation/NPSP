@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>A mapping of a source field on the Data Import object to a target field on a standard or custom object.</description>
+    <description>Used for Data Import Advanced Mapping definitions. These are mappings of source fields on the NPSP Data Import object to target fields on standard or custom objects.</description>
     <fields>
         <fullName>Data_Import_Field_Mapping_Set__c</fullName>
-        <description>The field mapping set that this record is a part of.</description>
+        <description>The Data Import Field Mapping Set containing this field mapping.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The field mapping set that this record is a part of.</inlineHelpText>
+        <inlineHelpText>The Data Import Field Mapping Set containing this field mapping.</inlineHelpText>
         <label>Data Import Field Mapping Set</label>
         <referenceTo>Data_Import_Field_Mapping_Set__mdt</referenceTo>
         <relationshipLabel>Data Import Field Mappings</relationshipLabel>
@@ -25,10 +25,10 @@
     </fields>
     <fields>
         <fullName>Required__c</fullName>
-        <description>Indicates whether the source field is required to have a non-null value in order to save a record for the Target Object.</description>
+        <description>Indicates if the field on the NPSP Data Import object must contain a value. When it's required, Dry Run will fail if that field doesn't contain a value.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>Indicates whether the source field is required to have a non-null value in order to save a record for the Target Object.</inlineHelpText>
+        <inlineHelpText>Indicates if the field on the NPSP Data Import object must contain a value. When it's required, Dry Run will fail if that field doesn't contain a value.</inlineHelpText>
         <label>Required?</label>
         <required>false</required>
         <type>Picklist</type>
@@ -51,10 +51,10 @@
     </fields>
     <fields>
         <fullName>Source_Field_API_Name__c</fullName>
-        <description>The API name of the Data Import record field that the value will be mapped from.</description>
+        <description>The API name of the field on the NPSP Data Import object.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The API name of the Data Import record field that the value will be mapped from.</inlineHelpText>
+        <inlineHelpText>The API name of the field on the NPSP Data Import object.</inlineHelpText>
         <label>Source Field API Name</label>
         <length>255</length>
         <required>true</required>
@@ -63,10 +63,10 @@
     </fields>
     <fields>
         <fullName>Target_Field_API_Name__c</fullName>
-        <description>The API name of the field to be populated on the standard or custom target object.</description>
+        <description>The API name of the field on the target object.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The API name of the field to be populated on the standard or custom target object.</inlineHelpText>
+        <inlineHelpText>The API name of the field on the target object.</inlineHelpText>
         <label>Target Field API Name</label>
         <length>255</length>
         <required>true</required>
@@ -75,10 +75,10 @@
     </fields>
     <fields>
         <fullName>Target_Object_Mapping__c</fullName>
-        <description>The Data Import Object Mapping that represents the target object instance for this field mapping.</description>
+        <description>The target Object Group for this Field Mapping.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The Data Import Object Mapping that represents the target object instance for this field mapping.</inlineHelpText>
+        <inlineHelpText>The target Data Import Object Group for this field mapping.</inlineHelpText>
         <label>Target Object Mapping</label>
         <referenceTo>Data_Import_Object_Mapping__mdt</referenceTo>
         <relationshipLabel>Data Import Field Mappings</relationshipLabel>

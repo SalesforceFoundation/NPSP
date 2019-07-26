@@ -2206,7 +2206,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiDeploymentInProgress</shortDescription>
-        <value>Help Text mappings are currently being converted to Custom Metadata.</value>
+        <value>Help Text mappings are currently being converted to Advanced Mapping.</value>
     </labels>
     <labels>
         <fullName>bdiDonation</fullName>
@@ -2310,7 +2310,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error deploying metadata during migration from help text to metadata mapping</shortDescription>
-        <value>There was an error attempting to deploy Custom Metadata.</value>
+        <value>There was an error attempting to convert and enable Advanced Mapping.</value>
     </labels>
     <labels>
         <fullName>bdiErrorDonationLookupMatch</fullName>
@@ -2422,7 +2422,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUIBackToMapGroup</shortDescription>
-        <value>Back to Mapping Group</value>
+        <value>Back to Object Group</value>
     </labels>
     <labels>
         <fullName>bdiFMUIDataType</fullName>
@@ -2507,7 +2507,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUINoFieldMappings</shortDescription>
-        <value>There are no Field Mappings for this Mapping Group yet, </value>
+        <value>There are no Field Mappings for this Object Group yet, </value>
     </labels>
     <labels>
         <fullName>bdiFMUISearchSourceInputLabel</fullName>
@@ -2515,7 +2515,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUISearchSourceInputLabel</shortDescription>
-        <value>Search for the source field by label or API name.</value>
+        <value>Search for the NPSP Data Import object's field by label or API name.</value>
     </labels>
     <labels>
         <fullName>bdiFMUISearchTargetInputLabel</fullName>
@@ -2555,7 +2555,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUITryAgain</shortDescription>
-        <value>Please try again</value>
+        <value>Please try again.</value>
     </labels>
     <labels>
         <fullName>bdiFMUIUnsuccessful</fullName>
@@ -6261,7 +6261,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgDIFMNonAdminError</shortDescription>
-        <value>Only System Administrators can enable or disable Data Import Field Mapping.</value>
+        <value>Only System Administrators can enable or disable Data Import Advanced Mapping.</value>
     </labels>
     <labels>
         <fullName>stgDocumentation</fullName>
@@ -6277,7 +6277,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgDeploymentInProgress</shortDescription>
-        <value>Custom Metadata mapping is enabled.</value>
+        <value>Advanced Mapping is enabled.</value>
     </labels>
     <labels>
         <fullName>stgDeploymentHelpTextMappingEnabled</fullName>
@@ -6374,7 +6374,7 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAdvancedMapping1</shortDescription>
-        <value>When you enable Advanced Mapping, we convert your existing Help Text field mapping in the NPSP Data Import object to use Custom Metadata. Once enabled, you'll edit mappings and create new ones on this page.</value>
+        <value>When you enable Advanced Mapping, we convert your existing Help Text field mappings to Advanced Mapping. Once enabled, you'll edit mappings and create new ones on this page.</value>
     </labels>
     <labels>
         <fullName>stgHelpAdvancedMapping2</fullName>
@@ -6390,7 +6390,7 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAdvancedMapping3</shortDescription>
-        <value>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
+        <value>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/s/article/NPSP-Map-Using-Advanced-Mapping&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>stgHelpAdvancedMapping4</fullName>
@@ -6399,10 +6399,10 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <protected>false</protected>
         <shortDescription>stgHelpAdvancedMapping4</shortDescription>
         <value>
-            We couldn't convert some of your existing Help Text mappings because they were invalid. Read more about &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;common Help Text mapping issues&lt;/a&gt;. &lt;b&gt;Please take a screenshot of this page or copy the information in the table below to track updates you need to make to these mappings.&lt;/b&gt;
+            **This message will no longer be displayed if you leave this page!** We couldn't convert some of your existing Help Text mappings because they are invalid. Read more about &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;common Help Text mapping issues&lt;/a&gt;. &lt;b&gt;Please take a screenshot of this page or copy the information in the table below to track updates you need to make to these mappings.&lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            You can correct these mappings when you configure Advanced Mapping on the next screen. Please note, these changes will be lost if you turn off Advanced Mapping.
+            To correct these mappings you may want to disable Advanced Mapping; correct the invalid Help Text mappings; and enable Advanced Mapping again. Alternatively, you add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
         </value>
     </labels>
     <labels>

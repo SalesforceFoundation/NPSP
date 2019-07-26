@@ -917,9 +917,9 @@
     <fields>
         <fullName>GAU_Allocation_1_GAU__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>The salesforce id of the GAU to be used for the first allocation.</description>
+        <description>The Salesforce ID of the GAU that will be used for the first GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The salesforce id of the GAU to be used for the first allocation.</inlineHelpText>
+        <inlineHelpText>The Salesforce ID of the GAU that will be used for the first GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</inlineHelpText>
         <label>GAU Allocation 1: GAU</label>
         <referenceTo>General_Accounting_Unit__c</referenceTo>
         <relationshipLabel>NPSP Data Imports (GAU 1)</relationshipLabel>
@@ -930,9 +930,9 @@
     </fields>
     <fields>
         <fullName>GAU_Allocation_1_Import_Status__c</fullName>
-        <description>The status from attempting to insert the first GAU Allocation.</description>
+        <description>The success or failure import status for the Opportunity's first GAU Allocation. This field will only be used with Data Import Advanced Mapping.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The status from attempting to insert the first GAU Allocation.</inlineHelpText>
+        <inlineHelpText>The success or failure import status for the Opportunity's first GAU Allocation. This field will only be used with Data Import Advanced Mapping.</inlineHelpText>
         <label>GAU Allocation 1: Import Status</label>
         <length>255</length>
         <required>false</required>
@@ -943,9 +943,9 @@
     <fields>
         <fullName>GAU_Allocation_1_Imported__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>A lookup to the first GAU Allocation if it was successfully created.</description>
+        <description>Link to the first GAU Allocation if it was successfully created or updated. This field will only be used with Data Import Advanced Mapping.</description>
         <externalId>false</externalId>
-        <inlineHelpText>A lookup to the first GAU Allocation if it was successfully created.</inlineHelpText>
+        <inlineHelpText>Link to the first GAU Allocation if it was successfully created or updated. This field will only be used with Data Import Advanced Mapping.</inlineHelpText>
         <label>GAU Allocation 1: Imported</label>
         <referenceTo>Allocation__c</referenceTo>
         <relationshipLabel>NPSP Data Imports (GAU 1)</relationshipLabel>
@@ -977,9 +977,9 @@
     <fields>
         <fullName>GAU_Allocation_2_GAU__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>The salesforce id of the GAU to be used for the second GAU allocation.</description>
+        <description>The Salesforce ID of the GAU that will be used for the second GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The salesforce id of the GAU to be used for the second GAU allocation.</inlineHelpText>
+        <inlineHelpText>The Salesforce ID of the GAU that will be used for the second GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</inlineHelpText>
         <label>GAU Allocation 2: GAU</label>
         <referenceTo>General_Accounting_Unit__c</referenceTo>
         <relationshipLabel>NPSP Data Imports (GAU 2)</relationshipLabel>
@@ -990,9 +990,9 @@
     </fields>
     <fields>
         <fullName>GAU_Allocation_2_Import_Status__c</fullName>
-        <description>The status from attempting to insert the second GAU Allocation.</description>
+        <description>The success or failure import status for the Opportunity's second GAU Allocation. This field will only be used with Data Import Advanced Mapping.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The status from attempting to insert the second GAU Allocation.</inlineHelpText>
+        <inlineHelpText>The success or failure import status for the Opportunity's second GAU Allocation. This field will only be used with Data Import Advanced Mapping.</inlineHelpText>
         <label>GAU Allocation 2: Import Status</label>
         <length>255</length>
         <required>false</required>
@@ -1003,9 +1003,9 @@
     <fields>
         <fullName>GAU_Allocation_2_Imported__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>A lookup to the first GAU Allocation if it was successfully created.</description>
+        <description>Link to the second GAU Allocation if it was successfully created or updated. This field will only be used with Data Import Advanced Mapping.</description>
         <externalId>false</externalId>
-        <inlineHelpText>A lookup to the first GAU Allocation if it was successfully created.</inlineHelpText>
+        <inlineHelpText>Link to the second GAU Allocation if it was successfully created or updated. This field will only be used with Data Import Advanced Mapping.</inlineHelpText>
         <label>GAU Allocation 2: Imported</label>
         <referenceTo>Allocation__c</referenceTo>
         <relationshipLabel>NPSP Data Imports (GAU 2)</relationshipLabel>
@@ -1145,9 +1145,9 @@
     </fields>
     <fields>
         <fullName>Opportunity_Contact_Role_1_ImportStatus__c</fullName>
-        <description>The status from attempting to insert the first Opportunity Contact Role.</description>
+        <description>The success or failure import status for Contact 1's Opportunity Contact Role. This field will only be used with Data Import Advanced Mapping.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The status from attempting to insert the first Opportunity Contact Role.</inlineHelpText>
+        <inlineHelpText>The success or failure import status for Contact 1's Opportunity Contact Role. This field will only be used with Data Import Advanced Mapping.</inlineHelpText>
         <label>Opportunity Contact Role 1: ImportStatus</label>
         <length>255</length>
         <required>false</required>
@@ -1157,9 +1157,9 @@
     </fields>
     <fields>
         <fullName>Opportunity_Contact_Role_1_Imported__c</fullName>
-        <description>The salesforce id of the imported opportunity contact role.</description>
+        <description>The Salesforce ID of Contact 1's imported Opportunity Contact Role if successfully imported. This field will only be used with Data Import Advanced Mapping.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The salesforce id of the imported opportunity contact role.</inlineHelpText>
+        <inlineHelpText>The Salesforce ID of Contact 1's imported Opportunity Contact Role if successfully imported. This field will only be used with Data Import Advanced Mapping.</inlineHelpText>
         <label>Opportunity Contact Role 1: Imported</label>
         <length>18</length>
         <required>false</required>
@@ -1169,9 +1169,9 @@
     </fields>
     <fields>
         <fullName>Opportunity_Contact_Role_1_Role__c</fullName>
-        <description>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</description>
+        <description>The Opportunity Contact Role to assign to Contact 1. For example, enter "Soft Credit" to assign this Role to Contact 1. You must use Data Import Advanced Mapping to map to this field.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</inlineHelpText>
+        <inlineHelpText>The Opportunity Contact Role to assign to Contact 1. For example, enter "Soft Credit" to assign this Role to Contact 1. You must use Data Import Advanced Mapping to map to this field.</inlineHelpText>
         <label>Opportunity Contact Role 1: Role</label>
         <length>255</length>
         <required>false</required>
@@ -1181,9 +1181,9 @@
     </fields>
     <fields>
         <fullName>Opportunity_Contact_Role_2_ImportStatus__c</fullName>
-        <description>The status from attempting to insert the second Opportunity Contact Role.</description>
+        <description>The success or failure import status for Contact 2's Opportunity Contact Role. This field will only be used with Data Import Advanced Mapping.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The status from attempting to insert the second Opportunity Contact Role.</inlineHelpText>
+        <inlineHelpText>The success or failure import status for Contact 2's Opportunity Contact Role. This field will only be used with Data Import Advanced Mapping.</inlineHelpText>
         <label>Opportunity Contact Role 2: ImportStatus</label>
         <length>255</length>
         <required>false</required>
@@ -1193,9 +1193,9 @@
     </fields>
     <fields>
         <fullName>Opportunity_Contact_Role_2_Imported__c</fullName>
-        <description>The salesforce id of the imported opportunity contact role.</description>
+        <description>The Salesforce ID of Contact 2's imported Opportunity Contact Role if successfully imported. This field will only be used with Data Import Advanced Mapping.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The salesforce id of the imported opportunity contact role.</inlineHelpText>
+        <inlineHelpText>The Salesforce ID of Contact 2's imported Opportunity Contact Role if successfully imported. This field will only be used with Data Import Advanced Mapping.</inlineHelpText>
         <label>Opportunity Contact Role 2: Imported</label>
         <length>18</length>
         <required>false</required>
@@ -1205,9 +1205,9 @@
     </fields>
     <fields>
         <fullName>Opportunity_Contact_Role_2_Role__c</fullName>
-        <description>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</description>
+        <description>The Opportunity Contact Role to assign to Contact 2. For example, enter "Soft Credit" to assign this Role to Contact 2. You must use Data Import Advanced Mapping to map to this field.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</inlineHelpText>
+        <inlineHelpText>The Opportunity Contact Role to assign to Contact 2. For example, enter "Soft Credit" to assign this Role to Contact 2. You must use Data Import Advanced Mapping to map to this field.</inlineHelpText>
         <label>Opportunity Contact Role 2: Role</label>
         <length>255</length>
         <required>false</required>
