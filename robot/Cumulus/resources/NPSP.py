@@ -944,12 +944,18 @@ class NPSP(object):
         assert int(value) == count, "Expected rows to be {} but found {}".format(
             value, count
         )       
-        
+     
     def return_locator_value(self, path, *args, **kwargs): 
         """Returns the value pointed by the specified locator"""
         locator=self.get_npsp_locator(path, *args, **kwargs)
         value=self.selenium.get_webelement(locator).text   
         return value
+        
+    def return_list(self, path, *args, **kwargs): 
+        """Returns all the values pointed by the specified locator"""
+        locator=self.get_npsp_locator(path, *args, **kwargs)
+        values=self.selenium.get_webelements(locator)
+        return [i.text for i in values]
 
     def select_bge_row(self, value):
         """To select a row on object page based on name and open the dropdown"""
