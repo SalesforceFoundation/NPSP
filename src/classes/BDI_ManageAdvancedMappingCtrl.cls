@@ -216,7 +216,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     *
     * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
     *
-    * @return String: Deployment Id
+    * @return String: Deployment Id or Data_Import_Field_Mapping__mdt instance JSON when in tests
     */
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
@@ -267,7 +267,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     * Data_Import_Object_Mapping__mdt. 
     *
     * @param objectMappingString: DataImportFieldMappingWrapper as JSON
-    * @return String: Deployment Id
+    * @return String: Deployment Id or Data_Import_Object_Mapping__mdt instance JSON when in tests
     */
     @AuraEnabled(cacheable=true)
     public static String createDataImportObjectMapping(String objectMappingString) {

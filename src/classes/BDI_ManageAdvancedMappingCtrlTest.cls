@@ -107,6 +107,7 @@ private class BDI_ManageAdvancedMappingCtrlTest {
         String actualNamespace = controllerClass.NamespacePrefix;
 
         String namespace = BDI_ManageAdvancedMappingCtrl.getNamespacePrefix();
+        namespace = namespace == '' ? null : namespace;
 
         System.assertEquals(actualNamespace, namespace);
     }
