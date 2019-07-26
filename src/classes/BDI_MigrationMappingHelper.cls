@@ -106,7 +106,8 @@ public class BDI_MigrationMappingHelper {
                     Relationship_Field__c, 
                     Relationship_To_Predecessor__c, 
                     Is_Deleted__c,
-                    Legacy_Data_Import_Object_Name__c
+                    Legacy_Data_Import_Object_Name__c,
+                    Custom_Mapping_Logic_Class__c
             FROM Data_Import_Object_Mapping__mdt
             WHERE Data_Import_Object_Mapping_Set__r.DeveloperName = :developerName
                 AND Is_Deleted__c = false];
