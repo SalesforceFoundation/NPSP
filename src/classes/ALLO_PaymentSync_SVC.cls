@@ -196,6 +196,7 @@ public class ALLO_PaymentSync_SVC {
             Decimal totalPaymentsPaidUnpaid = 0;
 
             for (npe01__OppPayment__c payment : paymentsByOpportunityId.get(opportunity.id)) {
+                
                 //ignore payments that have been written off
                 if (payment.npe01__Written_Off__c) {
                     continue;
@@ -212,7 +213,7 @@ public class ALLO_PaymentSync_SVC {
                 if (!payment.npe01__Paid__c) {
                     context.totalUnpaidPayments += payment.npe01__Payment_Amount__c;
                 }
-
+                
                 for (Allocation__c pmtAllocation : payment.Allocations__r) {
                     Id gau = pmtAllocation.General_Accounting_Unit__c;
 
@@ -241,7 +242,10 @@ public class ALLO_PaymentSync_SVC {
             }
 
             if (opportunity.Amount != null && opportunity.Amount != 0) {
-                context.scheduleRatio = totalPaymentsPaidUnpaid / opportunity.Amount;
+
+                // The schedule ratio should only take into account the unpaid payments that are left since the ratio is for remaining unpaid allocations. 
+                // We aren't currently taking into account the paid amount currently, but this may change in the future. 
+                context.scheduleRatio = context.totalUnpaidPayments / opportunity.Amount;
             }
 
             // Need this value to accurately calculate the percentage used when recalculating allocations on the Opportunity (from the changes to
@@ -431,6 +435,7 @@ public class ALLO_PaymentSync_SVC {
     ********************************************************************************************************/
     public void syncOpportunityAllocationsToPayments(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
+        
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
@@ -444,6 +449,7 @@ public class ALLO_PaymentSync_SVC {
             if (context.paymentAllocationsByGAU.containsKey(gau)) {
                 Decimal currentTotalPaymentAllocations = context.totalPaymentAllocationsByGAU.get(gau);
                 Decimal totalPaidPaymentAllocations = 0;
+                
                 if (context.totalPaidPaymentAllocationsByGAU.containsKey(gau)) {
                     totalPaidPaymentAllocations = context.totalPaidPaymentAllocationsByGAU.get(gau);
                 }
@@ -473,8 +479,10 @@ public class ALLO_PaymentSync_SVC {
                 }
 
                 //if desired end amounts are out of sync, update them
+                // Recalculate and update the existing allocations for this GAU. 
                 if (currentTotalPaymentAllocations != newTotalPaymentAllocations) {
                     Set<Id> paymentsWithExistingGAU = new Set<Id>();
+
                     for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
                         npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
 
@@ -487,7 +495,8 @@ public class ALLO_PaymentSync_SVC {
                             // Remove current allocation amount from total as it is changing
                             removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
 
-                            paymentAllocation.Amount__c = (unpaidAllocationAmount * paymentScale) / (paymentRatio * context.scheduleRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            // paymentAllocation.Amount__c = (unpaidAllocationAmount) / (paymentRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            paymentAllocation.Amount__c = (newTotalPaymentAllocations) / (paymentRatio);
 
                              //only add the percent for non-default
                             if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
@@ -514,7 +523,7 @@ public class ALLO_PaymentSync_SVC {
                             Allocation__c newAllocation = new Allocation__c(
                                 Payment__c = payment.Id,
                                 General_Accounting_Unit__c = gau,
-                                Amount__c = (newTotalPaymentAllocations * paymentScale) / (paymentRatio * context.scheduleRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                                Amount__c = (newTotalPaymentAllocations) / (paymentRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
                             );
 
                             //only add the percent for non-default
