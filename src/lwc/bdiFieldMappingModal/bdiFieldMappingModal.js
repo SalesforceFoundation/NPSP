@@ -103,7 +103,8 @@ export default class bdiFieldMappingModal extends LightningElement {
         'Multipicklist': ['Multipicklist'],
         'Percent': ['Percent'],
         'Phone': ['Phone', 'String'],
-        'Picklist': ['Picklist'], // Todo: Sometimes include Boolean as per the Bdi Mapping Field Types doc
+        // Todo: Add logic to only allow Picklist (True, False, Blank) => Boolean
+        'Picklist': ['Picklist', 'Boolean'],
         'Reference': ['Reference', 'String'],
         'String': ['String', 'Picklist'],
         'Textarea': ['Textarea', 'String'],
