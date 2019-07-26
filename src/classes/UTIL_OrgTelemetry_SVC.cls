@@ -51,12 +51,13 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * against a table (such as a really huge Opportunity object) were to fail.
      */
     public enum TelemetryBatchCategory {
+        CustomInstallment_Settings,
         NPSP_Settings,
         Org_Environment,
         Data_MaxNumRelatedOpps,
         Data_CountRdOpps,
         Data_CountRecurringDonations,
-        Data_CountRds,
+        Data_CountPaymentOpps,
         Data_CountErrorLog,
         Data_CountBDIRows,
         Data_CountBGERows
@@ -73,6 +74,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_CustomizableRollups,
         IsEnabled_DefaultGAU,
         Data_CountErrorLog,
+        Data_CountOppsWithMultiplePayments,
+        /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                 you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
+        //Data_OppPaymentsWithoutPaymentsEnabled,
         Data_CountRdOppsAll,
         Data_CountRdOppsOpenEnded,
         Data_CountRdsWithDiffAmount,
@@ -80,6 +85,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountBDIRowsLast30Days,
         Data_CountBGERowsLast30Days,
         Data_MaxNumRelatedOpps,
+        DataCount_ONETIME_Use,
         HasUserManagedTDTM,
         Org_CountNonEnglishLanguages,
         Org_IsEnabled_AdvancedMultiCurrency,
@@ -119,6 +125,28 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     }
 
     /**
+     * @description Determines if we should execute the telemetry code based on if the created custom metdata types
+     * are NPSP metadata type objects. 
+     * @param customMetadataTypeSet
+     */
+    @Future
+    public static void asyncProcessCMTChange(Set<String> customMetadataTypeSet) {
+
+        // We need to parse and check so that only NPSP specific actions will have telemetry execution.
+        // We don't want the telemetry logic to run for Abacus. 
+        // Currently, we will only call NPSP if it is an NPSP/Custom Rollup action. 
+        for (String customMetadataTypeName : customMetadataTypeSet) {
+            if (customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Rollup.name().toLowerCase()) ||
+                customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Filter_Group.name().toLowerCase()) ||
+                customMetadataTypeName.contains(CRLP_RollupCMT.MetadataObject.Filter_Rule.name().toLowerCase())) {
+                    
+                asyncTelemetrySvc.processTelemetryType(TelemetryBatchCategory.NPSP_Settings);
+                break;
+            }
+        }
+    }
+
+    /**
      * @description Called by the NPSP Settings Page to subject the current state of NPSP Settings related telemetry
      * data if it has been changed in the NPSP Settings page.
      * @param telemetryType
@@ -138,6 +166,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     public void processTelemetryType(TelemetryBatchCategory telemetryCategory) {
 
         switch on (telemetryCategory) {
+            when CustomInstallment_Settings {
+                handleCustomInstallmentSettings();
+            }
 
             // Simple Boolean FeatureParameters based strictly on NPSP Settings that can be processed in a single
             // operation.
@@ -181,6 +212,15 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             when Data_CountErrorLog {
                 handleErrorLogCount();
             }
+
+            when Data_CountPaymentOpps {
+                // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
+                featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), -1);
+
+                /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
+                         you move forward with Data_OppPaymentsWithoutPaymentsEnabled
+                //featureManager.setPackageIntegerValue(TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), -1); */
+            }
         }
     }
 
@@ -208,6 +248,23 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
+    }
+
+    /**
+     * @description Checks if custom installments are enabled and sets feature parameter. Enabled defined as having
+     * custom installment settings and having at least one recurring donation that has one of those custom installments
+     */
+    private void handleCustomInstallmentSettings() {
+        Set<String> customInstallments = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings().keySet();
+
+        Boolean hasCustomInstallments =
+            !customInstallments.isEmpty()
+            && ![SELECT Id FROM npe03__Recurring_Donation__c WHERE npe03__Installment_Period__c IN :customInstallments LIMIT 1].isEmpty();
+
+        featureManager.setPackageIntegerValue(
+            UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(),
+            hasCustomInstallments ? 1 : 0
+        );
     }
 
     /**

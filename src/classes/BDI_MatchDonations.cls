@@ -468,30 +468,32 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
         // now query for all Open Opportunities from these Contacts or Accounts
         integer cFilter = 0;
-        string strSoql = 'select ' + string.join(new list<String>(setOppFields), ',');
+        string strSoql = 'SELECT ' + string.join(new list<String>(setOppFields), ',');
         
         // add Payment subquery
-        strSoql += ', (select ' + string.join(new list<String>(setPmtFields), ',');
-        strSoql += ' from npe01__OppPayment__r where npe01__Paid__c = false )';
-        
-        strSoql += ' from Opportunity';
-        strSoql += ' where IsClosed = false and (';
+        strSoql += ', (SELECT ' + string.join(new list<String>(setPmtFields), ',');
+        strSoql += ' FROM npe01__OppPayment__r ' +
+                'WHERE npe01__Paid__c = false ' +
+                'AND npe01__Written_Off__c = false)';
+
+        strSoql += ' FROM Opportunity';
+        strSoql += ' WHERE IsClosed = false AND (';
         if (setOppId.size() > 0) {
-            strSoql += ' Id in :setOppId ';
+            strSoql += ' Id IN :setOppId ';
             cFilter++;
         }
         if (setAccId.size() > 0) {
             if (cFilter > 0) {
                 strSoql += ' or ';
             }
-            strSoql += ' AccountId in :setAccId ';
+            strSoql += ' AccountId IN :setAccId ';
             cFilter++;
         }
         if (setConId.size() > 0) {
             if (cFilter > 0) {
-                strSoql += ' or ';
+                strSoql += ' OR ';
             }
-            strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' in :setConId ';
+            strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' IN :setConId ';
             cFilter++;
         }
         strSoql += ') ';
