@@ -302,6 +302,34 @@ private class BDI_ManageAdvancedMappingCtrlTest {
     }
 
     /*******************************************************************************************************
+    * @description Test that our Deployment Callback creates a Platform Event
+    */
+    @IsTest
+    static void shouldCreateDeploymentEventOnDeployment() {
+        Test.startTest();
+
+        BDI_ManageAdvancedMappingCtrl.DeploymentCallback callback =
+            new BDI_ManageAdvancedMappingCtrl.DeploymentCallback();
+
+        // Construct a dummy Context
+        TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+
+        // Create dummy Deploy Result
+        Metadata.DeployResult deployResult = new Metadata.DeployResult();
+        deployResult.Id = '04s000000122345';
+        deployResult.status = Metadata.DeployStatus.SUCCEEDED;
+        Datetime currentDatetime = datetime.now();
+        deployResult.completedDate = currentDatetime;
+
+        // Call the handleResult() method of our main Callback with our dummy context and result
+        callback.handleResult(deployResult, context);
+
+        Test.stopTest();
+
+        System.assertEquals(BDI_ManageAdvancedMappingCtrl.deploymentEvents.size(), 1);
+    }
+
+    /*******************************************************************************************************
     * @description Helper method to collect isCreatable fields
     */
     static Set<String> getCreatableFields(Map<String, Schema.SObjectField> fieldMap) {
