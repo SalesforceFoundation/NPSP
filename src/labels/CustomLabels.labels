@@ -2724,7 +2724,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Is Child/Parent Field Label/Comlumn Name</shortDescription>
+        <shortDescription>Is Child/Parent Field Label/Column Name</shortDescription>
         <value>Is Child/Parent</value>
     </labels>
     <labels>
@@ -2805,7 +2805,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link to Record Helptext</shortDescription>
-        <value>When the import processes, this Lookup Relationship field links to the record created by an import for this Object Group.</value>
+        <value>When the import processes, this field will have a link to this Object Group's record or it will display the Salesforce ID of the record.</value>
     </labels>
     <labels>
         <fullName>bdiOMUILinkToRecordLabel</fullName>
@@ -2837,7 +2837,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Of This Object Group Helptext</shortDescription>
-        <value>Your target object’s records are likely related to another object group. Choose the related object group here.</value>
+        <value>Your target object's records are related to another Object Group. Choose the related Object Group here.</value>
     </labels>
     <labels>
         <fullName>bdiOMUIOfGroupLabel</fullName>
@@ -2853,7 +2853,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Object groups description part 1</shortDescription>
-        <value>Each row of this table shows your Object Groups. You'll set up individual field mappings when you click the dropdown icon for an Object Group, then click *View Field Mappings*.</value>
+        <value>Each row of this table shows your Object Groups. You'll set up individual field mappings when you click the dropdown icon for an Object Group, then click View Field Mappings.</value>
     </labels>
     <labels>
         <fullName>bdiOMUIPageDescriptionPt2</fullName>
@@ -2914,7 +2914,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error displayed when there are no valid options for "Through This Field"</shortDescription>
-        <value>Error: There are no valid relationship fields for the chosen combination of "Object Name", "Is Child/Parent", and "Of This Mapping Group"</value>
+        <value>Error: There are no valid fields based on what you selected in "Object Name", "Is Child/Parent", and "Of This Mapping Group"</value>
     </labels>
     <labels>
         <fullName>bdiOMUIErrorDupeName</fullName>
@@ -2930,7 +2930,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Basic error which any modal field is missing or invalid.</shortDescription>
-        <value>Invalid values in one or more fields.</value>
+        <value>Blank or invalid values in one or more fields.</value>
     </labels>
     <labels>
         <fullName>bdiOMUIErrorNoUnmappedFieldsPt1</fullName>
@@ -2938,7 +2938,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>First part of error displayed when there are no unmapped fields.</shortDescription>
-        <value>Error: There are no unmapped fields on the Data Import object to use for the </value>
+        <value>Error: There are no unmapped fields on the NPSP Data Import object to use for the </value>
     </labels>
     <labels>
         <fullName>bdiOMUIErrorNoUnmappedFieldsPt2</fullName>
@@ -2946,7 +2946,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Second part of error displayed when there are no unmapped fields.</shortDescription>
-        <value>. Create new fields on the Data Import object if needed.</value>
+        <value>. Create new fields on the NPSP Data Import object if needed.</value>
     </labels>
     <labels>
         <fullName>bdiPositiveNumber</fullName>
