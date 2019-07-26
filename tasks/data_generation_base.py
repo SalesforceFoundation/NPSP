@@ -1,10 +1,7 @@
 import os
-import math
-from cumulusci.tasks.salesforce import BaseSalesforceApiTask
-from cumulusci.tasks.bulkdata import LoadData
+from cumulusci.core.tasks import BaseTask
 from cumulusci.core.utils import ordered_yaml_load
-from cumulusci.utils import convert_to_snake_case, temporary_dir
-from cumulusci.core.config import TaskConfig
+from cumulusci.utils import convert_to_snake_case
 from sqlalchemy import create_engine
 from sqlalchemy import Column
 from sqlalchemy import MetaData
@@ -15,7 +12,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import create_session
 
 
-class BatchDataTask(BaseSalesforceApiTask):
+class BatchDataTask(BaseTask):
     """Abstract base class for any class that generates data using a SQL DB."""
     task_docs = """
     Use the `num_records` option to specify how many records to generate.
