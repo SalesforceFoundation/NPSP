@@ -35,12 +35,12 @@
                             <div class="slds-section slds-is-open slds-m-bottom_small">
                                 <lightning-input
                                     class="slds-m-bottom_small"
-                                    label="Mapping Group Name"
+                                    label={customLabels.bdiOMUIGroupNameLabel}
                                     type="text"
                                     name="masterLabel"
                                     value={row.MasterLabel}
                                     onchange={handleMasterLabelChange}
-                                    field-level-help="Enter a descriptive name for the mapping group."
+                                    field-level-help={customLabels.bdiOMUIGroupNameHelp}
                                     required>
                                 </lightning-input>
                                 <div class="slds-size_1-of-1 slds-m-vertical_medium">
@@ -50,58 +50,55 @@
                                 <lightning-combobox
                                     class="slds-m-bottom_small"
                                     name="objectName"
-                                    label="Object Name"
+                                    label={customLabels.bdiOMUIObjectNameLabel}
                                     value={row.Object_API_Name}
                                     placeholder="Select Object"
                                     options={objectOptions}
                                     onchange={handleObjectAPINameChange}
-                                    field-level-help="The API name for the object that will be created
-                                                        by this mapping group."
+                                    field-level-help={customLabels.bdiOMUIObjectNameHelp}
                                     required>
                                 </lightning-combobox>
 
                                 <lightning-combobox
                                     class="slds-m-bottom_small"
                                     name="relationshipToPredecessor"
-                                    label="Is Child/Parent"
+                                    label={customLabels.bdiOMUIChildParentLabel}
                                     value={row.Relationship_To_Predecessor}
                                     placeholder="Select Relationship"
                                     options={predRelationshipOptions}
                                     onchange={handleRelationshipToPredChange}
-                                    field-level-help="Whether the record to be created is a parent or child
-                                                    of the mapping group which this group is dependent on."
+                                    field-level-help={customLabels.bdiOMUIChildParentHelp}
                                     required>
                                 </lightning-combobox>
                                 <lightning-combobox
                                     class="slds-m-bottom_small"
                                     name="ofThisMappingGroup"
-                                    label="Of This Mapping Group"
+                                    label={customLabels.bdiOMUIOfGroupLabel}
                                     value={row.Predecessor}
                                     placeholder="Select Mapping Group"
                                     options={objectMappingOptions}
                                     onchange={handlePredecessorChange}
-                                    field-level-help="The mapping group that must exist
-                                                    before this record can be created (either Parent or Child)."
+                                    field-level-help={customLabels.bdiOMUIOfGroupHelp}
                                     required>
                                 </lightning-combobox>
                                 <lightning-combobox
                                     class="slds-m-bottom_small"
                                     placeholder="Select Field"
-                                    label="Through This Field"
+                                    label={customLabels.bdiOMUIThroughFieldLabel}
                                     name="throughThisField"
                                     data-id="throughThisField"
                                     options={relationshipFieldOptions}
                                     value={row.Relationship_Field}
                                     onchange={handleRelationshipFieldChange}
                                     disabled={isRelationshipFieldDisabled}
-                                    field-level-help="Placeholder"
+                                    field-level-help={customLabels.bdiOMUIThroughFieldHelp}
                                     required>
                                 </lightning-combobox>
                                 <div class="slds-size_1-of-1 slds-m-top_large">
                                     <h3 class="slds-text-heading_small slds-text-heading_small_extension">
                                         <span class="slds-truncate"
                                                 title="Import Details">
-                                                Import Details
+                                                {customLabels.bdiOMUIImportDetailsTitle}
                                         </span>
                                     </h3>
                                 </div>
@@ -109,29 +106,26 @@
                                     class="slds-m-bottom_small"
                                     name="importedRecordFieldName"
                                     data-id="importedRecordFieldName"
-                                    label="Imported Record Field Name"
+                                    label={customLabels.bdiOMUILinkToRecordLabel}
                                     value={row.Imported_Record_Field_Name}
                                     placeholder="Select Field"
                                     options={diImportRecordFieldOptions}
                                     onchange={handleImportedRecordFieldNameChange}
                                     dropdown-alignment="bottom-left"
-                                    field-level-help="The Field API Name on the NPSP Data Import object where the
-                                                        ID for the imported record will be placed when the import is successful.
-                                                    This is also where the code will verify if this record was imported or matched."
+                                    field-level-help={customLabels.bdiOMUILinkToRecordHelp}
                                     required>
                                 </lightning-combobox>
                                 <lightning-combobox
                                     class="slds-m-bottom_small"
                                     name="importedRecordStatusFieldName"
                                     data-id="importedRecordStatusFieldName"
-                                    label="Imported Record Status Field Name"
+                                    label={customLabels.bdiOMUIImportStatusLabel}
                                     placeholder="Select Field"
                                     options={diImportRecordStatusFieldOptions}
                                     value={row.Imported_Record_Status_Field_Name}
                                     onchange={handleImportedRecordStatusFieldNameChange}
                                     dropdown-alignment="bottom-left"
-                                    field-level-help="The Field API Name where the success or failure of the import
-                                                            will be recorded for an NPSP Data Import record."
+                                    field-level-help={customLabels.bdiOMUIImportStatusHelp}
                                     required>
                                 </lightning-combobox>
                             </div>
