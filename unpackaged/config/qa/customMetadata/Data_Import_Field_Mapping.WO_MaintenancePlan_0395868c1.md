@@ -20,7 +20,7 @@
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">MaintenancePlan</value>
+        <value xsi:type="xsd:string">MaintenancePlanId</value>
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>
