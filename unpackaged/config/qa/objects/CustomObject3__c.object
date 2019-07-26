@@ -147,7 +147,7 @@
         <fullName>C3_text__c</fullName>
         <externalId>false</externalId>
         <label>C3_text</label>
-        <length>10</length>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
