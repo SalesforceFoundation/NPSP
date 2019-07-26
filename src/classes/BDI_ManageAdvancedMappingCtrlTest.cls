@@ -41,7 +41,7 @@ private class BDI_ManageAdvancedMappingCtrlTest {
     /*******************************************************************************************************
     * @description Initialize test custom settings record
     */
-    private static Data_Import_Settings__c settingsInstance;
+    private static Data_Import_Settings__c settingsInstance = UTIL_CustomSettingsFacade.getDataImportSettings();
 
     /*******************************************************************************************************
     * @description Name of test Data Import Field Mapping Set
@@ -119,7 +119,9 @@ private class BDI_ManageAdvancedMappingCtrlTest {
     static void shouldReturnDefaultDataImportFieldMappingSetName() {
         String defaultDataImportFieldMappingSetName = BDI_ManageAdvancedMappingCtrl.getFieldMappingSetName();
 
-        System.assertEquals(DEFAULT_FIELD_MAPPING_SET_NAME, defaultDataImportFieldMappingSetName);
+        System.assertEquals(
+            settingsInstance.Default_Data_Import_Field_Mapping_Set__c,
+            defaultDataImportFieldMappingSetName);
     }
 
     /*******************************************************************************************************
@@ -327,6 +329,26 @@ private class BDI_ManageAdvancedMappingCtrlTest {
         Test.stopTest();
 
         System.assertEquals(BDI_ManageAdvancedMappingCtrl.deploymentEvents.size(), 1);
+    }
+
+    /*******************************************************************************************************
+    * @description Test that our Deployment Callback creates a Platform Event
+    */
+    @IsTest
+    static void shouldGetMappedDataImportSourceFields() {
+        Set<String> mappedFieldMappingSourceFields = new Set<String>();
+        Data_Import_Field_Mapping__mdt[] fieldMappings = [SELECT Id, Source_Field_API_Name__c
+            FROM Data_Import_Field_Mapping__mdt
+            WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =
+                :settingsInstance.Default_Data_Import_Field_Mapping_Set__c];
+
+        for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
+            mappedFieldMappingSourceFields.add(fieldMapping.Source_Field_API_Name__c);
+        }
+
+        String[] mappedDISourceFields = BDI_ManageAdvancedMappingCtrl.getMappedDISourceFields();
+
+        System.assertEquals(mappedFieldMappingSourceFields.size(), mappedDISourceFields.size());
     }
 
     /*******************************************************************************************************
