@@ -65,6 +65,7 @@
         <members>Opportunity.custom_picklist__c</members>
         <members>Opportunity.custom_text__c</members>
         <members>Opportunity.custom_textarea__c</members>
+        <members>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</members>
         <members>npe01__OppPayment__c.custom_email__c</members>
         <members>npe01__OppPayment__c.custom_multipick__c</members>
         <members>npe01__OppPayment__c.custom_phone__c</members>
