@@ -89,6 +89,7 @@
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
+        <members>BDI_ManageAdvancedMappingCtrlTest</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_MigrationMappingHelper</members>
         <members>BDI_MigrationMappingHelperTest</members>
