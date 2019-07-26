@@ -1,0 +1,43 @@
+GAU:
+    sf_object: npsp__General_Accounting_Unit__c
+    table: npsp__General_Accounting_Unit__c
+    fields:
+        Name: Name
+
+DataImport:
+    sf_object: npsp__DataImport__c
+    table: npsp__DataImport__c
+    fields:
+        npsp__Account1_Name__c: npsp__Account1_Name__c
+        npsp__Contact1_Lastname__c: npsp__Contact1_Lastname__c
+        npsp__Donation_Amount__c: npsp__Donation_Amount__c
+        npsp__Donation_Date__c: npsp__Donation_Date__c
+        npsp__Donation_Donor__c: npsp__Donation_Donor__c
+        npsp__GAU_Allocation_1_Percent__c: npsp__GAU_Allocation_1_Percent__c
+        npsp__Opportunity_Contact_Role_1_Role__c: npsp__Opportunity_Contact_Role_1_Role__c
+        npsp__CO1_Text__c: npsp__CO1_Text__c
+        npsp__CO1_Date__c: npsp__CO1_Date__c
+        npsp__CO1_currency__c: npsp__CO1_currency__c
+        npsp__CO1_Number__c: npsp__CO1_Number__c
+        npsp__CO1_Picklist__c: npsp__CO1_Picklist__c
+        npsp__CO1_Phone__c: npsp__CO1_Phone__c
+        npsp__CO1_textarea__c: npsp__CO1_textarea__c
+        npsp__CO1_url__c: npsp__CO1_url__c
+        npsp__CO1_text2__c: npsp__CO1_text2__c
+        npsp__CO1_Currency2__c: npsp__CO2_Currency2__c
+        npsp__CO3_Text__c: npsp__CO3_Text__c
+        npsp__CO3_Date__c: npsp__CO3_Date__c
+        npsp__CO3_Currency__c: npsp__CO3_Currency__c
+        npsp__CO3_Number__c: npsp__CO3_Number__c
+        npsp__CO3_Picklist__c: npsp__CO3_Picklist__c
+        npsp__CO3_Phone__c: npsp__CO3_Phone__c
+        npsp__WO_RecommendedCrewSize__c: npsp__WO_RecommendedCrewSize__c
+        npsp__WO_SuggestedMaintenanceDate__c: npsp__WO_SuggestedMaintenanceDate__c
+        npsp__WO_Subject__c: npsp__WO_Subject__c
+        npsp__Opp_Do_Not_Automatically_Create_Payment__c: npsp__Opp_Do_Not_Automatically_Create_Payment__c
+        npsp__ASC_Amount__c: npsp__ASC_Amount__c
+        npsp__ASC_Role__c: npsp__ASC_Role__c
+    lookups:
+        npsp__GAU_Allocation_1_GAU__c:
+            table: npsp__General_Accounting_Unit__c
+            key_field: npsp__GAU_Allocation_1_GAU__c
