@@ -416,7 +416,7 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>WO MaintenancePlan</label>
-        <referenceTo>WorkOrder</referenceTo>
+        <referenceTo>MaintenancePlan</referenceTo>
         <relationshipLabel>Maintenance Plans</relationshipLabel>
         <relationshipName>MaintenancePlans</relationshipName>
         <required>false</required>
