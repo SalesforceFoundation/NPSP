@@ -65,6 +65,7 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
 
         List<Allocation__c> triggerAllocations;
         Map<Id, Allocation__c> oldMap;
+        Set<Id> paymentIdSet = new Set<Id>();
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             triggerAllocations = (List<Allocation__c>) newList;
@@ -90,6 +91,8 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
                 }
             }
             if (allocation.Payment__c != null) {
+                paymentIdSet.add(allocation.Payment__c);
+
                 if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                     if (isSubstantialUpdate(allocation, oldMap.get(allocation.id))) {
                         paymentAllocations.put(allocation.id, allocation);
@@ -100,9 +103,17 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
             }
         }
 
+        Map<Id, npe01__OppPayment__c> paymentMap = new Map<Id, npe01__oppPayment__c>([Select Id, npe01__Written_Off__c FROM npe01__oppPayment__c WHERE Id in: paymentIdSet]);
+
         ALLO_PaymentSync_SVC service = new ALLO_PaymentSync_SVC(triggerAllocations);
 
         for (Allocation__c paymentAllocation : paymentAllocations.values()) {
+
+            // Do not add to the list of payments to sync if the payment is written off. 
+            if (paymentMap.get(paymentAllocation.Payment__c).npe01__Written_Off__c == true ) {
+                continue;
+            }
+
             Id opportunityId = service.opportunityIdByPaymentId.get(paymentAllocation.Payment__c);
             paymentAllocationsUpdated.add(opportunityId);
 
