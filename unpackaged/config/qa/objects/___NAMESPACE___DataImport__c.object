@@ -14,7 +14,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Account1.custom_acc_text__c</inlineHelpText>
         <label>custom_acc_text</label>
-        <length>10</length>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -304,9 +304,9 @@
         <type>Url</type>
     </fields>
     <fields>
-        <fullName>CO2_Currency2__c</fullName>
+        <fullName>CO1_Currency2__c</fullName>
         <externalId>false</externalId>
-        <label>CO2 Currency2</label>
+        <label>CO1 Currency2</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
@@ -390,6 +390,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>WO_MinimumCrewSize__c</fullName>
+        <externalId>false</externalId>
+        <label>WO MinimumCrewSize</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>WO_RecommendedCrewSize__c</fullName>
         <externalId>false</externalId>
         <label>WO RecommendedCrewSize</label>
@@ -399,6 +410,18 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>WO_MaintenancePlan__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>WO MaintenancePlan</label>
+        <referenceTo>WorkOrder</referenceTo>
+        <relationshipLabel>Maintenance Plans</relationshipLabel>
+        <relationshipName>MaintenancePlans</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>WO_Subject__c</fullName>
@@ -422,7 +445,7 @@
         <fullName>WorkOrderImportStatus__c</fullName>
         <externalId>false</externalId>
         <label>WorkOrderImportStatus</label>
-        <length>10</length>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -436,6 +459,111 @@
         <referenceTo>WorkOrder</referenceTo>
         <relationshipLabel>NPSP Data Imports</relationshipLabel>
         <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>CustomObject1ImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>CustomObject1ImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CustomObject1Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>CustomObject1Imported</label>
+        <referenceTo>CustomObject1__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>CustomObject3ImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>CustomObject3ImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CustomObject3Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>CustomObject3Imported</label>
+        <referenceTo>CustomObject3__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ASC_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>ASC Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>ASC_Role__c</fullName>
+        <externalId>false</externalId>
+        <label>ASC Role</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Option1</fullName>
+                    <default>false</default>
+                    <label>Option1</label>
+                </value>
+                <value>
+                    <fullName>Option2</fullName>
+                    <default>false</default>
+                    <label>Option2</label>
+                </value>
+                <value>
+                    <fullName>Option3</fullName>
+                    <default>false</default>
+                    <label>Option3</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>AccountSoftCreditsImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>AccountSoftCreditsImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AccountSoftCreditsImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>AccountSoftCreditsImported</label>
+        <referenceTo>Account_Soft_Credit__c</referenceTo>
+        <relationshipLabel>Account Soft Credits</relationshipLabel>
+        <relationshipName>Account_Soft_Credits</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>

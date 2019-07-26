@@ -10,8 +10,13 @@
         <members>Contact.custom_cont_num__c</members>
         <members>Contact.Previous_Level__c</members>
         <members>Contact.UniqueId__c</members>
+        <members>Contact.Work_Order__c</members>
         <members>Opportunity.UniqueId__c</members>
         <members>Opportunity.A_User_Defined_Rollup_Field__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.AccountSoftCreditsImported__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.AccountSoftCreditsImportStatus__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.ASC_Amount__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.ASC_Role__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.Custom_add_date__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.custom_acc_text__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.custom_cont_num__c</members>
@@ -34,18 +39,24 @@
         <members>%%%NAMESPACE%%%DataImport__c.CO1_text2__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_textarea__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO1_url__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.CO2_Currency2__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_Currency2__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Currency__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Date__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Number__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Phone__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Picklist__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.CO3_Text__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WO_MaintenancePlan__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WO_MinimumCrewSize__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WO_RecommendedCrewSize__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WO_Subject__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WO_SuggestedMaintenanceDate__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WorkOrderImportStatus__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.WorkOrderImported__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CustomObject1ImportStatus__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CustomObject1Imported__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CustomObject3ImportStatus__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CustomObject3Imported__c</members>                
         <members>%%%NAMESPACE%%%DataImport__c.custom_picklist__c</members>
         <members>Opportunity.custom_currency__c</members>
         <members>Opportunity.custom_date__c</members>
@@ -54,10 +65,12 @@
         <members>Opportunity.custom_picklist__c</members>
         <members>Opportunity.custom_text__c</members>
         <members>Opportunity.custom_textarea__c</members>
+        <members>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</members>
         <members>npe01__OppPayment__c.custom_email__c</members>
         <members>npe01__OppPayment__c.custom_multipick__c</members>
         <members>npe01__OppPayment__c.custom_phone__c</members>
         <members>npe01__OppPayment__c.custom_url__c</members>
+        <members>npe01__OppPayment__c.CustomObject3__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -69,7 +82,8 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set.Migrated_Custom_Field_Mapping_Set</members>
+        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.ASC_Amount_cac3e1cd0</members>
+        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.ASC_Role_f8860e39d</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_2cb21281d</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_37b322bd6</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Number_21e98c57a</members>
@@ -94,10 +108,12 @@
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Picklist_445f63ff6</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Picklist_e38aa0476</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Text_3532e6023</members>
+        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_MaintenancePlan_0395868c1</members>
+        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_MinimumCrewSize_5c6970260</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_RecommendedCrewSize_3cc44b330</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_Subject_7d6b4fcfb</members>
         <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_SuggestedMaintenanceDate_9ea67eb8e</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set.Migrated_Custom_Object_Mapping_Set</members>
+        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.AccountSoftCredits_ee5babc24</members>
         <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.CustomObject1_7b96c6e1b</members>
         <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.CustomObject3_f3f9b20ad</members>
         <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.WorkOrder_f516282fb</members>
