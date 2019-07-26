@@ -16,11 +16,11 @@
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">CO3_Picklist__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%CO3_Picklist__c</value>
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">C3_picklist__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%C3_picklist__c</value>
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>

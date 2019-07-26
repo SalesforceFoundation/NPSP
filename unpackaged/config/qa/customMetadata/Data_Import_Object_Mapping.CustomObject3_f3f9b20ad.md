@@ -12,11 +12,11 @@
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
-        <value xsi:type="xsd:string">CustomObject3Imported__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%CustomObject3Imported__c</value>
     </values>
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
-        <value xsi:type="xsd:string">CustomObject3ImportStatus__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%CustomObject3ImportStatus__c</value>
     </values>
     <values>
         <field>Is_Deleted__c</field>
@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Object_API_Name__c</field>
-        <value xsi:type="xsd:string">CustomObject3__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%CustomObject3__c</value>
     </values>
     <values>
         <field>Predecessor__c</field>
@@ -36,7 +36,7 @@
     </values>
     <values>
         <field>Relationship_Field__c</field>
-        <value xsi:type="xsd:string">CustomObject3__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%CustomObject3__c</value>
     </values>
     <values>
         <field>Relationship_To_Predecessor__c</field>

@@ -12,11 +12,11 @@
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
-        <value xsi:type="xsd:string">CustomObject1Imported__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%CustomObject1Imported__c</value>
     </values>
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
-        <value xsi:type="xsd:string">CustomObject1ImportStatus__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%CustomObject1ImportStatus__c</value>
     </values>
     <values>
         <field>Legacy_Data_Import_Object_Name__c</field>
@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Object_API_Name__c</field>
-        <value xsi:type="xsd:string">CustomObject1__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%CustomObject1__c</value>
     </values>
     <values>
         <field>Predecessor__c</field>
@@ -36,7 +36,7 @@
     </values>
     <values>
         <field>Relationship_Field__c</field>
-        <value xsi:type="xsd:string">Opportunity__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%Opportunity__c</value>
     </values>
     <values>
         <field>Relationship_To_Predecessor__c</field>

@@ -16,11 +16,11 @@
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">ASC_Role__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%ASC_Role__c</value>
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">Role__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%Role__c</value>
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>

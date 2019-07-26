@@ -12,11 +12,11 @@
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
-        <value xsi:type="xsd:string">WorkOrderImported__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%WorkOrderImported__c</value>
     </values>
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
-        <value xsi:type="xsd:string">WorkOrderImportStatus__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%WorkOrderImportStatus__c</value>
     </values>
     <values>
         <field>Legacy_Data_Import_Object_Name__c</field>
@@ -36,7 +36,7 @@
     </values>
     <values>
         <field>Relationship_Field__c</field>
-        <value xsi:type="xsd:string">Work_Order__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%Work_Order__c</value>
     </values>
     <values>
         <field>Relationship_To_Predecessor__c</field>

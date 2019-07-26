@@ -16,11 +16,11 @@
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
-        <value xsi:type="xsd:string">AccountSoftCreditsImported__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%AccountSoftCreditsImported__c</value>
     </values>
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
-        <value xsi:type="xsd:string">AccountSoftCreditsImportStatus__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%AccountSoftCreditsImportStatus__c</value>
     </values>
     <values>
         <field>Is_Deleted__c</field>
@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Object_API_Name__c</field>
-        <value xsi:type="xsd:string">Account_Soft_Credit__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%Account_Soft_Credit__c</value>
     </values>
     <values>
         <field>Predecessor__c</field>
@@ -36,7 +36,7 @@
     </values>
     <values>
         <field>Relationship_Field__c</field>
-        <value xsi:type="xsd:string">Account__c</value>
+        <value xsi:type="xsd:string">%%%NAMESPACE%%%Account__c</value>
     </values>
     <values>
         <field>Relationship_To_Predecessor__c</field>
