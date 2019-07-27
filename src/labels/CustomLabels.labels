@@ -2428,7 +2428,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIDataType</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIDataType</shortDescription>
         <value>Data Type</value>
     </labels>
@@ -2515,7 +2515,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiFMUISearchSourceInputLabel</shortDescription>
-        <value>Search for the source field by label or API name.</value>
+        <value>Search for the NPSP Data Import object&apos;s field by label or API name.</value>
     </labels>
     <labels>
         <fullName>bdiFMUISearchTargetInputLabel</fullName>
@@ -2553,7 +2553,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUITryAgain</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUITryAgain</shortDescription>
         <value>Please try again.</value>
     </labels>
@@ -2561,7 +2561,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIUnsuccessful</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIUnsuccessful</shortDescription>
         <value>unsuccessful</value>
     </labels>
