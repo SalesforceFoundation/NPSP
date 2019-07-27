@@ -2420,7 +2420,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUIBackToMapGroup</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUIBackToMapGroup</shortDescription>
         <value>Back to Object Group</value>
     </labels>
