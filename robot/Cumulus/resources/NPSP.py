@@ -1096,15 +1096,20 @@ class NPSP(object):
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
 
-    def batch_data_import(self, batchsize):
+    def batch_data_import(self, batchsize, method):
         """"Do a BDI import using the API and wait for it to complete"""
+
+        valid_methods = ('Data Import Field Mapping', 'Help Text')
+
+        assert method in valid_methods, f"Method must be one of {', '.join(valid_methods)}"
 
         code = """Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
                 diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+                diSettings.Field_Mapping_Method__c = '%s';
                 update diSettings;
                 BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
                 ID ApexJobId = Database.executeBatch(bdi, %d);
-                """ % int(batchsize)
+                """ % (method, int(batchsize))
         subtask_config = TaskConfig(
                 {"options": {"apex" : code}}
         )

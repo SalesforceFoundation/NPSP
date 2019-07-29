@@ -123,6 +123,16 @@ tasks:
             options:
                 outputdir: robot/Cumulus/results
 
+
+    performance_tests_CO:
+        description: Runs Robot Framework performance tests for BGE-BDI Complex Objects
+        class_path: cumulusci.tasks.robotframework.Robot
+        group: Performance Tests
+        options:
+            suites: robot/Cumulus/perftests/
+            options:
+                outputdir: robot/Cumulus/results
+
     pmd:
         description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
         class_path: tasks.pmd.PMDTask
@@ -138,6 +148,13 @@ tasks:
         options:
             database_url: 'sqlite:///datasets/dev_org/test_data.db'
             mapping: 'datasets/mapping.yml'
+
+    paul_test_data:
+        description: 'Loads Pauls test data'
+        class_path: cumulusci.tasks.bulkdata.LoadData
+        options:
+            database_url: 'sqlite:////tmp/test_data.db'
+            mapping: 'datasets/bdi_benchmark/mapping-CO.yml'
 
     test_data_1k:
         description: 'Loads a test data set for most NPSP objects based on 1024 Contacts'
@@ -409,8 +426,17 @@ flows:
             4:
                 task: performance_tests
                 options:
+                    vars: mapping:foo
                     options:
                         outputdir: .
+
+    test_performance_CO:
+        description: 'Creates a BGE-BDI test org and runs a CO performance test'
+        steps:
+            1:
+                flow: qa_org_namespaced
+            2:
+                task: performance_tests_CO
 
     beta_dependencies:
         steps:

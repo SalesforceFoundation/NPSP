@@ -63,8 +63,7 @@ def make_factories(session, classes, Factory):
         npsp__WO_RecommendedCrewSize__c = 10
         npsp__WO_SuggestedMaintenanceDate__c = now()
         npsp__WO_Subject__c = "test1"
-        npsp__ASC_Role__c = "match"   ####  FIXME
-        npsp__ASC_Role__c = "Option1"   ####  FIXME
+        npsp__ASC_Role__c = "match"
 
     class GAU(Factory):
         class Meta(BaseMeta):
