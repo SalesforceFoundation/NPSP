@@ -517,7 +517,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     if (mapWrapper.containsKey(opp.Id)){
                         alloWrapper oppWrap = mapWrapper.get(opp.Id);
                         dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.listAllo);
-                        if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo!=null) {
+                        if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo != null) {
                             dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
                         }
                     }
@@ -544,9 +544,15 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 (sObj.get('CampaignId') != null && mapWrapper.containsKey((Id)sObj.get('CampaignId'))))) {
 
                 alloWrapper wrap;
+                Map<Id, Allocation__c> GAUtoAlloMapping = new Map<Id, Allocation__c>();
+                Boolean isPaymentAllocation = false;
+
                 //get wrapper for parent Payment.
-                if (sObj instanceof npe01__OppPayment__c)
+                if (sObj instanceof npe01__OppPayment__c) {
                     wrap = mapWrapper.get((Id)sObj.get('npe01__Opportunity__c'));
+                    isPaymentAllocation = true;
+                }
+                    
                 //get wrapper for parent object, preferring recurring donation over campaign allocations if they exist
                 else if (sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c')))
                     wrap = mapWrapper.get((Id)sObj.get('npe03__Recurring_Donation__c'));
@@ -573,6 +579,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                 //reparent the cloned allocation to the opportunity
                 for (Allocation__c allo : listAlloForInsert) {
+                    Allocation__c alloInMap; 
+
+                    if (isPaymentAllocation == true && GAUtoAlloMapping.containsKey(allo.General_Accounting_Unit__c)) {
+                        alloInMap = GAUtoAlloMapping.get(allo.General_Accounting_Unit__c);
+                    }
+
                     allo.Opportunity__c = null;
                     allo.Recurring_Donation__c = null;
                     allo.Campaign__c = null;
@@ -582,30 +594,64 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         allo.Payment__c = sObj.Id;
                     }
 
-                    //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode
-                    if (UserInfo.isMultiCurrencyOrganization()) {
-                        if (allo.Amount__c!=null) {
-                            allo.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
-                                (String)allo.get('CurrencyIsoCode'),
-                                (String)sObj.get('CurrencyIsoCode'),
-                                allo.Amount__c
-                            );
-                        }
-                        allo.put('CurrencyIsoCode', sObj.get('CurrencyIsoCode'));
-                    }
-
                     if (allo.Percent__c != null) {
                         allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
+                        
                     }
 
                     //Calculate proportional amount for non-percentage based Payment allocations
                     if (sObj instanceof npe01__OppPayment__c && allo.Percent__c == null) {
                         allo.Percent__c = allo.Amount__c / wrap.parentAmount * 100;
                         allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
+
+
+                    }
+
+                    //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode
+                    if (UserInfo.isMultiCurrencyOrganization()) {
+                        if (allo.Amount__c!=null) {
+                            allo.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
+                                    (String)allo.get('CurrencyIsoCode'),
+                                    (String)sObj.get('CurrencyIsoCode'),
+                                    allo.Amount__c
+                            );
+
+                        }
+                        allo.put('CurrencyIsoCode', sObj.get('CurrencyIsoCode'));
+                    }
+
+                    if (isPaymentAllocation == true && alloInMap != null) {
+                        alloInMap.Amount__c += allo.Amount__c;
                     }
 
                     remainder -= allo.Amount__c;
+
+                    if (isPaymentAllocation == true) {
+                        if (alloInMap != null) {
+                            GAUtoAlloMapping.put(alloInMap.General_Accounting_Unit__c, alloInMap);
+                        } else {
+                            GAUtoAlloMapping.put(allo.General_Accounting_Unit__c, allo);
+                        }
+                    }
                 }
+
+                // Only set the percentages and update the list to insert to the consolidated list
+                // when it's a payment. 
+                if (isPaymentAllocation == true) {
+                    List<Allocation__c> consolidatedAllocationList = GAUtoAlloMapping.values();
+
+
+                    // Only set the percentage if it is a payment or an opportunity that isn't tied to a campaign or a recurring donation.
+                    // At this point, only the amounts on each allocation is correct, not the percentage. 
+                    // Go through the allocation and adjust the percentage so it is correct.
+                    for (Allocation__c consolidatedAllocation : consolidatedAllocationList) {
+                        consolidatedAllocation.Percent__c = consolidatedAllocation.Amount__c / amount * 100;
+                    }
+
+                    // Set the consolidated list as the list to insert
+                    listAlloForInsert = consolidatedAllocationList;
+                }
+                
 
                 //if our remainder is negative, only create percentage based allocations
                 if ((amount >= 0 && remainder < 0)||(amount < 0 && remainder > 0)) {
