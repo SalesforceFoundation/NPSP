@@ -61,10 +61,10 @@
     </fields>
     <fields>
         <fullName>Object_API_Name__c</fullName>
-        <description>The API name for the target object for this Object Group.</description>
+        <description>The API name of the target object for this Object Group.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The API name for the target object for this Object Group.</inlineHelpText>
+        <inlineHelpText>The API name of the target object for this Object Group.</inlineHelpText>
         <label>Object API Name</label>
         <length>255</length>
         <required>false</required>
