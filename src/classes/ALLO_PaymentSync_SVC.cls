@@ -159,10 +159,10 @@ public class ALLO_PaymentSync_SVC {
             }
             // Update Map of Default Allocations
             defaultAllocsByPayment.put (payment.Id, filterByGAU(payment.Allocations__r, defaultGAU));
+
             // Create Initial Total of Allocations by Payment, excluding the default amount
             allocatedAmountByPayment.put (payment.Id, calculateTotalAllocationAmountExcludingDefaultGAU(payment.Allocations__r, defaultGAU));
         }
-
         // Retrieve all opportunities, with associated allocations
         Map<Id, Opportunity> opportunitiesWithAllocations = retrieveOpportunitiesWithAllocations(paymentsByOpportunityId.keySet());
 
@@ -389,6 +389,7 @@ public class ALLO_PaymentSync_SVC {
                         Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
 
                         oppAllocation.Amount__c = newGAUAmtForOpp * duplicateAllocationpaidUnpaidAmountRatio;
+
                         if (oppAllocation.Percent__c != null) {
                             oppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? oppAllocation.Amount__c / context.opportunity.Amount * 100 : 0;
                         }
@@ -439,7 +440,7 @@ public class ALLO_PaymentSync_SVC {
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
-            
+
             // Default Allocation will be handled outside of this loop
             if (gau == UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
                 continue;
@@ -482,36 +483,42 @@ public class ALLO_PaymentSync_SVC {
                 // Recalculate and update the existing allocations for this GAU. 
                 if (currentTotalPaymentAllocations != newTotalPaymentAllocations) {
                     Set<Id> paymentsWithExistingGAU = new Set<Id>();
+                    Map<Id, Allocation__c> paymentToAllocationMap = new Map<Id, Allocation__c>();
 
                     for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
                         npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
 
-                        if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) {
-                            paymentsWithExistingGAU.add(payment.Id);
-                            Decimal unpaidAllocationAmount = newTotalPaymentAllocations - totalPaidPaymentAllocations;
-                            Decimal paymentRatio =  context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
-                            Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
+                        if (!paymentToAllocationMap.containsKey(payment.Id)) {
+                            if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) {
+                                paymentsWithExistingGAU.add(payment.Id);
+                                Decimal unpaidAllocationAmount = newTotalPaymentAllocations - totalPaidPaymentAllocations;
+                                Decimal paymentRatio =  context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
+                                Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
 
-                            // Remove current allocation amount from total as it is changing
-                            removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
+                                // Remove current allocation amount from total as it is changing
+                                removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
 
-                            // paymentAllocation.Amount__c = (unpaidAllocationAmount) / (paymentRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
-                            paymentAllocation.Amount__c = (newTotalPaymentAllocations) / (paymentRatio);
+                                // paymentAllocation.Amount__c = (unpaidAllocationAmount) / (paymentRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                                paymentAllocation.Amount__c = (newTotalPaymentAllocations) / (paymentRatio);
 
-                             //only add the percent for non-default
-                            if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
-                                paymentAllocation.Percent__c = paymentAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
+                                //only add the percent for non-default
+                                if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
+                                    paymentAllocation.Percent__c = paymentAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
+                                }
+
+                                // Add updated allocation amount to total
+                                addAllocationAmountToPayment(payment.Id, paymentAllocation.Amount__c);
+
+                                // Assumption: Payment Allocations should be maintained with Currency Type from Payment Record
+                                if (UserInfo.isMultiCurrencyOrganization()) {
+                                    paymentAllocation.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
+                                }
+
+                                allocationsChanges.objectsToUpdate.add(paymentAllocation);
+                                paymentToAllocationMap.put(payment.Id, paymentAllocation);
                             }
-
-                            // Add updated allocation amount to total
-                            addAllocationAmountToPayment(payment.Id, paymentAllocation.Amount__c);
-
-                            // Assumption: Payment Allocations should be maintained with Currency Type from Payment Record
-                            if (UserInfo.isMultiCurrencyOrganization()) {
-                                paymentAllocation.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
-                            }
-
-                            allocationsChanges.objectsToUpdate.add(paymentAllocation);
+                        } else {
+                            allocationsChanges.objectsToDelete.add(paymentAllocation);
                         }
                     }
                     // Now do a second pass looking for ones that did not have this allocation...
@@ -616,7 +623,6 @@ public class ALLO_PaymentSync_SVC {
             Decimal allocAmt = (allocatedAmountByPayment.containsKey(payment.Id)) ? allocatedAmountByPayment.get(payment.Id) : 0;
             Decimal paymentAmt = (payment.npe01__Payment_Amount__c != null) ? payment.npe01__Payment_Amount__c : 0;
             Decimal remainder = paymentAmt - allocAmt;
-
             List<Allocation__c> defaultAllocs = defaultAllocsByPayment.get(payment.Id);
             Allocation__c defaultAlloc = null;
             if ((defaultAllocs != null) && (defaultAllocs.size() > 0)) {
