@@ -17,9 +17,11 @@
     </fields>
     <fields>
         <fullName>Is_Deleted__c</fullName>
+        <description>When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing.</description>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing.</inlineHelpText>
         <label>Is Deleted</label>
         <type>Checkbox</type>
     </fields>
