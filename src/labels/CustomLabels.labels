@@ -2492,7 +2492,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUISourceFieldLabelHelp</shortDescription>
-        <value>The field on NPSP Data Import that you want to map. Search by either Field Label or API Name. If you can’t find the field, confirm you created the field on the NPSP Data Import object.</value>
+        <value>The NPSP Data Import field you want to map. Search by either Field Label or API Name. If you can’t find the field, confirm you created the field on the NPSP Data Import object.</value>
     </labels>
     <labels>
         <fullName>bdiFMUISourceFieldDataTypeHelp</fullName>
@@ -2508,7 +2508,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFMUITargetFieldLabelHelp</shortDescription>
-        <value>The field on NPSP Data Import that you want to map. Search by either Field Label or API Name. This is filtered to show only fields on your target object that are compatible with the field you chose on the NPSP Data Import object.</value>
+        <value>The target field you want to connect to the NPSP Data Import field. Search by either Field Label or API Name. This is filtered to show only fields on your target object that are compatible with the field you chose on the NPSP Data Import object.</value>
     </labels>
     <labels>
         <fullName>bdiFMUITargetFieldDataTypeHelp</fullName>
