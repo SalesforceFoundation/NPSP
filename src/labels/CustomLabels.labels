@@ -2441,14 +2441,23 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Maps To</value>
     </labels>
     <labels>
-        <fullName>bdiFMUIDescription</fullName>
+        <fullName>bdiFMUIDescription1</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>bdiFMUIDescription</shortDescription>
+        <shortDescription>bdiFMUIDescription1</shortDescription>
         <value>
             Connect the field you created on the NPSP Data Import object to the field on your target object in
             the grid below. You can find fields by Field Label or the Field API Name.
+        </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDescription2</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIDescription2</shortDescription>
+        <value>
             Fields on the NPSP Data Import object must map to compatible field types on your target object.
             When you select an NPSP Data Import field, only the compatible target fields will be available.
         </value>

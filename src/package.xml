@@ -1511,7 +1511,8 @@
         <members>bdiFMUIBackToMapGroup</members>
         <members>bdiFMUIDataType</members>
         <members>bdiFMUIDatatableMapsTo</members>
-        <members>bdiFMUIDescription</members>
+        <members>bdiFMUIDescription1</members>
+        <members>bdiFMUIDescription2</members>
         <members>bdiFMUIFieldAPIName</members>
         <members>bdiFMUIFieldLabel</members>
         <members>bdiFMUILongDeployment</members>
