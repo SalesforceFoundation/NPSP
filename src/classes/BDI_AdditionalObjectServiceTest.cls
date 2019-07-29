@@ -1209,4 +1209,67 @@ private class BDI_AdditionalObjectServiceTest {
         ], 'An Allocation for 15% should have been created.');
     }
 
+    @isTest
+    static void
+    givenDataImportHasAddtlObjectWhenDryRunThenAssertPredecessorErrorsSuppressed() {
+        //Setup: use Advanced Field Mapping with Donation Matching Behavior set to "Single
+        // Match or Create"
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        dis.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        // Create a test GAU
+        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(
+                Name = 'testGAU',
+                Active__c = true);
+        insert testGAU;
+
+        DataImportBatch__c testBatch = new DataImportBatch__c(
+                Name='testBatch'
+        );
+        insert testBatch;
+
+        // Create a simple Data Import record that will create a new Opp and GAU Allocation
+        // when processed.  After dry run the Opp will not be created yet, so the test
+        // ensures that the additional objects that depend on the Opp don't fail the Data
+        // Import record when dry run process is run.
+        DataImport__c dataImport = new DataImport__c(
+                NPSP_Data_Import_Batch__c = testBatch.Id,
+                Account1_Name__c = 'testAcct',
+                Donation_Donor__c = 'Account1',
+                Donation_Amount__c = 100,
+                Donation_Date__c = Date.today(),
+                GAU_Allocation_1_GAU__c = testGAU.Id,
+                GAU_Allocation_1_Percent__c = 15
+        );
+        insert dataImport;
+
+        //Run the data import dry run process
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(testBatch.Id, true);
+        Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        DataImport__c processedDataImport = [
+                SELECT
+                        Status__c,
+                        FailureInformation__c,
+                        DonationImported__c,
+                        DonationImportStatus__c,
+                        GAU_Allocation_1_Imported__c,
+                        GAU_Allocation_1_Import_Status__c
+                FROM DataImport__c
+                WHERE Id = :dataImport.Id
+        ];
+
+        System.assertEquals(BDI_DataImport_API.bdiDryRunValidated,
+                processedDataImport.Status__c,
+                'The Batch should have been dry run-validated without errors.');
+        System.assertEquals(null, processedDataImport.FailureInformation__c,
+                'The Batch should have been dry run-validated without errors.');
+    }
+
 }
