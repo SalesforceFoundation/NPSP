@@ -13,7 +13,8 @@ import getObjectFieldDescribes
 // Import custom labels
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
 import bdiFMUIBackToMapGroup from '@salesforce/label/c.bdiFMUIBackToMapGroup';
-import bdiFMUIDescription from '@salesforce/label/c.bdiFMUIDescription';
+import bdiFMUIDescription1 from '@salesforce/label/c.bdiFMUIDescription1';
+import bdiFMUIDescription2 from '@salesforce/label/c.bdiFMUIDescription2';
 import bdiFMUILongDeployment from '@salesforce/label/c.bdiFMUILongDeployment';
 import bdiFMUILongDeploymentLink from '@salesforce/label/c.bdiFMUILongDeploymentLink';
 import bdiFMUILongDeploymentMessage from '@salesforce/label/c.bdiFMUILongDeploymentMessage';
@@ -61,7 +62,8 @@ export default class bdiFieldMappings extends LightningElement {
     customLabels = {
         bdiFieldMappingsLabel,
         bdiFMUIBackToMapGroup,
-        bdiFMUIDescription,
+        bdiFMUIDescription1,
+        bdiFMUIDescription2,
         bdiFMUINewFieldMapping,
         bdiFMUINoFieldMappings,
         bdiFMUISourceObject,
