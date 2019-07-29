@@ -280,7 +280,7 @@ export default class bdiObjectMappings extends LightningElement {
     * send out a response.
     */
     handleDeploymentTimeout(event) {
-        if (this.displayFieldMappings) {
+        if (this.displayObjectMappings) {
             console.log('in bdiFieldMappings handleDeploymentResponse');
             let that = this;
             this.deploymentTimer = setTimeout(function() {
