@@ -244,7 +244,17 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 successMessage();
             } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
-                addPageMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
+
+                String href =
+                    '/lightning/setup/DeployStatus/page?' +
+                    'address=/changemgmt/monitorDeploymentsDetails.apexp?asyncId=' +
+                    deploymentResult.id;
+                String url = String.format(
+                    Label.bdiErrorDeploymentFailedLink,
+                    new List<String>{String.valueOf(href)});
+                String message = Label.bdiErrorDeploymentFailed + ' ' + url;
+
+                addPageMessage(ApexPages.Severity.ERROR, message);
             }
 
         } else if (deploymentResult == null
@@ -272,8 +282,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     private void successMessage() {
         if (migrationMappingUtility.badHelpTextMappings.size() > 0) {
-            addPageMessage(ApexPages.Severity.WARNING,
-                Label.stgDeploymentHasInvalidHelpTextMappings);
+            addPageMessage(ApexPages.Severity.WARNING, Label.stgDeploymentHasInvalidHelpTextMappings);
         } else {
             addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
         }

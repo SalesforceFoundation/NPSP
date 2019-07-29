@@ -1495,6 +1495,7 @@
         <members>bdiErrorBatchNameRequired</members>
         <members>bdiErrorDataImportCustomSettings</members>
         <members>bdiErrorDeploymentFailed</members>
+        <members>bdiErrorDeploymentFailedLink</members>
         <members>bdiErrorDonationLookupMatch</members>
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
