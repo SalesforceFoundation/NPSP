@@ -2310,7 +2310,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error deploying metadata during migration from help text to metadata mapping</shortDescription>
-        <value>There was an error attempting to deploy Custom Metadata.</value>
+        <value>There was an error attempting to convert and enable Advanced Mapping.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDeploymentFailedLink</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>link to the deployment status page</shortDescription>
+        <value>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;You can view the deployment status here.&lt;/a&gt;</value>
     </labels>
     <labels>
         <fullName>bdiErrorDonationLookupMatch</fullName>
@@ -2441,14 +2449,23 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Maps To</value>
     </labels>
     <labels>
-        <fullName>bdiFMUIDescription</fullName>
+        <fullName>bdiFMUIDescription1</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>bdiFMUIDescription</shortDescription>
+        <shortDescription>bdiFMUIDescription1</shortDescription>
         <value>
             Connect the field you created on the NPSP Data Import object to the field on your target object in
             the grid below. You can find fields by Field Label or the Field API Name.
+        </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDescription2</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIDescription2</shortDescription>
+        <value>
             Fields on the NPSP Data Import object must map to compatible field types on your target object.
             When you select an NPSP Data Import field, only the compatible target fields will be available.
         </value>
@@ -2468,6 +2485,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>bdiFMUIFieldLabel</shortDescription>
         <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISourceFieldLabelHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISourceFieldLabelHelp</shortDescription>
+        <value>The NPSP Data Import field you want to map. Search by either Field Label or API Name. If you can’t find the field, confirm you created the field on the NPSP Data Import object.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISourceFieldDataTypeHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISourceFieldDataTypeHelp</shortDescription>
+        <value>The data type of the field you chose on the NPSP Data Import object.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUITargetFieldLabelHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUITargetFieldLabelHelp</shortDescription>
+        <value>The target field you want to connect to the NPSP Data Import field. Search by either Field Label or API Name. This is filtered to show only fields on your target object that are compatible with the field you chose on the NPSP Data Import object.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUITargetFieldDataTypeHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUITargetFieldDataTypeHelp</shortDescription>
+        <value>The data type of the field you chose on the target object.</value>
     </labels>
     <labels>
         <fullName>bdiFMUILongDeployment</fullName>
@@ -6513,15 +6562,23 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <shortDescription>stgDeploymentCustomMetadataMappingEnabled</shortDescription>
         <value>Custom Metadata mapping is enabled.</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentHasInvalidHelpTextMappings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentHasInvalidHelpTextMappings</shortDescription>
+        <value>Advanced Mapping is enabled, but we found some invalid Help Text mappings that couldn't migrate. &lt;b&gt;Take a screenshot of the table below, it will not be displayed again after you leave this page.&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>stgDeploymentHelpTextMappingEnabled</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <shortDescription>stgDeploymentHelpTextMappingEnabled</shortDescription>
         <value>Help Text mapping is enabled.</value>
     </labels>
     <labels>
@@ -6627,7 +6684,7 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAdvancedMapping3</shortDescription>
-        <value>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
+        <value>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>stgHelpAdvancedMapping4</fullName>
@@ -6636,7 +6693,7 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <protected>false</protected>
         <shortDescription>stgHelpAdvancedMapping4</shortDescription>
         <value>
-            We couldn't convert some of your existing Help Text mappings because they were invalid. Read more about &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;common Help Text mapping issues&lt;/a&gt;. &lt;b&gt;Please take a screenshot of this page or copy the information in the table below to track updates you need to make to these mappings.&lt;/b&gt;
+            We couldn't convert some of your existing Help Text mappings because they were invalid. Read more about &lt;a href=&quot;https://powerofus.force.com/NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;common Help Text mapping issues&lt;/a&gt;. &lt;b&gt;Please take a screenshot of this page or copy the information in the table below to track updates you need to make to these mappings.&lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
             You can correct these mappings when you configure Advanced Mapping on the next screen. Please note, these changes will be lost if you turn off Advanced Mapping.
