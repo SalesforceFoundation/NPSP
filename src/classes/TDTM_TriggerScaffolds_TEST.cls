@@ -35,7 +35,6 @@
  * @description Test class to provide coverage for TDTM triggers on objects for which there are currently no TDTM classes. 
  *
 ***/
-
 @isTest
 private with sharing class TDTM_TriggerScaffolds_TEST {
 
