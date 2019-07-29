@@ -1145,3 +1145,11 @@ class NPSP(object):
         )
 
         self.cumulusci._run_task(BatchApexWait, subtask_config)
+        
+    def click_wrapper_related_list_button(self,heading,button_title):  
+        """Clicks a button in the heading of a related list when the related list is enclosed in wrapper.
+           Waits for a modal to open after clicking the button.
+        """  
+        locator = npsp_lex_locators["record"]["related"]["button"].format(heading, button_title)
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)    

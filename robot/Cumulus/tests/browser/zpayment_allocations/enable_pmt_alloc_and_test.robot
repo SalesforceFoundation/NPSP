@@ -21,7 +21,7 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Select Tab    Related
     Verify Allocations    Payment Allocations
     ...    &{def_gau}[Name]=$100.00
-    Click Related List Button    Payment Allocations    New
+    Click Wrapper Related List Button    Payment Allocations    New
     Populate Lookup Field    General Accounting Unit    &{gau}[Name]
     Populate Field    Amount    40
     Click Modal Button    Save
