@@ -170,7 +170,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
                 for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
                     if (pmt.npe01__Paid__c) {
-                        totalPaid += pmt.npe01__Payment_Amount__c;
+                        totalPaid += pmt.npe01__Payment_Amount__c == null ? 0 : pmt.npe01__Payment_Amount__c;
                     }
                 }
 
