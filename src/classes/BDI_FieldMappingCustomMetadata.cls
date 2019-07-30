@@ -198,7 +198,8 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                                                     Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
                                                     Is_Deleted__c
                                         FROM Data_Import_Field_Mapping__mdt
-                                        WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName]) {
+                                        WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName
+                                            AND Is_Deleted__c = false]) {
 
                 // Removing the npsp namespace since the code is not currently packaged.
                 if (removeNPSPNamespace) {
