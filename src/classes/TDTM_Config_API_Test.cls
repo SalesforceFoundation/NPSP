@@ -49,10 +49,10 @@ private class TDTM_Config_API_Test {
         TDTM_DefaultConfig.startTestDataInit();
         Test.startTest();
 
-        Contact con1 = new Contact(LastName = 'foo');
-        insert con1;
-        con1 = [SELECT AccountId FROM Contact WHERE Id = :con1.Id LIMIT 1];
-        System.assertNotEquals(null, con1.AccountId, 'there should be an account id associated with this new contact');
+        Contact contactWithAccount = UTIL_UnitTestData_TEST.getContact();
+        insert contactWithAccount;
+        contactWithAccount = [SELECT AccountId FROM Contact WHERE Id = :contactWithAccount.Id LIMIT 1];
+        System.assertNotEquals(null, contactWithAccount.AccountId, 'there should be an account id associated with this new contact');
 
         // disable the trigger that creates a new Household Account for the Contact
         List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
@@ -62,10 +62,10 @@ private class TDTM_Config_API_Test {
             }
         }
 
-        Contact con2 = new Contact(LastName = 'foo');
-        insert con2;
-        con2 = [SELECT AccountId FROM Contact WHERE Id = :con2.Id LIMIT 1];
-        System.assertEquals(null, con2.AccountId, 'there should NOT be an account id associated with this new contact');
+        Contact contactWithoutAccount = UTIL_UnitTestData_TEST.getContact();
+        insert contactWithoutAccount;
+        contactWithoutAccount = [SELECT AccountId FROM Contact WHERE Id = :contactWithoutAccount.Id LIMIT 1];
+        System.assertEquals(null, contactWithoutAccount.AccountId, 'there should NOT be an account id associated with this new contact');
 
         Test.stopTest();
     }
@@ -88,15 +88,15 @@ private class TDTM_Config_API_Test {
         }
         insert handlers;
 
-        Contact con = new Contact(LastName = 'foo');
-        insert con;
-        con = [SELECT AccountId FROM Contact WHERE Id = :con.Id LIMIT 1];
-        System.assertEquals(null, con.AccountId, 'there should not be an account id associated with this new contact');
+        Contact contactWithoutAccount = UTIL_UnitTestData_TEST.getContact();
+        insert contactWithoutAccount;
+        contactWithoutAccount = [SELECT AccountId FROM Contact WHERE Id = :contactWithoutAccount.Id LIMIT 1];
+        System.assertEquals(null, contactWithoutAccount.AccountId, 'there should not be an account id associated with this new contact');
     }
 
 
     /*******************************************************************************************************
-    * @description verify the TDTM Callable Action does not modify the TDTM Triggers globally
+    * @description verify the TDTM Callable Action modifies the TDTM Triggers globally 
     ********************************************************************************************************/
     @IsTest
     private static void triggersAreDisabledForCurrentContext() {
@@ -106,16 +106,15 @@ private class TDTM_Config_API_Test {
         }
 
         Integer accountCountBefore = Database.countQuery('SELECT COUNT() FROM Account');
-
         TDTM_Config_Api.disableAllTriggers();
         
-        Contact contact1 = new Contact(LastName = 'TDTM_Config_Api_Test');
-        insert contact1;
+        Contact contactWithoutAccount = UTIL_UnitTestData_TEST.getContact();
+        insert contactWithoutAccount;
 
         Integer accountCountAfter = Database.countQuery('SELECT COUNT() FROM Account');
 
-        System.assertEquals(accountCountBefore, accountCountAfter, 'Account record was created');
-        System.assertEquals(null, contact1.AccountId, 'Contact Triggers were not turned off');
+        System.assertEquals(accountCountBefore, accountCountAfter, 'Account record was not created');
+        System.assertEquals(null, contactWithoutAccount.AccountId, 'Contact Triggers were turned off');
 
     }
 
