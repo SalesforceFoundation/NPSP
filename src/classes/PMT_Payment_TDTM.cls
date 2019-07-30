@@ -96,7 +96,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         List<npe01__OppPayment__c> oldlist,
         TDTM_Runnable.Action triggerAction) {
 
-        DmlWrapper dmlWrapper = null;
+        DmlWrapper dmlWrapper = new DmlWrapper();
 
         validatePayments(newList, oldList, triggerAction, dmlWrapper);
 
