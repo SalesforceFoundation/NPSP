@@ -572,7 +572,7 @@ global with sharing class BDI_DataImportService {
             importCampaignMembers();
             pl.stop();
 
-            if (additionalObjectService != null) {
+            if (additionalObjectService != null && isDryRun == false) {
                 pl = perfLogger.newPerfLog('importAdditionalObjects');
                 additionalObjectService.importAdditionalObjects();
                 pl.stop();
