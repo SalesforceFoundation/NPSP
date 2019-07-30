@@ -1,6 +1,6 @@
 *** Variables ***
 
-${count} =   ${120}       # use a multiple of 40
+${count} =   ${40}       # use a multiple of 40
 
 *** Settings ***
 
@@ -10,6 +10,7 @@ Suite Setup       Run Task Class   tasks.generate_and_load_data.GenerateAndLoadD
 ...                 num_records=${count}
 ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
 ...                 data_generation_task=tasks.generate_bdi_CO_data.GenerateBDIData_CO
+...                 database_url=sqlite:////tmp/test.db
 
 *** Test Cases ***
 
