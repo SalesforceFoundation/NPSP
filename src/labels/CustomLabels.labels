@@ -1875,6 +1875,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>One or more errors were found in the Payment Allocation Configuration.</shortDescription>
         <value>One or more errors were found in the Payment Allocation Configuration: </value>
     </labels>
+    <labels>
+        <fullName>alloPaymentAllocationBatchInvalidUpdate</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The proposed updates for this Allocation would not be valid, and were blocked.</shortDescription>
+        <value>Allocation Update Blocked for Allocation named {0}.  Reason: {1}</value>
+    </labels>
 
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>

@@ -36,7 +36,7 @@
 */
 public class ALLO_AllocationsUtil {
     /** @description Allocations settings. */
-    public static Allocations_Settings__c allocationSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+    public static Allocations_Settings__c ALLOCATION_SETTINGS = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
     /** @description Used as a way to identify parts of Allocation Sync that may or may not be allowed to execute depending on earlier execution statuses */
     public enum PROCESS_DEF {
@@ -54,6 +54,9 @@ public class ALLO_AllocationsUtil {
 
     /** @description Caches PROCESS_EXCLUSIONS */
     private static Map<PROCESS_DEF, Set<PROCESS_DEF>> PROCESS_EXCLUSIONS;
+    private static Set<Id> EXCLUDED_OPPORTUNITY_RECORDTYPES;
+    private static Set<String> EXCLUDED_OPPORTUNITY_TYPES;
+
 
     /** @description Manages Record Exclusions for downstream processes, so it can process as much as possible while skipping what it has to */
     public class RecordExclusions {
@@ -95,7 +98,7 @@ public class ALLO_AllocationsUtil {
           * @param PROCESS_DEF exclusion The exclusions to check for
           */
         public boolean hasExclusion(Id recordId, PROCESS_DEF exclusion) {
-            return (this.exclusionsByRecordId(recordId) && this.exclusionsByRecordId.get(recordId).contains(exclusion));
+            return (this.exclusionsByRecordId.containsKey(recordId) && this.exclusionsByRecordId.get(recordId).contains(exclusion));
         }
     }
 
@@ -104,7 +107,7 @@ public class ALLO_AllocationsUtil {
         public List<Allocation__c> allocationsForInsert= new List<Allocation__c>();
         public List<Allocation__c> allocationsForUpdate= new List<Allocation__c>();
         public List<Allocation__c> allocationsForDelete= new List<Allocation__c>();
-        public Map<String, String> errorsByRecordId = new Map<String, String>();
+        public Map<String, List<String>> errorsByRecordId = new Map<String, List<String>>();
     }
 
     /**
@@ -145,6 +148,10 @@ public class ALLO_AllocationsUtil {
           * @return true if the Opportunity requires review
           */
         public boolean isOpportunityRequiresReview(Opportunity opp, Datetime boundary) {
+            // If the Opportunity is excluded for Recordtype or Type it will be skipped.
+            if (isExcluded(opp)) {
+                return false;
+            }
             // Check Opportunity & Opportunity Allocations first
             if (isRequiresReview(opp, this.oppsAllocations.get(opp.Id), boundary)) {
                 return true;
@@ -164,6 +171,20 @@ public class ALLO_AllocationsUtil {
             // Believe this to be out of scope for GA, but will confirm.
 
             return false;
+        }
+
+        /** @description Return true if either the Opportunities Recordtype or Type match those
+          * configured to be excluded from Allocations processing
+          * @param Opportunity opp The opportunity to check
+          * @return Boolean true if the Opportunity should be excluded from Allocations processing
+          */
+        public static Boolean isExcluded(Opportunity opp) {
+            if (EXCLUDED_OPPORTUNITY_RECORDTYPES == null || EXCLUDED_OPPORTUNITY_TYPES == null) {
+                EXCLUDED_OPPORTUNITY_RECORDTYPES = getExcludedOpportunityRecordtypes();
+                EXCLUDED_OPPORTUNITY_TYPES = getExcludedOpportunityTypes();
+            }
+
+            return (EXCLUDED_OPPORTUNITY_RECORDTYPES.contains(opp.RecordtypeId) || EXCLUDED_OPPORTUNITY_TYPE.contains(opp.Type));
         }
 
         /** @description Initialize errors for Process using the records flagged for review.  It will retrieve any
@@ -195,17 +216,17 @@ public class ALLO_AllocationsUtil {
      */
     public static List<String> validatePaymentAllocationsConfiguration() {
         List<String> problems = new List<String>();
-        if (!allocationSettings.Payment_Allocations_Enabled__c) {
+        if (!ALLOCATION_SETTINGS.Payment_Allocations_Enabled__c) {
             problems.add(System.Label.alloPaymentNotEnabled);
         }
-        if (!allocationSettings.Default_Allocations_Enabled__c) {
+        if (!ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) {
             problems.add(System.Label.alloDefaultNotEnabled);
         }
 
-        if (allocationSettings.Default__c == null) {
+        if (ALLOCATION_SETTINGS.Default__c == null) {
             problems.add(System.Label.alloDefaultGAUMissing);
         } else {
-            List<General_Accounting_Unit__c> defaultGAU = [select Id, Active__c, Name from General_Accounting_Unit__c where Id = :allocationSettings.Default__c];
+            List<General_Accounting_Unit__c> defaultGAU = [select Id, Active__c, Name from General_Accounting_Unit__c where Id = :ALLOCATION_SETTINGS.Default__c];
             if (defaultGAU.size() < 1) {
                 problems.add(System.Label.alloDefaultGAUDoesNotExist);
             } else if (!defaultGAU[0].Active__c) {
@@ -252,7 +273,7 @@ public class ALLO_AllocationsUtil {
             // Will only review Payments and Payment Allocations if Payment Allocations are enabled.
             // Note: This differs from the existing trigger, in that it will check and error if there are
             // Payment Allocations (inserts/updates) in the system and Payment Allocations is not enabled
-            if (allocationSettings.Payment_Allocations_Enabled__c) {
+            if (ALLOCATION_SETTINGS.Payment_Allocations_Enabled__c) {
                 if (opp.npe01__OppPayment__r != null) {
                     for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
                         paymentsIds.add(payment.Id);
@@ -294,9 +315,9 @@ public class ALLO_AllocationsUtil {
             }
         }
 
-        recsForReview.recErrs.retrieveExistingErrorsFor(sObjs);
+        recsForReview.initializeErrors(processName);
 
-        recErrs.initializeErrors(processName);
+        recsForReview.recErrs.retrieveExistingErrorsFor(sObjs);
 
         return recsForReview;
     }
@@ -306,7 +327,8 @@ public class ALLO_AllocationsUtil {
      * 1) Resizes existing percentage based allocations for Amount changes
      * 2) Adds/updates/removes the default allocation if enabled, and as appropriate
      * 3) Creates allocations from parent (if no allocations are present, and record has a parent)
-     * 4) Clears allocations if amount goes to null/0
+     * 4) If amount goes to null/0, deletes default allocations and converts existing non percentage
+     *    allocations to percentage allocations if possible, and zeroes all allocations
      * 5) Records errors if allocations become invalid for the Opportunity
      * 6) Adds record exclusions if cannot proceed with downstream steps, based on record state
      * 7) Validates changes, logs errors if allocations are now invalid
@@ -321,8 +343,29 @@ public class ALLO_AllocationsUtil {
     public static AllocationResults processOpportunityAllocations(Map<Id, Opportunity> opps, Map<Id, List<Allocation__c>> oppsAllocations, Map<Id, List<Allocation__c>> campaignAllocations, Map<Id, List<Allocation__c>> recurringDonationAllocations, RecordExclusions recExclusions) {
         AllocationResults allocResults = new AllocationResults();
 
-        //TODO Implememnt
+        for (Opportunity opp : opps.values()) {
+            Decimal amount = getAmountFor(opp);
+            List<Allocation__c> oppAllocations = oppsAllocations.get(opp.Id);
+            // Covers #3, part of #2
+            if (amount == null || amount == 0) {
+                // Convert all non percent based allocations to %, remove Default Allocation(s), zero out amounts
 
+            } else if (oppAllocations == null || oppAllocations.isEmpty()) {
+                List<Allocation__c> sourceAllocations = null;
+                // No Allocations, copyFromParent or set default of no parent
+                if (opp.CampaignId != null && campaignAllocations.containsKey(opp.CampaignId)) {
+                    sourceAllocations = campaignAllocations.get(opp.CampaignId);
+                }
+
+                if (opp.npe03__Recurring_Donation__c != null && recurringDonationAllocations.containsKey(opp.npe03__Recurring_Donation__c)) {
+                    sourceAllocations = recurringDonationAllocations.get(opp.npe03__Recurring_Donation__c);
+                }
+
+                copyAllocationsToTarget(opp, null, sourceAllocations, allocResults, false, false);
+            } else { // Resize Allocations
+
+            }
+        }
 
         return allocResults;
     }
@@ -346,7 +389,28 @@ public class ALLO_AllocationsUtil {
     public static AllocationResults processPaymentAllocations(Map<Id, Opportunity> opps, Map<Id, List<Allocation__c>> oppsAllocations, Map<Id, List<Allocation__c>> pmtsAllocations, RecordExclusions recExclusions) {
         AllocationResults allocResults = new AllocationResults();
 
-        //TODO Implememnt
+        if (!ALLOCATION_SETTINGS.Payment_Allocations_Enabled__c) {
+            // TODO: Determine whether this should throw an Exception instead...
+            return allocResults;
+        }
+
+        for (Opportunity opp : opps.values()) {
+            for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
+                List<Allocation__c> oppAllocations = oppsAllocations.get(opp.Id);
+                List<Allocation__c> pmtAllocations = pmtsAllocations.get(payment.Id);
+                // Covers #3, part of #2
+                Decimal sourceAmount = getAmountFor(opp);
+                Decimal amount = getAmountFor(payment);
+                if (amount == null || amount == 0) {
+                    // Convert all non percent based allocations to %, remove Default Allocation(s), zero out amounts
+
+                } else if (pmtAllocations == null || pmtAllocations.isEmpty()) {
+                    copyAllocationsToTarget(payment, sourceAmount, oppAllocations, allocResults, true, true);
+                } else { // Resize Allocations...
+
+                }
+            }
+        }
 
         return allocResults;
     }
@@ -358,38 +422,42 @@ public class ALLO_AllocationsUtil {
      * @param RecordExclusions recExclusions Map of records to any exclusions they might have
      */
     public static void processAllocationResults(PROCESS_DEF process, AllocationResults allocResults, RecordsForReview recs, RecordExclusions recExclusions) {
-        List<Database.DeleteResult> deletes = null;
-        List<Database.SaveResult> inserts = null;
-        List<Database.SaveResult> updates = null;
 
         // These are shells to pass to the ERR_RecordError addDML Errors method, so it can set the Object Type
         SObject oppObjType = new Opportunity();
         SObject paymentObjType = new npe01__OppPayment__c();
         Set<PROCESS_DEF> processExclusions = getProcessExclusionsFor(process);
 
-        // Process Deletions
-        if (allocResults.allocationsForDelete != null && allocResults.allocationsForDelete.size() > 0) {
-            deletes = Database.delete(allocResults.allocationsForDelete, false);
-        }
+        // Process Deletes
+        processAllocationDeleteResults(allocResults.allocationsForDelete, recs, recExclusions, processExclusions, oppObjType, paymentObjType);
 
         // Process Inserts
-        if (allocResults.allocationsForInsert != null && allocResults.allocationsForInsert.size() > 0) {
-            inserts = Database.insert(allocResults.allocationsForInsert, false);
-        }
+        processAllocationInsertResults(allocResults.allocationsForInsert, recs, recExclusions, processExclusions, oppObjType, paymentObjType);
 
         // Process Updates
-        if (allocResults.allocationsForUpdates != null && allocResults.allocationsForUpdate.size() > 0) {
-            updates = Database.update(allocResults.allocationsForUpdate, false);
+        processAllocationUpdateResults(allocResults.allocationsForUpdate, recs, recExclusions, processExclusions, oppObjType, paymentObjType);
+
+        // Process any functional errors
+        processFunctionalErrors(recs, allocResults.errorsByRecordId, oppObjType);
+    }
+
+    private static void processAllocationDeleteResults(List<Allocation__c> allocationsForDelete, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
+        List<Database.DeleteResult> deletes = null;
+
+        // Process Deletions
+        if (allocationsForDelete != null && allocationsForDelete.size() > 0) {
+            deletes = Database.delete(allocationsForDelete, false);
         }
 
         // Handle Deletes and Update Maps and Errors
         if (deletes != null) {
             for (Integer i=0; i < deletes.size(); i++) {
-                Allocation__c deletedAlloc = allocResults.allocationsForDelete[i];
+                Allocation__c deletedAlloc = allocationsForDelete[i];
                 Database.DeleteResult delResult = deletes[i];
                 if (deletedAlloc.Opportunity__c != null) {
                     if (delResult.isSuccess()) {
-                        deleteFromAllocationsList(recs.oppsAllocations.get(deletedAlloc.Opportunity__c), deletedAlloc);
+                        // Removes the successfully deleted Opportunity Allocation from the Opportunity Allocations List, indexed by Opportunity Id
+                        remove(recs.oppsAllocations, deletedAlloc.Opportunity__c, deletedAlloc);
                     } else {
                         recs.recErrs.addError(deletedAlloc.Opportunity__c, delResult, oppObjType);
                         recExclusions.addExclusions(deletedAlloc.Opportunity__c, processExclusions);
@@ -397,7 +465,8 @@ public class ALLO_AllocationsUtil {
 
                 } else if (deletedAlloc.Payment__c != null) {
                     if (delResult.isSuccess()) {
-                        deleteFromAllocationsList(recs.paymentAllocations.get(deletedAlloc.Payment__c), deletedAlloc);
+                        // Removes the successfully deleted Payment Allocation from the Payment Allocations List, indexed by Payment Id
+                        remove(recs.paymentAllocations, deletedAlloc.Payment__c, deletedAlloc);
                     } else {
                         recs.recErrs.addError(deletedAlloc.Payment__c, delResult, paymentObjType);
                         recExclusions.addExclusions(recs.paymentIdsToOppIds.get(deletedAlloc.Payment__c), processExclusions);
@@ -405,22 +474,33 @@ public class ALLO_AllocationsUtil {
                 }
             }
         }
+    }
+
+    private static void processAllocationInsertResults(List<Allocation__c> allocationsForInsert, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
+        List<Database.SaveResult> inserts = null;
+
+        // Process Inserts
+        if (allocationsForInsert != null && allocationsForInsert.size() > 0) {
+            inserts = Database.insert(allocationsForInsert, false);
+        }
 
         // Handle Inserts and Update Maps and Errors
         if (inserts != null) {
             for (Integer i=0; i < inserts.size(); i++) {
-                Allocation__c insertedAlloc = allocResults.allocationsForInsert[i];
-                Database.InsertResult insResult = inserts[i];
+                Allocation__c insertedAlloc = allocationsForInsert[i];
+                Database.SaveResult insResult = inserts[i];
                 if (insertedAlloc.Opportunity__c != null) {
                     if (insResult.isSuccess()) {
-                        insertIntoAllocationsList(recs.oppAllocations.get(insertedAlloc.Opportunity__c), insertedAlloc);
+                        // add the successfully inserted Allocation to the Opportunity Allocations List, indexed by the Opportunity Id
+                        add(recs.oppsAllocations, insertedAlloc.Opportunity__c, insertedAlloc);
                     } else {
                         recs.recErrs.addError(insertedAlloc.Opportunity__c, insResult, oppObjType);
                         recExclusions.addExclusions(insertedAlloc.Opportunity__c, processExclusions);
                     }
                 } else if (insertedAlloc.Payment__c != null) {
                     if (insResult.isSuccess()) {
-                        insertIntoAllocationsList(recs.paymentAllocations.get(insertedAlloc.Payment__c), insertedAlloc);
+                        // add the successfully inserted Allocation to the Payment Allocations List, indexed by the Payment Id
+                        add(recs.paymentAllocations, insertedAlloc.Payment__c, insertedAlloc);
                     } else {
                         recs.recErrs.addError(insertedAlloc.Payment__c, insResult, paymentObjType);
                         recExclusions.addExclusions(recs.paymentIdsToOppIds.get(insertedAlloc.Payment__c), processExclusions);
@@ -428,22 +508,33 @@ public class ALLO_AllocationsUtil {
                 }
             }
         }
+    }
+
+    private static void processAllocationUpdateResults(List<Allocation__c> allocationsForUpdate, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
+        List<Database.SaveResult> updates = null;
+
+        // Process Updates
+        if (allocationsForUpdate != null && allocationsForUpdate.size() > 0) {
+            updates = Database.update(allocationsForUpdate, false);
+        }
 
         // Handle Updates and Update Maps and Errors
         if (updates != null) {
             for (Integer i=0; i < updates.size(); i++) {
-                Allocation__c updatedAlloc = allocResults.allocationsForUpdate[i];
-                Database.UpdateResult updResult = updates[i];
+                Allocation__c updatedAlloc = allocationsForUpdate[i];
+                Database.SaveResult updResult = updates[i];
                 if (updatedAlloc.Opportunity__c != null) {
                     if (updResult.isSuccess()) {
-                        updateInAllocationsList(recs.oppAllocations.get(updatedAlloc.Opportunity__c), updatedAlloc);
+                        // Replaces the Updated Allocation in the Opportunity Allocations List, indexed by Opportunity Id
+                        replace(recs.oppSAllocations, updatedAlloc.Opportunity__c, updatedAlloc);
                     } else {
                         recs.recErrs.addError(updatedAlloc.Opportunity__c, updResult, oppObjType);
                         recExclusions.addExclusions(updatedAlloc.Opportunity__c, processExclusions);
                     }
                 } else if (updatedAlloc.Payment__c != null) {
                     if (updResult.isSuccess()) {
-                        updateInAllocationsList(recs.paymentAllocations.get(updatedAlloc.Payment__c), updatedAlloc);
+                        // Replaces the Updated Allocation in the Payment Allocations List, indexed by Payment Id
+                        replace(recs.paymentAllocations, updatedAlloc.Payment__c, updatedAlloc);
                     } else {
                         recs.recErrs.addError(updatedAlloc.Payment__c, updResult, paymentObjType);
                         recExclusions.addExclusions(recs.paymentIdsToOppIds.get(updatedAlloc.Payment__c), processExclusions);
@@ -451,15 +542,17 @@ public class ALLO_AllocationsUtil {
                 }
             }
         }
+    }
 
+    private static void processFunctionalErrors(RecordsForReview recs, Map<String, List<String>> errorsByRecordId, SObject oppObjType) {
         // Functional errors
-        if (allocResults.errorsByRecordId != null && allocResults.errorsByRecordId.size()) {
-            recs.recErrs.addErrors(errorsByRecordId, oppObjType);
-            for (String recordId : errorsByRecordId.keyset()) {
-
+        if (errorsByRecordId != null && !errorsByRecordId.isEmpty()) {
+            for(String soId :errorsByRecordId.keySet()) {
+                for (String msg :errorsByRecordId.get(soId)) {
+                    recs.recErrs.addError(soId, msg, oppObjType);
+                }
             }
         }
-
     }
 
     /**
@@ -510,7 +603,9 @@ public class ALLO_AllocationsUtil {
             'npe01__Written_Off__c',
             'npe01__Paid__c',
             'npe01__Opportunity__c',
-            'LastModifiedDate'
+            'LastModifiedDate',
+            'RecordtypeId',
+            'Type'
         };
         String paymentSubQueryString = + new UTIL_Query()
             .withSelectFields(oppPaymentFields)
@@ -589,9 +684,19 @@ public class ALLO_AllocationsUtil {
         if (whereClauses.size() == 0) {
             return new List<Allocation__c>();
         } else {
-            String allocationQueryString = allocQuery.withWhere(whereClauses).build();
+            String whereClauseExpanded = String.join(whereClauses, ' OR ');
+
+            String allocationQueryString = allocQuery.withWhere(whereClauseExpanded).build();
             return new List<Allocation__c>((List<Allocation__c>) Database.query(allocationQueryString));
         }
+    }
+
+    public static Set<Id> getExcludedOpportunityRecordtypes() {
+        return (String.isNotBlank(ALLOCATION_SETTINGS.Excluded_Opp_RecTypes__c)) ? new Set<Id>((List<Id>)ALLOCATION_SETTINGS.Excluded_Opp_RecTypes__c.split(';')) : new Set<Id>();
+    }
+
+    public static Set<String> getExcludedOpportunityTypes() {
+        return (String.isNotBlank(ALLOCATION_SETTINGS.Excluded_Opp_Types__c)) ? new Set<String>(ALLOCATION_SETTINGS.Excluded_Opp_Types__c.split(';')) : new Set<String>();
     }
 
     /**
@@ -601,7 +706,7 @@ public class ALLO_AllocationsUtil {
      */
     public static Map<PROCESS_DEF, Set<PROCESS_DEF>> getProcessExclusions() {
 
-        if (PROCESS_EXCLUSIONS = null) {
+        if (PROCESS_EXCLUSIONS == null) {
             PROCESS_EXCLUSIONS = new Map<PROCESS_DEF, SET<PROCESS_DEF>> {
                 PROCESS_DEF.OPP_AMT_UPD =>
                     new Set<PROCESS_DEF>    {PROCESS_DEF.OPP_ALLOC_UPD,
@@ -669,6 +774,67 @@ public class ALLO_AllocationsUtil {
             allocsByParentId.put (parentId, new List<Allocation__c> { alloc });
         }
     }
+
+    /**
+     * @description Generically removes an Allocation from a List of Allocations indexex by Parent Id in a Map.  If the
+     * Parent Id is not  in the Map, it will do nothing.  Otherwise, it will iterate over the List of Allocations, comparing
+     * the Id of the allocation in the list to the Id of the allocation to remove.  Any that match will be removed.
+     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the Parent
+     * @param Id parentId The Id of the Parent record
+     * @param Allocation__c alloc The Allocation to remove from the List of Allocations associated with the specified Parent
+     */
+    private static void remove(Map<Id, List<Allocation__c>> allocsByParentId, Id parentId, Allocation__c alloc) {
+        if (alloc == null || alloc.Id == null)
+            return;
+
+        if (allocsByParentId.containsKey(parentId)) {
+            List<Allocation__c> allocs = allocsByParentId.get(parentId);
+
+            Integer idx=0;
+            while (idx < allocs.size()) {
+                Allocation__c allocToCheck = allocs[idx];
+                if (allocToCheck.Id == alloc.Id) {
+                    // Remove from List
+                    allocs.remove(idx);
+                } else {
+                    idx++;
+                }
+            }
+        }
+    }
+
+    /**
+     * @description Generically replaces an Allocation from a List of Allocations indexex by Parent Id in a Map.  If the
+     * Parent Id is not in the Map, it will do nothing.  Otherwise, it will iterate over the List of Allocations, comparing
+     * the Id of the allocation in the list to the Id of the allocation to replace.  The first that matches, will be replaced.
+     * If not found, it will add the Allocation to end of the list
+     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the Parent
+     * @param Id parentId The Id of the Parent record
+     * @param Allocation__c alloc The Allocation to replace in the List of Allocations associated with the specified Parent
+     */
+    private static void replace(Map<Id, List<Allocation__c>> allocsByParentId, Id parentId, Allocation__c alloc) {
+        if (alloc == null || alloc.Id == null)
+            return;
+
+        if (allocsByParentId.containsKey(parentId)) {
+            List<Allocation__c> allocs = allocsByParentId.get(parentId);
+
+            Integer idx=0;
+            while (idx < allocs.size()) {
+                Allocation__c allocToCheck = allocs[idx];
+                if (allocToCheck.Id == alloc.Id) {
+                    // Replace in list
+                    allocs.set(idx, alloc);
+                    return;
+                } else {
+                    idx++;
+                }
+            }
+        }
+        // Adds if it was not found in the list to replace
+        add (allocsByParentId, parentId, alloc);
+    }
+
 
     /**
      * @description Initially, we added all the Allocations retrieved to the Maps.  After it is determined which Opportunities
@@ -781,7 +947,7 @@ public class ALLO_AllocationsUtil {
             return true;
         }
         // If Default Allocations are enabled, Check for a non null/zero amount with no allocations.
-        if (allocationSettings.Default_Allocations_Enabled__c && amount != null && amount != 0 && (allocations == null || allocations.size() == 0)) {
+        if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && amount != null && amount != 0 && (allocations == null || allocations.size() == 0)) {
             return true;
         }
 
@@ -828,5 +994,283 @@ public class ALLO_AllocationsUtil {
         // Positive checks exhausted.
         return false;
     }
+
+    public static void copyAllocationsToTarget(SObject targetObj, Decimal sourceAmount, List<Allocation__c> sourceAllocations, AllocationResults allocResults, boolean copyInactiveAllocations, Boolean convertToPercentages) {
+        Decimal amount = getAmountFor(targetObj);
+
+        List<Allocation__c> proposedAllocations = new List<Allocation__c>();
+
+        if (sourceAllocations != null && sourceAllocations.size() > 0) {
+            Id opportunityId = (targetObj instanceOf Opportunity) ? targetObj.Id : null;
+            Id paymentId = (targetObj instanceOf npe01__OppPayment__c) ? targetObj.Id : null;
+
+            List<Allocation__c> listAlloForInsert = new List<Allocation__c>();
+
+            for (Allocation__c allocation : sourceAllocations.deepclone()) {
+                // Only copy if Default Allocations are not Enabled or it is not for the Default Allocation
+                if (!ALLOCATION_SETTINGS.Default_Allocations_Enabled__c || allocation.General_Accounting_Unit__c != ALLOCATION_SETTINGS.Default__c) {
+                    // Set the Allocation Lookup Fields
+                    allocation.Opportunity__c = opportunityId;
+                    allocation.Payment__c = paymentId;
+                    allocation.Recurring_Donation__c = null;
+                    allocation.Campaign__c = null;
+
+                    // Copy all Allocations if copyInActiveAllocations is true
+                    if (copyInactiveAllocations) {
+                        listAlloForInsert.add(allocation);
+                    } else {
+                        if (allocation.General_Accounting_Unit__r.Active__c) {
+                            listAlloForInsert.add(allocation);
+                        }
+                    }
+                }
+            }
+
+            Decimal remainder = amount;
+
+            // Update the Allocations amounts and percentages, and if required, non-percentage based Allocations to percentage Allocations
+            for (Allocation__c allocation : listAlloForInsert) {
+                //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode to the same one as the parent
+                if (UserInfo.isMultiCurrencyOrganization()) {
+                    if (allocation.Amount__c!=null) {
+                        allocation.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
+                            (String)allocation.get('CurrencyIsoCode'),
+                            (String)targetObj.get('CurrencyIsoCode'),
+                            allocation.Amount__c
+                                );
+                    }
+                    allocation.put('CurrencyIsoCode', targetObj.get('CurrencyIsoCode'));
+                }
+
+                if (allocation.Percent__c != null) {
+                    allocation.Amount__c = (amount * allocation.Percent__c * .01).setScale(2);
+                }
+
+                //Calculate proportional amount for non-percentage based Payment allocations
+                // convertToPercentages must be true, the Percentage null, sourceAmount cannot be null and either Default Allocations are not enabled or the allocation is not for the Default Allocation
+                if (convertToPercentages && allocation.Percent__c == null & sourceAmount != null) {
+                    allocation.Percent__c = allocation.Amount__c / sourceAmount * 100;
+                    allocation.Amount__c = (amount * allocation.Percent__c * .01).setScale(2);
+                }
+                remainder -= allocation.Amount__c;
+            }
+
+            //if our remainder is not the same sign as the amount, only create percentage based Allocations
+            if ((amount >= 0 && remainder < 0) || (amount < 0 && remainder > 0)) {
+                remainder = amount;
+
+                //TODO: log error: not able to create allocations. chatter post?
+                for (Allocation__c allocation : listAlloForInsert) {
+                    if (allocation.Percent__c != null) {
+                        allocResults.allocationsForInsert.add(allocation);
+                        remainder -= allocation.Amount__c;
+                    }
+                }
+
+                if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && ((amount >= 0 && remainder > 0) || (amount < 0 && remainder < 0))) {
+                    Allocation__c defaultAllo = makeDefaultAllocation(targetObj, remainder);
+                    proposedAllocations.add(defaultAllo);
+                }
+
+            //Create Default Allocation if needed
+            } else if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && ((amount >= 0 && remainder > 0)||(amount < 0 && remainder < 0))) {
+                proposedAllocations.add(makeDefaultAllocation(targetObj, remainder));
+                proposedAllocations.addAll((List<Allocation__c>)listAlloForInsert);
+            //add objects to DML wrapper in all other cases (no remainder, or positive remainder without default allocations enabled)
+            } else {
+                proposedAllocations.addAll((List<Allocation__c>)listAlloForInsert);
+            }
+
+        //if we have no source Allocations and defaults are enabled, create them for each payment/opportunity
+        } else if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) {
+                proposedAllocations.add(makeDefaultAllocation(targetObj, amount));
+        }
+
+        if (validateAllocations(amount, proposedAllocations, allocResults.errorsByRecordId)) {
+            allocResults.allocationsForInsert.addAll (proposedAllocations);
+        }
+
+    }
+
+    private static Boolean validateAllocations(Decimal parentAmount, List<Allocation__c> allocations, Map<String, List<String>> errorsByRecordId) {
+        return true;
+    }
+
+    private static List<String> validateAllocation(Allocation allocation) {
+        errors = new List<String>();
+        // No parent, or multiple parents
+        if (hasParentError(allo)) {
+            errors.add(UTIL_Describe.getObjectLabel('Allocation__c') + '[' + allocation.Name__c + ']: ' + Label.alloSingleParent);
+        }
+        //neither an amount nor a percent is defined
+        if (allo.Amount__c == null && allo.Percent__c == null) {
+            errors.add(UTIL_Describe.getObjectLabel('Allocation__c') + '[' + allocation.Name__c + ']: ' + Label.alloAmountOrPercent);
+        }
+        //negative amount (Payments excepted)
+        if (allo.Amount__c != null && allo.Amount__c < 0 && allo.Payment__c == null) {
+            errors.add(UTIL_Describe.getObjectLabel('Allocation__c') + '[' + allocation.Name__c + ']: ' + Label.alloNegativeAmount);
+        }
+        //negative percent
+        if (allo.Percent__c != null && allo.Percent__c < 0) {
+            errors.add(UTIL_Describe.getObjectLabel('Allocation__c') + '[' + allocation.Name__c + ']: ' + Label.alloNegativePercent);
+        }
+
+        return errors;
+    }
+
+    public static void resizeAllocationsAsNeeded(SObject parentObj, List<Allocation__c> allocations, AllocationResults allocResults) {
+
+        Decimal sumOfAllocations = 0;
+        Decimal totalOfPercentages = 0;
+        Decimal parentAmount = getAmountFor(parentObj);
+
+        Boolean requiresUpdates = false;
+
+        List<Allocation__c> proposedAllocations = new List<Allocation__c>();
+        List<Allocation__c> proposedAllocDeletes = new List<Allocation__c>();
+        List<Allocation__c> defaultAllocations = new List<Allocation__c>();
+        String parentCurrencyIsoCode = (UserInfo.isMultiCurrencyOrganization()) ? (String) parentObj.get('CurrencyIsoCode') : null;
+        Boolean errorsFound = false;
+
+        for (Allocation__c allocation : allocations.deepClone(true, true, true)) {
+            if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c) {
+
+            }
+
+            String allocCurrencyIsoCode = (UserInfo.isMultiCurrencyOrganization()) ? (String) allocation.get('CurrencyIsoCode') : null;
+
+            if (allocation.Percent__c != null) {
+                Decimal curAllocAmount = allocation.Percent__c * 0.01 * parentAmount;
+
+                if (allocation.Amount__c != curAllocAmount || parentCurrencyIsoCode != currencyIsoCode) {
+                    allocation.Amount__c = curAllocAmount;
+                    if (UserInfo.isMultiCurrencyOrganization()) {
+                        allocation.put('CurrencyIsoCode', parentCurrencyIsoCode);
+                    }
+                    List<String> errs = validateAllocation(allocation);
+                    if (errs.isNotEmpty()) {
+                        errorsFound = true;
+                        if (allocResults.errorsByRecordId.containsKey(parentObj.Id)) {
+                            allocResults.errorsByRecordId.get(parentObj.Id).addAll(errs);
+                        } else {
+                            allocResults.put(parentObj.Id, errs);
+                        }
+                    } else {
+                        proposedAllocations.add(allocations);
+                    }
+                }
+            } else {
+                // Amount requires sign update
+                if ((allocation.Amount__c > 0 && parentAmount < 0) || (allocation.Amount__c < 0 && parentAmount > 0)) {
+                    allocation.Amount__c = -1 * allocation.Amount__c;
+                    if (UserInfo.isMultiCurrencyOrganization()) {
+                        allocation.put('CurrencyIsoCode', parentCurrencyIsoCode);
+                    }
+                }
+
+            }
+
+
+
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                if (parentCurrencyIsoCode != (String) allocation.get('CurrencyIsoCode')) {
+
+                }
+            }
+
+            sumOfAllocations += allocation.Amount__c;
+            totalOfPercentages += allocation.Percent__c;
+        }
+
+        if (!requiresUpdates) {
+            if (totalOfPercentages > 100) {
+
+            }
+
+        }
+
+        if (validateAllocations(parentAmount, proposedAllocations, allocResults.errorsByRecordId)) {
+            if (!proposedAllocations.isEmpty()) {
+                for (Allocation__c allocation : proposedAllocations) {
+                    if (allocation.Id != null) {
+                        allocResults.allocationsForUpdate.add (allocation);
+                    } else {
+                        allocResults.allocationsForInsert.add (allocation);
+                    }
+                }
+            }
+            if (!proposedAllocDeletes.isEmpty()) {
+                allocResults.allocationsForDelete.addAll (proposedAllocDeletes);
+            }
+        }
+    }
+
+    private static Id getOpportunityIdFor(SObject sObj) {
+        if (sObj != null) {
+            if (sObj instanceOf Opportunity) {
+                return (Id) sObj.Id;
+            }
+            if (sObj instanceOf npe01__OppPayment__c) {
+                return (Id) sObj.get('npe01__Opportunity__c');
+            }
+        }
+
+        return null;
+    }
+
+    private static Decimal getAmountFor(SObject sObj) {
+        if (sObj != null) {
+            if (sObj instanceOf Opportunity) {
+                return (Decimal) sObj.get('Amount');
+            }
+            if (sObj instanceOf npe01__OppPayment__c) {
+                return (Decimal) sObj.get('npe01__Payment_Amount__c');
+            }
+        }
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns true if this allocation doesn't have exactly one parent object.
+    * @param allo A GAU Allocation.
+    * @return boolean Whether this allocation has a parent error.
+    ********************************************************************************************************/
+    public Boolean hasParentError (Allocation__c allo) {
+        Integer parentCnt = 0;
+
+        parentCnt += (allo.Payment__c != null) ? 1 : 0;
+        parentCnt += (allo.Opportunity != null) ? 1 : 0;
+        parentCnt += (allo.Recurring_Donation__c != null) ? 1 : 0;
+        parentCnt += (allo.Campaign__c != null) ? 1 : 0;
+        // Anything other than exactly 1 will return an error
+        return (parentCnt != 1);
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a Default Allocation for the specified Opportunity/Payment.
+    * @param parentSObj An Opportunity or Payment.
+    * @param amount Amount of the Default Allocation
+    * @return Allocation__c A Default Allocation for the amount specified
+    ********************************************************************************************************/
+    public static Allocation__c makeDefaultAllocation(SObject parentSObj, Decimal amount) {
+
+        Id opportunityId = (parentSObj instanceOf Opportunity) ? parentSObj.Id : null;
+        Id paymentId = (parentSObj instanceOf npe01__OppPayment__c) ? parentSObj.Id : null;
+
+        Allocation__c defaultAllo = new Allocation__c(
+            General_Accounting_Unit__c = ALLOCATION_SETTINGS.Default__c,
+            Opportunity__c = opportunityId,
+            Payment__c = paymentId,
+            Amount__c = amount
+        );
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            defaultAllo.put('CurrencyIsoCode', parentSObj.get('CurrencyIsoCode'));
+        }
+
+        return defaultAllo;
+    }
+
 
 }

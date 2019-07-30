@@ -253,7 +253,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         }
                     }
                 }
-
             }
         }
 
@@ -558,7 +557,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 //add only allocations to active GAUs
                 for (Allocation__c allo : wrap.listAllo.deepclone()) {
 
-                    // If it's a payment, don't filter out the active allocations. 
+                    // If it's a payment, don't filter out the active allocations.
                     if (sObj instanceof npe01__OppPayment__c) {
                         listAlloForInsert.add(allo);
                     } else {

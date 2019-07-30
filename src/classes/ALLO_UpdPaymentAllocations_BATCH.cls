@@ -126,8 +126,6 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
         Set<Id> oppIds = addIdsForRecords(new Set<Id>(), records);
         ALLO_AllocationsUtil.RecordsForReview recs = ALLO_AllocationsUtil.determineRecordsRequiringReview(PROCESS_NAME, oppIds, boundary);
 
-        Map<ALLO_AllocationsUtils.PROCESS_DEF, Set<ALLO_AllocationsUtils.PROCESS_DEF>> processExclusionsMap = ALLO_AllocationsUtils.getProcessExclusions();
-
         this.reviewCnt += recs.oppsById.size();
 
         // Disable Allocation Triggers prior to making any DML Updates
@@ -140,13 +138,16 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
         ALLO_AllocationsUtil.AllocationResults allocResults = ALLO_AllocationsUtil.processOpportunityAllocations(recs.oppsById, recs.oppsAllocations, recs.campaignAllocations, recs.recurringDonationAllocations, recExcl);
 
         // Process Opportunity Allocation Results
-        ALLO_AllocationsUtil.processAllocationResults(allocResults, recs, recExcl);
+        ALLO_AllocationsUtil.processAllocationResults(ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD, allocResults, recs, recExcl);
 
         // Process Payment Allocations
         allocResults = ALLO_AllocationsUtil.processPaymentAllocations(recs.oppsById, recs.oppsAllocations, recs.paymentAllocations, recExcl);
 
         // Process Payment Allocations Results
-        ALLO_AllocationsUtil.processAllocationResults(allocResults, recs, recExcl);
+        ALLO_AllocationsUtil.processAllocationResults(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC, allocResults, recs, recExcl);
+
+        // Commit all pending errors
+        recs.recErrs.processErrors();
 
         // Enable Allocation Triggers after all updates are complete
         ALLO_AllocationsUtil.enableAllocationTriggers();
