@@ -20,26 +20,29 @@
             </div>
             <div class="slds-size_1-of-2 slds-m-bottom_small">
                 <lightning-button
-                    label="Create New Mapping Group"
-                    title="Create New Mapping Group"
+                    label={customLabels.bdiOMUICreateNewObjectGroup}
+                    title={customLabels.bdiOMUICreateNewObjectGroup}
                     onclick={handleOpenModal}
                     class="slds-m-left_x-small slds-float_right">
                 </lightning-button>
             </div>
             <div class="slds-size_1-of-1 slds-m-bottom_large">
-                <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">Data Import Advanced Mapping</h1>
-                <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">Mapping Groups</h2>
+                <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">{customLabels.bdiAdvancedMapping}</h1>
+                <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">{customLabels.bdiOMUIObjectGroupsTitle}</h2>
 
-                    <p class="slds-text-body_small slds-m-bottom_small">
-                    Mapping Groups are groups of field mappings which tell the NPSP Data Import tool what types of records to 
-                    create or update.  NPSP is able to link records within a single row of your import to one another because
-                    fields mappings are grouped in Mapping Groups in this way.  In addition, users can create multiple records
-                    of the same type and relate them to each other.
+                    <p class="slds-text_extension slds-m-bottom_small">
+                        {customLabels.bdiOMUIPageDescriptionPt1}
                     </p>
-
-                    <p class="slds-text-body_small">
-                        <span>Find complete Advanced Mapping setup documentation </span>
-                        <a href="https://powerofus.force.com/" target="_blank">here</a>.
+                    <p class="slds-text_extension slds-m-bottom_small">
+                        {customLabels.bdiOMUIPageDescriptionPt2}
+                    </p>
+                    <p class="slds-text_extension slds-m-bottom_small">
+                        {customLabels.bdiOMUIPageDescriptionPt3}
+                    </p>
+                    <p class="slds-text_extension">
+                        <lightning-formatted-rich-text
+                            value={customLabels.stgHelpAdvancedMapping3}>
+                        </lightning-formatted-rich-text>
                     </p>
             </div>
             <div class="slds-size_1-of-1 slds-m-bottom_small">
@@ -62,8 +65,8 @@
             </div>
             <div class="slds-size_1-of-2">
                 <lightning-button
-                    label="Create New Mapping Group"
-                    title="Create New Mapping Group"
+                    label={customLabels.bdiOMUICreateNewObjectGroup}
+                    title={customLabels.bdiOMUICreateNewObjectGroup}
                     onclick={handleOpenModal}
                     class="slds-m-left_x-small slds-float_right">
                 </lightning-button>

@@ -83,44 +83,6 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.ASC_Amount_cac3e1cd0</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.ASC_Role_f8860e39d</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_2cb21281d</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Date_37b322bd6</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Number_21e98c57a</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Number_53ae81fff</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Phone_97db48921</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Phone_d399fb3fe</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Picklist_52bab1bba</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Picklist_57bf42e30</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Text_9f7f926f9</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_Text_c4f14f3a7</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_currency_88bd4cc36</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_currency_94097b2d5</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_text2_1611ab645</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_textarea_7b77be471</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO1_url_ddad63107</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO2_Currency2_e6bb2adc4</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO2_Currency2_efa17795f</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Date_29f945088</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Number_ffb4d33db</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Phone_31e4c19e4</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Phone_eacb81703</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Picklist_445f63ff6</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Picklist_e38aa0476</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.CO3_Text_3532e6023</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_MaintenancePlan_0395868c1</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_MinimumCrewSize_5c6970260</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_RecommendedCrewSize_3cc44b330</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_Subject_7d6b4fcfb</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping.WO_SuggestedMaintenanceDate_9ea67eb8e</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.AccountSoftCredits_ee5babc24</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.CustomObject1_7b96c6e1b</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.CustomObject3_f3f9b20ad</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping.WorkOrder_f516282fb</members>
-        <name>CustomMetadata</name>
-    </types>
-    <types>
         <members>Contact-Contact Lightning Layout</members>
         <name>Layout</name>
     </types>
