@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <types>
+        <members>Opportunity_Stage_To_State_Mapping.COMMITTED</members>
+        <name>CustomMetadata</name>
+  </types>
+  <types>
     <members>*</members>
     <name>CustomObject</name>
   </types>
