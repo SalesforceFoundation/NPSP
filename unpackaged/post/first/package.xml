@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <types>
-        <members>Opportunity_Stage_To_State_Mapping.COMMITTED</members>
-        <name>CustomMetadata</name>
+    <members>Opportunity_Stage_To_State_Mapping.COMMITTED</members>
+    <name>CustomMetadata</name>
   </types>
   <types>
     <members>*</members>
@@ -20,5 +20,5 @@
     <members>*</members>
     <name>QuickAction</name>
   </types>
-  <version>29.0</version>
+  <version>43.0</version>
 </Package>
