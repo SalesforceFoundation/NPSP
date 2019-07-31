@@ -1,0 +1,153 @@
+<template>
+    <template if:true={isModalOpen}>
+        <section role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class={sectionClasses}>
+
+            <div class="slds-modal__container">
+
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading">
+                    </lightning-spinner>
+                </template>
+
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    title={customLabels.bdiBtnClose}>
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text={customLabels.bdiBtnClose}
+                            variant="inverse"
+                            size="small"
+                            onclick={handleCloseModal}>
+                        </lightning-icon>
+                        <span class="slds-assistive-text">{customLabels.bdiBtnClose}</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{modalTitle}</h2>
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-section slds-is-open slds-m-bottom_small">
+                                <lightning-input
+                                    class="slds-m-bottom_small"
+                                    label={customLabels.bdiOMUIGroupNameLabel}
+                                    type="text"
+                                    name="masterLabel"
+                                    value={row.MasterLabel}
+                                    onchange={handleMasterLabelChange}
+                                    field-level-help={customLabels.bdiOMUIGroupNameHelp}
+                                    required>
+                                </lightning-input>
+                                <div class="slds-size_1-of-1 slds-m-vertical_medium">
+                                    <h3 class="slds-text-align_center"><i>For</i></h3>
+                                </div>
+
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="objectName"
+                                    label={customLabels.bdiOMUIObjectNameLabel}
+                                    value={row.Object_API_Name}
+                                    placeholder="Select Object"
+                                    options={objectOptions}
+                                    onchange={handleObjectAPINameChange}
+                                    field-level-help={customLabels.bdiOMUIObjectNameHelp}
+                                    required>
+                                </lightning-combobox>
+
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="relationshipToPredecessor"
+                                    label={customLabels.bdiOMUIChildParentLabel}
+                                    value={row.Relationship_To_Predecessor}
+                                    placeholder="Select Relationship"
+                                    options={predRelationshipOptions}
+                                    onchange={handleRelationshipToPredChange}
+                                    field-level-help={customLabels.bdiOMUIChildParentHelp}
+                                    required>
+                                </lightning-combobox>
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="ofThisMappingGroup"
+                                    label={customLabels.bdiOMUIOfGroupLabel}
+                                    value={row.Predecessor}
+                                    placeholder="Select Mapping Group"
+                                    options={objectMappingOptions}
+                                    onchange={handlePredecessorChange}
+                                    field-level-help={customLabels.bdiOMUIOfGroupHelp}
+                                    required>
+                                </lightning-combobox>
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    placeholder="Select Field"
+                                    label={customLabels.bdiOMUIThroughFieldLabel}
+                                    name="throughThisField"
+                                    data-id="throughThisField"
+                                    options={relationshipFieldOptions}
+                                    value={row.Relationship_Field}
+                                    onchange={handleRelationshipFieldChange}
+                                    disabled={isRelationshipFieldDisabled}
+                                    field-level-help={customLabels.bdiOMUIThroughFieldHelp}
+                                    required>
+                                </lightning-combobox>
+                                <div class="slds-size_1-of-1 slds-m-top_large">
+                                    <h3 class="slds-text-heading_small slds-text-heading_small_extension">
+                                        <span class="slds-truncate"
+                                                title="Import Details">
+                                                {customLabels.bdiOMUIImportDetailsTitle}
+                                        </span>
+                                    </h3>
+                                </div>
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="importedRecordFieldName"
+                                    data-id="importedRecordFieldName"
+                                    label={customLabels.bdiOMUILinkToRecordLabel}
+                                    value={row.Imported_Record_Field_Name}
+                                    placeholder="Select Field"
+                                    options={diImportRecordFieldOptions}
+                                    onchange={handleImportedRecordFieldNameChange}
+                                    dropdown-alignment="bottom-left"
+                                    field-level-help={customLabels.bdiOMUILinkToRecordHelp}
+                                    required>
+                                </lightning-combobox>
+                                <lightning-combobox
+                                    class="slds-m-bottom_small"
+                                    name="importedRecordStatusFieldName"
+                                    data-id="importedRecordStatusFieldName"
+                                    label={customLabels.bdiOMUIImportStatusLabel}
+                                    placeholder="Select Field"
+                                    options={diImportRecordStatusFieldOptions}
+                                    value={row.Imported_Record_Status_Field_Name}
+                                    onchange={handleImportedRecordStatusFieldNameChange}
+                                    dropdown-alignment="bottom-left"
+                                    field-level-help={customLabels.bdiOMUIImportStatusHelp}
+                                    required>
+                                </lightning-combobox>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral"
+                            onclick={handleCloseModal}>
+                        Cancel
+                    </button>
+                    <button class="slds-button slds-button_brand"
+                            onclick={handleSave}>
+                        Save
+                    </button>
+                </footer>
+
+            </div>
+        </section>
+
+        <div class={backdropClasses}></div>
+    </template>
+</template>
