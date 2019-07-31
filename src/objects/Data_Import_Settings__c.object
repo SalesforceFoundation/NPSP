@@ -154,9 +154,9 @@
     </fields>
     <fields>
         <fullName>Field_Mapping_Method__c</fullName>
-        <description>Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Advanced Mapping.</description>
+        <description>Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Advanced Mapping.</inlineHelpText>
+        <inlineHelpText>Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping.</inlineHelpText>
         <label>Field Mapping Method</label>
         <length>40</length>
         <required>false</required>
