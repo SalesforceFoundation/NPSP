@@ -1,6 +1,6 @@
 *** Variables ***
 
-${count} =   ${40}       # use a multiple of 40
+${count} =   ${10000}       # use a multiple of 40
 
 *** Settings ***
 
@@ -17,13 +17,14 @@ Generate Data
     ...                 num_records=${count}
     ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
     ...                 data_generation_task=tasks.generate_bdi_CO_data.GenerateBDIData_CO
-    ...                 database_url=sqlite:////tmp/temp_db.db
 
 *** Test Cases ***
 
 Import a data batch via the API
     Batch Data Import   1000    Data Import Field Mapping
+
     @{result} =   Salesforce Query  npsp__DataImport__c  
     ...           select=COUNT(Id)
     ...           npsp__Status__c=Imported
+
     Should Be Equal     ${result}[0][expr0]     ${count}
