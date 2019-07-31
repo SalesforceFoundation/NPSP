@@ -4,6 +4,15 @@ GAU:
     fields:
         Name: Name
 
+MaintenancePlan:
+    sf_object: MaintenancePlan
+    table: MaintenancePlan
+    fields:
+        Frequency: Frequency
+        GenerationTimeframe: GenerationTimeframe
+        StartDate: StartDate
+        NextSuggestedMaintenanceDate: NextSuggestedMaintenanceDate
+
 DataImport:
     sf_object: npsp__DataImport__c
     table: npsp__DataImport__c
@@ -24,13 +33,14 @@ DataImport:
         npsp__CO1_textarea__c: npsp__CO1_textarea__c
         npsp__CO1_url__c: npsp__CO1_url__c
         npsp__CO1_text2__c: npsp__CO1_text2__c
-        npsp__CO1_Currency2__c: npsp__CO2_Currency2__c
+        npsp__CO1_Currency2__c: npsp__CO1_Currency2__c
         npsp__CO3_Text__c: npsp__CO3_Text__c
         npsp__CO3_Date__c: npsp__CO3_Date__c
         npsp__CO3_Currency__c: npsp__CO3_Currency__c
         npsp__CO3_Number__c: npsp__CO3_Number__c
         npsp__CO3_Picklist__c: npsp__CO3_Picklist__c
         npsp__CO3_Phone__c: npsp__CO3_Phone__c
+        npsp__WO_MinimumCrewSize__c: npsp__WO_MinimumCrewSize__c
         npsp__WO_RecommendedCrewSize__c: npsp__WO_RecommendedCrewSize__c
         npsp__WO_SuggestedMaintenanceDate__c: npsp__WO_SuggestedMaintenanceDate__c
         npsp__WO_Subject__c: npsp__WO_Subject__c
@@ -41,3 +51,6 @@ DataImport:
         npsp__GAU_Allocation_1_GAU__c:
             table: npsp__General_Accounting_Unit__c
             key_field: npsp__GAU_Allocation_1_GAU__c
+        npsp__WO_MaintenancePlan__c:
+            table: MaintenancePlan
+            key_field: npsp__WO_MaintenancePlan__c

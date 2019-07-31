@@ -124,9 +124,18 @@ tasks:
         description: 'Generate and load test data for BDI benchmarks into an org'
         class_path: tasks.generate_bdi_data.GenerateBDIData
         options:
-            mapping_yaml: 'datasets/bdi_benchmark/mapping.yml'
+            mapping: 'datasets/bdi_benchmark/mapping.yml'
             num_records: 5000
             debug_db_path: /tmp/temp_db.db
+
+    test_data_bdi_CO:
+        description: 'Generate test data for BDI DO benchmarks into an org'
+        class_path: tasks.generate_bdi_CO_data.GenerateBDIData_CO
+        options:
+            mapping: 'datasets/bdi_benchmark/mapping-CO.yml'
+            num_records: 40
+            database_url: sqlite:////tmp/temp_db.db
+
 
     performance_tests:
         description: Runs Robot Framework performance tests
