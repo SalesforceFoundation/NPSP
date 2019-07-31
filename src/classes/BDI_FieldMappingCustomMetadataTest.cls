@@ -36,57 +36,57 @@
 */
 @isTest
 private class BDI_FieldMappingCustomMetadataTest {
-	/*******************************************************************************************************
-	* @description Tests that the BDI_FieldMappingCustomMetadata class can be instantiated correctly based on the custom setting value
-	*  and that it will return a string map for a core object when called (using the default set of field mappings).
-	*/
-	@isTest static void shouldReturnMapOfFieldsForCoreObject() {
+    /*******************************************************************************************************
+    * @description Tests that the BDI_FieldMappingCustomMetadata class can be instantiated correctly based on the custom setting value
+    *  and that it will return a string map for a core object when called (using the default set of field mappings).
+    */
+    @isTest static void shouldReturnMapOfFieldsForCoreObject() {
 
-		//Set the custom setting for Data import to use Data Import Field Mappings (eg Custom Metadata Type Mapping)
-		Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
-		dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
-		dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
-		UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+        //Set the custom setting for Data import to use Data Import Field Mappings (eg Custom Metadata Type Mapping)
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
-		//Retrieve a field mapping using the getDefaultFieldMapping method and confirm it is the custom metadata implementation
-		BDI_FieldMapping bdiFM= BDI_DataImportService.getDefaultFieldMapping();
-		String className = String.valueOf(bdiFM).split(':')[0];
-		System.assertEquals('BDI_FieldMappingCustomMetadata',className);
+        //Retrieve a field mapping using the getDefaultFieldMapping method and confirm it is the custom metadata implementation
+        BDI_FieldMapping bdiFM= BDI_DataImportService.getDefaultFieldMapping();
+        String className = String.valueOf(bdiFM).split(':')[0];
+        System.assertEquals('BDI_FieldMappingCustomMetadata',className);
 
-		//Instantiate and call the data import service with the field mapping specified
-		BDI_DataImportService bdiDis = new BDI_DataImportService(false, bdiFM);
-		Map<String,String> accountFieldMapping = bdiDis.mapDataImportFields('Account1','Account',BDI_DataImportService.listStrDataImportFields);
-		System.assertNotEquals(null,accountFieldMapping);
-		//Confirm that there are at least 8 records
-		System.assert(accountFieldMapping.size() >= 8);
+        //Instantiate and call the data import service with the field mapping specified
+        BDI_DataImportService bdiDis = new BDI_DataImportService(false, bdiFM);
+        Map<String,String> accountFieldMapping = bdiDis.mapDataImportFields('Account1','Account',BDI_DataImportService.listStrDataImportFields);
+        System.assertNotEquals(null,accountFieldMapping);
+        //Confirm that there are at least 8 records
+        System.assert(accountFieldMapping.size() >= 8);
 
-		String namespace = UTIL_Namespace.getNamespace();
-		String sampleField = 'npsp__Account1_City__c';
-		
-		if (namespace != 'npsp') {
-			sampleField = UTIL_Namespace.removeNSPrefixNpspOnly(sampleField);
-		}
-		//Sample one of the fields to convfirm it is mapped correctly.
-		System.assertEquals('BillingCity',accountFieldMapping.get(sampleField));
+        String namespace = UTIL_Namespace.getNamespace();
+        String sampleField = 'npsp__Account1_City__c';
+        
+        if (namespace != 'npsp') {
+            sampleField = UTIL_Namespace.removeNSPrefixNpspOnly(sampleField);
+        }
+        //Sample one of the fields to convfirm it is mapped correctly.
+        System.assertEquals('BillingCity',accountFieldMapping.get(sampleField));
 
-	}
+    }
 
-	/*******************************************************************************************************
-	* @description Tests that the UTIL_CustomSettingsFacade correctly sets the defaults for the Data Import Settings.
-	*/
-	@isTest static void shouldReturnCorrectDefaultsForDISCustSetting() {
-		//Confirm that the defaults for the fields are null.
-		Data_Import_Settings__c dis1 = Data_Import_Settings__c.getInstance();
-		System.assertEquals(null,dis1.Field_Mapping_Method__c);
-		System.assertEquals(null,dis1.Default_Data_Import_Field_Mapping_Set__c);
+    /*******************************************************************************************************
+    * @description Tests that the UTIL_CustomSettingsFacade correctly sets the defaults for the Data Import Settings.
+    */
+    @isTest static void shouldReturnCorrectDefaultsForDISCustSetting() {
+        //Confirm that the defaults for the fields are null.
+        Data_Import_Settings__c dis1 = Data_Import_Settings__c.getInstance();
+        System.assertEquals(null,dis1.Field_Mapping_Method__c);
+        System.assertEquals(null,dis1.Default_Data_Import_Field_Mapping_Set__c);
 
-		//Retreive the Data Import Settings and confirm that the defaults have been 
-		//set correctly for the two CMT mapping related fields
-		Data_Import_Settings__c dis2 = UTIL_CustomSettingsFacade.getDataImportSettings();
+        //Retreive the Data Import Settings and confirm that the defaults have been 
+        //set correctly for the two CMT mapping related fields
+        Data_Import_Settings__c dis2 = UTIL_CustomSettingsFacade.getDataImportSettings();
 
-		System.assertEquals(BDI_DataImportService.FM_HELP_TEXT,dis2.Field_Mapping_Method__c);
-		System.assertEquals(BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME,dis2.Default_Data_Import_Field_Mapping_Set__c);
+        System.assertEquals(BDI_DataImportService.FM_HELP_TEXT,dis2.Field_Mapping_Method__c);
+        System.assertEquals(BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME,dis2.Default_Data_Import_Field_Mapping_Set__c);
 
-	}
-	
+    }
+    
 }
