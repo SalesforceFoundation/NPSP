@@ -843,7 +843,7 @@ private class PMT_Payment_TEST {
      */
     @isTest
     private static void testOpportunityAmountSync() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = false, Enforce_Accounting_Data_Consistency__c = true));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
         Test.startTest();
@@ -853,6 +853,7 @@ private class PMT_Payment_TEST {
                 Amount = 100,
                 AccountID = acc.Id,
                 CloseDate = System.today(),
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
                 StageName = UTIL_UnitTestData_TEST.getOpenStage());
         insert opp;
 
@@ -885,7 +886,7 @@ private class PMT_Payment_TEST {
      */
     @isTest
     private static void testOpportunityAmountSyncClosedStage() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = false, Enforce_Accounting_Data_Consistency__c = true));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
         Test.startTest();
@@ -895,6 +896,7 @@ private class PMT_Payment_TEST {
                 Amount = 100,
                 AccountID = acc.Id,
                 CloseDate = System.today(),
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
 
