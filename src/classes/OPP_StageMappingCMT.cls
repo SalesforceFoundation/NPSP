@@ -123,8 +123,8 @@ public with sharing class OPP_StageMappingCMT {
         customMd.protected_x = false;
 
         Map<String, Object> fieldMapping = new Map<String, Object>();
-        fieldMapping.put(OPP_STAGE_FIELD, oppStage);
-        fieldMapping.put(OPP_STATE_FIELD, oppState);
+        fieldMapping.put(UTIL_Namespace.StrTokenNSPrefix(OPP_STAGE_FIELD), oppStage);
+        fieldMapping.put(UTIL_Namespace.StrTokenNSPrefix(OPP_STATE_FIELD), oppState);
 
         Metadata.CustomMetadata md = new Metadata.CustomMetadata();
         md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldMapping);
