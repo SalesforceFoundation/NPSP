@@ -1495,6 +1495,7 @@
         <members>bdiErrorBatchNameRequired</members>
         <members>bdiErrorDataImportCustomSettings</members>
         <members>bdiErrorDeploymentFailed</members>
+        <members>bdiErrorDeploymentFailedLink</members>
         <members>bdiErrorDonationLookupMatch</members>
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
@@ -1511,7 +1512,8 @@
         <members>bdiFMUIBackToMapGroup</members>
         <members>bdiFMUIDataType</members>
         <members>bdiFMUIDatatableMapsTo</members>
-        <members>bdiFMUIDescription</members>
+        <members>bdiFMUIDescription1</members>
+        <members>bdiFMUIDescription2</members>
         <members>bdiFMUIFieldAPIName</members>
         <members>bdiFMUIFieldLabel</members>
         <members>bdiFMUILongDeployment</members>
@@ -1521,9 +1523,13 @@
         <members>bdiFMUINoFieldMappings</members>
         <members>bdiFMUISearchSourceInputLabel</members>
         <members>bdiFMUISearchTargetInputLabel</members>
+        <members>bdiFMUISourceFieldDataTypeHelp</members>
+        <members>bdiFMUISourceFieldLabelHelp</members>
         <members>bdiFMUISourceObject</members>
         <members>bdiFMUISuccessful</members>
         <members>bdiFMUITarget</members>
+        <members>bdiFMUITargetFieldDataTypeHelp</members>
+        <members>bdiFMUITargetFieldLabelHelp</members>
         <members>bdiFMUITryAgain</members>
         <members>bdiFMUIUnsuccessful</members>
         <members>bdiFMUIUpdate</members>
@@ -1544,6 +1550,35 @@
         <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
+        <members>bdiOMUIChildParentHelp</members>
+        <members>bdiOMUIChildParentLabel</members>
+        <members>bdiOMUICreateModalTitle</members>
+        <members>bdiOMUICreateNewObjectGroup</members>
+        <members>bdiOMUIEditModalTitle</members>
+        <members>bdiOMUIErrorDupeName</members>
+        <members>bdiOMUIErrorInvalidValues</members>
+        <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
+        <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
+        <members>bdiOMUIErrorNoValidThroughThisField</members>
+        <members>bdiOMUIGroupNameHelp</members>
+        <members>bdiOMUIGroupNameLabel</members>
+        <members>bdiOMUIImportDetailsTitle</members>
+        <members>bdiOMUIImportStatusHelp</members>
+        <members>bdiOMUIImportStatusLabel</members>
+        <members>bdiOMUILinkToRecordHelp</members>
+        <members>bdiOMUILinkToRecordLabel</members>
+        <members>bdiOMUILongDeployment</members>
+        <members>bdiOMUIObjectGroupsTitle</members>
+        <members>bdiOMUIObjectNameHelp</members>
+        <members>bdiOMUIObjectNameLabel</members>
+        <members>bdiOMUIOfGroupHelp</members>
+        <members>bdiOMUIOfGroupLabel</members>
+        <members>bdiOMUIPageDescriptionPt1</members>
+        <members>bdiOMUIPageDescriptionPt2</members>
+        <members>bdiOMUIPageDescriptionPt3</members>
+        <members>bdiOMUIThroughFieldHelp</members>
+        <members>bdiOMUIThroughFieldLabel</members>
+        <members>bdiOMUIViewFieldMappingsLabel</members>
         <members>bdiPositiveNumber</members>
         <members>bdiRecordsFailed</members>
         <members>bdiRecordsImported</members>
@@ -1994,6 +2029,7 @@
         <members>stgDIFMNonAdminError</members>
         <members>stgDefaultValue</members>
         <members>stgDeploymentCustomMetadataMappingEnabled</members>
+        <members>stgDeploymentHasInvalidHelpTextMappings</members>
         <members>stgDeploymentHelpTextMappingEnabled</members>
         <members>stgDeploymentInProgress</members>
         <members>stgDeploymentTimedOut</members>
@@ -2620,13 +2656,6 @@
         <members>Opportunity_Naming_Settings__c-iw</members>
         <members>Opportunity_Naming_Settings__c-ja</members>
         <members>Opportunity_Naming_Settings__c-nl_NL</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-fr</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-iw</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
         <members>Package_Settings__c-de</members>
         <members>Package_Settings__c-en_US</members>
         <members>Package_Settings__c-es</members>
@@ -2677,6 +2706,13 @@
         <members>Filter_Rule__mdt-iw</members>
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-fr</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-iw</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
         <members>Rollup__mdt-de</members>
         <members>Rollup__mdt-en_US</members>
         <members>Rollup__mdt-es</members>

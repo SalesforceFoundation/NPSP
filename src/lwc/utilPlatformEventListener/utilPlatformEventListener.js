@@ -93,7 +93,7 @@ export default class PlatformEventListener extends LightningElement {
         }
 
         //Store the response, in case we were unable to verify the deploymentId yet
-        this._deploymentResponses.put(deploymentId, response);
+        this._deploymentResponses.set(deploymentId, response);
     }
 
     static onError(error) {
