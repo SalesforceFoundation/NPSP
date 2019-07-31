@@ -14,7 +14,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Account1.custom_acc_text__c</inlineHelpText>
         <label>custom_acc_text</label>
-        <length>10</length>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -195,5 +195,389 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>CO1_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>CO1_Number__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 Number</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CO1_Phone__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>CO1_Picklist__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 Picklist</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Option1</fullName>
+                    <default>false</default>
+                    <label>Option1</label>
+                </value>
+                <value>
+                    <fullName>Option2</fullName>
+                    <default>false</default>
+                    <label>Option2</label>
+                </value>
+                <value>
+                    <fullName>Option3</fullName>
+                    <default>false</default>
+                    <label>Option3</label>
+                </value>
+                <value>
+                    <fullName>Option4</fullName>
+                    <default>false</default>
+                    <label>Option4</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>CO1_Text__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 Text</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CO1_currency__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 currency</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>CO1_text2__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 text2</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CO1_textarea__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 textarea</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>CO1_url__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 url</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>CO1_Currency2__c</fullName>
+        <externalId>false</externalId>
+        <label>CO1 Currency2</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>CO3_Currency__c</fullName>
+        <externalId>false</externalId>
+        <label>CO3 Currency</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>CO3_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>CO3 Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>CO3_Number__c</fullName>
+        <externalId>false</externalId>
+        <label>CO3 Number</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CO3_Phone__c</fullName>
+        <externalId>false</externalId>
+        <label>CO3 Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>CO3_Picklist__c</fullName>
+        <externalId>false</externalId>
+        <label>CO3 Picklist</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Option1</fullName>
+                    <default>false</default>
+                    <label>Option1</label>
+                </value>
+                <value>
+                    <fullName>Option2</fullName>
+                    <default>false</default>
+                    <label>Option2</label>
+                </value>
+                <value>
+                    <fullName>Option3</fullName>
+                    <default>false</default>
+                    <label>Option3</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>CO3_Text__c</fullName>
+        <externalId>false</externalId>
+        <label>CO3 Text</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>WO_MinimumCrewSize__c</fullName>
+        <externalId>false</externalId>
+        <label>WO MinimumCrewSize</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>WO_RecommendedCrewSize__c</fullName>
+        <externalId>false</externalId>
+        <label>WO RecommendedCrewSize</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>WO_MaintenancePlan__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>WO MaintenancePlan</label>
+        <referenceTo>MaintenancePlan</referenceTo>
+        <relationshipLabel>Maintenance Plans</relationshipLabel>
+        <relationshipName>MaintenancePlans</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>WO_Subject__c</fullName>
+        <externalId>false</externalId>
+        <label>WO Subject</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>WO_SuggestedMaintenanceDate__c</fullName>
+        <externalId>false</externalId>
+        <label>WO SuggestedMaintenanceDate</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>WorkOrderImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>WorkOrderImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>WorkOrderImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>WorkOrderImported</label>
+        <referenceTo>WorkOrder</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>CustomObject1ImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>CustomObject1ImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CustomObject1Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>CustomObject1Imported</label>
+        <referenceTo>CustomObject1__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>CustomObject3ImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>CustomObject3ImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CustomObject3Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>CustomObject3Imported</label>
+        <referenceTo>CustomObject3__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ASC_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>ASC Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>ASC_Role__c</fullName>
+        <description>The role associated with this soft credit. The role describes how the Account was involved with the Opportunity.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The role associated with this soft credit. The role describes how the Account was involved with the Opportunity.</inlineHelpText>
+        <label>ASC Role</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Donation Source</fullName>
+                    <default>false</default>
+                    <label>Donation Source</label>
+                </value>
+                <value>
+                    <fullName>Influencer</fullName>
+                    <default>false</default>
+                    <label>Influencer</label>
+                </value>
+                <value>
+                    <fullName>Match</fullName>
+                    <default>false</default>
+                    <label>Match</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>AccountSoftCreditsImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>AccountSoftCreditsImportStatus</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AccountSoftCreditsImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>AccountSoftCreditsImported</label>
+        <referenceTo>Account_Soft_Credit__c</referenceTo>
+        <relationshipLabel>Account Soft Credits</relationshipLabel>
+        <relationshipName>Account_Soft_Credits</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Opp_Do_Not_Automatically_Create_Payment__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If payments are active, and if this is checked, a new payment will not be automatically created for this Opportunity.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If payments are active, and if checked, a new payment will not be automatically created for this Opportunity.</inlineHelpText>
+        <label>Opp Do Not Automatically Create Payment</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
     </fields>
 </CustomObject>
