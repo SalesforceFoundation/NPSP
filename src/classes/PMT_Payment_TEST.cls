@@ -880,8 +880,8 @@ private class PMT_Payment_TEST {
     }
 
     /**
-     * @description Check that the opportunity amount is updated when the payed payments amounts
-     * exceed the opportunity amount
+     * @description Check that the finalized opportunity amount is updated when the payed payments amounts
+     * are less than the opportunity amount
      */
     @isTest
     private static void testOpportunityAmountSyncClosedStage() {
