@@ -106,10 +106,10 @@ public class BDI_Donations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Opportunity Fields
     */
-    public static Map<String, String> dataImportFieldToOpportunityField {
+    public Map<String, String> dataImportFieldToOpportunityField {
         get {
             if (dataImportFieldToOpportunityField == null) {
-                dataImportFieldToOpportunityField = BDI_DataImportService.mapFieldsForDIObject(
+                dataImportFieldToOpportunityField = bdi.mapDataImportFields(
                     'Opportunity', 'Opportunity',
                     BDI_DataImportService.listStrDataImportFields
                 );
@@ -122,10 +122,10 @@ public class BDI_Donations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Payment Fields
     */
-    public static Map<String, String> dataImportFieldToPaymentField {
+    public Map<String, String> dataImportFieldToPaymentField {
         get {
             if (dataImportFieldToPaymentField == null) {
-                dataImportFieldToPaymentField = BDI_DataImportService.mapFieldsForDIObject(
+                dataImportFieldToPaymentField = bdi.mapDataImportFields(
                     'Payment', 'npe01__OppPayment__c',
                     BDI_DataImportService.listStrDataImportFields);
             }
@@ -146,7 +146,7 @@ public class BDI_Donations {
 
         // get the list of DI records that have donations to process
         List<DataImport__c> dataImportDonations = validateDonationsToProcess(matchBehavior);
-        
+
         // call the extension to match against existing donations
         if (matchBehavior != BDI_DataImport_API.DoNotMatch) {
             BDI_PerfLogger.PerfLog logger = BDI_DataImportService.perfLogger.newPerfLog('iMatchDonations.match');
@@ -161,41 +161,45 @@ public class BDI_Donations {
         List<DataImport__c> dataImportsToUpdate = new List<DataImport__c>();
 
         for (DataImport__c dataImport : dataImportDonations) {
-            if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
-                // park a new empty payment in the map if the user specified Apply New Payment
-                paymentsByDataImportId.put(
-                        dataImport.Id,
-                        new npe01__OppPayment__c(
-                                npe01__Opportunity__c = dataImport.DonationImported__c
-                        )
-                );
-                dataImport.PaymentImportStatus__c = Label.bdiCreated;
-            } else {
-                // validate against our desired matching behavior (exact match, best match, new, etc.)
-                if (!isValidMatchBehavior(dataImport, matchBehavior)) {
-                    continue;
-                }
-
-                // update the new or existing Opp with the DI's field data
-                Opportunity opp = prepareOppForUpdateInsert(dataImport);
-
-                // handle any error from the prepare
-                if (opp == null) {
-                    continue;
-                }
-
-                if (opp.Id == null) {
-                    opportunitiesToInsert.add(opp);
-                    dataImportsToInsert.add(dataImport);
+            try {
+                if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                    // park a new empty payment in the map if the user specified Apply New Payment
+                    paymentsByDataImportId.put(
+                            dataImport.Id,
+                            new npe01__OppPayment__c(
+                                    npe01__Opportunity__c = dataImport.DonationImported__c
+                            )
+                    );
+                    dataImport.PaymentImportStatus__c = Label.bdiCreated;
                 } else {
-                    opportunitiesToUpdate.add(opp);
-                    dataImportsToUpdate.add(dataImport);
-                }
+                    // validate against our desired matching behavior (exact match, best match, new, etc.)
+                    if (!isValidMatchBehavior(dataImport, matchBehavior)) {
+                        continue;
+                    }
 
-                // for some error handling detection tests
-                if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
-                    opp.Name = null;
+                    // update the new or existing Opp with the DI's field data
+                    Opportunity opp = prepareOppForUpdateInsert(dataImport);
+
+                    // handle any error from the prepare
+                    if (opp == null) {
+                        continue;
+                    }
+
+                    if (opp.Id == null) {
+                        opportunitiesToInsert.add(opp);
+                        dataImportsToInsert.add(dataImport);
+                    } else {
+                        opportunitiesToUpdate.add(opp);
+                        dataImportsToUpdate.add(dataImport);
+                    }
+
+                    // for some error handling detection tests
+                    if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
+                        opp.Name = null;
+                    }
                 }
+            } catch (Exception ex) {
+                bdi.LogBDIError(dataImport, ex.getMessage(), 'DonationImportStatus__c');
             }
         }
 
@@ -251,7 +255,7 @@ public class BDI_Donations {
     private List<DataImport__c> validateDonationsToProcess(String matchBehavior) {
         List<DataImport__c> dataImportDonations = new List<DataImport__c>();
         for (DataImport__c dataImport : bdi.listDI) {
-            
+
             // skip di's that already have an error
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                continue;
@@ -260,6 +264,14 @@ public class BDI_Donations {
             // skip di's that have an OppId or PaymentId, but we were told to do no matching.  in this case
             // they must have already been created for this di on a previous run, and we don't want to create another.
             if ((dataImport.DonationImported__c != null || dataImport.PaymentImported__c != null) && matchBehavior == BDI_DataImport_API.DoNotMatch) {
+                continue;
+            }
+
+            // If the donation was created or matched on a previous run, consider the
+            // donation validated for this Data Import record.
+            if (dataImport.DonationImported__c != null
+                    && (dataImport.DonationImportStatus__c == System.Label.bdiCreated
+                    || dataImport.DonationImportStatus__c == System.Label.bdiMatched)) {
                 continue;
             }
                 
@@ -464,7 +476,10 @@ public class BDI_Donations {
             if (dataImportField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
                 continue;
             }
-            BDI_DataImportService.isCopiedDIField(dataImport, dataImportField, opp, dataImportFieldToOpportunityField);
+            BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, 
+                    dataImportField, 
+                    opp, 
+                    dataImportFieldToOpportunityField);
         }
 
         // the Opp is ready!
@@ -626,7 +641,7 @@ public class BDI_Donations {
                 if (payment != null) {
                     Integer numberOfCopiedFields = 0;
                     for (String dataImportField : dataImportFieldToPaymentField.keySet()) {
-                        if (BDI_DataImportService.isCopiedDIField(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {
+                        if (BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {
                             numberOfCopiedFields++;
                         }
                     }
