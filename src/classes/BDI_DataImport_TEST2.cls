@@ -1384,7 +1384,8 @@ private with sharing class BDI_DataImport_TEST2 {
     *    nothing imported
     *    records marked with fls error
     **********************************************************************************************************/            
-    static testMethod void givenUserHasOnlyReadAccessWhenUsingHelpTextMapThenImportsShouldFail() {
+    @isTest
+    static void givenUserHasOnlyReadAccessWhenUsingHelpTextMapThenImportsShouldFail() {
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
@@ -1421,7 +1422,8 @@ private with sharing class BDI_DataImport_TEST2 {
         }
     }
 
-    static testMethod void givenUserHasOnlyReadAccessWhenUsingCMTMapThenImportsShouldFail() {
+    @isTest
+    static void givenUserHasOnlyReadAccessWhenUsingCMTMapThenImportsShouldFail() {
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));

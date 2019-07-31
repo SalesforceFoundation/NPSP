@@ -8,7 +8,7 @@
             <c:utilPlatformEventListener
                     channelName="/event/DeploymentEvent__e"
                     isShowToastEnabled="true"
-                    isConsoleLogEnabled="true"
+                    isConsoleLogEnabled="false"
                     aura:id="platformEventListener"/>
         </div>
     </div>
