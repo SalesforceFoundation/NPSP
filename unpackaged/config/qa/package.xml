@@ -10,9 +10,13 @@
         <members>Contact.custom_cont_num__c</members>
         <members>Contact.Previous_Level__c</members>
         <members>Contact.UniqueId__c</members>
+        <members>Contact.Work_Order__c</members>
         <members>Opportunity.UniqueId__c</members>
         <members>Opportunity.A_User_Defined_Rollup_Field__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.new_lookup_campaign__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.AccountSoftCreditsImported__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.AccountSoftCreditsImportStatus__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.ASC_Amount__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.ASC_Role__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.Custom_add_date__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.custom_acc_text__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.custom_cont_num__c</members>
@@ -25,7 +29,36 @@
         <members>%%%NAMESPACE%%%DataImport__c.custom_text__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.custom_textarea__c</members>
         <members>%%%NAMESPACE%%%DataImport__c.custom_url__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.new_lookup_campaign__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_Date__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_Number__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_Phone__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_Picklist__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_Text__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_currency__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_text2__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_textarea__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_url__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO1_Currency2__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO3_Currency__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO3_Date__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO3_Number__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO3_Phone__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO3_Picklist__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CO3_Text__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WO_MaintenancePlan__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WO_MinimumCrewSize__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WO_RecommendedCrewSize__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WO_Subject__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WO_SuggestedMaintenanceDate__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WorkOrderImportStatus__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.WorkOrderImported__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CustomObject1ImportStatus__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CustomObject1Imported__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CustomObject3ImportStatus__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.CustomObject3Imported__c</members>                
         <members>%%%NAMESPACE%%%DataImport__c.custom_picklist__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.Opp_Do_Not_Automatically_Create_Payment__c</members>
         <members>Opportunity.custom_currency__c</members>
         <members>Opportunity.custom_date__c</members>
         <members>Opportunity.custom_lookup__c</members>
@@ -33,21 +66,25 @@
         <members>Opportunity.custom_picklist__c</members>
         <members>Opportunity.custom_text__c</members>
         <members>Opportunity.custom_textarea__c</members>
+        <members>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</members>
         <members>npe01__OppPayment__c.custom_email__c</members>
         <members>npe01__OppPayment__c.custom_multipick__c</members>
         <members>npe01__OppPayment__c.custom_phone__c</members>
         <members>npe01__OppPayment__c.custom_url__c</members>
+        <members>npe01__OppPayment__c.CustomObject3__c</members>
         <name>CustomField</name>
     </types>
     <types>
         <members>Account</members>
         <members>Contact</members>
         <members>Opportunity</members>
+        <members>CustomObject1__c</members>
+        <members>CustomObject3__c</members>
         <name>CustomObject</name>
     </types>
     <types>
         <members>Contact-Contact Lightning Layout</members>
         <name>Layout</name>
     </types>
-    <version>40.0</version>
+    <version>43.0</version>
 </Package>
