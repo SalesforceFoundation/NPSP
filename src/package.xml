@@ -58,7 +58,7 @@
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_AdditionalObjectService</members>
-        <members>BDI_AdditionalObjectServiceTest</members>
+        <members>BDI_AdditionalObjectService_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
@@ -84,17 +84,17 @@
         <members>BDI_DryRun_TEST</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingCustomMetadata</members>
-        <members>BDI_FieldMappingCustomMetadataTest</members>
+        <members>BDI_FieldMappingCustomMetadata_TEST</members>
         <members>BDI_FieldMappingHelpText</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
-        <members>BDI_ManageAdvancedMappingCtrlTest</members>
+        <members>BDI_ManageAdvancedMappingCtrl_TEST</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_MigrationMappingHelper</members>
-        <members>BDI_MigrationMappingHelperTest</members>
+        <members>BDI_MigrationMappingHelper_TEST</members>
         <members>BDI_MigrationMappingUtility</members>
-        <members>BDI_MigrationMappingUtilityTest</members>
+        <members>BDI_MigrationMappingUtility_TEST</members>
         <members>BDI_ObjectMappingLogic</members>
         <members>BDI_ObjectWrapper</members>
         <members>BDI_PerfLogger</members>
@@ -2691,6 +2691,34 @@
         <members>Trigger_Handler__c-iw</members>
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-de</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-en_US</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-es</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-fr</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-iw</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-ja</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-nl_NL</members>
+        <members>Data_Import_Field_Mapping__mdt-de</members>
+        <members>Data_Import_Field_Mapping__mdt-en_US</members>
+        <members>Data_Import_Field_Mapping__mdt-es</members>
+        <members>Data_Import_Field_Mapping__mdt-fr</members>
+        <members>Data_Import_Field_Mapping__mdt-iw</members>
+        <members>Data_Import_Field_Mapping__mdt-ja</members>
+        <members>Data_Import_Field_Mapping__mdt-nl_NL</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-de</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-en_US</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-es</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-fr</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-iw</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-ja</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-nl_NL</members>
+        <members>Data_Import_Object_Mapping__mdt-de</members>
+        <members>Data_Import_Object_Mapping__mdt-en_US</members>
+        <members>Data_Import_Object_Mapping__mdt-es</members>
+        <members>Data_Import_Object_Mapping__mdt-fr</members>
+        <members>Data_Import_Object_Mapping__mdt-iw</members>
+        <members>Data_Import_Object_Mapping__mdt-ja</members>
+        <members>Data_Import_Object_Mapping__mdt-nl_NL</members>
         <members>DeploymentEvent__e-en_US</members>
         <members>Filter_Group__mdt-de</members>
         <members>Filter_Group__mdt-en_US</members>

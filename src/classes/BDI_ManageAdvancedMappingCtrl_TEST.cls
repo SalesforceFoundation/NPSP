@@ -36,7 +36,7 @@
 */
 
 @IsTest
-private class BDI_ManageAdvancedMappingCtrlTest {
+private class BDI_ManageAdvancedMappingCtrl_TEST {
 
     /*******************************************************************************************************
     * @description Initialize test custom settings record

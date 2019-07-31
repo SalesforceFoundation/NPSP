@@ -36,7 +36,7 @@
 */
 
 @isTest(isParallel=true)
-private class BDI_AdditionalObjectServiceTest {
+private class BDI_AdditionalObjectService_TEST {
 
     @testSetup
     static void setupTestData() {

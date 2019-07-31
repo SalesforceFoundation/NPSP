@@ -36,7 +36,7 @@
 */
 
 @IsTest
-private class BDI_MigrationMappingUtilityTest {
+private class BDI_MigrationMappingUtility_TEST {
 
     /*******************************************************************************************************
     * @description Test that the migration utility will only create and enqueue usable help text mappings
