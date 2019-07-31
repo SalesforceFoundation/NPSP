@@ -57,9 +57,12 @@
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
+        <members>BDI_AdditionalObjectService</members>
+        <members>BDI_AdditionalObjectService_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
+        <members>BDI_CustObjMappingGAUAllocation</members>
         <members>BDI_DataImportAPI_TEST</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
@@ -67,6 +70,8 @@
         <members>BDI_DataImportCTRL_TEST</members>
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
+        <members>BDI_DataImportFLSService</members>
+        <members>BDI_DataImportFLSService_TEST</members>
         <members>BDI_DataImportService</members>
         <members>BDI_DataImportService_TEST</members>
         <members>BDI_DataImport_API</members>
@@ -77,14 +82,27 @@
         <members>BDI_Donations</members>
         <members>BDI_Donations_TEST</members>
         <members>BDI_DryRun_TEST</members>
+        <members>BDI_FieldMapping</members>
+        <members>BDI_FieldMappingCustomMetadata</members>
+        <members>BDI_FieldMappingCustomMetadata_TEST</members>
+        <members>BDI_FieldMappingHelpText</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
+        <members>BDI_ManageAdvancedMappingCtrl</members>
+        <members>BDI_ManageAdvancedMappingCtrl_TEST</members>
         <members>BDI_MatchDonations</members>
+        <members>BDI_MigrationMappingHelper</members>
+        <members>BDI_MigrationMappingHelper_TEST</members>
+        <members>BDI_MigrationMappingUtility</members>
+        <members>BDI_MigrationMappingUtility_TEST</members>
+        <members>BDI_ObjectMappingLogic</members>
+        <members>BDI_ObjectWrapper</members>
         <members>BDI_PerfLogger</members>
         <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BDI_TargetFields</members>
         <members>BGE_BatchGiftEntryTab_CTRL</members>
         <members>BGE_BatchGiftEntryTab_CTRL_TEST</members>
         <members>BGE_BatchGiftEntry_UTIL</members>
@@ -364,6 +382,7 @@
         <members>STG_PanelContacts_CTRL</members>
         <members>STG_PanelCreatePayments_CTRL</members>
         <members>STG_PanelCustomizableRollup_CTRL</members>
+        <members>STG_PanelDataImportAdvancedMapping_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
@@ -553,6 +572,7 @@
         <members>STG_PanelContacts</members>
         <members>STG_PanelCreatePayments</members>
         <members>STG_PanelCustomizableRollup</members>
+        <members>STG_PanelDataImportAdvancedMapping</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
         <members>STG_PanelHealthCheck</members>
@@ -610,6 +630,7 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>BDI_ManageAdvancedMapping</members>
         <members>BGE_BatchGiftEntryTab</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
@@ -895,6 +916,16 @@
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
         <members>DataImport__c.FailureInformation__c</members>
+        <members>DataImport__c.GAU_Allocation_1_Amount__c</members>
+        <members>DataImport__c.GAU_Allocation_1_GAU__c</members>
+        <members>DataImport__c.GAU_Allocation_1_Import_Status__c</members>
+        <members>DataImport__c.GAU_Allocation_1_Imported__c</members>
+        <members>DataImport__c.GAU_Allocation_1_Percent__c</members>
+        <members>DataImport__c.GAU_Allocation_2_Amount__c</members>
+        <members>DataImport__c.GAU_Allocation_2_GAU__c</members>
+        <members>DataImport__c.GAU_Allocation_2_Import_Status__c</members>
+        <members>DataImport__c.GAU_Allocation_2_Imported__c</members>
+        <members>DataImport__c.GAU_Allocation_2_Percent__c</members>
         <members>DataImport__c.HomeAddressImportStatus__c</members>
         <members>DataImport__c.HomeAddressImported__c</members>
         <members>DataImport__c.Home_City__c</members>
@@ -906,6 +937,12 @@
         <members>DataImport__c.Household_Phone__c</members>
         <members>DataImport__c.ImportedDate__c</members>
         <members>DataImport__c.NPSP_Data_Import_Batch__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_1_ImportStatus__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_1_Imported__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_1_Role__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_2_ImportStatus__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_2_Imported__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
@@ -915,12 +952,16 @@
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Batch_Size__c</members>
+        <members>Data_Import_Settings__c.CMT_API_Status__c</members>
+        <members>Data_Import_Settings__c.CMT_Deployment_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+        <members>Data_Import_Settings__c.Default_Data_Import_Field_Mapping_Set__c</members>
         <members>Data_Import_Settings__c.Donation_Date_Range__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Behavior__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Rule__c</members>
+        <members>Data_Import_Settings__c.Field_Mapping_Method__c</members>
         <members>Data_Import_Settings__c.Post_Process_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Run_Opportunity_Rollups_while_Processing__c</members>
         <members>Engagement_Plan_Task__c.Assigned_To__c</members>
@@ -1077,6 +1118,26 @@
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
         <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
+        <members>Data_Import_Field_Mapping_Set__mdt.Data_Import_Object_Mapping_Set__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Is_Deleted__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Required__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Custom_Mapping_Logic_Class__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Data_Import_Object_Mapping_Set__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Is_Deleted__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Legacy_Data_Import_Object_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Object_API_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Relationship_To_Predecessor__c</members>
+        <members>DeploymentEvent__e.CompletedDate__c</members>
+        <members>DeploymentEvent__e.DeploymentId__c</members>
+        <members>DeploymentEvent__e.Status__c</members>
         <members>Filter_Group__mdt.Description__c</members>
         <members>Filter_Group__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Constant__c</members>
@@ -1386,6 +1447,10 @@
         <members>alloTotals</members>
         <members>alloUnallocated</members>
         <members>bdiAccountCustomIdError</members>
+        <members>bdiAdditionalObjChildNotUpdated</members>
+        <members>bdiAdditionalObjPredNotFound</members>
+        <members>bdiAdditionalObjRequiredFieldsNull</members>
+        <members>bdiAdvancedMapping</members>
         <members>bdiBatchException</members>
         <members>bdiBehaviorBestMatchOrCreate</members>
         <members>bdiBehaviorDoNotMatch</members>
@@ -1414,6 +1479,7 @@
         <members>bdiDataImporterInfoTitle</members>
         <members>bdiDataImporterNumToProcess</members>
         <members>bdiDataImporterTitle</members>
+        <members>bdiDeploymentInProgress</members>
         <members>bdiDonation</members>
         <members>bdiDonationMatchingRuleEmpty</members>
         <members>bdiDryRunBeginButton</members>
@@ -1425,6 +1491,9 @@
         <members>bdiDryRunRecordsValidated</members>
         <members>bdiDryRunTitle</members>
         <members>bdiErrorBatchNameRequired</members>
+        <members>bdiErrorDataImportCustomSettings</members>
+        <members>bdiErrorDeploymentFailed</members>
+        <members>bdiErrorDeploymentFailedLink</members>
         <members>bdiErrorDonationLookupMatch</members>
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
@@ -1438,7 +1507,33 @@
         <members>bdiErrorNonHHAccountContactWithAdv</members>
         <members>bdiErrorOneToOneMultiContact</members>
         <members>bdiErrorPaymentMultiMatch</members>
+        <members>bdiFMUIBackToMapGroup</members>
+        <members>bdiFMUIDataType</members>
+        <members>bdiFMUIDatatableMapsTo</members>
+        <members>bdiFMUIDescription1</members>
+        <members>bdiFMUIDescription2</members>
+        <members>bdiFMUIFieldAPIName</members>
+        <members>bdiFMUIFieldLabel</members>
+        <members>bdiFMUILongDeployment</members>
+        <members>bdiFMUILongDeploymentLink</members>
+        <members>bdiFMUILongDeploymentMessage</members>
+        <members>bdiFMUINewFieldMapping</members>
+        <members>bdiFMUINoFieldMappings</members>
+        <members>bdiFMUISearchSourceInputLabel</members>
+        <members>bdiFMUISearchTargetInputLabel</members>
+        <members>bdiFMUISourceFieldDataTypeHelp</members>
+        <members>bdiFMUISourceFieldLabelHelp</members>
+        <members>bdiFMUISourceObject</members>
+        <members>bdiFMUISuccessful</members>
+        <members>bdiFMUITarget</members>
+        <members>bdiFMUITargetFieldDataTypeHelp</members>
+        <members>bdiFMUITargetFieldLabelHelp</members>
+        <members>bdiFMUITryAgain</members>
+        <members>bdiFMUIUnsuccessful</members>
+        <members>bdiFMUIUpdate</members>
         <members>bdiFailed</members>
+        <members>bdiFieldMapping</members>
+        <members>bdiFieldMappings</members>
         <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>
         <members>bdiImported</members>
@@ -1453,6 +1548,35 @@
         <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
+        <members>bdiOMUIChildParentHelp</members>
+        <members>bdiOMUIChildParentLabel</members>
+        <members>bdiOMUICreateModalTitle</members>
+        <members>bdiOMUICreateNewObjectGroup</members>
+        <members>bdiOMUIEditModalTitle</members>
+        <members>bdiOMUIErrorDupeName</members>
+        <members>bdiOMUIErrorInvalidValues</members>
+        <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
+        <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
+        <members>bdiOMUIErrorNoValidThroughThisField</members>
+        <members>bdiOMUIGroupNameHelp</members>
+        <members>bdiOMUIGroupNameLabel</members>
+        <members>bdiOMUIImportDetailsTitle</members>
+        <members>bdiOMUIImportStatusHelp</members>
+        <members>bdiOMUIImportStatusLabel</members>
+        <members>bdiOMUILinkToRecordHelp</members>
+        <members>bdiOMUILinkToRecordLabel</members>
+        <members>bdiOMUILongDeployment</members>
+        <members>bdiOMUIObjectGroupsTitle</members>
+        <members>bdiOMUIObjectNameHelp</members>
+        <members>bdiOMUIObjectNameLabel</members>
+        <members>bdiOMUIOfGroupHelp</members>
+        <members>bdiOMUIOfGroupLabel</members>
+        <members>bdiOMUIPageDescriptionPt1</members>
+        <members>bdiOMUIPageDescriptionPt2</members>
+        <members>bdiOMUIPageDescriptionPt3</members>
+        <members>bdiOMUIThroughFieldHelp</members>
+        <members>bdiOMUIThroughFieldLabel</members>
+        <members>bdiOMUIViewFieldMappingsLabel</members>
         <members>bdiPositiveNumber</members>
         <members>bdiRecordsFailed</members>
         <members>bdiRecordsImported</members>
@@ -1465,6 +1589,7 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>bdiUpdated</members>
         <members>bgeActionDelete</members>
         <members>bgeActionView</members>
         <members>bgeBatchAvailableFields</members>
@@ -1553,6 +1678,7 @@
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
         <members>flsError</members>
+        <members>flsReadAccessError</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
@@ -1860,6 +1986,7 @@
         <members>stgAddrMustChooseClass</members>
         <members>stgAddrPermissionDenied</members>
         <members>stgAllocationLevel</members>
+        <members>stgBDIGoToSetup</members>
         <members>stgBtnBack</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
@@ -1872,6 +1999,7 @@
         <members>stgBtnCreateUDR</members>
         <members>stgBtnEdit</members>
         <members>stgBtnHHAutoName</members>
+        <members>stgBtnNew</members>
         <members>stgBtnNewAutoRel</members>
         <members>stgBtnNewONS</members>
         <members>stgBtnNewPaymentMap</members>
@@ -1896,8 +2024,13 @@
         <members>stgClearErrors</members>
         <members>stgCountOf</members>
         <members>stgCreatedBy</members>
+        <members>stgDIFMNonAdminError</members>
         <members>stgDefaultValue</members>
+        <members>stgDeploymentCustomMetadataMappingEnabled</members>
+        <members>stgDeploymentHasInvalidHelpTextMappings</members>
+        <members>stgDeploymentHelpTextMappingEnabled</members>
         <members>stgDeploymentInProgress</members>
+        <members>stgDeploymentTimedOut</members>
         <members>stgDeploymentTryAgain</members>
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>
@@ -1906,6 +2039,13 @@
         <members>stgErrorInvalidNameFormat</members>
         <members>stgHHNameRefreshTitle</members>
         <members>stgHelpAccountModel</members>
+        <members>stgHelpAdvancedMapping1</members>
+        <members>stgHelpAdvancedMapping2</members>
+        <members>stgHelpAdvancedMapping3</members>
+        <members>stgHelpAdvancedMapping4</members>
+        <members>stgHelpAdvancedMappingInvalidHelpText</members>
+        <members>stgHelpAdvancedMappingTableHeader1</members>
+        <members>stgHelpAdvancedMappingTableHeader2</members>
         <members>stgHelpAlloFiscalYearRollups</members>
         <members>stgHelpAlloNDayValue</members>
         <members>stgHelpAllocationLevel</members>
@@ -2181,6 +2321,100 @@
         <name>CustomLabels</name>
     </types>
     <types>
+        <members>Data_Import_Field_Mapping.Account_1_City</members>
+        <members>Data_Import_Field_Mapping.Account_1_Country</members>
+        <members>Data_Import_Field_Mapping.Account_1_Name</members>
+        <members>Data_Import_Field_Mapping.Account_1_Phone</members>
+        <members>Data_Import_Field_Mapping.Account_1_State_Province</members>
+        <members>Data_Import_Field_Mapping.Account_1_Street</members>
+        <members>Data_Import_Field_Mapping.Account_1_Website</members>
+        <members>Data_Import_Field_Mapping.Account_1_Zip_Postal_Code</members>
+        <members>Data_Import_Field_Mapping.Account_2_City</members>
+        <members>Data_Import_Field_Mapping.Account_2_Country</members>
+        <members>Data_Import_Field_Mapping.Account_2_Name</members>
+        <members>Data_Import_Field_Mapping.Account_2_Phone</members>
+        <members>Data_Import_Field_Mapping.Account_2_State_Province</members>
+        <members>Data_Import_Field_Mapping.Account_2_Street</members>
+        <members>Data_Import_Field_Mapping.Account_2_Website</members>
+        <members>Data_Import_Field_Mapping.Account_2_Zip_Postal_Code</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Alternate_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Birthdate</members>
+        <members>Data_Import_Field_Mapping.Contact_1_First_Name</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Home_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Last_Name</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Mobile_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Other_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Personal_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Preferred_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Preferred_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Salutation</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Title</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Work_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Work_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Alternate_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Birthdate</members>
+        <members>Data_Import_Field_Mapping.Contact_2_First_Name</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Home_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Last_Name</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Mobile_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Other_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Personal_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Preferred_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Preferred_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Salutation</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Title</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Work_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Work_Phone</members>
+        <members>Data_Import_Field_Mapping.Donation_Amount</members>
+        <members>Data_Import_Field_Mapping.Donation_Date</members>
+        <members>Data_Import_Field_Mapping.Donation_Description</members>
+        <members>Data_Import_Field_Mapping.Donation_Member_Level</members>
+        <members>Data_Import_Field_Mapping.Donation_Membership_End_Date</members>
+        <members>Data_Import_Field_Mapping.Donation_Membership_Origin</members>
+        <members>Data_Import_Field_Mapping.Donation_Membership_Start_Date</members>
+        <members>Data_Import_Field_Mapping.Donation_Name</members>
+        <members>Data_Import_Field_Mapping.Donation_Record_Type_Name</members>
+        <members>Data_Import_Field_Mapping.Donation_Stage</members>
+        <members>Data_Import_Field_Mapping.Donation_Type</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Amount</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_GAU</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Opportunity</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Payment</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Amount</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_GAU</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Opportunity</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Payment</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Percent</members>
+        <members>Data_Import_Field_Mapping.Home_City</members>
+        <members>Data_Import_Field_Mapping.Home_Country</members>
+        <members>Data_Import_Field_Mapping.Home_State_Province</members>
+        <members>Data_Import_Field_Mapping.Home_Street</members>
+        <members>Data_Import_Field_Mapping.Home_Zip_Postal_Code</members>
+        <members>Data_Import_Field_Mapping.Household_Phone</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Contact</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Role</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Contact</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Role</members>
+        <members>Data_Import_Field_Mapping.Payment_Check_Reference_Number</members>
+        <members>Data_Import_Field_Mapping.Payment_Method</members>
+        <members>Data_Import_Field_Mapping_Set.Default_Field_Mapping_Set</members>
+        <members>Data_Import_Object_Mapping.Account1</members>
+        <members>Data_Import_Object_Mapping.Account2</members>
+        <members>Data_Import_Object_Mapping.Address</members>
+        <members>Data_Import_Object_Mapping.Contact1</members>
+        <members>Data_Import_Object_Mapping.Contact2</members>
+        <members>Data_Import_Object_Mapping.GAU_Allocation_1</members>
+        <members>Data_Import_Object_Mapping.GAU_Allocation_2</members>
+        <members>Data_Import_Object_Mapping.Household</members>
+        <members>Data_Import_Object_Mapping.Opportunity</members>
+        <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_1</members>
+        <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_2</members>
+        <members>Data_Import_Object_Mapping.Payment</members>
+        <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
         <members>Account_Soft_Credit__c</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
@@ -2210,6 +2444,11 @@
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
+        <members>Data_Import_Field_Mapping_Set__mdt</members>
+        <members>Data_Import_Field_Mapping__mdt</members>
+        <members>Data_Import_Object_Mapping_Set__mdt</members>
+        <members>Data_Import_Object_Mapping__mdt</members>
+        <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt</members>
@@ -2415,13 +2654,6 @@
         <members>Opportunity_Naming_Settings__c-iw</members>
         <members>Opportunity_Naming_Settings__c-ja</members>
         <members>Opportunity_Naming_Settings__c-nl_NL</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-fr</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-iw</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
-        <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
         <members>Package_Settings__c-de</members>
         <members>Package_Settings__c-en_US</members>
         <members>Package_Settings__c-es</members>
@@ -2457,6 +2689,35 @@
         <members>Trigger_Handler__c-iw</members>
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-de</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-en_US</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-es</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-fr</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-iw</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-ja</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-nl_NL</members>
+        <members>Data_Import_Field_Mapping__mdt-de</members>
+        <members>Data_Import_Field_Mapping__mdt-en_US</members>
+        <members>Data_Import_Field_Mapping__mdt-es</members>
+        <members>Data_Import_Field_Mapping__mdt-fr</members>
+        <members>Data_Import_Field_Mapping__mdt-iw</members>
+        <members>Data_Import_Field_Mapping__mdt-ja</members>
+        <members>Data_Import_Field_Mapping__mdt-nl_NL</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-de</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-en_US</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-es</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-fr</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-iw</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-ja</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-nl_NL</members>
+        <members>Data_Import_Object_Mapping__mdt-de</members>
+        <members>Data_Import_Object_Mapping__mdt-en_US</members>
+        <members>Data_Import_Object_Mapping__mdt-es</members>
+        <members>Data_Import_Object_Mapping__mdt-fr</members>
+        <members>Data_Import_Object_Mapping__mdt-iw</members>
+        <members>Data_Import_Object_Mapping__mdt-ja</members>
+        <members>Data_Import_Object_Mapping__mdt-nl_NL</members>
+        <members>DeploymentEvent__e-en_US</members>
         <members>Filter_Group__mdt-de</members>
         <members>Filter_Group__mdt-en_US</members>
         <members>Filter_Group__mdt-es</members>
@@ -2471,6 +2732,13 @@
         <members>Filter_Rule__mdt-iw</members>
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-fr</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-iw</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
         <members>Rollup__mdt-de</members>
         <members>Rollup__mdt-en_US</members>
         <members>Rollup__mdt-es</members>
@@ -2566,6 +2834,7 @@
         <members>HasUserManagedTDTM</members>
         <members>IsEnabled_AddressVerification</members>
         <members>IsEnabled_AutomaticPayments</members>
+        <members>IsEnabled_BDICMT</members>
         <members>IsEnabled_CustomizableRollups</members>
         <members>IsEnabled_DefaultGAU</members>
         <members>IsEnabled_HouseholdAcctModel</members>
@@ -2638,6 +2907,10 @@
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-Data Import Field Mapping Set Layout</members>
+        <members>Data_Import_Field_Mapping__mdt-Data Import Field Mapping Layout</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-Data Import Object Mapping Set Layout</members>
+        <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
@@ -2647,6 +2920,17 @@
     <types>
         <members>NPSP_Sample_Letterhead</members>
         <name>Letterhead</name>
+    </types>
+    <types>
+        <members>bdiFieldMappingModal</members>
+        <members>bdiFieldMappings</members>
+        <members>bdiObjectMappingModal</members>
+        <members>bdiObjectMappings</members>
+        <members>pubsubNoPageRef</members>
+        <members>utilPlatformEventListener</members>
+        <members>utilSearchableCombobox</members>
+        <members>utilStencil</members>
+        <name>LightningComponentBundle</name>
     </types>
     <types>
         <members>Batch__c.All</members>
@@ -2775,5 +3059,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>43.0</version>
+    <version>46.0</version>
 </Package>
