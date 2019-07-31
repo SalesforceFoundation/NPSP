@@ -2717,7 +2717,13 @@
         <members>Data_Import_Object_Mapping__mdt-iw</members>
         <members>Data_Import_Object_Mapping__mdt-ja</members>
         <members>Data_Import_Object_Mapping__mdt-nl_NL</members>
+        <members>DeploymentEvent__e-de</members>
         <members>DeploymentEvent__e-en_US</members>
+        <members>DeploymentEvent__e-es</members>
+        <members>DeploymentEvent__e-fr</members>
+        <members>DeploymentEvent__e-iw</members>
+        <members>DeploymentEvent__e-ja</members>
+        <members>DeploymentEvent__e-nl_NL</members>
         <members>Filter_Group__mdt-de</members>
         <members>Filter_Group__mdt-en_US</members>
         <members>Filter_Group__mdt-es</members>
