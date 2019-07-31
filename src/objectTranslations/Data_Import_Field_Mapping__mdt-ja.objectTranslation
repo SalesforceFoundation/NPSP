@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Data Import Field Mapping --></value>
+    </caseValues>
+    <fields>
+        <help><!-- The Data Import Field Mapping Set containing this field mapping. --></help>
+        <label><!-- Data Import Field Mapping Set --></label>
+        <name>Data_Import_Field_Mapping_Set__c</name>
+        <relationshipLabel><!-- Data Import Field Mappings --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing. --></help>
+        <label><!-- Is Deleted --></label>
+        <name>Is_Deleted__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates if the field on the NPSP Data Import object must contain a value. When it&apos;s required, Dry Run will fail if that field doesn&apos;t contain a value. --></help>
+        <label><!-- Required? --></label>
+        <name>Required__c</name>
+        <picklistValues>
+            <masterLabel>No</masterLabel>
+            <translation><!-- No --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yes</masterLabel>
+            <translation><!-- Yes --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The API name of the field on the NPSP Data Import object. --></help>
+        <label><!-- Source Field API Name --></label>
+        <name>Source_Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API name of the field on the target object. --></help>
+        <label><!-- Target Field API Name --></label>
+        <name>Target_Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- The target Data Import Object Group for this field mapping. --></help>
+        <label><!-- Target Object Mapping --></label>
+        <name>Target_Object_Mapping__c</name>
+        <relationshipLabel><!-- Data Import Field Mappings --></relationshipLabel>
+    </fields>
+    <layouts>
+        <layout>Data Import Field Mapping Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>
