@@ -160,7 +160,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper);
 
         //Prevent user modify Opp Amount
-        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && isEnforceAccountingDataConsistency) {
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate && isEnforceAccountingDataConsistency) {
             Set<Id> oppIds = (new Map<Id, Opportunity>(newList)).keySet();
 
             Map<Id, Opportunity> oppsById = getPaymentOpportunities(oppIds);
@@ -169,9 +169,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
                 Decimal totalPaid = 0;
 
                 for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
-                    if (pmt.npe01__Paid__c) {
-                        totalPaid += pmt.npe01__Payment_Amount__c == null ? 0 : pmt.npe01__Payment_Amount__c;
-                    }
+                    totalPaid += (pmt.npe01__Paid__c && pmt.npe01__Payment_Amount__c != null) ? pmt.npe01__Payment_Amount__c : 0;
                 }
 
                 if (OPP_StageMappingUtil.isOpportunityFinalized(opp) && mapIdOppNew.get(opp.Id).Amount != totalPaid) {
