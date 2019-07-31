@@ -74,7 +74,7 @@ public class BDI_DataImportFLSService {
         return qualifiedInvalidFieldNames;
     }
 
-    void validateTargetMappingFieldLevelSecurity(List<DataImport__c> dataImportsInitial) {
+    private void validateTargetMappingFieldLevelSecurity(List<DataImport__c> dataImportsInitial) {
         for (DataImport__c dataImport : dataImportsInitial) { //Loop DIs
             String sourceObjectName = DataImport__c.SObjectType.getDescribe().getName();
 
@@ -132,7 +132,7 @@ public class BDI_DataImportFLSService {
         }//END loop of Data Import records
     }
 
-    Boolean isValid(SObjectField field) {
+    private Boolean isValid(SObjectField field) {
         if ((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
                 && !field.getDescribe().isCreateable())
                 ||
@@ -147,7 +147,7 @@ public class BDI_DataImportFLSService {
         }
     }
 
-    class SObjectFieldWrapper {
+    private class SObjectFieldWrapper {
 
         SObjectType sObjType;
         SObjectField field;
