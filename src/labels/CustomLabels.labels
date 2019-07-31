@@ -2204,7 +2204,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiDeploymentInProgress</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiDeploymentInProgress</shortDescription>
         <value>Help Text mappings are currently being converted to Advanced Mapping.</value>
     </labels>
@@ -2490,7 +2490,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUISourceFieldLabelHelp</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUISourceFieldLabelHelp</shortDescription>
         <value>The NPSP Data Import field you want to map. Search by either Field Label or API Name. If you can’t find the field, confirm you created the field on the NPSP Data Import object.</value>
     </labels>
@@ -2498,7 +2498,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUISourceFieldDataTypeHelp</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUISourceFieldDataTypeHelp</shortDescription>
         <value>The data type of the field you chose on the NPSP Data Import object.</value>
     </labels>
@@ -2514,7 +2514,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bdiFMUITargetFieldDataTypeHelp</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>bdiFMUITargetFieldDataTypeHelp</shortDescription>
         <value>The data type of the field you chose on the target object.</value>
     </labels>
@@ -6563,7 +6563,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgDeploymentCustomMetadataMappingEnabled</shortDescription>
-        <value>Custom Metadata mapping is enabled.</value>
+        <value>Advanced Mapping is enabled.</value>
     </labels>
     <labels>
         <fullName>stgDeploymentHasInvalidHelpTextMappings</fullName>
