@@ -1223,6 +1223,22 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Unable to remove the duplicate primary OCRs from the Opportunity {0}. Review the Contact Roles on the Opportunity record, choose which is the correct one, and delete the others.</value>
     </labels>
     <labels>
+        <fullName>Opp_Amount_Is_Less_Error</fullName>
+        <categories>OppAmountSync</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Opp_Amount_Is_Less_Error</shortDescription>
+        <value>You are not allowed to lower the Opportunity Amount to less than total Paid Payment Amount.</value>
+    </labels>
+    <labels>
+        <fullName>Opp_Amount_Not_Equal_Error</fullName>
+        <categories>OppAmountSync</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Opp_Amount_Not_Equal_Error</shortDescription>
+        <value>The Opportunity Amount must be equal to total paid Payment Amount.</value>
+    </labels>
+    <labels>
         <fullName>OrganizationalOpportunities</fullName>
         <categories>Error</categories>
         <language>en_US</language>
