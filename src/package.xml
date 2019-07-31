@@ -539,7 +539,6 @@
         <members>BDI_BatchOverride</members>
         <members>BDI_DataImport</members>
         <members>BDI_DataImportDeleteBTN</members>
-        <members>BDI_ManageAdvancedMapping</members>
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
@@ -632,7 +631,6 @@
     </types>
     <types>
         <members>BDI_ManageAdvancedMapping</members>
-        <members>BDI_ManageAdvancedMappingContainer</members>
         <members>BGE_BatchGiftEntryTab</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
