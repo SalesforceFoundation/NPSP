@@ -15,8 +15,8 @@ public class OPP_OpportunityAmountSync_SVC {
                 totalPaid += (pmt.npe01__Paid__c && pmt.npe01__Payment_Amount__c != null) ? pmt.npe01__Payment_Amount__c : 0;
             }
 
-            Boolean addOppToList = (OPP_StageMappingUtil.determineOppStateFromOppStage(opp.StageName) == 'FINALIZED' && opp.Amount != totalPaid) ||
-                    (OPP_StageMappingUtil.determineOppStateFromOppStage(opp.StageName) != 'FINALIZED' && opp.Amount < totalPaid);
+            Boolean addOppToList = (OPP_StageMappingUtil.isOpportunityFinalized(opp) && opp.Amount != totalPaid) ||
+                    (!OPP_StageMappingUtil.isOpportunityFinalized(opp) && opp.Amount < totalPaid);
 
             if (addOppToList) {
                 opp.Amount = totalPaid;
