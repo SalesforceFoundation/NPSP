@@ -174,13 +174,11 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
                     }
                 }
 
-                if (OPP_StageMappingUtil.determineOppStateFromOppStage(opp.StageName) == 'FINALIZED'
-                        && mapIdOppNew.get(opp.Id).Amount != totalPaid) {
+                if (OPP_StageMappingUtil.isOpportunityFinalized(opp) && mapIdOppNew.get(opp.Id).Amount != totalPaid) {
                     opp.addError(System.Label.Opp_Amount_Not_Equal_Error);
                 }
 
-                if (OPP_StageMappingUtil.determineOppStateFromOppStage(opp.StageName) != 'FINALIZED'
-                        && mapIdOppNew.get(opp.Id).Amount < totalPaid) {
+                if (!OPP_StageMappingUtil.isOpportunityFinalized(opp) && mapIdOppNew.get(opp.Id).Amount < totalPaid) {
                     opp.addError(System.Label.Opp_Amount_Is_Less_Error);
                 }
             }

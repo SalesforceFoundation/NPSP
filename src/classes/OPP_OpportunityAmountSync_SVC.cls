@@ -12,9 +12,7 @@ public class OPP_OpportunityAmountSync_SVC {
             Decimal totalPaid = 0;
 
             for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
-                if (pmt.npe01__Paid__c) {
-                    totalPaid += pmt.npe01__Payment_Amount__c == null ? 0 : pmt.npe01__Payment_Amount__c;
-                }
+                totalPaid += (pmt.npe01__Paid__c && pmt.npe01__Payment_Amount__c != null) ? pmt.npe01__Payment_Amount__c : 0;
             }
 
             Boolean addOppToList = (OPP_StageMappingUtil.determineOppStateFromOppStage(opp.StageName) == 'FINALIZED' && opp.Amount != totalPaid) ||
