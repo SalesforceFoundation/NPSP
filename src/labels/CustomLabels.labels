@@ -1946,6 +1946,29 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Account Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</value>
     </labels>
     <labels>
+        <fullName>bdiAdditionalObjChildNotUpdated</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAdditionalObjChildNotUpdated</shortDescription>
+        <value>Unable to update the child record's lookup field with the parent record's ID. The record could not be updated because of this system error:</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdditionalObjPredNotFound</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAdditionalObjPredNotFound</shortDescription>
+        <value>Error: record not created. This record is dependent on another record which couldn&apos;t be found.</value>
+    </labels>
+    <labels>
+        <fullName>bdiAdditionalObjRequiredFieldsNull</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAdditionalObjRequiredFieldsNull</shortDescription>
+        <value>Error: record not created, missing required fields:</value>
+    </labels>
+    <labels>
         <fullName>bdiBatchException</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2090,6 +2113,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Created</value>
     </labels>
     <labels>
+        <fullName>bdiAdvancedMapping</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Data Import Advanced Mapping Summary</shortDescription>
+        <value>Data Import Advanced Mapping</value>
+    </labels>
+    <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2168,6 +2199,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiDataImporterTitle</shortDescription>
         <value>NPSP Data Import</value>
+    </labels>
+    <labels>
+        <fullName>bdiDeploymentInProgress</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiDeploymentInProgress</shortDescription>
+        <value>Help Text mappings are currently being converted to Advanced Mapping.</value>
     </labels>
     <labels>
         <fullName>bdiDonation</fullName>
@@ -2256,6 +2295,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>error when a batch is missing a name</shortDescription>
         <value>Batch Name is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDataImportCustomSettings</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when updating data import custom settings</shortDescription>
+        <value>There was an error attempting to update the Custom Settings named Data Import Settings.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDeploymentFailed</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error deploying metadata during migration from help text to metadata mapping</shortDescription>
+        <value>There was an error attempting to convert Help Text mapping and enable Advanced Mapping.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorDeploymentFailedLink</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>link to the deployment status page</shortDescription>
+        <value>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;You can view the deployment status here.&lt;/a&gt;</value>
     </labels>
     <labels>
         <fullName>bdiErrorDonationLookupMatch</fullName>
@@ -2362,12 +2425,226 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Donation information matched against multiple Payments, so the NPSP Data Importer did not import it. The Payment Possible Matches field contains the Salesforce Ids of the matched Payments.</value>
     </labels>
     <labels>
+        <fullName>bdiFMUIBackToMapGroup</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIBackToMapGroup</shortDescription>
+        <value>Back to Object Group</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDataType</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIDataType</shortDescription>
+        <value>Data Type</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDatatableMapsTo</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIDatatableMapsTo</shortDescription>
+        <value>Maps To</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDescription1</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIDescription1</shortDescription>
+        <value>
+            Connect the field you created on the NPSP Data Import object to the field on your target object in
+            the grid below. You can find fields by Field Label or the Field API Name.
+        </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIDescription2</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIDescription2</shortDescription>
+        <value>
+            Fields on the NPSP Data Import object must map to compatible field types on your target object.
+            When you select an NPSP Data Import field, only the compatible target fields will be available.
+        </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIFieldAPIName</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIFieldAPIName</shortDescription>
+        <value>Field API Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIFieldLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIFieldLabel</shortDescription>
+        <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISourceFieldLabelHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUISourceFieldLabelHelp</shortDescription>
+        <value>The NPSP Data Import field you want to map. Search by either Field Label or API Name. If you can’t find the field, confirm you created the field on the NPSP Data Import object.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISourceFieldDataTypeHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUISourceFieldDataTypeHelp</shortDescription>
+        <value>The data type of the field you chose on the NPSP Data Import object.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUITargetFieldLabelHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUITargetFieldLabelHelp</shortDescription>
+        <value>The target field you want to connect to the NPSP Data Import field. Search by either Field Label or API Name. This is filtered to show only fields on your target object that are compatible with the field you chose on the NPSP Data Import object.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUITargetFieldDataTypeHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUITargetFieldDataTypeHelp</shortDescription>
+        <value>The data type of the field you chose on the target object.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUILongDeployment</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUILongDeployment</shortDescription>
+        <value>Modifying this Field Mapping is taking longer than expected.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUILongDeploymentLink</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUILongDeploymentLink</shortDescription>
+        <value>You can view the deployment status here.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUILongDeploymentMessage</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUILongDeploymentMessage</shortDescription>
+        <value>It'll continue to process in the background. Please wait.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUINewFieldMapping</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUINewFieldMapping</shortDescription>
+        <value>Create New Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUINoFieldMappings</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUINoFieldMappings</shortDescription>
+        <value>There are no Field Mappings for this Mapping Group yet, </value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISearchSourceInputLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUISearchSourceInputLabel</shortDescription>
+        <value>Search for the NPSP Data Import object&apos;s field by label or API name.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISearchTargetInputLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUISearchTargetInputLabel</shortDescription>
+        <value>Search for the target field by label or API name.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISourceObject</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFMUISourceObject</shortDescription>
+        <value>Source (NPSP Data Import Object)</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUISuccessful</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUISuccessful</shortDescription>
+        <value>successful</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUITarget</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUITarget</shortDescription>
+        <value>Target</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUITryAgain</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUITryAgain</shortDescription>
+        <value>Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIUnsuccessful</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIUnsuccessful</shortDescription>
+        <value>unsuccessful</value>
+    </labels>
+    <labels>
+        <fullName>bdiFMUIUpdate</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFMUIUpdate</shortDescription>
+        <value>update</value>
+    </labels>
+    <labels>
         <fullName>bdiFailed</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFailed</shortDescription>
         <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>bdiFieldMapping</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFieldMapping</shortDescription>
+        <value>Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>bdiFieldMappings</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiFieldMappings</shortDescription>
+        <value>Field Mappings</value>
     </labels>
     <labels>
         <fullName>bdiHouseholdModelRequired</fullName>
@@ -2484,6 +2761,243 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Apply New Payment</value>
     </labels>
     <labels>
+        <fullName>bdiOMUIChildParentHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Is Child/Parent Help Text</shortDescription>
+        <value>How the target object is related to the other Object Group. For example, a GAU Allocation is a Child of an Opportunity or a Recurring Donation is a Parent of an Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIChildParentLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Is Child/Parent Field Label/Column Name</shortDescription>
+        <value>Is Child/Parent</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUICreateModalTitle</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Title for the Create Object Group modal.</shortDescription>
+        <value>Create Object Group</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUICreateNewObjectGroup</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create New Object Group button</shortDescription>
+        <value>Create New Object Group</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIEditModalTitle</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for the Edit Object Group modal.</shortDescription>
+        <value>Edit Object Group</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUILongDeployment</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error message for long deployment</shortDescription>
+        <value>Modifying this Object Group is taking longer than expected.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIGroupNameHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Object Group Name Help Text</shortDescription>
+        <value>The name of this Object Group. A common naming convention is [object name] Group.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIGroupNameLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Object Group Name Label/Column Name</shortDescription>
+        <value>Group Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIImportDetailsTitle</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for the Import Details section of the modal</shortDescription>
+        <value>Import Details</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIImportStatusHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Import Status Helptext</shortDescription>
+        <value>During Dry Run or when the import processes, the status of the import for the Object Group shows in this field.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIImportStatusLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Import Status Field Label/Column Name</shortDescription>
+        <value>Import Status</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUILinkToRecordHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to Record Helptext</shortDescription>
+        <value>When the import processes, this field will have a link to this Object Group's record or it will display the Salesforce ID of the record.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUILinkToRecordLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to Record Label/Column Name</shortDescription>
+        <value>Link to Record</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIObjectNameHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Object Name Helptext</shortDescription>
+        <value>The target object where these data import records will be created. This is a filtered list of objects; please see the documentation for a full list of available objects.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIObjectNameLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Object Name Label/Column Name</shortDescription>
+        <value>Object Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIOfGroupHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Of This Object Group Helptext</shortDescription>
+        <value>Your target object's records are related to another Object Group. Choose the related Object Group here.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIOfGroupLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Of This Object Group Label/Column</shortDescription>
+        <value>Of This Object Group</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIPageDescriptionPt1</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Object groups description part 1</shortDescription>
+        <value>Each row of this table shows your Object Groups. You'll set up individual field mappings when you click the dropdown icon for an Object Group, then click View Field Mappings.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIPageDescriptionPt2</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Object groups description part 2</shortDescription>
+        <value>Object Groups are collections of field mappings that tell the NPSP Data Import tool what types of records (e.g. Contacts, Opportunities, Payments, etc.) to create or update. NPSP is able to link related records within a single row of your import to one another because fields mappings are bundled in Object Groups in this way.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIPageDescriptionPt3</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Object groups description part 3</shortDescription>
+        <value>Let’s look at the two GAU Allocation 1 and GAU Allocation 2 Object Groups as an example. These object groups link directly to the Opportunity object. At times, 
+            you may want to assign two GAU Allocations to a single Opportunity. To achieve this, in your import file enter the Opportunity information in the Donations columns, 
+            then include the first GAU in the GAU Allocations 1 columns and the second GAU Allocation in the GAU Allocations 2 columns. Because of the GAU Allocation 1 and 
+            GAU Allocation 2 Object Mappings, when you import, the two GAU Allocations are both assigned to the Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIObjectGroupsTitle</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Object Groups Title</shortDescription>
+        <value>Object Groups</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIThroughFieldHelp</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Through This Field Helptext</shortDescription>
+        <value>The Lookup Relationship or Master-Detail field that connects your target object to the related Object Group. 
+            If the target object is a child of the related object, this field will be on the target object. Alternatively, 
+            if the target object is the parent of the related object, this field will be on the related object.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIThroughFieldLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Through this field Label/Column Name</shortDescription>
+        <value>Through This Field</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIViewFieldMappingsLabel</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View Field Mappings action</shortDescription>
+        <value>View Field Mappings</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIErrorNoValidThroughThisField</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when there are no valid options for "Through This Field"</shortDescription>
+        <value>Error: There are no valid fields based on what you selected in "Object Name", "Is Child/Parent", and "Of This Mapping Group"</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIErrorDupeName</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when Group name is duplicate</shortDescription>
+        <value>Error: This name is already in use, please choose another.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIErrorInvalidValues</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Basic error which any modal field is missing or invalid.</shortDescription>
+        <value>Blank or invalid values in one or more fields.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIErrorNoUnmappedFieldsPt1</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>First part of error displayed when there are no unmapped fields.</shortDescription>
+        <value>Error: There are no unmapped fields on the NPSP Data Import object to use for the </value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIErrorNoUnmappedFieldsPt2</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Second part of error displayed when there are no unmapped fields.</shortDescription>
+        <value>. Create new fields on the NPSP Data Import object if needed.</value>
+    </labels>
+    <labels>
         <fullName>bdiPositiveNumber</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2578,6 +3092,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiTime</shortDescription>
         <value>Time:</value>
+    </labels>
+    <labels>
+        <fullName>bdiUpdated</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiUpdated</shortDescription>
+        <value>Updated</value>
     </labels>
     <labels>
         <fullName>bgeActionDelete</fullName>
@@ -3244,6 +3766,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>flsError</shortDescription>
         <value>You do not have permissions to modify {0}.</value>
+    </labels>
+    <labels>
+        <fullName>flsReadAccessError</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>flsReadAccessError</shortDescription>
+        <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>
@@ -5694,6 +6224,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Allocation Type</value>
     </labels>
     <labels>
+        <fullName>stgBDIGoToSetup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgBDIGoToSetup</shortDescription>
+        <value>Configure Advanced Mapping</value>
+    </labels>
+    <labels>
         <fullName>stgBtnBack</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5788,6 +6326,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgBtnHHAutoName</shortDescription>
         <value>Refresh All Household Names</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNew</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNew</shortDescription>
+        <value>New</value>
     </labels>
     <labels>
         <fullName>stgBtnNewAutoRel</fullName>
@@ -5996,6 +6542,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Default Value</value>
     </labels>
     <labels>
+        <fullName>stgDIFMNonAdminError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDIFMNonAdminError</shortDescription>
+        <value>Only System Administrators can enable or disable Data Import Advanced Mapping.</value>
+    </labels>
+    <labels>
         <fullName>stgDocumentation</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6004,12 +6558,44 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Documentation</value>
     </labels>
     <labels>
+        <fullName>stgDeploymentCustomMetadataMappingEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentCustomMetadataMappingEnabled</shortDescription>
+        <value>Advanced Mapping is enabled.</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentHasInvalidHelpTextMappings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentHasInvalidHelpTextMappings</shortDescription>
+        <value>Advanced Mapping is enabled, but we found some invalid Help Text mappings that couldn't be migrated. &lt;b&gt;Take a screenshot of the table below; it will not be displayed again after you leave this page.&lt;/b&gt;</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentHelpTextMappingEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentHelpTextMappingEnabled</shortDescription>
+        <value>Help Text mapping is enabled.</value>
+    </labels>
+    <labels>
         <fullName>stgDeploymentInProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgDeploymentInProgress</shortDescription>
         <value>Deployment in progress. You can leave this page. The page will reload when deployment is finished.</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentTimedOut</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <value>Page timed out.</value>
     </labels>
     <labels>
         <fullName>stgDeploymentTryAgain</fullName>
@@ -6075,6 +6661,67 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <protected>false</protected>
         <shortDescription>stgHelpAccountModel</shortDescription>
         <value>The Account model used by the Nonprofit Success Pack. This option controls what happens when you create a Contact with a blank Account field value. WARNING: You should not use the Account Model record type you select as the default Account record type for any Profile. Doing so can cause various data issues.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMapping1</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping1</shortDescription>
+        <value>When you enable Advanced Mapping, we convert your existing Help Text field mappings to Advanced Mapping. Once enabled, you'll edit mappings and create new ones on this page.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMapping2</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping2</shortDescription>
+        <value>You can disable Advanced Mapping and go back to Help Text mapping, but any changes you make with Advanced Mapping will be lost.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMapping3</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping3</shortDescription>
+        <value>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMapping4</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping4</shortDescription>
+        <value>
+            &lt;b&gt;This message will no longer be displayed if you leave this page!&lt;/b&gt; We couldn't convert some of your existing Help Text mappings because they are invalid. Read more about &lt;a href=&quot;https://powerofus.force.com/NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;common Help Text mapping issues&lt;/a&gt;. &lt;b&gt;Please take a screenshot of this page or copy the information in the table below to track updates you need to make to these mappings.&lt;/b&gt;
+            &lt;br/&gt;
+            &lt;br/&gt;
+            To correct these mappings you may want to disable Advanced Mapping; correct the invalid Help Text mappings; and enable Advanced Mapping again. Alternatively, you add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMappingInvalidHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMappingInvalidHelpText</shortDescription>
+        <value>Invalid Help Text Mappings</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMappingTableHeader1</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMappingTableHeader1</shortDescription>
+        <value>NPSP Data Import Field</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMappingTableHeader2</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMappingTableHeader2</shortDescription>
+        <value>Current Help Text Value</value>
     </labels>
     <labels>
         <fullName>stgHelpAlloFiscalYearRollups</fullName>

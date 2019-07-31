@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Used for Data Import Advanced Mapping definitions. These represent Object Groups and their relationships which will be used for different NPSP Data Import batches.</description>
+    <fields>
+        <fullName>Custom_Mapping_Logic_Class__c</fullName>
+        <description>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method.</inlineHelpText>
+        <label>Custom Mapping Logic Class</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Data_Import_Object_Mapping_Set__c</fullName>
+        <description>The Data Import Object Group containing this record.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The Data Import Object Group containing this record.</inlineHelpText>
+        <label>Data Import Object Mapping Set</label>
+        <referenceTo>Data_Import_Object_Mapping_Set__mdt</referenceTo>
+        <relationshipLabel>Data Import Object Mappings</relationshipLabel>
+        <relationshipName>Data_Import_Object_Mappings</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Imported_Record_Field_Name__c</fullName>
+        <description>The Field API Name on the NPSP Data Import object where the ID for the imported record will be placed when the import is successful. This is also where the code will verify if this record was imported or matched.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The Field API Name on the NPSP Data Import object where the ID for the imported record will be placed when the import is successful. This is also where the code will verify if this record was imported or matched.</inlineHelpText>
+        <label>Imported Record Field Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Imported_Record_Status_Field_Name__c</fullName>
+        <description>The Field API Name where the success or failure of the import will be recorded for an NPSP Data Import record.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The Field API Name where the success or failure of the import will be recorded for an NPSP Data Import record.</inlineHelpText>
+        <label>Imported Record Status Field Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Is_Deleted__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Is Deleted</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Object_API_Name__c</fullName>
+        <description>The API name of the target object for this Object Group.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The API name of the target object for this Object Group.</inlineHelpText>
+        <label>Object API Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Legacy_Data_Import_Object_Name__c</fullName>
+        <description>The legacy Data Import object name of the object this Data Import Object Group is based on.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The legacy Data Import object name of the object this Data Import Object Group is based on.</inlineHelpText>
+        <label>Legacy Data Import Object Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Predecessor__c</fullName>
+        <description>The Data Import Object Group record that must exist before this record can be created (either Parent or Child).</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The Data Import Object Group record that must exist before this record can be created (either Parent or Child).</inlineHelpText>
+        <label>Predecessor</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Relationship_Field__c</fullName>
+        <description>If this Object Group is a child of the predecessor, this field should look up to the parent. If it's the parent of the predecessor, this should be the lookup field on the child record.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>If this Object Group is a child of the predecessor, this field should look up to the parent. If it's the parent of the predecessor, this should be the lookup field on the child record.</inlineHelpText>
+        <label>Relationship Field</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Relationship_To_Predecessor__c</fullName>
+        <description>This indicates if this object is a parent or child of the predecessor.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>This indicates if this object is a parent or child of the predecessor.</inlineHelpText>
+        <label>Relationship To Predecessor</label>
+        <required>false</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Parent</fullName>
+                    <default>true</default>
+                    <label>Parent</label>
+                </value>
+                <value>
+                    <fullName>Child</fullName>
+                    <default>false</default>
+                    <label>Child</label>
+                </value>
+                <value>
+                    <fullName>No Predecessor</fullName>
+                    <default>false</default>
+                    <label>No Predecessor</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <label>Data Import Object Mapping</label>
+    <pluralLabel>Data Import Object Mappings</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>
