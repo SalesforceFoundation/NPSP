@@ -64,8 +64,6 @@ global without sharing class STG_InstallScript implements InstallHandler {
             
             executeAction(InstallAction.RUN_NEW_ORG_SCRIPT, logger);
 
-            // Create the Opportunity Stage to State mapping record for finalized
-            executeAction(InstallAction.CREATE_OPP_STAGE_TO_STATE_RECORDS, logger);
         // Upgrade of existing Cumulus installation
         } else if (context.isUpgrade() || context.isPush()) {
             // Ensure the any new Custom Settings objects are populated
