@@ -176,12 +176,12 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
                 if (OPP_StageMappingUtil.determineOppStateFromOppStage(opp.StageName) == 'FINALIZED'
                         && mapIdOppNew.get(opp.Id).Amount != totalPaid) {
-                    opp.addError('The Opportunity Amount must be equal to total paid Payment Amount amount!');
+                    opp.addError(System.Label.Opp_Amount_Not_Equal_Error);
                 }
 
                 if (OPP_StageMappingUtil.determineOppStateFromOppStage(opp.StageName) != 'FINALIZED'
                         && mapIdOppNew.get(opp.Id).Amount < totalPaid) {
-                    opp.addError('You are not allow to lower the Opportunity Amount to less than total Paid Payment amount!');
+                    opp.addError(System.Label.Opp_Amount_Is_Less_Error);
                 }
             }
         }
