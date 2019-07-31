@@ -58,7 +58,6 @@
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_AdditionalObjectService</members>
-        <members>BDI_AdditionalObjectServiceTest</members>
         <members>BDI_AdditionalObjectService_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
@@ -85,20 +84,16 @@
         <members>BDI_DryRun_TEST</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingCustomMetadata</members>
-        <members>BDI_FieldMappingCustomMetadataTest</members>
         <members>BDI_FieldMappingCustomMetadata_TEST</members>
         <members>BDI_FieldMappingHelpText</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
-        <members>BDI_ManageAdvancedMappingCtrlTest</members>
         <members>BDI_ManageAdvancedMappingCtrl_TEST</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_MigrationMappingHelper</members>
-        <members>BDI_MigrationMappingHelperTest</members>
         <members>BDI_MigrationMappingHelper_TEST</members>
         <members>BDI_MigrationMappingUtility</members>
-        <members>BDI_MigrationMappingUtilityTest</members>
         <members>BDI_MigrationMappingUtility_TEST</members>
         <members>BDI_ObjectMappingLogic</members>
         <members>BDI_ObjectWrapper</members>
