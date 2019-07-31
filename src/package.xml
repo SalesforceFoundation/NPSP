@@ -1780,6 +1780,8 @@
         <members>oppNamingBoth</members>
         <members>oppNamingIndividual</members>
         <members>oppNamingOrganizational</members>
+        <members>Opp_Amount_Is_Less_Error</members>
+        <members>Opp_Amount_Not_Equal_Error</members>
         <members>pmtModifyCurrency</members>
         <members>pmtPaidPaymentDateRequired</members>
         <members>pmtUnpaidPaymentScheduledDateRequired</members>
