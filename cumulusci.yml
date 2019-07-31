@@ -128,15 +128,6 @@ tasks:
             num_records: 5000
             debug_db_path: /tmp/temp_db.db
 
-    test_data_bdi_CO:
-        description: 'Generate test data for BDI DO benchmarks into an org'
-        class_path: tasks.generate_bdi_CO_data.GenerateBDIData_CO
-        options:
-            mapping: 'datasets/bdi_benchmark/mapping-CO.yml'
-            num_records: 40
-            database_url: sqlite:////tmp/temp_db.db
-
-
     performance_tests:
         description: Runs Robot Framework performance tests
         class_path: cumulusci.tasks.robotframework.Robot
@@ -171,13 +162,6 @@ tasks:
         options:
             database_url: 'sqlite:///datasets/dev_org/test_data.db'
             mapping: 'datasets/mapping.yml'
-
-    paul_test_data:
-        description: 'Loads Pauls test data'
-        class_path: cumulusci.tasks.bulkdata.LoadData
-        options:
-            database_url: 'sqlite:////tmp/test_data.db'
-            mapping: 'datasets/bdi_benchmark/mapping-CO.yml'
 
     test_data_1k:
         description: 'Loads a test data set for most NPSP objects based on 1024 Contacts'
@@ -482,7 +466,6 @@ flows:
             4:
                 task: performance_tests
                 options:
-                    vars: mapping:foo
                     options:
                         outputdir: .
 
