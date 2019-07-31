@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 */
 
 @IsTest
-private class BDI_ManageAdvancedMappingCtrlTest {
+private class BDI_ManageAdvancedMappingCtrl_TEST {
 
     /*******************************************************************************************************
     * @description Initialize test custom settings record

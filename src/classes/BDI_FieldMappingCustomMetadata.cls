@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -115,7 +115,6 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     *
-    * TODO: Implement this method
     */
 
     public Map<String,String> getFieldMap(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {

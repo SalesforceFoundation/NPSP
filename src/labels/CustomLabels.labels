@@ -1950,7 +1950,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiAdditionalObjChildNotUpdated</shortDescription>
-        <value>Unable to update the child record's lookup field with new parent record's ID. It was unable to update because of this system error:</value>
+        <value>Unable to update the child record's lookup field with the parent record's ID. The record could not be updated because of this system error:</value>
     </labels>
     <labels>
         <fullName>bdiAdditionalObjPredNotFound</fullName>
@@ -2310,7 +2310,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error deploying metadata during migration from help text to metadata mapping</shortDescription>
-        <value>There was an error attempting to convert and enable Advanced Mapping.</value>
+        <value>There was an error attempting to convert Help Text mapping and enable Advanced Mapping.</value>
     </labels>
     <labels>
         <fullName>bdiErrorDeploymentFailedLink</fullName>
@@ -6571,7 +6571,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgDeploymentHasInvalidHelpTextMappings</shortDescription>
-        <value>Advanced Mapping is enabled, but we found some invalid Help Text mappings that couldn't migrate. &lt;b&gt;Take a screenshot of the table below, it will not be displayed again after you leave this page.&lt;/b&gt;</value>
+        <value>Advanced Mapping is enabled, but we found some invalid Help Text mappings that couldn't be migrated. &lt;b&gt;Take a screenshot of the table below; it will not be displayed again after you leave this page.&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>stgDeploymentHelpTextMappingEnabled</fullName>

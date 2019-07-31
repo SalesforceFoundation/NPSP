@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 */
 
 @IsTest
-private class BDI_MigrationMappingUtilityTest {
+private class BDI_MigrationMappingUtility_TEST {
 
     /*******************************************************************************************************
     * @description Test that the migration utility will only create and enqueue usable help text mappings

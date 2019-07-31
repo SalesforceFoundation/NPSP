@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 */
 
 @isTest(isParallel=true)
-private class BDI_AdditionalObjectServiceTest {
+private class BDI_AdditionalObjectService_TEST {
 
     @testSetup
     static void setupTestData() {
