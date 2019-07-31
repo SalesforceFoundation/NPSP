@@ -242,6 +242,19 @@ public with sharing class STG_SettingsService {
     }
 
     /*********************************************************************************************************
+    * @description The Data Import Settings object
+    */
+    public Data_Import_Settings__c stgDI {
+        get {
+            if (stgDI == null) {
+                stgDI = UTIL_CustomSettingsFacade.getDataImportSettings();
+            }
+            return stgDI;
+        }
+        private set;
+    }
+
+    /*********************************************************************************************************
     * @description Saves all settings objects to the database
     * @return void
     */
