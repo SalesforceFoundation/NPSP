@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Deployment Event --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Deployment Event --></value>
+    </caseValues>
+    <fields>
+        <label><!-- Completed Date --></label>
+        <name>CompletedDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Deployment ID --></label>
+        <name>DeploymentId__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>
