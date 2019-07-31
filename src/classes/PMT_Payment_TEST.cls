@@ -838,6 +838,90 @@ private class PMT_Payment_TEST {
 
 
     /**
+     * @description Check that the opportunity amount is updated when the payed payments amounts
+     * exceed the opportunity amount
+     */
+    @isTest
+    private static void testOpportunityAmountSync() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = false, Enforce_Accounting_Data_Consistency__c = true));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Test.startTest();
+
+        Opportunity opp = new Opportunity(
+                Name='open opp',
+                Amount = 100,
+                AccountID = acc.Id,
+                CloseDate = System.today(),
+                StageName = UTIL_UnitTestData_TEST.getOpenStage());
+        insert opp;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = true,
+                        npe01__Payment_Amount__c = 250,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Payment_Date__c = System.today()
+                ),
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = true,
+                        npe01__Payment_Amount__c = 250,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Payment_Date__c = System.today()
+                )
+        };
+        insert payments;
+
+        Test.stopTest();
+
+        // check the opp amount
+        opp = [select Id, Amount from Opportunity where Id = :opp.Id];
+        System.assertEquals(500, opp.Amount, 'Open opportunity amount not updated when paid amounts exceed opportunity amount.');
+    }
+
+    /**
+     * @description Check that the opportunity amount is updated when the payed payments amounts
+     * exceed the opportunity amount
+     */
+    @isTest
+    private static void testOpportunityAmountSyncClosedStage() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = false, Enforce_Accounting_Data_Consistency__c = true));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Test.startTest();
+
+        Opportunity opp = new Opportunity(
+                Name='closed opp',
+                Amount = 100,
+                AccountID = acc.Id,
+                CloseDate = System.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = true,
+                        npe01__Payment_Amount__c = 10,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Payment_Date__c = System.today()
+                ),
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = true,
+                        npe01__Payment_Amount__c = 10,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Payment_Date__c = System.today()
+                )
+        };
+        insert payments;
+
+        Test.stopTest();
+
+        // check the opp amount
+        opp = [select Id, Amount from Opportunity where Id = :opp.Id];
+        System.assertEquals(20, opp.Amount, 'Finalized opportunity amount not updated when paid amounts are less than opportunity amount.');
+    }
+
+    /**
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity
      */
     private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
