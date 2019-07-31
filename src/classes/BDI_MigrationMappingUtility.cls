@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -548,6 +548,9 @@ public with sharing class BDI_MigrationMappingUtility {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Class for to store properties of the Object Mapping 
+    */
     public class DataImportObjectMapping {
         Data_Import_Object_Mapping__mdt objectMapping;
         String uniqueRecordName;

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2018
+* @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Visualforce page Controller for the Manage Advanced Mappings VF page

@@ -983,7 +983,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     * @param Data_Import_Settings__c
     */
     public static void setDataImportSettings(Data_Import_Settings__c dis) {
-        // New default settings for the Levels Assignment engine
+        // New default settings for the Batch Data Import engine
         dataImportSettings = dis;
     }
 }

@@ -41,6 +41,9 @@ public class BDI_TargetFields {
         return targetFieldsByTargetObject;
     }
 
+    /*******************************************************************************************************
+    * @description Add a target field to the collection
+    */
     public void addTargetField(String objName, String fieldName){
         SObjectType objectToken;
         SObjectField fieldToken;
