@@ -1,6 +1,6 @@
 *** Variables ***
 
-${count} =   ${10000}       # use a multiple of 40
+${count} =   ${99920}       # use a multiple of 40
 
 *** Settings ***
 
