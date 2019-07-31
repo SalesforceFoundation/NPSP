@@ -277,102 +277,6 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
-        <fullName>CMT_DeleteConfirm</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Confirmation message when a user wants to delete something.</shortDescription>
-        <value>Are you sure you want to delete this {0}?</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterGroupActiveRollupsHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text for the rollups tree</shortDescription>
-        <value>The list of rollups that are using this filter group. As long as there are rollups listed here, you can&apos;t delete this filter group.</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterGroupDeleteError</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error message when a user wants to delete a filter group with rollups.</shortDescription>
-        <value>You can&apos;t delete this filter group because there is at least one rollup using it. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterGroupDescriptionHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text for the filter group description</shortDescription>
-        <value>It&apos;s important to enter a detailed description that explains the filter rules in this group so that users in your org can understand if this filter group is right for their rollup.</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterGroupNameHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text for the filter group name</shortDescription>
-        <value>A unique name for this filter group.</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterGroupNameLimitError</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>New filter group button</shortDescription>
-        <value>Filter group name is limited to 40 characters.</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterNew</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>New filter group button</shortDescription>
-        <value>New Filter Group</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterRuleDeleteWarning</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Warning message when a user wants to delete a filter rule.</shortDescription>
-        <value>There are rollups using the filter group that this rule is part of. If you delete this filter rule, it will affect those rollup calculations. Are you sure you want to delete?</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterRuleDuplicateError</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Warning message when a user creates a duplicate filter rule.</shortDescription>
-        <value>This filter rule already exists in this filter group. Edit one or more fields to create a unique filter rule.</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterRuleFieldsMissing</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error message preventing a user from saving a filter rule with fields missing.</shortDescription>
-        <value>One or more fields are missing. Complete all fields to save this filter rule.</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterRulesHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text for the filter rules</shortDescription>
-        <value>The list of rules included in this filter group. The filter rules set the criteria to ensure that you only get the data you need. Keep in mind that filter groups use AND criteria for filter rules, so if the data doesn&apos;t match ALL filter rules within a filter group, it won&apos;t be included in the rollup.</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterRulesValueHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text for the filter rule value field</shortDescription>
-        <value>If the Operator is In List or Not in List and you don&apos;t see a picklist, enter values separated by semi-colons.</value>
-    </labels>
-    <labels>
         <fullName>CONV_Accept_Risk</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -419,7 +323,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>All Data Backed Up</shortDescription>
-        <value>I&apos;ve backed up my data using the Export Data tool in Setup | Data Management.</value>
+        <value>I've backed up my data using the Export Data tool in Setup | Data Management.</value>
     </labels>
     <labels>
         <fullName>CONV_All_Dup_Rules_Disabled</fullName>
@@ -559,7 +463,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Old Household Objects</shortDescription>
-        <value>Does NOT delete Household objects after conversion is complete. You should manually delete these after you&apos;ve verified the conversion.</value>
+        <value>Does NOT delete Household objects after conversion is complete. You should manually delete these after you've verified the conversion.</value>
     </labels>
     <labels>
         <fullName>CONV_Only_Household_Contacts</fullName>
@@ -601,7 +505,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Permanent Change Info</shortDescription>
-        <value>Account Model Conversion is a permanent change. Please consider this action carefully before proceeding. While the conversion is in process, your database functionality will be temporarily disabled. Salesforce.com and Salesforce.org are not responsible for any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK. You&apos;ll need to confirm that you&apos;ve taken the following steps before beginning the conversion:</value>
+        <value>Account Model Conversion is a permanent change. Please consider this action carefully before proceeding. While the conversion is in process, your database functionality will be temporarily disabled. Salesforce.com and Salesforce.org are not responsible for any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK. You'll need to confirm that you've taken the following steps before beginning the conversion:</value>
     </labels>
     <labels>
         <fullName>CONV_Primary_Contacts_Set</fullName>
@@ -643,7 +547,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Selected Field Not Verified for Id</shortDescription>
-        <value>The conversion tool encountered an error when attempting to verify the validity of your selected Account field. Without this verification, the conversion tool can&apos;t determine if your field mapping, and therefore your conversion, will be successful.  You may proceed at your own risk, or select a different field to hold the Household Id.</value>
+        <value>The conversion tool encountered an error when attempting to verify the validity of your selected Account field. Without this verification, the conversion tool can't determine if your field mapping, and therefore your conversion, will be successful.  You may proceed at your own risk, or select a different field to hold the Household Id.</value>
     </labels>
     <labels>
         <fullName>CONV_Tested_in_Sandbox</fullName>
@@ -657,7 +561,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Triggers ReEnabled</shortDescription>
-        <value>Re-enables all NPSP triggers. NOTE: You&apos;ll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables &lt;b&gt;all&lt;/b&gt; NPSP triggers, so if you selectively disabled any of them beforehand, you&apos;ll need to manually disable them again.</value>
+        <value>Re-enables all NPSP triggers. NOTE: You'll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables &lt;b&gt;all&lt;/b&gt; NPSP triggers, so if you selectively disabled any of them beforehand, you'll need to manually disable them again.</value>
     </labels>
     <labels>
         <fullName>CONV_Warning</fullName>
@@ -672,6 +576,134 @@
         <protected>false</protected>
         <shortDescription>What This Tool Does</shortDescription>
         <value>What This Tool Does</value>
+    </labels>
+    <labels>
+        <fullName>CampaignMemberStatusOmit</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CampaignMemberStatusOmit</shortDescription>
+        <value>omit</value>
+    </labels>
+    <labels>
+        <fullName>ClosedWonOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ClosedWonOpportunities</shortDescription>
+        <value>Closed Won Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupActiveRollupsHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the rollups tree</shortDescription>
+        <value>The list of rollups that are using this filter group. As long as there are rollups listed here, you can't delete this filter group.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_DeleteConfirm</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirmation message when a user wants to delete something.</shortDescription>
+        <value>Are you sure you want to delete this {0}?</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupDeleteError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when a user wants to delete a filter group with rollups.</shortDescription>
+        <value>You can't delete this filter group because there is at least one rollup using it. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupDescriptionHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter group description</shortDescription>
+        <value>It's important to enter a detailed description that explains the filter rules in this group so that users in your org can understand if this filter group is right for their rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupNameHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter group name</shortDescription>
+        <value>A unique name for this filter group.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupNameLimitError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New filter group button</shortDescription>
+        <value>Filter group name is limited to 40 characters.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRulesHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter rules</shortDescription>
+        <value>The list of rules included in this filter group. The filter rules set the criteria to ensure that you only get the data you need. Keep in mind that filter groups use AND criteria for filter rules, so if the data doesn't match ALL filter rules within a filter group, it won't be included in the rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRulesValueHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter rule value field</shortDescription>
+        <value>If the Operator is In List or Not in List and you don't see a picklist, enter values separated by semi-colons.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterNew</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New filter group button</shortDescription>
+        <value>New Filter Group</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleDeleteWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message when a user wants to delete a filter rule.</shortDescription>
+        <value>There are rollups using the filter group that this rule is part of. If you delete this filter rule, it will affect those rollup calculations. Are you sure you want to delete?</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleDuplicateError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message when a user creates a duplicate filter rule.</shortDescription>
+        <value>This filter rule already exists in this filter group. Edit one or more fields to create a unique filter rule.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleFieldsMissing</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message preventing a user from saving a filter rule with fields missing.</shortDescription>
+        <value>One or more fields are missing. Complete all fields to save this filter rule.</value>
+    </labels>
+    <labels>
+        <fullName>ConfirmDeleteAccount</fullName>
+        <categories>Error, Delete</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_AvailableRollupType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to be used for table describing rollup types.</shortDescription>
+        <value>Available Rollup Types</value>
     </labels>
     <labels>
         <fullName>CRLP_AdvancedCustomizationHeader</fullName>
@@ -690,19 +722,11 @@
         <value>These fields determine what information is being summarized and provide the normal defaults for Donations. You can edit them as needed.</value>
     </labels>
     <labels>
-        <fullName>CRLP_AvailableRollupType</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label to be used for table describing rollup types.</shortDescription>
-        <value>Available Rollup Types</value>
-    </labels>
-    <labels>
         <fullName>CRLP_BatchCalculating</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Displays on page when &quot;Recalculate Rollups&quot; button is hit on Acc/Con/GAU/RD.</shortDescription>
+        <shortDescription>Displays on page when "Recalculate Rollups" button is hit on Acc/Con/GAU/RD.</shortDescription>
         <value>The rollups batch job is calculating and may take a few moments to complete. Go back to the {0} and refresh to see updated rollup values.</value>
     </labels>
     <labels>
@@ -714,100 +738,13 @@
         <value>Today&apos;&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</value>
     </labels>
     <labels>
-        <fullName>CRLP_CreateRollupActiveHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for the active flag.</shortDescription>
-        <value>Indicates that the rollup is active. Inactive rollups won&apos;t be calculated along with active rollups.</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupAmountFieldHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for amount field picklist.</shortDescription>
-        <value>The amount field to use when calculating the rollup.</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupDateFieldHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for date field picklist.</shortDescription>
-        <value>The date field to use when calculating the rollup. This is the date that the Time Frame uses to figure out whether to include this record or not.</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupDaysBackHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for days back integer.</shortDescription>
-        <value>Choose the number of days back (from today) that you want to roll up data for.</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupDescriptionHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for description.</shortDescription>
-        <value>It&apos;s important to enter a detailed description so that you (or other users) understand exactly what this rollup calculates. The description will show when you hover over the rollup in the list view.</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupDetailFieldHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for detail field picklist.</shortDescription>
-        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation is a single result operation (First, Last, Largest, or Smallest). This list only shows fields whose field types are compatible with the selected Target field.</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupFilterGroupHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for filter group.</shortDescription>
-        <value>The field shows which filter group to apply to this rollup. A filter group is a collection of filter rules that determine which records get rolled up.</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupFiscalYearHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for fiscal year.</shortDescription>
-        <value>Calculates rollups based on fiscal year settings (instead of calendar year).</value>
-    </labels>
-    <labels>
         <fullName>CRLP_CreateRollupIntroHelpText</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for user adding a summary object, field, and a description.</shortDescription>
-        <value>Select the Target Object to determine the available fields, then select the Target Field that this information should roll up to. Be sure to enter a detailed description that will help you (and others) understand exactly what this rollup does.</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupNameHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for name.</shortDescription>
-        <value>TODO: REMOVE ME</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupOperationHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for operation.</shortDescription>
-        <value>Determines how the donation data will roll up. Is it a sum, an average, or a best year total (to name just a few)? Available values are determined by the type of the Target Field.</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreateRollupTargetFieldHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for target field.</shortDescription>
-        <value>Custom field on the selected Target Object that you are rolling up donation data to. Note that a Target Field can only be associated with one rollup.</value>
+        <value>Select the Target Object to determine the available fields, then select the Target Field that this information should roll up to. Be sure to enter a detailed description that will help you (and others) understand exactly what this rollup does.
+        </value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupTargetObjectHelpText</fullName>
@@ -818,6 +755,70 @@
         <value>The object determines which Target Fields are available for you to roll up donation data to. The available Target Objects are Account, Contact, General Accounting Unit, and Recurring Donation.</value>
     </labels>
     <labels>
+        <fullName>CRLP_CreateRollupTargetFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for target field.</shortDescription>
+        <value>Custom field on the selected Target Object that you are rolling up donation data to. Note that a Target Field can only be associated with one rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupActiveHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for the active flag.</shortDescription>
+        <value>Indicates that the rollup is active. Inactive rollups won't be calculated along with active rollups.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDescriptionHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for description.</shortDescription>
+        <value>It's important to enter a detailed description so that you (or other users) understand exactly what this rollup calculates. The description will show when you hover over the rollup in the list view.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupNameHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for name.</shortDescription>
+        <value>TODO: REMOVE ME</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupTypeHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for rollup type.</shortDescription>
+        <value>The combination of which object you're rolling up data from and whether the rollup is a hard credit or soft credit.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupFilterGroupHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for filter group.</shortDescription>
+        <value>The field shows which filter group to apply to this rollup. A filter group is a collection of filter rules that determine which records get rolled up.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupOperationHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for operation.</shortDescription>
+        <value>Determines how the donation data will roll up. Is it a sum, an average, or a best year total (to name just a few)? Available values are determined by the type of the Target Field.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupFiscalYearHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for fiscal year.</shortDescription>
+        <value>Calculates rollups based on fiscal year settings (instead of calendar year).</value>
+    </labels>
+    <labels>
         <fullName>CRLP_CreateRollupTimeBoundOperationHelpText</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -826,20 +827,44 @@
         <value>The time period for this rollup. You can roll up data for all time, a certain number of days, or a specific year.</value>
     </labels>
     <labels>
-        <fullName>CRLP_CreateRollupTypeHelpText</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Tooltip help text for rollup type.</shortDescription>
-        <value>The combination of which object you&apos;re rolling up data from and whether the rollup is a hard credit or soft credit.</value>
-    </labels>
-    <labels>
         <fullName>CRLP_CreateRollupYearsAgoHelpText</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for years ago picklist.</shortDescription>
         <value>Choose the number of years ago that you want to roll up data for. Keep in mind that only the data for that calendar (or fiscal) year will roll up. So, if the current year is 2018 and you choose 2 years ago, the roll up will include data for 2016.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDaysBackHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for days back integer.</shortDescription>
+        <value>Choose the number of days back (from today) that you want to roll up data for.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDetailFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for detail field picklist.</shortDescription>
+        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation is a single result operation (First, Last, Largest, or Smallest). This list only shows fields whose field types are compatible with the selected Target field.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDateFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for date field picklist.</shortDescription>
+        <value>The date field to use when calculating the rollup. This is the date that the Time Frame uses to figure out whether to include this record or not.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupAmountFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for amount field picklist.</shortDescription>
+        <value>The amount field to use when calculating the rollup.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreditType</fullName>
@@ -890,28 +915,20 @@
         <value>Deleting the {0} has timed out. Please try again.</value>
     </labels>
     <labels>
-        <fullName>CRLP_DisabledMessage</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Message for CRLP Disabled Toast</shortDescription>
-        <value>You don&apos;t have Customizable Rollups enabled. Return to NPSP Settings for information on how to enable these.</value>
-    </labels>
-    <labels>
         <fullName>CRLP_DisabledTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title for CRLP Disabled Toast</shortDescription>
-        <value>These aren&apos;t the rollups you&apos;re looking for.</value>
+        <value>These aren't the rollups you're looking for.</value>
     </labels>
     <labels>
-        <fullName>CRLP_DisplayError</fullName>
+        <fullName>CRLP_DisabledMessage</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error loading Customizable Rollup data</shortDescription>
-        <value>Error displaying the {0}</value>
+        <shortDescription>Message for CRLP Disabled Toast</shortDescription>
+        <value>You don't have Customizable Rollups enabled. Return to NPSP Settings for information on how to enable these.</value>
     </labels>
     <labels>
         <fullName>CRLP_DuplicateTargetField</fullName>
@@ -930,11 +947,19 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
+        <fullName>CRLP_DisplayError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error loading Customizable Rollup data</shortDescription>
+        <value>Error displaying the {0}</value>
+    </labels>
+    <labels>
         <fullName>CRLP_NoAvailableDetailFieldsMessage</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Message when user doesn&apos;t have available detail fields on a custom rollup.</shortDescription>
+        <shortDescription>Message when user doesn't have available detail fields on a custom rollup.</shortDescription>
         <value>There are no available fields. Only fields whose field types are compatible with the Target field appear in the Field to Roll Up picklist.</value>
     </labels>
     <labels>
@@ -942,7 +967,7 @@
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label when user doesn&apos;t have available summary fields on a custom rollup</shortDescription>
+        <shortDescription>Label when user doesn't have available summary fields on a custom rollup</shortDescription>
         <value>There are no available Target fields. You need to create a writeable, custom field that your data can roll up to.</value>
     </labels>
     <labels>
@@ -950,7 +975,7 @@
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label when user doesn&apos;t select a filter group.</shortDescription>
+        <shortDescription>Label when user doesn't select a filter group.</shortDescription>
         <value>No Filter Group (Include All Records)</value>
     </labels>
     <labels>
@@ -975,7 +1000,9 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning before complete reset of Customizable Rollups</shortDescription>
-        <value>Are you sure you want to reset Customizable Rollups? This will delete any new Customizable Rollups, Filter Rules, and Filter Groups you created, as well as reset all NPSP rollups to their default behavior.</value>
+        <value>
+            Are you sure you want to reset Customizable Rollups? This will delete any new Customizable Rollups, Filter Rules, and Filter Groups you created, as well as reset all NPSP rollups to their default behavior.
+        </value>
     </labels>
     <labels>
         <fullName>CRLP_Return</fullName>
@@ -984,6 +1011,14 @@
         <protected>true</protected>
         <shortDescription>Breadcrumb text to return to the specified location.</shortDescription>
         <value>Back to {0}</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_RollupsByFilterGroup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Shows rollups using a specific filter group.</shortDescription>
+        <value>Rollups Using this Filter Group</value>
     </labels>
     <labels>
         <fullName>CRLP_RollupNew</fullName>
@@ -1008,14 +1043,6 @@
         <protected>true</protected>
         <shortDescription>Type of custom rollup</shortDescription>
         <value>Rollup Type</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_RollupsByFilterGroup</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Shows rollups using a specific filter group.</shortDescription>
-        <value>Rollups Using this Filter Group</value>
     </labels>
     <labels>
         <fullName>CRLP_SaveError</fullName>
@@ -1058,38 +1085,6 @@
         <value>Soft Credit</value>
     </labels>
     <labels>
-        <fullName>CallableApiMethodNotImplemented</fullName>
-        <categories>API</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>CallableApi Method Not Implemented</shortDescription>
-        <value>{0} is not implemented</value>
-    </labels>
-    <labels>
-        <fullName>CallableApiParameterError</fullName>
-        <categories>API</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error parsing/type casting a parameter</shortDescription>
-        <value>Error parsing {0} parameter: {1}</value>
-    </labels>
-    <labels>
-        <fullName>CallableApiProcessingError</fullName>
-        <categories>API</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error completing the specified API call</shortDescription>
-        <value>Error completing the {0} api: {1}</value>
-    </labels>
-    <labels>
-        <fullName>CampaignMemberStatusOmit</fullName>
-        <categories>Opportunity, Campaign Member</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>CampaignMemberStatusOmit</shortDescription>
-        <value>omit</value>
-    </labels>
-    <labels>
         <fullName>CascadeDeletionError</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -1104,22 +1099,6 @@
         <protected>true</protected>
         <shortDescription>Cascade Deletion Error Message In Lightning Experience</shortDescription>
         <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</value>
-    </labels>
-    <labels>
-        <fullName>ClosedWonOpportunities</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ClosedWonOpportunities</shortDescription>
-        <value>Closed Won Opportunities</value>
-    </labels>
-    <labels>
-        <fullName>ConfirmDeleteAccount</fullName>
-        <categories>Error, Delete</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ConfirmDeleteAccount</shortDescription>
-        <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
     </labels>
     <labels>
         <fullName>DeleteAccount</fullName>
@@ -1189,7 +1168,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>EPTaskTemplate</shortDescription>
-        <value>The Parent Task you selected belongs to a different Engagement Plan Template. Please select an Engagement Plan Task that&apos;s part of this Engagement Plan Template.</value>
+        <value>The Parent Task you selected belongs to a different Engagement Plan Template. Please select an Engagement Plan Task that's part of this Engagement Plan Template.</value>
     </labels>
     <labels>
         <fullName>EPTo</fullName>
@@ -1284,14 +1263,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Error</value>
     </labels>
     <labels>
-        <fullName>PageMessagesFatal</fullName>
-        <categories>PageMessages</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Fatal</shortDescription>
-        <value>Error</value>
-    </labels>
-    <labels>
         <fullName>PageMessagesInfo</fullName>
         <categories>PageMessages</categories>
         <language>en_US</language>
@@ -1300,12 +1271,12 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Info</value>
     </labels>
     <labels>
-        <fullName>PageMessagesProcessing</fullName>
+        <fullName>PageMessagesFatal</fullName>
         <categories>PageMessages</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Processing</shortDescription>
-        <value>Processing</value>
+        <shortDescription>Fatal</shortDescription>
+        <value>Error</value>
     </labels>
     <labels>
         <fullName>PageMessagesWarning</fullName>
@@ -1316,6 +1287,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>PageMessagesProcessing</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Processing</shortDescription>
+        <value>Processing</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorAddDonationHeaderText</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1323,7 +1302,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Refresh Opportunities</shortDescription>
         <value>Refresh Opportunities</value>
     </labels>
-    <labels>
+        <labels>
         <fullName>RD_ErrorAddDonationMissingId</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1478,7 +1457,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RP Remote Site Settings Deactivated</shortDescription>
-        <value>To take advantage of all the new functionality on the Getting Started page, go to Setup, search for Remote Site Settings, and ensure that the SFDOEndpoints site is active. If it isn&apos;t, click Edit, check the Active box, and click Save.</value>
+        <value>To take advantage of all the new functionality on the Getting Started page, go to Setup, search for Remote Site Settings, and ensure that the SFDOEndpoints site is active. If it isn't, click Edit, check the Active box, and click Save.</value>
     </labels>
     <labels>
         <fullName>RP_SalesforceOrgLinkLabel</fullName>
@@ -1764,7 +1743,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloCantAllocateNothing</shortDescription>
-        <value>You can&apos;t create Allocations for an Opportunity with a blank or zero amount.</value>
+        <value>You can't create Allocations for an Opportunity with a blank or zero amount.</value>
     </labels>
     <labels>
         <fullName>alloDefaultGAUMissing</fullName>
@@ -1772,7 +1751,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Default Allocations are enabled, but no default GAU is selected.</shortDescription>
-        <value>You&apos;ve selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</value>
+        <value>You've selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</value>
     </labels>
     <labels>
         <fullName>alloDefaultNotEnabled</fullName>
@@ -1852,7 +1831,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloModifyCurrency</shortDescription>
-        <value>You can&apos;t modify Allocation currencies directly. NPSP updates Allocation currencies when you update the currency of the parent Opportunity, Campaign, or Recurring Donation.</value>
+        <value>You can't modify Allocation currencies directly. NPSP updates Allocation currencies when you update the currency of the parent Opportunity, Campaign, or Recurring Donation.</value>
     </labels>
     <labels>
         <fullName>alloNegativeAmount</fullName>
@@ -1860,7 +1839,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloNegativeAmount</shortDescription>
-        <value>The Amount field can&apos;t contain a negative value.</value>
+        <value>The Amount field can't contain a negative value.</value>
     </labels>
     <labels>
         <fullName>alloNegativePercent</fullName>
@@ -1868,7 +1847,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloNegativePercent</shortDescription>
-        <value>The Percent field can&apos;t contain a negative value.</value>
+        <value>The Percent field can't contain a negative value.</value>
     </labels>
     <labels>
         <fullName>alloObjectUnsupported</fullName>
@@ -1892,7 +1871,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Payment-level allocations are not enabled.</shortDescription>
-        <value>Payment-level Allocations aren&apos;t enabled for your organization. Try allocating at the Opportunity level instead.</value>
+        <value>Payment-level Allocations aren't enabled for your organization. Try allocating at the Opportunity level instead.</value>
     </labels>
     <labels>
         <fullName>alloPaymentOverallocatedError</fullName>
@@ -1926,7 +1905,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>alloRemainder</shortDescription>
         <value>Remainder:</value>
     </labels>
-    <labels>
+        <labels>
         <fullName>alloRemoveOppWithPmt</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -1956,7 +1935,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Allocations cannot exceed the amount of the related Payment or Opportunity.</shortDescription>
-        <value>Allocation totals can&apos;t exceed the amount of the related Payment or Opportunity.</value>
+        <value>Allocation totals can't exceed the amount of the related Payment or Opportunity.</value>
     </labels>
     <labels>
         <fullName>alloTotals</fullName>
@@ -2372,7 +2351,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiErrorNonHHAccountContact</shortDescription>
-        <value>This Contact matched an existing Contact that&apos;s associated with a non-Household Account. The Data Import Tool can only update Contacts that are part of a Household Account.</value>
+        <value>This Contact matched an existing Contact that's associated with a non-Household Account. The Data Import Tool can only update Contacts that are part of a Household Account.</value>
     </labels>
     <labels>
         <fullName>bdiErrorNonHHAccountContactWithAdv</fullName>
@@ -2380,7 +2359,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiErrorNonHHAccountContactWithAdv</shortDescription>
-        <value>This Contact matched an existing Contact that&apos;s associated with a non-Household, non-Administrative Account. The Gift Entry Tool can only update Contacts that are part of a Household or Administrative Account.</value>
+        <value>This Contact matched an existing Contact that's associated with a non-Household, non-Administrative Account. The Gift Entry Tool can only update Contacts that are part of a Household or Administrative Account.</value>
     </labels>
     <labels>
         <fullName>bdiErrorOneToOneMultiContact</fullName>
@@ -2473,20 +2452,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Matched</value>
     </labels>
     <labels>
-        <fullName>bdiMatchedApplyNewPayment</fullName>
-        <categories>Data Import</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>status on BDI object when user selected opp in BGE interface for new payment</shortDescription>
-        <value>Apply New Payment</value>
-    </labels>
-    <labels>
         <fullName>bdiMatchedBest</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
         <value>Best Match Used</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedId</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>BDI status when matching an object by its Salesforce ID</shortDescription>
+        <value>Matched by Id</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedNone</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Status on a bdi object when no matching record found</shortDescription>
+        <value>Matched None</value>
     </labels>
     <labels>
         <fullName>bdiMatchedByUser</fullName>
@@ -2505,20 +2492,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>User-Selected New Opportunity</value>
     </labels>
     <labels>
-        <fullName>bdiMatchedId</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>BDI status when matching an object by its Salesforce ID</shortDescription>
-        <value>Matched by Id</value>
-    </labels>
-    <labels>
-        <fullName>bdiMatchedNone</fullName>
+        <fullName>bdiMatchedApplyNewPayment</fullName>
         <categories>Data Import</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Status on a bdi object when no matching record found</shortDescription>
-        <value>Matched None</value>
+        <shortDescription>status on BDI object when user selected opp in BGE interface for new payment</shortDescription>
+        <value>Apply New Payment</value>
     </labels>
     <labels>
         <fullName>bdiPositiveNumber</fullName>
@@ -2631,6 +2610,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>View</value>
     </labels>
     <labels>
+        <fullName>bgeBatchSelectedFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchActiveFields</shortDescription>
+        <value>Selected Fields</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchAvailableFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2680,13 +2666,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Select the fields to use for entering gifts in this batch. Donor Type and an Account or Contact lookup will always appear. You will only see fields that you have access to.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchDryRun</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Text for batch dry run in BGE.</shortDescription>
-        <value>Batch Dry Run</value>
-    </labels>
-    <labels>
         <fullName>bgeBatchErrorRequiredFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2701,13 +2680,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Enter Batch Info</value>
     </labels>
     <labels>
-        <fullName>bgeBatchOverview</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Header for Batch Info in View Mode</shortDescription>
-        <value>Batch Info</value>
-    </labels>
-    <labels>
         <fullName>bgeBatchOverviewWizard</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2719,7 +2691,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
-        <value>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP batch records.</value>
+        <value>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP batch records.
+        </value>
     </labels>
     <labels>
         <fullName>bgeBatchProcessUsingScheduledJobHelp</fullName>
@@ -2736,18 +2709,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</value>
     </labels>
     <labels>
+        <fullName>bgeBatchOverview</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Info in View Mode</shortDescription>
+        <value>Batch Info</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchSelectFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header and text for Field Selection</shortDescription>
         <value>Select Fields</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchSelectedFields</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>bgeBatchActiveFields</shortDescription>
-        <value>Selected Fields</value>
     </labels>
     <labels>
         <fullName>bgeBatchSetBatchOptions</fullName>
@@ -2764,13 +2737,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Set Field Options</value>
     </labels>
     <labels>
-        <fullName>bgeCopyBatchSetupBatchNameAppend</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Button text for copying existing Batch setup to a new Batch.</shortDescription>
-        <value>COPY</value>
-    </labels>
-    <labels>
         <fullName>bgeCopyBatchSetupButton</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2778,11 +2744,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Copy Batch Setup</value>
     </labels>
     <labels>
-        <fullName>bgeDonationSelectorHelp</fullName>
+        <fullName>bgeCopyBatchSetupBatchNameAppend</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Help text to appear in Donation Selector modal in BGE.</shortDescription>
-        <value>This screen displays unpaid Payments and open Opportunities that have no unpaid Payments.</value>
+        <shortDescription>Button text for copying existing Batch setup to a new Batch.</shortDescription>
+        <value>COPY</value>
     </labels>
     <labels>
         <fullName>bgeDryRunComplete</fullName>
@@ -2790,6 +2756,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Success message when batch dry run completes in BGE.</shortDescription>
         <value>Batch Dry Run Complete</value>
+    </labels>
+    <labels>
+        <fullName>bgeDonationSelectorHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text to appear in Donation Selector modal in BGE.</shortDescription>
+        <value>This screen displays unpaid Payments and open Opportunities that have no unpaid Payments.</value>
     </labels>
     <labels>
         <fullName>bgeEditBatchFieldOptionsWarning</fullName>
@@ -2848,18 +2821,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Alternatively, create a new Opportunity.</value>
     </labels>
     <labels>
-        <fullName>bgeFormSelectedOpportunity</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Denotes donation selected in the BGE UI entry form.</shortDescription>
-        <value>Updating this Opportunity</value>
-    </labels>
-    <labels>
         <fullName>bgeFormSelectedOpportunityApplyNewPayment</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Denotes donation selected in the BGE UI entry form will receive a new payment.</shortDescription>
         <value>Applying New Payment</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormSelectedOpportunity</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Denotes donation selected in the BGE UI entry form.</shortDescription>
+        <value>Updating this Opportunity</value>
     </labels>
     <labels>
         <fullName>bgeFormSelectedPayment</fullName>
@@ -2911,18 +2884,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Donor Type</value>
     </labels>
     <labels>
-        <fullName>bgeGridErrorConflictingGifts</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Message preventing user from processing batch if there are conflicting gifts.</shortDescription>
-        <value>There are conflicting gifts in this batch. You will need to resolve these conflicts before you&apos;re able to process this batch.</value>
-    </labels>
-    <labels>
         <fullName>bgeGridErrorFromDryRun</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message preventing user from processing batch if there are errors.</shortDescription>
         <value>There are errors on one or more entries. You must resolve all errors before you can process this batch.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridErrorConflictingGifts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message preventing user from processing batch if there are conflicting gifts.</shortDescription>
+        <value>There are conflicting gifts in this batch. You will need to resolve these conflicts before you're able to process this batch.</value>
     </labels>
     <labels>
         <fullName>bgeGridErrorRequiredTotalsExpected</fullName>
@@ -2960,18 +2933,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Gifts successfully updated.</value>
     </labels>
     <labels>
+        <fullName>bgeGridNoGiftsHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header message when no gifts are associated with batch.</shortDescription>
+        <value>Looks like you haven't entered any gifts yet!</value>
+    </labels>
+    <labels>
         <fullName>bgeGridNoGiftsBody</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Body message when no gifts are associated with batch.</shortDescription>
         <value>Enter a new gift and it will appear here.</value>
-    </labels>
-    <labels>
-        <fullName>bgeGridNoGiftsHeader</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Header message when no gifts are associated with batch.</shortDescription>
-        <value>Looks like you haven&apos;t entered any gifts yet!</value>
     </labels>
     <labels>
         <fullName>bgeGridTotalAmount</fullName>
@@ -2993,6 +2966,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Message warning user if totals don&apos;t match expected</shortDescription>
         <value>Require Expected Totals Match is selected but the Expected Count of Gifts and Expected Total Batch Amount fields are blank. Edit the batch details and either uncheck Require Expected Totals Match or add values in the related fields.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchDryRun</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for batch dry run in BGE.</shortDescription>
+        <value>Batch Dry Run</value>
     </labels>
     <labels>
         <fullName>bgeMatchingAlert</fullName>
@@ -3037,18 +3017,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Gift Entry</value>
     </labels>
     <labels>
-        <fullName>bgeWizardHideAdvancedOptions</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for link to hide advanced options in the Wizard</shortDescription>
-        <value>Hide Advanced Options</value>
-    </labels>
-    <labels>
         <fullName>bgeWizardShowAdvancedOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for link to show advanced options in the Wizard</shortDescription>
         <value>Show Advanced Options</value>
+    </labels>
+    <labels>
+        <fullName>bgeWizardHideAdvancedOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for link to hide advanced options in the Wizard</shortDescription>
+        <value>Hide Advanced Options</value>
     </labels>
     <labels>
         <fullName>btnContinue</fullName>
@@ -3088,6 +3068,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>campaignMemberStatusResponded</shortDescription>
         <value>campaignMemberStatusResponded</value>
+    </labels>
+    <labels>
+        <fullName>CallableApiMethodNotImplemented</fullName>
+        <categories>API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CallableApi Method Not Implemented</shortDescription>
+        <value>{0} is not implemented</value>
+    </labels>
+    <labels>
+        <fullName>CallableApiParameterError</fullName>
+        <categories>API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error parsing/type casting a parameter</shortDescription>
+        <value>Error parsing {0} parameter: {1}</value>
+    </labels>
+    <labels>
+        <fullName>CallableApiProcessingError</fullName>
+        <categories>API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error completing the specified API call</shortDescription>
+        <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
         <fullName>conFailedAccountCreate</fullName>
@@ -3199,7 +3203,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>engagementPlanCantEdit</shortDescription>
-        <value>You can&apos;t change the Account, Contact, Campaign, Case, Opportunity, or Recurring Donation for an Engagement Plan. Create a new Engagement Plan instead.</value>
+        <value>You can't change the Account, Contact, Campaign, Case, Opportunity, or Recurring Donation for an Engagement Plan. Create a new Engagement Plan instead.</value>
     </labels>
     <labels>
         <fullName>engagementPlanMissingField</fullName>
@@ -3293,7 +3297,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthDetailsAccountDefaultRTInvalid</shortDescription>
-        <value>The Account Model record type isn&apos;t valid.</value>
+        <value>The Account Model record type isn't valid.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountDefaultRTIssue</fullName>
@@ -3301,7 +3305,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthDetailsAccountDefaultRTIssue</shortDescription>
-        <value>The Account Model record type, {0} (set in NPSP Settings) is currently set as your Profile&apos;s default Account record type.</value>
+        <value>The Account Model record type, {0} (set in NPSP Settings) is currently set as your Profile's default Account record type.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountModel</fullName>
@@ -3372,7 +3376,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsContactData</shortDescription>
-        <value>There are {0} Contacts that have no Account. Contacts with no Account are private to the User who created them and can&apos;t be seen by other Users.</value>
+        <value>There are {0} Contacts that have no Account. Contacts with no Account are private to the User who created them and can't be seen by other Users.</value>
     </labels>
     <labels>
         <fullName>healthDetailsDuplicateAcctRT</fullName>
@@ -3396,7 +3400,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsHHAccountModel</shortDescription>
-        <value>When using the Household Account Model, you must set Household Object Rules to &quot;No Contacts&quot;. You can set the Household Object Rules field on the NPSP Settings Page under People | Households.</value>
+        <value>When using the Household Account Model, you must set Household Object Rules to "No Contacts". You can set the Household Object Rules field on the NPSP Settings Page under People | Households.</value>
     </labels>
     <labels>
         <fullName>healthDetailsHHActNoContacts</fullName>
@@ -4203,7 +4207,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionMailingListReportMissing</shortDescription>
-        <value>Create a Campaigns with Contacts report, and add a filter for Member Status does not contain &quot;Duplicate&quot;. Then specify this report on the {0} | {1} tab in NPSP Settings.</value>
+        <value>Create a Campaigns with Contacts report, and add a filter for Member Status does not contain "Duplicate". Then specify this report on the {0} | {1} tab in NPSP Settings.</value>
     </labels>
     <labels>
         <fullName>healthSolutionMissingOppPayments</fullName>
@@ -4219,7 +4223,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
-        <value>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs in the Power of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</value>
+        <value>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don't Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs in the Power of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRDupPrimary</fullName>
@@ -4322,7 +4326,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>hhCmpDedupeBatchMessage</shortDescription>
-        <value>Due to the large number of Campaign Members on this Campaign, NPSP is using a batch process to identify Household Members, which may take several minutes to complete. When it&apos;s done, you can view the Household Mailing report by clicking on the Household Mailing Report link.</value>
+        <value>Due to the large number of Campaign Members on this Campaign, NPSP is using a batch process to identify Household Members, which may take several minutes to complete. When it's done, you can view the Household Mailing report by clicking on the Household Mailing Report link.</value>
     </labels>
     <labels>
         <fullName>hhCmpDedupeBatchProgressTitle</fullName>
@@ -5063,7 +5067,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtModifyCurrency</shortDescription>
-        <value>You can&apos;t modify Payment currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related Payment records.</value>
+        <value>You can't modify Payment currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the currency of all related Payment records.</value>
     </labels>
     <labels>
         <fullName>pmtPaidPaymentDateRequired</fullName>
@@ -5080,6 +5084,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>pmtUnpaidPaymentScheduledDateRequired</shortDescription>
         <value>An unpaid Payment must have a Scheduled Date.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWriteOffPaidPayment</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWriteOffPaidPayment</shortDescription>
+        <value>A Payment can't be both paid and written off. You must deselect one or both checkboxes.</value>
     </labels>
     <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
@@ -5154,14 +5166,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Period</value>
     </labels>
     <labels>
-        <fullName>pmtWizardInvalidRecords</fullName>
-        <categories>Payment Wizard</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>pmtWizardInvalidRecords</shortDescription>
-        <value>NOTE: This Opportunity has payment record(s) that are both Paid and Written Off. You must deselect one or both checkboxes.</value>
-    </labels>
-    <labels>
         <fullName>pmtWizardMonth</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -5176,6 +5180,46 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>pmtWizardMsgNoOppFound</shortDescription>
         <value>No opportunity found.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardInvalidRecords</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardInvalidRecords</shortDescription>
+        <value>NOTE: This Opportunity has payment record(s) that are both Paid and Written Off. You must deselect one or both checkboxes.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardScheduleInvalidRecords</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardScheduleInvalidRecords</shortDescription>
+        <value>One or more existing Payment records are both paid and written off. To create a new Payment schedule, you must first deselect one or both checkboxes for these Payments.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardScheduleNoAmount</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardNoAmount</shortDescription>
+        <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can schedule Payments.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardWriteOffNoAmount</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardNoAmount</shortDescription>
+        <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can write off Payments.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardWriteOffInvalidRecords</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardWriteOffInvalidRecords</shortDescription>
+        <value>One or more existing Payment records are both paid and written off. To write off Payments, you must first deselect one or both checkboxes for these Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardNoUnpaidAmount</fullName>
@@ -5234,22 +5278,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to manage Payments.</value>
     </labels>
     <labels>
-        <fullName>pmtWizardScheduleInvalidRecords</fullName>
-        <categories>Payment Wizard</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>pmtWizardScheduleInvalidRecords</shortDescription>
-        <value>One or more existing Payment records are both paid and written off. To create a new Payment schedule, you must first deselect one or both checkboxes for these Payments.</value>
-    </labels>
-    <labels>
-        <fullName>pmtWizardScheduleNoAmount</fullName>
-        <categories>Payment Wizard</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>pmtWizardNoAmount</shortDescription>
-        <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can schedule Payments.</value>
-    </labels>
-    <labels>
         <fullName>pmtWizardSectionTitle</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -5306,22 +5334,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Week</value>
     </labels>
     <labels>
-        <fullName>pmtWizardWriteOffInvalidRecords</fullName>
-        <categories>Payment Wizard</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>pmtWizardWriteOffInvalidRecords</shortDescription>
-        <value>One or more existing Payment records are both paid and written off. To write off Payments, you must first deselect one or both checkboxes for these Payments.</value>
-    </labels>
-    <labels>
-        <fullName>pmtWizardWriteOffNoAmount</fullName>
-        <categories>Payment Wizard</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>pmtWizardNoAmount</shortDescription>
-        <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can write off Payments.</value>
-    </labels>
-    <labels>
         <fullName>pmtWizardWriteoffDate</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -5352,14 +5364,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>pmtWizardYear</shortDescription>
         <value>Year</value>
-    </labels>
-    <labels>
-        <fullName>pmtWriteOffPaidPayment</fullName>
-        <categories>Payment, Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>pmtWriteOffPaidPayment</shortDescription>
-        <value>A Payment can&apos;t be both paid and written off. You must deselect one or both checkboxes.</value>
     </labels>
     <labels>
         <fullName>pmtWrittenOffPaymentDateRequired</fullName>
@@ -5402,6 +5406,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Please enter an amount or percent for each soft credit.</value>
     </labels>
     <labels>
+        <fullName>pscManageSoftCreditsContactMissing</fullName>
+        <categories>Manage Soft Credits</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pscManageSoftCreditsContactMissing</shortDescription>
+        <value>You must enter a Contact for each soft credit.</value>
+    </labels>
+    <labels>
         <fullName>pscManageSoftCreditsAmountOrPercent</fullName>
         <categories>Manage Soft Credits</categories>
         <language>en_US</language>
@@ -5418,12 +5430,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You can&apos;t modify soft credit currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related soft credits.</value>
     </labels>
     <labels>
-        <fullName>pscManageSoftCreditsContactMissing</fullName>
-        <categories>Manage Soft Credits</categories>
+        <fullName>pscManageSoftCreditsPermissionDenied</fullName>
+        <categories>Manage Soft Credits, Error</categories>
         <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>pscManageSoftCreditsContactMissing</shortDescription>
-        <value>You must enter a Contact for each soft credit.</value>
+        <protected>true</protected>
+        <shortDescription>You do not have permission to manage soft credits</shortDescription>
+        <value>You do not have permissions to manage Partial Soft Credits. Please contact your system administrator for more information.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsFull</fullName>
@@ -5439,7 +5451,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsInvalidContact</shortDescription>
-        <value>{0} is the Primary Contact for this Opportunity. You can&apos;t add soft credit to this Contact.</value>
+        <value>{0} is the Primary Contact for this Opportunity. You can't add soft credit to this Contact.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsNoRoles</fullName>
@@ -5482,14 +5494,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Percent</value>
     </labels>
     <labels>
-        <fullName>pscManageSoftCreditsPermissionDenied</fullName>
-        <categories>Manage Soft Credits, Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>You do not have permission to manage soft credits</shortDescription>
-        <value>You do not have permissions to manage Partial Soft Credits. Please contact your system administrator for more information.</value>
-    </labels>
-    <labels>
         <fullName>pscManageSoftCreditsPrimaryDonor</fullName>
         <categories>Manage Soft Credits</categories>
         <language>en_US</language>
@@ -5503,7 +5507,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsReconcileFail</shortDescription>
-        <value>The total Soft Credit Amount can&apos;t exceed the Opportunity Amount. Select Allow Soft Credit Amount more than Total Amount to override this restriction.</value>
+        <value>The total Soft Credit Amount can't exceed the Opportunity Amount. Select Allow Soft Credit Amount more than Total Amount to override this restriction.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsRestrictions</fullName>
@@ -5586,14 +5590,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must select one or more Opportunities before clicking Email Acknowledgments.</value>
     </labels>
     <labels>
-        <fullName>sendAcknowledgmentNumberAlreadySent</fullName>
-        <categories>Send Acknowledgment Button</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>sendAcknowledgmentNumberAlreadySent</shortDescription>
-        <value>{0} acknowledgment(s) already sent.</value>
-    </labels>
-    <labels>
         <fullName>sendAcknowledgmentNumberNoEmail</fullName>
         <categories>Send Acknowledgment Button</categories>
         <language>en_US</language>
@@ -5608,6 +5604,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentNumberSent</shortDescription>
         <value>{0} acknowledgment(s) sent.</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNumberAlreadySent</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>sendAcknowledgmentNumberAlreadySent</shortDescription>
+        <value>{0} acknowledgment(s) already sent.</value>
     </labels>
     <labels>
         <fullName>sendAcknowledgmentPageTitle</fullName>
@@ -5906,58 +5910,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save</value>
     </labels>
     <labels>
-        <fullName>stgCRLPGoToSetup</fullName>
+        <fullName>stgCheckboxTrue</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgCRLPGoToSetup</shortDescription>
-        <value>Configure Customizable Rollups</value>
-    </labels>
-    <labels>
-        <fullName>stgCRLPHouseholdAccountError</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgCRLPHouseholdAccountError</shortDescription>
-        <value>You must be using the Household Account Model in order to use Customizable Rollups.</value>
-    </labels>
-    <labels>
-        <fullName>stgCRLPInfoOnUDRBody</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgCRLPInfoOnUDRBody</shortDescription>
-        <value>Customizable Rollups offer all the functionality of User Defined Rollups and so much more:&lt;br/&gt;
-            &lt;br/&gt;
-            ● Roll up Payments in addition to Opportunities&lt;br/&gt;
-            ● Use filters to easily exclude certain records or data&lt;br/&gt;
-            ● Roll up data for more than 2 years back&lt;br/&gt;
-            &lt;br/&gt;
-            Go to NPSP Settings | Donations | Customizable Rollups to enable Customizable Rollups and get started using them!</value>
-    </labels>
-    <labels>
-        <fullName>stgCRLPInfoOnUDRHeading</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgCRLPInfoOnUDRHeading</shortDescription>
-        <value>Why not try Customizable Rollups instead?</value>
-    </labels>
-    <labels>
-        <fullName>stgCRLPNonAdminError</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgCRLPNonAdminError</shortDescription>
-        <value>Only System Administrators can enable or disable Customizable Rollups.</value>
-    </labels>
-    <labels>
-        <fullName>stgCRLPReset</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgCRLPReset</shortDescription>
-        <value>Reset Customizable Rollups</value>
+        <shortDescription>For alternative text when a boolean is selected.</shortDescription>
+        <value>Selected</value>
     </labels>
     <labels>
         <fullName>stgCheckboxFalse</fullName>
@@ -5966,14 +5924,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>For alternative text when a boolean is not selected.</shortDescription>
         <value>Not Selected</value>
-    </labels>
-    <labels>
-        <fullName>stgCheckboxTrue</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>For alternative text when a boolean is selected.</shortDescription>
-        <value>Selected</value>
     </labels>
     <labels>
         <fullName>stgClearErrors</fullName>
@@ -5999,12 +5949,75 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Created By</value>
     </labels>
     <labels>
+        <fullName>stgCRLPHouseholdAccountError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPHouseholdAccountError</shortDescription>
+        <value>You must be using the Household Account Model in order to use Customizable Rollups.</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPInfoOnUDRBody</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPInfoOnUDRBody</shortDescription>
+        <value>Customizable Rollups offer all the functionality of User Defined Rollups and so much more:&lt;br/&gt;
+            &lt;br/&gt;
+            ● Roll up Payments in addition to Opportunities&lt;br/&gt;
+            ● Use filters to easily exclude certain records or data&lt;br/&gt;
+            ● Roll up data for more than 2 years back&lt;br/&gt;
+            &lt;br/&gt;
+            Go to NPSP Settings | Donations | Customizable Rollups to enable Customizable Rollups and get started using them!
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPInfoOnUDRHeading</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPInfoOnUDRHeading</shortDescription>
+        <value>Why not try Customizable Rollups instead?</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPNonAdminError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPNonAdminError</shortDescription>
+        <value>Only System Administrators can enable or disable Customizable Rollups.</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPGoToSetup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPGoToSetup</shortDescription>
+        <value>Configure Customizable Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPReset</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPReset</shortDescription>
+        <value>Reset Customizable Rollups</value>
+    </labels>
+    <labels>
         <fullName>stgDefaultValue</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgDefaultValue</shortDescription>
         <value>Default Value</value>
+    </labels>
+    <labels>
+        <fullName>stgDocumentation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDocumentation</shortDescription>
+        <value>Documentation</value>
     </labels>
     <labels>
         <fullName>stgDeploymentInProgress</fullName>
@@ -6023,14 +6036,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You can try again immediately.</value>
     </labels>
     <labels>
-        <fullName>stgDocumentation</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgDocumentation</shortDescription>
-        <value>Documentation</value>
-    </labels>
-    <labels>
         <fullName>stgDontAutoScheduleHelpText</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6039,13 +6044,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>NPSP has a number of Scheduled Jobs that calculate rollups, update Recurring Donations and Seasonal Addresses, and perform error handling.
 &lt;br/&gt;
 &lt;br/&gt;
-When Don&apos;t Auto Schedule Default NPSP Jobs is not selected, whenever you load the NPSP Settings page, NPSP checks that all the default NPSP Jobs are scheduled. If they&apos;re not scheduled, NPSP reschedules them. NPSP will reschedule only missing NPSP Jobs; it will not overwrite Jobs that have been updated.
+When Don't Auto Schedule Default NPSP Jobs is not selected, whenever you load the NPSP Settings page, NPSP checks that all the default NPSP Jobs are scheduled. If they're not scheduled, NPSP reschedules them. NPSP will reschedule only missing NPSP Jobs; it will not overwrite Jobs that have been updated.
 &lt;br/&gt;
 &lt;br/&gt;
 To view these Jobs, search for Scheduled Jobs in Salesforce Setup.
 &lt;br/&gt;
 &lt;br/&gt;
-Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</value>
+Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</value>
     </labels>
     <labels>
         <fullName>stgErrorINaming</fullName>
@@ -6101,7 +6106,7 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAlloNDayValue</shortDescription>
-        <value>Sets the value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to roll up GAU Allocations over the past 365 days.</value>
+        <value>Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to roll up GAU Allocations over the past 365 days.</value>
     </labels>
     <labels>
         <fullName>stgHelpAllocationLevel</fullName>
@@ -6111,7 +6116,7 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
         <shortDescription>stgHelpAllocationLevel</shortDescription>
         <value>An allocation is the specific amount of a gift that goes to a designated General Accounting Unit (GAU). This setting determines whether funds are allocated based on the Amount on the Opportunity or the Amount on the Payment.&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;WARNING:&lt;/b&gt; Choosing to use Payment Allocations changes the way Opportunity Allocations work in your org. It&apos;s important that you understand these changes and the additional requirements that exist before enabling them.&lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;WARNING:&lt;/b&gt; Choosing to use Payment Allocations changes the way Opportunity Allocations work in your org. It's important that you understand these changes and the additional requirements that exist before enabling them.&lt;br/&gt;&lt;br/&gt;
 
 If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations. Review the Payment Allocations documentation to better understand the potential impact.&lt;br/&gt;&lt;br/&gt;
 
@@ -6123,7 +6128,7 @@ When you enable Payment Allocations, existing rollups remain the same. We do not
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAutoAffil</shortDescription>
-        <value>When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organization Accounts whenever the Contact&apos;s Account field or Primary Affiliation field changes. Organizations Accounts include all Record Types except those defined as Household or One-to-One Account Record Types.</value>
+        <value>When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organization Accounts whenever the Contact's Account field or Primary Affiliation field changes. Organizations Accounts include all Record Types except those defined as Household or One-to-One Account Record Types.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoRelCampaignRT</fullName>
@@ -6131,7 +6136,7 @@ When you enable Payment Allocations, existing rollups remain the same. We do not
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAutoRelCampaignRT</shortDescription>
-        <value>Select the Campaign Type(s) you&apos;d like this Automatic Relationship to be created for.</value>
+        <value>Select the Campaign Type(s) you'd like this Automatic Relationship to be created for.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoRelField</fullName>
@@ -6227,7 +6232,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpBtnOppNaming</shortDescription>
-        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Opportunity renaming, and refresh all Opportunity Names according to the formats you&apos;ve chosen. Salesforce will rename every Opportunity in your organization except those Opportunities whose Opportunity Name Formats you&apos;ve specified as &quot;Do Not Rename.&quot;&lt;br/&gt;&lt;br/&gt;
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Opportunity renaming, and refresh all Opportunity Names according to the formats you've chosen. Salesforce will rename every Opportunity in your organization except those Opportunities whose Opportunity Name Formats you've specified as &quot;Do Not Rename.&quot;&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
 Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
@@ -6297,7 +6302,9 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable1</shortDescription>
-        <value>You can find complete Customizable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
+        <value>
+            You can find complete Customizable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
+        </value>
     </labels>
     <labels>
         <fullName>stgHelpCustomizableRollupsEnable2</fullName>
@@ -6305,9 +6312,11 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable2</shortDescription>
-        <value>When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customizable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
+        <value>
+            When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customizable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
-            You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customizable Rollups won&apos;t be applied to your legacy rollup settings.</value>
+            You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customizable Rollups won't be applied to your legacy rollup settings.
+        </value>
     </labels>
     <labels>
         <fullName>stgHelpCustomizableRollupsEnable3</fullName>
@@ -6315,7 +6324,9 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
-        <value>Removes any new rollups, filter groups, and filter rules you created while using Customizable Rollups AND resets all NPSP legacy rollups back to their default behavior.</value>
+        <value>
+            Removes any new rollups, filter groups, and filter rules you created while using Customizable Rollups AND resets all NPSP legacy rollups back to their default behavior.
+        </value>
     </labels>
     <labels>
         <fullName>stgHelpDefaultAllocationsEnabled</fullName>
@@ -6331,7 +6342,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpDefaultGAU</shortDescription>
-        <value>When Default Allocations Enabled is selected, NPSP creates a GAU Allocation for all new Opportunities not excluded in GAU Allocations Rollup Settings, and assigns them to this General Accounting Unit. NOTE: This doesn&apos;t include existing unallocated Opportunities. You can allocate them to the default General Accounting Unit in NPSP Settings under Bulk Data Processes | Batch Create Default Allocations.</value>
+        <value>When Default Allocations Enabled is selected, NPSP creates a GAU Allocation for all new Opportunities not excluded in GAU Allocations Rollup Settings, and assigns them to this General Accounting Unit. NOTE: This doesn't include existing unallocated Opportunities. You can allocate them to the default General Accounting Unit in NPSP Settings under Bulk Data Processes | Batch Create Default Allocations.</value>
     </labels>
     <labels>
         <fullName>stgHelpDisableHHAccountAddr</fullName>
@@ -6419,7 +6430,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHMailingListReport</shortDescription>
-        <value>The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called &quot;NPSP Campaign Household Mailing List V2&quot;. If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with filters for Member Status does not contain &quot;Duplicate&quot;, and Campaign Id = blank.</value>
+        <value>The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called "NPSP Campaign Household Mailing List V2". If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with filters for Member Status does not contain "Duplicate", and Campaign Id = blank.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHNameFormat</fullName>
@@ -6443,7 +6454,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHOCROn</shortDescription>
-        <value>When selected, NPSP automatically creates Contact Roles on Individual gifts for Household members of the Opportunity&apos;s Primary Contact.</value>
+        <value>When selected, NPSP automatically creates Contact Roles on Individual gifts for Household members of the Opportunity's Primary Contact.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHObjectOverview</fullName>
@@ -6610,6 +6621,14 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <value>The default Contact Role automatically assigned to the Primary Contact when the Opportunity Account is a Household, One-to-One, or Individual Account.</value>
     </labels>
     <labels>
+        <fullName>stgHelpOrgOCRDefaultRole</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Help text for Contact Role for Organizational Opps</shortDescription>
+        <value>The default Contact Role automatically assigned to the Opportunity&apos;s Primary Contact when the Opportunity&apos;s Account is NOT a Household, One-to-One, or Individual Account.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpOCRRoleForHH</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6631,7 +6650,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOppNamingAttribution</shortDescription>
-        <value>Specifies whether you want to apply these settings to Contact Donations (i.e. Opportunities associated with Household, 1-to-1, or Individual &quot;Bucket&quot; Accounts), Organization Donations, or both Contact and Organization Donations.</value>
+        <value>Specifies whether you want to apply these settings to Contact Donations (i.e. Opportunities associated with Household, 1-to-1, or Individual "Bucket" Accounts), Organization Donations, or both Contact and Organization Donations.</value>
     </labels>
     <labels>
         <fullName>stgHelpOppNamingDateFormat</fullName>
@@ -6680,14 +6699,6 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <protected>false</protected>
         <shortDescription>stgHelpOrgAccountAddressMgmt</shortDescription>
         <value>When selected, enables Address Management for non-Household Accounts such as Organizational Accounts.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpOrgOCRDefaultRole</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Help text for Contact Role for Organizational Opps</shortDescription>
-        <value>The default Contact Role automatically assigned to the Opportunity&apos;s Primary Contact when the Opportunity&apos;s Account is NOT a Household, One-to-One, or Individual Account.</value>
     </labels>
     <labels>
         <fullName>stgHelpOverrunCount</fullName>
@@ -6883,7 +6894,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppForecastMonths</shortDescription>
-        <value>Number of months&apos; worth of open Opportunities that NPSP maintains on Open-Ended Recurring Donations. NPSP makes sure there are always this many months&apos; worth of Opportunities by creating the appropriate number of new Opportunities every month.</value>
+        <value>Number of months' worth of open Opportunities that NPSP maintains on Open-Ended Recurring Donations. NPSP makes sure there are always this many months' worth of Opportunities by creating the appropriate number of new Opportunities every month.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOppRT</fullName>
@@ -6891,7 +6902,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>The Opportunity record type assigned to the Recurring Donation&apos;s child Opportunities.</value>
+        <value>The Opportunity record type assigned to the Recurring Donation's child Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
@@ -7328,12 +7339,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Default Contact Roles</value>
     </labels>
     <labels>
-        <fullName>stgLabelBDESettings</fullName>
+        <fullName>stgLabelBatchJobSizes</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>stgLabelBDESettings</shortDescription>
-        <value>Batch Data Entry Settings</value>
+        <shortDescription>stgLabelBatchJobSizes</shortDescription>
+        <value>Rollup Batch Job Sizes</value>
     </labels>
     <labels>
         <fullName>stgLabelBatchJobRollupSkewSizes</fullName>
@@ -7344,20 +7355,20 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Rollup Batch Job Skew Mode Sizes</value>
     </labels>
     <labels>
-        <fullName>stgLabelBatchJobSizes</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelBatchJobSizes</shortDescription>
-        <value>Rollup Batch Job Sizes</value>
-    </labels>
-    <labels>
         <fullName>stgLabelBatchProcessingOptions</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgLabelBatchProcessingOptions</shortDescription>
         <value>Batch Processing Options</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelBDESettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelBDESettings</shortDescription>
+        <value>Batch Data Entry Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelBatchStatus</fullName>
@@ -7592,12 +7603,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>--None--</value>
     </labels>
     <labels>
-        <fullName>stgLabelOK</fullName>
+        <fullName>stgLabelObject</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>stgLabelOK</shortDescription>
-        <value>OK</value>
+        <shortDescription>stgLabelObject</shortDescription>
+        <value>Object</value>
     </labels>
     <labels>
         <fullName>stgLabelONS</fullName>
@@ -7608,12 +7619,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Opportunity Name Settings</value>
     </labels>
     <labels>
-        <fullName>stgLabelObject</fullName>
+        <fullName>stgLabelOK</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>stgLabelObject</shortDescription>
-        <value>Object</value>
+        <shortDescription>stgLabelOK</shortDescription>
+        <value>OK</value>
     </labels>
     <labels>
         <fullName>stgLabelOppBatchProgress</fullName>
@@ -7936,6 +7947,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Del</value>
     </labels>
     <labels>
+        <fullName>stgNoObjectsFound</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No records of an object found. Pass in the object's plural label.</shortDescription>
+        <value>No {0} found.</value>
+    </labels>
+    <labels>
         <fullName>stgNPSPGuideImportData</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -8000,20 +8019,20 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>GAU Allocations</value>
     </labels>
     <labels>
-        <fullName>stgNavBDE</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgNavBDE</shortDescription>
-        <value>Batch Data Entry</value>
-    </labels>
-    <labels>
         <fullName>stgNavBatchProcessSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavBatchProcessSettings</shortDescription>
         <value>Batch Process Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgNavBDE</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavBDE</shortDescription>
+        <value>Batch Data Entry</value>
     </labels>
     <labels>
         <fullName>stgNavBulkProcesses</fullName>
@@ -8246,14 +8265,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgNavUserDefinedRollups</shortDescription>
         <value>User Defined Rollups</value>
-    </labels>
-    <labels>
-        <fullName>stgNoObjectsFound</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>No records of an object found. Pass in the object&apos;s plural label.</shortDescription>
-        <value>No {0} found.</value>
     </labels>
     <labels>
         <fullName>stgNotApplicable</fullName>
