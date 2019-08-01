@@ -242,6 +242,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description For multicurrency orgs, validate the currencies and set the appropriate stages
     *  and currency fields
+    * @param oppsById The map of opportunities by Id
     * @param newlist The list of Payments from trigger new.
     * @param oldlist The list of Payments from trigger old.
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
