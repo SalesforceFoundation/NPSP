@@ -837,12 +837,13 @@ private class PMT_Payment_TEST {
     }
 
 
-    /**
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /*
      * @description Check that the opportunity amount is updated when the payed payments amounts
-     * exceed the opportunity amount
+     * exceed the opportunity amount if the opp is not finalized
      */
     @isTest
-    private static void oppAmtUpdatedForLargerPaidPaymentsNotFinalized() {
+    private static void paidPaymentAddLargerAmtToOppNonFinalized() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -880,12 +881,13 @@ private class PMT_Payment_TEST {
         System.assertEquals(500, opp.Amount, 'Open opportunity amount not updated when paid amounts exceed opportunity amount.');
     }
 
-    /**
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /*
      * @description Check that the finalized opportunity amount is updated when the payed payments amounts
      * are less than the opportunity amount
      */
     @isTest
-    private static void oppAmtUpdatedForLowerPaidPaymentsFinalized() {
+    private static void paidPaymentAddLowerAmtToFinalized() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -922,6 +924,133 @@ private class PMT_Payment_TEST {
         opp = [select Id, Amount from Opportunity where Id = :opp.Id];
         System.assertEquals(20, opp.Amount, 'Finalized opportunity amount not updated when paid amounts are less than opportunity amount.');
     }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Non Finalized Opportunity, Amount changed to more than Sum of Paid Payments: Result (Allowed)
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedUpdateAmtToHigherThanPaidPayments() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Non Finalized Opportunity, Amount changed to less than Sum of Paid Payments: Result (Blocked)
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedUpdateAmtToLowerThanPaidPayments() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Finalized Opportunity, Amount same as Sum of Paid Payments: Result (Allowed)
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedUpdateAmtToEqualToPaidPayments() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Finalized Opportunity, Amount < Sum of Paid Payments: Result (Blocked)
+    */
+    // TODO
+    @isTest
+    private static void oppFinalizedUpdateAmtToLowerThanPaidPayments() {
+
+    }
+    
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Finalized Opportunity, Amount > Sum of Paid Payments: Result (Blocked)
+    */
+    // TODO
+    @isTest
+    private static void oppFinalizedUpdateAmtToHigherThanPaidPayments() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Non Final Opportunity inserted with unpaid payments totaling < than opportunity Amount. Change Unpaid Payments to Paid. Amount should remain the same
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedUpdatePaymentsToNotPaid() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Non Final Opportunity inserted with unpaid payments totaling < than opportunity Amount. Change Unpaid Payments to Paid. Amount should remain the same
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedUpdatePaymentsToPaid() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Non Finalized Opportunity inserted with unpaid payments totaling > than opportunity Amount. 
+                    Change Unpaid Payments to Paid. Amount should increase to Sum of Paid Payments
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedUpdateHigherPaymentsToPaid() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Non Finalized Opportunity inserted with unpaid payments totaling < Opportunity Amount. 
+       Change Unpaid Payments to Paid. No change to Opportunity Amount. Change Opportunity to Finalized Stage. 
+       Amount should change to Sum of Paid Payments-- I think as coded, this will instead throw a validation error, 
+       as it does not re-sum the Payment Amounts when going to finalized though). @pedrodalcol - 
+       Do I have the behavior we want correct here? Basically, when an Opportunity Becomes finalized (but was not previously, 
+       it needs to recalculate the Amount based on the Paid Payments. The logic as coded currently will not do that because we are only recalcing on payment changes..
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedUpdateLowerPaymentsToPaid() {
+
+    }
+    
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Non Finalized Opportunity inserted with unpaid payments. Change to Finalized Opportunity. 
+       Update the payments to Paid. Confirm Opportunity Amount is now Sum of Paid Payments: 
+       Note: I don't love this test because it will eventually conflict with write off on finalized behavior.
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedToFinalizedUpatePaymentsToPaid() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Finalized Opportunity with Paid Payment equal to amount. Add additional unpaid payment. No change in Opp amount. 
+        Add additional paid payment confirm Opp AMount increases.
+    */
+    // TODO
+    @isTest
+    private static void oppFinalizedWithEqualPaidPaymentsAddUnpaidPayment() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* @description Finalized Opportunity with Paid Payments equal to Amount. Change one of the Payments to Unpaid or Written Off. Confirm Opportunity Amount updates.
+    */
+    // TODO
+    @isTest
+    private static void oppFinalizedWithEqualPaidPaymentsWriteOffPayment() {
+
+    }
+
+
+
+
+//-- Tests with Enforce Accounting Data Consistency Not Enabled:
+
+//Create Non Finalized Opportunity with Amount > Paid Payments. Change Opp Amount to < Sum of Paid Payment Amounts. Confirm no error.
+//Create Non Finalized Opportunity with Amount < Unpaid Payments. Make Payments Paid. Confirm No change to Opp Amount.
+//Create Finalized Opportunity With Amount Different than Paid Payments. Confirm no error. Update Amount. Confirm no error.
+//Create Finalized Opportunity With Amount and Unpaid Payments. Change Unpaid Payments to Paid. Confirm no change in amount.
 
     /**
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity
