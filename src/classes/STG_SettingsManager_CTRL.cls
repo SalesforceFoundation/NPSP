@@ -70,17 +70,20 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     * @return void 
     */
     public void onNpspSettingsLoad() {
+
         //Set TDTM config
         STG_InstallScript installScript = new STG_InstallScript();
         installScript.runNewOrgScript();
 
         UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
 
-       if (STG_Panel.runningUserIsAdmin()) {
+        if (STG_Panel.runningUserIsAdmin()) {
             cleanupRecordTypeSettings();
 
             UTIL_MasterSchedulableHelper.setScheduledJobs();
         }
+
+        validateAllocationSettings();
     }
     
     /*********************************************************************************************************
@@ -102,5 +105,25 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
             UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
         }
     }
+
+    /*********************************************************************************************************
+    * @description validateAllocationSettings if there are no GAC records
+    * @return void 
+    */
+    private void validateAllocationSettings() {
+        System.debug('what is the value of default:' + STG_Panel.stgService.stgAllo.Default__c);
+        if (!string.isBlank(STG_Panel.stgService.stgAllo.Default__c)) {
+            list<General_Accounting_Unit__c> listGAU = [select Id, Name from General_Accounting_Unit__c WHERE ID=:STG_Panel.stgService.stgAllo.Default__c];
+            if (listGAU.isEmpty()) {
+                //now uncheck the custom settings and clear the value on the custom settings
+                STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
+                STG_Panel.stgService.stgAllo.Default__c = null;
+                upsert STG_Panel.stgService.stgAllo;
+            }
+
+        }
+                
+    }
+    
 
 }
