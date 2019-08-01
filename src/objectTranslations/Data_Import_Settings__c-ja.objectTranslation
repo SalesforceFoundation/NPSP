@@ -1,62 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value><!-- Data Import Settings --></value>
-    </caseValues>
-    <fields>
-        <help>団体のマッチングに使用する任意の一意の ID 項目</help>
-        <label>一意の団体カスタム ID</label>
-        <name>Account_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>既存の団体に対してデータインポートレコード内の団体を照合するときのルールを指定します。</help>
-        <label>団体マッチングルール</label>
-        <name>Account_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>各バッチで処理する NPSP データインポートレコードの数。</help>
-        <label>バッチサイズ</label>
-        <name>Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>個人のマッチングに使用する任意の一意の ID 項目</help>
-        <label>一意の個人カスタム ID</label>
-        <name>Contact_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>既存の個人に対してデータインポートレコード内の個人を照合するときのルールを指定します。</help>
-        <label>個人マッチングルール</label>
-        <name>Contact_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help><!-- Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date. --></help>
-        <label><!-- Number of Days from Donation Date --></label>
-        <name>Donation_Date_Range__c</name>
-    </fields>
-    <fields>
-        <help><!-- Defines how the Data Importer should handle matching Donations. You must choose a value. --></help>
-        <label><!-- Donation Matching Behavior --></label>
-        <name>Donation_Matching_Behavior__c</name>
-    </fields>
-    <fields>
-        <help><!-- The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching. --></help>
-        <label><!-- Donation Matching Implementing Class --></label>
-        <name>Donation_Matching_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help><!-- Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field. --></help>
-        <label><!-- Donation Matching Rule --></label>
-        <name>Donation_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help><!-- The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records. --></help>
-        <label><!-- Post Process Implementing Class --></label>
-        <name>Post_Process_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help><!-- When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch. --></help>
-        <label><!-- Calculate Donation Rollups with Batch --></label>
-        <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
+  <fields>
+    <name>Account_Custom_Unique_ID__c</name>
+    <help>組織団体のマッチングに使用する任意の一意の ID 項目</help>
+    <label>一意の団体カスタム ID</label>
+  </fields>
+  <fields>
+    <name>Account_Matching_Rule__c</name>
+    <help>既存の団体に対してデータインポートレコード内の団体を照合するときのルールを指定します。</help>
+    <label>団体マッチングルール</label>
+  </fields>
+  <fields>
+    <name>Batch_Size__c</name>
+    <help>各バッチで処理する NPSP データインポートレコードの数。</help>
+    <label>バッチサイズ</label>
+  </fields>
+  <fields>
+    <name>Contact_Custom_Unique_ID__c</name>
+    <help>個人のマッチングに使用する任意の一意の ID 項目</help>
+    <label>一意の個人カスタム ID</label>
+  </fields>
+  <fields>
+    <name>Contact_Matching_Rule__c</name>
+    <help>既存の個人に対してデータインポートレコード内の個人を照合するときのルールを指定します。</help>
+    <label>個人マッチングルール</label>
+  </fields>
+  <fields>
+    <name>Donation_Date_Range__c</name>
+    <help>マッチング支援または支払を探すときの [日付(支援)] からの日数を入力します。データインポーターはその日数範囲内で最も近い、マッチングする支援または支払を選択します。</help>
+    <label>日付(支援)からの日数</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Behavior__c</name>
+    <help>データインポーターがマッチング支援をどのように処理するかを定義します。値を選択する必要があります。</help>
+    <label>支援マッチング動作</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Implementing_Class__c</name>
+    <help>支援の BDI_IMatching インターフェースを実装する Apex クラスの API 参照名。NPSP がマッチングを処理できるように、空のままにします。</help>
+    <label>支援マッチング実装クラス</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Rule__c</name>
+    <help>既存の支援および支払に対してデータインポートレコードの支援をマッチングするとき、どの項目をマッチングするかを指定します。複数の項目を選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
+    <label>支援マッチングルール</label>
+  </fields>
+  <fields>
+    <name>Post_Process_Implementing_Class__c</name>
+    <help>NPSP データインポートレコードの BDI_IPostProcess インターフェースを実装する Apex クラスの API 参照名。</help>
+    <label>ポストプロセス実装クラス</label>
+  </fields>
+  <fields>
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    <help>オンの場合、支援処理時に支援者の統計情報が計算されます。オフの場合、支援者の統計情報はデフォルトの夜間スケジュール済みジョブ時に計算されます。このチェックボックスを選択すると、バッチの処理が遅くなることがあります。</help>
+    <label>バッチでの支援積み上げ集計の計算</label>
+  </fields>
 </CustomObjectTranslation>

@@ -1,34 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value><!-- Account Soft Credit --></value>
-    </caseValues>
-    <fields>
-        <label><!-- Account --></label>
-        <name>Account__c</name>
-        <relationshipLabel><!-- Account Soft Credits --></relationshipLabel>
-    </fields>
-    <fields>
-        <label><!-- Amount --></label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <label><!-- Opportunity --></label>
-        <name>Opportunity__c</name>
-        <relationshipLabel><!-- Account Soft Credits --></relationshipLabel>
-    </fields>
-    <fields>
-        <label><!-- Role --></label>
-        <name>Role__c</name>
-        <picklistValues>
-            <masterLabel>Influence</masterLabel>
-            <translation><!-- Influence --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Match</masterLabel>
-            <translation><!-- Match --></translation>
-        </picklistValues>
-    </fields>
-    <nameFieldLabel><!-- Account Soft Credit Name --></nameFieldLabel>
+  <fields>
+    <name>Account__c</name>
+    <help>このソフトクレジットを受け取る団体</help>
+    <relationshipLabel>団体ソフトクレジット</relationshipLabel>
+    <label>団体</label>
+  </fields>
+  <fields>
+    <name>Amount__c</name>
+    <help>ソフトクレジットされる金額</help>
+    <label>金額</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>このソフトクレジットが適用される支援。</help>
+    <relationshipLabel>団体ソフトクレジット</relationshipLabel>
+    <label>支援</label>
+  </fields>
+  <fields>
+    <name>Role__c</name>
+    <help>このソフトクレジットに関連する役割。役割は、団体がどのように支援に関与したかを示します。</help>
+    <label>役割</label>
+    <picklistValues>
+      <masterLabel>Donation Source</masterLabel>
+      <translation>支援ソース</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Influencer</masterLabel>
+      <translation>インフルエンサー</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Match</masterLabel>
+      <translation>マッチ</translation>
+    </picklistValues>
+  </fields>
+  <nameFieldLabel>団体ソフトクレジット名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>団体ソフトクレジット名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>団体ソフトクレジット</value>
+  </caseValues>
 </CustomObjectTranslation>

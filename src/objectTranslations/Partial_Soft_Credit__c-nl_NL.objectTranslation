@@ -1,56 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value><!-- Partial Soft Credit --></value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value><!-- Partial Soft Credit --></value>
-    </caseValues>
-    <fields>
-        <help>Het bedrag wat soft credit moet worden.</help>
-        <label>Bedrag</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>De contactpersoon&apos;s volledige naam.</help>
-        <label>Contactpersoon Naam</label>
-        <name>Contact_Name__c</name>
-    </fields>
-    <fields>
-        <help>De Opportunity Contactpersoon Rol waar deze Soft Credit betrekking op heeft.</help>
-        <label>Contactpersoon Rol ID</label>
-        <name>Contact_Role_ID__c</name>
-    </fields>
-    <fields>
-        <help>De contactpersoon die deze soft credit krijgt.</help>
-        <label>Contactpersoon</label>
-        <name>Contact__c</name>
-        <relationshipLabel>Gedeeltelijke Soft Credits</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De Opportunity waar deze Soft Credit betrekking op heeft.</help>
-        <label><!-- Opportunity --></label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Gedeeltelijke Soft Credits</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De Rol van deze Soft Credit.</help>
-        <label>Rol Naam</label>
-        <name>Role_Name__c</name>
-    </fields>
-    <gender><!-- Neuter --></gender>
-    <layouts>
-        <layout>Partial Soft Credit Layout</layout>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel><!-- Partial Soft Credit Name --></nameFieldLabel>
-    <webLinks>
-        <label>Beheer Soft Credits</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
+  <fields>
+    <name>Amount__c</name>
+    <help>Het bedrag dat soft credit moet worden.</help>
+    <label>Bedrag</label>
+  </fields>
+  <fields>
+    <name>Contact_Name__c</name>
+    <help>De volledige naam van de Contactpersoon die deze soft credit krijgt (alleen lezen).</help>
+    <label>Naam van Contactpersoon</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_ID__c</name>
+    <help>De Opportunitycontactpersoonrol waarop deze soft credit van toepassing is.</help>
+    <label>Contactpersoonrol-ID</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <help>Opzoeking van Contactpersoon die deze soft credit krijgt.</help>
+    <relationshipLabel>Gedeeltelijke Soft Credits</relationshipLabel>
+    <label>Contactpersoon</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>De Opportunity waarop deze soft credit van toepassing is.</help>
+    <relationshipLabel>Gedeeltelijke Soft Credits</relationshipLabel>
+    <label>Opportunity</label>
+  </fields>
+  <fields>
+    <name>Role_Name__c</name>
+    <help>De Rol van deze soft credit.</help>
+    <label>Rolnaam</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Soft_Credits</name>
+    <label>Soft Credits beheren</label>
+  </webLinks>
+  <layouts>
+    <layout>Partial Soft Credit Layout</layout>
+    <sections>
+      <label>Aangepaste Koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Naam van Gedeeltelijke Soft Credits</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam van Gedeeltelijke Soft Credits</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Gedeeltelijke soft credit</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Gedeeltelijke soft credits</value>
+  </caseValues>
 </CustomObjectTranslation>
