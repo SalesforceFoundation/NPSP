@@ -1042,15 +1042,42 @@ private class PMT_Payment_TEST {
 
     }
 
+    /* Tests with Enforce Accounting Data Consistency Not Enabled */
+    /* @description Create Non Finalized Opportunity with Amount > Paid Payments. Change Opp Amount to < Sum of Paid Payment Amounts. Confirm no error.
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedUpdateAmountToLowerThanPaymentsDataConsistDisabled() {
 
+    }
 
+    /* Tests with Enforce Accounting Data Consistency Not Enabled */
+    /* @description Create Non Finalized Opportunity with Amount < Unpaid Payments. Make Payments Paid. Confirm No change to Opp Amount.
+    */
+    // TODO
+    @isTest
+    private static void oppNonFinalizedWAmountLowerThanPaidPaymentsMarkPaymentsPaidDataConsistDisabled() {
 
-//-- Tests with Enforce Accounting Data Consistency Not Enabled:
+    }
 
-//Create Non Finalized Opportunity with Amount > Paid Payments. Change Opp Amount to < Sum of Paid Payment Amounts. Confirm no error.
-//Create Non Finalized Opportunity with Amount < Unpaid Payments. Make Payments Paid. Confirm No change to Opp Amount.
-//Create Finalized Opportunity With Amount Different than Paid Payments. Confirm no error. Update Amount. Confirm no error.
-//Create Finalized Opportunity With Amount and Unpaid Payments. Change Unpaid Payments to Paid. Confirm no change in amount.
+    /* Tests with Enforce Accounting Data Consistency Not Enabled */
+    /* @description Create Finalized Opportunity With Amount Different than Paid Payments. Confirm no error. Update Amount. Confirm no error.
+    */
+    // TODO
+    @isTest
+    private static void oppFinalizedWAmountDiffThanPaidPaymentsUpdateAmountDataConsistDisabled() {
+
+    }
+
+    /* Tests with Enforce Accounting Data Consistency Not Enabled */
+    /* @description Create Finalized Opportunity With Amount and Unpaid Payments. Change Unpaid Payments to Paid. Confirm no change in amount.
+    */
+    // TODO
+    @isTest
+    private static void oppFinalizedWUnpaidPaymentsUpdateeToPaidDataConsistDisabled() {
+
+    }
+
 
     /**
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity
