@@ -180,6 +180,27 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             }
         }
 
+        // update opportunity amount if the state goes from non-finalized -> finalized
+        // and if there is a paid payments mismatch
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && isEnforceAccountingDataConsistency) {
+            Set<Id> oppIds = (new Map<Id, Opportunity>(newList)).keySet();
+            Map<Id, Opportunity> oppsById = getPaymentOpportunities(oppIds);
+
+            for (Opportunity opp : oppsById.values()) {
+                if (OPP_StageMappingUtil.isOpportunityFinalized(opp) && !OPP_StageMappingUtil.isOpportunityFinalized(mapIdOppOld.get(opp.Id))) {
+                    Decimal totalPaid = 0;
+
+                    for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                        totalPaid += (pmt.npe01__Paid__c && pmt.npe01__Payment_Amount__c != null) ? pmt.npe01__Payment_Amount__c : 0;
+                    }
+
+                    if (opp.Amount != totalPaid) {
+                        opp.Amount = totalPaid;
+                    }              
+                }
+            }
+        }
+
         //if currency has changed, reset payment currencies
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate && isCurrencyFieldAvailable) {
             List<Opportunity> listOppsForProcessing = new List<Opportunity>();
