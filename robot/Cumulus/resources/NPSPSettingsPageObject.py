@@ -8,7 +8,7 @@ from compiler.pycodegen import EXCEPT
 
 @pageobject("Custom", "NPSPSettings")
 class NPSPSettingsHomePage(BasePage):
-    
+    object_name = None
 
     
     @property
