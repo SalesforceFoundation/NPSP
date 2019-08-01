@@ -74,9 +74,6 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             // Submit generic org telemetry data back to the LMO using FeatureManagement
             executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
-
-            // Create the Opportunity Stage to State mapping record for finalized
-            executeAction(InstallAction.CREATE_OPP_STAGE_TO_STATE_RECORDS, logger);
         }
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
@@ -381,6 +378,10 @@ global without sharing class STG_InstallScript implements InstallHandler {
     */
     private void createOppStageToStateRecordsIfNecessary() {
 
+        // This is no longer being called in the post install script at all.
+        // We will revisit this very soon.
+        // There was issues with the upgrade process, so we are unable to
+        // get this in before GA.
         List<Metadata.CustomMetadata> metadataToInsert = new List<Metadata.CustomMetadata>();
         Map<String, Object> params = new Map<String, Object>();
 
