@@ -108,7 +108,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         if (isEnforceAccountingDataConsistency) {
             //If the Opp Map is not set in the previous step, then query the Opp here
-            if (oppsById.size() == 0) {
+            if (oppsById.isEmpty()) {
                 Set<Id> oppIds = new Set<Id>();
                 for (npe01__OppPayment__c pmt : newlist) {
                     oppIds.add(pmt.npe01__Opportunity__c);

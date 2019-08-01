@@ -90,8 +90,11 @@ public with sharing class OPP_StageMappingUtil {
         return UNCOMMITTED_STATE_VAL;
     }
 
-    /* determines if the Opportunity is in the FINALIZED state 
-    */
+    /*******************************************************************************************************
+    * @description Determines if the opportunity is in the FINALIZED state
+    * @param Opportunity 
+    * @return Boolean
+    ********************************************************************************************************/
     public static Boolean isOpportunityFinalized(Opportunity opp) {
         return determineOppStateFromOppStage(opp.StageName) == FINALIZED_STATE_VAL;
     }
