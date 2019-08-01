@@ -1873,7 +1873,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>One or more errors were found in the Payment Allocation Configuration.</shortDescription>
-        <value>One or more errors were found in the Payment Allocation Configuration: </value>
+        <value>We found these errors in the configuration of Payment Allocations: </value>
     </labels>
     <labels>
         <fullName>alloPaymentAllocationBatchAllocationError</fullName>
@@ -1881,7 +1881,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>An error occurred associated with a specific Allocation.</shortDescription>
-        <value>Allocation Error occurred on the {obj_type} record named {parent_name} for Allocation named {alloc_name}.  Reason: {error}</value>
+        <value>Allocation Error occurred on the {obj_type} record named {parent_name} for Allocation named {alloc_name}. Reason: {error}</value>
     </labels>
     <labels>
         <fullName>alloPaymentAllocationBatchRecordError</fullName>
@@ -1889,7 +1889,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>An error occurred not associated with a specific Allocation.</shortDescription>
-        <value>Allocation Error occurred on the {obj_type} record named {parent_name}.  Reason: {error}</value>
+        <value>Allocation Error occurred on the {obj_type} record named {parent_name}. Reason: {error}</value>
+    </labels>
+    <labels>
+        <fullName>alloNullZeroInvalidStateError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>All allocations must be cleared.</shortDescription>
+        <value>Warning! Allocations couldn’t be converted to percentages and were cleared. If the parent amount becomes a non-blank or zero amount, Allocations will be restored from the parent amount or default Allocations.</value>
     </labels>
     <labels>
         <fullName>alloOverallocatedError</fullName>
@@ -2968,9 +2976,9 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Object groups description part 3</shortDescription>
-        <value>Let’s look at the two GAU Allocation 1 and GAU Allocation 2 Object Groups as an example. These object groups link directly to the Opportunity object. At times, 
-            you may want to assign two GAU Allocations to a single Opportunity. To achieve this, in your import file enter the Opportunity information in the Donations columns, 
-            then include the first GAU in the GAU Allocations 1 columns and the second GAU Allocation in the GAU Allocations 2 columns. Because of the GAU Allocation 1 and 
+        <value>Let’s look at the two GAU Allocation 1 and GAU Allocation 2 Object Groups as an example. These object groups link directly to the Opportunity object. At times,
+            you may want to assign two GAU Allocations to a single Opportunity. To achieve this, in your import file enter the Opportunity information in the Donations columns,
+            then include the first GAU in the GAU Allocations 1 columns and the second GAU Allocation in the GAU Allocations 2 columns. Because of the GAU Allocation 1 and
             GAU Allocation 2 Object Mappings, when you import, the two GAU Allocations are both assigned to the Opportunity.</value>
     </labels>
     <labels>
@@ -2987,8 +2995,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Through This Field Helptext</shortDescription>
-        <value>The Lookup Relationship or Master-Detail field that connects your target object to the related Object Group. 
-            If the target object is a child of the related object, this field will be on the target object. Alternatively, 
+        <value>The Lookup Relationship or Master-Detail field that connects your target object to the related Object Group.
+            If the target object is a child of the related object, this field will be on the target object. Alternatively,
             if the target object is the parent of the related object, this field will be on the related object.</value>
     </labels>
     <labels>

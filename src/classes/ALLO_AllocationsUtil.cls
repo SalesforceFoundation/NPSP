@@ -87,7 +87,7 @@ public class ALLO_AllocationsUtil {
           * @param Set<PROCESS_DEF> exclusions The exclusions to add
           */
         public void addExclusions(Id recordId, Set<PROCESS_DEF> exclusions) {
-            Set<PROCESS_DEF> recordExclusions = (this.exclusionsByRecordId.containsKey(recordId)) ? new Set<PROCESS_DEF>() : this.exclusionsByRecordId.get(recordId);
+            Set<PROCESS_DEF> recordExclusions = (this.exclusionsByRecordId.containsKey(recordId)) ? this.exclusionsByRecordId.get(recordId) : new Set<PROCESS_DEF>();
 
             for (PROCESS_DEF excl : exclusions) {
                 recordExclusions.add(excl);
@@ -366,8 +366,7 @@ public class ALLO_AllocationsUtil {
      * 4) If amount goes to null/0, deletes default allocations and converts existing non percentage
      *    allocations to percentage allocations if possible, and zeroes all allocations
      * 5) Records errors if allocations become invalid for the Opportunity
-     * 6) Adds record exclusions if cannot proceed with downstream steps, based on record state
-     * 7) Validates changes, logs errors if allocations are now invalid
+     * 6) Validates changes, logs errors if allocations are now invalid
      * NO DML is processed in this method.  It is instead returned to the caller for processing
      * @param Map<Id, Opportunity> opps The opportunities to process
      * @param Map<Id, List<Allocation__c>> oppsAllocations The Allocations associated with the Opportunity
@@ -379,12 +378,8 @@ public class ALLO_AllocationsUtil {
     public static AllocationResults processOpportunityAllocations(Map<Id, Opportunity> opps, Map<Id, List<Allocation__c>> oppsAllocations, Map<Id, List<Allocation__c>> campaignAllocations, Map<Id, List<Allocation__c>> recurringDonationAllocations, RecordExclusions recExclusions) {
         AllocationResults allocResults = new AllocationResults();
 
-        // TODO: Add Exclusion checks
-        // TODO: Convert returned errors into exclusions for next step??  (Confirm whether needed...might be done in the processResults section...have to confirm)
-
-        for (Opportunity opp : opps.values()) {
-            Set<PROCESS_DEF> exclusions = recExclusions.get(opp.Id);
-            if (exclusions.contains(PROCESS_DEF.OPP_ALLOC_UPD)) {
+         for (Opportunity opp : opps.values()) {
+            if (recExclusions.hasExclusion(opp.Id, PROCESS_DEF.OPP_ALLOC_UPD)) {
                 continue;
             }
 
@@ -393,7 +388,7 @@ public class ALLO_AllocationsUtil {
             // Covers #3, part of #2
             if (amount == null || amount == 0) {
                 // Convert all non percent based allocations to %, remove Default Allocation(s), zero out amounts
-
+                clearAllocations(opp, oppAllocations, allocResults);
             } else if (oppAllocations == null || oppAllocations.isEmpty()) {
                 List<Allocation__c> sourceAllocations = null;
                 // No Allocations, copyFromParent or set default of no parent
@@ -421,8 +416,7 @@ public class ALLO_AllocationsUtil {
      * 3) Creates allocations from parent
      * 4) Clears allocations if amount goes to null/0
      * 5) Records errors if allocations become invalid for the Payment
-     * 6) Adds record exclusions if cannot proceed with downstream steps, based on record state
-     * 7) Validates changes, logs errors if allocations are now invalid
+     * 6) Validates changes, logs errors if allocations are now invalid
      * NO DML is processed in this method.  It is instead returned to the caller for processing
      * @param Map<Id, Opportunity> opps The opportunities to process
      * @param Map<Id, List<Allocation__c>> oppsAllocations The Allocations associated with the Opportunity
@@ -440,8 +434,8 @@ public class ALLO_AllocationsUtil {
 
         for (Opportunity opp : opps.values()) {
             for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
-                Set<PROCESS_DEF> exclusions = recExclusions.get(opp.Id);
-                if (exclusions.contains(PROCESS_DEF.PMT_ALLOC)) {
+                // All processing for this payment should be skipped
+                if (recExclusions.hasExclusion(opp.Id, PROCESS_DEF.PMT_ALLOC)) {
                     continue;
                 }
                 List<Allocation__c> oppAllocations = oppsAllocations.get(opp.Id);
@@ -451,18 +445,15 @@ public class ALLO_AllocationsUtil {
                 Decimal amount = getAmountFor(payment);
                 if (amount == null || amount == 0) {
                     // Convert all non percent based allocations to %, remove Default Allocation(s), zero out amounts
-                    if (!exclusions.contains(PROCESS_DEF.PMT_ALLOC_ZERO_OUT)) {
-                        //TODO: Implement...
-
-
+                    if (!recExclusions.hasExclusion(opp.Id, PROCESS_DEF.PMT_ALLOC_ZERO_OUT)) {
+                        clearAllocations(payment, pmtAllocations, allocResults);
                     }
-
                 } else if (pmtAllocations == null || pmtAllocations.isEmpty()) {
-                    if (!exclusions.contains(PROCESS_DEF.PMT_ALLOC_INITIALIZE)) {
+                    if (!recExclusions.hasExclusion(opp.Id, PROCESS_DEF.PMT_ALLOC_INITIALIZE)) {
                         copyAllocationsToTarget(payment, sourceAmount, oppAllocations, allocResults, true, true);
                     }
                 } else { // Resize Allocations...
-                    if (!exclusions.contains(PROCESS_DEF.PMT_ALLOC_RECALC) {
+                    if (!recExclusions.hasExclusion(opp.Id, PROCESS_DEF.PMT_ALLOC_RECALC)) {
                         resizeAllocationsAsNeeded(payment, pmtAllocations, allocResults);
                     }
                 }
@@ -1228,7 +1219,6 @@ public class ALLO_AllocationsUtil {
 
         List<Allocation__c> proposedAllocations = new List<Allocation__c>();
         List<Allocation__c> proposedAllocDeletes = new List<Allocation__c>();
-        List<Allocation__c> unchangedAllocations = new List<Allocation__c>();
         List<Allocation__c> defaultAllocations = new List<Allocation__c>();
         String parentCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) parentObj.get('CurrencyIsoCode') : null;
         Boolean errorsFound = false;
@@ -1264,8 +1254,6 @@ public class ALLO_AllocationsUtil {
                             allocation.put('CurrencyIsoCode', parentCurrencyIsoCode);
                         }
                         proposedAllocations.add(allocation);
-                    } else {
-                        unchangedAllocations.add(allocation);
                     }
                 }
                 sumOfAllocations += (curAllocAmount != null) ? curAllocAmount : 0;
@@ -1299,8 +1287,95 @@ public class ALLO_AllocationsUtil {
             // Process Default Allocations
             processDefaultAllocations(parentObj, parentAmount, parentCurrencyIsoCode, sumOfAllocations, defaultAllocations, allocResults);
         }
-
     }
+
+    public static void clearAllocations(SObject parentObj, List<Allocation__c> allocations, AllocationResults allocResults) {
+        System.debug('Clear Allocations');
+
+        Decimal sumOfAllocations = 0;
+        Decimal totalOfPercentages = 0;
+        Decimal parentAmount = getAmountFor(parentObj);
+
+        // Will only clear Allocations if Amount is null or 0
+        if (parentAmount != null && parentAmount != 0) {
+            return;
+        }
+
+        Boolean requiresUpdates = false;
+
+        String parentCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) parentObj.get('CurrencyIsoCode') : null;
+
+        List<Allocation__c> proposedAllocations = new List<Allocation__c>();
+        List<Allocation__c> proposedAllocDeletes = new List<Allocation__c>();
+        List<Allocation__c> defaultAllocations = new List<Allocation__c>();
+        Boolean errorsFound = false;
+        Integer countOfAllocationsWithoutPercentage = 0;
+        // Sum Allocations
+        for (Allocation__c allocation : allocations) {
+            sumOfAllocations += (allocation__c.Amount__c != null) ? allocation.Amount__c : 0;
+            if (allocation.Percent__c == null) {
+                countOfAllocationsWithoutPercentage++;
+            }
+        }
+        System.debug('[clear] Allocation Sum: ' + sumOfAllocations);
+        System.debug('[clear] Count of Allocations Without Percentages: '+ countOfAllocationsWithoutPercentage );
+        if (sumOfAllocations != 0) {
+            for (Allocation__c allocation : allocations.deepClone(true, true, true)) {
+                if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c) {
+                    proposedAllocDeletes.add(allocation);
+                } else {
+                    String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) allocation.get('CurrencyIsoCode') : null;
+                    Boolean updatesToAllocation = false;
+
+                    if (allocation.Percent__c != 0 && allocation.Percent__c != null) {
+                        totalOfPercentages += allocation.Percent__c;
+                        if ((allocation.Amount__c != null) && (allocation.Amount__c != 0)) {
+                            allocation.Amount__c = 0;
+                            proposedAllocations.add (allocation);
+                        }
+                    } else {
+                        if (allocation.Amount__c != null) {
+                            allocation.Percent__c = allocation.Amount__c / sumOfAllocations * 100;
+                            allocation.Amount__c = 0;
+                            totalOfPercentages += allocation.Percent__c;
+                            proposedAllocations.add (allocation);
+                        } else {
+                            errorsFound = true;
+                            //Decision: Will kill all allocations if an error occurs when attempting to zero them.
+                            allocResults.addError(getOpportunityIdFor(parentObj), assembleAllocationError(parentObj, allocation, Label.alloNegativeAmount));
+                        }
+                    }
+                }
+            }
+        } else if (countOfAllocationsWithoutPercentage > 0) {
+            // Got here with no sum to convert allocations without percentage to to percentage.  Delete all allocations with error
+            errorsFound = true;
+            allocResults.addError(getOpportunityIdFor(parentObj), assembleRecordError(parentObj, Label.alloNullZeroInvalidStateError));
+        }
+
+        if (totalOfPercentages > 100) {
+            errorsFound = true;
+            allocResults.addError(getOpportunityIdFor(parentObj), assembleRecordError(parentObj, Label.alloNullZeroInvalidStateError));
+        }
+
+        if (!errorsFound) {
+            if (!proposedAllocations.isEmpty()) {
+                for (Allocation__c allocation : proposedAllocations) {
+                    if (allocation.Id != null) {
+                        allocResults.allocationsForUpdate.add (allocation);
+                    } else {
+                        allocResults.allocationsForInsert.add (allocation);
+                    }
+                }
+            }
+            if (!proposedAllocDeletes.isEmpty()) {
+                allocResults.allocationsForDelete.addAll (proposedAllocDeletes);
+            }
+        } else {
+            allocResults.allocationsForDelete.addAll(allocations.deepClone(true, true, true));
+        }
+    }
+
 
     private static void processDefaultAllocations(SObject parentObj, Decimal parentAmount, String parentCurrencyIsoCode, Decimal allocationTotalAmount, List<Allocation__c> defaultAllocations, AllocationResults allocResults) {
 

@@ -1449,6 +1449,7 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
+        <members>alloNullZeroInvalidStateError</members>
         <members>alloOverallocatedError</members>
         <members>alloPaidPmtsExceedsOpp</members>
         <members>alloPaymentAllocationBatchConfigError</members>
