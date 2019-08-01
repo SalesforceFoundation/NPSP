@@ -1,3 +1,5 @@
+import time
+
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from locators_46 import npsp_lex_locators
@@ -38,17 +40,16 @@ class NPSPSettingsHomePage(BasePage):
         locator = npsp_lex_locators["npsp_settings"]["checkbox"].format(page_name)
         self.selenium.wait_until_element_is_enabled(locator,error="Checkbox could not be found on the page")
         self.selenium.get_webelement(locator).click()
+        time.sleep(5)
     
     def wait_until_advanced_mapping_is_enabled(self):
-        locator=npsp_lex_locators["button"].format("Configure Advanced Mapping")
-        button=self.selenium.get_webelement(locator)
         i=0
         while True:
             if i<=12:
                 try:
-                    if button.is_displayed():
-                        break
-                except exception:
+                    self.selenium.page_should_contain("Advanced Mapping is enabled")
+                    break
+                except Exception:
                     time.sleep(5)
                     i += 1
             else:
