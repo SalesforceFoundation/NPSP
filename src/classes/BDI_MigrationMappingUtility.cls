@@ -426,7 +426,8 @@ public with sharing class BDI_MigrationMappingUtility {
     */
     private void createAndEnqueueMigratedCustomObjectMappingSet() {
         Metadata.CustomMetadata objectMappingSetMDT = new Metadata.CustomMetadata();
-        String mdTypeName = 'Data_Import_Object_Mapping_Set__mdt';
+        String mdTypeName = Data_Import_Object_Mapping_Set__mdt.SObjectType.getDescribe().getName();
+
         objectMappingSetMDT.label = MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME.replace('_', ' ');
         objectMappingSetMDT.fullName = mdTypeName + '.' + MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME;
         objectMappingSetMDT.protected_x = false;
@@ -530,7 +531,7 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
-            String mdTypeName = 'Data_Import_Field_Mapping_Set__mdt';
+            String mdTypeName = Data_Import_Field_Mapping_Set__mdt.SObjectType.getDescribe().getName();
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
@@ -571,7 +572,7 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
-            String mdTypeName = 'Data_Import_Object_Mapping__mdt';
+            String mdTypeName = Data_Import_Object_Mapping__mdt.SObjectType.getDescribe().getName();
 
             Data_Import_Object_Mapping__mdt clone = objectMapping.clone();
 
@@ -722,7 +723,7 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
-            String mdTypeName = 'Data_Import_Field_Mapping__mdt';
+            String mdTypeName = Data_Import_Field_Mapping__mdt.SObjectType.getDescribe().getName();
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
