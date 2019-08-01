@@ -37,6 +37,16 @@
 public with sharing class BDI_MigrationMappingUtility {
 
     /*******************************************************************************************************
+    * @description Enum of the supported MetadataType objects (without the __mdt suffix)
+    */
+    public enum MetadataObject {
+        Data_Import_Field_Mapping,
+        Data_Import_Object_Mapping,
+        Data_Import_Object_Mapping_Set,
+        Data_Import_Field_Mapping_Set
+    }
+
+    /*******************************************************************************************************
     * @description Metadata queued up for deployment
     */
     public List<Metadata.CustomMetadata> queuedMetadataTypesForDeploy =
@@ -426,7 +436,11 @@ public with sharing class BDI_MigrationMappingUtility {
     */
     private void createAndEnqueueMigratedCustomObjectMappingSet() {
         Metadata.CustomMetadata objectMappingSetMDT = new Metadata.CustomMetadata();
-        String mdTypeName = 'Data_Import_Object_Mapping_Set__mdt';
+        String mdTypeName =
+            UTIL_Namespace.StrTokenNSPrefix(
+                BDI_MigrationMappingUtility.MetadataObject.Data_Import_Object_Mapping_Set.Name() +
+                '__mdt');
+
         objectMappingSetMDT.label = MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME.replace('_', ' ');
         objectMappingSetMDT.fullName = mdTypeName + '.' + MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME;
         objectMappingSetMDT.protected_x = false;
@@ -530,7 +544,10 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
-            String mdTypeName = 'Data_Import_Field_Mapping_Set__mdt';
+            String mdTypeName =
+                UTIL_Namespace.StrTokenNSPrefix(
+                    BDI_MigrationMappingUtility.MetadataObject.Data_Import_Field_Mapping_Set.Name() +
+                    '__mdt');
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
@@ -571,7 +588,10 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
-            String mdTypeName = 'Data_Import_Object_Mapping__mdt';
+            String mdTypeName =
+                UTIL_Namespace.StrTokenNSPrefix(
+                    BDI_MigrationMappingUtility.MetadataObject.Data_Import_Object_Mapping.Name() +
+                    '__mdt');
 
             Data_Import_Object_Mapping__mdt clone = objectMapping.clone();
 
@@ -722,7 +742,10 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
-            String mdTypeName = 'Data_Import_Field_Mapping__mdt';
+            String mdTypeName =
+                UTIL_Namespace.StrTokenNSPrefix(
+                    BDI_MigrationMappingUtility.MetadataObject.Data_Import_Field_Mapping.Name() +
+                    '__mdt');
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
