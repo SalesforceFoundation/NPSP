@@ -842,19 +842,19 @@ private class PMT_Payment_TEST {
      * exceed the opportunity amount
      */
     @isTest
-    private static void testOpportunityAmountSync() {
+    private static void oppAmtUpdatedForLargerPaidPaymentsNotFinalized() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
         Test.startTest();
 
         Opportunity opp = new Opportunity(
-                Name='open opp',
+                Name='non finalized opp',
                 Amount = 100,
                 AccountID = acc.Id,
                 CloseDate = System.today(),
                 npe01__Do_Not_Automatically_Create_Payment__c = true,
-                StageName = UTIL_UnitTestData_TEST.getOpenStage());
+                StageName = OPP_StageMappingUtil.TEST_COMMITTED_STAGE);
         insert opp;
 
         List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
@@ -885,7 +885,7 @@ private class PMT_Payment_TEST {
      * are less than the opportunity amount
      */
     @isTest
-    private static void testOpportunityAmountSyncClosedStage() {
+    private static void oppAmtUpdatedForLowerPaidPaymentsFinalized() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -897,7 +897,7 @@ private class PMT_Payment_TEST {
                 AccountID = acc.Id,
                 CloseDate = System.today(),
                 npe01__Do_Not_Automatically_Create_Payment__c = true,
-                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+                StageName = OPP_StageMappingUtil.TEST_FINALIZED_STAGE);
         insert opp;
 
         List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
