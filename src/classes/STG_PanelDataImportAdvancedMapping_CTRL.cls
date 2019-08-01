@@ -39,7 +39,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*********************************************************************************************************
     * @description URL of the Advanced Mapping Custom UI aura component container
     */
-    public static final String COMPONENT_URL = '/lightning/cmp/c__BDI_ManageAdvancedMapping';
+    public static String componentUrl = '/lightning/cmp/npsp__BDI_ManageAdvancedMapping';
 
     /*********************************************************************************************************
     * @description Returns the string Id of the Data Import Advanced Mapping panel
@@ -139,8 +139,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     *
     * @return PageReference
     */
-    public PageReference navigate(){
-        PageReference advancedMapping = new PageReference(COMPONENT_URL);
+    public PageReference navigate() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (namespace != 'npsp') {
+            componentUrl = componentUrl.replace('npsp__','c__');
+        }
+        PageReference advancedMapping = new PageReference(componentUrl);
         advancedMapping.setRedirect(true);
         return advancedMapping;
     }
