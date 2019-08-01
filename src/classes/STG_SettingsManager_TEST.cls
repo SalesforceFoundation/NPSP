@@ -88,6 +88,28 @@ public with sharing class STG_SettingsManager_TEST {
         UTIL_UnitTestData_TEST.assertPageHasError('Test Exception');
     }
 
+    /*********************************************************************************************************
+    * @description unchecks the default allocations enabled checkbox and clears the value of default id in allocations settings when no GAC is found.
+    * @return void
+    */
+    public static testMethod void testValidateAllocationSettings() {
+        Test.setCurrentPage(Page.STG_SettingsManager);
+
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+
+        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
+        STG_Panel.stgService.stgAllo.Default__c ='a9302003536469';
+        upsert STG_Panel.stgService.stgAllo;
+
+        Test.startTest();
+        ctrl.onNpspSettingsLoad();
+        Test.stopTest();
+
+        system.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c);
+        system.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c);
+
+    }
+
      
     /*********************************************************************************************************
     * @description Tests the DataBoundMultiSelect control used in Settings
