@@ -1388,9 +1388,11 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
+        <members>alloOverallocatedError</members>
         <members>alloPaidPmtsExceedsOpp</members>
         <members>alloPaymentAllocationBatchConfigError</members>
-        <members>alloPaymentAllocationBatchInvalidUpdate</members>
+        <members>alloPaymentAllocationBatchAllocationError</members>
+        <members>alloPaymentAllocationBatchRecordError</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPaymentOverallocatedError</members>
         <members>alloPercentExceed100</members>

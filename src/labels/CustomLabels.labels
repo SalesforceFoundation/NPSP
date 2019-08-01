@@ -1876,14 +1876,29 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>One or more errors were found in the Payment Allocation Configuration: </value>
     </labels>
     <labels>
-        <fullName>alloPaymentAllocationBatchInvalidUpdate</fullName>
+        <fullName>alloPaymentAllocationBatchAllocationError</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>The proposed updates for this Allocation would not be valid, and were blocked.</shortDescription>
-        <value>Allocation Update Blocked for Allocation named {0}.  Reason: {1}</value>
+        <shortDescription>An error occurred associated with a specific Allocation.</shortDescription>
+        <value>Allocation Error occurred on the {obj_type} record named {parent_name} for Allocation named {alloc_name}.  Reason: {error}</value>
     </labels>
-
+    <labels>
+        <fullName>alloPaymentAllocationBatchRecordError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>An error occurred not associated with a specific Allocation.</shortDescription>
+        <value>Allocation Error occurred on the {obj_type} record named {parent_name}.  Reason: {error}</value>
+    </labels>
+    <labels>
+        <fullName>alloOverallocatedError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The sum of the Allocation amounts is greater than the parent's amount</shortDescription>
+        <value>The amount allocated is more than the amount of the {obj_type}. Please update the Allocation amount(s) so the total equals the {obj_type} Amount.</value>
+    </labels>
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>
         <categories>Allocation, Error</categories>

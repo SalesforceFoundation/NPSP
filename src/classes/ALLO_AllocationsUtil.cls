@@ -37,6 +37,12 @@
 public class ALLO_AllocationsUtil {
     /** @description Allocations settings. */
     public static Allocations_Settings__c ALLOCATION_SETTINGS = UTIL_CustomSettingsFacade.getAllocationsSettings();
+    private static final Boolean IS_MULTICURRENCY_ORG = UserInfo.isMultiCurrencyOrganization();
+
+    // Lazy initialization on use to reduce describes.
+    private static String ALLOC_OBJ_LABEL;
+    private static String OPP_OBJ_LABEL;
+    private static String PMT_OBJ_LABEL;
 
     /** @description Used as a way to identify parts of Allocation Sync that may or may not be allowed to execute depending on earlier execution statuses */
     public enum PROCESS_DEF {
@@ -108,6 +114,34 @@ public class ALLO_AllocationsUtil {
         public List<Allocation__c> allocationsForUpdate= new List<Allocation__c>();
         public List<Allocation__c> allocationsForDelete= new List<Allocation__c>();
         public Map<String, List<String>> errorsByRecordId = new Map<String, List<String>>();
+
+        /**
+          * @description Adds an error to the list of errors for a specific record Id.  If no errors are present for that record Id,
+          * a new error list is created
+          * @param String recordId The Id of the record
+          * @param String error to add
+          */
+        public void addError(String recordId, String error) {
+            if (this.errorsByRecordId.containsKey(recordId)) {
+                this.errorsByRecordId.get(recordId).add(error);
+            } else {
+                this.errorsByRecordId.put(recordId, new List<String> { error });
+            }
+        }
+
+        /**
+          * @description Adds a list of errors to the existing list of errors for a specific record Id.  If no errors are present for that record Id,
+          * the list is inserted as is.
+          * @param String recordId The Id of the record
+          * @param List<String> errors to add
+          */
+        public void addAllErrors(String recordId, List<String> errors) {
+            if (this.errorsByRecordId.containsKey(recordId)) {
+                this.errorsByRecordId.get(recordId).addAll(errors);
+            } else {
+                this.errorsByRecordId.put(recordId, errors);
+            }
+        }
     }
 
     /**
@@ -173,19 +207,6 @@ public class ALLO_AllocationsUtil {
             return false;
         }
 
-        /** @description Return true if either the Opportunities Recordtype or Type match those
-          * configured to be excluded from Allocations processing
-          * @param Opportunity opp The opportunity to check
-          * @return Boolean true if the Opportunity should be excluded from Allocations processing
-          */
-        public static Boolean isExcluded(Opportunity opp) {
-            if (EXCLUDED_OPPORTUNITY_RECORDTYPES == null || EXCLUDED_OPPORTUNITY_TYPES == null) {
-                EXCLUDED_OPPORTUNITY_RECORDTYPES = getExcludedOpportunityRecordtypes();
-                EXCLUDED_OPPORTUNITY_TYPES = getExcludedOpportunityTypes();
-            }
-
-            return (EXCLUDED_OPPORTUNITY_RECORDTYPES.contains(opp.RecordtypeId) || EXCLUDED_OPPORTUNITY_TYPE.contains(opp.Type));
-        }
 
         /** @description Initialize errors for Process using the records flagged for review.  It will retrieve any
           * existing errors so we can update them if more errors for that record and process.
@@ -209,6 +230,21 @@ public class ALLO_AllocationsUtil {
         }
 
     }
+
+    /** @description Return true if either the Opportunities Recordtype or Type match those
+        * configured to be excluded from Allocations processing
+        * @param Opportunity opp The opportunity to check
+        * @return Boolean true if the Opportunity should be excluded from Allocations processing
+        */
+    public static Boolean isExcluded(Opportunity opp) {
+        if (EXCLUDED_OPPORTUNITY_RECORDTYPES == null || EXCLUDED_OPPORTUNITY_TYPES == null) {
+            EXCLUDED_OPPORTUNITY_RECORDTYPES = getExcludedOpportunityRecordtypes();
+            EXCLUDED_OPPORTUNITY_TYPES = getExcludedOpportunityTypes();
+        }
+
+        return (EXCLUDED_OPPORTUNITY_RECORDTYPES.contains(opp.RecordtypeId) || EXCLUDED_OPPORTUNITY_TYPES.contains(opp.Type));
+    }
+
 
     /**
      * @description Returns a list of configuration problems, if any.  If the List is empty, there are no configuration problems.
@@ -343,7 +379,15 @@ public class ALLO_AllocationsUtil {
     public static AllocationResults processOpportunityAllocations(Map<Id, Opportunity> opps, Map<Id, List<Allocation__c>> oppsAllocations, Map<Id, List<Allocation__c>> campaignAllocations, Map<Id, List<Allocation__c>> recurringDonationAllocations, RecordExclusions recExclusions) {
         AllocationResults allocResults = new AllocationResults();
 
+        // TODO: Add Exclusion checks
+        // TODO: Convert returned errors into exclusions for next step??  (Confirm whether needed...might be done in the processResults section...have to confirm)
+
         for (Opportunity opp : opps.values()) {
+            Set<PROCESS_DEF> exclusions = recExclusions.get(opp.Id);
+            if (exclusions.contains(PROCESS_DEF.OPP_ALLOC_UPD)) {
+                continue;
+            }
+
             Decimal amount = getAmountFor(opp);
             List<Allocation__c> oppAllocations = oppsAllocations.get(opp.Id);
             // Covers #3, part of #2
@@ -363,7 +407,7 @@ public class ALLO_AllocationsUtil {
 
                 copyAllocationsToTarget(opp, null, sourceAllocations, allocResults, false, false);
             } else { // Resize Allocations
-
+                resizeAllocationsAsNeeded(opp, oppAllocations, allocResults);
             }
         }
 
@@ -396,6 +440,10 @@ public class ALLO_AllocationsUtil {
 
         for (Opportunity opp : opps.values()) {
             for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
+                Set<PROCESS_DEF> exclusions = recExclusions.get(opp.Id);
+                if (exclusions.contains(PROCESS_DEF.PMT_ALLOC)) {
+                    continue;
+                }
                 List<Allocation__c> oppAllocations = oppsAllocations.get(opp.Id);
                 List<Allocation__c> pmtAllocations = pmtsAllocations.get(payment.Id);
                 // Covers #3, part of #2
@@ -403,11 +451,20 @@ public class ALLO_AllocationsUtil {
                 Decimal amount = getAmountFor(payment);
                 if (amount == null || amount == 0) {
                     // Convert all non percent based allocations to %, remove Default Allocation(s), zero out amounts
+                    if (!exclusions.contains(PROCESS_DEF.PMT_ALLOC_ZERO_OUT)) {
+                        //TODO: Implement...
+
+
+                    }
 
                 } else if (pmtAllocations == null || pmtAllocations.isEmpty()) {
-                    copyAllocationsToTarget(payment, sourceAmount, oppAllocations, allocResults, true, true);
+                    if (!exclusions.contains(PROCESS_DEF.PMT_ALLOC_INITIALIZE)) {
+                        copyAllocationsToTarget(payment, sourceAmount, oppAllocations, allocResults, true, true);
+                    }
                 } else { // Resize Allocations...
-
+                    if (!exclusions.contains(PROCESS_DEF.PMT_ALLOC_RECALC) {
+                        resizeAllocationsAsNeeded(payment, pmtAllocations, allocResults);
+                    }
                 }
             }
         }
@@ -438,7 +495,8 @@ public class ALLO_AllocationsUtil {
         processAllocationUpdateResults(allocResults.allocationsForUpdate, recs, recExclusions, processExclusions, oppObjType, paymentObjType);
 
         // Process any functional errors
-        processFunctionalErrors(recs, allocResults.errorsByRecordId, oppObjType);
+        // TODO: Add code to update/add record exclusions if functional errors are present.
+        processFunctionalErrors(recs, recExclusions, processExclusions, allocResults.errorsByRecordId, oppObjType);
     }
 
     private static void processAllocationDeleteResults(List<Allocation__c> allocationsForDelete, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
@@ -544,12 +602,14 @@ public class ALLO_AllocationsUtil {
         }
     }
 
-    private static void processFunctionalErrors(RecordsForReview recs, Map<String, List<String>> errorsByRecordId, SObject oppObjType) {
+    private static void processFunctionalErrors(RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, Map<String, List<String>> errorsByRecordId, SObject oppObjType) {
         // Functional errors
         if (errorsByRecordId != null && !errorsByRecordId.isEmpty()) {
             for(String soId :errorsByRecordId.keySet()) {
                 for (String msg :errorsByRecordId.get(soId)) {
                     recs.recErrs.addError(soId, msg, oppObjType);
+                    String exclusionId = recs.oppsById.containsKey(soId) ? soId : recs.paymentIdsToOppIds.get(soId);
+                    recExclusions.addExclusions(soId, processExclusions);
                 }
             }
         }
@@ -603,9 +663,7 @@ public class ALLO_AllocationsUtil {
             'npe01__Written_Off__c',
             'npe01__Paid__c',
             'npe01__Opportunity__c',
-            'LastModifiedDate',
-            'RecordtypeId',
-            'Type'
+            'LastModifiedDate'
         };
         String paymentSubQueryString = + new UTIL_Query()
             .withSelectFields(oppPaymentFields)
@@ -622,6 +680,8 @@ public class ALLO_AllocationsUtil {
             'npe03__Recurring_Donation__c',
             'IsClosed',
             'LastModifiedDate',
+            'RecordtypeId',
+            'Type',
             '(' + paymentSubQueryString + ')'
         };
 
@@ -938,7 +998,7 @@ public class ALLO_AllocationsUtil {
 
         DateTime lastModifiedDate = (DateTime) parentSObj.get('LastModifiedDate');
         String currencyIsoCode = null;
-        if (UserInfo.isMultiCurrencyOrganization()) {
+        if (IS_MULTICURRENCY_ORG) {
             currencyIsoCode = (String) parentSObj.get('CurrencyIsoCode');
         }
 
@@ -967,7 +1027,7 @@ public class ALLO_AllocationsUtil {
 
             allocAmount += alloc.Amount__c;
 
-            if (UserInfo.isMultiCurrencyOrganization()) { // Only check if CurrencyIsoCode is different if Multi Currency Organization
+            if (IS_MULTICURRENCY_ORG) { // Only check if CurrencyIsoCode is different if Multi Currency Organization
                 String alloCurrencyIsoCode = (String) alloc.get('CurrencyIsoCode');
                 if (alloCurrencyIsoCode != currencyIsoCode) {
                     return true;
@@ -1031,7 +1091,7 @@ public class ALLO_AllocationsUtil {
             // Update the Allocations amounts and percentages, and if required, non-percentage based Allocations to percentage Allocations
             for (Allocation__c allocation : listAlloForInsert) {
                 //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode to the same one as the parent
-                if (UserInfo.isMultiCurrencyOrganization()) {
+                if (IS_MULTICURRENCY_ORG) {
                     if (allocation.Amount__c!=null) {
                         allocation.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
                             (String)allocation.get('CurrencyIsoCode'),
@@ -1096,26 +1156,61 @@ public class ALLO_AllocationsUtil {
         return true;
     }
 
-    private static List<String> validateAllocation(Allocation allocation) {
-        errors = new List<String>();
+    private static List<String> validateAllocation(SObject parentObj, Allocation__c allocation) {
+        List<String> errors = new List<String>();
         // No parent, or multiple parents
-        if (hasParentError(allo)) {
-            errors.add(UTIL_Describe.getObjectLabel('Allocation__c') + '[' + allocation.Name__c + ']: ' + Label.alloSingleParent);
+        if (hasParentError(allocation)) {
+            errors.add(assembleAllocationError(parentObj, allocation, Label.alloSingleParent));
         }
         //neither an amount nor a percent is defined
-        if (allo.Amount__c == null && allo.Percent__c == null) {
-            errors.add(UTIL_Describe.getObjectLabel('Allocation__c') + '[' + allocation.Name__c + ']: ' + Label.alloAmountOrPercent);
+        if (allocation.Amount__c == null && allocation.Percent__c == null) {
+            errors.add(assembleAllocationError(parentObj, allocation, Label.alloAmountOrPercent));
         }
         //negative amount (Payments excepted)
-        if (allo.Amount__c != null && allo.Amount__c < 0 && allo.Payment__c == null) {
-            errors.add(UTIL_Describe.getObjectLabel('Allocation__c') + '[' + allocation.Name__c + ']: ' + Label.alloNegativeAmount);
+        if (allocation.Amount__c != null && allocation.Amount__c < 0 && allocation.Payment__c == null) {
+            errors.add(assembleAllocationError(parentObj, allocation, Label.alloNegativeAmount));
         }
         //negative percent
-        if (allo.Percent__c != null && allo.Percent__c < 0) {
-            errors.add(UTIL_Describe.getObjectLabel('Allocation__c') + '[' + allocation.Name__c + ']: ' + Label.alloNegativePercent);
+        if (allocation.Percent__c != null && allocation.Percent__c < 0) {
+            errors.add(assembleAllocationError(parentObj, allocation, Label.alloNegativePercent));
         }
 
         return errors;
+    }
+
+    private static String assembleAllocationError(SObject parentObj, Allocation__c alloc, String message) {
+        return Label.alloPaymentAllocationBatchAllocationError.replace('{obj_type}', getLabelFor(parentObj))
+                                                              .replace('{parent_name}', (String) parentObj.get('Name'))
+                                                              .replace('{alloc_name}', alloc.Name)
+                                                              .replace('{error}', message);
+    }
+
+    private static String assembleRecordError(SObject parentObj, String message) {
+        return Label.alloPaymentAllocationBatchRecordError.replace('{obj_type}', getLabelFor(parentObj))
+                                                          .replace('{parent_name}', (String) parentObj.get('Name'))
+                                                          .replace('{error}', message);
+    }
+
+    private static String getAllocationLabel() {
+        if (ALLOC_OBJ_LABEL == null) {
+            ALLOC_OBJ_LABEL = UTIL_Describe.getObjectLabel('Allocation__c');
+        }
+        return ALLOC_OBJ_LABEL;
+    }
+
+
+    private static String getOpportunityLabel() {
+        if (OPP_OBJ_LABEL == null) {
+            OPP_OBJ_LABEL = UTIL_Describe.getObjectLabel('Opportunity');
+        }
+        return OPP_OBJ_LABEL;
+    }
+
+    private static String getPaymentLabel() {
+        if (PMT_OBJ_LABEL == null) {
+            PMT_OBJ_LABEL = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
+        }
+        return PMT_OBJ_LABEL;
     }
 
     public static void resizeAllocationsAsNeeded(SObject parentObj, List<Allocation__c> allocations, AllocationResults allocResults) {
@@ -1124,72 +1219,70 @@ public class ALLO_AllocationsUtil {
         Decimal totalOfPercentages = 0;
         Decimal parentAmount = getAmountFor(parentObj);
 
+        // Resizing of Allocations for null/0 Amounts is not done in this method, as null/0 resizing is a special case.
+        if (parentAmount == null || parentAmount == 0) {
+            return;
+        }
+
         Boolean requiresUpdates = false;
 
         List<Allocation__c> proposedAllocations = new List<Allocation__c>();
         List<Allocation__c> proposedAllocDeletes = new List<Allocation__c>();
+        List<Allocation__c> unchangedAllocations = new List<Allocation__c>();
         List<Allocation__c> defaultAllocations = new List<Allocation__c>();
-        String parentCurrencyIsoCode = (UserInfo.isMultiCurrencyOrganization()) ? (String) parentObj.get('CurrencyIsoCode') : null;
+        String parentCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) parentObj.get('CurrencyIsoCode') : null;
         Boolean errorsFound = false;
 
         for (Allocation__c allocation : allocations.deepClone(true, true, true)) {
             if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c) {
-
-            }
-
-            String allocCurrencyIsoCode = (UserInfo.isMultiCurrencyOrganization()) ? (String) allocation.get('CurrencyIsoCode') : null;
-
-            if (allocation.Percent__c != null) {
-                Decimal curAllocAmount = allocation.Percent__c * 0.01 * parentAmount;
-
-                if (allocation.Amount__c != curAllocAmount || parentCurrencyIsoCode != currencyIsoCode) {
-                    allocation.Amount__c = curAllocAmount;
-                    if (UserInfo.isMultiCurrencyOrganization()) {
-                        allocation.put('CurrencyIsoCode', parentCurrencyIsoCode);
-                    }
-                    List<String> errs = validateAllocation(allocation);
-                    if (errs.isNotEmpty()) {
-                        errorsFound = true;
-                        if (allocResults.errorsByRecordId.containsKey(parentObj.Id)) {
-                            allocResults.errorsByRecordId.get(parentObj.Id).addAll(errs);
-                        } else {
-                            allocResults.put(parentObj.Id, errs);
-                        }
-                    } else {
-                        proposedAllocations.add(allocations);
-                    }
-                }
+                defaultAllocations.add(allocation);
             } else {
-                // Amount requires sign update
-                if ((allocation.Amount__c > 0 && parentAmount < 0) || (allocation.Amount__c < 0 && parentAmount > 0)) {
-                    allocation.Amount__c = -1 * allocation.Amount__c;
-                    if (UserInfo.isMultiCurrencyOrganization()) {
-                        allocation.put('CurrencyIsoCode', parentCurrencyIsoCode);
+                String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) allocation.get('CurrencyIsoCode') : null;
+                Decimal curAllocAmount = (allocation.Percent__c != null) ? allocation.Percent__c * 0.01 * parentAmount : allocation.Amount__c;
+                Boolean updatesToAllocation = false;
+
+
+                // Change due to Parent Amount update or Parent CurrencyIsoCode change
+                if (allocation.Amount__c != curAllocAmount || parentCurrencyIsoCode != allocCurrencyIsoCode) {
+                    updatesToAllocation = true;
+                }
+
+                // Amount requires sign update.  Only allowed for Payments...
+                if (allocation.Payment__c != null && ((curAllocAmount > 0 && parentAmount < 0) || (curAllocAmount < 0 && parentAmount > 0))) {
+                    curAllocAmount = -1 * curAllocAmount;
+                    updatesToAllocation = true;
+                }
+
+                List<String> errs = validateAllocation(parentObj, allocation);
+                if (!errs.isEmpty()) {
+                    errorsFound = true;
+                    allocResults.addAllErrors(getOpportunityIdFor(parentObj), errs);
+                } else {
+                    if (updatesToAllocation) {
+                        allocation.Amount__c = curAllocAmount;
+                        if (IS_MULTICURRENCY_ORG) {
+                            allocation.put('CurrencyIsoCode', parentCurrencyIsoCode);
+                        }
+                        proposedAllocations.add(allocation);
+                    } else {
+                        unchangedAllocations.add(allocation);
                     }
                 }
-
+                sumOfAllocations += (curAllocAmount != null) ? curAllocAmount : 0;
+                totalOfPercentages += (allocation.Percent__c != null) ? allocation.Percent__c : 0;
             }
-
-
-
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                if (parentCurrencyIsoCode != (String) allocation.get('CurrencyIsoCode')) {
-
-                }
-            }
-
-            sumOfAllocations += allocation.Amount__c;
-            totalOfPercentages += allocation.Percent__c;
         }
 
-        if (!requiresUpdates) {
-            if (totalOfPercentages > 100) {
-
-            }
-
+        if (totalOfPercentages > 100) {
+            allocResults.addError(getOpportunityIdFor(parentObj), assembleRecordError(parentObj, Label.alloPercentExceed100));
+            errorsFound = true;
+        }
+        if ((sumOfAllocations > parentAmount && parentAmount > 0) || (sumofAllocations < parentAmount && parentAmount < 0)) {
+            allocResults.addError(getOpportunityIdFor(parentObj), assembleRecordError(parentObj, Label.alloOverallocatedError.replace('{obj_type}', getLabelFor(parentObj))));
+            errorsFound = true;
         }
 
-        if (validateAllocations(parentAmount, proposedAllocations, allocResults.errorsByRecordId)) {
+        if (!errorsFound) {
             if (!proposedAllocations.isEmpty()) {
                 for (Allocation__c allocation : proposedAllocations) {
                     if (allocation.Id != null) {
@@ -1202,7 +1295,45 @@ public class ALLO_AllocationsUtil {
             if (!proposedAllocDeletes.isEmpty()) {
                 allocResults.allocationsForDelete.addAll (proposedAllocDeletes);
             }
+
+            // Process Default Allocations
+            processDefaultAllocations(parentObj, parentAmount, parentCurrencyIsoCode, sumOfAllocations, defaultAllocations, allocResults);
         }
+
+    }
+
+    private static void processDefaultAllocations(SObject parentObj, Decimal parentAmount, String parentCurrencyIsoCode, Decimal allocationTotalAmount, List<Allocation__c> defaultAllocations, AllocationResults allocResults) {
+
+        // Skip all processing of Default Allocations if they are not enabled
+        if (!ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) {
+            return;
+        }
+
+        Decimal defaultAllocationAmount = parentAmount - allocationTotalAmount;
+
+
+        if (defaultAllocationAmount == 0) {
+            // No default allocations should be present.  Parent is fully allocated.  Any existing defaults should be deleted.
+            allocResults.allocationsForDelete.addAll(defaultAllocations);
+        } else if ((parentAmount > 0 && defaultAllocationAmount > 0) || (parentAmount < 0 && defaultAllocationAmount < 0)) {
+            if (!defaultAllocations.isEmpty()) {
+                String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) defaultAllocations[0].get('CurrencyIsoCode') : null;
+                if (defaultAllocationAmount != defaultAllocations[0].Amount__c || parentCurrencyIsoCode != allocCurrencyIsoCode) {
+                    defaultAllocations[0].Amount__c = defaultAllocationAmount;
+                    if (IS_MULTICURRENCY_ORG) {
+                        defaultAllocations[0].put('CurrencyIsoCode', parentCurrencyIsoCode);
+                    }
+                    allocResults.allocationsForUpdate.add(defaultAllocations[0]);
+                }
+                // Add all remaining allocations to the list of allocations to delete
+                for (Integer i=1; i< defaultAllocations.size(); i++) {
+                    allocResults.allocationsForDelete.add(defaultAllocations[i]);
+                }
+            } else { // Add a default Allocation
+                allocResults.allocationsForInsert.add(makeDefaultAllocation(parentObj, defaultAllocationAmount));
+            }
+        }
+        // Other conditions could not occur because trapped for inside of resizeAllocations method...
     }
 
     private static Id getOpportunityIdFor(SObject sObj) {
@@ -1231,16 +1362,20 @@ public class ALLO_AllocationsUtil {
         return null;
     }
 
+    private static String getLabelFor(SObject sObj) {
+        return (sObj instanceOf Opportunity) ? getOpportunityLabel() : ((sObj instanceOf npe01__OppPayment__c) ? getPaymentLabel() : '');
+    }
+
     /*******************************************************************************************************
     * @description Returns true if this allocation doesn't have exactly one parent object.
     * @param allo A GAU Allocation.
     * @return boolean Whether this allocation has a parent error.
     ********************************************************************************************************/
-    public Boolean hasParentError (Allocation__c allo) {
+    public static Boolean hasParentError (Allocation__c allo) {
         Integer parentCnt = 0;
 
         parentCnt += (allo.Payment__c != null) ? 1 : 0;
-        parentCnt += (allo.Opportunity != null) ? 1 : 0;
+        parentCnt += (allo.Opportunity__c != null) ? 1 : 0;
         parentCnt += (allo.Recurring_Donation__c != null) ? 1 : 0;
         parentCnt += (allo.Campaign__c != null) ? 1 : 0;
         // Anything other than exactly 1 will return an error
@@ -1265,7 +1400,7 @@ public class ALLO_AllocationsUtil {
             Amount__c = amount
         );
 
-        if (UserInfo.isMultiCurrencyOrganization()) {
+        if (IS_MULTICURRENCY_ORG) {
             defaultAllo.put('CurrencyIsoCode', parentSObj.get('CurrencyIsoCode'));
         }
 
