@@ -1,6 +1,6 @@
 *** Variables ***
 
-${count} =   99920       # use a multiple of 4
+${count} =   9920       # use a multiple of 4
 ${database_url} =    
 ${field_mapping_method} =   Data Import Field Mapping
 
