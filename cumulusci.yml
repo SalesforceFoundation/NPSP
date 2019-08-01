@@ -467,6 +467,7 @@ flows:
                 task: performance_tests
                 options:
                     options:
+                        field_mapping_method: 'Help Text'
                         outputdir: .
 
     test_performance_CO:
@@ -476,6 +477,10 @@ flows:
                 flow: qa_org_namespaced
             2:
                 task: performance_tests_CO
+                options:
+                    options:
+                        field_mapping_method: 'Data Import Field Mapping'
+                        outputdir: .
 
     beta_dependencies:
         steps:
