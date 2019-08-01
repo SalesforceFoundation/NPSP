@@ -31,9 +31,6 @@ class NPSPSettingsHomePage(BasePage):
         self.selenium.wait_until_page_contains("System Tools")  
         self.npsp.click_link_with_text("System Tools")
         
-
-    def _is_current_page(self):
-        self.selenium.location_should_contain("/lightning/n/NPSP_Settings")
    
     def click_toggle_button(self, page_name):
         """ specify the partial id of submenu under which the checkbox exists """
@@ -43,6 +40,7 @@ class NPSPSettingsHomePage(BasePage):
         time.sleep(5)
     
     def wait_until_advanced_mapping_is_enabled(self):
+        """Waits for the text 'Advanced Mapping is enabled' to be displayed on the page for 1 min"""
         i=0
         while True:
             if i<=12:

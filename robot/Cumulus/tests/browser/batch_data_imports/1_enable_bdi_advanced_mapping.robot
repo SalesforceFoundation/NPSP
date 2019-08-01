@@ -8,13 +8,14 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
-Enable Advanced Mapping 
+Enable Advanced Mapping
+    [Documentation]    This test case enables Advanced Mapping for Data Imports 
     [tags]  Unstable
-    Go To Page    Custom    NPSPSettings
-    Load Page Object    Custom    NPSPSettings
-    Open Main Menu    System Tools
-    Click Link With Text    Data Import Advanced Mapping
-    Click Toggle Button    DataImportAdvancedMapping
+    Go To Page                                Custom          NPSPSettings
+    Load Page Object                          Custom          NPSPSettings
+    Open Main Menu                            System Tools
+    Click Link With Text                      Data Import Advanced Mapping
+    Click Toggle Button                       DataImportAdvancedMapping
     Wait Until Advanced Mapping Is Enabled
 
 
