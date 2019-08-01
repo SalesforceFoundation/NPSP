@@ -139,11 +139,19 @@ class NPSP(object):
         """ To Click on a related list button which would open up a new lightning page rather than a modal.
             Pass the list name and button name"""
         self.salesforce.load_related_list(heading)
+        b_found = False
         locator = npsp_lex_locators["record"]["related"]["button"].format(
             heading, button_title
         )
-        self.selenium.click_link(locator)
-        
+        buttons=self.selenium.get_webelements(locator)
+        for button in buttons:
+            if button.is_displayed():
+                button.click()
+                b_found = True
+                break
+            
+        assert b_found, "{} related list with button {} not found.".format(heading, button_title)
+                  
     def click_related_list_dd_button(self, heading, dd_title, button_title):
         """ To Click on a related list dropdown button.
             Pass the list name, dd name and button name"""
@@ -747,9 +755,10 @@ class NPSP(object):
           key is value in 1st td element, value is value in 2nd element     
        """
        for key, value in kwargs.items():
-           locator = npsp_lex_locators['gaus']['allocations'].format(header,key)
-           ele = self.selenium.get_webelement(locator).text
-           assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)                      
+           locator = npsp_lex_locators['gaus']['allocations'].format(header,key,value)
+           self.selenium.wait_until_page_contains_element(locator,error="Expected {} allocation of {} was not found".format(key,value))
+#            ele = self.selenium.get_webelement(locator).text
+#            assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)                      
                 
     def verify_occurrence_payments(self,title,value=None):
         """"""

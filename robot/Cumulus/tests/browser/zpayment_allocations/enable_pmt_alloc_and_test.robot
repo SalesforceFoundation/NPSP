@@ -43,8 +43,7 @@ Update GAU Allocations and Verify Payment Allocations Sync
     Choose Frame    Manage Allocations
     Add GAU Allocation    Percent 0    60
     Click Button    Save
-    Wait Until Page Does Not Contain    Add Row
-    Select Window
+    Unselect Frame
     Load Related List    GAU Allocations
     Verify Gau Allocations    GAU Allocations
     ...    &{def_gau}[Name]=$40.00

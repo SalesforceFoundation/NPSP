@@ -148,7 +148,7 @@ npsp_lex_locators={
         },
     'gaus':{
         'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',
-        'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/td[2]/span",
+        'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/td[2]/span[text()='{}']",
         },
     'npsp_settings':{
         'panel_sub_link':'//ul/li/a[text()="{}"]',
