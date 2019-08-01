@@ -100,21 +100,19 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         validatePayments(newList, oldList, triggerAction, dmlWrapper);
 
-        Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>();
+        // get the payment opportunities here
+        Set<Id> oppIds = new Set<Id>();
+        for (npe01__OppPayment__c pmt : newlist) {
+            oppIds.add(pmt.npe01__Opportunity__c);
+        }
+        Map<Id, Opportunity> oppsById = getPaymentOpportunities(oppIds);
+     
 
         if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return handleMultiCurrencyPayments(oppsById, newlist, oldlist, triggerAction, dmlWrapper);
         }
 
         if (isEnforceAccountingDataConsistency) {
-            //If the Opp Map is not set in the previous step, then query the Opp here
-            if (oppsById.isEmpty()) {
-                Set<Id> oppIds = new Set<Id>();
-                for (npe01__OppPayment__c pmt : newlist) {
-                    oppIds.add(pmt.npe01__Opportunity__c);
-                }
-                oppsById = getPaymentOpportunities(oppIds);
-            }
             OPP_OpportunityAmountSync_SVC service = new OPP_OpportunityAmountSync_SVC();
             List<Opportunity> oppsToUpdate = service.syncOppAmountWithTotalPaidPaymentAmount(oppsById);
             for (Opportunity opp : oppsToUpdate) {
@@ -258,13 +256,6 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         if (dmlWrapper == null) {
             dmlWrapper = new DmlWrapper();
         }
-
-        Set<Id> oppIds = new Set<Id>();
-        for (npe01__OppPayment__c pmt : newlist) {
-            oppIds.add(pmt.npe01__Opportunity__c);
-        }
-
-        oppsById = getPaymentOpportunities(oppIds);
 
         // Validation and default the CurrencyIsoCode for new records for Before Insert/update
         if (isCurrencyFieldAvailable && (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
