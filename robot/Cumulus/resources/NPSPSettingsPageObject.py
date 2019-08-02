@@ -4,7 +4,6 @@ from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from locators_46 import npsp_lex_locators
 from logging import exception
-from compiler.pycodegen import EXCEPT
 
 @pageobject("Custom", "NPSPSettings")
 class NPSPSettingsHomePage(BasePage):
