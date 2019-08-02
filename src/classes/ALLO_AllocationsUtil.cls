@@ -37,20 +37,21 @@
 public class ALLO_AllocationsUtil {
     /** @description Allocations settings. */
     public static Allocations_Settings__c ALLOCATION_SETTINGS = UTIL_CustomSettingsFacade.getAllocationsSettings();
+    /** @description Caches call to UserInfo.IsMultiCurrencyOrganization */
     private static final Boolean IS_MULTICURRENCY_ORG = UserInfo.isMultiCurrencyOrganization();
 
-    // Lazy initialization on use to reduce describes.
+    // Lazy initialization on use to reduce describes for Object Labels
     private static String ALLOC_OBJ_LABEL;
     private static String OPP_OBJ_LABEL;
     private static String PMT_OBJ_LABEL;
 
-    /** @description Used as a way to identify parts of Allocation Sync that may or may not be allowed to execute depending on earlier execution statuses */
+    /** @description Used as a way to identify parts of Allocation Sync that may or may not be allowed to
+      *execute depending on earlier execution statuses */
     public enum PROCESS_DEF {
         ALL,
         OPP_AMT_UPD,
         OPP_ALLOC_UPD,
         PMT_ALLOC,
-        PMT_ALLOC_ZERO_OUT,
         PMT_ALLOC_RECALC,
         PMT_ALLOC_INITIALIZE,
         PMT_ALLOC_SYNC_TO_OPP_ALLOC,
@@ -60,19 +61,23 @@ public class ALLO_AllocationsUtil {
 
     /** @description Caches PROCESS_EXCLUSIONS */
     private static Map<PROCESS_DEF, Set<PROCESS_DEF>> PROCESS_EXCLUSIONS;
+    /** @description Caches excluded Opportunity Recordtype Ids */
     private static Set<Id> EXCLUDED_OPPORTUNITY_RECORDTYPES;
+    /** @description Caches excluded Opportunity Type values */
     private static Set<String> EXCLUDED_OPPORTUNITY_TYPES;
 
-
-    /** @description Manages Record Exclusions for downstream processes, so it can process as much as possible while skipping what it has to */
+    /*******************************************************************************************************
+     * @description Inner class to help Manages Record Exclusions for downstream processes, so it can
+     * process as much as possible while skipping what it has to
+     ********************************************************************************************************/
     public class RecordExclusions {
         private Map<Id, Set<PROCESS_DEF>> exclusionsByRecordId = new Map<Id, Set<PROCESS_DEF>>();
 
-        /**
-          * @description Adds an exclusion for the specified record.
-          * @param Id recordId The Id of the record to add an Exclusion for
-          * @param PROCESS_DEF exclusion The exclusion to add
-          */
+        /*******************************************************************************************************
+         * @description Adds an exclusion for the specified record.
+         * @param Id recordId The Id of the record to add an Exclusion for
+         * @param PROCESS_DEF exclusion The exclusion to add
+         ********************************************************************************************************/
         public void addExclusion(Id recordId, PROCESS_DEF exclusion) {
             if (!this.exclusionsByRecordId.containsKey(recordId)) {
                 this.exclusionsByRecordId.put(recordId, new Set<PROCESS_DEF> {exclusion});
@@ -81,11 +86,11 @@ public class ALLO_AllocationsUtil {
             }
         }
 
-        /**
-          * @description Adds a set of exclusions for the specified record.
-          * @param Id recordId The Id of the record to add an Exclusion for
-          * @param Set<PROCESS_DEF> exclusions The exclusions to add
-          */
+        /*******************************************************************************************************
+         * @description Adds a set of exclusions for the specified record.
+         * @param Id recordId The Id of the record to add an Exclusion for
+         * @param Set<PROCESS_DEF> exclusions The exclusions to add
+         ********************************************************************************************************/
         public void addExclusions(Id recordId, Set<PROCESS_DEF> exclusions) {
             Set<PROCESS_DEF> recordExclusions = (this.exclusionsByRecordId.containsKey(recordId)) ? this.exclusionsByRecordId.get(recordId) : new Set<PROCESS_DEF>();
 
@@ -98,29 +103,35 @@ public class ALLO_AllocationsUtil {
             }
         }
 
-        /**
-          * @description Checks to see if an exclusion is present for a record
-          * @param Id recordId The Id of the record
-          * @param PROCESS_DEF exclusion The exclusions to check for
-          */
-        public boolean hasExclusion(Id recordId, PROCESS_DEF exclusion) {
-            return (this.exclusionsByRecordId.containsKey(recordId) && this.exclusionsByRecordId.get(recordId).contains(exclusion));
+        /*******************************************************************************************************
+         * @description Checks to see if an exclusion is present for a record, or if record is excluded from
+         *              all processing
+         * @param Id recordId The Id of the record
+         * @param PROCESS_DEF exclusion The exclusions to check for
+         * @return Boolean True if the exclusion if present for that recordId
+         ********************************************************************************************************/
+        public Boolean hasExclusion(Id recordId, PROCESS_DEF exclusion) {
+            Set<PROCESS_DEF> recordExclusions = (this.exclusionsByRecordId.containsKey(recordId)) ? this.exclusionsByRecordId.get(recordId) : null;
+            return (recordExclusions != null && (recordExclusions.contains(exclusion) || recordExclusions.contains(PROCESS_DEF.ALL)));
         }
     }
 
-    /** @description Envelope of Changes to Allocations, along with any functional errors by Opportunity or Payment Id */
+    /*******************************************************************************************************
+     * @description Inner class used as Envelope of Changes to Allocations, along with any functional
+     *              errors by Opportunity or Payment Id
+     ********************************************************************************************************/
     public class AllocationResults {
         public List<Allocation__c> allocationsForInsert= new List<Allocation__c>();
         public List<Allocation__c> allocationsForUpdate= new List<Allocation__c>();
         public List<Allocation__c> allocationsForDelete= new List<Allocation__c>();
         public Map<String, List<String>> errorsByRecordId = new Map<String, List<String>>();
 
-        /**
-          * @description Adds an error to the list of errors for a specific record Id.  If no errors are present for that record Id,
-          * a new error list is created
-          * @param String recordId The Id of the record
-          * @param String error to add
-          */
+        /*******************************************************************************************************
+         * @description Adds an error to the list of errors for a specific record Id.  If no errors are
+         *              present for that record Id, a new error list is created
+         * @param String recordId The Id of the record
+         * @param String error to add
+         ********************************************************************************************************/
         public void addError(String recordId, String error) {
             if (this.errorsByRecordId.containsKey(recordId)) {
                 this.errorsByRecordId.get(recordId).add(error);
@@ -129,12 +140,12 @@ public class ALLO_AllocationsUtil {
             }
         }
 
-        /**
-          * @description Adds a list of errors to the existing list of errors for a specific record Id.  If no errors are present for that record Id,
-          * the list is inserted as is.
-          * @param String recordId The Id of the record
-          * @param List<String> errors to add
-          */
+        /*******************************************************************************************************
+         * @description Adds a list of errors to the existing list of errors for a specific record Id.  If no
+         *              errors are present for that record Id, the list is inserted as is.
+         * @param String recordId The Id of the record
+         * @param List<String> errors to add
+         ********************************************************************************************************/
         public void addAllErrors(String recordId, List<String> errors) {
             if (this.errorsByRecordId.containsKey(recordId)) {
                 this.errorsByRecordId.get(recordId).addAll(errors);
@@ -144,11 +155,13 @@ public class ALLO_AllocationsUtil {
         }
     }
 
-    /**
-     * @description Records Identified as needing further review and/or updates based on the state of the records, as well as any recent changes.
-     *  Opportunity Data with payments, as well as the allocations for the opportunity, payment, recurring donation (if needed), and campaign (if needed)
-     *  are returned if flagged for further review/processing
-     */
+    /*******************************************************************************************************
+     * @description Inner class to hold Records identified as needing further review and/or updates based
+     *              on the state of the records, as well as any recent changes.  Opportunity Data with
+     *              payments, as well as the allocations for the opportunity, payment, recurring donation
+     *              (if needed), and campaign (if needed) are returned if flagged for further
+     *              review/processing
+     ********************************************************************************************************/
     public class RecordsForReview {
         public List<Opportunity> opps = new List<Opportunity>();
         public Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>();
@@ -159,11 +172,11 @@ public class ALLO_AllocationsUtil {
         public Map<Id, List<Allocation__c>> campaignAllocations = new Map<Id, List<Allocation__c>>();
         public ERR_RecordError recErrs;
 
-        /**
-          * @description Adds the Allocation to the appropriate map.  It picks the appropriate parent allocation
-          * Map based on which lookup is populated.
-          * @param alloc Allocation to add to the maps
-          */
+        /*******************************************************************************************************
+         * @description Adds the Allocation to the appropriate map.  It picks the appropriate parent allocation
+         *              Map based on which lookup is populated.
+         * @param alloc Allocation to add to the maps
+         ********************************************************************************************************/
         public void addAllocationByType(Allocation__c alloc) {
             if (alloc.Opportunity__c != null) { // This is an Opportunity Allocation
                 ALLO_AllocationsUtil.add(oppsAllocations, alloc.Opportunity__c, alloc);
@@ -176,12 +189,15 @@ public class ALLO_AllocationsUtil {
             }
         }
 
-        /** @description Checks to see if the Opportunity requires review, based on it's payments, allocations, etc.
-          * @param Opportunity opp The opportunity to check
-          * @param Datetime boundary Represents a Datatime boundary.  Records newer than this boundary will require review
-          * @return true if the Opportunity requires review
-          */
-        public boolean isOpportunityRequiresReview(Opportunity opp, Datetime boundary) {
+        /*******************************************************************************************************
+         * @description Checks to see if the Opportunity requires review, based on it's payments, allocations,
+         *              etc.
+         * @param Opportunity opp The opportunity to check
+         * @param Datetime boundary Represents a Datatime boundary.  Records newer than this boundary will
+         *        require review
+         * @return Boolean True if the Opportunity requires review
+         ********************************************************************************************************/
+        public Boolean isOpportunityRequiresReview(Opportunity opp, Datetime boundary) {
             // If the Opportunity is excluded for Recordtype or Type it will be skipped.
             if (isExcluded(opp)) {
                 return false;
@@ -207,11 +223,11 @@ public class ALLO_AllocationsUtil {
             return false;
         }
 
-
-        /** @description Initialize errors for Process using the records flagged for review.  It will retrieve any
-          * existing errors so we can update them if more errors for that record and process.
-          * @param String processName The processName/context the record errors are recorded under
-          */
+        /*******************************************************************************************************
+         * @description Initialize errors for Process using the records flagged for review.  It will retrieve
+         *              any existing errors so we can update them if more errors for that record and process.
+         * @param String processName The processName/context the record errors are recorded under
+         ********************************************************************************************************/
         public void initializeErrors(String processName) {
             // Initialize the Record Errors
             this.recErrs = new ERR_RecordError(processName);
@@ -228,57 +244,20 @@ public class ALLO_AllocationsUtil {
             // Retrieve any errors already in the System
             this.recErrs.retrieveExistingErrorsFor(sObjs);
         }
-
     }
 
-    /** @description Return true if either the Opportunities Recordtype or Type match those
-        * configured to be excluded from Allocations processing
-        * @param Opportunity opp The opportunity to check
-        * @return Boolean true if the Opportunity should be excluded from Allocations processing
-        */
-    public static Boolean isExcluded(Opportunity opp) {
-        if (EXCLUDED_OPPORTUNITY_RECORDTYPES == null || EXCLUDED_OPPORTUNITY_TYPES == null) {
-            EXCLUDED_OPPORTUNITY_RECORDTYPES = getExcludedOpportunityRecordtypes();
-            EXCLUDED_OPPORTUNITY_TYPES = getExcludedOpportunityTypes();
-        }
-
-        return (EXCLUDED_OPPORTUNITY_RECORDTYPES.contains(opp.RecordtypeId) || EXCLUDED_OPPORTUNITY_TYPES.contains(opp.Type));
-    }
-
-
-    /**
-     * @description Returns a list of configuration problems, if any.  If the List is empty, there are no configuration problems.
-     * @return List<String> List of configuration problems, if any
-     */
-    public static List<String> validatePaymentAllocationsConfiguration() {
-        List<String> problems = new List<String>();
-        if (!ALLOCATION_SETTINGS.Payment_Allocations_Enabled__c) {
-            problems.add(System.Label.alloPaymentNotEnabled);
-        }
-        if (!ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) {
-            problems.add(System.Label.alloDefaultNotEnabled);
-        }
-
-        if (ALLOCATION_SETTINGS.Default__c == null) {
-            problems.add(System.Label.alloDefaultGAUMissing);
-        } else {
-            List<General_Accounting_Unit__c> defaultGAU = [select Id, Active__c, Name from General_Accounting_Unit__c where Id = :ALLOCATION_SETTINGS.Default__c];
-            if (defaultGAU.size() < 1) {
-                problems.add(System.Label.alloDefaultGAUDoesNotExist);
-            } else if (!defaultGAU[0].Active__c) {
-                problems.add(System.Label.alloDefaultGAUNotActive.replace('{0}', defaultGAU[0].Name));
-            }
-        }
-
-        return problems;
-    }
-
-    /**
-     * description Returns a populated RecordsForReview structure for the set of Opportunity Ids provided, and the boundary Datetime.  The
-     * boundary is used to determine whether or not the records were updated based on whether the LastModified is >= boundary date.  If the boundary is
-     * null, all records are considered to be updated.
+    /*******************************************************************************************************
+     * description Returns a populated RecordsForReview structure for the set of Opportunity Ids provided,
+     *             and the boundary Datetime.  The boundary is used to determine whether or not the records
+     *             were updated based on whether the LastModified is >= boundary date.  If the boundary is
+     *             null, all records are considered to be updated.
+     * @param String processName The process name errors should be stored under in the Errors__c
+     *        Context_Type__c field
+     * @param Set<Id> oppIds The set of Opportunities to review/retrieve data for
+     * @param Datetime boundary The boundary condition to be used when seeing if certain records were
+     *        updated or not
      * @return RecordsForReview the Opportunity records requiring review and additional/processing
-     */
+    ********************************************************************************************************/
     public static RecordsForReview determineRecordsRequiringReview(String processName, Set<Id> oppIds, Datetime boundary) {
         RecordsForReview recsForReview = new RecordsForReview();
 
@@ -358,23 +337,29 @@ public class ALLO_AllocationsUtil {
         return recsForReview;
     }
 
-    /**
-     * @description processes Opportunities and their allocations:
-     * 1) Resizes existing percentage based allocations for Amount changes
-     * 2) Adds/updates/removes the default allocation if enabled, and as appropriate
-     * 3) Creates allocations from parent (if no allocations are present, and record has a parent)
-     * 4) If amount goes to null/0, deletes default allocations and converts existing non percentage
-     *    allocations to percentage allocations if possible, and zeroes all allocations
-     * 5) Records errors if allocations become invalid for the Opportunity
-     * 6) Validates changes, logs errors if allocations are now invalid
-     * NO DML is processed in this method.  It is instead returned to the caller for processing
+    /*******************************************************************************************************
+     * @description Processes Opportunities and their Allocations:
+     *              1) Resizes existing percentage based Allocations for amount changes
+     *              2) Adds/updates/removes the default Allocation if enabled, and as appropriate
+     *              3) Creates Allocations from the parent (if no Allocations are present, and the
+     *                 record has a parent)
+     *              4) If amount goes to null/0, deletes the default Allocations (if present/enabled) and
+     *                 converts existing non percentage Allocations to percentage Allocations if possible,
+     *                 and zeroes all allocations
+     *              Records errors if allocations become invalid for the Opportunity
+     *              Validates changes, logs errors if allocations are now invalid
+     *              NO DML is processed in this method.  It is instead returned to the caller for
+     *              processing
      * @param Map<Id, Opportunity> opps The opportunities to process
      * @param Map<Id, List<Allocation__c>> oppsAllocations The Allocations associated with the Opportunity
-     * @param Map<Id, List<Allocation__c>> campaignAllocations The Allocations associated with (parent Campaigns, if any)
-     * @param Map<Id, List<Allocation__c>> recurringDonationAllocations The Allocations associated with (parent Recurring Donations, if any)
+     * @param Map<Id, List<Allocation__c>> campaignAllocations The Allocations associated with (parent
+     *        Campaigns, if any)
+     * @param Map<Id, List<Allocation__c>> recurringDonationAllocations The Allocations associated with
+     *        (parent Recurring Donations, if any)
      * @param RecordExclusions recExclusions Map of records to any exclusions they might have
-     * @return AllocationResults The DML to process, along with any errors identified
-     */
+     * @return AllocationResults The DML to process, along with any functional and validation errors
+     *         identified
+    ********************************************************************************************************/
     public static AllocationResults processOpportunityAllocations(Map<Id, Opportunity> opps, Map<Id, List<Allocation__c>> oppsAllocations, Map<Id, List<Allocation__c>> campaignAllocations, Map<Id, List<Allocation__c>> recurringDonationAllocations, RecordExclusions recExclusions) {
         AllocationResults allocResults = new AllocationResults();
 
@@ -383,13 +368,11 @@ public class ALLO_AllocationsUtil {
                 continue;
             }
 
-            Decimal amount = getAmountFor(opp);
             List<Allocation__c> oppAllocations = oppsAllocations.get(opp.Id);
-            // Covers #3, part of #2
-            if (amount == null || amount == 0) {
-                // Convert all non percent based allocations to %, remove Default Allocation(s), zero out amounts
-                clearAllocations(opp, oppAllocations, allocResults);
-            } else if (oppAllocations == null || oppAllocations.isEmpty()) {
+
+            if (oppAllocations == null || oppAllocations.isEmpty()) {
+                // New Allocations to be copied from parent, or defaulted (part of #2, #3)
+
                 List<Allocation__c> sourceAllocations = null;
                 // No Allocations, copyFromParent or set default of no parent
                 if (opp.CampaignId != null && campaignAllocations.containsKey(opp.CampaignId)) {
@@ -401,7 +384,8 @@ public class ALLO_AllocationsUtil {
                 }
 
                 copyAllocationsToTarget(opp, null, sourceAllocations, allocResults, false, false);
-            } else { // Resize Allocations
+            } else {
+                // Existing Allocations and are to be resized, or cleared as necessary (#1, part of #2, #4)
                 resizeAllocationsAsNeeded(opp, oppAllocations, allocResults);
             }
         }
@@ -409,21 +393,25 @@ public class ALLO_AllocationsUtil {
         return allocResults;
     }
 
-    /**
-     * @description processes Payments and their allocations:
-     * 1) Resizes existing percentage based allocations for Amount changes
-     * 2) Adds/updates/removes the default allocation if enabled, and as appropriate
-     * 3) Creates allocations from parent
-     * 4) Clears allocations if amount goes to null/0
-     * 5) Records errors if allocations become invalid for the Payment
-     * 6) Validates changes, logs errors if allocations are now invalid
+    /*******************************************************************************************************
+     * @description Processes Payments and their Allocations:
+     *              1) Resizes existing percentage based Allocations for amount changes
+     *              2) Adds/updates/removes the default Allocation if enabled, and as appropriate
+     *              3) Creates Allocations from the parent
+     *              4) If amount goes to null/0, deletes the default Allocations (if present/enabled) and
+     *                 converts existing non percentage Allocations to percentage Allocations if possible,
+     *                 and zeroes all Allocations
+     *              Records errors if Allocations become invalid for the Payment
+     *              Validates changes, logs errors if Allocations are now invalid
      * NO DML is processed in this method.  It is instead returned to the caller for processing
      * @param Map<Id, Opportunity> opps The opportunities to process
      * @param Map<Id, List<Allocation__c>> oppsAllocations The Allocations associated with the Opportunity
-     * @param Map<Id, List<Allocation__c>> pmtsAllocations The Payment Allocations for the Payments associated with these Opportunities
+     * @param Map<Id, List<Allocation__c>> pmtsAllocations The Payment Allocations for the Payments
+     *        associated with these Opportunities
      * @param RecordExclusions recExclusions Map of records to any exclusions they might have
-     * @return AllocationResults The DML to process, along with any errors identified
-     */
+     * @return AllocationResults The DML to process, along with any functional and validation errors
+     *         identified
+    ********************************************************************************************************/
     public static AllocationResults processPaymentAllocations(Map<Id, Opportunity> opps, Map<Id, List<Allocation__c>> oppsAllocations, Map<Id, List<Allocation__c>> pmtsAllocations, RecordExclusions recExclusions) {
         AllocationResults allocResults = new AllocationResults();
 
@@ -440,19 +428,15 @@ public class ALLO_AllocationsUtil {
                 }
                 List<Allocation__c> oppAllocations = oppsAllocations.get(opp.Id);
                 List<Allocation__c> pmtAllocations = pmtsAllocations.get(payment.Id);
-                // Covers #3, part of #2
                 Decimal sourceAmount = getAmountFor(opp);
-                Decimal amount = getAmountFor(payment);
-                if (amount == null || amount == 0) {
-                    // Convert all non percent based allocations to %, remove Default Allocation(s), zero out amounts
-                    if (!recExclusions.hasExclusion(opp.Id, PROCESS_DEF.PMT_ALLOC_ZERO_OUT)) {
-                        clearAllocations(payment, pmtAllocations, allocResults);
-                    }
-                } else if (pmtAllocations == null || pmtAllocations.isEmpty()) {
+
+                if (pmtAllocations == null || pmtAllocations.isEmpty()) {
+                    // New Allocations to be copied from parent, or defaulted (part of #2, #3)
                     if (!recExclusions.hasExclusion(opp.Id, PROCESS_DEF.PMT_ALLOC_INITIALIZE)) {
                         copyAllocationsToTarget(payment, sourceAmount, oppAllocations, allocResults, true, true);
                     }
-                } else { // Resize Allocations...
+                } else {
+                    // Existing Allocations and are to be resized, or cleared as necessary (#1, part of #2, #4)
                     if (!recExclusions.hasExclusion(opp.Id, PROCESS_DEF.PMT_ALLOC_RECALC)) {
                         resizeAllocationsAsNeeded(payment, pmtAllocations, allocResults);
                     }
@@ -463,12 +447,14 @@ public class ALLO_AllocationsUtil {
         return allocResults;
     }
 
-    /**
-     * @description Processes the DML for the Allocation Results and updates the RecordsForReview and recExclusions
+    /*******************************************************************************************************
+     * @description Processes the DML for the Allocation Results and updates the "Records For Review" and
+     *              "Record Exclusions", recordding errors as needed.
      * @param AllocationResults allocResults The DML to process, along with any errors identified
-     * @param RecordsForReview recs the Opportunity records and associated Allocations requiring review and additional/processing
+     * @param RecordsForReview recs the Opportunity records and associated Allocations requiring review
+     *        and additional/processing
      * @param RecordExclusions recExclusions Map of records to any exclusions they might have
-     */
+    ********************************************************************************************************/
     public static void processAllocationResults(PROCESS_DEF process, AllocationResults allocResults, RecordsForReview recs, RecordExclusions recExclusions) {
 
         // These are shells to pass to the ERR_RecordError addDML Errors method, so it can set the Object Type
@@ -486,11 +472,24 @@ public class ALLO_AllocationsUtil {
         processAllocationUpdateResults(allocResults.allocationsForUpdate, recs, recExclusions, processExclusions, oppObjType, paymentObjType);
 
         // Process any functional errors
-        // TODO: Add code to update/add record exclusions if functional errors are present.
         processFunctionalErrors(recs, recExclusions, processExclusions, allocResults.errorsByRecordId, oppObjType);
     }
 
-    private static void processAllocationDeleteResults(List<Allocation__c> allocationsForDelete, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
+    /*******************************************************************************************************
+     * @description Processes Allocation deletions, recording DML errors as Record Errors and adding
+     * Record Exclusions for ones that errored.  The RecordsForReview Allocations are updated removing
+     * Allocations from the Maps for successful DML.
+     * @param List<Allocation__c> allocationsForDelete
+     * @param RecordsForReview recs the Opportunity records and associated Allocations requiring review
+              and additional/processing
+     * @param RecordExclusions recExclusions Map of records to any exclusions they might have
+     * @param Set<PROCESS_DEF> processExclusions Exclusions to add for any errors
+     * @param SObject oppObjType - (Opportunity SObject) Used when adding an error to the list of Record
+     *        Errors so it can store the Object as "Opportunity"
+     * @param SObject paymentObjType - (Payment SObject) Used when adding an error to the list of Record
+     *        Errors so it can store the Object as "npe01__OppPayment__c"
+    ********************************************************************************************************/
+    @testVisible private static void processAllocationDeleteResults(List<Allocation__c> allocationsForDelete, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
         List<Database.DeleteResult> deletes = null;
 
         // Process Deletions
@@ -525,7 +524,21 @@ public class ALLO_AllocationsUtil {
         }
     }
 
-    private static void processAllocationInsertResults(List<Allocation__c> allocationsForInsert, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
+    /*******************************************************************************************************
+     * @description Processes Allocation inserts, recording DML errors as Record Errors and adding
+     * Record Exclusions for ones that errored.  The RecordsForReview Allocations are updated adding all
+     * successful DML.
+     * @param List<Allocation__c> allocationsForInsert
+     * @param RecordsForReview recs the Opportunity records and associated Allocations requiring review
+              and additional/processing
+     * @param RecordExclusions recExclusions Map of records to any exclusions they might have
+     * @param Set<PROCESS_DEF> processExclusions Exclusions to add for any errors
+     * @param SObject oppObjType - (Opportunity SObject) Used when adding an error to the list of Record
+     *        Errors so it can store the Object as "Opportunity"
+     * @param SObject paymentObjType - (Payment SObject) Used when adding an error to the list of Record
+     *        Errors so it can store the Object as "npe01__OppPayment__c"
+    ********************************************************************************************************/
+    @testVisible private static void processAllocationInsertResults(List<Allocation__c> allocationsForInsert, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
         List<Database.SaveResult> inserts = null;
 
         // Process Inserts
@@ -559,7 +572,21 @@ public class ALLO_AllocationsUtil {
         }
     }
 
-    private static void processAllocationUpdateResults(List<Allocation__c> allocationsForUpdate, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
+    /*******************************************************************************************************
+     * @description Processes Allocation updates, recording DML errors as Record Errors and adding
+     * Record Exclusions for ones that errored.  The RecordsForReview Allocations are updated for all
+     * successful DML.
+     * @param List<Allocation__c> allocationsForUpdate
+     * @param RecordsForReview recs the Opportunity records and associated Allocations requiring review
+              and additional/processing
+     * @param RecordExclusions recExclusions Map of records to any exclusions they might have
+     * @param Set<PROCESS_DEF> processExclusions Exclusions to add for any errors
+     * @param SObject oppObjType - (Opportunity SObject) Used when adding an error to the list of Record
+     *        Errors so it can store the Object as "Opportunity"
+     * @param SObject paymentObjType - (Payment SObject) Used when adding an error to the list of Record
+     *        Errors so it can store the Object as "npe01__OppPayment__c"
+    ********************************************************************************************************/
+    @testVisible private static void processAllocationUpdateResults(List<Allocation__c> allocationsForUpdate, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
         List<Database.SaveResult> updates = null;
 
         // Process Updates
@@ -593,7 +620,19 @@ public class ALLO_AllocationsUtil {
         }
     }
 
-    private static void processFunctionalErrors(RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, Map<String, List<String>> errorsByRecordId, SObject oppObjType) {
+    /*******************************************************************************************************
+     * @description Processes functional errors and adds record exclusion, for the errors that occurred.
+     * @param RecordsForReview recs the Opportunity records and associated Allocations requiring review
+              and additional/processing
+     * @param RecordExclusions recExclusions Map of records to any exclusions they might have
+     * @param Set<PROCESS_DEF> processExclusions Exclusions to add for any errors
+     * @param Map<String, List<String>> errorsByRecordId A map of a list of error messages to process into
+     *        "Record Errors" and add exclusions for, keyed by the Opportunity Id associated with the
+     *        error
+     * @param SObject oppObjType - (Opportunity SObject) Used when adding an error to the list of Record
+     *        Errors so it can store the Object as "Opportunity"
+    ********************************************************************************************************/
+    @testVisible private static void processFunctionalErrors(RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, Map<String, List<String>> errorsByRecordId, SObject oppObjType) {
         // Functional errors
         if (errorsByRecordId != null && !errorsByRecordId.isEmpty()) {
             for(String soId :errorsByRecordId.keySet()) {
@@ -606,448 +645,27 @@ public class ALLO_AllocationsUtil {
         }
     }
 
-    /**
-     * @description Disables the following Allocation Triggers, on the Allocation, Opportunity,
-     * and npe01__OppPayment__c objects: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM (in
-     * memory only)
-     */
-    public static void disableAllocationTriggers() {
-        updateAllocationTriggersState(false);
-    }
-
-    /**
-     * @description Enables the following Allocation Triggers, on the Allocation, Opportunity,
-     * and npe01__OppPayment__c objects: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM (in
-     * memory only)
-     */
-    public static void enableAllocationTriggers() {
-        updateAllocationTriggersState(true);
-    }
-
-
-
-    /**
-     * @description Updates the state of the Allocation triggers in the in memory cache, enabling or disabling the
-     * trigger.  The following triggers are enabled/disabled by this method: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM.
-     * @param Boolean state - If true, they are active, if false, they are inactive.
-     */
-    private static void updateAllocationTriggersState(Boolean state) {
-        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_Allocations_TDTM', state);
-        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'ALLO_Allocations_TDTM', state);
-        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'ALLO_Allocations_TDTM', state);
-        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_PaymentSync_TDTM', state);
-    }
-
-    /**
-     * @description Retrieves Opportunity and Payment Data into a Map by Opportunity Id for the Set of Opportunity
-     * Ids requested.
-     * @param Set<Id> oppIds The set of Opportunity Ids to retrieve Opportunity and Payment information for
-     * @return Map<Id, Opportunity> Map of Opportunities by Opportunity Id
-     */
-    private static Map<Id, Opportunity> retrieveOpportunities(Set<Id> oppIds) {
-        Set<String> oppPaymentFields = new Set<String> {
-            'Id',
-            'Name',
-            'npe01__Payment_Amount__c',
-            'npe01__Payment_Date__c',
-            'npe01__Scheduled_Date__c',
-            'npe01__Written_Off__c',
-            'npe01__Paid__c',
-            'npe01__Opportunity__c',
-            'LastModifiedDate'
-        };
-        String paymentSubQueryString = + new UTIL_Query()
-            .withSelectFields(oppPaymentFields)
-            .withMultiCurrencyField()
-            .withFrom('npe01__OppPayment__r')
-            .build();
-
-        Set<String> oppFields = new Set<String> {
-            'Id',
-            'Name',
-            'Amount',
-            'StageName',
-            'CampaignId',
-            'npe03__Recurring_Donation__c',
-            'IsClosed',
-            'LastModifiedDate',
-            'RecordtypeId',
-            'Type',
-            '(' + paymentSubQueryString + ')'
-        };
-
-        String oppQueryString = new UTIL_Query()
-            .withSelectFields(oppFields)
-            .withMultiCurrencyField()
-            .withFrom(Opportunity.getSObjectType())
-            .withWhere('Id IN :oppIds')
-            .build();
-
-        return new Map<Id, Opportunity>((List<Opportunity>)Database.query(oppQueryString));
-    }
-
-    /**
-     * @description Retrieves and returns a list of Allocations associated the requested Opportunities, Payments, Campaigns, and
-     * Recurring Donation records.  It will return Allocations associated with any of the sets.
-     * @param Set<Id> oppIds The set of Opportunity Ids to retrieve Allocations for
-     * @param Set<Id> paymentIds The set of Payment Ids to retrieve Allocations for
-     * @param Set<Id> campaignIds The set of Campaign Ids to retrieve Allocations for
-     * @param Set<Id> recurringDonationIds The set of Recurring Donation Ids to retrieve Allocations for
-     * @return List<Allocation__c> All allocations associated with any of the records specified
-     */
-    private static List<Allocation__c> retrieveAllocations(Set<Id> oppIds, Set<Id> paymentIds, Set<Id>campaignIds, Set<Id> recurringDonationIds) {
-        Set<String> allocationFields = new Set<String> {
-            'Id',
-            'Name',
-            'Amount__c',
-            'Campaign__c',
-            'General_Accounting_Unit__c',
-            'General_Accounting_Unit__r.Active__c',
-            'General_Accounting_Unit__r.Name',
-            'Opportunity__c',
-            'Payment__c',
-            'Payment__r.npe01__Opportunity__c',
-            'Percent__c',
-            'Recurring_Donation__c',
-            'LastModifiedDate'
-        };
-
-        UTIL_Query allocQuery = new UTIL_Query()
-            .withSelectFields(allocationFields)
-            .withMultiCurrencyField()
-            .withFrom(Allocation__c.getSObjectType());
-
-        List<String> whereClauses = new List<String>();
-
-        if (oppIds != null && !oppIds.isEmpty()) {
-            whereClauses.add('Opportunity__c in :oppIds');
-        }
-        if (paymentIds != null && !paymentIds.isEmpty()) {
-            whereClauses.add('Payment__c in :paymentIds');
-        }
-        if (campaignIds != null && !campaignIds.isEmpty()) {
-            whereClauses.add('Campaign__c in :campaignIds');
-        }
-        if (recurringDonationIds != null && !recurringDonationIds.isEmpty()) {
-            whereClauses.add('Recurring_Donation__c in :recurringDonationIds');
-        }
-
-        if (whereClauses.size() == 0) {
-            return new List<Allocation__c>();
-        } else {
-            String whereClauseExpanded = String.join(whereClauses, ' OR ');
-
-            String allocationQueryString = allocQuery.withWhere(whereClauseExpanded).build();
-            return new List<Allocation__c>((List<Allocation__c>) Database.query(allocationQueryString));
-        }
-    }
-
-    public static Set<Id> getExcludedOpportunityRecordtypes() {
-        return (String.isNotBlank(ALLOCATION_SETTINGS.Excluded_Opp_RecTypes__c)) ? new Set<Id>((List<Id>)ALLOCATION_SETTINGS.Excluded_Opp_RecTypes__c.split(';')) : new Set<Id>();
-    }
-
-    public static Set<String> getExcludedOpportunityTypes() {
-        return (String.isNotBlank(ALLOCATION_SETTINGS.Excluded_Opp_Types__c)) ? new Set<String>(ALLOCATION_SETTINGS.Excluded_Opp_Types__c.split(';')) : new Set<String>();
-    }
-
-    /**
-     * @description Get a Map that indicates which processes an Opportunity should be excluded from
-     * if an error occurs for that Opportunity in that process.  Recommend calling process cache map for further use.
-     *@return  Map<PROCESS_DEFINITION, Set<PROCESS_DEFINITION>>
-     */
-    public static Map<PROCESS_DEF, Set<PROCESS_DEF>> getProcessExclusions() {
-
-        if (PROCESS_EXCLUSIONS == null) {
-            PROCESS_EXCLUSIONS = new Map<PROCESS_DEF, SET<PROCESS_DEF>> {
-                PROCESS_DEF.OPP_AMT_UPD =>
-                    new Set<PROCESS_DEF>    {PROCESS_DEF.OPP_ALLOC_UPD,
-                                            PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
-                PROCESS_DEF.OPP_ALLOC_UPD =>
-                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_INITIALIZE,
-                                            PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
-                PROCESS_DEF.PMT_ALLOC =>
-                    new Set<PROCESS_DEF>    {PROCESS_DEF.ALL},
-                PROCESS_DEF.PMT_ALLOC_ZERO_OUT =>
-                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
-                PROCESS_DEF.PMT_ALLOC_RECALC =>
-                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED},
-                PROCESS_DEF.PMT_ALLOC_INITIALIZE =>
-                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
-                PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC =>
-                    new Set<PROCESS_DEF>    {PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
-                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED}
-            };
-        }
-
-        return PROCESS_EXCLUSIONS;
-    }
-
-    private static Set<PROCESS_DEF> getProcessExclusionsFor(PROCESS_DEF process) {
-        return getProcessExclusions().get(process);
-    }
-
-    /**
-     * @description Adds to the childId to a Map of a Set of Child Ids, but Parent Id.  This is used to
-     * Keep track of which records are affected by changes to the Parent
-     * @param Map<Id, Set<Id>> parentIdToChildIds The map of Set of Child Ids, by Parent Id
-     * @param Id parentId The Id of the Parent record
-     * @param Id childId The Id of the Child (to the Parent) record
-     */
-    private static void add(Map<Id, Set<Id>> parentIdToChildIds, Id parentId, Id childId) {
-        if (parentIdToChildIds.containsKey(parentId)) {
-            parentIdToChildIds.get(parentId).add(childId);
-        } else {
-            parentIdToChildIds.put(parentId, new Set<Id> { childId });
-        }
-    }
-
-    /**
-     * @description Generically adds an Allocation to a List of Allocations index by Parent Id in a Map.  If the
-     * Parent Id is not yet in the Map, it will create a new list with the allocation in it, and add it to the Map.
-     * Otherwise, it will add the Allocation to the List of Allocations associated with that Parent record
-     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the Parent
-     * @param Id parentId The Id of the Parent record
-     * @param Allocation__c alloc The Allocation to add to the List of Allocations associated with the specified Parent
-     */
-    private static void add(Map<Id, List<Allocation__c>> allocsByParentId, Id parentId, Allocation__c alloc) {
-        if (allocsByParentId.containsKey(parentId)) {
-            allocsByParentId.get(parentId).add(alloc);
-        } else {
-            allocsByParentId.put (parentId, new List<Allocation__c> { alloc });
-        }
-    }
-
-    /**
-     * @description Generically removes an Allocation from a List of Allocations indexex by Parent Id in a Map.  If the
-     * Parent Id is not  in the Map, it will do nothing.  Otherwise, it will iterate over the List of Allocations, comparing
-     * the Id of the allocation in the list to the Id of the allocation to remove.  Any that match will be removed.
-     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the Parent
-     * @param Id parentId The Id of the Parent record
-     * @param Allocation__c alloc The Allocation to remove from the List of Allocations associated with the specified Parent
-     */
-    private static void remove(Map<Id, List<Allocation__c>> allocsByParentId, Id parentId, Allocation__c alloc) {
-        if (alloc == null || alloc.Id == null)
-            return;
-
-        if (allocsByParentId.containsKey(parentId)) {
-            List<Allocation__c> allocs = allocsByParentId.get(parentId);
-
-            Integer idx=0;
-            while (idx < allocs.size()) {
-                Allocation__c allocToCheck = allocs[idx];
-                if (allocToCheck.Id == alloc.Id) {
-                    // Remove from List
-                    allocs.remove(idx);
-                } else {
-                    idx++;
-                }
-            }
-        }
-    }
-
-    /**
-     * @description Generically replaces an Allocation from a List of Allocations indexex by Parent Id in a Map.  If the
-     * Parent Id is not in the Map, it will do nothing.  Otherwise, it will iterate over the List of Allocations, comparing
-     * the Id of the allocation in the list to the Id of the allocation to replace.  The first that matches, will be replaced.
-     * If not found, it will add the Allocation to end of the list
-     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the Parent
-     * @param Id parentId The Id of the Parent record
-     * @param Allocation__c alloc The Allocation to replace in the List of Allocations associated with the specified Parent
-     */
-    private static void replace(Map<Id, List<Allocation__c>> allocsByParentId, Id parentId, Allocation__c alloc) {
-        if (alloc == null || alloc.Id == null)
-            return;
-
-        if (allocsByParentId.containsKey(parentId)) {
-            List<Allocation__c> allocs = allocsByParentId.get(parentId);
-
-            Integer idx=0;
-            while (idx < allocs.size()) {
-                Allocation__c allocToCheck = allocs[idx];
-                if (allocToCheck.Id == alloc.Id) {
-                    // Replace in list
-                    allocs.set(idx, alloc);
-                    return;
-                } else {
-                    idx++;
-                }
-            }
-        }
-        // Adds if it was not found in the list to replace
-        add (allocsByParentId, parentId, alloc);
-    }
-
-
-    /**
-     * @description Initially, we added all the Allocations retrieved to the Maps.  After it is determined which Opportunities
-     * require further review, some of the Allocations can be removed from the allocation Maps.  This method removes ones where
-     * None of the related Opportunities are flagged for update (and so the Campaign/Recurring Donation Allocations are not needed)
-     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the Parent
-     * @param Map<Id, Set<Id>> parentIdToOppIds Set of Opportunities, Indexed By the Parent/Related Record's Id
-     * @param Map<Id, Opportunity> oppsById Map of Opportunities by Opportunity Id
-     */
-    private static void removeIfNotForReview(Map<Id, List<Allocation__c>> allocationsByParentId, Map<Id, Set<Id>> parentIdToOppIds, Map<Id, Opportunity> oppsById) {
-        // Clear out allocations by parent id, if they are not associated with at least one Opportunity tagged for review
-        for (Id parentId :parentIdToOppIds.keySet()) {
-            Set<Id> oppIds = parentIdToOppIds.get(parentId);
-            Set<Id> oppsForReviewIds = oppsById.keySet();
-            if (!set1ContainsAnyInSet2(oppsById.keySet(), oppIds)) {
-                allocationsByParentId.remove(parentId);
-            }
-        }
-    }
-
-    /**
-     * @description Determines whether set 1 contains any of the Ids in set 2.  If at least 1 Id found in set 2 is
-     * also in set 1, this method returns true.  Otherwise, it returns false.
-     * @param Set<Id> set1 The first set of Ids (we will see if any members of set2 are in this set)
-     * @param Set<Id> set2 The second set of Ids
-     */
-    private static boolean set1ContainsAnyInSet2(Set<Id> set1, Set<Id> set2) {
-        for (Id id :set2) {
-            if (set1.contains(id)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @description Removes List of Allocations from the allocationsByParentId map, if the Opportunity that is a parent of the allocation parent (E.g. The Payment) is not
-     * flagged for review.
-     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the Parent
-     * @param Map<Id, Id> parentIdToOppId Opportunity, Indexed By the Parent/Related Record's Id
-     * @param Map<Id, Opportunity> oppsById Map of Opportunities by Opportunity Id
-     */
-   private static void removeIfNotForReview(Map<Id, List<Allocation__c>> allocationsByParentId, Map<Id, Id> parentIdToOppId, Map<Id, Opportunity> oppsById) {
-        // Clear out allocations by parent id, if they are not associated with at least one Opportunity tagged for review
-        for (Id parentId :parentIdToOppId.keySet()) {
-            Id oppId = parentIdToOppId.get(parentId);
-            if (!oppsById.containsKey(oppId)) {
-                allocationsByParentId.remove(parentId);
-            }
-        }
-    }
-
-    /**
-     * @description Removes List of Allocations from the allocationsByParentId map, if the Opportunity that is a parent of the allocation is not
-     * flagged for review.
-     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the Parent
-     * @param Map<Id, Opportunity> oppsById Map of Opportunities by Opportunity Id
-     */
-   private static void removeIfNotForReview(Map<Id, List<Allocation__c>> allocationsByParentId, Map<Id, Opportunity> oppsById) {
-        // Clear out allocations by parent id, if they are not associated with at least one Opportunity tagged for review
-        for (Id parentId :new Set<Id>(allocationsByParentId.keySet())) {
-            if (!oppsById.containsKey(parentId)) {
-                allocationsByParentId.remove(parentId);
-            }
-        }
-    }
-
-    /**
-     * @description Determines whether a record requires review (based on it and it's associated allocations, and an associated boundary timestamp)
-     * Rule 1 - If boundary is null, it will flag the record for review.  This will be null for records requiring reprocessing because they originally errored
-     * Rule 2 - Record was Modified since "Boundary" timestamp. (LastModifiedDate >= Boundary)
-     * Rule 3 - Default Allocations are enabled, but no allocations are present
-     * Rule 4 - Allocations are present but Amount is null or 0 (Excluding ones associated with Payment)
-     * Rule 5 - Any of the individual allocations are Modified since "Boundary" timestamp. (LastModifiedDate >= Boundary)
-     * Rule 6 - If MultiCurrencyOrg, and Allocation CurrencyIsoCode and Parent CurrencyIsoCode are different
-     * Rule 7 - Payment Allocations Only: Parent Amount is 0/null, and Allocation Amount is Not Equal to 0
-     * Rule 8 - Payment Allocations Only: Parent Amount is not 0/null, but Allocation Amount equals 0
-     * Rule 9 - Sum of Allocations != Parent Amount
-     * Rule 10 - Parent Allocations have changed (Not Implemented)
-     * @param SObject parentSObj Parent of the Allocations
-     * @param List<Allocation__c> allocations Allocations associated with the parentSObj that need to be checked to see if review is required
-     * @param DateTime boundary Records older than this timestamp should not be considered modified since the last execution.  If null, will reprocess
-     */
-    private static boolean isRequiresReview(SObject parentSObj, List<Allocation__c> allocations, DateTime boundary) {
-        // if boundary is null, it is assumed it must be validated.  Likeliest circumstance is from reprocessing an error
-        if (boundary == null) {
-            return true;
-        }
-
-        Decimal amount = null;
-        Boolean forPayment = false;
-
-        if (parentSObj instanceOf Opportunity) {
-            amount = (Decimal) parentSObj.get('Amount');
-        } else if (parentSObj instanceOf npe01__OppPayment__c) {
-            amount = (Decimal) parentSObj.get('npe01__Payment_Amount__c');
-            forPayment = true;
-        } else { // invalid object passed to method
-            return false;
-        }
-
-        DateTime lastModifiedDate = (DateTime) parentSObj.get('LastModifiedDate');
-        String currencyIsoCode = null;
-        if (IS_MULTICURRENCY_ORG) {
-            currencyIsoCode = (String) parentSObj.get('CurrencyIsoCode');
-        }
-
-        // Data Modified since last execution
-        if (lastModifiedDate >= boundary) {
-            return true;
-        }
-        // If Default Allocations are enabled, Check for a non null/zero amount with no allocations.
-        if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && amount != null && amount != 0 && (allocations == null || allocations.size() == 0)) {
-            return true;
-        }
-
-        // Check for a null/zero amount with allocations ( not associated with payment)
-        if ((amount == null || amount == 0) && (allocations != null && allocations.size() > 0 && !forPayment)) {
-            return true;
-        }
-
-        Decimal allocAmount = 0;
-
-        // Check individual allocations next
-        for (Allocation__c alloc :allocations)  {
-            // Modified since last execution
-            if (alloc.LastModifiedDate >= boundary) {
-                return true;
-            }
-
-            allocAmount += alloc.Amount__c;
-
-            if (IS_MULTICURRENCY_ORG) { // Only check if CurrencyIsoCode is different if Multi Currency Organization
-                String alloCurrencyIsoCode = (String) alloc.get('CurrencyIsoCode');
-                if (alloCurrencyIsoCode != currencyIsoCode) {
-                    return true;
-                }
-            }
-
-            if (forPayment) { // These checks are only for Payment Allocations
-                // Amount on allocation is present that needs to be cleared.
-                if ((amount == null || amount == 0) && alloc.Amount__c != 0) {
-                    return true;
-                }
-                // Amount is blank zero, but should not be if Parent is a non null/zero amount
-                if (amount != null && amount != 0 && (alloc.Amount__c == null || alloc.Amount__c == 0)) {
-                    return true;
-                }
-            }
-        }
-
-        // Total of Allocations and Parent Amount should match
-        if (amount != null && allocAmount != amount) {
-            return true;
-        }
-
-        // Positive checks exhausted.
-        return false;
-    }
-
-    public static void copyAllocationsToTarget(SObject targetObj, Decimal sourceAmount, List<Allocation__c> sourceAllocations, AllocationResults allocResults, boolean copyInactiveAllocations, Boolean convertToPercentages) {
+    /*******************************************************************************************************
+     * @description Copies Allocations from the source to the target.  It should only do this if there are
+     *              no allocations present on the target.
+     *              Note: This will not actually modify any records.
+     * @param SObject targetObj The record the Allocations will be copied to
+     * @param List<Allocation__c> sourceAllocations The Allocations associated with the source that will
+     *        be copied to the target
+     * @param AllocationResults allocResults The results of this call.  It will include the allocations to
+     *        create/update/delete, as well as any functional errors to be added
+     * @param Boolean copyInactiveAllocations If true, it will attempt to copy Allocations associated with
+     *        an Inactive General Accounting Unit to the target
+     * @param Boolean convertToPercentages Indicates whether amount based allocations (other than
+     *        Allocations for the default) should be converted to percentages
+    ********************************************************************************************************/
+    public static void copyAllocationsToTarget(SObject targetObj, Decimal sourceAmount, List<Allocation__c> sourceAllocations, AllocationResults allocResults, Boolean copyInactiveAllocations, Boolean convertToPercentages) {
         Decimal amount = getAmountFor(targetObj);
+
+        // Allocations should not be copied to the target if the target object's amount is 0/null
+        if (amount == null || amount == 0) {
+            return;
+        }
 
         List<Allocation__c> proposedAllocations = new List<Allocation__c>();
 
@@ -1138,67 +756,19 @@ public class ALLO_AllocationsUtil {
         }
 
         allocResults.allocationsForInsert.addAll (proposedAllocations);
-
     }
 
-
-    private static List<String> validateAllocation(SObject parentObj, Allocation__c allocation) {
-        List<String> errors = new List<String>();
-        // No parent, or multiple parents
-        if (hasParentError(allocation)) {
-            errors.add(assembleAllocationError(parentObj, allocation, Label.alloSingleParent));
-        }
-        //neither an amount nor a percent is defined
-        if (allocation.Amount__c == null && allocation.Percent__c == null) {
-            errors.add(assembleAllocationError(parentObj, allocation, Label.alloAmountOrPercent));
-        }
-        //negative amount (Payments excepted)
-        if (allocation.Amount__c != null && allocation.Amount__c < 0 && allocation.Payment__c == null) {
-            errors.add(assembleAllocationError(parentObj, allocation, Label.alloNegativeAmount));
-        }
-        //negative percent
-        if (allocation.Percent__c != null && allocation.Percent__c < 0) {
-            errors.add(assembleAllocationError(parentObj, allocation, Label.alloNegativePercent));
-        }
-
-        return errors;
-    }
-
-    private static String assembleAllocationError(SObject parentObj, Allocation__c alloc, String message) {
-        return Label.alloPaymentAllocationBatchAllocationError.replace('{obj_type}', getLabelFor(parentObj))
-                                                              .replace('{parent_name}', (String) parentObj.get('Name'))
-                                                              .replace('{alloc_name}', alloc.Name)
-                                                              .replace('{error}', message);
-    }
-
-    private static String assembleRecordError(SObject parentObj, String message) {
-        return Label.alloPaymentAllocationBatchRecordError.replace('{obj_type}', getLabelFor(parentObj))
-                                                          .replace('{parent_name}', (String) parentObj.get('Name'))
-                                                          .replace('{error}', message);
-    }
-
-    private static String getAllocationLabel() {
-        if (ALLOC_OBJ_LABEL == null) {
-            ALLOC_OBJ_LABEL = UTIL_Describe.getObjectLabel('Allocation__c');
-        }
-        return ALLOC_OBJ_LABEL;
-    }
-
-
-    private static String getOpportunityLabel() {
-        if (OPP_OBJ_LABEL == null) {
-            OPP_OBJ_LABEL = UTIL_Describe.getObjectLabel('Opportunity');
-        }
-        return OPP_OBJ_LABEL;
-    }
-
-    private static String getPaymentLabel() {
-        if (PMT_OBJ_LABEL == null) {
-            PMT_OBJ_LABEL = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
-        }
-        return PMT_OBJ_LABEL;
-    }
-
+    /*******************************************************************************************************
+    * @description In the event a parent's Amount has increased or Decreased, or it has changed sign, or
+    *              new Allocations have been added, or Allocations have been removed, the parentObj's
+    *              Allocations must be recalculated/resized.  If the parent object's amount becomes null
+    *              or zero, clear allocations should instead be called.
+    * @param SObject parentObj An Opportunity or Payment.
+    * @param List<Allocation__c> List of any Allocations associated with the parentObj
+    * @param AllocationResults allocResults The results of this call.
+    *        It will include the allocations to create/update/delete, as well as any functional errors to be
+    *        added
+    ********************************************************************************************************/
     public static void resizeAllocationsAsNeeded(SObject parentObj, List<Allocation__c> allocations, AllocationResults allocResults) {
 
         Decimal sumOfAllocations = 0;
@@ -1207,6 +777,7 @@ public class ALLO_AllocationsUtil {
 
         // Resizing of Allocations for null/0 Amounts is not done in this method, as null/0 resizing is a special case.
         if (parentAmount == null || parentAmount == 0) {
+            clearAllocations(parentObj, allocations, allocResults);
             return;
         }
 
@@ -1284,9 +855,19 @@ public class ALLO_AllocationsUtil {
         }
     }
 
-    public static void clearAllocations(SObject parentObj, List<Allocation__c> allocations, AllocationResults allocResults) {
-        System.debug('Clear Allocations');
-
+    /*******************************************************************************************************
+    * @description In the event a parent object's amount becomes Null/0, the Allocations associated with it
+    *              should be converted to percentages, excluding the Default Allocation (which should be
+    *              deleted if present).  All Allocation amount values should be set to 0.  In the event
+    *              that an Allocation cannot successfully be converted to percentages, a functional error
+    *              is added to the result and all Allocations for the object are deleted.
+    * @param SObject parentObj An Opportunity or Payment.
+    * @param List<Allocation__c> List of any Allocations associated with the parentObj
+    * @param AllocationResults allocResults The results of this call.
+    *        It will include the allocations to create/update/delete, as well as any functional errors to be
+    *        added
+    ********************************************************************************************************/
+    @testVisible private static void clearAllocations(SObject parentObj, List<Allocation__c> allocations, AllocationResults allocResults) {
         Decimal sumOfAllocations = 0;
         Decimal totalOfPercentages = 0;
         Decimal parentAmount = getAmountFor(parentObj);
@@ -1312,9 +893,7 @@ public class ALLO_AllocationsUtil {
                 countOfAllocationsWithoutPercentage++;
             }
         }
-        System.debug('[clear] Allocation Sum: ' + sumOfAllocations);
-        System.debug('[clear] Count of Allocations Without Percentages: '+ countOfAllocationsWithoutPercentage );
-        if (sumOfAllocations != 0) {
+       if (sumOfAllocations != 0) {
             for (Allocation__c allocation : allocations.deepClone(true, true, true)) {
                 if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c) {
                     proposedAllocDeletes.add(allocation);
@@ -1371,8 +950,21 @@ public class ALLO_AllocationsUtil {
         }
     }
 
-
-    private static void processDefaultAllocations(SObject parentObj, Decimal parentAmount, String parentCurrencyIsoCode, Decimal allocationTotalAmount, List<Allocation__c> defaultAllocations, AllocationResults allocResults) {
+    /*******************************************************************************************************
+    * @description Recalculates the Default Allocation for the specified Opportunity/Payment, adding,
+    *              updating, or removing it as necessary.
+    * @param SObject parentSObj An Opportunity or Payment.
+    * @param Decimal parentAmount Amount of the Parent Object
+    * @param String parentCurrencyIsoCode The parent objects CurrencyIsoCode, if Multicurrency is enabled
+    *        or null if not
+    * @param Decimal allocationTotalAmount Total amount of all Allocations for the parentObject other
+    *        than the default
+    * @param List<Allocation__c> List of any Allocations on the current object for the Default GAU
+    * @param AllocationResults allocResults The results of this call.
+    *        It will include the allocations to create/update/delete, as well as any functional errors to be
+    *        added
+    ********************************************************************************************************/
+    @testVisible private static void processDefaultAllocations(SObject parentObj, Decimal parentAmount, String parentCurrencyIsoCode, Decimal allocationTotalAmount, List<Allocation__c> defaultAllocations, AllocationResults allocResults) {
 
         // Skip all processing of Default Allocations if they are not enabled
         if (!ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) {
@@ -1381,15 +973,15 @@ public class ALLO_AllocationsUtil {
 
         Decimal defaultAllocationAmount = parentAmount - allocationTotalAmount;
 
-
         if (defaultAllocationAmount == 0) {
             // No default allocations should be present.  Parent is fully allocated.  Any existing defaults should be deleted.
             allocResults.allocationsForDelete.addAll(defaultAllocations);
         } else if ((parentAmount > 0 && defaultAllocationAmount > 0) || (parentAmount < 0 && defaultAllocationAmount < 0)) {
             if (!defaultAllocations.isEmpty()) {
                 String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) defaultAllocations[0].get('CurrencyIsoCode') : null;
-                if (defaultAllocationAmount != defaultAllocations[0].Amount__c || parentCurrencyIsoCode != allocCurrencyIsoCode) {
+                if (defaultAllocationAmount != defaultAllocations[0].Amount__c || parentCurrencyIsoCode != allocCurrencyIsoCode || defaultAllocations[0].Percent__c != null) {
                     defaultAllocations[0].Amount__c = defaultAllocationAmount;
+                    defaultAllocations[0].Percent__c = null;
                     if (IS_MULTICURRENCY_ORG) {
                         defaultAllocations[0].put('CurrencyIsoCode', parentCurrencyIsoCode);
                     }
@@ -1404,52 +996,6 @@ public class ALLO_AllocationsUtil {
             }
         }
         // Other conditions could not occur because trapped for inside of resizeAllocations method...
-    }
-
-    private static Id getOpportunityIdFor(SObject sObj) {
-        if (sObj != null) {
-            if (sObj instanceOf Opportunity) {
-                return (Id) sObj.Id;
-            }
-            if (sObj instanceOf npe01__OppPayment__c) {
-                return (Id) sObj.get('npe01__Opportunity__c');
-            }
-        }
-
-        return null;
-    }
-
-    private static Decimal getAmountFor(SObject sObj) {
-        if (sObj != null) {
-            if (sObj instanceOf Opportunity) {
-                return (Decimal) sObj.get('Amount');
-            }
-            if (sObj instanceOf npe01__OppPayment__c) {
-                return (Decimal) sObj.get('npe01__Payment_Amount__c');
-            }
-        }
-
-        return null;
-    }
-
-    private static String getLabelFor(SObject sObj) {
-        return (sObj instanceOf Opportunity) ? getOpportunityLabel() : ((sObj instanceOf npe01__OppPayment__c) ? getPaymentLabel() : '');
-    }
-
-    /*******************************************************************************************************
-    * @description Returns true if this allocation doesn't have exactly one parent object.
-    * @param allo A GAU Allocation.
-    * @return boolean Whether this allocation has a parent error.
-    ********************************************************************************************************/
-    public static Boolean hasParentError (Allocation__c allo) {
-        Integer parentCnt = 0;
-
-        parentCnt += (allo.Payment__c != null) ? 1 : 0;
-        parentCnt += (allo.Opportunity__c != null) ? 1 : 0;
-        parentCnt += (allo.Recurring_Donation__c != null) ? 1 : 0;
-        parentCnt += (allo.Campaign__c != null) ? 1 : 0;
-        // Anything other than exactly 1 will return an error
-        return (parentCnt != 1);
     }
 
     /*******************************************************************************************************
@@ -1477,5 +1023,708 @@ public class ALLO_AllocationsUtil {
         return defaultAllo;
     }
 
+    /*****************************************
+     * Helper Methods - Record Retrieval
+     *****************************************/
+
+    /*******************************************************************************************************
+     * @description Retrieves Opportunity and Payment Data into a Map by Opportunity Id for the Set of
+     *              Opportunity Ids requested.
+     * @param Set<Id> oppIds The set of Opportunity Ids to retrieve Opportunity and Payment information for
+     * @return Map<Id, Opportunity> Map of Opportunities by Opportunity Id
+    ********************************************************************************************************/
+    private static Map<Id, Opportunity> retrieveOpportunities(Set<Id> oppIds) {
+        Set<String> oppPaymentFields = new Set<String> {
+            'Id',
+            'Name',
+            'npe01__Payment_Amount__c',
+            'npe01__Payment_Date__c',
+            'npe01__Scheduled_Date__c',
+            'npe01__Written_Off__c',
+            'npe01__Paid__c',
+            'npe01__Opportunity__c',
+            'LastModifiedDate'
+        };
+        String paymentSubQueryString = + new UTIL_Query()
+            .withSelectFields(oppPaymentFields)
+            .withMultiCurrencyField()
+            .withFrom('npe01__OppPayment__r')
+            .build();
+
+        Set<String> oppFields = new Set<String> {
+            'Id',
+            'Name',
+            'Amount',
+            'StageName',
+            'CampaignId',
+            'npe03__Recurring_Donation__c',
+            'IsClosed',
+            'LastModifiedDate',
+            'RecordtypeId',
+            'Type',
+            '(' + paymentSubQueryString + ')'
+        };
+
+        String oppQueryString = new UTIL_Query()
+            .withSelectFields(oppFields)
+            .withMultiCurrencyField()
+            .withFrom(Opportunity.getSObjectType())
+            .withWhere('Id IN :oppIds')
+            .build();
+
+        return new Map<Id, Opportunity>((List<Opportunity>)Database.query(oppQueryString));
+    }
+
+    /*******************************************************************************************************
+     * @description Retrieves and returns a list of Allocations associated the requested Opportunities,
+     *              Payments, Campaigns, and Recurring Donation records.  It will return Allocations
+     *              associated with any of the sets.
+     * @param Set<Id> oppIds The set of Opportunity Ids to retrieve Allocations for
+     * @param Set<Id> paymentIds The set of Payment Ids to retrieve Allocations for
+     * @param Set<Id> campaignIds The set of Campaign Ids to retrieve Allocations for
+     * @param Set<Id> recurringDonationIds The set of Recurring Donation Ids to retrieve Allocations for
+     * @return List<Allocation__c> All allocations associated with any of the records specified
+    ********************************************************************************************************/
+    private static List<Allocation__c> retrieveAllocations(Set<Id> oppIds, Set<Id> paymentIds, Set<Id>campaignIds, Set<Id> recurringDonationIds) {
+        Set<String> allocationFields = new Set<String> {
+            'Id',
+            'Name',
+            'Amount__c',
+            'Campaign__c',
+            'General_Accounting_Unit__c',
+            'General_Accounting_Unit__r.Active__c',
+            'General_Accounting_Unit__r.Name',
+            'Opportunity__c',
+            'Payment__c',
+            'Payment__r.npe01__Opportunity__c',
+            'Percent__c',
+            'Recurring_Donation__c',
+            'LastModifiedDate'
+        };
+
+        UTIL_Query allocQuery = new UTIL_Query()
+            .withSelectFields(allocationFields)
+            .withMultiCurrencyField()
+            .withFrom(Allocation__c.getSObjectType());
+
+        List<String> whereClauses = new List<String>();
+
+        if (oppIds != null && !oppIds.isEmpty()) {
+            whereClauses.add('Opportunity__c in :oppIds');
+        }
+        if (paymentIds != null && !paymentIds.isEmpty()) {
+            whereClauses.add('Payment__c in :paymentIds');
+        }
+        if (campaignIds != null && !campaignIds.isEmpty()) {
+            whereClauses.add('Campaign__c in :campaignIds');
+        }
+        if (recurringDonationIds != null && !recurringDonationIds.isEmpty()) {
+            whereClauses.add('Recurring_Donation__c in :recurringDonationIds');
+        }
+
+        if (whereClauses.size() == 0) {
+            return new List<Allocation__c>();
+        } else {
+            String whereClauseExpanded = String.join(whereClauses, ' OR ');
+
+            String allocationQueryString = allocQuery.withWhere(whereClauseExpanded).build();
+            return new List<Allocation__c>((List<Allocation__c>) Database.query(allocationQueryString));
+        }
+    }
+
+    /*****************************************
+     * Helper Methods - Allocation Triggers
+     *****************************************/
+
+    /*******************************************************************************************************
+     * @description Disables the following Allocation Triggers, on the Allocation, Opportunity,
+     *              and npe01__OppPayment__c objects: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM (in
+     *              memory only)
+    ********************************************************************************************************/
+    public static void disableAllocationTriggers() {
+        updateAllocationTriggersState(false);
+    }
+
+    /*******************************************************************************************************
+     * @description Enables the following Allocation Triggers, on the Allocation, Opportunity,
+     *              and npe01__OppPayment__c objects: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM (in
+     *              memory only)
+    ********************************************************************************************************/
+    public static void enableAllocationTriggers() {
+        updateAllocationTriggersState(true);
+    }
+
+    /*******************************************************************************************************
+     * @description Updates the state of the Allocation triggers in the in memory cache, enabling or
+     *              disabling the trigger.  The following triggers are enabled/disabled by this method:
+     *              ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM.
+     * @param Boolean state - If true, they are active, if false, they are inactive.
+    ********************************************************************************************************/
+    private static void updateAllocationTriggersState(Boolean state) {
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_Allocations_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'ALLO_Allocations_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'ALLO_Allocations_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_PaymentSync_TDTM', state);
+    }
+
+    /*****************************************
+     * Helper Methods - Allocation Maps
+     *****************************************/
+
+    /*******************************************************************************************************
+     * @description Get a Map that indicates which processes an Opportunity should be excluded from
+     *              if an error occurs for that Opportunity in that process.  Recommend calling process
+     *              cache map for further use.
+     *@return Map<PROCESS_DEFINITION, Set<PROCESS_DEFINITION>>
+    ********************************************************************************************************/
+    public static Map<PROCESS_DEF, Set<PROCESS_DEF>> getProcessExclusions() {
+
+        if (PROCESS_EXCLUSIONS == null) {
+            PROCESS_EXCLUSIONS = new Map<PROCESS_DEF, SET<PROCESS_DEF>> {
+                PROCESS_DEF.OPP_AMT_UPD =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.OPP_ALLOC_UPD,
+                                            PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
+                PROCESS_DEF.OPP_ALLOC_UPD =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_INITIALIZE,
+                                            PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
+                PROCESS_DEF.PMT_ALLOC =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.ALL},
+                PROCESS_DEF.PMT_ALLOC_RECALC =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
+                PROCESS_DEF.PMT_ALLOC_INITIALIZE =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED},
+                PROCESS_DEF.PMT_ALLOC_SYNC_TO_OPP_ALLOC =>
+                    new Set<PROCESS_DEF>    {PROCESS_DEF.OPP_ALLOC_SYNC_FINALIZED,
+                                            PROCESS_DEF.OPP_ALLOC_SYNC_NONFINALIZED}
+            };
+        }
+
+        return PROCESS_EXCLUSIONS;
+    }
+
+    /*******************************************************************************************************
+     * @description Returns a set of process exclusions for a specific Process.
+     * @param PROCESS_DEF process The process to retrieve processes for
+     * @return Set<PROCESS_DEF> Any processes that should be exluded if there are errors in the specified
+     *         process
+    ********************************************************************************************************/
+    @testVisible private static Set<PROCESS_DEF> getProcessExclusionsFor(PROCESS_DEF process) {
+        return getProcessExclusions().get(process);
+    }
+
+    /*****************************************
+     * Helper Methods - Allocation Maps
+     *****************************************/
+
+    /*******************************************************************************************************
+     * @description Adds to the childId to a Map of a Set of Child Ids, but Parent Id.  This is used to
+     *              Keep track of which records are affected by changes to the Parent
+     * @param Map<Id, Set<Id>> parentIdToChildIds The map of Set of Child Ids, by Parent Id
+     * @param Id parentId The Id of the Parent record
+     * @param Id childId The Id of the Child (to the Parent) record
+    ********************************************************************************************************/
+    @testVisible private static void add(Map<Id, Set<Id>> parentIdToChildIds, Id parentId, Id childId) {
+        if (parentIdToChildIds.containsKey(parentId)) {
+            parentIdToChildIds.get(parentId).add(childId);
+        } else {
+            parentIdToChildIds.put(parentId, new Set<Id> { childId });
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Generically adds an Allocation to a List of Allocations index by Parent Id in a Map.
+     *              If the Parent Id is not yet in the Map, it will create a new list with the allocation
+     *              in it, and add it to the Map.  Otherwise, it will add the Allocation to the List of
+     *              Allocations associated with that Parent record
+     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the
+     *        Parent
+     * @param Id parentId The Id of the Parent record
+     * @param Allocation__c alloc The Allocation to add to the List of Allocations associated with the
+     *        specified Parent
+    ********************************************************************************************************/
+    @testVisible private static void add(Map<Id, List<Allocation__c>> allocsByParentId, Id parentId, Allocation__c alloc) {
+        if (allocsByParentId.containsKey(parentId)) {
+            allocsByParentId.get(parentId).add(alloc);
+        } else {
+            allocsByParentId.put (parentId, new List<Allocation__c> { alloc });
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Generically removes an Allocation from a List of Allocations indexex by Parent Id in a
+     *              Map.  If the Parent Id is not  in the Map, it will do nothing.  Otherwise, it will
+     *              iterate over the List of Allocations, comparing the Id of the allocation in the list
+     *              to the Id of the allocation to remove.  Any that match will be removed.
+     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the
+     *        Parent
+     * @param Id parentId The Id of the Parent record
+     * @param Allocation__c alloc The Allocation to remove from the List of Allocations associated with
+     *        the specified Parent
+    ********************************************************************************************************/
+    @testVisible private static void remove(Map<Id, List<Allocation__c>> allocsByParentId, Id parentId, Allocation__c alloc) {
+        if (alloc == null || alloc.Id == null)
+            return;
+
+        if (allocsByParentId.containsKey(parentId)) {
+            List<Allocation__c> allocs = allocsByParentId.get(parentId);
+
+            Integer idx=0;
+            while (idx < allocs.size()) {
+                Allocation__c allocToCheck = allocs[idx];
+                if (allocToCheck.Id == alloc.Id) {
+                    // Remove from List
+                    allocs.remove(idx);
+                } else {
+                    idx++;
+                }
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Generically replaces an Allocation from a List of Allocations indexex by Parent Id in
+     *              a Map.  If the Parent Id is not in the Map, it will do nothing.  Otherwise, it will
+     *              iterate over the List of Allocations, comparing the Id of the allocation in the list
+     *              to the Id of the allocation to replace.  The first that matches, will be replaced.
+     *              If not found, it will add the Allocation to end of the list
+     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the
+     *        Parent
+     * @param Id parentId The Id of the Parent record
+     * @param Allocation__c alloc The Allocation to replace in the List of Allocations associated with the
+     *        specified Parent
+    ********************************************************************************************************/
+    @testVisible private static void replace(Map<Id, List<Allocation__c>> allocsByParentId, Id parentId, Allocation__c alloc) {
+        if (alloc == null || alloc.Id == null)
+            return;
+
+        if (allocsByParentId.containsKey(parentId)) {
+            List<Allocation__c> allocs = allocsByParentId.get(parentId);
+
+            Integer idx=0;
+            while (idx < allocs.size()) {
+                Allocation__c allocToCheck = allocs[idx];
+                if (allocToCheck.Id == alloc.Id) {
+                    // Replace in list
+                    allocs.set(idx, alloc);
+                    return;
+                } else {
+                    idx++;
+                }
+            }
+        }
+        // Adds if it was not found in the list to replace
+        add (allocsByParentId, parentId, alloc);
+    }
+
+    /*****************************************
+     * Helper Methods - Record Review Methods
+     *****************************************/
+
+    /*******************************************************************************************************
+     * @description Determines whether a record requires review (based on it and it's associated
+     *              Allocations, and an associated boundary timestamp)
+     * Rule 1 - If boundary is null, it will flag the record for review.  This will be null for records
+     *          requiring reprocessing because they originally errored
+     * Rule 2 - Record was Modified since "Boundary" timestamp. (LastModifiedDate >= Boundary)
+     * Rule 3 - Default Allocations are enabled, but no allocations are present
+     * Rule 4 - Allocations are present but Amount is null or 0 (Excluding ones associated with Payment)
+     * Rule 5 - Any of the individual allocations are Modified since "Boundary" timestamp.
+     *          (LastModifiedDate >= Boundary)
+     * Rule 6 - If MultiCurrencyOrg, and Allocation CurrencyIsoCode and Parent CurrencyIsoCode are different
+     * Rule 7 - Payment Allocations Only: Parent Amount is 0/null, and Allocation Amount is Not Equal to 0
+     * Rule 8 - Payment Allocations Only: Parent Amount is not 0/null, but Allocation Amount equals 0
+     * Rule 9 - Sum of Allocations != Parent Amount
+     * Rule 10 - Parent Allocations have changed (Not Implemented)
+     * @param SObject parentSObj Parent of the Allocations
+     * @param List<Allocation__c> allocations Allocations associated with the parentSObj that need to be
+     *        checked to see if review is required
+     * @param DateTime boundary Records older than this timestamp should not be considered modified since
+     *        the last execution.  If null, will reprocess
+     * @return Boolean true if the record requires review, based on the state of the allocations, etc.
+    ********************************************************************************************************/
+    @testVisible private static boolean isRequiresReview(SObject parentSObj, List<Allocation__c> allocations, DateTime boundary) {
+        // if boundary is null, it is assumed it must be validated.  Likeliest circumstance is from reprocessing an error
+        if (boundary == null) {
+            return true;
+        }
+
+        Decimal amount = null;
+        Boolean forPayment = false;
+
+        if (parentSObj instanceOf Opportunity) {
+            amount = (Decimal) parentSObj.get('Amount');
+        } else if (parentSObj instanceOf npe01__OppPayment__c) {
+            amount = (Decimal) parentSObj.get('npe01__Payment_Amount__c');
+            forPayment = true;
+        } else { // invalid object passed to method
+            return false;
+        }
+
+        DateTime lastModifiedDate = (DateTime) parentSObj.get('LastModifiedDate');
+        String currencyIsoCode = null;
+        if (IS_MULTICURRENCY_ORG) {
+            currencyIsoCode = (String) parentSObj.get('CurrencyIsoCode');
+        }
+
+        // Data Modified since last execution
+        if (lastModifiedDate >= boundary) {
+            return true;
+        }
+        // If Default Allocations are enabled, Check for a non null/zero amount with no allocations.
+        if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && amount != null && amount != 0 && (allocations == null || allocations.size() == 0)) {
+            return true;
+        }
+
+        // Check for a null/zero amount with allocations ( not associated with payment)
+        if ((amount == null || amount == 0) && (allocations != null && allocations.size() > 0 && !forPayment)) {
+            return true;
+        }
+
+        Decimal allocAmount = 0;
+
+        // Check individual allocations next
+        for (Allocation__c alloc :allocations)  {
+            // Modified since last execution
+            if (alloc.LastModifiedDate >= boundary) {
+                return true;
+            }
+
+            allocAmount += alloc.Amount__c;
+
+            if (IS_MULTICURRENCY_ORG) { // Only check if CurrencyIsoCode is different if Multi Currency Organization
+                String alloCurrencyIsoCode = (String) alloc.get('CurrencyIsoCode');
+                if (alloCurrencyIsoCode != currencyIsoCode) {
+                    return true;
+                }
+            }
+
+            if (forPayment) { // These checks are only for Payment Allocations
+                // Amount on allocation is present that needs to be cleared.
+                if ((amount == null || amount == 0) && alloc.Amount__c != 0) {
+                    return true;
+                }
+                // Amount is blank zero, but should not be if Parent is a non null/zero amount
+                if (amount != null && amount != 0 && (alloc.Amount__c == null || alloc.Amount__c == 0)) {
+                    return true;
+                }
+            }
+        }
+
+        // Total of Allocations and Parent Amount should match
+        if (amount != null && allocAmount != amount) {
+            return true;
+        }
+
+        // Positive checks exhausted.
+        return false;
+    }
+    /*******************************************************************************************************
+     * @description Return true if either the Opportunities Recordtype or Type match those
+     *              configured to be excluded from Allocations processing
+     * @param Opportunity opp The opportunity to check
+     * @return Boolean true if the Opportunity should be excluded from Allocations processing
+    ********************************************************************************************************/
+    public static Boolean isExcluded(Opportunity opp) {
+        if (EXCLUDED_OPPORTUNITY_RECORDTYPES == null || EXCLUDED_OPPORTUNITY_TYPES == null) {
+            EXCLUDED_OPPORTUNITY_RECORDTYPES = getExcludedOpportunityRecordtypes();
+            EXCLUDED_OPPORTUNITY_TYPES = getExcludedOpportunityTypes();
+        }
+
+        return (EXCLUDED_OPPORTUNITY_RECORDTYPES.contains(opp.RecordtypeId) || EXCLUDED_OPPORTUNITY_TYPES.contains(opp.Type));
+    }
+
+    /*******************************************************************************************************
+     * @description Initially, we added all the Allocations retrieved to the Maps.  After it is
+     *              determined which Opportunities require further review, some of the Allocations can be
+     *              removed from the allocation Maps.  This method removes ones where none of the related
+     *              Opportunities are flagged for update (and so the Campaign/Recurring Donation Allocations
+     *              are not needed)
+     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the
+     *        Parent
+     * @param Map<Id, Set<Id>> parentIdToOppIds Set of Opportunities, Indexed By the Parent/Related
+     *        Record's Id
+     * @param Map<Id, Opportunity> oppsById Map of Opportunities by Opportunity Id
+    ********************************************************************************************************/
+    @testVisible private static void removeIfNotForReview(Map<Id, List<Allocation__c>> allocationsByParentId, Map<Id, Set<Id>> parentIdToOppIds, Map<Id, Opportunity> oppsById) {
+        // Clear out allocations by parent id, if they are not associated with at least one Opportunity tagged for review
+        for (Id parentId :parentIdToOppIds.keySet()) {
+            Set<Id> oppIds = parentIdToOppIds.get(parentId);
+            Set<Id> oppsForReviewIds = oppsById.keySet();
+            if (!set1ContainsAnyInSet2(oppsById.keySet(), oppIds)) {
+                allocationsByParentId.remove(parentId);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Determines whether set 1 contains any of the Ids in set 2.  If at least 1 Id found in
+     *              set 2 is also in set 1, this method returns true.  Otherwise, it returns false.
+     * @param Set<Id> set1 The first set of Ids (we will see if any members of set2 are in this set)
+     * @param Set<Id> set2 The second set of Ids
+    ********************************************************************************************************/
+    @testVisible private static boolean set1ContainsAnyInSet2(Set<Id> set1, Set<Id> set2) {
+        for (Id id :set2) {
+            if (set1.contains(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*******************************************************************************************************
+     * @description Removes List of Allocations from the allocationsByParentId map, if the Opportunity that
+     * is a parent of the allocation parent (E.g. The Payment) is not flagged for review.
+     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the
+     *        Parent
+     * @param Map<Id, Id> parentIdToOppId Opportunity, Indexed By the Parent/Related Record's Id
+     * @param Map<Id, Opportunity> oppsById Map of Opportunities by Opportunity Id
+    ********************************************************************************************************/
+   @testVisible private static void removeIfNotForReview(Map<Id, List<Allocation__c>> allocationsByParentId, Map<Id, Id> parentIdToOppId, Map<Id, Opportunity> oppsById) {
+        // Clear out allocations by parent id, if they are not associated with at least one Opportunity tagged for review
+        for (Id parentId :parentIdToOppId.keySet()) {
+            Id oppId = parentIdToOppId.get(parentId);
+            if (!oppsById.containsKey(oppId)) {
+                allocationsByParentId.remove(parentId);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Removes List of Allocations from the allocationsByParentId map, if the Opportunity
+     *              that is a parent of the allocation is not flagged for review.
+     * @param Map<Id, List<Allocation__c>> allocsByParentId List of Allocations Indexed By the Id of the
+     *                                     Parent
+     * @param Map<Id, Opportunity> oppsById Map of Opportunities by Opportunity Id
+    ********************************************************************************************************/
+    @testVisible private static void removeIfNotForReview(Map<Id, List<Allocation__c>> allocationsByParentId, Map<Id, Opportunity> oppsById) {
+        // Clear out allocations by parent id, if they are not associated with at least one Opportunity tagged for review
+        for (Id parentId :new Set<Id>(allocationsByParentId.keySet())) {
+            if (!oppsById.containsKey(parentId)) {
+                allocationsByParentId.remove(parentId);
+            }
+        }
+    }
+
+    /*****************************************
+     * Helper Methods - Allocation Validation
+     *****************************************/
+
+    /*******************************************************************************************************
+     * @description Returns a list of configuration problems, if any.  If the List is empty, there are no
+     *              configuration problems.
+     * @return List<String> List of configuration problems, if any
+    ********************************************************************************************************/
+    public static List<String> validatePaymentAllocationsConfiguration() {
+        List<String> problems = new List<String>();
+        if (!ALLOCATION_SETTINGS.Payment_Allocations_Enabled__c) {
+            problems.add(System.Label.alloPaymentNotEnabled);
+        }
+        if (!ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) {
+            problems.add(System.Label.alloDefaultNotEnabled);
+        }
+
+        if (ALLOCATION_SETTINGS.Default__c == null) {
+            problems.add(System.Label.alloDefaultGAUMissing);
+        } else {
+            List<General_Accounting_Unit__c> defaultGAU = [select Id, Active__c, Name from General_Accounting_Unit__c where Id = :ALLOCATION_SETTINGS.Default__c];
+            if (defaultGAU.size() < 1) {
+                problems.add(System.Label.alloDefaultGAUDoesNotExist);
+            } else if (!defaultGAU[0].Active__c) {
+                problems.add(System.Label.alloDefaultGAUNotActive.replace('{0}', defaultGAU[0].Name));
+            }
+        }
+
+        return problems;
+    }
+
+    /*******************************************************************************************************
+     * @description Validates an individual Allocation record
+     * @param SObject parentObj The Allocation's parent
+     * @param Allocation__c allocation The Allocation to validate
+     * @return List<String> A list of errors.  If the list is empty, there were no errors associated with
+     *         this Allocation
+    ********************************************************************************************************/
+     @testVisible private static List<String> validateAllocation(SObject parentObj, Allocation__c allocation) {
+        List<String> errors = new List<String>();
+        // No parent, or multiple parents
+        if (validateAllocationHasParentError(allocation)) {
+            errors.add(assembleAllocationError(parentObj, allocation, Label.alloSingleParent));
+        }
+        //neither an amount nor a percent is defined
+        if (allocation.Amount__c == null && allocation.Percent__c == null) {
+            errors.add(assembleAllocationError(parentObj, allocation, Label.alloAmountOrPercent));
+        }
+        //negative amount (Payments excepted)
+        if (allocation.Amount__c != null && allocation.Amount__c < 0 && allocation.Payment__c == null) {
+            errors.add(assembleAllocationError(parentObj, allocation, Label.alloNegativeAmount));
+        }
+        //negative percent
+        if (allocation.Percent__c != null && allocation.Percent__c < 0) {
+            errors.add(assembleAllocationError(parentObj, allocation, Label.alloNegativePercent));
+        }
+
+        return errors;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns true if this allocation doesn't have exactly one parent object.
+    * @param allo A GAU Allocation.
+    * @return boolean Whether this allocation has a parent error.
+    ********************************************************************************************************/
+    public static Boolean validateAllocationHasParentError (Allocation__c allo) {
+        Integer parentCnt = 0;
+
+        parentCnt += (allo.Payment__c != null) ? 1 : 0;
+        parentCnt += (allo.Opportunity__c != null) ? 1 : 0;
+        parentCnt += (allo.Recurring_Donation__c != null) ? 1 : 0;
+        parentCnt += (allo.Campaign__c != null) ? 1 : 0;
+        // Anything other than exactly 1 will return an error
+        return (parentCnt != 1);
+    }
+
+    // TODO: Add additional validation method(s) to cover trigger validations not needed by the batch.
+    // This will need to be done as the triggers are refactored to share code.
+
+    /***************************************
+     * Helper Methods - Allocation Settings
+     ***************************************/
+
+    /*******************************************************************************************************
+     * @description Gets any Opportunity Recordtypes that should be excluded from Allocation processing
+     * @return Set<Id> A Set of Opportunity Recordtype Ids to be excluded
+    ********************************************************************************************************/
+    public static Set<Id> getExcludedOpportunityRecordtypes() {
+        return (String.isNotBlank(ALLOCATION_SETTINGS.Excluded_Opp_RecTypes__c)) ? new Set<Id>((List<Id>)ALLOCATION_SETTINGS.Excluded_Opp_RecTypes__c.split(';')) : new Set<Id>();
+    }
+
+    /*******************************************************************************************************
+     * @description Gets any Opportunity Type values that means the Opportunity should be excluded from
+     *              Allocation Processing
+     * @return Set<Id> A Set of Opportunity Recordtype Ids to be excluded
+    ********************************************************************************************************/
+    public static Set<String> getExcludedOpportunityTypes() {
+        return (String.isNotBlank(ALLOCATION_SETTINGS.Excluded_Opp_Types__c)) ? new Set<String>(ALLOCATION_SETTINGS.Excluded_Opp_Types__c.split(';')) : new Set<String>();
+    }
+
+    /***************************
+     * Helper Methods - Error
+     ***************************/
+
+    /*******************************************************************************************************
+     * @description Assembles an error associated with a specific Allocation
+     * @param SObject parentObj The Allocation's parent
+     * @param Allocation__c alloc The Allocation associated with the error
+     * @param String message The error or warning message to add
+     * @return String the complete message for this Allocation
+    ********************************************************************************************************/
+    @testVisible private static String assembleAllocationError(SObject parentObj, Allocation__c alloc, String message) {
+        return Label.alloPaymentAllocationBatchAllocationError.replace('{obj_type}', getLabelFor(parentObj))
+                                                              .replace('{parent_name}', (String) parentObj.get('Name'))
+                                                              .replace('{alloc_name}', alloc.Name)
+                                                              .replace('{error}', message);
+    }
+
+    /*******************************************************************************************************
+     * @description Assembles an error associated with a record
+     * @param SObject sObj The object the error is associated with
+     * @param String message The error or warning message to add
+     * @return String the complete message
+    ********************************************************************************************************/
+    @testVisible private static String assembleRecordError(SObject sObj, String message) {
+        return Label.alloPaymentAllocationBatchRecordError.replace('{obj_type}', getLabelFor(sObj))
+                                                          .replace('{parent_name}', (String) sObj.get('Name'))
+                                                          .replace('{error}', message);
+    }
+
+    /***************************
+     * Helper Methods - General
+     ***************************/
+
+    /*******************************************************************************************************
+     * @description Determines whether this is a Opportunity or a Payment Object, and returns the
+     *              Opportunity Id associated with it (either the Opportunities Id, or the Opportunity Id
+     *              of the related record if it is a Payment)
+     * @return Id (for the Opportunity)
+    ********************************************************************************************************/
+    @testVisible private static Id getOpportunityIdFor(SObject sObj) {
+        if (sObj != null) {
+            if (sObj instanceOf Opportunity) {
+                return (Id) sObj.Id;
+            }
+            if (sObj instanceOf npe01__OppPayment__c) {
+                return (Id) sObj.get('npe01__Opportunity__c');
+            }
+        }
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+     * @description Determines whether this is a Opportunity or a Payment Object, and returns the Amount
+     *              associated with it
+     * @return Decimal value of the object's amount
+    ********************************************************************************************************/
+    @testVisible private static Decimal getAmountFor(SObject sObj) {
+        if (sObj != null) {
+            if (sObj instanceOf Opportunity) {
+                return (Decimal) sObj.get('Amount');
+            }
+            if (sObj instanceOf npe01__OppPayment__c) {
+                return (Decimal) sObj.get('npe01__Payment_Amount__c');
+            }
+        }
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+     * @description Determines whether this is a Opportunity or a Payment Object, and returns the
+     *              appropriate label
+     * @return String The Object's Label
+    ********************************************************************************************************/
+    @testVisible private static String getLabelFor(SObject sObj) {
+        return (sObj instanceOf Opportunity) ? getOpportunityLabel() : ((sObj instanceOf npe01__OppPayment__c) ? getPaymentLabel() : '');
+    }
+
+    /*******************************************************************************************************
+     * @description Gets the Allocation Object's Label, caching it the first time it is retrieved.
+     * @return String The Allocation Object's Label
+    ********************************************************************************************************/
+    @testVisible private static String getAllocationLabel() {
+        if (ALLOC_OBJ_LABEL == null) {
+            ALLOC_OBJ_LABEL = UTIL_Describe.getObjectLabel('Allocation__c');
+        }
+        return ALLOC_OBJ_LABEL;
+    }
+
+    /*******************************************************************************************************
+     * @description Gets the Opportunity Object's Label, caching it the first time it is retrieved.
+     * @return String The Opportunity Object's Label
+    ********************************************************************************************************/
+    @testVisible private static String getOpportunityLabel() {
+        if (OPP_OBJ_LABEL == null) {
+            OPP_OBJ_LABEL = UTIL_Describe.getObjectLabel('Opportunity');
+        }
+        return OPP_OBJ_LABEL;
+    }
+
+    /*******************************************************************************************************
+     * @description Gets the Payment Object's Label, caching it the first time it is retrieved.
+     * @return String The Payment Object's Label
+    ********************************************************************************************************/
+    @testVisible private static String getPaymentLabel() {
+        if (PMT_OBJ_LABEL == null) {
+            PMT_OBJ_LABEL = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
+        }
+        return PMT_OBJ_LABEL;
+    }
 
 }
