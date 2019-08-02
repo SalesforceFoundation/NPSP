@@ -113,22 +113,6 @@ public class ALLO_UpdPaymentAllocations_ERR_BATCH extends UTIL_AbstractCommon_BA
      */
     public override void doFinish(Database.BatchableContext bc , Boolean isComplete) {
         if (isComplete) {
-            // Since we have to iterate over the error object and the Opportunity object, at a minimum,
-            // We may re-execute even though execution for one object is done.
-            objectIdx++;
-
-            if (objectIdx < OBJECTS_TO_PROCESS.size()) {
-                this.currentObjectToProcess = OBJECTS_TO_PROCESS[objectIdx];
-                Database.executeBatch(this, this.getBatchSize());
-            }  else {
-                for (SObjectType sot : OBJECTS_TO_PROCESS) {
-                    System.debug('Record Count for ' + sot.getDescribe().getName() + ':' + recordCountForObject.get(sot));
-                }
-
-                allocationsSettings.LastJobStartTimePaymentAllocations__c = this.jobStart;
-                upsert allocationsSettings;
-
-            }
         }
     }
 
