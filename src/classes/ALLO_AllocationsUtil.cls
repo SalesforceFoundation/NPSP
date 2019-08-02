@@ -1137,15 +1137,10 @@ public class ALLO_AllocationsUtil {
                 proposedAllocations.add(makeDefaultAllocation(targetObj, amount));
         }
 
-        if (validateAllocations(amount, proposedAllocations, allocResults.errorsByRecordId)) {
-            allocResults.allocationsForInsert.addAll (proposedAllocations);
-        }
+        allocResults.allocationsForInsert.addAll (proposedAllocations);
 
     }
 
-    private static Boolean validateAllocations(Decimal parentAmount, List<Allocation__c> allocations, Map<String, List<String>> errorsByRecordId) {
-        return true;
-    }
 
     private static List<String> validateAllocation(SObject parentObj, Allocation__c allocation) {
         List<String> errors = new List<String>();

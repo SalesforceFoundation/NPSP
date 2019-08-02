@@ -1751,7 +1751,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The default General Accounting Unit selected is no longer active.</shortDescription>
-        <value>The value you selected for the Default General Accounting Unit ({0}) is not active.</value>
+        <value>{0} is an inactive Default General Accounting Unit.</value>
     </labels>
 
     <labels>
@@ -1872,7 +1872,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>One or more errors were found in the Payment Allocation Configuration.</shortDescription>
+        <shortDescription>Error when the Payment Allocations batch encounters a Payment Allocations error.</shortDescription>
         <value>We found these errors in the configuration of Payment Allocations: </value>
     </labels>
     <labels>
@@ -1880,7 +1880,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>An error occurred associated with a specific Allocation.</shortDescription>
+        <shortDescription>Error when the Payment Allocations batch encounters an Allocation-specific error</shortDescription>
         <value>Allocation Error occurred on the {obj_type} record named {parent_name} for Allocation named {alloc_name}. Reason: {error}</value>
     </labels>
     <labels>
@@ -1896,16 +1896,16 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>All allocations must be cleared.</shortDescription>
-        <value>Warning! Allocations couldn’t be converted to percentages and were cleared. If the parent amount becomes a non-blank or zero amount, Allocations will be restored from the parent amount or default Allocations.</value>
+        <shortDescription>Error when Allocations are cleared because amounts can't convert to percentages</shortDescription>
+        <value>Warning! Allocations couldn’t be converted to percentages and were cleared. If the parent amount becomes a non-blank or zero amount, Allocations will be recreated from the defaults for this record.</value>
     </labels>
     <labels>
         <fullName>alloOverallocatedError</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>The sum of the Allocation amounts is greater than the parent's amount</shortDescription>
-        <value>The amount allocated is more than the amount of the {obj_type}. Please update the Allocation amount(s) so the total equals the {obj_type} Amount.</value>
+        <shortDescription>Error when Allocations are cleared because amounts can't convert to percentages</shortDescription>
+        <value>The amount allocated exceeds the {obj_type} amount. Update Allocation amounts so that the total equals the {obj_type} amount.</value>
     </labels>
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>
@@ -1915,7 +1915,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Payment-level allocations are not enabled.</shortDescription>
         <value>Payment-level Allocations aren't enabled for your organization. Try allocating at the Opportunity level instead.</value>
     </labels>
-    <labels>
+    <labels>=
         <fullName>alloPaymentOverallocatedError</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
