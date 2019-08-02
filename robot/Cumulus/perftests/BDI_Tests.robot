@@ -1,6 +1,6 @@
 *** Variables ***
 
-${count} =   9920       # use a multiple of 4
+${count} =   40       # use a multiple of 4
 ${database_url} =    
 ${field_mapping_method} =   Data Import Field Mapping
 
@@ -8,11 +8,14 @@ ${field_mapping_method} =   Data Import Field Mapping
 
 Resource  cumulusci/robotframework/CumulusCI.robot
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup      Run Keywords    Clear DataImport Records   AND Generate Data
+Suite Setup      Run Keywords    Setup BDI
+...                             AND Clear DataImport Records   
+...                             AND Generate Data
 
 *** Keywords ***
 Clear DataImport Records
-    Run Task Class  cumulusci.tasks.bulkdata.DeleteData   objects=npsp__DataImport__c
+    Run Task Class  cumulusci.tasks.bulkdata.DeleteData
+    ...    objects=npsp__DataImport__c
 
 Generate Data
     ${count} =	Convert To Integer	${count}	
@@ -23,10 +26,13 @@ Generate Data
     ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
     ...                 data_generation_task=tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
+Setup BDI
+    Configure BDI     ${field_mapping_method}
+
 *** Test Cases ***
 
 Import a data batch via the API
-    Batch Data Import   1000    ${field_mapping_method}
+    Batch Data Import   1000    
 
     ${count} =	Convert To Integer	${count}	
 

@@ -1110,25 +1110,20 @@ class NPSP(object):
 
         self.cumulusci._run_task(AnonymousApexTask, subtask_config)
         
-    def set_bdi_settings(self, method):
+    def configure_BDI(self, method):
+        valid_methods = ('Data Import Field Mapping', 'Help Text')
+
+        assert method in valid_methods, f"Method must be one of {', '.join(valid_methods)}"
+
         self.run_apex("""Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
                 diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
                 diSettings.Field_Mapping_Method__c = '%s';
                 update diSettings;""" % method)
+        time.sleep(10*60)  ## FIXME: How can I do this properly?
 
-        try:
-            self.batch_apex_wait("STG_PanelDataImportAdvancedMapping_CTRL")
-        except IndexError:
-            pass
 
-    def batch_data_import(self, batchsize, method):
+    def batch_data_import(self, batchsize):
         """"Do a BDI import using the API and wait for it to complete"""
-        valid_methods = ('Data Import Field Mapping', 'Help Text')
-        time.sleep(5*60)
-
-        assert method in valid_methods, f"Method must be one of {', '.join(valid_methods)}"
-        self.set_bdi_settings(method)
-
         self.run_apex("""BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
                 ID ApexJobId = Database.executeBatch(bdi, %d);
                 """ % int(batchsize))
