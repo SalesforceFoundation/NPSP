@@ -1033,7 +1033,7 @@ public class ALLO_AllocationsUtil {
      * @param Set<Id> oppIds The set of Opportunity Ids to retrieve Opportunity and Payment information for
      * @return Map<Id, Opportunity> Map of Opportunities by Opportunity Id
     ********************************************************************************************************/
-    private static Map<Id, Opportunity> retrieveOpportunities(Set<Id> oppIds) {
+    @testVisible private static Map<Id, Opportunity> retrieveOpportunities(Set<Id> oppIds) {
         Set<String> oppPaymentFields = new Set<String> {
             'Id',
             'Name',
@@ -1085,7 +1085,7 @@ public class ALLO_AllocationsUtil {
      * @param Set<Id> recurringDonationIds The set of Recurring Donation Ids to retrieve Allocations for
      * @return List<Allocation__c> All allocations associated with any of the records specified
     ********************************************************************************************************/
-    private static List<Allocation__c> retrieveAllocations(Set<Id> oppIds, Set<Id> paymentIds, Set<Id>campaignIds, Set<Id> recurringDonationIds) {
+    @testVisible private static List<Allocation__c> retrieveAllocations(Set<Id> oppIds, Set<Id> paymentIds, Set<Id>campaignIds, Set<Id> recurringDonationIds) {
         Set<String> allocationFields = new Set<String> {
             'Id',
             'Name',
@@ -1160,7 +1160,7 @@ public class ALLO_AllocationsUtil {
      *              ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM.
      * @param Boolean state - If true, they are active, if false, they are inactive.
     ********************************************************************************************************/
-    private static void updateAllocationTriggersState(Boolean state) {
+    @testVisible private static void updateAllocationTriggersState(Boolean state) {
         TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_Allocations_TDTM', state);
         TDTM_ProcessControl.toggleTriggerState('Opportunity', 'ALLO_Allocations_TDTM', state);
         TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'ALLO_Allocations_TDTM', state);
