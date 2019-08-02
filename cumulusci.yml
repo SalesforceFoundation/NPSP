@@ -450,7 +450,7 @@ flows:
             3:
                 task: ensure_record_type
 
-    test_performance:
+    test_performance_help_text:
         description: 'Creates a BDI org and runs a performance test'
         steps:
             1:
@@ -481,6 +481,12 @@ flows:
                     options:
                         field_mapping_method: 'Data Import Field Mapping'
                         outputdir: .
+
+    test_performance:
+        steps:
+            1:
+                flow: test_performance_CO
+
 
     beta_dependencies:
         steps:
