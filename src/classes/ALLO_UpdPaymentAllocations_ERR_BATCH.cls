@@ -32,7 +32,7 @@
 * @date 2019
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
-* @description Batch Job to update/recalculate Payment Allocations, Reprocess Errors Phase, Driven By
+* @description Batch Job to recalculate Payment Allocations with errors reprocess Errors , Driven By
 *              Error Records with the following characteristics:
 *              - Record_Id__c != null
 *              - Context_Type__c == 'Payment Allocations Batch'
@@ -40,30 +40,10 @@
 */
 public class ALLO_UpdPaymentAllocations_ERR_BATCH extends UTIL_AbstractCommon_BATCH {
 
-    private static final SObjectType ERROR_SOT = Error__c.getSObjectType();
-    private static final SObjectType OPPORTUNITY_SOT = Opportunity.getSObjectType();
-    private static final List<SObjectType> OBJECTS_TO_PROCESS = new List<SObjectType> {
-        ERROR_SOT,
-        OPPORTUNITY_SOT
-    };
-
-    private static final Map<SObjectType, String> FIELD_LIST_FOR_OBJECT = new Map<SOBjectType, String> {
-        ERROR_SOT => 'Id, Record_Id__c, Retry_Pending__c',
-        OPPORTUNITY_SOT => 'Id'
-    };
-
-    private static final Map<SObjectType, String> WHERE_CLAUSE_FOR_OBJECT = new Map<SOBjectType, String> {
-        ERROR_SOT => 'Context_Type__c =\'' + ALLO_UpdPaymentAllocations_BATCH.PROCESS_NAME + '\' and Retry_Pending__c = true',
-        OPPORTUNITY_SOT => ''
-    };
-
     private static Allocations_Settings__c allocationsSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
-    private Iterator<SObjectType> objectToProcess;
-    private SObjectType currentObjectToProcess;
-    private Map<SObjectType, Integer> recordCountForObject;
-    private Integer objectIdx;
-    private DateTime jobStart;
+    private Integer recCnt;
+    private DateTime boundary;
 
     public ALLO_UpdPaymentAllocations_ERR_BATCH() {
         super();
@@ -82,30 +62,9 @@ public class ALLO_UpdPaymentAllocations_ERR_BATCH extends UTIL_AbstractCommon_BA
     }
 
     private void initialize() {
-        this.objectIdx = 0;
-        this.currentObjectToProcess = OBJECTS_TO_PROCESS[objectIdx];
-        initializeRecordCounts();
-    }
-
-    /**
-     * Overridable method called from the start method for any implementing classes logic just prior to execution of start.  firstChunk will be true
-     * if running in non LDV mode, or if it is the first chunk of the batch.  This can be used to trigger logic at the start of the batch, including
-     * recording a timestamp for last executed to use in future batches
-     * @param bc BatchableContext provided by Salesforce
-     * @param firstChunk Boolean indicating this is the first execution of the start method.
-     */
-    public override void onStart(Database.BatchableContext bc, Boolean firstChunk) {
-        if (this.jobStart == null) {
-            this.jobStart = System.now();
-        }
-    }
-
-    private void initializeRecordCounts() {
-        this.recordCountForObject = new Map<SObjectType, Integer>();
-        for (SObjectType sot :OBJECTS_TO_PROCESS) {
-            recordCountForObject.put (sot, 0);
-        }
-    }
+        this.recCnt = 0;
+        this.boundary = (allocationsSettings != null && allocationsSettings.LastJobStartTimePaymentAllocations__c != null) ?
+                        allocationsSettings.LastJobStartTimePaymentAllocations__c : System.now().addYears(-1);}
 
     /**
      * @description Actual processing occurs in this method
@@ -121,7 +80,7 @@ public class ALLO_UpdPaymentAllocations_ERR_BATCH extends UTIL_AbstractCommon_BA
      * @description Required to set the main object the batch executes against
      */
     public override SObjectType getSObjectType() {
-        return this.currentObjectToProcess;
+        return Error__c.getSObjectType();
     }
 
     /**
@@ -129,15 +88,21 @@ public class ALLO_UpdPaymentAllocations_ERR_BATCH extends UTIL_AbstractCommon_BA
      * @return String SOQL Query fragment consisting of fields and subqueries to retrieve, part between outer select and from
      */
     public override String getSOQLFullQueryFieldList() {
-        return FIELD_LIST_FOR_OBJECT.get(this.currentObjectToProcess);
+        return 'Id, ' +
+                'Record_Id__c, ' +
+                'Retry_Pending__c';
     }
 
+    // TODO: Consider a modular approach to this batch where the data to retrieve could be parameterized for the Process, and the
+    //       Implementing class could fulfill the contract to retry and then return success, or update the errors if
+    //       additional errors occurred.
+
     /**
-     * Overridable test Where Clause to add to the inner query, or non LDV query, if not running in LDV/Chunking mode
-     * @return String ''
+     * @description Returns the where clause for the payment allocations Batch for records that require reprocessing
+     * @return String Where Clause for Batch Query
      */
     public override String getWhereClause() {
-        return WHERE_CLAUSE_FOR_OBJECT.get(this.currentObjectToProcess);
+        return 'Context_Type__c =\'' + ALLO_UpdPaymentAllocations_BATCH.PROCESS_NAME + '\' and Retry_Pending__c = true';
     }
 
     /**
