@@ -127,9 +127,14 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
     */
     @isTest
     static void shouldGetCorrectNumberOfObjectMappingWrappers() {
+        Data_Import_Object_Mapping_Set__mdt objectMappingSet = [SELECT Id
+            FROM Data_Import_Object_Mapping_Set__mdt
+            WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_NAME
+            LIMIT 1];
+
         Data_Import_Object_Mapping__mdt[] defaultObjectMappings = [SELECT Id
             FROM Data_Import_Object_Mapping__mdt
-            WHERE Data_Import_Object_Mapping_Set__r.DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_NAME];
+            WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSet.Id];
 
         BDI_ManageAdvancedMappingCtrl.DataImportObjectMappingWrapper[] objectMappingWrappers =
             BDI_ManageAdvancedMappingCtrl.getObjectMappings();
@@ -163,15 +168,27 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
     */
     @isTest
     static void shouldGetCorrectNumberOfFieldMappingWrappersForGivenObjectMapping() {
+        Data_Import_Field_Mapping_Set__mdt fieldMappingSet = [SELECT Id,
+                DeveloperName
+            FROM Data_Import_Field_Mapping_Set__mdt
+            WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_NAME
+            LIMIT 1];
+
+        Data_Import_Object_Mapping__mdt account1 = [SELECT Id,
+                DeveloperName
+            FROM Data_Import_Object_Mapping__mdt
+            WHERE DeveloperName = :ACCOUNT1
+            LIMIT 1];
+
         Data_Import_Field_Mapping__mdt[] account1FieldMappings = [SELECT Id
             FROM Data_Import_Field_Mapping__mdt
-            WHERE Data_Import_Field_Mapping_Set__r.DeveloperName = :DEFAULT_FIELD_MAPPING_SET_NAME
-                AND Target_Object_Mapping__r.DeveloperName = :ACCOUNT1];
+            WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSet.Id
+                AND Target_Object_Mapping__c = :account1.Id];
 
         BDI_ManageAdvancedMappingCtrl.DataImportFieldMappingWrapper[] account1FieldMappingWrappers =
             BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames(
-                ACCOUNT1,
-                DEFAULT_FIELD_MAPPING_SET_NAME);
+                account1.DeveloperName,
+                fieldMappingSet.DeveloperName);
 
         System.assertEquals(account1FieldMappings.size(), account1FieldMappingWrappers.size());
     }
