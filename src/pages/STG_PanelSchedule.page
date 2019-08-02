@@ -108,6 +108,18 @@
                     </div>
                 </div>
             </div>
+
+            <div class="slds-grid slds-gutters_small">
+                <div class="slds-col slds-has-flexi-truncate slds-grid" role="listitem">
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Seasonal_Addresses_Batch_Size__c.Label}" for="seasonalAddressBatchSize" styleClass="slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:outputField value="{!stgService.stgHH.Seasonal_Addresses_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                            <apex:inputField value="{!stgService.stgHH.Seasonal_Addresses_Batch_Size__c}" rendered="{!isEditMode}" id="seasonalAddressBatchSize" styleClass="slds-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
