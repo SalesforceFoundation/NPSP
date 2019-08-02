@@ -166,7 +166,22 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                                             Object_API_Name__c,
                                             Predecessor__c,
                                             Relationship_Field__c,
-                                            Relationship_To_Predecessor__c
+                                            Relationship_To_Predecessor__c,
+                                            (SELECT MasterLabel,
+                                                DeveloperName,
+                                                Data_Import_Field_Mapping_Set__c,
+                                                Data_Import_Field_Mapping_Set__r.DeveloperName,
+                                                Required__c,
+                                                Source_Field_API_Name__c,
+                                                Target_Field_API_Name__c,
+                                                Target_Object_Mapping__c,
+                                                Target_Object_Mapping__r.DeveloperName,
+                                                Target_Object_Mapping__r.Object_API_Name__c,
+                                                Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                                                Is_Deleted__c
+                                            FROM Data_Import_Field_Mappings__r
+                                            WHERE Is_Deleted__c = false
+                                                AND Target_Object_Mapping__r.Is_Deleted__c = false)
                                     FROM Data_Import_Object_Mapping__mdt
                                     WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c
                                         AND Is_Deleted__c = false
@@ -183,23 +198,20 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
             objMappingsByDevName.put(diom.DeveloperName, diom);
         }
 
+        Data_Import_Field_Mapping__mdt[] fieldMappings = new List<Data_Import_Field_Mapping__mdt>();
+
+        for (String objectName : objMappingsByDevName.keySet()) {
+            Data_Import_Object_Mapping__mdt objectMapping = objMappingsByDevName.get(objectName);
+
+            if (objectMapping.Data_Import_Field_Mappings__r != null &&
+                objectMapping.Data_Import_Field_Mappings__r.size() > 0) {
+
+                fieldMappings.addAll(objectMapping.Data_Import_Field_Mappings__r);
+            }
+        }
+
         if (objMappingsByDevName != null && objMappingsByDevName.size() > 0) {
-            for (Data_Import_Field_Mapping__mdt difm:[SELECT MasterLabel,
-                                                    DeveloperName,
-                                                    Data_Import_Field_Mapping_Set__c,
-                                                    Data_Import_Field_Mapping_Set__r.DeveloperName,
-                                                    Required__c,
-                                                    Source_Field_API_Name__c,
-                                                    Target_Field_API_Name__c,
-                                                    Target_Object_Mapping__c,
-                                                    Target_Object_Mapping__r.DeveloperName,
-                                                    Target_Object_Mapping__r.Object_API_Name__c,
-                                                    Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
-                                                    Is_Deleted__c
-                                        FROM Data_Import_Field_Mapping__mdt
-                                        WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName
-                                            AND Is_Deleted__c = false
-                                            AND Target_Object_Mapping__r.Is_Deleted__c = false]) {
+            for (Data_Import_Field_Mapping__mdt difm : fieldMappings) {
 
                 // Removing the npsp namespace since the code is not currently packaged.
                 if (removeNPSPNamespace) {
