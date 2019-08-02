@@ -114,5 +114,4 @@ public class ALLO_UpdPaymentAllocations_ERR_BATCH extends UTIL_AbstractCommon_BA
         }
     }
 
-
 }
