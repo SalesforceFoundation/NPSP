@@ -215,9 +215,6 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
      */
     public override void doFinish(Database.BatchableContext bc , Boolean isComplete) {
         if (isComplete) {
-            System.debug('Record Count for ' + Opportunity.getSObjectType().getDescribe().getName() + ':' + recCnt);
-            System.debug('Review Count for ' + Opportunity.getSObjectType().getDescribe().getName() + ':' + reviewCnt);
-
             allocationsSettings.LastJobStartTimePaymentAllocations__c = this.jobStart;
             upsert allocationsSettings;
 
