@@ -1096,28 +1096,41 @@ class NPSP(object):
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
 
-    def batch_data_import(self, batchsize, method):
-        """"Do a BDI import using the API and wait for it to complete"""
+    def batch_apex_wait(self, classname):
+        subtask_config = TaskConfig(
+                {"options": {"class_name" : classname}}
+        )
 
-        valid_methods = ('Data Import Field Mapping', 'Help Text')
+        self.cumulusci._run_task(BatchApexWait, subtask_config)
 
-        assert method in valid_methods, f"Method must be one of {', '.join(valid_methods)}"
-
-        code = """Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-                diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
-                diSettings.Field_Mapping_Method__c = '%s';
-                update diSettings;
-                BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-                ID ApexJobId = Database.executeBatch(bdi, %d);
-                """ % (method, int(batchsize))
+    def run_apex(self, code):
         subtask_config = TaskConfig(
                 {"options": {"apex" : code}}
         )
 
         self.cumulusci._run_task(AnonymousApexTask, subtask_config)
+        
+    def set_bdi_settings(self, method):
+        self.run_apex("""Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+                diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+                diSettings.Field_Mapping_Method__c = '%s';
+                update diSettings;""" % method)
 
-        subtask_config = TaskConfig(
-                {"options": {"class_name" : "BDI_DataImport_BATCH"}}
-        )
+        try:
+            self.batch_apex_wait("STG_PanelDataImportAdvancedMapping_CTRL")
+        except IndexError:
+            pass
 
-        self.cumulusci._run_task(BatchApexWait, subtask_config)
+    def batch_data_import(self, batchsize, method):
+        """"Do a BDI import using the API and wait for it to complete"""
+        valid_methods = ('Data Import Field Mapping', 'Help Text')
+        time.sleep(5*60)
+
+        assert method in valid_methods, f"Method must be one of {', '.join(valid_methods)}"
+        self.set_bdi_settings(method)
+
+        self.run_apex("""BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+                ID ApexJobId = Database.executeBatch(bdi, %d);
+                """ % int(batchsize))
+
+        self.batch_apex_wait("BDI_DataImport_BATCH")
