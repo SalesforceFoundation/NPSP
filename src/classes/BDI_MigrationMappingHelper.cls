@@ -96,10 +96,16 @@ public class BDI_MigrationMappingHelper {
      */
     public Map<String, Data_Import_Object_Mapping__mdt> getObjectMappingsBySetDeveloperName(String developerName) {
 
-        Data_Import_Object_Mapping_Set__mdt objectMappingSet = [SELECT Id
+        Data_Import_Object_Mapping_Set__mdt[] objectMappingSets = [SELECT Id
             FROM Data_Import_Object_Mapping_Set__mdt
-            WHERE DeveloperName = :developerName
-            LIMIT 1];
+            WHERE DeveloperName = :developerName];
+
+        Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName =
+            new Map<String, Data_Import_Object_Mapping__mdt>();
+
+        if (objectMappingSets == null || objectMappingSets.size() == 0) {
+            return objectMappingsByDeveloperName;
+        }
 
         List<Data_Import_Object_Mapping__mdt> existingObjectMappings = [SELECT 
                     Id, 
@@ -115,11 +121,8 @@ public class BDI_MigrationMappingHelper {
                     Legacy_Data_Import_Object_Name__c,
                     Custom_Mapping_Logic_Class__c
             FROM Data_Import_Object_Mapping__mdt
-            WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSet.Id
+            WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSets[0].Id
                 AND Is_Deleted__c = false];
-
-        Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName = 
-            new Map<String, Data_Import_Object_Mapping__mdt>();
 
         for (Data_Import_Object_Mapping__mdt objectMapping : existingObjectMappings) {
             objectMappingsByDeveloperName.put(objectMapping.Legacy_Data_Import_Object_Name__c, objectMapping);
@@ -137,10 +140,16 @@ public class BDI_MigrationMappingHelper {
     public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByFieldMappingSetDeveloperName(
         String developerName) {
 
-        Data_Import_Field_Mapping_Set__mdt fieldMappingSet = [SELECT Id
+        Data_Import_Field_Mapping_Set__mdt[] fieldMappingSets = [SELECT Id
             FROM Data_Import_Field_Mapping_Set__mdt
-            WHERE DeveloperName = :developerName
-            LIMIT 1];
+            WHERE DeveloperName = :developerName];
+
+        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsBySourceFieldName =
+            new Map<String, Data_Import_Field_Mapping__mdt>();
+
+        if (fieldMappingSets == null || fieldMappingSets.size() == 0) {
+            return fieldMappingsBySourceFieldName;
+        }
 
         List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT 
                     Id, 
@@ -160,11 +169,8 @@ public class BDI_MigrationMappingHelper {
                     Target_Object_Mapping__r.MasterLabel,
                     Is_Deleted__c
             FROM Data_Import_Field_Mapping__mdt
-            WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSet.Id
+            WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSets[0].Id
                 AND Is_Deleted__c = false];
-
-        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsBySourceFieldName =
-            new Map<String, Data_Import_Field_Mapping__mdt>();
 
         String namespace = UTIL_Namespace.getNamespace();
 
