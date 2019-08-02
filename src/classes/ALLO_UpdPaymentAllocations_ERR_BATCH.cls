@@ -71,9 +71,7 @@ public class ALLO_UpdPaymentAllocations_ERR_BATCH extends UTIL_AbstractCommon_BA
      * @param records The list of records returned for this batch, filtered for any additionalWhere clause added, and including the fields/subqueries configured for this batch
      */
     public override void doExecute(Database.BatchableContext bc, List<SObject>records ) {
-        Integer recCnt = this.recordCountForObject.get(this.currentObjectToProcess);
-        recCnt += records.size();
-        this.recordCountForObject.put(currentObjectToProcess, recCnt);
+        this.recCnt += records.size();
     }
 
     /**
