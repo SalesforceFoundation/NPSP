@@ -557,6 +557,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Soft_Credit_Roles__c = 'Matched Donor;Soft Credit;Household Member';
         hs.Matched_Donor_Role__c = 'Matched Donor';
         hs.npo02__Household_Contact_Roles_On__c = true;
+        hs.Seasonal_Addresses_Batch_Size__c = 10;
 
         // new HH Account model overrides having HH objects
         if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
