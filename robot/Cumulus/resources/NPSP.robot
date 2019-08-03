@@ -110,10 +110,12 @@ API Create Relationship
     # ...               &{fields}
    
 API Create GAU
+    [Arguments]      &{fields}
     ${name} =   Generate Random String
     ${ns} =    Get Npsp Namespace Prefix
     ${gau_id} =  Salesforce Insert  ${ns}General_Accounting_Unit__c
     ...               Name=${name}
+    ...               &{fields} 
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
 
