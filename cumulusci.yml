@@ -62,6 +62,14 @@ tasks:
             path: unpackaged/config/qa
             namespace_inject: $project_config.project__package__namespace
 
+    retrieve_qa_config:
+        description: Retrieves additional fields used for QA purposes
+        class_path: cumulusci.tasks.salesforce.sourcetracking.RetrieveChanges
+        options:
+            path: unpackaged/config/qa
+            namespace_tokenize: $project_config.project__package__namespace
+            snapshot: True
+
     deploy_qa_namespaced_config:
         description: Deploys additional configuration required for namespaced QA orgs
         class_path: cumulusci.tasks.salesforce.Deploy
