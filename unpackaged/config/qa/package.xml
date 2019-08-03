@@ -84,6 +84,7 @@
     </types>
     <types>
         <members>Contact-Contact Lightning Layout</members>
+        <members>npe01__OppPayment__c-npe01__Payment Layout</members>
         <name>Layout</name>
     </types>
     <version>43.0</version>
