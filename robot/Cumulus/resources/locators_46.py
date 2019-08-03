@@ -33,6 +33,7 @@ npsp_lex_locators={
             'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
             'link':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//table[contains(@class,'forceRecordLayout')]/tbody/tr[.//th/div/a[contains(@class,'textUnderline')]][.//td//span[text()='{}']]/th//a",
             'dd-link':'//div[contains(@class,"actionMenu")]//a[@title="{}"]',
+            'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/th",
          },
     },
     "alert": "//span[contains(@class,'toastMessage')]/a",
@@ -51,6 +52,7 @@ npsp_lex_locators={
         'model-checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
         'details-checkbox':'//label[@class="slds-checkbox__label"][./span[text()="{}"]]/span[contains(@class,"slds-checkbox_faux")]',
         'table_checkbox':'//tbody/tr[./td[2]/a[text()="{}"]]/td/input[@type="checkbox"]',
+        'id':'//input[@type="checkbox" and contains(@id,"{}")]',
     }, 
     'tabs':{   
         'tab': "//div[@class='uiTabBar']/ul[@class='tabs__nav']/li[contains(@class,'uiTabItem')]/a[@class='tabHeader']/span[contains(text(), '{}')]",
@@ -146,6 +148,7 @@ npsp_lex_locators={
         },
     'gaus':{
         'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',
+        'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/td[2]/span[text()='{}']",
         },
     'npsp_settings':{
         'panel_sub_link':'//ul/li/a[text()="{}"]',
