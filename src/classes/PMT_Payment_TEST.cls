@@ -1023,11 +1023,11 @@ private class PMT_Payment_TEST {
             update opp;
 
             // failure
-            System.assert(false);
+            System.assert(false, 'The opportunity amount should not have updated to a lower amount.');
 
         } catch (Exception ex) {
             // success
-            System.Assert(true);
+            System.assert(ex.getMessage().contains(System.Label.Opp_Amount_Is_Less_Error), 'The opportunity was not updated, but received different error message.');
         }
 
     }
