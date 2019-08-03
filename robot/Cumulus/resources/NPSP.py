@@ -124,12 +124,14 @@ class NPSP(object):
         for i in locators:
             locator = i.format(title)
             if self.check_if_element_exists(locator):
-                self.selenium.set_focus_to_element(locator)
-                button = self.selenium.get_webelement(locator)
-                button.click()
-                time.sleep(5)
-                tab_found = True
-                break
+                buttons = self.selenium.get_webelements(locator)
+                for button in buttons:
+                    if button.is_displayed():
+                        self.salesforce._focus(button)
+                        button.click()
+                        time.sleep(5)
+                        tab_found = True
+                        break
 
         assert tab_found, "tab not found"    
         
@@ -137,11 +139,19 @@ class NPSP(object):
         """ To Click on a related list button which would open up a new lightning page rather than a modal.
             Pass the list name and button name"""
         self.salesforce.load_related_list(heading)
+        b_found = False
         locator = npsp_lex_locators["record"]["related"]["button"].format(
             heading, button_title
         )
-        self.selenium.click_link(locator)
-        
+        buttons=self.selenium.get_webelements(locator)
+        for button in buttons:
+            if button.is_displayed():
+                button.click()
+                b_found = True
+                break
+            
+        assert b_found, "{} related list with button {} not found.".format(heading, button_title)
+                  
     def click_related_list_dd_button(self, heading, dd_title, button_title):
         """ To Click on a related list dropdown button.
             Pass the list name, dd name and button name"""
@@ -441,6 +451,13 @@ class NPSP(object):
         locator=npsp_lex_locators['modal_field'].format(title,value)
         self.salesforce._populate_field(locator, value)
     
+    def populate_field_with_id(self,id,value):
+        locator=npsp_lex_locators['id'].format(id)
+        if value == 'null':
+            field = self.selenium.get_webelement(locator)
+            self.salesforce._clear(field)
+        else :    
+            self.salesforce._populate_field(locator, value)
         
     def verify_occurrence(self,title,value):
         locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
@@ -641,7 +658,7 @@ class NPSP(object):
 
     def add_gau_allocation(self,field, value):
         locator = npsp_lex_locators["gaus"]["input_field"].format(field)
-        loc = self.selenium.get_webelement(locator).send_keys(value)
+        self.salesforce._populate_field(locator,value)
             
         
     def click_save(self, page):
@@ -722,7 +739,26 @@ class NPSP(object):
            locators = npsp_lex_locators['payments']['pays'].format(key)
            list_ele = self.selenium.get_webelements(locators)
            p_count=len(list_ele)
-           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)             
+           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)  
+           
+    def verify_allocations(self,header, **kwargs):
+       """To verify allocations, header is related list
+          key is value in td element, value is value in th element     
+       """
+       for key, value in kwargs.items():
+           locator = npsp_lex_locators['record']['related']['allocations'].format(header,key)
+           ele = self.selenium.get_webelement(locator).text
+           assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)     
+           
+    def verify_gau_allocations(self,header, **kwargs):
+       """To verify allocations, header is related list
+          key is value in 1st td element, value is value in 2nd element     
+       """
+       for key, value in kwargs.items():
+           locator = npsp_lex_locators['gaus']['allocations'].format(header,key,value)
+           self.selenium.wait_until_page_contains_element(locator,error="Expected {} allocation of {} was not found".format(key,value))
+#            ele = self.selenium.get_webelement(locator).text
+#            assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)                      
                 
     def verify_occurrence_payments(self,title,value=None):
         """"""
@@ -824,14 +860,16 @@ class NPSP(object):
         while True:
             i += 1
             if i > 14:
+                self.selenium.capture_page_screenshot()
                 raise AssertionError(
                     "Timed out waiting for batch with locator {} to load.".format(locator)
                 )
-            try:
-                self.selenium.wait_until_element_is_visible(locator)
-                break
-            except ElementNotFound:
-                time.sleep(15)    
+            else:    
+                try:
+                    self.selenium.wait_until_element_is_visible(locator)
+                    break
+                except Exception:
+                    time.sleep(15)    
 
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
@@ -1116,3 +1154,11 @@ class NPSP(object):
         )
 
         self.cumulusci._run_task(BatchApexWait, subtask_config)
+        
+    def click_wrapper_related_list_button(self,heading,button_title):  
+        """Clicks a button in the heading of a related list when the related list is enclosed in wrapper.
+           Waits for a modal to open after clicking the button.
+        """  
+        locator = npsp_lex_locators["record"]["related"]["button"].format(heading, button_title)
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)    
