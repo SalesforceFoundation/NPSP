@@ -157,24 +157,26 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         // the Opportunity should still be marked as closed.
         PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper);
 
-        //Prevent user modify Opp Amount
+       
+        // Prevent the user from modifying the Opp Amount
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate && isEnforceAccountingDataConsistency) {
             Set<Id> oppIds = (new Map<Id, Opportunity>(newList)).keySet();
-
             Map<Id, Opportunity> oppsById = getPaymentOpportunities(oppIds);
 
-            for (Opportunity opp : oppsById.values()) {
-                Decimal totalPaid = 0;
+            for (Opportunity opp : newList) {
+                // get the opp with payments
+                Opportunity oppWithPayment = oppsById.get(opp.Id);
 
-                for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                Decimal totalPaid = 0;
+                for (npe01__OppPayment__c pmt : oppWithPayment.npe01__OppPayment__r) {
                     totalPaid += (pmt.npe01__Paid__c && pmt.npe01__Payment_Amount__c != null) ? pmt.npe01__Payment_Amount__c : 0;
                 }
 
-                if (OPP_StageMappingUtil.isOpportunityFinalized(opp) && mapIdOppNew.get(opp.Id).Amount != totalPaid) {
+                if (OPP_StageMappingUtil.isOpportunityFinalized(opp) && opp.Amount != totalPaid) {
                     opp.addError(System.Label.Opp_Amount_Not_Equal_Error);
                 }
 
-                if (!OPP_StageMappingUtil.isOpportunityFinalized(opp) && mapIdOppNew.get(opp.Id).Amount < totalPaid) {
+                if (!OPP_StageMappingUtil.isOpportunityFinalized(opp) && opp.Amount < totalPaid) {
                     opp.addError(System.Label.Opp_Amount_Is_Less_Error);
                 }
             }
@@ -186,11 +188,14 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             Set<Id> oppIds = (new Map<Id, Opportunity>(newList)).keySet();
             Map<Id, Opportunity> oppsById = getPaymentOpportunities(oppIds);
 
-            for (Opportunity opp : oppsById.values()) {
+            for (Opportunity opp : newList) {
+                // get the opp with payments
+                Opportunity oppWithPayment = oppsById.get(opp.Id);
+
                 if (OPP_StageMappingUtil.isOpportunityFinalized(opp) && !OPP_StageMappingUtil.isOpportunityFinalized(mapIdOppOld.get(opp.Id))) {
                     Decimal totalPaid = 0;
 
-                    for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                    for (npe01__OppPayment__c pmt : oppWithPayment.npe01__OppPayment__r) {
                         totalPaid += (pmt.npe01__Paid__c && pmt.npe01__Payment_Amount__c != null) ? pmt.npe01__Payment_Amount__c : 0;
                     }
 
