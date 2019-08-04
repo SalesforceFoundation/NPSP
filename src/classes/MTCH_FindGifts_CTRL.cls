@@ -356,6 +356,11 @@ public with sharing class MTCH_FindGifts_CTRL {
         // now rather than displaying in a seperate list, let's just add them to our first list!
         potentialGifts.addAll(potentialGifts2);
         
+        if (potentialGifts.size() == 0){
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.mtchNotFindMoreGifts));
+   
+        }
+
         return null;
     }
 }
