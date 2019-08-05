@@ -82,8 +82,9 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
 
             UTIL_MasterSchedulableHelper.setScheduledJobs();
         }
-
-        validateAllocationSettings();
+        if (STG_Panel.runningUserIsAdmin()) {
+            validateAllocationSettings();
+        }
     }
     
     /*********************************************************************************************************
@@ -107,28 +108,26 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description validateAllocationSettings if there are no GAC records
+    * @description Clears Default GAU settings if the specified GAU does not exist or 
+      has been deleted.
     * @return void 
     */
     private void validateAllocationSettings() {
-        if (!string.isBlank(STG_Panel.stgService.stgAllo.Default__c)) {
-            list<General_Accounting_Unit__c> listGAU = [
-                SELECT Id, Name 
-                FROM General_Accounting_Unit__c 
-                WHERE ID=:STG_Panel.stgService.stgAllo.Default__c
-            ];
-            if (listGAU.isEmpty()) {
-                //now uncheck the custom settings and clear the value on the custom settings
-                STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
-                STG_Panel.stgService.stgAllo.Default__c = null;
-                if (!Test.isRunningTest()) {
-                    upsert STG_Panel.stgService.stgAllo;
-                }
-            }
-
+        if (String.isBlank(STG_Panel.stgService.stgAllo.Default__c)) {
+            return;
         }
-                
+        List<General_Accounting_Unit__c> listGaus = [
+            SELECT Id, Name 
+            FROM General_Accounting_Unit__c 
+            WHERE Id = :STG_Panel.stgService.stgAllo.Default__c
+        ];
+        if (listGaus.isEmpty()) {
+            //now uncheck the custom settings and clear the value on the custom settings
+            STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
+            STG_Panel.stgService.stgAllo.Default__c = null;
+            if (!Test.isRunningTest()) {
+                upsert STG_Panel.stgService.stgAllo;
+            }
+        }
     }
-    
-
 }

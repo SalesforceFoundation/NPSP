@@ -89,7 +89,8 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     /*********************************************************************************************************
-    * @description unchecks the default allocations enabled checkbox and clears the value of default id in allocations settings when no GAC is found.
+    * @description Verifies if it unchecks the default allocations enabled checkbox and clears the value 
+      of default id in allocations settings when no GAU is found.
     * @return void
     */
     @isTest
@@ -97,19 +98,19 @@ public with sharing class STG_SettingsManager_TEST {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
 
         STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
-        STG_Panel.stgService.stgAllo.Default__c ='a9302003536469';
+        STG_Panel.stgService.stgAllo.Default__c = 'a9302003536469';
         upsert STG_Panel.stgService.stgAllo;
 
         Test.startTest();
         ctrl.onNpspSettingsLoad();
         Test.stopTest();
 
-        system.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be unchecked');
-        system.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should not be filled in.');
+        System.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be unchecked');
+        System.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should not be filled in.');
     }
 
     /*********************************************************************************************************
-    * @description Nothing should be changed if default GAC is present.
+    * @description Verifies Default GAU is not cleared if default GAU is present.
     * @return void
     */
     @isTest
@@ -127,8 +128,8 @@ public with sharing class STG_SettingsManager_TEST {
         ctrl.onNpspSettingsLoad();
         Test.stopTest();
 
-        system.assertEquals(true, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be checked');
-        system.assertEquals(gau.id, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should be filled in.');
+        System.assertEquals(true, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be checked');
+        System.assertEquals(gau.id, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should be filled in.');
     }
 
      
