@@ -368,6 +368,10 @@ public class ALLO_PaymentSync_SVC {
     ********************************************************************************************************/
     public void syncPaymentAllocationsToOpportunity(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
+
+        //get allocations settings
+        Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+
         //loop through allocations totals by GAU
         for (Id gau : context.totalPaymentAllocationsByGAU.keySet()) {
             Decimal totalPaymentAllocations = context.totalPaymentAllocationsByGAU.get(gau);
@@ -412,8 +416,9 @@ public class ALLO_PaymentSync_SVC {
                     Amount__c = newGAUAmtForOpp     
                 );
 
-                //if the GAU is default do not enter a percent
-                if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
+                //only add the percent for non-default
+                if (!alloSettings.Default_Allocations_Enabled__c
+                    || (alloSettings.Default_Allocations_Enabled__c &&  gau != alloSettings.Default__c) {
                     newOppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? newGAUAmtFOrOpp / context.Opportunity.Amount * 100 : 0;
                 }
 
