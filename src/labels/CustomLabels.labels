@@ -2918,9 +2918,9 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Object groups description part 3</shortDescription>
-        <value>Let’s look at the two GAU Allocation 1 and GAU Allocation 2 Object Groups as an example. These object groups link directly to the Opportunity object. At times, 
-            you may want to assign two GAU Allocations to a single Opportunity. To achieve this, in your import file enter the Opportunity information in the Donations columns, 
-            then include the first GAU in the GAU Allocations 1 columns and the second GAU Allocation in the GAU Allocations 2 columns. Because of the GAU Allocation 1 and 
+        <value>Let’s look at the two GAU Allocation 1 and GAU Allocation 2 Object Groups as an example. These object groups link directly to the Opportunity object. At times,
+            you may want to assign two GAU Allocations to a single Opportunity. To achieve this, in your import file enter the Opportunity information in the Donations columns,
+            then include the first GAU in the GAU Allocations 1 columns and the second GAU Allocation in the GAU Allocations 2 columns. Because of the GAU Allocation 1 and
             GAU Allocation 2 Object Mappings, when you import, the two GAU Allocations are both assigned to the Opportunity.</value>
     </labels>
     <labels>
@@ -2937,8 +2937,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Through This Field Helptext</shortDescription>
-        <value>The Lookup Relationship or Master-Detail field that connects your target object to the related Object Group. 
-            If the target object is a child of the related object, this field will be on the target object. Alternatively, 
+        <value>The Lookup Relationship or Master-Detail field that connects your target object to the related Object Group.
+            If the target object is a child of the related object, this field will be on the target object. Alternatively,
             if the target object is the parent of the related object, this field will be on the related object.</value>
     </labels>
     <labels>
@@ -3775,6 +3775,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>errErrorUnsupportedDMLType</shortDescription>
         <value>Unsupported Operation: Unable to log an Error for this type of DML operation.</value>
+    </labels>
+    <labels>
+        <fullName>errErrorRecordRetrySuccessful</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>errErrorRecordRetrySuccessful</shortDescription>
+        <value>Record reprocessing completed successfully. </value>
     </labels>
     <labels>
         <fullName>exceptionDeletePermission</fullName>

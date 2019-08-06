@@ -33,6 +33,65 @@
 * @description Abstract Base class to facilitate reprocessing of records
 * @group ErrorHandling
 */
-public class ERR_RecordErrorReprocessBatch_BASE {
+public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE extends UTIL_AbstractCommon_BATCH {
+
+    private DateTime boundary;
+
+    public ERR_RecordErrorReprocessBatch_Base() {
+        super();
+        this.boundary = System.now();
+    }
+
+    public ERR_RecordErrorReprocessBatch_Base(DateTime boundary) {
+        super();
+        this.boundary = boundary;
+    }
+
+    public ERR_RecordErrorReprocessBatch_Base(Integer batchSize, DateTime boundary) {
+        super(batchSize);
+        this.boundary = boundary;
+    }
+
+    public override void doExecute(Database.BatchableContext bc, List<SObject>records ) {
+        List<Error__c> errors = (List<Error__c>) records;
+
+        ERR_RecordError recErrs = new ERR_RecordError(getContextType());
+        List<Error__c> errsToProcess = new List<Error__c>();
+        Set<Id> recIds = new Set<Id>();
+
+        for (SObject rec : records) {
+            if ((Datetime) rec.get('LastModifiedDate') <= boundary) {
+                recIds.add (rec.Id);
+                errsToProcess.add((Error__c) rec);
+            }
+        }
+        recErrs.withExistingErrors(errsToProcess);
+        if (!recIds.isEmpty()) {
+            Set<Id> successfullyReprocessed = reprocessRecords(recIds, recErrs);
+
+            recErrs.clearErrors(recIds, this.getSuccessMessage());
+            recErrs.processErrors();
+        }
+    }
+
+    public override SObjectType getSObjectType() {
+        return Error__c.getSObjectType();
+    }
+
+    /**
+     * Overridable test Where Clause to add to the inner query, or non LDV query, if not running in LDV/Chunking mode
+     * @return String ''
+     */
+    public override String getWhereClause() {
+        return 'Context_Type__c = \'' + getContextType() + '\' and Retry_Pending__c = true and Record_Id__c != null';
+    }
+
+    public virtual String getSuccessMessage() {
+        return Label.errErrorRecordRetrySuccessful;
+    }
+
+    public abstract String getContextType();
+    public abstract Set<Id> reprocessRecords(Set<Id> recordIds, ERR_RecordError recErrs);
+
 
 }

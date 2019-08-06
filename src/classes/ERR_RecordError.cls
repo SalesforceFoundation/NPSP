@@ -47,8 +47,8 @@ public class ERR_RecordError {
     private Map<String, Error__c> updRecordErrors = new Map<String, Error__c>();
 
     /*******************************************************************************************************
-    * @description Constructor for the ERR_RecordError class.  It should include a context that represents the
-    * process these Record Errors should be associated with.
+    * @description Constructor for the ERR_RecordError class.  It should include a context that represents
+    *              the process these Record Errors should be associated with.
     * @param context The process or batch to be associated with any errors processed via this instance
     *                of RecordErrors
     */
@@ -60,14 +60,14 @@ public class ERR_RecordError {
             // Record Errors
             throw new RecordErrorHandlerException(System.Label.errErrorNoContext);
         }
-
     }
 
     /*******************************************************************************************************
     * @description Allows a ERR_RecordError instance to reference "existing" errors previously set for this
-    * process.
+    *              process.
     * @param existingErrors A List of Existing Error records
-    * @return A reference to the ERR_RecordError Object so it can be part of an construct and configure statement
+    * @return A reference to the ERR_RecordError Object so it can be part of an construct and configure
+    *         statement
     */
     public ERR_RecordError withExistingErrors(List<Error__c> existingErrors) {
         this.existingErrorsByRecordId = new Map<String, Error__c>();
@@ -82,9 +82,10 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Queries the Errors object using the Context Type configured for this RecordErrors instance,
-    * and the list of sObjects passed in to populate a map of existing errors by "Related Record Id", which are kept
-    * in an internal map and used when other errors are added to determine if it is an update or an insert
+    * @description Queries the Errors object using the Context Type configured for this RecordErrors
+    *              instance, and the list of sObjects passed in to populate a map of existing errors by
+    *              "Related Record Id", which are kept in an internal map and used when other errors are
+    *              added to determine if it is an update or an insert
     * operation.
     * @param sObjects the list of sObjects to determine if errors are present for
     */
@@ -124,7 +125,7 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Returns a list of Errors for records to be inserted that did not previously have Errors
-    * for that Record and Process.
+    *              for that Record and Process.
     * @return List of Errors to be inserted
     */
     @testVisible private List<Error__c> getErrorsForInsert() {
@@ -133,8 +134,8 @@ public class ERR_RecordError {
 
 
     /*******************************************************************************************************
-    * @description Returns a list of Errors for records to be updated because they was a previous Error record
-    * present for that Record Id and process
+    * @description Returns a list of Errors for records to be updated because they was a previous Error
+    *              record present for that Record Id and process
     * @return List of Errors to be updated
     */
     @testVisible private List<Error__c> getErrorsForUpdate() {
@@ -142,12 +143,13 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Checks the maps in a hierarchy to find the Error record that should be used when adding a
-    * new error.  This is to allow Errors (sometimes multiple errors for a single record) to be added without
-    * requiring the process to manage all the nuances required.  Basically, if the record is in our updated
-    * records map, we will use that first.  If not, we will check the existing Errors next.  Finally we will
-    * check for newly inserted error records.  Once an Error has been added or updated, it will ignore the
-    * record in the existing errors map.
+    * @description Checks the maps in a hierarchy to find the Error record that should be used when adding
+    *              a new error.  This is to allow Errors (sometimes multiple errors for a single record) to
+    *              be added without requiring the process to manage all the nuances required.  Basically,
+    *              if the record is in our updated records map, we will use that first.  If not, we will
+    *              check the existing Errors next.  Finally we will check for newly inserted error records.
+    *              Once an Error has been added or updated, it will ignore the record in the existing
+    *              errors map.
     * @param recordId Id of the Salesforce Record to get from the maps hierarchy
     * @return Error__c record, if found in any of the maps
     */
@@ -165,7 +167,8 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Adds/or replaces an error in either the insert or update error map.  If the Error record
-    * has a Salesforce Id, it will put it in the update map.  Otherwise, it will put it in the insert map.
+    *              has a Salesforce Id, it will put it in the update map.  Otherwise, it will put it in the
+    *              insert map.
     * @param recordId The Record Id of the Salesforce record associated with the Error
     * @param Error__c The error record
     */
@@ -179,7 +182,7 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Adds a single Error by Record Id to the appropriate insert or update map, if an error
-    * occurred (isSuccess() of the dmlResult != true).
+    *              occurred (isSuccess() of the dmlResult != true).
     * @param recordId The Record Id of the Salesforce record associated with the Error
     * @param dmlResult The result of the DML Operation
     * @param sObj The record the error is associated with
@@ -212,9 +215,9 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Adds errors by Record Ids to the appropriate insert or update map, if an error
-    * occurred (isSuccess() of the dmlResult != true).  The three lists are ordinal, and should be the same
-    * length.  The information provided in each parameter will be associated together by it's position in
-    * the list.
+    *              occurred (isSuccess() of the dmlResult != true).  The three lists are ordinal, and
+    *              should be the same length.  The information provided in each parameter will be
+    *              associated together by it's position in the list.
     * @param dmlResults The list of result of the DML Operation
     * @param errorIdForSObject The List of Record Ids that match each dmlResult, in terms of errors
     * @param sObjects The list of records any errors are associated with
@@ -261,9 +264,10 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Adds errors by Record Ids to the appropriate insert or update map.  The two parameters
-    * are keyed by the Record Id associated with teh error
+    *              are keyed by the Record Id associated with the error
     * @param errorMessagesByRecordId Error Messages to add, keyed by Record Id
-    * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the Error
+    * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the
+    *        Error
     */
     public void addErrors(Map<String, String> errorMessagesByRecordId, Map<String, SObject> sObjects) {
         if (errorMessagesByRecordId != null && !errorMessagesByRecordId.isEmpty()) {
@@ -293,10 +297,10 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Adds errors by Record Ids to the appropriate insert or update map.  The two parameters
-    * are keyed by the Record Id associated with teh error
-    * @param errorMessagesByRecordId Error Messages to add, keyed by Record Id
-    * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the Error
+    * @description Resets the Retry Pending flag and adds a message for a Set of RecordIds.  It only does
+    * this if the recordId is present in map of Errors by Record Id
+    * @param Set<String> recordIds
+    * @param String message
     */
     public void clearErrors(Set<String> recordIds, String message) {
         for (String recordId :recordIds) {
@@ -305,10 +309,24 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Executes DML for any pending inserts and updates.  Then, it updates the Existing Errors Map
-    * using the inserted and updated data
+    * @description Resets the Retry Pending flag and adds a message for a Set of RecordIds.  It only does
+    *              this for recordIds that are present in the map of Errors by Record Id
+    * @param Set<String> recordIds
+    * @param String message
+    */
+    public void clearErrors(Set<Id> recordIds, String message) {
+        for (String recordId :recordIds) {
+            clearError((String) recordId, message);
+        }
+    }
+
+
+    /*******************************************************************************************************
+    * @description Executes DML for any pending inserts and updates.  Then, it updates the Existing Errors
+    *              Map using the inserted and updated data
     * @param errorMessagesByRecordId Error Messages to add, keyed by Record Id
-    * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the Error
+    * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the
+    *        Error
     */
     public void processErrors() {
         List<Error__c> errsForIns = getErrorsForInsert();
@@ -338,8 +356,8 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Takes a list of Errors, and updates the existing Errors map using the errors Related Record Id
-    * as a key
+    * @description Takes a list of Errors, and updates the existing Errors map using the errors Related
+    *              Record Id as a key
     * @param errs List of Errors to be processed into the Existing Errors Map
     */
     @testVisible private void refreshExistingErrorsMap(List<Error__c> errs) {
@@ -351,8 +369,8 @@ public class ERR_RecordError {
     // **************************** HELPER METHODS ****************************
 
     /*******************************************************************************************************
-    * @description Checks if a given DML operation has succeeded depending on the type of DML result.  Use the
-    * isSuccess() method of the result.
+    * @description Checks if a given DML operation has succeeded depending on the type of DML result.  Use
+    *              the isSuccess() method of the result.
     * @param Boolean true if isSuccess() was true
     */
     @testVisible private static boolean isDmlResultSuccess(Object dmlResult) {
@@ -369,7 +387,7 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Gets the first error from the error list if the list is not null and has at least one
-    * error present
+    *              error present
     * @param errs The list of Errors
     * @return Database.Error the first error (if errors are present) or null
     */
@@ -378,10 +396,12 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Creates a error record associated with a specific context and record from the result of a DML
+    * @description Creates a error record associated with a specific context and record from the result of
+    *              a DML
     * operation performed through the Database class.
-    * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of
-    *               the different DML operations that the Database class can perform don't have a common parent.
+    * @param result The result of the Database DML operation. It cannot be more specific than Object,
+    *               because the result of the different DML operations that the Database class can
+    *               perform don't have a common parent.
     * @param objectType The name of the type of object that caused the error.
     * @param objId The id of the record that caused the error.
     * @param context The context the exception was raised on.
@@ -419,7 +439,7 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Creates a error record associated with a specific context and record with the message
-    * passed to the method.
+    *              passed to the method.
     * @param message The full message of all the errors for a given job and compiled IDs.
     * @param statusCode The code associated with the error
     * @param objectType The name of the type of object that caused the error.
@@ -444,10 +464,12 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Updates an existing error record associated with a specific context and record from the result of a DML
-    * operation performed through the Database class.  Full_Message__c will be prepended with the latest message and timestamp, and
-    * truncated to 5K.  The Error Type will be updated based on the StatusCode of the Result.  The Datetime field will be updated
-    * to the current timestamp.  Retry_Pending__c will be set to true, indicated it should try the record again, if possible.
+    * @description Updates an existing error record associated with a specific context and record from the
+    *              result of a DML operation performed through the Database class.  Full_Message__c will
+    *              be prepended with the latest message and timestamp, and truncated to 5K.  The Error
+    *              Type will be updated based on the StatusCode of the Result.  The Datetime field will be
+    *              updated to the current timestamp.  Retry_Pending__c will be set to true, indicated it
+    *              should try to process the record again, if possible.
     * @param error The error record to be updated.
     * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of
     *               the different DML operations that the Database class can perform don't have a common parent.
@@ -479,10 +501,12 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Updates an existing error record associated with a specific context and record from the result of a DML
-    * operation performed through the Database class.  Full_Message__c will be prepended with the latest message and timestamp, and
-    * truncated to 5K.  The Error Type will be updated based on the StatusCode of the Result.  The Datetime field will be updated
-    * to the current timestamp.  Retry_Pending__c will be set to true, indicated it should try the record again, if possible.
+    * @description Updates an existing error record associated with a specific context and record from the
+    *              result of a DML operation performed through the Database class.  Full_Message__c will be
+    *              prepended with the latest message and timestamp, and truncated to 5K.  The Error Type
+    *              will be updated based on the StatusCode of the Result.  The Datetime field will be
+    *              updated to the current timestamp.  Retry_Pending__c will be set to true, indicated it
+    *              should try to process the record again, if possible.
     * @param error The error record to be updated.
     * @param message The full message of all the errors for a given job and compiled IDs.
     * @param statusCode The code associated with the error
@@ -500,9 +524,9 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Updates an existing error record, clearing the retry pending flag.  Full_Message__c
-    * will be prepended with the latest message and timestamp, and truncated to 5K.  The Datetime field
-    * will be updated to the current timestamp.  Retry_Pending__c will be set to false, indicating it
-    * should NOT try the record again.
+    *              will be prepended with the latest message and timestamp, and truncated to 5K.  The
+    *              Datetime field will be updated to the current timestamp.  Retry_Pending__c will be set
+    *              to false, indicating it should NOT try the record again.
     * @param error The error record to be updated.
     * @param message The full message to add when clearing the Retry Pending? status.
     * @return The error record.
