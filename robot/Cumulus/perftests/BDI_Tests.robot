@@ -45,7 +45,7 @@ Setup BDI
 
 *** Test Cases ***
 
-Import a data batch via the API
+Import a data batch via the API - Test 40
     Batch Data Import   1000    
 
     ${count} =	Convert To Integer	${count}	
