@@ -10,6 +10,7 @@ export default class utilSearchableCombobox extends LightningElement {
     @api searchInputLabel;
     @api selectedFieldValue;
     @api options;
+    @api searchableOptions;
     @api parentListenerEventName;
     @api fieldLevelHelp;
     @api disabled;
@@ -59,12 +60,12 @@ export default class utilSearchableCombobox extends LightningElement {
     handleSearchkeyChange(searchKey) {
         let results = [];
 
-        for(let i = 0; i < this.options.length; i++) {
-            if (this.options[i].label.toLowerCase().indexOf(searchKey.toLowerCase()) != -1) {
+        for(let i = 0; i < this.searchableOptions.length; i++) {
+            if (this.searchableOptions[i].label.toLowerCase().indexOf(searchKey.toLowerCase()) != -1) {
                 let result = {
                     id: i,
-                    label: this.options[i].label,
-                    value: this.options[i].value
+                    label: this.searchableOptions[i].label,
+                    value: this.searchableOptions[i].value
                 }
                 results.push(result);
             }

@@ -66,6 +66,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     @track selectedSourceFieldLabel;
     @track selectedSourceFieldAPIName;
     @track sourceFieldLabelOptions;
+    @track searchableSourceFieldLabelOptions;
     @track selectedSourceFieldDisplayType;
     @track selectedSourceFieldDisplayTypeLabel;
     @track hasSourceFieldErrors;
@@ -249,22 +250,25 @@ export default class bdiFieldMappingModal extends LightningElement {
     setDataImportFieldDescribes(fieldInfos) {
         try {
             this.sourceFieldLabelOptions = [];
+            this.searchableSourceFieldLabelOptions = [];
             let diFieldsByAPIName = {};
 
             for (let i = 0; i < fieldInfos.length; i++) {
+                let labelOption = {
+                    label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
+                    value: fieldInfos[i].value,
+                    displayTypeLabel: fieldInfos[i].displayTypeLabel
+                }
+
+                this.searchableSourceFieldLabelOptions.push(labelOption);
+                diFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
 
                 // Include the data import field if it hasn't already been mapped
                 // or if it's the currently selected field (i.e. editing)
                 if (!this.mappedDiFieldDescribes.includes(fieldInfos[i].value.toLowerCase()) ||
                     this.selectedSourceFieldLabel === fieldInfos[i].label) {
-                    let labelOption = {
-                        label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
-                        value: fieldInfos[i].value,
-                        displayTypeLabel: fieldInfos[i].displayTypeLabel
-                    }
 
                     this.sourceFieldLabelOptions.push(labelOption);
-                    diFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
                 }
             }
             this.sourceFieldLabelOptions = this.sortBy(this.sourceFieldLabelOptions, 'label');
@@ -459,6 +463,14 @@ export default class bdiFieldMappingModal extends LightningElement {
     */
     handleSourceFieldLabelChange(event) {
         if (event) {
+            let existsInDiPicklist = this.sourceFieldLabelOptions.find(
+                option => option.value.toLowerCase() == event.detail.value.toLowerCase());
+
+            if (existsInDiPicklist === undefined) {
+                this.sourceFieldLabelOptions.push(event.detail);
+                this.sourceFieldLabelOptions = this.sortBy(this.sourceFieldLabelOptions, 'label');
+            }
+
             let fieldAPIName = event.detail.value;
             let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
 
