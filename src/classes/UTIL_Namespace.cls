@@ -45,6 +45,7 @@ public class UTIL_Namespace {
     * @description Finds the namespace for the current context.
     * @return string The current namespace as a string, or a blank string if we're not in a namespaced context.
     ********************************************************************************************************/
+    @AuraEnabled
     public static string getNamespace() {       
         if (plainNamespace == null) {
             string withDotNotation = UTIL_Namespace.class.getName();  
