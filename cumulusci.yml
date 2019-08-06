@@ -134,9 +134,7 @@ tasks:
         group: Performance Tests
         options:
             suites: robot/Cumulus/perftests/
-            options:
-                outputdir: robot/Cumulus/results
-
+            outputdir: robot/Cumulus/results
 
     performance_tests_CO:
         description: Runs Robot Framework performance tests for BGE-BDI Complex Objects
@@ -144,8 +142,8 @@ tasks:
         group: Performance Tests
         options:
             suites: robot/Cumulus/perftests/
-            options:
-                outputdir: robot/Cumulus/results
+            outputdir: robot/Cumulus/results
+            vars: field_mapping_method:Data Import Field Mapping
 
     pmd:
         description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
@@ -454,21 +452,11 @@ flows:
         description: 'Creates a BDI org and runs a performance test'
         steps:
             1:
-                flow: dev_org_namespaced
-            2:
-                task: deploy
-                options:
-                    unmanaged: False
-                    path: unpackaged/config/perf
-                    namespace_inject: $project_config.project__package__namespace
-            3:
-                task: update_admin_profile
+                flow: qa_org_namespaced
             4:
                 task: performance_tests
                 options:
-                    options:
-                        field_mapping_method: 'Help Text'
-                        outputdir: .
+                    vars: field_mapping_method:Help Text
 
     test_performance_CO:
         description: 'Creates a BGE-BDI test org and runs a CO performance test'
@@ -477,10 +465,6 @@ flows:
                 flow: qa_org_namespaced
             2:
                 task: performance_tests_CO
-                options:
-                    options:
-                        field_mapping_method: 'Data Import Field Mapping'
-                        outputdir: .
 
     test_performance:
         steps:
