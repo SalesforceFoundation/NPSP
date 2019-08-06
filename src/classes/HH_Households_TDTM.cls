@@ -36,7 +36,7 @@
 * on contact.
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
-          	
+
     /*******************************************************************************************************
     * @description Trigger Handler on Contacts that handles managing Households (Objects) and naming exclusions
     * on contact.
@@ -90,15 +90,15 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             // rather than change the code to require two seperate contact loops, just
             // continue the strategy.
             if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            	contacts = oldlist;
-            	oldContacts = null;
+                contacts = oldlist;
+                oldContacts = null;
             }
             
             map<Id, Contact> newcmap = new map<Id, Contact>(contacts);
             map<Id, Contact> oldcmap;
             if (oldContacts != null) oldcmap = new map<Id, Contact>(oldContacts);
             
-                	   
+
             npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
             List<Contact> householdInserts = new List<Contact>();
             List<Contact> contactEvaluations = new List<Contact>();
@@ -220,11 +220,6 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 }
                 i += 1;
             }
-            
-            /*if (mergedWinningContact.size() > 0) {
-            	// this fires off opp rollups, which we aren't going to move to dmlWrapper!
-                contactMergeUpdate(mergedWinningContact);
-            }*/
 
             if(!blankHHDeletes.isEmpty()) {
                 //Database.delete(blankHHDeletes);
@@ -253,12 +248,14 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     hn.UpdateNames(householdnameupdates);
                 }                   
             }
-            
+
+            // Note: This set will contain Household__c record Id's only (i.e., legacy models)
             if (setHHIdToRollup.size() > 0) {
-                if (system.isFuture() || system.isBatch() || setHHIdToRollup.size() <= 2) {
+                if (System.isFuture() || System.isBatch() || setHHIdToRollup.size() <= 2) {
                     RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-                    map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
-                                                                                    ' where id IN :setHHIdToRollup'));
+                    Map<Id, npo02__Household__c> hhmap = new Map<Id, npo02__Household__c>(
+                        (List<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
+                                                                ' WHERE Id IN :setHHIdToRollup'));
                     RLLP_OppRollup rg = new RLLP_OppRollup();
                     rg.rollupHouseholds(hhmap);
                 } else {
@@ -304,29 +301,6 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
 
         con.npo02__Naming_Exclusions__c = mspValue;
     }
-
-    /*******************************************************************************************************
-    * @description kicks off Opportunity Rollups after contacts have been merged.
-    * @param winningContacts Set of Contact Id's
-    * @return void
-    ********************************************************************************************************/
-    /*public static void contactMergeUpdate(Set<Id> winningContacts){
-        Set<Id> oppIDs = new Set<Id>();
-        List<OpportunityContactRole> ocrlist = new List<OpportunityContactRole>();
-        ocrlist = [select OpportunityId from OpportunityContactRole where ContactId IN :winningContacts and isPrimary = true];
-
-        for (OpportunityContactRole ocr : ocrlist) {
-            oppIds.add(ocr.OpportunityId);
-        }
-
-        if(!oppIDs.isEmpty()) {
-            if (System.isFuture() || System.isBatch()) {
-                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);
-            } else {
-                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
-            }
-        }
-    }*/
 
     /*******************************************************************************************************
     * @description Creates a new Household Object for each contact, unless excluded by recordType

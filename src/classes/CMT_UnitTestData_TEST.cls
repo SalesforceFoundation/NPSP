@@ -634,9 +634,9 @@ public class CMT_UnitTestData_TEST {
         );
 
         // Clear any cached collections as well
-//        CRLP_Rollup_SEL.rollupsBySummaryType = null;
-//        CRLP_Rollup_SEL.rollupsByDetailType = null;
-//        CRLP_Rollup_SEL.rollupsByFilterGroup = null;
+        CRLP_Rollup_SEL.rollupsBySummaryType = null;
+        CRLP_Rollup_SEL.rollupsByDetailType = null;
+        CRLP_Rollup_SEL.rollupsByFilterGroup = null;
 
         return CRLP_Rollup_SEL.cachedRollups.size();
     }
