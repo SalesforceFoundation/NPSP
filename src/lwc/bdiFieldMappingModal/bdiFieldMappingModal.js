@@ -57,6 +57,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     @api isModalOpen = false;
     @api modalMode = 'new';
     @api diFieldDescribes;
+    @api mappedDiFieldDescribes;
     @api targetObjectFieldDescribes;
 
     @track isLoading;
@@ -207,9 +208,8 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.hasTargetFieldErrors = false;
             this.objectMapping = event.objectMapping;
             this.diFieldDescribes = event.diFieldDescribes;
+            this.mappedDiFieldDescribes = event.mappedDiFieldDescribes;
             this.targetObjectFieldDescribes = event.targetObjectFieldDescribes;
-
-            this.collectMappedDataImportFields(event.fieldMappings);
 
             this.row = event.row;
 
@@ -240,24 +240,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Loops through and collects the source field label and target field
-    * labels of existing field mappings for the currently selected object mapping
-    *
-    * @param {array} fieldMappings: List of field mappings from bdiFieldMappings
-    */
-    collectMappedDataImportFields(fieldMappings) {
-        this.mappedDIFieldLabels = [];
-        this.mappedTargetFieldLabels = [];
-
-        for (let i = 0; i < fieldMappings.length; i++) {
-            let fieldMapping = fieldMappings[i];
-
-            this.mappedDIFieldLabels.push(fieldMapping.Source_Field_Label);
-            this.mappedTargetFieldLabels.push(fieldMapping.Target_Field_Label);
-        }
-    }
-
-    /*******************************************************************************
     * @description Creates a map of data import field labels by field API name and a
     * map of data import field API names by field label.
     *
@@ -273,7 +255,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 // Include the data import field if it hasn't already been mapped
                 // or if it's the currently selected field (i.e. editing)
-                if (!this.mappedDIFieldLabels.includes(fieldInfos[i].label) ||
+                if (!this.mappedDiFieldDescribes.includes(fieldInfos[i].value.toLowerCase()) ||
                     this.selectedSourceFieldLabel === fieldInfos[i].label) {
                     let labelOption = {
                         label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,

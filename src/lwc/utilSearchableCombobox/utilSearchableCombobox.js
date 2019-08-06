@@ -44,7 +44,7 @@ export default class utilSearchableCombobox extends LightningElement {
 
     debounceOnSearchKeyChange(event) {
         // Debouncing this method: Do not update the reactive property as long as this function is
-        // being called within a delay of DELAY. This is to avoid a very large number of Apex method calls.
+        // being called within a delay of DELAY.
         window.clearTimeout(this.delayTimeout);
         const searchKey = event.target.value;
         if (searchKey && searchKey.length > 1) {
