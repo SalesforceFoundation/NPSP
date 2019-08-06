@@ -1186,7 +1186,7 @@ private class PMT_Payment_TEST {
     /* @description Non Final Opportunity inserted with unpaid payments totaling < than opportunity Amount. Change Unpaid Payments to Paid. Amount should remain the same
     */
     @isTest
-    private static void oppNonFinalizedUpdatePaymentsToNotPaid() {
+    private static void oppNonFinalizedUpdatePaymentsToPaid() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -1286,13 +1286,10 @@ private class PMT_Payment_TEST {
     /* Tests with Enforce Accounting Data Consistency Enabled */
     /* @description Non Finalized Opportunity inserted with unpaid payments totaling < Opportunity Amount. 
        Change Unpaid Payments to Paid. No change to Opportunity Amount. Change Opportunity to Finalized Stage. 
-       Amount should change to Sum of Paid Payments-- I think as coded, this will instead throw a validation error, 
-       as it does not re-sum the Payment Amounts when going to finalized though). @pedrodalcol - 
-       Do I have the behavior we want correct here? Basically, when an Opportunity Becomes finalized (but was not previously, 
-       it needs to recalculate the Amount based on the Paid Payments. The logic as coded currently will not do that because we are only recalcing on payment changes..
+       Amount should change to Sum of Paid Payments
     */
     @isTest
-    private static void oppNonFinalizedUpdateLowerPaymentsToPaid() {
+    private static void oppNonFinalizedUpdateLowerPaymentsToPaidMakeFinalized() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -1333,6 +1330,14 @@ private class PMT_Payment_TEST {
         Test.stopTest();
 
         // check the opp amount
+        opp = [select Id, Amount from Opportunity where Id = :opp.Id];
+        System.assertEquals(100, opp.Amount, 'The opportunity amount should have remained unchanged.');
+
+        // make the opp finalized
+        opp.StageName = OPP_StageMappingUtil.TEST_FINALIZED_STAGE;
+        update opp;
+
+        // check the opp amount again
         opp = [select Id, Amount from Opportunity where Id = :opp.Id];
         System.assertEquals(80, opp.Amount, 'The opportunity amount should have decreased.');
     }
