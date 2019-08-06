@@ -231,8 +231,8 @@ export default class bdiFieldMappingModal extends LightningElement {
                 this.clearSelections();
             }
 
-            this.setDataImportFieldDescribes(this.diFieldDescribes);
-            this.setTargetObjectFieldDescribes(this.targetObjectFieldDescribes);
+            this.getSourceFieldOptions(this.diFieldDescribes);
+            this.getTargetFieldOptions(this.targetObjectFieldDescribes);
         } catch(error) {
             this.handleError(error);
         }
@@ -241,13 +241,13 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Creates a map of data import field labels by field API name and a
-    * map of data import field API names by field label.
+    * @description Generates picklist options for the sourceFieldLabel picklist and
+    * the searchableOptions picklist
     *
     * @param {FieldInfo[]} fieldInfos: List of BDI_ManageAdvancedMappingCtrl.FieldInfos
     * from the Data Import object
     */
-    setDataImportFieldDescribes(fieldInfos) {
+    getSourceFieldOptions(fieldInfos) {
         try {
             this.sourceFieldLabelOptions = [];
             this.searchableSourceFieldLabelOptions = [];
@@ -279,13 +279,12 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Creates a map of target object field labels by field API name and a
-    * map of target object field API names by field label.
+    * @description Generates picklist options for the targetFieldLabel picklist
     *
     * @param {FieldInfo[]} fieldInfos: List of BDI_ManageAdvancedMappingCtrl.FieldInfos
     * from the Data Import object
     */
-    setTargetObjectFieldDescribes(fieldInfos) {
+    getTargetFieldOptions(fieldInfos) {
         try {
             this.targetFieldLabelOptions = [];
             let targetFieldsByAPIName = {};
