@@ -115,7 +115,7 @@ public with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldNotRemoveAllocDefaultIfGauExist() {
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
 
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 

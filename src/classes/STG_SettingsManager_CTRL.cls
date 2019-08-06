@@ -78,12 +78,11 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
 
         if (STG_Panel.runningUserIsAdmin()) {
+            validateAllocationSettings();
+
             cleanupRecordTypeSettings();
 
             UTIL_MasterSchedulableHelper.setScheduledJobs();
-        }
-        if (STG_Panel.runningUserIsAdmin()) {
-            validateAllocationSettings();
         }
     }
     
@@ -116,15 +115,17 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         if (String.isBlank(STG_Panel.stgService.stgAllo.Default__c)) {
             return;
         }
-        List<General_Accounting_Unit__c> listGaus = [
+
+        List<General_Accounting_Unit__c> gaus = [
             SELECT Id, Name 
             FROM General_Accounting_Unit__c 
             WHERE Id = :STG_Panel.stgService.stgAllo.Default__c
         ];
-        if (listGaus.isEmpty()) {
-            //now uncheck the custom settings and clear the value on the custom settings
+        if (gaus.isEmpty()) {
+            //Uncheck the checkbox and clear the default GAU value
             STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
             STG_Panel.stgService.stgAllo.Default__c = null;
+            
             if (!Test.isRunningTest()) {
                 upsert STG_Panel.stgService.stgAllo;
             }
