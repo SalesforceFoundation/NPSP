@@ -58,7 +58,7 @@
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_AdditionalObjectService</members>
-        <members>BDI_AdditionalObjectServiceTest</members>
+        <members>BDI_AdditionalObjectService_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
@@ -84,16 +84,17 @@
         <members>BDI_DryRun_TEST</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingCustomMetadata</members>
-        <members>BDI_FieldMappingCustomMetadataTest</members>
+        <members>BDI_FieldMappingCustomMetadata_TEST</members>
         <members>BDI_FieldMappingHelpText</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
+        <members>BDI_ManageAdvancedMappingCtrl_TEST</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_MigrationMappingHelper</members>
-        <members>BDI_MigrationMappingHelperTest</members>
+        <members>BDI_MigrationMappingHelper_TEST</members>
         <members>BDI_MigrationMappingUtility</members>
-        <members>BDI_MigrationMappingUtilityTest</members>
+        <members>BDI_MigrationMappingUtility_TEST</members>
         <members>BDI_ObjectMappingLogic</members>
         <members>BDI_ObjectWrapper</members>
         <members>BDI_PerfLogger</members>
@@ -246,6 +247,8 @@
         <members>ERR_Notifier_TEST</members>
         <members>ERR_ParentAccountUpdater2_TEST</members>
         <members>ERR_ParentAccountUpdater_TEST</members>
+        <members>GAU_TDTM</members>
+        <members>GAU_TDTM_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -306,6 +309,8 @@
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
+        <members>OPP_StageMappingCMT</members>
+        <members>OPP_StageMappingCMT_TEST</members>
         <members>OPP_StageMappingUtil</members>
         <members>OPP_StageMappingUtil_TEST</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
@@ -421,6 +426,9 @@
         <members>TDTM_ObjectDataGateway</members>
         <members>TDTM_ProcessControl</members>
         <members>TDTM_Runnable</members>
+        <members>TDTM_RunnableMutable</members>
+        <members>TDTM_RunnableMutableMock_TEST</members>
+        <members>TDTM_RunnableMutable_TEST</members>
         <members>TDTM_Runnable_TEST</members>
         <members>TDTM_TriggerActionHelper</members>
         <members>TDTM_TriggerHandler</members>
@@ -454,6 +462,8 @@
         <members>UTIL_IScheduled</members>
         <members>UTIL_IntegrationConfig</members>
         <members>UTIL_IntegrationConfig_TEST</members>
+        <members>UTIL_IntegrationGateway</members>
+        <members>UTIL_IntegrationGateway_TEST</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
         <members>UTIL_LightningComponentSupport</members>
@@ -469,6 +479,7 @@
         <members>UTIL_OrgTelemetry_SObject_BATCH</members>
         <members>UTIL_OrgTelemetry_SObject_BATCH_TEST</members>
         <members>UTIL_OrgTelemetry_SVC</members>
+        <members>UTIL_OrgTelemetry_SVC_TEST</members>
         <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PerfLogger</members>
@@ -528,7 +539,6 @@
         <members>BDI_BatchOverride</members>
         <members>BDI_DataImport</members>
         <members>BDI_DataImportDeleteBTN</members>
-        <members>BDI_ManageAdvancedMapping</members>
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
@@ -606,6 +616,7 @@
         <members>TDTM_Contact</members>
         <members>TDTM_EngagementPlan</members>
         <members>TDTM_EngagementPlanTask</members>
+        <members>TDTM_GeneralAccountingUnit</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Level</members>
@@ -620,7 +631,6 @@
     </types>
     <types>
         <members>BDI_ManageAdvancedMapping</members>
-        <members>BDI_ManageAdvancedMappingContainer</members>
         <members>BGE_BatchGiftEntryTab</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
@@ -1120,6 +1130,7 @@
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Is_Deleted__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Legacy_Data_Import_Object_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Object_API_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
         <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
@@ -1135,6 +1146,8 @@
         <members>Filter_Rule__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Object__c</members>
         <members>Filter_Rule__mdt.Operator__c</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
         <members>Rollup__mdt.Active__c</members>
         <members>Rollup__mdt.Amount_Field__c</members>
         <members>Rollup__mdt.Amount_Object__c</members>
@@ -1176,6 +1189,7 @@
         <members>npe5__Affiliation__c.Related_Opportunity_Contact_Role__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
+        <members>npo02__Households_Settings__c.Seasonal_Addresses_Batch_Size__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>
     </types>
@@ -1480,6 +1494,7 @@
         <members>bdiErrorBatchNameRequired</members>
         <members>bdiErrorDataImportCustomSettings</members>
         <members>bdiErrorDeploymentFailed</members>
+        <members>bdiErrorDeploymentFailedLink</members>
         <members>bdiErrorDonationLookupMatch</members>
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
@@ -1496,7 +1511,8 @@
         <members>bdiFMUIBackToMapGroup</members>
         <members>bdiFMUIDataType</members>
         <members>bdiFMUIDatatableMapsTo</members>
-        <members>bdiFMUIDescription</members>
+        <members>bdiFMUIDescription1</members>
+        <members>bdiFMUIDescription2</members>
         <members>bdiFMUIFieldAPIName</members>
         <members>bdiFMUIFieldLabel</members>
         <members>bdiFMUILongDeployment</members>
@@ -1506,9 +1522,13 @@
         <members>bdiFMUINoFieldMappings</members>
         <members>bdiFMUISearchSourceInputLabel</members>
         <members>bdiFMUISearchTargetInputLabel</members>
+        <members>bdiFMUISourceFieldDataTypeHelp</members>
+        <members>bdiFMUISourceFieldLabelHelp</members>
         <members>bdiFMUISourceObject</members>
         <members>bdiFMUISuccessful</members>
         <members>bdiFMUITarget</members>
+        <members>bdiFMUITargetFieldDataTypeHelp</members>
+        <members>bdiFMUITargetFieldLabelHelp</members>
         <members>bdiFMUITryAgain</members>
         <members>bdiFMUIUnsuccessful</members>
         <members>bdiFMUIUpdate</members>
@@ -1529,6 +1549,35 @@
         <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
+        <members>bdiOMUIChildParentHelp</members>
+        <members>bdiOMUIChildParentLabel</members>
+        <members>bdiOMUICreateModalTitle</members>
+        <members>bdiOMUICreateNewObjectGroup</members>
+        <members>bdiOMUIEditModalTitle</members>
+        <members>bdiOMUIErrorDupeName</members>
+        <members>bdiOMUIErrorInvalidValues</members>
+        <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
+        <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
+        <members>bdiOMUIErrorNoValidThroughThisField</members>
+        <members>bdiOMUIGroupNameHelp</members>
+        <members>bdiOMUIGroupNameLabel</members>
+        <members>bdiOMUIImportDetailsTitle</members>
+        <members>bdiOMUIImportStatusHelp</members>
+        <members>bdiOMUIImportStatusLabel</members>
+        <members>bdiOMUILinkToRecordHelp</members>
+        <members>bdiOMUILinkToRecordLabel</members>
+        <members>bdiOMUILongDeployment</members>
+        <members>bdiOMUIObjectGroupsTitle</members>
+        <members>bdiOMUIObjectNameHelp</members>
+        <members>bdiOMUIObjectNameLabel</members>
+        <members>bdiOMUIOfGroupHelp</members>
+        <members>bdiOMUIOfGroupLabel</members>
+        <members>bdiOMUIPageDescriptionPt1</members>
+        <members>bdiOMUIPageDescriptionPt2</members>
+        <members>bdiOMUIPageDescriptionPt3</members>
+        <members>bdiOMUIThroughFieldHelp</members>
+        <members>bdiOMUIThroughFieldLabel</members>
+        <members>bdiOMUIViewFieldMappingsLabel</members>
         <members>bdiPositiveNumber</members>
         <members>bdiRecordsFailed</members>
         <members>bdiRecordsImported</members>
@@ -1979,6 +2028,7 @@
         <members>stgDIFMNonAdminError</members>
         <members>stgDefaultValue</members>
         <members>stgDeploymentCustomMetadataMappingEnabled</members>
+        <members>stgDeploymentHasInvalidHelpTextMappings</members>
         <members>stgDeploymentHelpTextMappingEnabled</members>
         <members>stgDeploymentInProgress</members>
         <members>stgDeploymentTimedOut</members>
@@ -2402,6 +2452,7 @@
         <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt</members>
         <members>Rollup__mdt</members>
         <name>CustomObject</name>
     </types>
@@ -2639,7 +2690,41 @@
         <members>Trigger_Handler__c-iw</members>
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-de</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-en_US</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-es</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-fr</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-iw</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-ja</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-nl_NL</members>
+        <members>Data_Import_Field_Mapping__mdt-de</members>
+        <members>Data_Import_Field_Mapping__mdt-en_US</members>
+        <members>Data_Import_Field_Mapping__mdt-es</members>
+        <members>Data_Import_Field_Mapping__mdt-fr</members>
+        <members>Data_Import_Field_Mapping__mdt-iw</members>
+        <members>Data_Import_Field_Mapping__mdt-ja</members>
+        <members>Data_Import_Field_Mapping__mdt-nl_NL</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-de</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-en_US</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-es</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-fr</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-iw</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-ja</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-nl_NL</members>
+        <members>Data_Import_Object_Mapping__mdt-de</members>
+        <members>Data_Import_Object_Mapping__mdt-en_US</members>
+        <members>Data_Import_Object_Mapping__mdt-es</members>
+        <members>Data_Import_Object_Mapping__mdt-fr</members>
+        <members>Data_Import_Object_Mapping__mdt-iw</members>
+        <members>Data_Import_Object_Mapping__mdt-ja</members>
+        <members>Data_Import_Object_Mapping__mdt-nl_NL</members>
+        <members>DeploymentEvent__e-de</members>
         <members>DeploymentEvent__e-en_US</members>
+        <members>DeploymentEvent__e-es</members>
+        <members>DeploymentEvent__e-fr</members>
+        <members>DeploymentEvent__e-iw</members>
+        <members>DeploymentEvent__e-ja</members>
+        <members>DeploymentEvent__e-nl_NL</members>
         <members>Filter_Group__mdt-de</members>
         <members>Filter_Group__mdt-en_US</members>
         <members>Filter_Group__mdt-es</members>
@@ -2654,6 +2739,13 @@
         <members>Filter_Rule__mdt-iw</members>
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-fr</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-iw</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
         <members>Rollup__mdt-de</members>
         <members>Rollup__mdt-en_US</members>
         <members>Rollup__mdt-es</members>
@@ -2757,9 +2849,11 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>DataCount_ONETIME_Use</members>
         <members>Data_CountBDIRowsLast30Days</members>
         <members>Data_CountBGERowsLast30Days</members>
         <members>Data_CountErrorLog</members>
+        <members>Data_CountOppsWithMultiplePayments</members>
         <members>Data_CountRdOppsAll</members>
         <members>Data_CountRdOppsOpenEnded</members>
         <members>Data_CountRdsWithDiffAmount</members>
@@ -2826,6 +2920,7 @@
         <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>

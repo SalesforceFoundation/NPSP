@@ -9,6 +9,32 @@ import getNamespacePrefix
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespacePrefix';
 
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
+import bdiOMUIChildParentLabel from '@salesforce/label/c.bdiOMUIChildParentLabel';
+import bdiOMUIGroupNameLabel from '@salesforce/label/c.bdiOMUIGroupNameLabel';
+import bdiOMUIImportStatusLabel from '@salesforce/label/c.bdiOMUIImportStatusLabel';
+import bdiOMUILinkToRecordLabel from '@salesforce/label/c.bdiOMUILinkToRecordLabel';
+import bdiOMUIObjectNameLabel from '@salesforce/label/c.bdiOMUIObjectNameLabel';
+import bdiOMUIOfGroupLabel from '@salesforce/label/c.bdiOMUIOfGroupLabel';
+import bdiOMUIThroughFieldLabel from '@salesforce/label/c.bdiOMUIThroughFieldLabel';
+import bdiFMUISuccessful from '@salesforce/label/c.bdiFMUISuccessful';
+import bdiFMUIUnsuccessful from '@salesforce/label/c.bdiFMUIUnsuccessful';
+import bdiFMUIUpdate from '@salesforce/label/c.bdiFMUIUpdate';
+import bdiFMUITryAgain from '@salesforce/label/c.bdiFMUITryAgain';
+
+import bdiAdvancedMapping from '@salesforce/label/c.bdiAdvancedMapping';
+import bdiOMUICreateNewObjectGroup from '@salesforce/label/c.bdiOMUICreateNewObjectGroup';
+import bdiOMUIObjectGroupsTitle from '@salesforce/label/c.bdiOMUIObjectGroupsTitle';
+import bdiOMUIPageDescriptionPt1 from '@salesforce/label/c.bdiOMUIPageDescriptionPt1';
+import bdiOMUIPageDescriptionPt2 from '@salesforce/label/c.bdiOMUIPageDescriptionPt2';
+import bdiOMUIPageDescriptionPt3 from '@salesforce/label/c.bdiOMUIPageDescriptionPt3';
+import bdiOMUIViewFieldMappingsLabel from '@salesforce/label/c.bdiOMUIViewFieldMappingsLabel';
+import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
+import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
+import stgHelpAdvancedMapping3 from '@salesforce/label/c.stgHelpAdvancedMapping3';
+
+import bdiOMUILongDeployment from '@salesforce/label/c.bdiOMUILongDeployment';
+import bdiFMUILongDeploymentLink from '@salesforce/label/c.bdiFMUILongDeploymentLink';
+import bdiFMUILongDeploymentMessage from '@salesforce/label/c.bdiFMUILongDeploymentMessage';
 
 export default class bdiObjectMappings extends LightningElement {
     @track displayObjectMappings = true;
@@ -27,16 +53,42 @@ export default class bdiObjectMappings extends LightningElement {
 
     diObjectMappingSetDevName;
 
+    customLabels = {
+        bdiOMUIChildParentLabel,
+        bdiOMUIGroupNameLabel,
+        bdiOMUIImportStatusLabel,
+        bdiOMUILinkToRecordLabel,
+        bdiOMUIObjectNameLabel,
+        bdiOMUIOfGroupLabel,
+        bdiOMUIThroughFieldLabel,
+        bdiFMUISuccessful,
+        bdiFMUIUnsuccessful,
+        bdiFMUITryAgain,
+        bdiAdvancedMapping,
+        bdiOMUICreateNewObjectGroup,
+        bdiOMUIObjectGroupsTitle,
+        bdiOMUIPageDescriptionPt1,
+        bdiOMUIPageDescriptionPt2,
+        bdiOMUIPageDescriptionPt3,
+        bdiOMUIViewFieldMappingsLabel,
+        bgeActionDelete,
+        stgBtnEdit,
+        stgHelpAdvancedMapping3,
+        bdiOMUILongDeployment,
+        bdiFMUILongDeploymentLink,
+        bdiFMUILongDeploymentMessage
+    };
+
     constructor() {
         super();
         this.columns =[
-            {label: 'Mapping Group Name', fieldName: 'MasterLabel', type: 'text'},
-            {label: 'Object API Name', fieldName: 'Object_API_Name', type: 'text'},
-            {label: 'Is Child/Parent', fieldName: 'Relationship_To_Predecessor', type: 'text', fixedWidth: 150},
-            {label: 'Of This Mapping Group', fieldName: 'Predecessor', type: 'text'},
-            {label: 'Through This Field', fieldName: 'Relationship_Field', type: 'text'},
-            {label: 'Imported Record Field Name', fieldName: 'Imported_Record_Field_Name', type: 'text'},
-            {label: 'Imported Record Status Field Name', fieldName: 'Imported_Record_Status_Field_Name', type: 'text'},
+            {label: this.customLabels.bdiOMUIGroupNameLabel, fieldName: 'MasterLabel', type: 'text'},
+            {label: this.customLabels.bdiOMUIObjectNameLabel, fieldName: 'Object_API_Name', type: 'text'},
+            {label: this.customLabels.bdiOMUIChildParentLabel, fieldName: 'Relationship_To_Predecessor', type: 'text', fixedWidth: 150},
+            {label: this.customLabels.bdiOMUIOfGroupLabel, fieldName: 'Predecessor_Label_Name', type: 'text'},
+            {label: this.customLabels.bdiOMUIThroughFieldLabel, fieldName: 'Relationship_Field', type: 'text'},
+            {label: this.customLabels.bdiOMUILinkToRecordLabel, fieldName: 'Imported_Record_Field_Name', type: 'text'},
+            {label: this.customLabels.bdiOMUIImportStatusLabel, fieldName: 'Imported_Record_Status_Field_Name', type: 'text'},
             {type: 'action', typeAttributes: { rowActions: this.getRowActions }}];
     }
 
@@ -203,13 +255,18 @@ export default class bdiObjectMappings extends LightningElement {
     * it is a core object mapping.
     */
     getRowActions(row, doneCallback) {
+        console.log('customlabel is: ' + bdiOMUIViewFieldMappingsLabel);
         const actions = [
-            { label: 'View Field Mappings', name: 'goToFieldMappings' }
+            { label: bdiOMUIViewFieldMappingsLabel, name: 'goToFieldMappings' }
         ];
 
-        if (row.Relationship_To_Predecessor !== 'No Predecessor') {
-            actions.push({ label: 'Edit', name: 'edit' });
-            actions.push({ label: 'Delete', name: 'delete' });
+        if (row.Relationship_To_Predecessor !== 'No Predecessor'
+            && row.MasterLabel !== 'Opportunity Contact Role 1' 
+            && row.MasterLabel !== 'Opportunity Contact Role 2' 
+            && row.MasterLabel !== 'GAU Allocation 1' 
+            && row.MasterLabel !== 'GAU Allocation 2') {
+            actions.push({ label: stgBtnEdit, name: 'edit' });
+            actions.push({ label: bgeActionDelete, name: 'delete' });
         }
 
         setTimeout(() => {
@@ -224,53 +281,56 @@ export default class bdiObjectMappings extends LightningElement {
     */
     handleDeploymentTimeout(event) {
         if (this.displayObjectMappings) {
+            console.log('in bdiFieldMappings handleDeploymentResponse');
             let that = this;
             this.deploymentTimer = setTimeout(function() {
                 that.isLoading = false;
                 fireEvent(this.pageRef, 'closeModal', {});
+
+                let url =
+                    '/lightning/setup/DeployStatus/page?' +
+                    'address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D' +
+                    event.deploymentId +
+                    '%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp';
+
                 that.showToast(
-                    'Mapping Group deployment is taking longer than expected.',
-                    'Your deployment ({0}) will continue to process in the background.',
+                    bdiOMUILongDeployment,
+                    bdiFMUILongDeploymentMessage + ' {0}',
                     'warning',
                     'sticky',
-                    [event.deploymentId]);
+                    [{url, label: bdiFMUILongDeploymentLink}]);
             }, this.deploymentTimeout, that);
         }
-    }   
+    } 
 
     /*******************************************************************************
     * @description Listens for an event from the platformEventListener component.
-    * Upon receiving an event refreshes the object mappings records, closes the modal,
+    * Upon receiving an event refreshes the field mappings records, closes the modal,
     * and creates a toast.
     *
     * @param {object} platformEvent: Object containing the platform event payload
     */
     handleDeploymentResponse(platformEvent) {
-
         if (this.displayObjectMappings) {
-
             clearTimeout(this.deploymentTimer);
             fireEvent(this.pageRef, 'refresh', {});
             fireEvent(this.pageRef, 'closeModal', {});
 
             const payload = platformEvent.response.data.payload;
             const status = payload.Status__c || payload.npsp__Status__c;
-            const deploymentId = payload.DeploymentId__c || payload.npsp__DeploymentId__c;
 
-            if (status === 'Succeeded') {
-                this.showToast(
-                    'Deployment completed with Status: ' + status,
-                    'Deployment Id: ' + deploymentId,
-                    'success');
-            } else {
-                this.showToast(
-                    'Deployment completed with Status: ' + status,
-                    'Deployment Id: ' + deploymentId,
-                    'error');
-            }
+            const successful = bdiFMUISuccessful.charAt(0).toUpperCase() + bdiFMUISuccessful.slice(1);
+            const unsuccessful = bdiFMUIUnsuccessful.charAt(0).toUpperCase() + bdiFMUIUnsuccessful.slice(1);
+            const successMessage = `${successful} ${bdiOMUIObjectGroupsTitle} ${bdiFMUIUpdate}.`;
+            const failMessage = `${unsuccessful} ${bdiOMUIObjectGroupsTitle} ${bdiFMUIUpdate}. ${bdiFMUITryAgain}.`;
+            const succeeded = status === 'Succeeded';
+            
+            this.showToast(
+                `${succeeded ? successMessage : failMessage}`,
+                '',
+                succeeded ? 'success' : 'error');
         }
-    } 
-
+    }
     /*******************************************************************************
     * @description Creates and dispatches a CustomEvent 'deployment' for deletion
     * letting the platformEventListener know that we have an id to register and monitor.

@@ -62,6 +62,28 @@ tasks:
             path: unpackaged/config/qa
             namespace_inject: $project_config.project__package__namespace
 
+    retrieve_qa_config:
+        description: Retrieves additional fields used for QA purposes
+        class_path: cumulusci.tasks.salesforce.sourcetracking.RetrieveChanges
+        options:
+            path: unpackaged/config/qa
+            namespace_tokenize: $project_config.project__package__namespace
+            snapshot: True
+
+    deploy_qa_namespaced_config:
+        description: Deploys additional configuration required for namespaced QA orgs
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/qa_namespaced
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_qa_bdi_metadata_config:
+        description: Deploys Custom Metadata for BDI QA
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/qa_bdi_custom_metadata
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -280,21 +302,54 @@ flows:
             6:
                 task: deploy_qa_config
             7:
-                task: update_admin_profile
+                task: deploy_qa_bdi_metadata_config
             8:
-                task: test_data_relationships
+                task: update_admin_profile
             9:
+                task: test_data_relationships
+            10:
                 task: deploy_reports
+
+    config_qa_namespaced:
+        steps:
+            1:
+                task: deploy_post
+            2:
+                task: None
+            3:
+                task: deploy_dev_config_delete
+            4:
+                task: deploy_trial_config
+            5:
+                task: npsp_default_settings
+            6:
+                task: deploy_qa_config
+            7:
+                task: deploy_qa_bdi_metadata_config
+                options:
+                    namespaced_org: True
+                    unmanaged: False
+            8:
+                task: update_admin_profile
+            9:
+                task: test_data_relationships
+            10:
+                task: deploy_reports
+            11:
+                task: deploy_qa_namespaced_config
+
 
     qa_org_namespaced:
         description: Execute the qa_org flow against a namespaced scratch org and patch help text.
         steps:
             1:
-                flow: qa_org
+                flow: dependencies
             2:
-                task: deploy
-                options:
-                    path: unpackaged/config/qa_namespaced
+                flow: deploy_unmanaged
+            3:
+                flow: config_qa_namespaced
+            4:
+                task: snapshot_changes
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
@@ -466,23 +521,26 @@ plans:
                     first:
                         name: NPSP Config for Salesforce Mobile App
     new_org:
-        slug: trial
-        title: Install NPSP Trial
-        # This will be tier: unlisted once that is an option.
+        slug: trailhead
+        title: Install NPSP for Trailhead Playgrounds
         tier: additional
         is_listed: False
         steps:
             1:
-                flow: dependencies
-                ui_options:
-                    deploy_pre:
-                        account_record_types:
-                            name: Account Record Types
-                        opportunity_record_types:
-                            name: Opportunity Record Types
+                task: update_dependencies
             2:
-                task: install_managed
+                task: deploy
+                options:
+                    path: unpackaged/pre/account_record_types
+                ui_options:
+                    name: Account Record Types
             3:
+                task: ensure_record_type
+                ui_options:
+                    name: Opportunity Record Types
+            4:
+                task: install_managed
+            5:
                 flow: config_managed
                 options:
                     deploy_reports:
@@ -497,6 +555,8 @@ plans:
                         is_required: False
                     deploy_trial_config:
                         name: NPSP Trial Experience
+                    test_data_relationships:
+                        name: Set Default Relationship Settings
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False

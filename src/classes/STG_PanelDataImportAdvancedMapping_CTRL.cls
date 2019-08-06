@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2018
+* @date 2019
 * @group Settings
 * @group-content ../../ApexDocContent/Settings.htm
 * @description Controller extension for the Data Import Fied Mapping settings panel.
@@ -39,7 +39,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*********************************************************************************************************
     * @description URL of the Advanced Mapping Custom UI aura component container
     */
-    public static final String COMPONENT_URL = '/lightning/cmp/c__BDI_ManageAdvancedMapping';
+    public static String componentUrl = '/lightning/cmp/npsp__BDI_ManageAdvancedMapping';
 
     /*********************************************************************************************************
     * @description Returns the string Id of the Data Import Advanced Mapping panel
@@ -139,8 +139,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     *
     * @return PageReference
     */
-    public PageReference navigate(){
-        PageReference advancedMapping = new PageReference(COMPONENT_URL);
+    public PageReference navigate() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (namespace != 'npsp') {
+            componentUrl = componentUrl.replace('npsp__','c__');
+        }
+        PageReference advancedMapping = new PageReference(componentUrl);
         advancedMapping.setRedirect(true);
         return advancedMapping;
     }
@@ -174,7 +178,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
             } catch (Exception e) {
                 Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
                 addPageMessage(ApexPages.Severity.ERROR, Label.bdiErrorDeploymentFailed + ' ' + e.getMessage());
 
                 isPolling = false;
@@ -198,7 +201,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                     String.valueOf(Metadata.DeployStatus.Succeeded));
             addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             addPageMessage(ApexPages.Severity.ERROR,
                 Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage());
 
@@ -221,7 +223,6 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         try {
             upsert dataImportSettings;
         } catch (Exception e) {
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,
                 Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage()));
         }
@@ -244,10 +245,20 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
 
             if (isSuccess) {
                 isPolling = false;
-                addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
+                successMessage();
             } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
-                addPageMessage(ApexPages.Severity.ERROR, Label.stgDeploymentTryAgain);
+
+                String href =
+                    '/lightning/setup/DeployStatus/page?' +
+                    'address=/changemgmt/monitorDeploymentsDetails.apexp?asyncId=' +
+                    deploymentResult.id;
+                String url = String.format(
+                    Label.bdiErrorDeploymentFailedLink,
+                    new List<String>{String.valueOf(href)});
+                String message = Label.bdiErrorDeploymentFailed + ' ' + url;
+
+                addPageMessage(ApexPages.Severity.ERROR, message);
             }
 
         } else if (deploymentResult == null
@@ -256,10 +267,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             // DeploymentContainer was empty which means we're using our standard field mapping set
             // Org had no conflicting field mappings nor any net new field mappings in their Data Import help text
             isPolling = false;
-            addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
+            successMessage();
         }
 
-        if (timeoutCount > MAX_TIME_OUT) {
+        if (timeoutCount > MAX_TIME_OUT && isPolling == true) {
             isPolling = false;
             addPageMessage(ApexPages.Severity.WARNING,
                 Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
@@ -267,6 +278,18 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         }
 
         return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Display successful enablement of Advanced Mapping based on if there were some invalid
+    * help text mappings
+    */
+    private void successMessage() {
+        if (migrationMappingUtility.badHelpTextMappings.size() > 0) {
+            addPageMessage(ApexPages.Severity.WARNING, Label.stgDeploymentHasInvalidHelpTextMappings);
+        } else {
+            addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
+        }
     }
 
     /*******************************************************************************************************

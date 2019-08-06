@@ -42,6 +42,16 @@
  * the future method would have no effect.) Also, some classes might not want to prevent it.
  */
 global abstract class TDTM_Runnable {
+    @TestVisible
+    protected UTIL_IntegrationGateway integrationGateway {
+        get {
+            if (integrationGateway == null) {
+                integrationGateway = new UTIL_IntegrationGateway();
+            }
+            return integrationGateway;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
      * @description Calls the run method of the class, as a future. To be called dynamically from TDTM_TriggerHandler. 
@@ -76,34 +86,38 @@ global abstract class TDTM_Runnable {
         List<Schema.SObjectField> allFields = objResult.fields.getMap().values();
         
         //Getting the records the IDs refer to
-        String qn = 'select ';
-        for(Integer i = 0; i < allFields.size() - 1; i++) //add all fields, except last, to query
+        String qn = 'SELECT ';
+        for (Integer i = 0; i < allFields.size() - 1; i++) { //add all fields, except last, to query
             qn += ' ' + allFields[i] + ', ';
+        }
         qn += ' ' + allFields[allFields.size() - 1]; //add last field to query
-        qn += ' from ' + objectName + ' where id IN ';
+        qn += ' FROM ' + objectName + ' WHERE Id IN ';
 
-        List<SObject> newlist;
-        if (newIds != null) 
-            newlist = Database.query(qn + ':newIds order by Id');
-        List<SObject> oldlist;
-        if (oldIds != null)
-            oldlist = Database.query(qn + ':oldIds order by Id');
+        List<SObject> newList;
+        if (newIds != null) {
+            newList = Database.query(qn + ':newIds ORDER BY Id');
+        }
+        List<SObject> oldList;
+        if (oldIds != null) {
+            oldList = Database.query(qn + ':oldIds ORDER BY Id');
+        }
 
         //Call the non-future method
         Type classType = Type.forName(classToRunName);
         Object classInstance; 
-        if(classType != null)
+        if (classType != null) {
             classInstance = classType.newInstance();
-        if(classInstance instanceof TDTM_Runnable) {
-        	TDTM_Runnable runnable = (TDTM_Runnable) classInstance;
-        	//WARNING: we have queried all the fields that would be available in the records themselves, but NOT the fields
-        	//from related (parent or child) records. Those would need to be queried independently in the class itself (see 
-        	//ERR_ParentAccountUpdater2_TEST class for an example on how to do that).
-	        DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
-	        
-	        //Process the result. In this case we cannot pass the original Trigger.new and Trigger.old, since we are
-	        //in a future
-	        TDTM_TriggerHandler.processDML(dmlWrapper);
+        }
+        if (classInstance instanceof TDTM_Runnable) {
+            TDTM_Runnable runnable = (TDTM_Runnable) classInstance;
+            //WARNING: we have queried all the fields that would be available in the records themselves, but NOT the fields
+            //from related (parent or child) records. Those would need to be queried independently in the class itself (see
+            //ERR_ParentAccountUpdater2_TEST class for an example on how to do that).
+            DmlWrapper dmlWrapper = runnable.run(newList, oldList, triggerAction, objResult);
+
+            //Process the result. In this case we cannot pass the original Trigger.new and Trigger.old, since we are
+            //in a future
+            TDTM_TriggerHandler.processDML(dmlWrapper);
         }
     }
     
@@ -134,10 +148,10 @@ global abstract class TDTM_Runnable {
         * @return void
         */
         public void groupByType() {
-        	objectsToInsert = groupSObjects(objectsToInsert);
-        	objectsToUpdate = groupSObjects(objectsToUpdate);
-        	objectsToDelete = groupSObjects(objectsToDelete);
-        	objectsToUndelete = groupSObjects(objectsToUndelete);
+            objectsToInsert = groupSObjects(objectsToInsert);
+            objectsToUpdate = groupSObjects(objectsToUpdate);
+            objectsToDelete = groupSObjects(objectsToDelete);
+            objectsToUndelete = groupSObjects(objectsToUndelete);
         }
         
         /*******************************************************************************************************

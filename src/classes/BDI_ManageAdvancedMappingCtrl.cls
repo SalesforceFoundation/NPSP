@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2018
+* @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Visualforce page Controller for the Manage Advanced Mappings VF page
@@ -119,6 +119,12 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
+    * @description List of Platform Events created from Metadata deployments
+    */
+    @TestVisible
+    private static DeploymentEvent__e[] deploymentEvents = new List<DeploymentEvent__e>();
+
+    /*******************************************************************************************************
     * @description Gets all the existing Data Import Object Mapping records and wraps them for use in the 
     * component
     * @return List: List of Data Import Object Mapping
@@ -129,9 +135,23 @@ public class BDI_ManageAdvancedMappingCtrl {
         DataImportObjectMappingWrapper[] objMappingWrappers = new DataImportObjectMappingWrapper[]{};
         Data_Import_Object_Mapping__mdt[] objMappings = bdiCMT.objMappingsByDevName.values();
 
+        Map<String,DataImportObjectMappingWrapper> objMappingWrappersByDevName = new Map<String,DataImportObjectMappingWrapper>();
+
         for (Data_Import_Object_Mapping__mdt objMapping : objMappings) {
-            objMappingWrappers.add(new DataImportObjectMappingWrapper(objMapping));
+            DataImportObjectMappingWrapper objMappingWrapper = new DataImportObjectMappingWrapper(objMapping);
+            objMappingWrappers.add(objMappingWrapper);
+            objMappingWrappersByDevName.put(objMappingWrapper.DeveloperName, objMappingWrapper);
         }
+
+        //Assign the label name field for the predecessor using the constructed map by dev name.
+        for (DataImportObjectMappingWrapper objMappingWrapper : objMappingWrappers) {
+
+            DataImportObjectMappingWrapper predecessorObjMappingWrapper = objMappingWrappersByDevName.get(objMappingWrapper.Predecessor);
+            if(predecessorObjMappingWrapper != null) {
+                objMappingWrapper.Predecessor_Label_Name = predecessorObjMappingWrapper.MasterLabel;
+            }
+        }
+
         return objMappingWrappers;
     }
 
@@ -152,9 +172,10 @@ public class BDI_ManageAdvancedMappingCtrl {
             UTIL_Describe.getAllFieldsDescribe(objectName);
 
         for (String key : fieldDescribes.keySet()) {
-            //Only include fields that are updateable by the current user
+
+            //Only include fields that are createable by the current user
             //This will filter out System / formula fields
-            if (fieldDescribes.get(key).isUpdateable()) {
+            if (fieldDescribes.get(key).isCreateable()) {
                 fieldInfos.add(new FieldInfo(fieldDescribes.get(key)));
             }
         }
@@ -242,7 +263,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     *
     * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
     *
-    * @return String: Deployment Id
+    * @return String: Deployment Id or Data_Import_Field_Mapping__mdt instance JSON when in tests
     */
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
@@ -253,8 +274,8 @@ public class BDI_ManageAdvancedMappingCtrl {
             String diFieldMappingSetFieldName = 'npsp__Data_Import_Field_Mapping_Set__c';
             String targetObjectMappingFieldName = 'npsp__Target_Object_Mapping__c';
             if (NAMESPACE != 'npsp') {
-                diFieldMappingSetFieldName.replaceFirst('npsp__', '');
-                targetObjectMappingFieldName.replaceFirst('npsp__', '');
+                diFieldMappingSetFieldName = diFieldMappingSetFieldName.replaceFirst('npsp__', '');
+                targetObjectMappingFieldName = targetObjectMappingFieldName.replaceFirst('npsp__', '');
             }
 
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since
@@ -276,6 +297,10 @@ public class BDI_ManageAdvancedMappingCtrl {
             fieldMapping.Source_Field_API_Name__c = fieldMappingWrapper.Source_Field_API_Name;
             fieldMapping.Target_Field_API_Name__c = fieldMappingWrapper.Target_Field_API_Name;
 
+            if (Test.isRunningTest()) {
+                return JSON.serialize(fieldMapping);
+            }
+
             String deploymentId = enqueueMetadataRecords(fieldMapping);
             return deploymentId;
         } catch(Exception e) {
@@ -289,7 +314,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     * Data_Import_Object_Mapping__mdt. 
     *
     * @param objectMappingString: DataImportFieldMappingWrapper as JSON
-    * @return String: Deployment Id
+    * @return String: Deployment Id or Data_Import_Object_Mapping__mdt instance JSON when in tests
     */
     @AuraEnabled(cacheable=true)
     public static String createDataImportObjectMapping(String objectMappingString) {
@@ -300,7 +325,7 @@ public class BDI_ManageAdvancedMappingCtrl {
 
             String diObjMappingSetFieldName = 'npsp__Data_Import_Object_Mapping_Set__c';
             if (NAMESPACE != 'npsp') {
-                diObjMappingSetFieldName.replaceFirst('npsp__','');
+                diObjMappingSetFieldName = diObjMappingSetFieldName.replaceFirst('npsp__','');
             }
 
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since 
@@ -322,6 +347,10 @@ public class BDI_ManageAdvancedMappingCtrl {
             objMapping.Predecessor__c = objMappingWrapper.Predecessor;
             objMapping.Relationship_Field__c = objMappingWrapper.Relationship_Field;
             objMapping.Relationship_To_Predecessor__c = objMappingWrapper.Relationship_To_Predecessor;
+
+            if (Test.isRunningTest()) {
+                return JSON.serialize(objMapping);
+            }
 
             String deploymentId = enqueueMetadataRecords(objMapping);
             return deploymentId;
@@ -404,6 +433,10 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
 
         DeploymentCallback callback = new DeploymentCallback();
+
+        if (Test.isRunningTest()) {
+            return JSON.serialize(deployContainer);
+        }
 
         Id jobId = Metadata.Operations.enqueueDeployment(deployContainer, callback);
 
@@ -555,6 +588,7 @@ public class BDI_ManageAdvancedMappingCtrl {
                     CompletedDate__c = deployResult.completedDate
             );
 
+            deploymentEvents.add(de);
             Database.SaveResult saveResult = EventBus.publish(de);
 
             if (!saveResult.isSuccess()) {
@@ -571,6 +605,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     * @description Wrapper class for the Data Import Object Mapping object.
     */
     public class DataImportObjectMappingWrapper {
+        @AuraEnabled public Id Id;
         @AuraEnabled public String DeveloperName;
         @AuraEnabled public String MasterLabel;
         @AuraEnabled public String Custom_Mapping_Logic_Class;
@@ -581,11 +616,12 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public Boolean Is_Deleted;
         @AuraEnabled public String Object_API_Name;
         @AuraEnabled public String Predecessor;
+        @AuraEnabled public String Predecessor_Label_Name;
         @AuraEnabled public String Relationship_Field;
         @AuraEnabled public String Relationship_To_Predecessor;
 
         public DataImportObjectMappingWrapper(Data_Import_Object_Mapping__mdt objectMapping) {
-
+            this.Id = objectMapping.Id;
             this.MasterLabel = objectMapping.MasterLabel;
             this.DeveloperName = objectMapping.DeveloperName;
             this.Custom_Mapping_Logic_Class = objectMapping.Custom_Mapping_Logic_Class__c;
@@ -674,7 +710,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         for (String key : fieldDescribes.keySet()) {
             Schema.DescribeFieldResult dfr = fieldDescribes.get(key);
 
-            if (dfr.getType().name() == 'REFERENCE' && fieldDescribes.get(key).isUpdateable()) {
+            if (dfr.getType().name() == 'REFERENCE' && fieldDescribes.get(key).isCreateable() ) {
 
                 List<Schema.sObjectType> objTypes = dfr.getReferenceTo();
 

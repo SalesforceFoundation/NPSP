@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -42,8 +42,12 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     public Data_Import_Field_Mapping_Set__mdt diFieldMappingSet;
     public String fieldMappingSetName;
 
-    public Map<String,Data_Import_Object_Mapping__mdt> objMappingsByDevName = new Map<String,Data_Import_Object_Mapping__mdt>();
-    public Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingDevName = new Map<String,Data_Import_Field_Mapping__mdt[]>();
+    public Map<String,Data_Import_Object_Mapping__mdt> objMappingsByDevName =
+        new Map<String,Data_Import_Object_Mapping__mdt>();
+    public Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingDevName =
+        new Map<String,Data_Import_Field_Mapping__mdt[]>();
+    public Map<String,Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingLegacyName =
+        new Map<String,Data_Import_Field_Mapping__mdt[]>();
 
     private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
 
@@ -111,14 +115,12 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     *
-    * TODO: Implement this method
     */
 
     public Map<String,String> getFieldMap(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
-
         Map<String,String> targetFieldByDataImportField = new Map<String,String>();
-        
-        Data_Import_Field_Mapping__mdt[] diFieldMappings = fieldMappingsByObjMappingDevName.get(dataImportObjectName); 
+
+        Data_Import_Field_Mapping__mdt[] diFieldMappings = fieldMappingsByObjMappingLegacyName.get(dataImportObjectName);
 
         if (diFieldMappings != null) {
             for (Data_Import_Field_Mapping__mdt difm : diFieldMappings) {
@@ -164,7 +166,22 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                                             Object_API_Name__c,
                                             Predecessor__c,
                                             Relationship_Field__c,
-                                            Relationship_To_Predecessor__c
+                                            Relationship_To_Predecessor__c,
+                                            (SELECT MasterLabel,
+                                                DeveloperName,
+                                                Data_Import_Field_Mapping_Set__c,
+                                                Data_Import_Field_Mapping_Set__r.DeveloperName,
+                                                Required__c,
+                                                Source_Field_API_Name__c,
+                                                Target_Field_API_Name__c,
+                                                Target_Object_Mapping__c,
+                                                Target_Object_Mapping__r.DeveloperName,
+                                                Target_Object_Mapping__r.Object_API_Name__c,
+                                                Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                                                Is_Deleted__c
+                                            FROM Data_Import_Field_Mappings__r
+                                            WHERE Is_Deleted__c = false
+                                                AND Target_Object_Mapping__r.Is_Deleted__c = false)
                                     FROM Data_Import_Object_Mapping__mdt
                                     WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c
                                         AND Is_Deleted__c = false
@@ -181,20 +198,20 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
             objMappingsByDevName.put(diom.DeveloperName, diom);
         }
 
+        Data_Import_Field_Mapping__mdt[] fieldMappings = new List<Data_Import_Field_Mapping__mdt>();
+
+        for (String objectName : objMappingsByDevName.keySet()) {
+            Data_Import_Object_Mapping__mdt objectMapping = objMappingsByDevName.get(objectName);
+
+            if (objectMapping.Data_Import_Field_Mappings__r != null &&
+                objectMapping.Data_Import_Field_Mappings__r.size() > 0) {
+
+                fieldMappings.addAll(objectMapping.Data_Import_Field_Mappings__r);
+            }
+        }
+
         if (objMappingsByDevName != null && objMappingsByDevName.size() > 0) {
-            for (Data_Import_Field_Mapping__mdt difm:[SELECT MasterLabel,
-                                                    DeveloperName,
-                                                    Data_Import_Field_Mapping_Set__c,
-                                                    Data_Import_Field_Mapping_Set__r.DeveloperName,
-                                                    Required__c,
-                                                    Source_Field_API_Name__c,
-                                                    Target_Field_API_Name__c,
-                                                    Target_Object_Mapping__c,
-                                                    Target_Object_Mapping__r.DeveloperName,
-                                                    Target_Object_Mapping__r.Object_API_Name__c,
-                                                    Is_Deleted__c
-                                        FROM Data_Import_Field_Mapping__mdt
-                                        WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName]) {
+            for (Data_Import_Field_Mapping__mdt difm : fieldMappings) {
 
                 // Removing the npsp namespace since the code is not currently packaged.
                 if (removeNPSPNamespace) {
@@ -210,6 +227,9 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
                 tempDifms.add(difm);
                 fieldMappingsByObjMappingDevName.put(difm.Target_Object_Mapping__r.DeveloperName,tempDifms);
+                fieldMappingsByObjMappingLegacyName.put(
+                    difm.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                    tempDifms);
             }
         }
     }

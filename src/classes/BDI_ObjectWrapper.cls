@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -45,10 +45,42 @@ public with sharing class BDI_ObjectWrapper {
 
     public Id existingSObjectId;
 
+    /*******************************************************************************************************
+    * @description Constructor
+    *
+    * @param dataImport Instance of DataImport__c 
+    * @param objMapping  CMT record for object from config
+    * @param fieldMappings CMT records for field mappings from config
+    * @param predessessorObjMapping CMT record of predessessor
+    */
     public BDI_ObjectWrapper(DataImport__c dataImport, Data_Import_Object_Mapping__mdt objMapping, Data_Import_Field_Mapping__mdt[] fieldMappings, Data_Import_Object_Mapping__mdt predecessorObjMapping) {
         this.objMapping = objMapping;
         this.predecessorObjMapping = predecessorObjMapping;
         this.fieldMappings = fieldMappings;
         this.dataImport = dataImport;
+    }
+
+    /*******************************************************************************************************
+    * @description Set the status for the DataImport__c
+    */
+    public void setDataImportStatus(String status) {
+        dataImport.Status__c = status;
+    }
+
+    /*******************************************************************************************************
+    * @description Set error information on the DataImport__c
+    */
+    public void setImportedRecordStatusError(String errorMessage) {
+        String statusField = objMapping.Imported_Record_Status_Field_Name__c;
+        if (statusField != null && errorMessage != null) {
+            dataImport.put(statusField, errorMessage.left(255));
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Set failure information on the DataImport__c
+    */
+    public void setFailureInformation(String failureInformation) {
+        dataImport.FailureInformation__c = failureInformation;
     }
 }

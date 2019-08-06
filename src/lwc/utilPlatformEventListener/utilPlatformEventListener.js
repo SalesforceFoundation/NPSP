@@ -1,6 +1,3 @@
-/**
- * Created by kenneth.lewis on 2019-06-27.
- */
 
 import {LightningElement, track, api} from 'lwc';
 import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
@@ -65,16 +62,12 @@ export default class PlatformEventListener extends LightningElement {
 
         // Callback invoked whenever a new event message is received
         const messageCallback = function (response) {
-            console.log('*** ' + 'Received Platform Event' + ' ***');
-            // console.log('JSON.stringify(response): ', JSON.stringify(response));
-            //TODO: see if we can import DeploymentEvent__e schema
             x.handleEventReceived(response);
         };
 
         // Invoke subscribe method of empApi. Pass reference to messageCallback
         subscribe(this.channelName, -1, messageCallback).then(response => {
             // Response contains the subscription information on successful subscribe call
-            console.log('Successfully subscribed to : ', JSON.stringify(response.channel));
             this.subscription = response;
         });
     }
@@ -84,7 +77,6 @@ export default class PlatformEventListener extends LightningElement {
             response.data.payload.DeploymentId__c || response.data.payload.npsp__DeploymentId__c;
         if (this.isMonitored(deploymentId)) {
             if (this.isShowToastEnabled) {
-                //this.showToast(response);
                 fireEvent(this.pageRef, 'deploymentResponse', { response: response });
             }
             if (this.isConsoleLogEnabled) {
@@ -93,7 +85,7 @@ export default class PlatformEventListener extends LightningElement {
         }
 
         //Store the response, in case we were unable to verify the deploymentId yet
-        this._deploymentResponses.put(deploymentId, response);
+        this._deploymentResponses.set(deploymentId, response);
     }
 
     static onError(error) {

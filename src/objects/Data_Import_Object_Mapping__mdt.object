@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Represents a a specific instance of an object to be used for data import, and how it is related to its predecessors.</description>
+    <description>Used for Data Import Advanced Mapping definitions. These represent Object Groups and their relationships which will be used for different NPSP Data Import batches.</description>
     <fields>
         <fullName>Custom_Mapping_Logic_Class__c</fullName>
         <description>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method.</description>
@@ -15,10 +15,10 @@
     </fields>
     <fields>
         <fullName>Data_Import_Object_Mapping_Set__c</fullName>
-        <description>The Data Import Object Mapping Set that this record is a part of.</description>
+        <description>The Data Import Object Group containing this record.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The Data Import Object Mapping Set that this record is a part of.</inlineHelpText>
+        <inlineHelpText>The Data Import Object Group containing this record.</inlineHelpText>
         <label>Data Import Object Mapping Set</label>
         <referenceTo>Data_Import_Object_Mapping_Set__mdt</referenceTo>
         <relationshipLabel>Data Import Object Mappings</relationshipLabel>
@@ -29,10 +29,10 @@
     </fields>
     <fields>
         <fullName>Imported_Record_Field_Name__c</fullName>
-        <description>This is the API name of field on the Data Import object where the Id for the imported record will be placed if successful.  It is also where the code will check to see if this record has already been imported/matched.</description>
+        <description>The Field API Name on the NPSP Data Import object where the ID for the imported record will be placed when the import is successful. This is also where the code will verify if this record was imported or matched.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>This is the API name of field on the Data Import object where the Id for the imported record will be placed if successful.  It is also where the code will check to see if this record has already been imported/matched.</inlineHelpText>
+        <inlineHelpText>The Field API Name on the NPSP Data Import object where the ID for the imported record will be placed when the import is successful. This is also where the code will verify if this record was imported or matched.</inlineHelpText>
         <label>Imported Record Field Name</label>
         <length>255</length>
         <required>false</required>
@@ -41,10 +41,10 @@
     </fields>
     <fields>
         <fullName>Imported_Record_Status_Field_Name__c</fullName>
-        <description>The API name of the field where the success/failure of the import of this Data Import Object Mapping will be recorded on the Data Import object.</description>
+        <description>The Field API Name where the success or failure of the import will be recorded for an NPSP Data Import record.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The API name of the field where the success/failure of the import of this Data Import Object Mapping will be recorded on the Data Import object.</inlineHelpText>
+        <inlineHelpText>The Field API Name where the success or failure of the import will be recorded for an NPSP Data Import record.</inlineHelpText>
         <label>Imported Record Status Field Name</label>
         <length>255</length>
         <required>false</required>
@@ -61,10 +61,10 @@
     </fields>
     <fields>
         <fullName>Object_API_Name__c</fullName>
-        <description>The API name of the object that this Data Import Object Mapping is based on.</description>
+        <description>The API name of the target object for this Object Group.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The API name of the object that this Data Import Object Mapping is based on.</inlineHelpText>
+        <inlineHelpText>The API name of the target object for this Object Group.</inlineHelpText>
         <label>Object API Name</label>
         <length>255</length>
         <required>false</required>
@@ -72,11 +72,23 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Predecessor__c</fullName>
-        <description>The Custom Metadata Record Name of the Data Import Object Mapping that should be created before this object (either Parent or Child).</description>
+        <fullName>Legacy_Data_Import_Object_Name__c</fullName>
+        <description>The legacy Data Import object name of the object this Data Import Object Group is based on.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>The Custom Metadata Record Name of the Data Import Object Mapping that should be created before this object (either Parent or Child).</inlineHelpText>
+        <inlineHelpText>The legacy Data Import object name of the object this Data Import Object Group is based on.</inlineHelpText>
+        <label>Legacy Data Import Object Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Predecessor__c</fullName>
+        <description>The Data Import Object Group record that must exist before this record can be created (either Parent or Child).</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The Data Import Object Group record that must exist before this record can be created (either Parent or Child).</inlineHelpText>
         <label>Predecessor</label>
         <length>255</length>
         <required>false</required>
@@ -85,10 +97,10 @@
     </fields>
     <fields>
         <fullName>Relationship_Field__c</fullName>
-        <description>If this Data Import Mapping Object is a child of the predecessor then this should be the lookup field to the parent.  If parent to the predecessor, this should be the lookup field on the child to this record.</description>
+        <description>If this Object Group is a child of the predecessor, this field should look up to the parent. If it's the parent of the predecessor, this should be the lookup field on the child record.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>If this Data Import Mapping Object is a child of the predecessor then this should be the lookup field to the parent.  If parent to the predecessor, this should be the lookup field on the child to this record.</inlineHelpText>
+        <inlineHelpText>If this Object Group is a child of the predecessor, this field should look up to the parent. If it's the parent of the predecessor, this should be the lookup field on the child record.</inlineHelpText>
         <label>Relationship Field</label>
         <length>255</length>
         <required>false</required>

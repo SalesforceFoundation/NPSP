@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,13 @@ public with sharing class BDI_MigrationMappingUtility {
     * Set as static because it's used in the static method updateCustomSettings
     */
     public static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME = 'Default_Field_Mapping_Set';
+
+    /*******************************************************************************************************
+    * @description Name of custom Object Mapping Set
+    * Set as static because it's used in the static method updateCustomSettings
+    */
+    public static final String MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME =
+        'Migrated_Custom_Object_Mapping_Set';
 
     /*******************************************************************************************************
     * @description Name of custom Field Mapping Set
@@ -134,9 +141,15 @@ public with sharing class BDI_MigrationMappingUtility {
     private Data_Import_Settings__c dataImportSettings;
 
     /*******************************************************************************************************
-    * @description List of standard data import object mappings
+    * @description List of reference data import object mappings
     */
-    private Map<String, Data_Import_Object_Mapping__mdt> objectMappingsByDeveloperName;
+    private Map<String, Data_Import_Object_Mapping__mdt> referenceObjectMappingsByDeveloperName;
+
+    /*******************************************************************************************************
+    * @description Map of migrated Data Import Object Mapping developer names by legacy data import object
+    * names
+    */
+    private Map<String, String> legacyDataImportObjectNameByDeveloperName;
 
     /*******************************************************************************************************
     * @description List of bad/malformed help text mappings
@@ -155,6 +168,11 @@ public with sharing class BDI_MigrationMappingUtility {
     * @description List of BDI_FieldMappingHelpText.DataImportFieldMappings built from good help text mappings
     */
     public List<DataImportFieldMapping> dataImportFieldMappings = new List<DataImportFieldMapping>();
+
+    /*******************************************************************************************************
+    * @description Map of valid Object Fields by Object Name
+    */
+    public static Map<String, Set<String>> validFieldsByObjectName;
 
     /*******************************************************************************************************
     * @description Name of the Data Import Field Mapping Set to use
@@ -182,7 +200,7 @@ public with sharing class BDI_MigrationMappingUtility {
     public BDI_MigrationMappingUtility(BDI_MigrationMappingHelper helper) {
         this.helper = helper;
         this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        this.objectMappingsByDeveloperName =
+        this.referenceObjectMappingsByDeveloperName =
             helper.getObjectMappingsBySetDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
     }
 
@@ -234,69 +252,118 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
+    * @description Clone the reference Data Import Object Mapping records
+    */
+    public void cloneObjectMappings() {
+
+        queuedMetadataTypesForDeploy.clear();
+        legacyDataImportObjectNameByDeveloperName = new Map<String, String>();
+
+        Data_Import_Object_Mapping_Set__mdt[] migratedObjectMappingSets =
+            helper.getObjectMappingSet(MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
+
+        if (migratedObjectMappingSets.isEmpty()) {
+            createAndEnqueueMigratedCustomObjectMappingSet();
+        }
+
+        Map<String, Data_Import_Object_Mapping__mdt> existingMigratedObjectMappings =
+            helper.getObjectMappingsBySetDeveloperName(MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
+
+        DataImportObjectMapping[] objectMappings = new List<DataImportObjectMapping>();
+        Map<String, String> developerNamesByPredecessor = new Map<String, String>();
+
+        for (String name : referenceObjectMappingsByDeveloperName.keySet()) {
+
+            String legacyDataImportObjectName;
+            String developerName;
+            Data_Import_Object_Mapping__mdt referenceObjectMapping =
+                referenceObjectMappingsByDeveloperName.get(name);
+            Data_Import_Object_Mapping__mdt existingMigratedObjectMapping =
+                existingMigratedObjectMappings.get(name);
+            DataImportObjectMapping objectMappingWrapper;
+
+            if (existingMigratedObjectMapping == null) {
+                objectMappingWrapper = new DataImportObjectMapping(referenceObjectMapping, true);
+                legacyDataImportObjectName =
+                    referenceObjectMapping.Legacy_Data_Import_Object_Name__c;
+                developerName = objectMappingWrapper.uniqueRecordName;
+            } else {
+                objectMappingWrapper = new DataImportObjectMapping(existingMigratedObjectMapping, false);
+                legacyDataImportObjectName =
+                    existingMigratedObjectMapping.Legacy_Data_Import_Object_Name__c;
+                developerName = existingMigratedObjectMapping.DeveloperName;
+                objectMappingWrapper.uniqueRecordName = existingMigratedObjectMapping.DeveloperName;
+            }
+
+            objectMappings.add(objectMappingWrapper);
+            legacyDataImportObjectNameByDeveloperName.put(legacyDataImportObjectName, developerName);
+            developerNamesByPredecessor.put(legacyDataImportObjectName, developerName);
+        }
+
+        for (DataImportObjectMapping objectMappingWrapper : objectMappings) {
+
+            if (objectMappingWrapper.objectMapping.Predecessor__c != null &&
+                developerNamesByPredecessor.get(objectMappingWrapper.predecessor) != null) {
+
+                objectMappingWrapper.objectMapping.Predecessor__c =
+                    developerNamesByPredecessor.get(objectMappingWrapper.predecessor);
+            }
+
+            queuedMetadataTypesForDeploy.add(objectMappingWrapper.getMetadataRecord());
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Starts the migration from help text to custom metadata records and adds created custom
     * metadata records to list queuedMetadataTypesForDeploy.
     */
     public void migrateHelpTextToCustomMetadata() {
 
-        queuedMetadataTypesForDeploy.clear();
+        cloneObjectMappings();
 
         if (!Test.isRunningTest()) {
-            badHelpTextMappings.clear();
             populateListsFromHelpTextMappings();
         }
 
-        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsByFieldMappingSetDeveloperName =
-            helper.getFieldMappingsByFieldMappingSetDeveloperName(fieldMappingSetName);
+        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByFieldMappingKey =
+            helper.getFieldMappingsByFieldMappingSetDeveloperName(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+        Map<String, Data_Import_Field_Mapping__mdt> migratedFieldMappingsByFieldMappingKey =
+            helper.getFieldMappingsByFieldMappingSetDeveloperName(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
         for (DataImportFieldMapping fieldMapping : dataImportFieldMappings) {
 
             String fieldMappingKey = fieldMapping.getKey();
 
-            Data_Import_Object_Mapping__mdt existingDefaultObjectMapping =
-                objectMappingsByDeveloperName.get(fieldMapping.dataImportObjectName);
-            Data_Import_Field_Mapping__mdt existingDefaultFieldMapping =
-                fieldMappingsByFieldMappingSetDeveloperName.get(fieldMappingKey);
+            String existingObjectMappingDeveloperName =
+                legacyDataImportObjectNameByDeveloperName.get(fieldMapping.dataImportObjectName);
+            Data_Import_Field_Mapping__mdt referenceFieldMapping =
+                referenceFieldMappingsByFieldMappingKey.get(fieldMappingKey);
+            Data_Import_Field_Mapping__mdt migratedFieldMapping =
+                migratedFieldMappingsByFieldMappingKey.get(fieldMappingKey);
 
-            if (existingDefaultFieldMapping == null) {
-                fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                fieldMapping.setObjectMapping(existingDefaultObjectMapping);
-                // Setting name to null will force field mapping to generate a unique name
+            if (referenceFieldMapping == null && migratedFieldMapping == null) {
                 fieldMapping.setRecordName(null, false);
-
-                queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
-
-            } else if (existingDefaultFieldMapping != null) {
-                if (fieldMappingSetName == MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME) {
-                    // Migrated Custom Field Mapping Set exists
-                    DataImportFieldMapping overwrittenMapping =
-                        new DataImportFieldMapping(
-                            existingDefaultFieldMapping,
-                            MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-
-                    overwrittenMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                    overwrittenMapping.setObjectMapping(existingDefaultObjectMapping);
-                    overwrittenMapping.setTargetField(fieldMapping.targetFieldAPIName);
-
-                    queuedMetadataTypesForDeploy.add(overwrittenMapping.getMetadataRecord());
+            } else {
+                if (migratedFieldMapping != null) {
+                    fieldMapping.recordName = migratedFieldMapping.DeveloperName;
                 } else {
-
-                    fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                    fieldMapping.setObjectMapping(existingDefaultObjectMapping);
-
-                    // Check if we have a conflict and update the target field based on the help text mapping
-                    if (fieldMapping.hasBadDefaultValues(existingDefaultFieldMapping)) {
-                        fieldMapping.setTargetField(fieldMapping.targetFieldAPIName);
-                    }
-
-                    queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                    fieldMapping.setRecordName(referenceFieldMapping.DeveloperName, true);
                 }
             }
 
-            fieldMappingsByFieldMappingSetDeveloperName.remove(fieldMappingKey);
+            fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+            fieldMapping.setObjectMapping(
+                existingObjectMappingDeveloperName,
+                fieldMapping.dataImportObjectName);
+
+            queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+
+            referenceFieldMappingsByFieldMappingKey.remove(fieldMappingKey);
         }
 
-        createAndEnqueueNonHelpTextMappings(fieldMappingsByFieldMappingSetDeveloperName);
+        createAndEnqueueNonHelpTextMappings(
+            referenceFieldMappingsByFieldMappingKey,
+            migratedFieldMappingsByFieldMappingKey);
         createAndEnqueueMigratedCustomFieldMappingSet();
     }
 
@@ -314,8 +381,9 @@ public with sharing class BDI_MigrationMappingUtility {
 
         for (HelpTextFieldMapping helpTextFieldMapping : helpTextFieldMappings) {
 
-            Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(
-                helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
+            String unnamespacedDIFieldName =
+                UTIL_Namespace.removeNSPrefixNpspOnly(helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
+            Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(unnamespacedDIFieldName);
 
             Boolean isException = false;
             if (helpTextFieldMapping.helpText != null) {
@@ -347,11 +415,24 @@ public with sharing class BDI_MigrationMappingUtility {
             DataImportFieldMappingSet fieldMappingSet =
                 new DataImportFieldMappingSet(
                     MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME,
-                    DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
+                    MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
 
-            // Add custom field mapping set to list queuedMetadataTypesForDeploy
             queuedMetadataTypesForDeploy.add(fieldMappingSet.getMetadataRecord());
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates the Migrated Custom Object Mapping Set and adds to queuedMetadataTypesForDeploy
+    */
+    private void createAndEnqueueMigratedCustomObjectMappingSet() {
+        Metadata.CustomMetadata objectMappingSetMDT = new Metadata.CustomMetadata();
+        String mdTypeName = Data_Import_Object_Mapping_Set__mdt.SObjectType.getDescribe().getName();
+
+        objectMappingSetMDT.label = MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME.replace('_', ' ');
+        objectMappingSetMDT.fullName = mdTypeName + '.' + MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME;
+        objectMappingSetMDT.protected_x = false;
+
+        queuedMetadataTypesForDeploy.add(objectMappingSetMDT);
     }
 
     /*******************************************************************************************************
@@ -361,25 +442,35 @@ public with sharing class BDI_MigrationMappingUtility {
     * @param fieldMappingSetName String Name of the parent Data Import Field Mapping Set
     */
     private void createAndEnqueueNonHelpTextMappings(
-        Map<String, Data_Import_Field_Mapping__mdt> fieldMappings) {
+        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappings,
+        Map<String, Data_Import_Field_Mapping__mdt> migratedFieldMappings) {
 
-        for (String key : fieldMappings.keySet()) {
-            Data_Import_Field_Mapping__mdt existingFieldMapping =
-                fieldMappings.get(key);
+        for (String key : referenceFieldMappings.keySet()) {
+            Data_Import_Field_Mapping__mdt referenceFieldMapping = referenceFieldMappings.get(key);
+            Data_Import_Field_Mapping__mdt migratedFieldMapping = migratedFieldMappings.get(key);
 
-            DataImportFieldMapping fieldMapping =
-                new DataImportFieldMapping(
-                    existingFieldMapping,
-                    MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+            if (referenceFieldMapping != null) {
+                Data_Import_Field_Mapping__mdt clone = referenceFieldMapping.clone();
+                String existingObjectMappingDeveloperName =
+                    legacyDataImportObjectNameByDeveloperName.get(
+                        referenceFieldMapping.Target_Object_Mapping__r.DeveloperName);
 
-            Boolean isUnique =
-                fieldMappingSetName == DEFAULT_FIELD_MAPPING_SET_RECORD_NAME ? true : false;
+                DataImportFieldMapping fieldMapping =
+                    new DataImportFieldMapping(clone, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
-            fieldMapping.setRecordName(
-                existingFieldMapping.DeveloperName,
-                isUnique);
+                fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                fieldMapping.setObjectMapping(
+                    existingObjectMappingDeveloperName,
+                    fieldMapping.dataImportObjectName);
 
-            queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                if (migratedFieldMapping != null) {
+                    fieldMapping.setRecordName(migratedFieldMapping.DeveloperName, false);
+                } else {
+                    fieldMapping.setRecordName(null, false);
+                }
+
+                queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+            }
         }
     }
 
@@ -440,7 +531,7 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
-            String mdTypeName = 'Data_Import_Field_Mapping_Set__mdt';
+            String mdTypeName = Data_Import_Field_Mapping_Set__mdt.SObjectType.getDescribe().getName();
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
@@ -455,6 +546,88 @@ public with sharing class BDI_MigrationMappingUtility {
             customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
 
             return customMd;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class for to store properties of the Object Mapping 
+    */
+    public class DataImportObjectMapping {
+        Data_Import_Object_Mapping__mdt objectMapping;
+        String uniqueRecordName;
+        String predecessor;
+        Boolean isReference;
+
+        public DataImportObjectMapping() {}
+
+        public DataImportObjectMapping(Data_Import_Object_Mapping__mdt objectMapping, Boolean isReference) {
+            this.isReference = isReference;
+            this.objectMapping = objectMapping;
+            this.predecessor = objectMapping.Predecessor__c;
+            if (objectMapping.Predecessor__c == null &&
+                objectMapping.Relationship_To_Predecessor__c == null) {
+                objectMapping.Relationship_To_Predecessor__c = null;
+            }
+            this.uniqueRecordName = generateUniqueRecordName(objectMapping.DeveloperName);
+        }
+
+        public Metadata.CustomMetadata getMetadataRecord() {
+            String mdTypeName = Data_Import_Object_Mapping__mdt.SObjectType.getDescribe().getName();
+
+            Data_Import_Object_Mapping__mdt clone = objectMapping.clone();
+
+            Map<String, Object> fieldValues =
+                (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(clone));
+
+            fieldValues.remove(UTIL_Namespace.StrAllNSPrefix('attributes'));
+            fieldValues.remove(UTIL_Namespace.StrAllNSPrefix('DeveloperName'));
+            fieldValues.remove(UTIL_Namespace.StrAllNSPrefix('Label'));
+
+            fieldValues.put(
+                UTIL_Namespace.StrAllNSPrefix('Data_Import_Object_Mapping_Set__c'),
+                MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
+
+            fieldValues.put(
+                UTIL_Namespace.StrAllNSPrefix('Legacy_Data_Import_Object_Name__c'),
+                (isReference ? clone.DeveloperName : clone.Legacy_Data_Import_Object_Name__c)
+            );
+
+            Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
+            customMd.label = clone.label.left(40);
+            customMd.fullName = mdTypeName + '.' + uniqueRecordName.left(40);
+            customMd.protected_x = false;
+
+            customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
+
+            return customMd;
+        }
+
+        /****************************************************************************************************
+        * @description Utility to convert a name into a valid 'DeveloperName' quality value (or unique GUID)
+        * for the CMT record
+        *
+        * @param name String
+        * @param makeUnique Boolean
+        * @return DeveloperName format string
+        */
+        private String generateUniqueRecordName(String recordName) {
+
+            recordName = recordName.replace(' ', '_');
+
+            if (recordName.length() > 30) {
+                String firstFifteen = recordName.substring(0, 15);
+                String lastFifteen = recordName.substring(recordName.length() - 15, recordName.length());
+                recordName = firstFifteen + lastFifteen;
+            }
+
+            // Create a GUID format unique string
+            Blob b = Crypto.GenerateAESKey(128);
+            String h = EncodingUtil.ConvertTohex(b);
+            // force everything to have a 9-char random string at the end
+            recordName = recordName.left(30).removeEnd('_') + '_' + h.left(9);
+
+            recordName = recordName.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');
+            return recordName;
         }
     }
 
@@ -486,6 +659,7 @@ public with sharing class BDI_MigrationMappingUtility {
             this.dataImportObjectName = helpTextMapping.dataImportObjectName;
             this.targetFieldAPIName = helpTextMapping.targetFieldAPIName;
             this.targetObjectAPIName = helpTextMapping.targetObjectAPIName;
+            this.isRequired = helpTextMapping.isRequired;
         }
 
         public DataImportFieldMapping(
@@ -497,10 +671,11 @@ public with sharing class BDI_MigrationMappingUtility {
             this.targetFieldAPIName = sourceFieldMapping.Target_Field_API_Name__c;
             this.targetObjectMappingRecordName = sourceFieldMapping.Target_Object_Mapping__r.DeveloperName;
             this.targetObjectMappingLabel = sourceFieldMapping.Target_Object_Mapping__r.MasterLabel;
-            this.dataImportObjectName = sourceFieldMapping.Target_Object_Mapping__r.DeveloperName;
+            this.dataImportObjectName =
+                sourceFieldMapping.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c;
             this.targetObjectAPIName = sourceFieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
             this.recordName = sourceFieldMapping.DeveloperName;
-            this.isRequired = 'No';
+            this.isRequired = sourceFieldMapping.Required__c;
             this.isDeleted = false;
         }
 
@@ -514,9 +689,9 @@ public with sharing class BDI_MigrationMappingUtility {
             this.dataImportFieldMappingSetRecordName = fieldMappingSetName;
         }
 
-        public void setObjectMapping(Data_Import_Object_Mapping__mdt objectMapping) {
-            this.targetObjectMappingLabel = objectMapping.Label;
-            this.targetObjectMappingRecordName = objectMapping.DeveloperName;
+        public void setObjectMapping(String objectMappingDeveloperName, String objectMappingLabel) {
+            this.targetObjectMappingLabel = objectMappingLabel;
+            this.targetObjectMappingRecordName = objectMappingDeveloperName;
         }
 
         public void setTargetField(String targetFieldAPIName) {
@@ -548,7 +723,7 @@ public with sharing class BDI_MigrationMappingUtility {
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
-            String mdTypeName = 'Data_Import_Field_Mapping__mdt';
+            String mdTypeName = Data_Import_Field_Mapping__mdt.SObjectType.getDescribe().getName();
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
@@ -649,6 +824,7 @@ public with sharing class BDI_MigrationMappingUtility {
         private Boolean isFieldNameUsable = false;
         private Boolean isObjectNameUsable = false;
         private Boolean isObjectAPINameUsable = false;
+        private String isRequired = '';
         public String dataImportObjectName;
         public String targetObjectAPIName;
         public String targetFieldAPIName;
@@ -662,28 +838,70 @@ public with sharing class BDI_MigrationMappingUtility {
             this.dataImportFieldName = dfr.Label;
             this.dataImportFieldAPIName = dfr.Name;
             this.helpText = dfr.getInlineHelpText();
+            this.isRequired = dfr.isNillable() ? 'No' : 'Yes';
 
             if (this.helpText != null) {
-                List<String> parts = helpText.split('\\.', 2);
-                this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
-                this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
 
-                if (NAMESPACE != 'npsp') {
-                    this.targetFieldAPIName =
-                        UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                List<String> parts = splitHelpText(this.helpText);
+                if (parts != null) {
+                    this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
+                    this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
+
+                    if (NAMESPACE != 'npsp') {
+                        this.targetFieldAPIName =
+                            UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                    }
+
+                    checkRequiredFields();
                 }
-
-                checkRequiredFields();
             }
         }
 
+        private List<String> splitHelpText(String helpText) {
+            String symbol;
+            Boolean hasSpecialChar = helpText.containsAny('$&+,:;=?@#|\'<>.-^*()%!_');
+            Boolean hasDataImportNames =
+                helpText.containsAny('Account1Account2AddressContact1Contact2HouseholdOpportunityDonationPaymentGAURole');
+
+            if (hasSpecialChar == true) {
+                String[] specialCharacters =
+                    new List<String>{'$', '&', '\\+', ',', ':', ';', '=', '\\?', '@',
+                                     '#', '\\|', '\'', '<', '>', '\\.', '-', '^', '\\*',
+                                     '\\(', '\\)', '%', '!', '_'};
+
+                for (String sc : specialCharacters) {
+                    List<String> parts = helpText.split(sc, 2);
+                    Integer countWhitespaces = helpText.countMatches(' ');
+
+                    if (parts.size() >= 2 && countWhitespaces <= 4) {
+                        if (String.isNotBlank(parts[0]) && String.isNotBlank(parts[1])) {
+                            return parts;
+                        }
+                    }
+                }
+            }
+
+            if (hasDataImportNames == true) {
+                Integer countWhitespaces = helpText.countMatches(' ');
+
+                if (countWhitespaces <= 4) {
+                    return helpText.split('', 2);
+                }
+            }
+
+            return null;
+        }
+
         private void checkRequiredFields() {
-            this.isFieldNameUsable = String.isNotBlank(this.targetFieldAPIName);
             this.isObjectNameUsable = String.isNotBlank(this.dataImportObjectName);
             if (String.isNotBlank(this.dataImportObjectName)) {
                 this.targetObjectAPIName = DI_OBJECT_MAP.get(this.dataImportObjectName);
             }
             this.isObjectAPINameUsable = String.isNotBlank(this.targetObjectAPIName);
+            if (this.isObjectAPINameUsable && String.isNotBlank(this.targetFieldAPIName)) {
+                Set<String> validFields = getValidFieldsByObjectName(this.targetObjectAPIName);
+                this.isFieldNameUsable = validFields.contains(this.targetFieldAPIName.toLowerCase());
+            }
         }
 
         public Boolean isUsable() {
@@ -697,7 +915,23 @@ public with sharing class BDI_MigrationMappingUtility {
             if (Test.isRunningTest()) {
                 checkRequiredFields();
             }
-            return this.isFieldNameUsable && this.isObjectNameUsable && !this.isObjectAPINameUsable;
+            return this.isObjectNameUsable && String.isNotBlank(this.targetFieldAPIName);
+        }
+
+        public Set<String> getValidFieldsByObjectName(String objectName) {
+            if (validFieldsByObjectName == null) {
+                validFieldsByObjectName = new Map<String, Set<String>>();
+            }
+
+            if (validFieldsByObjectName.get(objectName) == null) {
+                SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
+                Set<String> validFields = objectType.getDescribe().fields.getMap().keySet();
+                validFieldsByObjectName.put(objectName, validFields);
+
+                return validFields;
+            } else {
+                return validFieldsByObjectName.get(objectName);
+            }
         }
 
         /****************************************************************************************************

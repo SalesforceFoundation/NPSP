@@ -15,7 +15,8 @@ import getUnmappedDataImportFieldDescribes
 // Import custom labels
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
 import bdiFMUIBackToMapGroup from '@salesforce/label/c.bdiFMUIBackToMapGroup';
-import bdiFMUIDescription from '@salesforce/label/c.bdiFMUIDescription';
+import bdiFMUIDescription1 from '@salesforce/label/c.bdiFMUIDescription1';
+import bdiFMUIDescription2 from '@salesforce/label/c.bdiFMUIDescription2';
 import bdiFMUILongDeployment from '@salesforce/label/c.bdiFMUILongDeployment';
 import bdiFMUILongDeploymentLink from '@salesforce/label/c.bdiFMUILongDeploymentLink';
 import bdiFMUILongDeploymentMessage from '@salesforce/label/c.bdiFMUILongDeploymentMessage';
@@ -46,15 +47,15 @@ const actions = [
 
 const columns = [
     { label: bdiFMUIFieldLabel, fieldName: 'Source_Field_Label', type: 'text', sortable: true },
-    { label: bdiFMUIFieldAPIName, fieldName: 'Source_Field_API_Name', type: 'text' },
-    { label: bdiFMUIDataType, fieldName: 'Source_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
+    { label: bdiFMUIFieldAPIName, fieldName: 'Source_Field_API_Name', type: 'text', sortable: true},
+    { label: bdiFMUIDataType, fieldName: 'Source_Field_Display_Type_Label', type: 'text', initialWidth: 125, sortable: true },
         {
             label: bdiFMUIDatatableMapsTo, fieldName: '', type: 'text', fixedWidth: 95,
             cellAttributes: { alignment: 'center', iconName: { fieldName: 'Maps_To_Icon' } }
         },
-    { label: bdiFMUIFieldLabel, fieldName: 'Target_Field_Label', type: 'text' },
-    { label: bdiFMUIFieldAPIName, fieldName: 'Target_Field_API_Name', type: 'text' },
-    { label: bdiFMUIDataType, fieldName: 'Target_Field_Display_Type_Label', type: 'text', fixedWidth: 125 },
+    { label: bdiFMUIFieldLabel, fieldName: 'Target_Field_Label', type: 'text', sortable: true },
+    { label: bdiFMUIFieldAPIName, fieldName: 'Target_Field_API_Name', type: 'text', sortable: true },
+    { label: bdiFMUIDataType, fieldName: 'Target_Field_Display_Type_Label', type: 'text', initialWidth: 125, sortable: true },
     { type: 'action', typeAttributes: { rowActions: actions } }
 ];
 
@@ -63,7 +64,8 @@ export default class bdiFieldMappings extends LightningElement {
     customLabels = {
         bdiFieldMappingsLabel,
         bdiFMUIBackToMapGroup,
-        bdiFMUIDescription,
+        bdiFMUIDescription1,
+        bdiFMUIDescription2,
         bdiFMUINewFieldMapping,
         bdiFMUINoFieldMappings,
         bdiFMUISourceObject,
@@ -79,6 +81,8 @@ export default class bdiFieldMappings extends LightningElement {
     @track displayFieldMappings = false;
     @track isLoading = true;
     @track columns = columns;
+    @track sortedBy;
+    @track sortDirection;
     @track fieldMappingSetName;
     @track fieldMappings;
 
@@ -143,7 +147,10 @@ export default class bdiFieldMappings extends LightningElement {
                 });
 
             if (this.fieldMappings && this.fieldMappings.length > 0) {
-                this.fieldMappings = this.sortBy(this.fieldMappings, 'Source_Field_Label');
+                this.fieldMappings = this.sortData(
+                    this.fieldMappings,
+                    'Source_Field_Label',
+                    'asc');
             }
 
             this.isLoading = false;
@@ -174,7 +181,7 @@ export default class bdiFieldMappings extends LightningElement {
 
                 that.showToast(
                     bdiFMUILongDeployment,
-                    bdiFMUILongDeploymentMessage + ' {0}.',
+                    bdiFMUILongDeploymentMessage + ' {0}',
                     'warning',
                     'sticky',
                     [{url, label: bdiFMUILongDeploymentLink}]);
@@ -300,13 +307,35 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sorts a list by a property
+    * @description Handles the onsort event from the lightning:datatable
+    *
+    * @param {object} event: Event holding column details of the action
+    */
+    handleColumnSorting(event) {
+        this.sortedBy = event.detail.fieldName;
+        this.sortedDirection = event.detail.sortDirection;
+        this.fieldMappings = this.sortData(this.fieldMappings, this.sortedBy, this.sortedDirection);
+    }
+
+    /*******************************************************************************
+    * @description Sorts the given list by field name and direction
     *
     * @param {array} list: List to be sorted
-    * @param {string} sortedBy: Property to sort by
+    * @param {string} fieldName: Property to sort by
+    * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
     */
-    sortBy(list, sortedBy) {
-        return list.sort((a, b) => { return (a[sortedBy] > b[sortedBy]) ? 1 : -1} );
+    sortData(list, fieldName, sortDirection) {
+        const data = JSON.parse(JSON.stringify(list));
+        const key =(a) => a[fieldName];
+        const reverse = sortDirection === 'asc' ? 1 : -1;
+
+        data.sort((a,b) => {
+            let valueA = key(a) ? key(a).toLowerCase() : '';
+            let valueB = key(b) ? key(b).toLowerCase() : '';
+            return reverse * ((valueA > valueB) - (valueB > valueA));
+        });
+
+        return data;
     }
 
     /*******************************************************************************
