@@ -1,0 +1,174 @@
+<apex:page controller="STG_PanelDataImportAdvancedMapping_CTRL" docType="html-5.0" standardStylesheets="false">
+
+    <apex:slds/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}" />
+
+    <style>
+        .slds-scope .slds-text-heading_medium__extension {
+            font-size: 1rem;
+        }
+        #page_messages .slds-notify {
+            margin-left: 0;
+        }
+        #page_messages .slds-notify .slds-media__body {
+            align-self: center;
+        }
+        #invalidHelpTextMappingsIcon {
+            fill: rgb(81, 79, 77);
+        }
+    </style>
+
+    <div class="slds-scope">
+        <apex:form id="form" styleClass="slds-m-around_x-large">
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.bdiAdvancedMapping}" />
+
+            <c:UTIL_PageMessages escMsg="false" allowClose="false" id="messages" />
+            <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
+
+            <!-- BEGIN INTRO TEXT AND TOGGLE -->
+            <div class="{!IF(isPolling, 'slds-hide', '')}">
+                <div class="slds-grid">
+                    <apex:outputPanel>
+                        <div class="slds-m-vertical_medium">
+                            <c:UTIL_HtmlOutput
+                                html="{!$Label.stgHelpAdvancedMapping1}"
+                                hasLink="true"
+                                styleClass="slds-text-body_small" />
+                        </div>
+                        <div class="slds-m-vertical_medium">
+                            <i>
+                                <c:UTIL_HtmlOutput
+                                    html="{!$Label.stgHelpAdvancedMapping2}"
+                                    hasLink="true"
+                                    styleClass="slds-text-body_small" />
+                            </i>
+                        </div>
+                        <div class="slds-m-vertical_medium">
+                            <c:UTIL_HtmlOutput
+                                html="{!$Label.stgHelpAdvancedMapping3}"
+                                hasLink="true"
+                                styleClass="slds-text-body_small" />
+                        </div>
+
+                        <label class="slds-checkbox_toggle slds-grid slds-m-vertical_large" style="width: fit-content;">
+                            <span class="slds-form-element__label slds-m-bottom_none">Advanced Mapping</span>
+                            <apex:inputCheckbox onClick="toggle(); return false;"
+                                                id="enableDIFMToggle"
+                                                html-name="checkbox-toggle-2"
+                                                value="{!isAdvancedMappingEnabled}"
+                                                html-aria-describedby="checkbox-toggle-2"
+                                                disabled="{!hasDeploymentInProgress}"/>
+                            <span class="slds-checkbox_faux_container" aria-live="assertive">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-checkbox_on">Enabled</span>
+                                <span class="slds-checkbox_off">Disabled</span>
+                            </span>
+                        </label>
+
+                        <apex:commandButton id="navigateAdvancedMapping"
+                                            value="{!$Label.stgBDIGoToSetup}"
+                                            styleClass="slds-m-vertical_large slds-button slds-button_brand {!IF(isAdvancedMappingEnabled,'','slds-hide')}"
+                                            action="{!navigate}" />
+                    </apex:outputPanel>
+                </div>
+            </div>
+            <!-- END -->
+
+            <!-- BAD/MALFORMED HELP TEXT MAPPINGS DATATABLE -->
+            <div class="slds-grid slds-wrap slds-m-top_large {!IF(isPolling,'slds-hide','')}">
+                <div class="slds-size_1-of-1 {!IF(migrationMappingUtility.badHelpTextMappings.size > 0,'','slds-hide')}">
+                    <div class="slds-inline_icon_text slds-grid">
+                        <svg id="invalidHelpTextMappingsIcon" class="slds-icon slds-icon--small slds-m-right--small slds-col slds-no-flex" viewBox="0 0 24 24">
+                            <path d="M23.7 19.6L13.2 2.5c-.6-.9-1.8-.9-2.4 0L.3 19.6c-.7 1.1 0 2.6 1.1 2.6h21.2c1.1 0 1.8-1.5 1.1-2.6zM12 18.5c-.8 0-1.4-.6-1.4-1.4s.6-1.4 1.4-1.4 1.4.6 1.4 1.4-.6 1.4-1.4 1.4zm1.4-4.2c0 .3-.2.5-.5.5h-1.8c-.3 0-.5-.2-.5-.5v-6c0-.3.2-.5.5-.5h1.8c.3 0 .5.2.5.5v6z"/>
+                        </svg>
+                        <div class="slds-col slds-align-middle">
+                            <p class="slds-text-heading_medium slds-text-heading_medium__extension">
+                                {!$Label.stgHelpAdvancedMappingInvalidHelpText}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="slds-m-vertical_medium">
+                        <c:UTIL_HtmlOutput
+                            html="{!$Label.stgHelpAdvancedMapping4}"
+                            hasLink="true"
+                            styleClass="slds-text-body_small" />
+                    </div>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Data Import Field">
+                                        {!$Label.stgHelpAdvancedMappingTableHeader1}
+                                    </div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Help Text">
+                                        {!$Label.stgHelpAdvancedMappingTableHeader2}
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!migrationMappingUtility.badHelpTextMappings}" var="cmt">
+                                <tr class="slds-hint-parent">
+                                    <th data-label="{!cmt.dataImportFieldName}" scope="row">
+                                        <div class="slds-truncate" title="{!cmt.dataImportFieldName}">
+                                            {!cmt.dataImportFieldName} ({!cmt.dataImportFieldAPIName})
+                                        </div>
+                                    </th>
+                                    <td data-label="{!cmt.helpText}">
+                                        <div class="slds-truncate" title="{!cmt.helpText}">
+                                            {!cmt.helpText}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END BAD/MALFORMED HELP TEXT MAPPINGS DATATABLE -->
+
+            <!-- BEGIN POLLING MESSAGE -->
+            <div class="slds-card slds-m-top_medium {!IF(isPolling,'','slds-hide')}">
+                <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
+                    <p class="slds-text-body_small slds-m-top_x-small">
+                        <apex:outputText rendered="{!isPolling}" value="{!$Label.stgDeploymentInProgress}" />
+                    </p>
+                </div>
+            </div>
+            <!-- END POLLING MESSAGE -->
+
+            <apex:actionPoller
+                action="{!startPolling}"
+                enabled="{!isPolling}"
+                reRender="form"
+                interval="5"
+                status="deploymentStatus" />
+
+            <apex:actionFunction
+                name="enableDataImportFieldMapping"
+                action="{!enableDataImportFieldMapping}"
+                reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+                status="statusLoad" />
+            <apex:actionFunction
+                name="disableDataImportFieldMapping"
+                action="{!disableDataImportFieldMapping}"
+                reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+                status="statusLoad" />
+
+        </apex:form>
+
+        <script type="text/javascript">
+            function toggle() {
+                if (document.getElementById('{!$Component.form.enableDIFMToggle}').checked) {
+                    enableDataImportFieldMapping();
+                } else {
+                    disableDataImportFieldMapping();
+                }
+            }
+        </script>
+
+    </div>
+
+</apex:page>
