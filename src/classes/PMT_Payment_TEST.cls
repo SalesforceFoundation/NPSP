@@ -928,7 +928,6 @@ private class PMT_Payment_TEST {
     /* Tests with Enforce Accounting Data Consistency Enabled */
     /* @description Non Finalized Opportunity, Amount changed to more than Sum of Paid Payments: Result (Allowed)
     */
-    // TODO
     @isTest
     private static void oppNonFinalizedUpdateAmtToHigherThanPaidPayments() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
@@ -982,7 +981,6 @@ private class PMT_Payment_TEST {
     /* Tests with Enforce Accounting Data Consistency Enabled */
     /* @description Non Finalized Opportunity, Amount changed to less than Sum of Paid Payments: Result (Blocked)
     */
-    // TODO
     @isTest
     private static void oppNonFinalizedUpdateAmtToLowerThanPaidPayments() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
@@ -1035,7 +1033,6 @@ private class PMT_Payment_TEST {
     /* Tests with Enforce Accounting Data Consistency Enabled */
     /* @description Finalized Opportunity, Amount same as Sum of Paid Payments: Result (Allowed)
     */
-    // TODO
     @isTest
     private static void oppFinalizedUpdateAmtToEqualToPaidPayments() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
@@ -1079,19 +1076,59 @@ private class PMT_Payment_TEST {
             System.assert(true);
          } catch (Exception ex) {
             // failed
-            System.assert(false, 'Fianlized opportunity did not update to amount equal to paid payments.');
+            System.assert(false, 'Finalized opportunity did not update to amount equal to paid payments.');
         }
-        
-        
     }
 
     /* Tests with Enforce Accounting Data Consistency Enabled */
     /* @description Finalized Opportunity, Amount < Sum of Paid Payments: Result (Blocked)
     */
-    // TODO
     @isTest
     private static void oppFinalizedUpdateAmtToLowerThanPaidPayments() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
 
+        Test.startTest();
+
+        Opportunity opp = new Opportunity(
+                Name='finalized opp',
+                Amount = 100,
+                AccountID = acc.Id,
+                CloseDate = System.today(),
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                StageName = OPP_StageMappingUtil.TEST_FINALIZED_STAGE);
+        insert opp;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = true,
+                        npe01__Payment_Amount__c = 50,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Payment_Date__c = System.today()
+                ),
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = true,
+                        npe01__Payment_Amount__c = 50,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Payment_Date__c = System.today()
+                )
+        };
+        insert payments;
+        
+        Test.stopTest();
+
+        // update the opp to a lower amount, should be blocked
+        try {
+            opp.Amount = 37;
+            update opp;
+
+            // failure
+            System.assert(false, 'The opportunity amount should not have updated to a lower amount.');
+
+        } catch (Exception ex) {
+            // success
+            System.assert(ex.getMessage().contains(System.Label.Opp_Amount_Not_Equal_Error), 'The opportunity was not updated, but received different error message.');
+        }
     }
     
     /* Tests with Enforce Accounting Data Consistency Enabled */
