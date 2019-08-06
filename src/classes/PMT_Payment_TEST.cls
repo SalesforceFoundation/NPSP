@@ -1291,10 +1291,50 @@ private class PMT_Payment_TEST {
        Do I have the behavior we want correct here? Basically, when an Opportunity Becomes finalized (but was not previously, 
        it needs to recalculate the Amount based on the Paid Payments. The logic as coded currently will not do that because we are only recalcing on payment changes..
     */
-    // TODO
     @isTest
     private static void oppNonFinalizedUpdateLowerPaymentsToPaid() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = true));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
 
+        Test.startTest();
+
+        Opportunity opp = new Opportunity(
+                Name='committed opp',
+                Amount = 100,
+                AccountID = acc.Id,
+                CloseDate = System.today(),
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                StageName = OPP_StageMappingUtil.TEST_COMMITTED_STAGE);
+        insert opp;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = false,
+                        npe01__Payment_Amount__c = 40,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Scheduled_Date__c = System.today()
+                ),
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = false,
+                        npe01__Payment_Amount__c = 40,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Scheduled_Date__c = System.today()
+                )
+        };
+        insert payments;
+
+        // update payments to paid
+        for (npe01__OppPayment__c p : payments) {
+            p.npe01__Paid__c = true;
+            p.npe01__Payment_Date__c = System.today();
+        }
+        update payments;
+        
+        Test.stopTest();
+
+        // check the opp amount
+        opp = [select Id, Amount from Opportunity where Id = :opp.Id];
+        System.assertEquals(80, opp.Amount, 'The opportunity amount should have decreased.');
     }
     
     /* Tests with Enforce Accounting Data Consistency Enabled */
