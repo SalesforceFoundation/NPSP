@@ -418,7 +418,7 @@ public class ALLO_PaymentSync_SVC {
 
                 //only add the percent for non-default
                 if (!alloSettings.Default_Allocations_Enabled__c
-                    || (alloSettings.Default_Allocations_Enabled__c &&  gau != alloSettings.Default__c) {
+                    || (alloSettings.Default_Allocations_Enabled__c &&  gau != alloSettings.Default__c)) {
                     newOppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? newGAUAmtFOrOpp / context.Opportunity.Amount * 100 : 0;
                 }
 
