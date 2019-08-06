@@ -1,5 +1,4 @@
 import logging
-import re
 import time
 import warnings
 
@@ -14,12 +13,12 @@ from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
-import sys
 from email.mime import text
 
 from cumulusci.tasks.apex.anon import AnonymousApexTask
 from cumulusci.core.config import TaskConfig
 from cumulusci.tasks.apex.batch import BatchApexWait
+from tasks.set_BDI_mapping_mode import SetBDIMappingMode
 
 from locators_45 import npsp_lex_locators as locators_45
 from locators_46 import npsp_lex_locators as locators_46
@@ -1096,31 +1095,25 @@ class NPSP(object):
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
 
-    def batch_apex_wait(self, classname):
+    def _run_subtask(self, taskclass, **options):
         subtask_config = TaskConfig(
-                {"options": {"class_name" : classname}}
+                {"options": options}
         )
+        return self.cumulusci._run_task(taskclass, subtask_config)
 
-        self.cumulusci._run_task(BatchApexWait, subtask_config)
+    def batch_apex_wait(self, class_name):
+        return self._run_subtask(BatchApexWait, class_name=class_name)
 
     def run_apex(self, code):
-        subtask_config = TaskConfig(
-                {"options": {"apex" : code}}
-        )
+        return self._run_subtask(AnonymousApexTask, apex=code)
 
-        self.cumulusci._run_task(AnonymousApexTask, subtask_config)
-        
-    def configure_BDI(self, method):
-        valid_methods = ('Data Import Field Mapping', 'Help Text')
+    def configure_BDI(self, mode):
+        return self._run_subtask(SetBDIMappingMode, mode=mode)
 
-        assert method in valid_methods, f"Method must be one of {', '.join(valid_methods)}"
-
-        self.run_apex("""Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-                diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
-                diSettings.Field_Mapping_Method__c = '%s';
-                update diSettings;""" % method)
-        time.sleep(10*60)  ## FIXME: How can I do this properly?
-
+    def _get_di_mode(self):
+        soql = "SELECT npsp__Field_Mapping_Method__c FROM npsp__Data_Import_Settings__c"
+        res = self.cumulusci.sf.query_all(soql)
+        return res['records'][0]['npsp__Field_Mapping_Method__c']
 
     def batch_data_import(self, batchsize):
         """"Do a BDI import using the API and wait for it to complete"""
@@ -1129,3 +1122,6 @@ class NPSP(object):
                 """ % int(batchsize))
 
         self.batch_apex_wait("BDI_DataImport_BATCH")
+
+        soql = "select Id from npsp__CustomObject3__c"
+        res = self.cumulusci.sf.query_all(soql)
