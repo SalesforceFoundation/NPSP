@@ -1123,5 +1123,8 @@ class NPSP(object):
 
         self.batch_apex_wait("BDI_DataImport_BATCH")
 
-        soql = "select Id from npsp__CustomObject3__c"
-        res = self.cumulusci.sf.query_all(soql)
+    def python_display(self, title, value):
+        print(value)
+        import os, sys
+        os.system(f"echo '{title}: {repr(value)}'")
+        sys.stderr.write(f"{title}: {repr(value)}\n")

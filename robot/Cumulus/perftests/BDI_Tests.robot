@@ -36,12 +36,20 @@ Generate Data
 
     Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
     ...                 num_records=${count}
-    ...                 database_url=${database_url} 
+#    ...                 database_url=sqlite:////tmp/debug_backup.db
     ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
     ...                 data_generation_task=tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
 Setup BDI
     Configure BDI     ${field_mapping_method}
+
+Display Failures
+    @{result} =   Salesforce Query  npsp__DataImport__c  
+    ...           select=Id,npsp__Status__c,npsp__FailureInformation__c
+    ...           npsp__Status__c=Failed
+    ${first_failure} =   Set Variable   ${result}[0][npsp__FailureInformation__c]
+    Python Display      Failures   ${first_failure}
+
 
 *** Test Cases ***
 
@@ -53,6 +61,16 @@ Import a data batch via the API - Test 40
     @{result} =   Salesforce Query  npsp__DataImport__c  
     ...           select=COUNT(Id)
     ...           npsp__Status__c=Imported
+
+    ${imported_records} =   Set Variable    ${result}[0][expr0]
+
+    Run Keyword If  ${imported_records}!=${count}
+    ...    Display Failures
+
+    Should Be Equal      ${imported_records}    ${count}
+
+    @{result} =   Salesforce Query  npsp__CustomObject3__c  
+    ...           select=COUNT(Id)
 
     Should Be Equal     ${result}[0][expr0]     ${count}
 
