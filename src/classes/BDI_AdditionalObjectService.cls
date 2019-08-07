@@ -452,6 +452,7 @@ public with sharing class BDI_AdditionalObjectService {
             System.debug(LoggingLevel.ERROR, 'objWrap.dataImport.get(predecessor.Imported_Record_Field_Name__c) == null');
             logError(objWrap, System.label.bdiAdditionalObjPredNotFound);
         }
+        System.debug(LoggingLevel.ERROR, 'Returning result: ' + result);
         return result;
     }
 
