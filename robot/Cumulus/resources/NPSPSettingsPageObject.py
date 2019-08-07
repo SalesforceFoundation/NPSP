@@ -6,7 +6,7 @@ from locators_46 import npsp_lex_locators
 from logging import exception
 
 @pageobject("Custom", "NPSPSettings")
-class NPSPSettingsHomePage(BasePage):
+class NPSPSettingsPage(BasePage):
     object_name = None
 
     
@@ -18,8 +18,6 @@ class NPSPSettingsHomePage(BasePage):
     def _go_to_page(self, filter_name=None):
         """To go to NPSP Settings page"""
         url= self.cumulusci.org.lightning_base_url+"/lightning/n/NPSP_Settings"
-        if filter_name:
-            url += "?filterName={}".format(filter_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
         self.npsp.wait_for_locator("frame","Nonprofit Success Pack Settings")
