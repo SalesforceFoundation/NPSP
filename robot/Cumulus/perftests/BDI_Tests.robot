@@ -1,13 +1,13 @@
 *** Variables ***
 
-${count} =   40       # use a multiple of 4
+${count} =   4       # use a multiple of 4
 ${database_url} =    
 ${field_mapping_method} =  
 
 # tests won't work if there are records of these types in existence.
 ${core_objs_for_cleanup} =  npsp__DataImport__c,npsp__CustomObject3__c
 # you could also clean these up to have a cleaner test
-${other_objs_for_cleanup} =   Account,Contact,Opportunity,npe01__OppPayment__c, npsp__CustomObject1__c
+${other_objs_for_cleanup} =   Opportunity,npe01__OppPayment__c,Account,Contact, npsp__CustomObject1__c
 ${cleanup_first} =   "core"   # could also be "all" for maximum cleanliness or "none" for fresh scratch orgs
 
 *** Settings ***
@@ -20,7 +20,7 @@ Suite Setup      Run Keywords   Setup BDI
 
 *** Keywords ***
 Clear DataImport Records
-    ${all_objects} =   Catenate    ${core_objs_for_cleanup}    ${other_objs_for_cleanup}
+    ${all_objects} =   Catenate    ${core_objs_for_cleanup}  ,   ${other_objs_for_cleanup}
     ${cleanup_objects} =   Set Variable If  
     ...             "${cleanup_first}"=="core"  ${core_objs_for_cleanup}
     ...             "${cleanup_first}"=="all"  ${all_objects}
@@ -44,17 +44,22 @@ Setup BDI
     Configure BDI     ${field_mapping_method}
 
 Display Failures
-    @{result} =   Salesforce Query  npsp__DataImport__c  
+    @{result} =   Salesforce Query  npsp__DataImport__c
     ...           select=Id,npsp__Status__c,npsp__FailureInformation__c
     ...           npsp__Status__c=Failed
-    ${first_failure} =   Set Variable   ${result}[0][npsp__FailureInformation__c]
-    Python Display      Failures   ${first_failure}
+    ${length} =  Get Length  ${result}
+    Run Keyword If  ${length} == 0  Log to Console  No failure records
+    Run Keyword If  ${length} == 0  Return From Keyword    False
+
+    ${first_failure} =   ${result}[0][npsp__FailureInformation__c]
+
+   Python Display      Failures   ${first_failure}
 
 
 *** Test Cases ***
 
-Import a data batch via the API - Test 40
-    Batch Data Import   1000    
+Import a data batch via the API - Test 4
+    Batch Data Import   1
 
     ${count} =	Convert To Integer	${count}	
 
