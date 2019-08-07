@@ -51,7 +51,7 @@ Display Failures
     Run Keyword If  ${length} == 0  Log to Console  No failure records
     Run Keyword If  ${length} == 0  Return From Keyword    False
 
-    ${first_failure} =   ${result}[0][npsp__FailureInformation__c]
+    ${first_failure} =   Set Variable   ${result}[0][npsp__FailureInformation__c]
 
    Python Display      Failures   ${first_failure}
 
