@@ -70,6 +70,7 @@ public with sharing class BDI_AdditionalObjectService {
         //Iterate through the map of tiers, starting with the first tier that actually has a predecessor 
         //(ie 2nd tier), and validate and create each object as appropriate.
         for (Integer i = 1; i < objMappingsByTier.size(); i++) {
+            System.debug(LoggingLevel.ERROR, 'OBJ MAPPING');
 
             Map<String,Data_Import_Object_Mapping__mdt> currentTier = objMappingsByTier.get(i);
 
@@ -438,9 +439,17 @@ public with sharing class BDI_AdditionalObjectService {
     *  if it exists.
     */
     private Boolean predecessorExists(BDI_ObjectWrapper objWrap, Data_Import_Object_Mapping__mdt predecessor){
+        System.debug(LoggingLevel.ERROR, '***predecessorExists()');
+        System.debug(LoggingLevel.ERROR, objWrap);
+        System.debug(LoggingLevel.ERROR, predecessor);
+
+        System.debug(LoggingLevel.ERROR, '======================');
+        System.debug(LoggingLevel.ERROR, 'objWrap Data Import: ' + objWrap.dataImport);
+        System.debug(LoggingLevel.ERROR, 'predecessor.Imported_Record_Field_Name__c: ' + predecessor.Imported_Record_Field_Name__c);
         Boolean result = true;
         if (objWrap.dataImport.get(predecessor.Imported_Record_Field_Name__c) == null) {
             result = false;
+            System.debug(LoggingLevel.ERROR, 'objWrap.dataImport.get(predecessor.Imported_Record_Field_Name__c) == null');
             logError(objWrap, System.label.bdiAdditionalObjPredNotFound);
         }
         return result;
