@@ -127,9 +127,9 @@ class DownloadDebugLogs(BaseSalesforceApiTask):
             writer.writeheader()
             for log in result["records"]:
                 writer.writerow(log)
-                log_file = os.path.join(debug_log_dir, log['Id'] + '.log')
+                log_file = os.path.join(debug_log_dir, log["Id"] + ".log")
                 try:
-                    self.write_logfile(log_file, log['Id'])
+                    self.write_logfile(log_file, log["Id"])
                 except Exception as e:
                     self.logger.info(f"Cannot write {log_file} because {e}")
 
@@ -141,15 +141,12 @@ class DownloadDebugLogs(BaseSalesforceApiTask):
             TurnOnDebugLogs.debug_level_id = None
 
     def write_logfile(self, log_file, logid):
-        body_url = '{}sobjects/ApexLog/{}/Body'.format(
-            self.tooling.base_url, logid)
-        response = self.tooling.request.get(body_url,
-                                            headers=self.tooling.headers)
+        body_url = "{}sobjects/ApexLog/{}/Body".format(self.tooling.base_url, logid)
+        response = self.tooling.request.get(body_url, headers=self.tooling.headers)
 
-        with open(log_file, mode='w', encoding='utf-8') as f:
+        with open(log_file, mode="w", encoding="utf-8") as f:
             f.write(self._decode_to_unicode(response.content))
             self.logger.info(f"Created {log_file}")
-
 
     # I don't really understand the purpose of this code but I'm copying it
     # from the original version of this code
@@ -157,7 +154,7 @@ class DownloadDebugLogs(BaseSalesforceApiTask):
         if content:
             try:
                 # Try to decode ISO-8859-1 to unicode
-                return content.decode('ISO-8859-1')
+                return content.decode("ISO-8859-1")
             except UnicodeEncodeError:
                 # Assume content is unicode already
                 return content

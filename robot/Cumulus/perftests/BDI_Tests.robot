@@ -45,7 +45,7 @@ Setup BDI
 
 Display Failures
     @{result} =   Salesforce Query  npsp__DataImport__c
-    ...           select=Id,npsp__Status__c,npsp__FailureInformation__c
+    ...           select=Id,npsp__Status__c,npsp__FailureInformation__c, npsp__PaymentImported__c, npsp__PaymentImportStatus__c
     ...           npsp__Status__c=Failed
     ${length} =  Get Length  ${result}
     Run Keyword If  ${length} == 0  Log to Console  No failure records
