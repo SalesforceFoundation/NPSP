@@ -1631,13 +1631,13 @@ private class PMT_Payment_TEST {
                         npe01__Paid__c = true,
                         npe01__Payment_Amount__c = 40,
                         npe01__Opportunity__c = opp.Id,
-                        npe01__Scheduled_Date__c = System.today()
+                        npe01__Payment_Date__c = System.today()
                 ),
                 new npe01__OppPayment__c(
                         npe01__Paid__c = true,
                         npe01__Payment_Amount__c = 40,
                         npe01__Opportunity__c = opp.Id,
-                        npe01__Scheduled_Date__c = System.today()
+                        npe01__Payment_Date__c = System.today()
                 )
         };
         insert payments;
@@ -1660,7 +1660,46 @@ private class PMT_Payment_TEST {
     // TODO
     @isTest
     private static void oppFinalizedWUnpaidPaymentsUpdateeToPaidDataConsistDisabled() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = false));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
 
+        Test.startTest();
+
+        Opportunity opp = new Opportunity(
+                Name='finalized opp',
+                Amount = 100,
+                AccountID = acc.Id,
+                CloseDate = System.today(),
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                StageName = OPP_StageMappingUtil.TEST_FINALIZED_STAGE);
+        insert opp;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = false,
+                        npe01__Payment_Amount__c = 40,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Scheduled_Date__c = System.today()
+                ),
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = false,
+                        npe01__Payment_Amount__c = 40,
+                        npe01__Opportunity__c = opp.Id,
+                        npe01__Scheduled_Date__c = System.today()
+                )
+        };
+        insert payments;
+
+        // make payments paid
+        for (npe01__OppPayment__c p : payments) {
+            p.npe01__Paid__c = true;
+            p.npe01__Payment_Date__c = System.today();
+        }
+        update payments;
+
+        // check the opp amount again, it should be unchanged
+        opp = [select Id, Amount from Opportunity where Id = :opp.Id];
+        System.assertEquals(100, opp.Amount, 'The opportunity amount should have remained unchanged.');
     }
 
 
