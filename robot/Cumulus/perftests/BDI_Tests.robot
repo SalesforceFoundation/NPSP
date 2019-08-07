@@ -1,6 +1,6 @@
 *** Variables ***
 
-${count} =   8       # use a multiple of 4
+${count} =   12       # use a multiple of 4
 ${database_url} =    
 ${field_mapping_method} =  
 
@@ -36,7 +36,7 @@ Generate Data
 
     Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
     ...                 num_records=${count}
-#    ...                 database_url=sqlite:////tmp/debug_backup.db
+    ...                 database_url=sqlite:////tmp/temp_db.db.db
     ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
     ...                 data_generation_task=tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
