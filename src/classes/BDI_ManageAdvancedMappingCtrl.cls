@@ -184,47 +184,6 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
-    * @description Gets unmapped Data Import field describes
-    *
-    * @return List: List of BDI_ManageAdvancedMappingCtrl.FieldInfo
-    */
-    @AuraEnabled
-    public static FieldInfo[] getUnmappedDataImportFieldDescribes() {
-        Map<String, String> mappedFieldMappingNameBySourceFieldAPIName = new Map<String, String>();
-        Data_Import_Field_Mapping__mdt[] allFieldMappings = new List<Data_Import_Field_Mapping__mdt>();
-        Map<String, Data_Import_Field_Mapping__mdt[]> fieldMappingsByObjMappingDevName =
-            bdiCMT.fieldMappingsByObjMappingDevName;
-
-        for (Data_Import_Field_Mapping__mdt[] fieldMappings : fieldMappingsByObjMappingDevName.values()) {
-            allFieldMappings.addAll(fieldMappings);
-        }
-
-        for (Data_Import_Field_Mapping__mdt fieldMapping : allFieldMappings) {
-            if (fieldMapping.Is_Deleted__c == false) {
-                mappedFieldMappingNameBySourceFieldAPIName.put(
-                    fieldMapping.Source_Field_API_Name__c,
-                    fieldMapping.DeveloperName);
-            }
-        }
-
-        FieldInfo[] fieldInfos = new List<FieldInfo>();
-
-        String objectName = UTIL_Namespace.StrAllNSPrefix('DataImport__c');
-
-        Map<String, Schema.DescribeFieldResult> fieldDescribes =
-            UTIL_Describe.getAllFieldsDescribe(objectName);
-
-        for (String key : fieldDescribes.keySet()) {
-            Schema.DescribeFieldResult dfr = fieldDescribes.get(key);
-            if (mappedFieldMappingNameBySourceFieldAPIName.get(dfr.name) == null) {
-                fieldInfos.add(new FieldInfo(dfr));
-            }
-        }
-
-        return fieldInfos;
-    }
-
-    /*******************************************************************************************************
     * @description Gets Data Import Field Mapping records based on their parent object and a Field Mapping
     * Set name and converts each to instances of DataImportFieldMappingWrapper for use in the UI.
     *
