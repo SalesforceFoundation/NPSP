@@ -1127,11 +1127,12 @@ class NPSP(object):
 
     def python_display(self, title, value, say=False):
         print(value)
-        sys.stderr.write(f"{title}: {repr(value)}\n")
+        value = repr(value)
+        sys.stderr.write(f"{title}: {value}\n")
         value = value.replace("'", "")
         value = value.replace('"', "")
         value = value.replace('`', "")
-        os.system(f'echo "{title}: {repr(value)}"')
+        os.system(f'echo "{title}: {value}"')
         if say:
             os.system(f'say {title}')
 
