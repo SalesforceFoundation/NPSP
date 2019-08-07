@@ -1,13 +1,13 @@
 *** Variables ***
 
-${count} =   4       # use a multiple of 4
+${count} =   8       # use a multiple of 4
 ${database_url} =    
 ${field_mapping_method} =  
 
 # tests won't work if there are records of these types in existence.
 ${core_objs_for_cleanup} =  npsp__DataImport__c,npsp__CustomObject3__c
 # you could also clean these up to have a cleaner test
-${other_objs_for_cleanup} =   Opportunity,npe01__OppPayment__c,Account,Contact, npsp__CustomObject1__c
+${other_objs_for_cleanup} =   Opportunity,npe01__OppPayment__c,Account,Contact,npsp__CustomObject1__c,MaintenancePlan,npsp__General_Accounting_Unit__c
 ${cleanup_first} =   "core"   # could also be "all" for maximum cleanliness or "none" for fresh scratch orgs
 
 *** Settings ***
@@ -59,7 +59,7 @@ Display Failures
 *** Test Cases ***
 
 Import a data batch via the API - Test 4
-    Batch Data Import   1
+    Batch Data Import   2
 
     ${count} =	Convert To Integer	${count}	
 
