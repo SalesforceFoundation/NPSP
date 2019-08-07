@@ -30,29 +30,74 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @description Abstract Base class to facilitate reprocessing of records
+* @description Abstract Base Batch class to facilitate reprocessing of records
+*              Classes that extend from this can expect to be able to reprocess
+*              record errors recorded via ERR_RecordError  by implementing the
+*              getContextType method (to indicate which Context Type value) the
+*              Record Errors are associated with, and the reprocessRecords method
+*              (where the actual logic of reprocessing the Errored records will occur).
+*              The batch will automatically remove Retry_Pending__c from any record Ids
+*              returned from the reprocessRecords call, as these are assumed to be
+*              successes.
+*              Optionally, the getSuccessMessage can be overriden to provide a closing message
+*              other than the default one if desired.
+*              Record Errors will be retrieved using the following Criteria (anded):
+*                     - ContextType = <<getContextType>>
+*                     - Retry_Pending__c = true
+*                     - Related_Record_Id__c != null
+*              Any Record Errors returned will be compared to the boundary dateTime value, if specified,
+*              or will assume all records if not.
 * @group ErrorHandling
 */
 public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE extends UTIL_AbstractCommon_BATCH {
 
     private DateTime boundary;
 
+    /*******************************************************************************************************
+     * @description Constructor
+    *******************************************************************************************************/
     public ERR_RecordErrorReprocessBatch_Base() {
         super();
-        this.boundary = System.now();
+        this.boundary = System.now().addDays(1);
     }
 
+    /*******************************************************************************************************
+     * @description Constructor
+     * @param DateTime boundary Only records whose LastModifiedDate <= boundary will
+     *        be processed
+    *******************************************************************************************************/
     public ERR_RecordErrorReprocessBatch_Base(DateTime boundary) {
         super();
-        this.boundary = boundary;
+        this.boundary = (boundary != null) ? boundary :System.now().addDays(1);
     }
 
+    /*******************************************************************************************************
+     * @description Constructor
+     * @param Integer batchSize # of records to be returned per batch
+     * @param DateTime boundary Only records whose LastModifiedDate <= boundary will
+     *        be processed
+    *******************************************************************************************************/
     public ERR_RecordErrorReprocessBatch_Base(Integer batchSize, DateTime boundary) {
         super(batchSize);
-        this.boundary = boundary;
+        this.boundary = (boundary != null) ? boundary : System.now().addDays(1);
     }
 
-    public override void doExecute(Database.BatchableContext bc, List<SObject>records ) {
+    /*******************************************************************************************************
+     * @description Executes the pre and post steps for each batch of errors:
+     *              Step 1: Confirm which records meet the criteria and build set/smaps
+     *              Step 2: Initialize ERR_RecordErrors class with Errors
+     *              Step 3: Invoke reprocessRecords method, passing set of Record Ids, and ERR_RecordErrors
+     *                      class as parameters
+     *              Step 4: Call ERR_RecordErrors clearErrors method passing in the Set of Ids returned
+     *                      reprocessRecords (all Ids returned are considered success) and the message to
+     *                      store with this change
+     *              Step 5: Call ERR_RecordErrors.processErrors() method, to commit any new Errors to the
+     *                      System, and to clear any that were marked as successful
+     * @param Database.BatchableContext bc Represents the Parameter Type of a Batch Job Method, and
+     *        contains the batch job Id
+     * @param List<SObject> the list of records found in this batch
+    *******************************************************************************************************/
+    public override void doExecute(Database.BatchableContext bc, List<SObject> records ) {
         List<Error__c> errors = (List<Error__c>) records;
 
         ERR_RecordError recErrs = new ERR_RecordError(getContextType());
@@ -60,10 +105,8 @@ public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE exten
         Set<Id> recIds = new Set<Id>();
 
         for (SObject rec : records) {
-            if ((Datetime) rec.get('LastModifiedDate') <= boundary) {
-                recIds.add (rec.Id);
-                errsToProcess.add((Error__c) rec);
-            }
+            recIds.add (rec.Id);
+            errsToProcess.add((Error__c) rec);
         }
         recErrs.withExistingErrors(errsToProcess);
         if (!recIds.isEmpty()) {
@@ -74,24 +117,69 @@ public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE exten
         }
     }
 
+    /*******************************************************************************************************
+     * @description SObjectType of the Main SObject the SOQL query will retrieve data from
+     * @return SObjectType SObjectType of Object to Query
+    *******************************************************************************************************/
     public override SObjectType getSObjectType() {
         return Error__c.getSObjectType();
     }
 
-    /**
-     * Overridable test Where Clause to add to the inner query, or non LDV query, if not running in LDV/Chunking mode
-     * @return String ''
-     */
-    public override String getWhereClause() {
-        return 'Context_Type__c = \'' + getContextType() + '\' and Retry_Pending__c = true and Record_Id__c != null';
+    /*******************************************************************************************************
+     * @description Fields to retrieve for the batch
+     * @return String Part of select statement between Select and From
+    *******************************************************************************************************/
+    public override String getSOQLFullQueryFieldList() {
+        return  'Id, ' +
+                'Context_Type__c, ' +
+                'Datetime__c, ' +
+                'Error_Type__c, ' +
+                'Full_Message__c, ' +
+                'Object_Type__c, ' +
+                'Related_Record_Id__c, ' +
+                'Record_URL__c, ' +
+                'Retry_Pending__c';
     }
 
+    /*******************************************************************************************************
+     * @description Where clause to find Record Errors for the specified Process Pending Retry
+     * @return String Where Clause
+    *******************************************************************************************************/
+    public override String getWhereClause() {
+        return 'Context_Type__c = \'' + getContextType() + '\' AND ' +
+        'Retry_Pending__c = true AND ' +
+        ' Related_Record_Id__c != null AND ' +
+        ' LastModifiedDate <= ' + boundary.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+    }
+
+    /*******************************************************************************************************
+     * @description The Success Message to be written to the Error record when clearing the
+     *              Retry_Pending__c value for successfully reprocessed records
+     * @return String Success Message Text
+    *******************************************************************************************************/
     public virtual String getSuccessMessage() {
         return Label.errErrorRecordRetrySuccessful;
     }
 
+    /*******************************************************************************************************
+     * @description The Context Type (Error__c.Context_Type__c value) the Record Errors are stored under.
+     *              (Child class must implement this method, and should not be blank/null)
+     * @return String Context Type
+    *******************************************************************************************************/
     public abstract String getContextType();
-    public abstract Set<Id> reprocessRecords(Set<Id> recordIds, ERR_RecordError recErrs);
 
+    /*******************************************************************************************************
+     * @description The logic that must be reprocessed, associated with the Record Errors.
+     *              (Child class must implement this method).  The set of Ids returned by this method call
+     *              are assumed to have been successfully reprocessed, and are cleared with a "retry
+     *              successful message.  Any errors added via the ERR_RecordError instance are also
+     *              written out to the Error__c object.
+     * @param Set<Id> recordIds The recordIds requiring reprocessing
+     * @param ERR_RecordError instance of ERR_RecordError initialized with records to be processed so
+     *        the Retry_Pending__c flag can be cleared, or additional errors can be logged.
+     * @return Set<Id> A set of Ids (Subset of the Ids passed to this method) that were successfully
+     *         reprocessed.
+    *******************************************************************************************************/
+    public abstract Set<Id> reprocessRecords(Set<Id> recordIds, ERR_RecordError recErrs);
 
 }
