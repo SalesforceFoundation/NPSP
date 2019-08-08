@@ -3,7 +3,7 @@ import {LightningElement, track, api} from 'lwc';
 import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import getNamespacePrefix from '@salesforce/apex/UTIL_Namespace.getNamespace';
+import getNamespacePrefix from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespacePrefix';
 
 export default class PlatformEventListener extends LightningElement {
     @api platformEventName = 'DeploymentEvent__e'; //Default
