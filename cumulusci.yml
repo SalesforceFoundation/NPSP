@@ -479,23 +479,15 @@ flows:
         steps:
             1:
                 flow: qa_org_namespaced
-            2:
-                task: turn_on_debug_logs
             3:
                 task: performance_tests_CO
                 options:
-                    vars: field_mapping_method:Data Import Field Mapping,cleanup_first:none
-                    # don't cleanup in this context because its slow
-            4: 
-                task: download_debug_logs
-                options:
-                    debug_log_dir: /tmp/sflogs
+                    vars: field_mapping_method:Data Import Field Mapping,count:5000
 
     test_performance:
         steps:
             1:
                 flow: test_performance_CO
-
 
     beta_dependencies:
         steps:
