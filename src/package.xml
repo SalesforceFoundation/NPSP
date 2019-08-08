@@ -1015,7 +1015,7 @@
         <members>Error__c.Full_Message__c</members>
         <members>Error__c.Object_Type__c</members>
         <members>Error__c.Posted_in_Chatter__c</members>
-        <members>Error__c.Record_Id__c</members>
+        <members>Error__c.Related_Record_Id__c</members>
         <members>Error__c.Record_URL__c</members>
         <members>Error__c.Retry_Pending__c</members>
         <members>Error__c.Stack_Trace__c</members>

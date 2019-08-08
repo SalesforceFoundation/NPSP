@@ -360,7 +360,6 @@ public class ERR_Handler {
             Database.SaveResult saveResult = (Database.SaveResult) result;
             recordId = (saveResult.getId() != null) ? saveResult.getId() : objId;
             error.Record_URL__c = getRecordURL(recordId);
-            error.Record_Id__c = (saveResult.getId() != null) ? saveResult.getId() : objId;
             error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = saveResult.getErrors()[0].getMessage();
         } else if (result instanceof Database.DeleteResult) {
@@ -377,7 +376,7 @@ public class ERR_Handler {
             error.Full_Message__c = undeleteResult.getErrors()[0].getMessage();
         }
 
-        error.Record_Id__c = recordId;
+        error.Related_Record_Id__c = recordId;
 
         UTIL_Debug.debug('**** createError() returns error: ' + error);
         return error;
