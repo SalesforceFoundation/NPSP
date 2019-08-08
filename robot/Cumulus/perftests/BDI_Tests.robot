@@ -44,17 +44,25 @@ Setup BDI
     Configure BDI     ${field_mapping_method}
 
 Display Failures
-    @{result} =   Salesforce Query  npsp__DataImport__c
+    @{failures} =   Salesforce Query  npsp__DataImport__c
     ...           select=Id,npsp__Status__c,npsp__FailureInformation__c, npsp__PaymentImported__c, npsp__PaymentImportStatus__c
     ...           npsp__Status__c=Failed
-    ${length} =  Get Length  ${result}
+    ${length} =  Get Length  ${failures}
     Run Keyword If  ${length} == 0  Log to Console  No failure records
     Run Keyword If  ${length} == 0  Return From Keyword    False
 
-    ${first_failure} =   Set Variable   ${result}[0][npsp__FailureInformation__c]
 
-   Python Display      Failures   ${first_failure}
+    Python Display      Failures   ${length}
 
+    @{payments} =   Salesforce Query  npe01__OppPayment__c
+    ...           select=COUNT(Id)
+
+    Python Display      Number of payments created    ${payments}[0][expr0]
+
+    Python Display      Example Failure   Id: ${failures[0]['Id']}
+    ...                                   npsp__Status__c: ${failures[0]['npsp__Status__c']}
+    ...                                   npsp__PaymentImported__c: ${failures[0]['npsp__PaymentImported__c']}
+    ...                                   npsp__PaymentImportStatus__c: ${failures[0]['npsp__PaymentImportStatus__c']}
 
 *** Test Cases ***
 
