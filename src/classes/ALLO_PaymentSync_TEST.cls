@@ -832,6 +832,78 @@ private with sharing  class ALLO_PaymentSync_TEST {
         Test.stopTest();
     }
 
+    /*******************************************************************************************************
+    * @description Test when an opportunity is fully scheduled with one paid payment and one scheduled payment,
+    * updating the allocations should not change the paid payment allocation. However, it should update the
+    * schedule payment's allocations.
+    ********************************************************************************************************/
+    @isTest
+    private static void testSyncOpportunityToPaymentWithFullyScheduledPartiallyPaid() {
+        setupForTests();
+        makeGAUs(1);
+        opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 100, General_Accounting_Unit__c = gaus[0].Id));
+        insert alloForInsert;
+
+        makePayments(1000, 2);
+
+        npe01__OppPayment__c paidPayment = new npe01__OppPayment__c(Id = payments[0].Id, npe01__Paid__c = true);
+        update paidPayment;
+
+        Allocation__c oppAllocation = [select Id,
+                Opportunity__c,
+                Payment__c,
+                General_Accounting_Unit__c,
+                General_Accounting_Unit__r.Name,
+                Amount__c,
+                Percent__c
+        from Allocation__c
+        where Opportunity__c = :opportunity.Id
+        AND General_Accounting_Unit__c =: gaus[0].Id
+        order by Amount__c DESC];
+
+        oppAllocation.Percent__c = 50;
+
+        Test.startTest();
+        update oppAllocation;
+
+        List<Allocation__c> paidPaymentAllocationList = new List<Allocation__c>([select Id,
+                Opportunity__c,
+                Payment__c,
+                Payment__r.npe01__Paid__c,
+                General_Accounting_Unit__c,
+                General_Accounting_Unit__r.Name,
+                Amount__c,
+                Percent__c
+        from Allocation__c
+        where Payment__c = :payments[0].Id
+        order by Amount__c DESC]);
+
+        System.assert(paidPaymentAllocationList.size() == 1, 'The allocation list size is incorrect. It should be 1, but it is actually: ' + paidPaymentAllocationList.size());
+        System.assert(paidPaymentAllocationList[0].Amount__c == 500, 'The allocation amount should be $250, but it is actually: ' + paidPaymentAllocationList[0].Amount__c);
+
+        List<Allocation__c> secondPaymentList = new List<Allocation__c>([select Id,
+                Opportunity__c,
+                Payment__c,
+                Payment__r.npe01__Paid__c,
+                General_Accounting_Unit__c,
+                General_Accounting_Unit__r.Name,
+                Amount__c,
+                Percent__c
+        from Allocation__c
+        where Payment__c = :payments[1].Id
+        order by Amount__c DESC]);
+
+        System.assert(secondPaymentList.size() == 2, 'The allocation list size is incorrect. It should be 2, but it is actually: ' + secondPaymentList.size());
+        System.assert(secondPaymentList[0].Amount__c == 250, 'The allocation amount should be $250, but it is actually: ' + secondPaymentList[0].Amount__c);
+        System.assert(secondPaymentList[1].Amount__c == 250, 'The allocation amount should be $250, but it is actually: ' + secondPaymentList[1].Amount__c);
+
+
+        Test.stopTest();
+    }
+
     private static void setupForTests() {
         defaultGau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'Default GAU' LIMIT 1];
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
