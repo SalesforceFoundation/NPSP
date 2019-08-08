@@ -285,15 +285,16 @@ public class ERR_RecordError {
     public void clearError(String recordId, String message) {
         // Checks to see if this in already in the Record Errors List
         Error__c err = this.get(recordId);
-        if (err != null) {
+
+        // Only clear error if Error is found and Retry Pending is true
+        if (err != null && err.Retry_Pending__c) {
             err = clearRecordError(
                 err,
                 message
             );
+            // Put into list
+            this.put(recordId, err);
         }
-
-        // Put into list
-        this.put(recordId, err);
     }
 
     /*******************************************************************************************************
@@ -319,7 +320,6 @@ public class ERR_RecordError {
             clearError((String) recordId, message);
         }
     }
-
 
     /*******************************************************************************************************
     * @description Executes DML for any pending inserts and updates.  Then, it updates the Existing Errors
