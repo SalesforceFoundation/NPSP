@@ -481,7 +481,8 @@ export default class bdiObjectMappingModal extends LightningElement {
     * for the ImportedRecordFieldName and ImportedRecordStatusField Name picklists.
     */    
     getDataImportFieldDescribes() {
-        getObjectFieldDescribes({objectName: 'DataImport__c'})
+        getObjectFieldDescribes({objectName: 'DataImport__c',
+                                includeReferenceToObjectList: true })
             .then((data) => {
                 this.dataImportFieldData = data;
                 this.refreshImportRecordFieldOptions();
@@ -513,9 +514,19 @@ export default class bdiObjectMappingModal extends LightningElement {
                         value: fieldData.value
                     }
         
-                    if (fieldData.value !== this.row.Imported_Record_Status_Field_Name &&
-                        (fieldData.displayType === 'REFERENCE' || fieldData.displayType === 'STRING')) {
-                        this.diImportRecordFieldOptions.push(labelOption);
+                    if (fieldData.value !== this.row.Imported_Record_Status_Field_Name) {
+
+                        if (fieldData.displayType === 'REFERENCE' 
+                            && fieldData.referenceToObjectList
+                            && (this.row.Object_API_Name 
+                                && fieldData.referenceToObjectList.includes(this.row.Object_API_Name.toLowerCase())
+                                || !this.row.Object_API_Name)){
+
+                            this.diImportRecordFieldOptions.push(labelOption);
+                            
+                        } else if (fieldData.displayType === 'STRING') {
+                            this.diImportRecordFieldOptions.push(labelOption);
+                        }
                     }
         
                     if (fieldData.value !== this.row.Imported_Record_Field_Name &&
@@ -605,6 +616,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     handleObjectAPINameChange(event){
         this.row.Object_API_Name = event.detail.value;
         this.getRelationshipFieldOptions();
+        this.refreshImportRecordFieldOptions();
     }
 
     /*******************************************************************************
