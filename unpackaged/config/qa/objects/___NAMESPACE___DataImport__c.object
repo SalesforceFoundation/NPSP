@@ -563,7 +563,7 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>AccountSoftCreditsImported</label>
-        <referenceTo>Account_Soft_Credit__c</referenceTo>
+        <referenceTo>%%%NAMESPACE%%%Account_Soft_Credit__c</referenceTo>
         <relationshipLabel>Account Soft Credits</relationshipLabel>
         <relationshipName>Account_Soft_Credits</relationshipName>
         <required>false</required>
