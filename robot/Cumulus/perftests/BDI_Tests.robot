@@ -3,6 +3,7 @@
 ${count} =   12       # use a multiple of 4
 ${database_url} =    
 ${field_mapping_method} =  
+${time_to_pause_after_changing_mode} =  
 
 # tests won't work if there are records of these types in existence.
 ${core_objs_for_cleanup} =  npsp__DataImport__c,npsp__CustomObject3__c
@@ -42,6 +43,10 @@ Generate Data
 
 Setup BDI
     Configure BDI     ${field_mapping_method}
+    Run Keyword If    ${time_to_pause_after_changing_mode}
+    ...               Python Display    Pausing ${time_to_pause_after_changing_mode}
+    Run Keyword If    ${time_to_pause_after_changing_mode}
+    ...               Sleep     ${time_to_pause_after_changing_mode}
 
 Display Failures
     @{failures} =   Salesforce Query  npsp__DataImport__c
