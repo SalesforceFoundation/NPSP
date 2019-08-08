@@ -482,7 +482,7 @@ flows:
             3:
                 task: performance_tests_CO
                 options:
-                    vars: field_mapping_method:Data Import Field Mapping,count:5000
+                    vars: field_mapping_method:Data Import Field Mapping,count:4995
 
     test_performance:
         steps:
