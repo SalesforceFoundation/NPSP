@@ -801,6 +801,7 @@ global with sharing class BDI_DataImportService {
     */
     public static String getTargetObject(String sourceFieldName) {
 
+        /***
         Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
             BDI_DataImportService.getDefaultFieldMapping().getTargetFieldsBySourceField();
 
@@ -813,18 +814,18 @@ global with sharing class BDI_DataImportService {
                 // assumes it's one to one.
                 // TODO: update BGE to handle multiple target mappings
                 if(targetFieldMap.keySet().size() > 0 && targetFieldMap.values().get(0).size() > 0) {
-                    SObjectField targetSObjField = (targetFieldMap.values()).get(0).get(0);
-                    System.debug(' ****** target sobj: '+(targetFieldMap.keySet())[0].getName() +
+                    List<Schema.sObjectType> targetObjNames = new List<Schema.sObjectType>(targetFieldMap.keySet());
+                    List<Schema.SObjectField> targetFieldNames = new List<Schema.SObjectField>(targetFieldMap.get(targetObjNames.get(0)));
+                    SObjectField targetSObjField = targetFieldNames[0];
+                    System.debug(' ****** target sobj: '+targetObjNames[0].getDescribe().getName() +
                         ' target field: '+targetSObjField.getDescribe().getName());
-                    return (targetFieldMap.keySet())[0].getName();
+                    return targetObjNames[0].getDescribe().getName();
                 }
             }
         }
 
         return null;
-
-        /****
-
+        **/
         // record type is special-cased by BDI so in some orgs, it has no help text
         // BGE needs this object for display purposes only
         if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
@@ -854,7 +855,6 @@ global with sharing class BDI_DataImportService {
                 return targetObject;
             }
         }
-        ***/
     }
 
     /*******************************************************************************************************
@@ -867,6 +867,12 @@ global with sharing class BDI_DataImportService {
         Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
             BDI_DataImportService.getDefaultFieldMapping().getTargetFieldsBySourceField();
 
+        if(BDI_DataImportService.getDefaultFieldMapping() instanceof BDI_FieldMappingHelpText) {
+            System.debug(' ****** HELP TEXT MAPPING');
+        } else if(BDI_DataImportService.getDefaultFieldMapping() instanceof BDI_FieldMappingCustomMetadata) {
+            System.debug(' ****** ADVANCED/CMT MAPPING');
+        }
+
         for(SObjectField sObjField: targetFieldsBySourceField.keySet()) {
             System.debug(' *** '+sObjField.getDescribe().getName()+' compared to '+sourceFieldName);
             if(sObjField.getDescribe().getName().equalsIgnoreCase(sourceFieldName.toLowerCase())) {
@@ -876,10 +882,12 @@ global with sharing class BDI_DataImportService {
                 // assumes it's one to one.
                 // TODO: update BGE to handle multiple target mappings
                 if(targetFieldMap.keySet().size() > 0 && targetFieldMap.values().get(0).size() > 0) {
-                    SObjectField targetSObjField = (targetFieldMap.values()).get(0).get(0);
-                    System.debug(' ****** target sobj: '+(targetFieldMap.keySet())[0].getName() +
+                    List<Schema.sObjectType> targetObjNames = new List<Schema.sObjectType>(targetFieldMap.keySet());
+                    List<Schema.SObjectField> targetFieldNames = new List<Schema.SObjectField>(targetFieldMap.get(targetObjNames.get(0)));
+                    SObjectField targetSObjField = targetFieldNames[0];
+                    System.debug(' ****** target sobj: '+targetObjNames[0].getDescribe().getName() +
                         ' target field: '+targetSObjField.getDescribe().getName());
-                     return (targetSObjField.getDescribe()).getName();
+                    return (targetSObjField.getDescribe()).getName();
                 }
             }
         }

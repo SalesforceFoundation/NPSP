@@ -126,6 +126,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         List<DescribeFieldResult> dfrs = getRelevantFields(allowedObjectsToObjectGroupName.keySet());
 
+
         for (DescribeFieldResult dfr : dfrs) {
 
             BGEField field = new BGEField();
@@ -146,6 +147,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             fields.add(field);
         }
+
         return fields;
     }
 
