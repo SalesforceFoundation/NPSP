@@ -6,9 +6,9 @@ ${field_mapping_method} =
 ${time_to_pause_after_changing_mode} =  0
 
 # tests won't work if there are records of these types in existence.
-${core_objs_for_cleanup} =  npsp__DataImport__c,npsp__CustomObject3__c
+${core_objs_for_cleanup} =  npsp__DataImport__c,npsp__CustomObject3__c,npe01__OppPayment__c
 # you could also clean these up to have a cleaner test
-${other_objs_for_cleanup} =   Opportunity,npe01__OppPayment__c,Account,Contact,npsp__CustomObject1__c,MaintenancePlan,npsp__General_Accounting_Unit__c
+${other_objs_for_cleanup} =   Opportunity,Account,Contact,npsp__CustomObject1__c,MaintenancePlan,npsp__General_Accounting_Unit__c
 ${cleanup_first} =   "core"   # could also be "all" for maximum cleanliness or "none" for fresh scratch orgs
 
 *** Settings ***
@@ -16,16 +16,19 @@ ${cleanup_first} =   "core"   # could also be "all" for maximum cleanliness or "
 Resource  cumulusci/robotframework/CumulusCI.robot
 Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup      Run Keywords   Setup BDI
+...                             AND  Workaround Bug
 ...                             AND  Clear DataImport Records   
 ...                             AND  Generate Data
 
 *** Keywords ***
 Clear DataImport Records
+                                
     ${all_objects} =   Catenate    ${core_objs_for_cleanup}  ,   ${other_objs_for_cleanup}
+    # changed below to disable the "none" option temporarily.
     ${cleanup_objects} =   Set Variable If  
     ...             "${cleanup_first}"=="core"  ${core_objs_for_cleanup}
     ...             "${cleanup_first}"=="all"  ${all_objects}
-    ...             "${cleanup_first}"=="none"  NONE     Error
+    ...             "${cleanup_first}"=="none"  ${core_objs_for_cleanup}     Error
     Should not be equal     ${cleanup_objects}      Error     
     ...                     Cleanup mode was not one of "core", "all" or "none"
     Run keyword if  "${cleanup_objects}"!="NONE"
@@ -37,7 +40,7 @@ Generate Data
 
     Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
     ...                 num_records=${count}
-    ...                 database_url=sqlite:////tmp/temp_db.db.db
+#    ...                 database_url=sqlite:////tmp/temp_db.db
     ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
     ...                 data_generation_task=tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
@@ -45,7 +48,7 @@ Setup BDI
     Configure BDI     ${field_mapping_method}
 
     Run Keyword If    ${time_to_pause_after_changing_mode}
-    ...               Python Display    Pausing ${time_to_pause_after_changing_mode}
+    ...               Python Display    Pausing ${time_to_pause_after_changing_mode}    Seconds
     Run Keyword If    ${time_to_pause_after_changing_mode}
     ...               Sleep     ${time_to_pause_after_changing_mode}
     Ensure Custom Metadata Was Deployed
@@ -86,12 +89,20 @@ Display Failures
     ...                                   npsp__PaymentImported__c: ${failures[0]['npsp__PaymentImported__c']}
     ...                                   npsp__PaymentImportStatus__c: ${failures[0]['npsp__PaymentImportStatus__c']}
 
+Workaround Bug
+    Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
+    ...                 num_records=${4}
+    ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
+    ...                 data_generation_task=tasks.generate_bdi_CO_data.GenerateBDIData_CO
+
+    Batch Data Import   1000
+
+
 *** Test Cases ***
 
 Import a data batch via the API - Test 4
-    Ensure Custom Metadata Was Deployed
 
-    Batch Data Import   2
+    Batch Data Import   1000
 
     ${count} =	Convert To Integer	${count}	
 
@@ -111,7 +122,7 @@ Import a data batch via the API - Test 4
 
     Should Be Equal     ${result}[0][expr0]     ${count}
 
-    @{result} =   Salesforce Query  npsp__CustomObject3__c  
+    @{result} =   Salesforce Query  npe01__OppPayment__c  
     ...           select=COUNT(Id)
 
     Should Be Equal     ${result}[0][expr0]     ${count}
