@@ -3835,6 +3835,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Unsupported Operation: Unable to log an Error for this type of DML operation.</value>
     </labels>
     <labels>
+        <fullName>errErrorRecordRetrySuccessful</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>errErrorRecordRetrySuccessful</shortDescription>
+        <value>Record reprocessing completed successfully. </value>
+    </labels>
+    <labels>
         <fullName>exceptionDeletePermission</fullName>
         <categories>Error</categories>
         <language>en_US</language>
