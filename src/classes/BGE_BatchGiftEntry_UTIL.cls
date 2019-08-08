@@ -37,6 +37,15 @@
 public with sharing class BGE_BatchGiftEntry_UTIL {
 
     /*******************************************************************************************************
+    * @description Currently limit the set of allowed objects, and point to their BDI-defined 
+    *  Object group name
+    */
+    public static Map<String, String> objectGroupNameByAllowedObjects = new Map<String,String> {
+        'Opportunity' => 'Opportunity',
+        'npe01__OppPayment__c' => 'Payment'
+    };
+
+    /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
     * @param batchId the batch for which to get all fields for soql
     * @return List<String> list of DataImport__c field api names
@@ -44,6 +53,12 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     public static List<String> getDataImportFields(Id batchId) {
         return getDataImportFields(batchId, true);
     }
+
+    /*******************************************************************************************************
+    * @description Provides field mapping configuration used by BGE
+    */
+    public static Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
+        BDI_DataImportService.getDefaultFieldMapping().getTargetFieldsBySourceField();
 
     /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
@@ -292,24 +307,42 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
 
         Schema.DisplayType rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase());
+        Schema.DescribeFieldResult sourceFieldDFR = UTIL_Describe.getFieldDescribe(dataImportObject, dataImportField.toLowerCase());
 
         if (rawSourceFieldType == Schema.DisplayType.Picklist) {
             options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
 
         } else if (rawSourceFieldType == Schema.DisplayType.String) {
 
-            String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
+            if (targetFieldsBySourceField.containsKey(sourceFieldDFR.getSObjectField())) {
+                BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceFieldDFR.getSObjectField());
+                Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject = targetFields.getTargetFieldsByTargetObject();
 
-            String targetField = BDI_DataImportService.getTargetField(dataImportField);
-            Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
+                String targetObject = '';
+                String targetField = '';
 
-            if (targetFieldType == Schema.DisplayType.PICKLIST) {
-                options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
-            } else if (targetField == 'RecordTypeId') {
-                options = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(UTIL_Describe.getSObjectType(targetObject));
+                // One DI field can be mapped to multiple target fields although it will be rare and presents some issues
+                // with picklists; here we will return info for the first match
+                for (Schema.SObjectType targetSObjType: targetFieldsByTargetObject.keySet()) {
+                    String aTargetObjectName = targetSObjType.getDescribe().getName();
+                    if (objectGroupNameByAllowedObjects.containsKey(aTargetObjectName)) {
+                        targetObject = aTargetObjectName;
+                        List<SObjectField> mappedTargetFields = new List<SObjectField> (targetFieldsByTargetObject.get(targetSObjType));
+                        if(mappedTargetFields.size() > 0) {
+                            targetField = mappedTargetFields[0].getDescribe().getName();
+                        }
+                    }
+                }
+
+                Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
+
+                if (targetFieldType == Schema.DisplayType.PICKLIST) {
+                    options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
+                } else if (targetField == 'RecordTypeId') {
+                    options = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(UTIL_Describe.getSObjectType(targetObject));
+                }
             }
         }
-
         return options;
     }
 

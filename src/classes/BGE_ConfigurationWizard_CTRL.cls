@@ -47,15 +47,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     };
 
     /*******************************************************************************************************
-    * @description Currently limit the set of allowed objects, and point to their BDI-defined 
-    *  Object group name
-    */
-    private static Map<String, String> objectGroupNameByAllowedObjects = new Map<String,String> {
-        'Opportunity' => 'Opportunity',
-        'npe01__OppPayment__c' => 'Payment'
-    };
-
-    /*******************************************************************************************************
     * @description Fields to be blocked from BGE as they are required by the system
     */
     private static Set<String> bannedFields = new Set<String>{
@@ -176,7 +167,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceSObjField);
             for (Schema.SObjectType targetSObjType: targetFields.getTargetFieldsByTargetObject().keySet()) {
             
-                if (!objectGroupNameByAllowedObjects.containsKey(targetSObjType.getDescribe().getName())) {
+                if (!BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(targetSObjType.getDescribe().getName())) {
                     continue;
                 }
 
@@ -218,7 +209,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         BDI_FieldMapping fieldMapping = BDI_DataImportService.getDefaultFieldMapping();
 
-        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = fieldMapping.getTargetFieldsBySourceField();
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField;
 
         for (SObjectField sourceSObjField: targetFieldsBySourceField.keySet()) {
             Schema.DescribeFieldResult sourceDFR = sourceSObjField.getDescribe();
@@ -231,7 +222,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             Set<SObjectType> targetObjectTypesMappedFromField = targetFields.getTargetFieldsByTargetObject().keySet();
             Boolean mappedToAllowedObject = false;
             for (SObjectType sObjType: targetObjectTypesMappedFromField) {
-                if (objectGroupNameByAllowedObjects.containsKey(sObjType.getDescribe().getName())) {
+                if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(sObjType.getDescribe().getName())) {
                     mappedToAllowedObject = true;
                     break;
                 }
