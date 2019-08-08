@@ -51,7 +51,7 @@
 */
 public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE extends UTIL_AbstractCommon_BATCH {
 
-    private DateTime boundary;
+    @testVisible private DateTime boundary;
 
     /*******************************************************************************************************
      * @description Constructor
@@ -100,21 +100,40 @@ public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE exten
     public override void doExecute(Database.BatchableContext bc, List<SObject> records ) {
         List<Error__c> errors = (List<Error__c>) records;
 
+
         ERR_RecordError recErrs = new ERR_RecordError(getContextType());
         List<Error__c> errsToProcess = new List<Error__c>();
         Set<Id> recIds = new Set<Id>();
 
         for (SObject rec : records) {
-            recIds.add (rec.Id);
-            errsToProcess.add((Error__c) rec);
+                Id recId = convertToIdFromString((String)rec.get('Related_Record_Id__c'));
+                if (recId != null) {
+                    recIds.add (recId);
+                    errsToProcess.add((Error__c) rec);
+                }
         }
         recErrs.withExistingErrors(errsToProcess);
         if (!recIds.isEmpty()) {
             Set<Id> successfullyReprocessed = reprocessRecords(recIds, recErrs);
-
-            recErrs.clearErrors(recIds, this.getSuccessMessage());
+            recErrs.clearErrors(successfullyReprocessed, this.getSuccessMessage());
             recErrs.processErrors();
         }
+    }
+
+    /*******************************************************************************************************
+     * @description Attempts to convert a String value to a Salesforce Id.  If there are errors, it will
+     *              return null
+     * @param String idVal String value of Id
+     * @return Converted Id (if successful) or null (if unsuccessful)
+    *******************************************************************************************************/
+    @testVisible private static String convertToIdFromString(String idVal) {
+        Id cvtId = null;
+        try {
+            cvtId = idVal;
+        } catch (Exception e) {
+
+        }
+        return cvtId;
     }
 
     /*******************************************************************************************************
@@ -146,10 +165,11 @@ public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE exten
      * @return String Where Clause
     *******************************************************************************************************/
     public override String getWhereClause() {
-        return 'Context_Type__c = \'' + getContextType() + '\' AND ' +
+        String whereClause = 'Context_Type__c = \'' + getContextType() + '\' AND ' +
         'Retry_Pending__c = true AND ' +
         ' Related_Record_Id__c != null AND ' +
         ' LastModifiedDate <= ' + boundary.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+        return whereClause;
     }
 
     /*******************************************************************************************************

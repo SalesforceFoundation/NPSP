@@ -250,6 +250,7 @@
         <members>ERR_RecordError</members>
         <members>ERR_RecordErrorReprocessBatch_BASE</members>
         <members>ERR_RecordErrorReprocessBatch_MOCK</members>
+        <members>ERR_RecordErrorReprocessBatch_TEST</members>
         <members>ERR_RecordError_TEST</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
