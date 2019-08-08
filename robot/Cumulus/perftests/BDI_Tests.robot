@@ -3,7 +3,7 @@
 ${count} =   12       # use a multiple of 4
 ${database_url} =    
 ${field_mapping_method} =  
-${time_to_pause_after_changing_mode} =  
+${time_to_pause_after_changing_mode} =  0
 
 # tests won't work if there are records of these types in existence.
 ${core_objs_for_cleanup} =  npsp__DataImport__c,npsp__CustomObject3__c
@@ -43,10 +43,28 @@ Generate Data
 
 Setup BDI
     Configure BDI     ${field_mapping_method}
+
     Run Keyword If    ${time_to_pause_after_changing_mode}
     ...               Python Display    Pausing ${time_to_pause_after_changing_mode}
     Run Keyword If    ${time_to_pause_after_changing_mode}
     ...               Sleep     ${time_to_pause_after_changing_mode}
+    Ensure Custom Metadata Was Deployed
+
+
+Ensure Custom Metadata Was Deployed
+    ${Default_Object_Mapping_Set} =   Salesforce Query  npsp__Data_Import_Object_Mapping__mdt
+    ...           select=Id
+    ...           npsp__Data_Import_Object_Mapping_Set__r.DeveloperName=Default_Object_Mapping_Set
+    ${Default_Object_Mapping_Set_Length} =  Get Length  ${Default_Object_Mapping_Set}
+
+    ${Migrated_Custom_Object_Mapping_Set} =   Salesforce Query  npsp__Data_Import_Object_Mapping__mdt
+    ...           select=Id
+    ...           npsp__Data_Import_Object_Mapping_Set__r.DeveloperName=Migrated_Custom_Object_Mapping_Set
+    ${Migrated_Custom_Object_Mapping_Set_Length} =  Get Length  ${Migrated_Custom_Object_Mapping_Set}
+
+    Should Be Equal     ${Default_Object_Mapping_Set_Length}    ${Migrated_Custom_Object_Mapping_Set_Length}
+
+    Python Display      Custom Metadata Deployed        ${Migrated_Custom_Object_Mapping_Set_Length}
 
 Display Failures
     @{failures} =   Salesforce Query  npsp__DataImport__c
@@ -55,7 +73,6 @@ Display Failures
     ${length} =  Get Length  ${failures}
     Run Keyword If  ${length} == 0  Log to Console  No failure records
     Run Keyword If  ${length} == 0  Return From Keyword    False
-
 
     Python Display      Failures   ${length}
 
@@ -72,6 +89,8 @@ Display Failures
 *** Test Cases ***
 
 Import a data batch via the API - Test 4
+    Ensure Custom Metadata Was Deployed
+
     Batch Data Import   2
 
     ${count} =	Convert To Integer	${count}	
