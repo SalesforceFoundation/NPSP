@@ -837,7 +837,7 @@ private class PMT_Payment_TEST {
     }
 
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /*
      * @description Check that the opportunity amount is updated when the payed payments amounts
      * exceed the opportunity amount if the opp is not finalized
@@ -881,7 +881,7 @@ private class PMT_Payment_TEST {
         System.assertEquals(500, opp.Amount, 'Open opportunity amount not updated when paid amounts exceed opportunity amount.');
     }
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /*
      * @description Check that the finalized opportunity amount is updated when the payed payments amounts
      * are less than the opportunity amount
@@ -925,7 +925,7 @@ private class PMT_Payment_TEST {
         System.assertEquals(20, opp.Amount, 'Finalized opportunity amount not updated when paid amounts are less than opportunity amount.');
     }
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Non Finalized Opportunity, Amount changed to more than Sum of Paid Payments: Result (Allowed)
     */
     @isTest
@@ -978,7 +978,7 @@ private class PMT_Payment_TEST {
 
     }
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Non Finalized Opportunity, Amount changed to less than Sum of Paid Payments: Result (Blocked)
     */
     @isTest
@@ -1030,7 +1030,7 @@ private class PMT_Payment_TEST {
 
     }
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Finalized Opportunity, Amount same as Sum of Paid Payments: Result (Allowed)
     */
     @isTest
@@ -1080,7 +1080,7 @@ private class PMT_Payment_TEST {
         }
     }
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Finalized Opportunity, Amount < Sum of Paid Payments: Result (Blocked)
     */
     @isTest
@@ -1131,7 +1131,7 @@ private class PMT_Payment_TEST {
         }
     }
     
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Finalized Opportunity, Amount > Sum of Paid Payments: Result (Blocked)
     */
     @isTest
@@ -1182,7 +1182,7 @@ private class PMT_Payment_TEST {
         }
     }
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Non Final Opportunity inserted with unpaid payments totaling < than opportunity Amount. Change Unpaid Payments to Paid. Amount should remain the same
     */
     @isTest
@@ -1233,7 +1233,7 @@ private class PMT_Payment_TEST {
     }
 
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Non Finalized Opportunity inserted with unpaid payments totaling > than opportunity Amount. 
                     Change Unpaid Payments to Paid. Amount should increase to Sum of Paid Payments
     */
@@ -1283,7 +1283,7 @@ private class PMT_Payment_TEST {
         System.assertEquals(120, opp.Amount, 'The opportunity amount should have increased.');
     }
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Non Finalized Opportunity inserted with unpaid payments totaling < Opportunity Amount. 
        Change Unpaid Payments to Paid. No change to Opportunity Amount. Change Opportunity to Finalized Stage. 
        Amount should change to Sum of Paid Payments
@@ -1342,7 +1342,7 @@ private class PMT_Payment_TEST {
         System.assertEquals(80, opp.Amount, 'The opportunity amount should have decreased.');
     }
     
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Non Finalized Opportunity inserted with unpaid payments. Change to Finalized Opportunity. 
        Update the payments to Paid. Confirm Opportunity Amount is now Sum of Paid Payments: 
        Note: this test will eventually conflict with write off on finalized behavior.
@@ -1397,7 +1397,7 @@ private class PMT_Payment_TEST {
         System.assertEquals(80, opp.Amount, 'The opportunity amount should have decreased.');
     }
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Finalized Opportunity with Paid Payment equal to amount. Add additional unpaid payment. No change in Opp amount. 
         Add additional paid payment confirm Opp AMount increases.
     */
@@ -1462,7 +1462,7 @@ private class PMT_Payment_TEST {
         System.assertEquals(135, opp.Amount, 'The opportunity amount should have increased.');
     }
 
-    /* Tests with Enforce Accounting Data Consistency Enabled */
+    /* Test with Enforce Accounting Data Consistency Enabled */
     /* @description Finalized Opportunity with Paid Payments equal to Amount. Change one of the Payments to Unpaid or Written Off. Confirm Opportunity Amount updates.
     */
     @isTest
@@ -1511,7 +1511,7 @@ private class PMT_Payment_TEST {
         System.assertEquals(50, opp.Amount, 'The opportunity amount should have decreased.');
     }
 
-    /* Tests with Enforce Accounting Data Consistency Not Enabled */
+    /* Test with Enforce Accounting Data Consistency Not Enabled */
     /* @description Create Non Finalized Opportunity with Amount > Paid Payments. Change Opp Amount to < Sum of Paid Payment Amounts. Confirm no error.
     */
     @isTest
@@ -1558,7 +1558,7 @@ private class PMT_Payment_TEST {
 
     }
 
-    /* Tests with Enforce Accounting Data Consistency Not Enabled */
+    /* Test with Enforce Accounting Data Consistency Not Enabled */
     /* @description Create Non Finalized Opportunity with Amount < Unpaid Payments. Make Payments Paid. Confirm No change to Opp Amount.
     */
     @isTest
@@ -1607,7 +1607,7 @@ private class PMT_Payment_TEST {
         System.assertEquals(80, opp.Amount, 'The opportunity amount should have stayed the same.');
     }
 
-    /* Tests with Enforce Accounting Data Consistency Not Enabled */
+    /* Test with Enforce Accounting Data Consistency Not Enabled */
     /* @description Create Finalized Opportunity With Amount Different than Paid Payments. Confirm no error. Update Amount. Confirm no error.
     */
     @isTest
@@ -1654,7 +1654,7 @@ private class PMT_Payment_TEST {
         System.assertEquals(35, opp.Amount, 'The opportunity amount should have updated.');
     }
 
-    /* Tests with Enforce Accounting Data Consistency Not Enabled */
+    /* Test with Enforce Accounting Data Consistency Not Enabled */
     /* @description Create Finalized Opportunity With Amount and Unpaid Payments. Change Unpaid Payments to Paid. Confirm no change in amount.
     */
     @isTest
