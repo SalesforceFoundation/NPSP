@@ -46,6 +46,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         'Contact2_LastName__c'
     };
 
+    private static Map<String, String> allowedObjectsToObjectGroupName = new Map<String,String> {
+        'Opportunity' => 'Opportunity',
+        'npe01__OppPayment__c' => 'Payment'
+    };
+
     /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
     * @param recordId Id of the record to be queried
@@ -112,12 +117,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         List<BGEField> fields = new List<BGEField>();
 
+        /***
         Set<String> allowedObjects = new Set<String>{
             'Opportunity',
             'npe01__OppPayment__c'
         };
+        ***/ 
 
-        List<DescribeFieldResult> dfrs = getRelevantFields(allowedObjects);
+        List<DescribeFieldResult> dfrs = getRelevantFields(allowedObjectsToObjectGroupName.keySet());
 
         for (DescribeFieldResult dfr : dfrs) {
 
@@ -153,6 +160,22 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         Map<String, Schema.DescribeFieldResult> allFieldsMap =
                 UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
 
+
+        BDI_FieldMapping fieldMapping = BDI_DataImportService.getDefaultFieldMapping();
+        Set<String> mappedDIFields = new Set<String>();
+        for(String objName: allowedObjects) {
+            mappedDIFields.addAll(fieldMapping.getFieldMap(
+                allowedObjectsToObjectGroupName.get(objName), 
+                objName, 
+                new List<String> (allFieldsMap.keySet())
+            ).keySet());
+        }
+
+        // debug
+        for(String fieldName: mappedDIFields) {
+            System.debug(' **** Identified mapped field for BGE: '+fieldName);
+        }
+        
         Set<String> bannedFields = new Set<String>{
             'Account1Imported__c',
             'Account1ImportStatus__c',
@@ -206,13 +229,15 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
 
+            System.debug(' ***** Testing DI field for BGE: '+dataImportFieldApiName);
+
             Boolean fieldAllowed = (
                 UTIL_Permissions.canUpdate(dfr, false)
                 && ((allowedObjects.contains(dataImportFieldMappedObject)
                 && allowedDataTypes.contains(dfr.type)
                 && !bannedFields.contains(dataImportFieldApiName)
-                && dfr.getInlineHelpText() != null)
-                || allowedFields.contains(dataImportFieldApiName))
+                && mappedDIFields.contains(dfr.getName())
+                || allowedFields.contains(dataImportFieldApiName)))
             );
 
             if (fieldAllowed) {

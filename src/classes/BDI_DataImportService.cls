@@ -801,6 +801,30 @@ global with sharing class BDI_DataImportService {
     */
     public static String getTargetObject(String sourceFieldName) {
 
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
+            BDI_DataImportService.getDefaultFieldMapping().getTargetFieldsBySourceField();
+
+        for(SObjectField sObjField: targetFieldsBySourceField.keySet()) {
+            System.debug(' *** '+sObjField.getDescribe().getName()+' compared to '+sourceFieldName);
+            if(sObjField.getDescribe().getName().equalsIgnoreCase(sourceFieldName.toLowerCase())) {
+                BDI_TargetFields targetFields = targetFieldsBySourceField.get(sObjField);
+                Map<SObjectType, Set<SObjectField>> targetFieldMap = targetFields.getTargetFieldsByTargetObject();
+                // We can technically map one source field to multiple target objects fields, but the implementation
+                // assumes it's one to one.
+                // TODO: update BGE to handle multiple target mappings
+                if(targetFieldMap.keySet().size() > 0 && targetFieldMap.values().get(0).size() > 0) {
+                    SObjectField targetSObjField = (targetFieldMap.values()).get(0).get(0);
+                    System.debug(' ****** target sobj: '+(targetFieldMap.keySet())[0].getName() +
+                        ' target field: '+targetSObjField.getDescribe().getName());
+                    return (targetFieldMap.keySet())[0].getName();
+                }
+            }
+        }
+
+        return null;
+
+        /****
+
         // record type is special-cased by BDI so in some orgs, it has no help text
         // BGE needs this object for display purposes only
         if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
@@ -830,7 +854,7 @@ global with sharing class BDI_DataImportService {
                 return targetObject;
             }
         }
-
+        ***/
     }
 
     /*******************************************************************************************************
@@ -840,18 +864,27 @@ global with sharing class BDI_DataImportService {
     */
     public static String getTargetField(String sourceFieldName) {
 
-        // record type is special-cased by BDI so in some orgs, it has no help text
-        // BGE needs this for display purposes only
-        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
-            return 'RecordTypeId';
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
+            BDI_DataImportService.getDefaultFieldMapping().getTargetFieldsBySourceField();
+
+        for(SObjectField sObjField: targetFieldsBySourceField.keySet()) {
+            System.debug(' *** '+sObjField.getDescribe().getName()+' compared to '+sourceFieldName);
+            if(sObjField.getDescribe().getName().equalsIgnoreCase(sourceFieldName.toLowerCase())) {
+                BDI_TargetFields targetFields = targetFieldsBySourceField.get(sObjField);
+                Map<SObjectType, Set<SObjectField>> targetFieldMap = targetFields.getTargetFieldsByTargetObject();
+                // We can technically map one source field to multiple target objects fields, but the implementation
+                // assumes it's one to one.
+                // TODO: update BGE to handle multiple target mappings
+                if(targetFieldMap.keySet().size() > 0 && targetFieldMap.values().get(0).size() > 0) {
+                    SObjectField targetSObjField = (targetFieldMap.values()).get(0).get(0);
+                    System.debug(' ****** target sobj: '+(targetFieldMap.keySet())[0].getName() +
+                        ' target field: '+targetSObjField.getDescribe().getName());
+                     return (targetSObjField.getDescribe()).getName();
+                }
+            }
         }
 
-        sourceFieldName = sourceFieldName.toLowerCase();
-        String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
-        String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
-
-        return targetField;
+        return null;
     }
 
     /*******************************************************************************************************
