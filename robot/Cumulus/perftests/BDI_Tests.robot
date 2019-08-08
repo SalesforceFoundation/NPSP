@@ -100,7 +100,7 @@ Workaround Bug
 
 *** Test Cases ***
 
-Import a data batch via the API - Test 4
+Import a data batch via the API - Complex Objects No ASCs
 
     Batch Data Import   1000
 
