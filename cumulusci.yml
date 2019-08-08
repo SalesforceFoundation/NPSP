@@ -28,6 +28,13 @@ project:
         - github: https://github.com/SalesforceFoundation/Affiliations
 
 tasks:
+    turn_on_debug_logs:
+        class_path: tasks.debug_logs.TurnOnDebugLogs
+
+    download_debug_logs:
+        class_path: 
+            tasks.debug_logs.DownloadDebugLogs
+
     download_ldv_tests:
         description: Downloads the NPSP-LDV-Tests repository
         class_path: cumulusci.tasks.util.DownloadZip
@@ -121,12 +128,19 @@ tasks:
                   default: true
 
     test_data_bdi:
-        description: 'Generate and load test data for BDI benchmarks into an org'
+        description: 'Generate test data for BDI benchmarks into an org'
         class_path: tasks.generate_bdi_data.GenerateBDIData
         options:
             mapping: 'datasets/bdi_benchmark/mapping.yml'
             num_records: 5000
             debug_db_path: /tmp/temp_db.db
+
+    gen_test_data_bdi_ci:
+        description: 'Generate test data for BDI benchmarks into an org'
+        class_path: tasks.generate_bdi_CO_data.GenerateBDIData_CO
+        options:
+            mapping: 'tasks.generate_bdi_CO_data.GenerateBDIData_CO'
+            num_records: 5000
 
     performance_tests_help_text:
         description: Runs Robot Framework performance tests
@@ -448,13 +462,6 @@ flows:
         steps:
             3:
                 task: ensure_record_type
-
-    turn_on_debug_logs:
-        class_path: tasks.debug_logs.TurnOnDebugLogs
-
-    download_debug_logs:
-        class_path: 
-            tasks.debug_logs.DownloadDebugLogs
 
     test_performance_help_text:
         description: 'Creates a BDI org and runs a performance test'
