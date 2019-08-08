@@ -114,6 +114,11 @@ public class ALLO_AllocationsUtil {
             Set<PROCESS_DEF> recordExclusions = (this.exclusionsByRecordId.containsKey(recordId)) ? this.exclusionsByRecordId.get(recordId) : null;
             return (recordExclusions != null && (recordExclusions.contains(exclusion) || recordExclusions.contains(PROCESS_DEF.ALL)));
         }
+
+        public Boolean hasNoExclusions(id recordId) {
+            Set<PROCESS_DEF> recordExclusions = (this.exclusionsByRecordId.containsKey(recordId)) ? this.exclusionsByRecordId.get(recordId) : null;
+            return (recordExclusions == null || recordExclusions.isEmpty());
+        }
     }
 
     /*******************************************************************************************************
@@ -228,21 +233,25 @@ public class ALLO_AllocationsUtil {
          *              any existing errors so we can update them if more errors for that record and process.
          * @param String processName The processName/context the record errors are recorded under
          ********************************************************************************************************/
-        public void initializeErrors(String processName) {
-            // Initialize the Record Errors
-            this.recErrs = new ERR_RecordError(processName);
+        public void initializeErrors(String processName, ERR_RecordError recErrs) {
+            if (recErrs != null) { // Use populated instance
+                this.recErrs = recErrs;
+            } else { // initialize a new instance of Record Errors, and retrieve existing errors
+                // Initialize the Record Errors for this process
+                this.recErrs = new ERR_RecordError(processName);
 
-            // Build SObjects List to retrieve existing records
-            List<SObject> sObjs = new List<SObject>();
-            for (Opportunity opp : this.oppsById.values()) {
-                sObjs.add(opp);
-                for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
-                    sObjs.add(payment);
+                // Build SObjects List to retrieve existing records
+                List<SObject> sObjs = new List<SObject>();
+                for (Opportunity opp : this.oppsById.values()) {
+                    sObjs.add(opp);
+                    for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
+                        sObjs.add(payment);
+                    }
                 }
-            }
 
-            // Retrieve any errors already in the System
-            this.recErrs.retrieveExistingErrorsFor(sObjs);
+                // Retrieve any errors already in the System
+                this.recErrs.retrieveExistingErrorsFor(sObjs);
+            }
         }
     }
 
@@ -256,9 +265,12 @@ public class ALLO_AllocationsUtil {
      * @param Set<Id> oppIds The set of Opportunities to review/retrieve data for
      * @param Datetime boundary The boundary condition to be used when seeing if certain records were
      *        updated or not
+     * @param ERR_RecordError recErrs If populated, will use that RecordErrors instance.  Otherwise, it
+     *        will initialize the record Errors instance using the processName and records identified as
+     *        requiring review
      * @return RecordsForReview the Opportunity records requiring review and additional/processing
     ********************************************************************************************************/
-    public static RecordsForReview determineRecordsRequiringReview(String processName, Set<Id> oppIds, Datetime boundary) {
+    public static RecordsForReview determineRecordsRequiringReview(String processName, Set<Id> oppIds, Datetime boundary, ERR_RecordError recErrs) {
         RecordsForReview recsForReview = new RecordsForReview();
 
         Map<Id, Opportunity> oppsById = retrieveOpportunities(oppIds);
@@ -330,7 +342,7 @@ public class ALLO_AllocationsUtil {
             }
         }
 
-        recsForReview.initializeErrors(processName);
+        recsForReview.initializeErrors(processName, recErrs);
 
         recsForReview.recErrs.retrieveExistingErrorsFor(sObjs);
 
@@ -643,6 +655,25 @@ public class ALLO_AllocationsUtil {
                 }
             }
         }
+    }
+
+    /*******************************************************************************************************
+     * @description Builds a list of Opportunities that can be assumed to be successfully processed
+     *              because no exclusions are present.
+     * @param Set<Id> oppIds Set of Opportunities to see whether or not Exclusions are present
+     * @param RecordExclusions recExclusions Map of records to any exclusions they might have
+     * @param Set<PROCESS_DEF> processExcl Exclusions to add for any errors
+     * @return Set<Id> Ids that can be considered to have been successfully processed
+    ********************************************************************************************************/
+    public static Set<Id> determineSucessfullyProcessedRecords(Set<Id> oppIds, RecordExclusions recExcl) {
+        Set<Id> successfullyProcessedOppIds = new Set<Id>();
+
+        for (Id oppId : oppIds) {
+            if (recExcl.hasNoExclusions(oppId)) {
+                successfullyProcessedOppIds.add(oppId);
+            }
+        }
+        return successfullyProcessedOppIds;
     }
 
     /*******************************************************************************************************

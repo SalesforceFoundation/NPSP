@@ -116,20 +116,36 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     }
 
     /**
-     * @description Actual processing occurs in this method
+     * @description Invoked here per batch
      * @param bc BatchableContext
      * @param records The list of records returned for this batch, filtered for any additionalWhere clause added, and including the fields/subqueries configured for this batch
      */
     public override void doExecute(Database.BatchableContext bc, List<SObject>records ) {
-        this.recCnt += records.size();
 
         Set<Id> oppIds = addIdsForRecords(new Set<Id>(), records);
-        ALLO_AllocationsUtil.RecordsForReview recs = ALLO_AllocationsUtil.determineRecordsRequiringReview(PROCESS_NAME, oppIds, boundary);
 
-        this.reviewCnt += recs.oppsById.size();
+        // We want to disable Allocation Triggers, do not have a RecordErrors Map to pass in, and want to commit and clear any errors (Calls this to do actual processing)
+        processRecords(PROCESS_NAME, oppIds, null, this.boundary, true, true);
+    }
 
-        // Disable Allocation Triggers prior to making any DML Updates
-        ALLO_AllocationsUtil.disableAllocationTriggers();
+    /**
+     * @description Actual processing occurs in this method
+     * @param String processName Name of Process Error Records should be associated with
+     * @param Set<Id> oppIds Set of Opportunity Ids to review and process
+     * @param ERR_RecordError recErrs Instance of the ERR_RecordError class.  If populated, will use this.  If not, it will initialize and retrieve records
+     *        for this batch
+     * @param Datetime boundary Used to find records modified since last execution
+     * @param Boolean disableAllocationTriggers Indicates whether or not the ALLO_Allocation_TDTM and ALLO_PaymentSync_TDTM triggers should be allowed to run
+     * @param Boolean commitAndClearRecordErrors Should we commit and clear record errors here, or delegate it to the caller.
+     */
+    public static Set<Id> processRecords(String processName, Set<Id> oppIds, ERR_RecordError recErrs, Datetime boundary, Boolean disableAllocationTriggers, Boolean commitAndClearRecordErrors) {
+
+        ALLO_AllocationsUtil.RecordsForReview recs = ALLO_AllocationsUtil.determineRecordsRequiringReview(PROCESS_NAME, oppIds, boundary, recErrs);
+
+        if (disableAllocationTriggers) {
+            // Disable Allocation Triggers prior to making any DML Updates
+            ALLO_AllocationsUtil.disableAllocationTriggers();
+        }
 
         // Will track exclusions across processes
         ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUtil.RecordExclusions();
@@ -146,12 +162,26 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
         // Process Payment Allocations Results
         ALLO_AllocationsUtil.processAllocationResults(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC, allocResults, recs, recExcl);
 
-        // Commit all pending errors
-        recs.recErrs.processErrors();
+        // Determine successfully processed errors
+        Set<Id> successfullyProcessed = ALLO_AllocationsUtil.determineSucessfullyProcessedRecords(oppIds, recExcl);
 
-        // Enable Allocation Triggers after all updates are complete
-        ALLO_AllocationsUtil.enableAllocationTriggers();
+        if (commitAndClearRecordErrors) {
+            // Clear Retry Pending and add Retry Successful for Records that were successful that have exiting errors flagged for Retry
+            recs.recErrs.clearErrors(successfullyProcessed, Label.errErrorRecordRetrySuccessful);
+            // Commit all pending errors
+            recs.recErrs.processErrors();
+        }
+
+        if (disableAllocationTriggers) {
+            // Enable Allocation Triggers after all updates are complete
+            ALLO_AllocationsUtil.enableAllocationTriggers();
+        }
+
+        return successfullyProcessed;
+
     }
+
+
 
     /**
      * @description Takes a set of Ids, and adds additional record Ids to it from the list of records
@@ -209,7 +239,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     }
 
     /**
-     * @description Records the most recent time this job started.  This is set only in the final iteration.
+     * @description Records the most recent time this job started.  Executes the Error Phase.  These only occur in the final iteration of the Batch
      * @param bc BatchableContext
      * @param isComplete boolean value that indicates whether or not this is the final invocation, or will be executing against additional chunks
      */
@@ -218,6 +248,9 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
             allocationsSettings.LastJobStartTimePaymentAllocations__c = this.jobStart;
             upsert allocationsSettings;
 
+            // Execute Error Batch Phase
+            ALLO_UpdPaymentAllocations_ERR_BATCH alloErrBatch = new ALLO_UpdPaymentAllocations_ERR_BATCH(getBatchSize(), this.jobStart);
+            Database.execute(alloErrBatch, getBatchSize());
         }
     }
 

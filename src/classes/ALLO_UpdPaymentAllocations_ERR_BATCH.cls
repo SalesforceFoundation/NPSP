@@ -32,86 +32,40 @@
 * @date 2019
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
-* @description Batch Job to recalculate Payment Allocations with errors reprocess Errors , Driven By
-*              Error Records with the following characteristics:
-*              - Record_Id__c != null
-*              - Context_Type__c == 'Payment Allocations Batch'
-*              - Retry_Pending__c == true
+* @description Batch Job to Errors from the earlier executions of the Payment Allocation Batch Job
 */
-public class ALLO_UpdPaymentAllocations_ERR_BATCH extends UTIL_AbstractCommon_BATCH {
+public class ALLO_UpdPaymentAllocations_ERR_BATCH extends ERR_RecordErrorReprocessBatch_BASE {
 
     private static Allocations_Settings__c allocationsSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
-    private Integer recCnt;
-    private DateTime boundary;
-
-    public ALLO_UpdPaymentAllocations_ERR_BATCH() {
-        super();
-        initialize();
-    }
-
-    public ALLO_UpdPaymentAllocations_ERR_BATCH(Integer batchSize) {
-        super(batchSize);
-        initialize();
-    }
-
-
-    public ALLO_UpdPaymentAllocations_ERR_BATCH(Integer batchSize, String additionalWhereClause) {
-        super(batchSize, additionalWhereClause);
-        initialize();
-    }
-
-    private void initialize() {
-        this.recCnt = 0;
-        this.boundary = (allocationsSettings != null && allocationsSettings.LastJobStartTimePaymentAllocations__c != null) ?
-                        allocationsSettings.LastJobStartTimePaymentAllocations__c : System.now().addYears(-1);}
-
     /**
-     * @description Actual processing occurs in this method
-     * @param records The list of records returned for this batch, filtered for any additionalWhere clause added, and including the fields/subqueries configured for this batch
+     * @description Constructor
+     * @param Integer batchSize The batch size the job should be re-executed with if multiple iterations are necessary
+     * @param Datetime boundary The point after which Error Records for this process should be ignored because they are
+     *        too recent (meaning they happened in the most recent batch execution)
      */
-    public override void doExecute(Database.BatchableContext bc, List<SObject>records ) {
-        this.recCnt += records.size();
+    public ALLO_UpdPaymentAllocations_ERR_BATCH(Integer batchSize, Datetime boundary) {
+        super(batchSize, boundary);
     }
 
     /**
-     * @description Required to set the main object the batch executes against
+     * @description The Context Type Payment Allocations Batch Record Errors are stored under
+     * @return String String representation of the Context Type Payment Allocations Batch Record Errors are stored under
      */
-    public override SObjectType getSObjectType() {
-        return Error__c.getSObjectType();
+    public override String getContextType() {
+        return ALLO_UpdPaymentAllocations_BATCH.PROCESS_NAME;
     }
 
     /**
-     * Returns ID by default.  Can be modified to return other fields, and subQueries instead
-     * @return String SOQL Query fragment consisting of fields and subqueries to retrieve, part between outer select and from
+     * @description Reprocesses Errors that occurred during the Payment Allocations Batch Execution
+     * @param Set<Id> recordIds Set of Opportunity Ids to review and process
+     * @param ERR_RecordError recErrs Instance of the ERR_RecordError class, populated by the Base Error Reprocessing Batch Class.
+     * @return Set<Id> Any Opportunities that were successfully reprocessed.
      */
-    public override String getSOQLFullQueryFieldList() {
-        return 'Id, ' +
-                'Record_Id__c, ' +
-                'Retry_Pending__c';
-    }
-
-    // TODO: Consider a modular approach to this batch where the data to retrieve could be parameterized for the Process, and the
-    //       Implementing class could fulfill the contract to retry and then return success, or update the errors if
-    //       additional errors occurred.
-
-    /**
-     * @description Returns the where clause for the payment allocations Batch for records that require reprocessing
-     * @return String Where Clause for Batch Query
-     */
-    public override String getWhereClause() {
-        return 'Context_Type__c =\'' + ALLO_UpdPaymentAllocations_BATCH.PROCESS_NAME + '\' and Retry_Pending__c = true';
-    }
-
-    /**
-     * @description Called on completion of the batch job.  If this is running LDV Mode it may be called more than once.  All but the last invocation will
-     * have an isComplete value of false.  This method isd similar in nature/roughly equivalent to the finish method of a standard Apex Batch job
-     * @param bc BatchableContext
-     * @param isComplete boolean value that indicates whether or not this is the final invocation, or will be executing against additional chunks
-     */
-    public override void doFinish(Database.BatchableContext bc , Boolean isComplete) {
-        if (isComplete) {
-        }
+    public override Set<Id> reprocessRecords(Set<Id> recordIds, ERR_RecordError recErrs) {
+        // We want to disable Allocation Triggers, have a RecordErrors Map to pass in, and do not want to commit and clear any errors
+        // as this will be handled by the Error Reprocessing Base Class
+        return ALLO_UpdPaymentAllocations_BATCH.processRecords(ALLO_UpdPaymentAllocations_BATCH.PROCESS_NAME, recordIds, recErrs, null, true, false);
     }
 
 }
