@@ -3,6 +3,7 @@ import time
 import sys
 import warnings
 import os
+import pprint
 
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
@@ -1125,9 +1126,14 @@ class NPSP(object):
 
         self.batch_apex_wait("BDI_DataImport_BATCH")
 
-    def python_display(self, title, value, say=False):
-        print(value)
-        value = repr(value)
+    def python_display(self, title, *value, say=False):
+        if isinstance(value, str):
+            pass
+        elif any(isinstance(value, t) for t in [list, dict, tuple]):
+            value = pprint.pformat(value)
+        else:
+            value = repr(value)
+        print(title, value)
         sys.stderr.write(f"{title}: {value}\n")
         value = value.replace("'", "")
         value = value.replace('"', "")
