@@ -250,7 +250,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
 
             // Execute Error Batch Phase
             ALLO_UpdPaymentAllocations_ERR_BATCH alloErrBatch = new ALLO_UpdPaymentAllocations_ERR_BATCH(getBatchSize(), this.jobStart);
-            Database.execute(alloErrBatch, getBatchSize());
+            Database.executeBatch(alloErrBatch, this.getBatchSize());
         }
     }
 
