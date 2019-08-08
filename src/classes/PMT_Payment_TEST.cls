@@ -1657,7 +1657,6 @@ private class PMT_Payment_TEST {
     /* Tests with Enforce Accounting Data Consistency Not Enabled */
     /* @description Create Finalized Opportunity With Amount and Unpaid Payments. Change Unpaid Payments to Paid. Confirm no change in amount.
     */
-    // TODO
     @isTest
     private static void oppFinalizedWUnpaidPaymentsUpdateeToPaidDataConsistDisabled() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c = true, Enforce_Accounting_Data_Consistency__c = false));
