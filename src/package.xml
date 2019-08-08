@@ -248,6 +248,9 @@
         <members>ERR_ParentAccountUpdater2_TEST</members>
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
+        <members>ERR_RecordErrorReprocessBatch_BASE</members>
+        <members>ERR_RecordErrorReprocessBatch_MOCK</members>
+        <members>ERR_RecordErrorReprocessBatch_TEST</members>
         <members>ERR_RecordError_TEST</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
@@ -1015,8 +1018,8 @@
         <members>Error__c.Full_Message__c</members>
         <members>Error__c.Object_Type__c</members>
         <members>Error__c.Posted_in_Chatter__c</members>
-        <members>Error__c.Related_Record_Id__c</members>
         <members>Error__c.Record_URL__c</members>
+        <members>Error__c.Related_Record_Id__c</members>
         <members>Error__c.Retry_Pending__c</members>
         <members>Error__c.Stack_Trace__c</members>
         <members>General_Accounting_Unit__c.Active__c</members>
@@ -1685,6 +1688,7 @@
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
         <members>errErrorNoContext</members>
+        <members>errErrorRecordRetrySuccessful</members>
         <members>errErrorTypeOther</members>
         <members>errErrorTypeRequiredFieldMissing</members>
         <members>errErrorTypeValidationFailed</members>
