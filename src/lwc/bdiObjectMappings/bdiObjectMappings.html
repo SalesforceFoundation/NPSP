@@ -1,0 +1,76 @@
+<template>
+    <template if:true={displayObjectMappings}>
+        
+        <c-bdi-object-mapping-modal
+            is-modal-open={isModalOpen}
+            object-options={objectOptions}
+            object-mappings={objectMappings}
+            di-object-mapping-set-dev-name={diObjectMappingSetDevName}
+            namespace={namespace}>
+        </c-bdi-object-mapping-modal>
+
+        <div class="slds-grid slds-wrap slds-m-bottom_small">
+            <div class="slds-size_1-of-2">
+                <lightning-breadcrumbs>
+                    <lightning-breadcrumb
+                        label="Back to NPSP Settings"
+                        href={npspSettingsURL}>
+                    </lightning-breadcrumb>
+                </lightning-breadcrumbs>
+            </div>
+            <div class="slds-size_1-of-2 slds-m-bottom_small">
+                <lightning-button
+                    label={customLabels.bdiOMUICreateNewObjectGroup}
+                    title={customLabels.bdiOMUICreateNewObjectGroup}
+                    onclick={handleOpenModal}
+                    class="slds-m-left_x-small slds-float_right">
+                </lightning-button>
+            </div>
+            <div class="slds-size_1-of-1 slds-m-bottom_large">
+                <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">{customLabels.bdiAdvancedMapping}</h1>
+                <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">{customLabels.bdiOMUIObjectGroupsTitle}</h2>
+
+                    <p class="slds-text_extension slds-m-bottom_small">
+                        {customLabels.bdiOMUIPageDescriptionPt1}
+                    </p>
+                    <p class="slds-text_extension slds-m-bottom_small">
+                        {customLabels.bdiOMUIPageDescriptionPt2}
+                    </p>
+                    <p class="slds-text_extension slds-m-bottom_small">
+                        {customLabels.bdiOMUIPageDescriptionPt3}
+                    </p>
+                    <p class="slds-text_extension">
+                        <lightning-formatted-rich-text
+                            value={customLabels.stgHelpAdvancedMapping3}>
+                        </lightning-formatted-rich-text>
+                    </p>
+            </div>
+            <div class="slds-size_1-of-1 slds-m-bottom_small">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size_1-of-1 slds-m-top_x-small">
+                        <tempate if:true={isLoading}>
+                            <lightning-spinner></lightning-spinner>
+                        </tempate>
+                        <lightning-datatable
+                            key-field="id"
+                            data={objectMappings}
+                            columns={columns}
+                            hide-checkbox-column
+                            onrowaction={handleRowAction}>
+                        </lightning-datatable>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size_1-of-2">
+            </div>
+            <div class="slds-size_1-of-2">
+                <lightning-button
+                    label={customLabels.bdiOMUICreateNewObjectGroup}
+                    title={customLabels.bdiOMUICreateNewObjectGroup}
+                    onclick={handleOpenModal}
+                    class="slds-m-left_x-small slds-float_right">
+                </lightning-button>
+            </div>
+        </div>
+    </template>   
+</template>
