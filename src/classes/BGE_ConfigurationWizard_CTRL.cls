@@ -46,10 +46,61 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         'Contact2_LastName__c'
     };
 
-    private static Map<String, String> allowedObjectsToObjectGroupName = new Map<String,String> {
+    /*******************************************************************************************************
+    * @description Currently limit the set of allowed objects, and point to their BDI-defined 
+    *  Object group name
+    */
+    private static Map<String, String> objectGroupNameByAllowedObjects = new Map<String,String> {
         'Opportunity' => 'Opportunity',
         'npe01__OppPayment__c' => 'Payment'
     };
+
+    /*******************************************************************************************************
+    * @description Fields to be blocked from BGE as they are required by the system
+    */
+    private static Set<String> bannedFields = new Set<String>{
+            'Account1Imported__c',
+            'Account1ImportStatus__c',
+            'Account2Imported__c',
+            'Account2ImportStatus__c',
+            'ApexJobId__c',
+            'Contact1Imported__c',
+            'Contact1ImportStatus__c',
+            'Contact2Imported__c',
+            'Contact2ImportStatus__c',
+            'DonationImported__c',
+            'DonationImportStatus__c',
+            'Donation_Possible_Matches__c',
+            'FailureInformation__c',
+            'HomeAddressImported__c',
+            'HomeAddressImportStatus__c',
+            'HouseholdAccountImported__c',
+            'ImportedDate__c',
+            'NPSP_Data_Import_Batch__c',
+            'PaymentImported__c',
+            'PaymentImportStatus__c',
+            'Payment_Possible_Matches__c',
+            'Status__c',
+            'Account2ImportStatus__c'
+        };
+
+    /*******************************************************************************************************
+    * @description these data types have been whitelisted since they already work with BGE
+    */ 
+    private static Set<Schema.DisplayType> allowedDataTypes = new Set<Schema.DisplayType>{
+            Schema.DisplayType.CURRENCY,
+            Schema.DisplayType.DATE,
+            Schema.DisplayType.STRING,
+            Schema.DisplayType.TEXTAREA,
+            Schema.DisplayType.DOUBLE,
+            Schema.DisplayType.PICKLIST,
+            Schema.DisplayType.EMAIL,
+            Schema.DisplayType.MULTIPICKLIST,
+            Schema.DisplayType.PHONE,
+            Schema.DisplayType.URL,
+            Schema.DisplayType.REFERENCE
+        };
+
 
     /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
@@ -117,35 +168,36 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         List<BGEField> fields = new List<BGEField>();
 
-        /***
-        Set<String> allowedObjects = new Set<String>{
-            'Opportunity',
-            'npe01__OppPayment__c'
-        };
-        ***/ 
+        //List<DescribeFieldResult> dfrs = getRelevantFields(objectGroupNameByAllowedObjects.keySet());
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = getRelevantFields();
 
-        List<DescribeFieldResult> dfrs = getRelevantFields(allowedObjectsToObjectGroupName.keySet());
+        for (SObjectField sourceSObjField: targetFieldsBySourceField.keySet()) {
+            Schema.DescribeFieldResult sourceFieldDFR = sourceSObjField.getDescribe();
+            BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceSObjField);
+            for (Schema.SObjectType targetSObjType: targetFields.getTargetFieldsByTargetObject().keySet()) {
+            
+                if (!objectGroupNameByAllowedObjects.containsKey(targetSObjType.getDescribe().getName())) {
+                    continue;
+                }
 
+                BGEField field = new BGEField();
+                field.name = sourceFieldDFR.getName();
+                // TODO: pull these labels from target fields' schema based on help text mapping
+                Boolean fieldHasSpacesAndObjName = sourceFieldDFR.getLabel().contains(' ') && sourceFieldDFR.getLabel().split(' ',2)[0] == field.sObjectName;
+                field.label = (fieldHasSpacesAndObjName) ? sourceFieldDFR.getLabel().split(' ',2)[1] : sourceFieldDFR.getLabel();
 
-        for (DescribeFieldResult dfr : dfrs) {
+                field.sObjectName = targetSObjType.getDescribe().getName();
+                field.sObjectLabel = targetSObjType.getDescribe().getLabel();
 
-            BGEField field = new BGEField();
-            field.name = dfr.getName();
-            // TODO: pull these labels from target fields' schema based on help text mapping
-            Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
-            field.label = (fieldHasSpacesAndObjName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel();
+                if (conditionallyRequiredFields.contains(field.name)) {
+                    field.conditionallyRequired = true;
+                }
 
-            field.sObjectName = BDI_DataImportService.getTargetObject(dfr.getName());
-            field.sObjectLabel = UTIL_Describe.getObjectLabel(field.sObjectName);
+                field.type = UTIL_LightningComponentSupport.getLightningInputDataType(sourceFieldDFR.getType());
+                field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
 
-            if (conditionallyRequiredFields.contains(field.name)) {
-                field.conditionallyRequired = true;
+                fields.add(field);
             }
-
-            field.type = UTIL_LightningComponentSupport.getLightningInputDataType(dfr.getType());
-            field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
-
-            fields.add(field);
         }
 
         return fields;
@@ -155,98 +207,52 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Returns the Data Import DFRs for a set of target objects
     * @return list of DescribeFieldResults
     */
-    public static List<Schema.DescribeFieldResult> getRelevantFields(Set<String> allowedObjects) {
-
-        Map<String, Schema.DescribeFieldResult> filteredDFRMap = new Map<String, Schema.DescribeFieldResult>();
-
-        Map<String, Schema.DescribeFieldResult> allFieldsMap =
-                UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
-
-
-        BDI_FieldMapping fieldMapping = BDI_DataImportService.getDefaultFieldMapping();
-        Set<String> mappedDIFields = new Set<String>();
-        for(String objName: allowedObjects) {
-            mappedDIFields.addAll(fieldMapping.getFieldMap(
-                allowedObjectsToObjectGroupName.get(objName), 
-                objName, 
-                new List<String> (allFieldsMap.keySet())
-            ).keySet());
-        }
-
-        // debug
-        for(String fieldName: mappedDIFields) {
-            System.debug(' **** Identified mapped field for BGE: '+fieldName);
-        }
-        
-        Set<String> bannedFields = new Set<String>{
-            'Account1Imported__c',
-            'Account1ImportStatus__c',
-            'Account2Imported__c',
-            'Account2ImportStatus__c',
-            'ApexJobId__c',
-            'Contact1Imported__c',
-            'Contact1ImportStatus__c',
-            'Contact2Imported__c',
-            'Contact2ImportStatus__c',
-            'DonationImported__c',
-            'DonationImportStatus__c',
-            'Donation_Possible_Matches__c',
-            'FailureInformation__c',
-            'HomeAddressImported__c',
-            'HomeAddressImportStatus__c',
-            'HouseholdAccountImported__c',
-            'ImportedDate__c',
-            'NPSP_Data_Import_Batch__c',
-            'PaymentImported__c',
-            'PaymentImportStatus__c',
-            'Payment_Possible_Matches__c',
-            'Status__c',
-            'Account2ImportStatus__c'
-        };
-
-        // these data types have been whitelisted since they already work with BGE
-        Set<Schema.DisplayType> allowedDataTypes = new Set<Schema.DisplayType>{
-            Schema.DisplayType.CURRENCY,
-            Schema.DisplayType.DATE,
-            Schema.DisplayType.STRING,
-            Schema.DisplayType.TEXTAREA,
-            Schema.DisplayType.DOUBLE,
-            Schema.DisplayType.PICKLIST,
-            Schema.DisplayType.EMAIL,
-            Schema.DisplayType.MULTIPICKLIST,
-            Schema.DisplayType.PHONE,
-            Schema.DisplayType.URL,
-            Schema.DisplayType.REFERENCE
-        };
+    public static Map<SObjectField, BDI_TargetFields> getRelevantFields() {
 
         // these fields have been whitelisted since they have special handling in BDI
         Set<String> allowedFields = new Set<String>{
             'Donation_Record_Type_Name__c'
         };
 
-        // looping through the fields on DataImport__c and remove unsupported data types
-        // Remove fields user doesn't have permission to update unless whitelisted
-        for (Schema.DescribeFieldResult dfr : allFieldsMap.values()) {
-            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
+        Map<SObjectField, BDI_TargetFields> filteredTargetFieldsBySourceField = new Map<SObjectField, BDI_TargetFields>();
 
-            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
+        BDI_FieldMapping fieldMapping = BDI_DataImportService.getDefaultFieldMapping();
+
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = fieldMapping.getTargetFieldsBySourceField();
+
+        for (SObjectField sourceSObjField: targetFieldsBySourceField.keySet()) {
+            Schema.DescribeFieldResult sourceDFR = sourceSObjField.getDescribe();
+            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(sourceDFR.getName());
 
             System.debug(' ***** Testing DI field for BGE: '+dataImportFieldApiName);
 
+            // get objects the field is mapped to
+            BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceSObjField);
+            Set<SObjectType> targetObjectTypesMappedFromField = targetFields.getTargetFieldsByTargetObject().keySet();
+            Boolean mappedToAllowedObject = false;
+            for (SObjectType sObjType: targetObjectTypesMappedFromField) {
+                if (objectGroupNameByAllowedObjects.containsKey(sObjType.getDescribe().getName())) {
+                    mappedToAllowedObject = true;
+                    break;
+                }
+            }
+
             Boolean fieldAllowed = (
-                UTIL_Permissions.canUpdate(dfr, false)
-                && ((allowedObjects.contains(dataImportFieldMappedObject)
-                && allowedDataTypes.contains(dfr.type)
-                && !bannedFields.contains(dataImportFieldApiName)
-                && mappedDIFields.contains(dfr.getName())
-                || allowedFields.contains(dataImportFieldApiName)))
+                UTIL_Permissions.canUpdate(sourceDFR, false)
+                && (mappedToAllowedObject
+                    && allowedDataTypes.contains(sourceDFR.type)
+                    && !bannedFields.contains(dataImportFieldApiName)
+                    || allowedFields.contains(dataImportFieldApiName)
+                )
             );
 
             if (fieldAllowed) {
-                filteredDFRMap.put(dfr.label, dfr);
+                filteredTargetFieldsBySourceField.put(sourceSObjField, targetFields);
             }
         }
 
+        // TODO: Sort the results!
+        /** 
         List<String> sortedFieldLabels = new List<String>(filteredDFRMap.keySet());
         sortedFieldLabels.sort();
 
@@ -256,6 +262,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         }
 
         return sortedDFRs;
+        */
+        return filteredTargetFieldsBySourceField;
     }
 
     /*******************************************************************************************************
