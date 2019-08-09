@@ -97,8 +97,7 @@ export default class PlatformEventListener extends LightningElement {
             default: {
                 let namespace =
                     this._namespacePrefix && this._namespacePrefix != '' ? this._namespacePrefix + '__' : '';
-                this._fullChannelName =
-                    `/event/${namespace}DeploymentEvent__e`;
+                this._fullChannelName = `/event/${namespace}DeploymentEvent__e`;
             }
         }
     }
