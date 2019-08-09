@@ -50,7 +50,7 @@ export default class PlatformEventListener extends LightningElement {
     classifyChannelName() {
         let isFullName = this.channelName && this.channelName.includes('/event/');
         let isNamespaceContext = this._namespacePrefix && this._namespacePrefix !== '';
-        let isChannelNamespaced = this.channelName.includes(this._namespacePrefix);
+        let isChannelNamespaced = this.channelName && this.channelName.includes(`${this._namespacePrefix}__`);
 
         if (isFullName) {
             return channelNameContexts.IS_FULL_NAME;
@@ -58,7 +58,7 @@ export default class PlatformEventListener extends LightningElement {
             return channelNameContexts.IN_NAMESPACE_CONTEXT_IS_NAMESPACED;
         } else if (isNamespaceContext && !isChannelNamespaced) {
             return channelNameContexts.IN_NAMESPACE_CONTEXT_NOT_NAMESPACED;
-        } else if (!isNamespaceContext) {
+        } else if (this.channelName && !isNamespaceContext) {
             return channelNameContexts.NOT_IN_NAMESPACE_CONTEXT
         } else if (!this.channelName) {
             return channelNameContexts.UNDEFINED;
@@ -94,8 +94,12 @@ export default class PlatformEventListener extends LightningElement {
                 });
                 break;
 
-            default:
-                this._fullChannelName = '/event/npsp__DeploymentEvent__e';
+            default: {
+                let namespace =
+                    this._namespacePrefix && this._namespacePrefix != '' ? this._namespacePrefix + '__' : '';
+                this._fullChannelName =
+                    `/event/${namespace}DeploymentEvent__e`;
+            }
         }
     }
 
@@ -149,7 +153,6 @@ export default class PlatformEventListener extends LightningElement {
             // Response contains the subscription information on successful subscribe call
             this.subscription = response;
         });
-        console.log('Subscribed to channel: ', this._fullChannelName);
     }
 
     handleEventReceived(response) {
@@ -169,7 +172,7 @@ export default class PlatformEventListener extends LightningElement {
     }
 
     static onError(error) {
-        console.log('Received error from server: ', JSON.stringify(error));
+        this.handleError(error);
         // Error contains the server-side error
     }
 
@@ -201,7 +204,6 @@ export default class PlatformEventListener extends LightningElement {
     * @param {object} error: Event holding error details
     */
     handleError(error) {
-        console.log('Error: ', error);
         if (error && error.status && error.body) {
             this.errorToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {
