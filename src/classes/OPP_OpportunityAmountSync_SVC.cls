@@ -37,7 +37,8 @@
 public class OPP_OpportunityAmountSync_SVC {
 
     /**
-     * updates the opportunity amount based on the paid payment amounts if there is a mismatch
+     * @description updates the opportunity amount based on the paid payment amounts if there is a mismatch; this method does not process
+     * dml, the list returned contains the opportunities to be updated
      * @param Map<Id, Opportunity> map of opportunities by Id opportunitiesByIds
      * @return List<Opportunity>
      */
