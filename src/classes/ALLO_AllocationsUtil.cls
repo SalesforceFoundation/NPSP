@@ -115,6 +115,11 @@ public class ALLO_AllocationsUtil {
             return (recordExclusions != null && (recordExclusions.contains(exclusion) || recordExclusions.contains(PROCESS_DEF.ALL)));
         }
 
+        /*******************************************************************************************************
+         * @description Checks to see if no exclusions are present for a record
+         * @param Id recordId The Id of the record
+         * @return Boolean True if there are no exclusions present for that recordId
+         ********************************************************************************************************/
         public Boolean hasNoExclusions(id recordId) {
             Set<PROCESS_DEF> recordExclusions = (this.exclusionsByRecordId.containsKey(recordId)) ? this.exclusionsByRecordId.get(recordId) : null;
             return (recordExclusions == null || recordExclusions.isEmpty());
