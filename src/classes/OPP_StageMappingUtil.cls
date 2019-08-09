@@ -93,7 +93,7 @@ public with sharing class OPP_StageMappingUtil {
     /*******************************************************************************************************
     * @description Determines if the opportunity is in the FINALIZED state
     * @param Opportunity 
-    * @return Boolean
+    * @return Boolean: true if Finalized, and false otherwise
     ********************************************************************************************************/
     public static Boolean isOpportunityFinalized(Opportunity opp) {
         return determineOppStateFromOppStage(opp.StageName) == FINALIZED_STATE_VAL;
