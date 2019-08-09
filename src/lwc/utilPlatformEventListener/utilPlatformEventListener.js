@@ -7,6 +7,15 @@ import getNamespacePrefix from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.g
 
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
+const channelNameContexts = {
+    IS_FULL_NAME: 'isFullName',
+    IN_NAMESPACE_CONTEXT_IS_NAMESPACED: 'inNamespaceContextIsNamespaced',
+    IN_NAMESPACE_CONTEXT_NOT_NAMESPACED: 'inNamespaceContextNotNamespaced',
+    NOT_IN_NAMESPACE_CONTEXT: 'notInNamespaceContext',
+    UNDEFINED: 'undefined',
+    DEFAULT: 'default'
+}
+
 export default class PlatformEventListener extends LightningElement {
 
     /*******************************************************************************
@@ -44,41 +53,41 @@ export default class PlatformEventListener extends LightningElement {
         let isChannelNamespaced = this.channelName.includes(this._namespacePrefix);
 
         if (isFullName) {
-            return 'isFullName';
+            return channelNameContexts.IS_FULL_NAME;
         } else if (isNamespaceContext && isChannelNamespaced) {
-            return 'inNamespaceContextIsNamespaced';
+            return channelNameContexts.IN_NAMESPACE_CONTEXT_IS_NAMESPACED;
         } else if (isNamespaceContext && !isChannelNamespaced) {
-            return 'inNamespaceContextNotNamespaced';
+            return channelNameContexts.IN_NAMESPACE_CONTEXT_NOT_NAMESPACED;
         } else if (!isNamespaceContext) {
-            return 'notInNamespaceContext'
+            return channelNameContexts.NOT_IN_NAMESPACE_CONTEXT
         } else if (!this.channelName) {
-            return 'undefined';
+            return channelNameContexts.UNDEFINED;
         }
 
-        return 'default';
+        return channelNameContexts.DEFAULT;
     }
 
     handleChannelName() {
         let category = this.classifyChannelName();
 
         switch (category) {
-            case 'fullName':
+            case channelNameContexts.IS_FULL_NAME:
                 this._fullChannelName = this.channelName;
                 break;
 
-            case 'inNamespaceContextIsNamespaced':
+            case channelNameContexts.IN_NAMESPACE_CONTEXT_IS_NAMESPACED:
                 this._fullChannelName = `/event/${this.channelName}`;
                 break;
 
-            case 'inNamespaceContextNotNamespaced':
+            case channelNameContexts.IN_NAMESPACE_CONTEXT_NOT_NAMESPACED:
                 this._fullChannelName = `/event/${this._namespacePrefix}__${this.channelName}`;
                 break;
 
-            case 'notInNamespaceContext':
+            case channelNameContexts.NOT_IN_NAMESPACE_CONTEXT:
                 this._fullChannelName = `/event/${this.channelName}`;
                 break;
 
-            case 'undefined':
+            case channelNameContexts.UNDEFINED:
                 this.handleError({
                     name: 'Error',
                     message: `Invalid or missing channel '${this.channelName}'`
