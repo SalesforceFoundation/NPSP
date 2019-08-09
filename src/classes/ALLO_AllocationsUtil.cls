@@ -200,6 +200,18 @@ public class ALLO_AllocationsUtil {
         }
 
         /*******************************************************************************************************
+         * @description Checks to see if the Opportunity is associated with a Campaign or Recurring Donation
+         *              and has no allocations
+         * @param Opportunity opp The opportunity to check
+         * @return Boolean True if the Opportunity has a Parent but no Allocations
+         ********************************************************************************************************/
+        @testVisible private Boolean isOpportunityWithParentAndNoAllocations(Opportunity opp) {
+            List<Allocation__c> oppAllocations = this.oppsAllocations.get(opp.Id);
+            return (opp.Amount != null && opp.Amount != 0 && (opp.npe03__Recurring_Donation__c != null || opp.CampaignId != null) &&
+                    (oppAllocations == null || oppAllocations.size() == 0));
+        }
+
+        /*******************************************************************************************************
          * @description Checks to see if the Opportunity requires review, based on it's payments, allocations,
          *              etc.
          * @param Opportunity opp The opportunity to check
@@ -212,8 +224,14 @@ public class ALLO_AllocationsUtil {
             if (isExcluded(opp)) {
                 return false;
             }
+
             // Check Opportunity & Opportunity Allocations first
             if (isRequiresReview(opp, this.oppsAllocations.get(opp.Id), boundary)) {
+                return true;
+            }
+
+            // Check if Opportunity is Opportunity with Parent and No Allocations (Only needed for cases where Default Allocations Not Enabled)
+            if (isOpportunityWithParentAndNoAllocations(opp)) {
                 return true;
             }
 
@@ -1414,14 +1432,12 @@ public class ALLO_AllocationsUtil {
         if (lastModifiedDate >= boundary) {
             return true;
         }
-        // If Default Allocations are enabled, Check for a non null/zero amount with no allocations.
-        if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && amount != null && amount != 0 && (allocations == null || allocations.size() == 0)) {
-            return true;
-        }
 
-        // Check for a null/zero amount with allocations ( not associated with payment)
-        if ((amount == null || amount == 0) && (allocations != null && allocations.size() > 0 && !forPayment)) {
-            return true;
+        if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) { // Only if Default Allocations are Enabled
+            //  Check for a non null/zero amount with no allocations.
+            if (amount != null && amount != 0 && (allocations == null || allocations.size() == 0)) {
+                return true;
+            }
         }
 
         Decimal allocAmount = 0;
@@ -1442,21 +1458,21 @@ public class ALLO_AllocationsUtil {
                 }
             }
 
-            if (forPayment) { // These checks are only for Payment Allocations
-                // Amount on allocation is present that needs to be cleared.
-                if ((amount == null || amount == 0) && alloc.Amount__c != 0) {
-                    return true;
-                }
-                // Amount is blank zero, but should not be if Parent is a non null/zero amount
-                if (amount != null && amount != 0 && (alloc.Amount__c == null || alloc.Amount__c == 0)) {
-                    return true;
-                }
+            // Amount on allocation is present that needs to be cleared.
+            if ((amount == null || amount == 0) && alloc.Amount__c != 0) {
+                return true;
+            }
+            // Amount is blank zero, but should not be if Parent is a non null/zero amount
+            if (amount != null && amount != 0 && (alloc.Amount__c == null || alloc.Amount__c == 0)) {
+                return true;
             }
         }
 
-        // Total of Allocations and Parent Amount should match
-        if (amount != null && allocAmount != amount) {
-            return true;
+        if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) { // Only if Default Allocations are Enabled
+            // Total of Allocations and Parent Amount should match
+            if (amount != null && allocAmount != amount) {
+                return true;
+            }
         }
 
         // Positive checks exhausted.
