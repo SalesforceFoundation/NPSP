@@ -869,7 +869,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
         Test.startTest();
         update oppAllocation;
 
-        List<Allocation__c> paidPaymentAllocationList = new List<Allocation__c>([select Id,
+        List<Allocation__c> paidPaymentAllocations = new List<Allocation__c>([select Id,
                 Opportunity__c,
                 Payment__c,
                 Payment__r.npe01__Paid__c,
@@ -881,10 +881,10 @@ private with sharing  class ALLO_PaymentSync_TEST {
         where Payment__c = :payments[0].Id
         order by Amount__c DESC]);
 
-        System.assertEquals(1, paidPaymentAllocationList.size());
-        System.assertEquals(500, paidPaymentAllocationList[0].Amount__c);
+        System.assertEquals(1, paidPaymentAllocations.size(), 'Paid Payment Allocation size');
+        System.assertEquals(500, paidPaymentAllocations[0].Amount__c, 'Paid Payment amount');
 
-        List<Allocation__c> secondPaymentList = new List<Allocation__c>([select Id,
+        List<Allocation__c> secondPaymentAllocations = new List<Allocation__c>([select Id,
                 Opportunity__c,
                 Payment__c,
                 Payment__r.npe01__Paid__c,
@@ -896,9 +896,9 @@ private with sharing  class ALLO_PaymentSync_TEST {
         where Payment__c = :payments[1].Id
         order by Amount__c DESC]);
 
-        System.assertEquals(2, secondPaymentList.size());
-        System.assertEquals(250, secondPaymentList[0].Amount__c);
-        System.assertEquals(250, secondPaymentList[1].Amount__c);
+        System.assertEquals(2, secondPaymentAllocations.size(), 'Payment Allocation size');
+        System.assertEquals(250, secondPaymentAllocations[0].Amount__c, 'Payment amount');
+        System.assertEquals(250, secondPaymentAllocations[1].Amount__c, 'Payment amount');
 
 
         Test.stopTest();
