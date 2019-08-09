@@ -103,7 +103,7 @@ Workaround Bug
 
 Import a data batch via the API - Complex Objects No ASCs
 
-    Batch Data Import   100
+    Batch Data Import   250
 
     ${count} =	Convert To Integer	${count}	
 
