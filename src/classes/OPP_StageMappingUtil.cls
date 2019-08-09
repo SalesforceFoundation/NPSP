@@ -45,8 +45,8 @@ public with sharing class OPP_StageMappingUtil {
     @testVisible private static final String UNCOMMITTED_STATE_VAL = 'UNCOMMITTED';
     @testVisible private static final String COMMITTED_STATE_VAL = 'COMMITTED';
     @testVisible private static final String FINALIZED_STATE_VAL = 'FINALIZED';
-    @testVisible public static final String TEST_FINALIZED_STAGE = 'Closed Won';
-    @testVisible public static final String TEST_COMMITTED_STAGE = 'Pledged';
+    @testVisible private static final String TEST_FINALIZED_STAGE = 'Closed Won';
+    @testVisible private static final String TEST_COMMITTED_STAGE = 'Pledged';
     
 
 
