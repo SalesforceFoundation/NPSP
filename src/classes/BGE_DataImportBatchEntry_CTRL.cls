@@ -440,11 +440,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 if (dataImportDFR != null) {
 
                     if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
-                        /******
-                        String targetObject = BDI_DataImportService.getTargetObject(dataImportDFR.name);
-                        String targetField = BDI_DataImportService.getTargetField(dataImportDFR.name);
-                        DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject, targetField);
-                        */
 
                         String targetObject = '';
                         String targetField = '';
