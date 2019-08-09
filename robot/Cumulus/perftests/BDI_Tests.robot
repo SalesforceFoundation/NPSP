@@ -88,6 +88,7 @@ Display Failures
     ...                                   npsp__Status__c: ${failures[0]['npsp__Status__c']}
     ...                                   npsp__PaymentImported__c: ${failures[0]['npsp__PaymentImported__c']}
     ...                                   npsp__PaymentImportStatus__c: ${failures[0]['npsp__PaymentImportStatus__c']}
+    ...                                   npsp__FailureInformation__c: ${failures[0]['npsp__FailureInformation__c']}
 
 Workaround Bug
     Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
