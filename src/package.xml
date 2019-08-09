@@ -42,6 +42,7 @@
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
         <members>ALLO_AllocationsUtil</members>
+        <members>ALLO_AllocationsUtil_TEST</members>
         <members>ALLO_Allocations_TDTM</members>
         <members>ALLO_Allocations_TEST</members>
         <members>ALLO_MakeDefaultAllocations_BATCH</members>
@@ -56,6 +57,7 @@
         <members>ALLO_Rollup_TEST</members>
         <members>ALLO_UpdPaymentAllocations_BATCH</members>
         <members>ALLO_UpdPaymentAllocations_ERR_BATCH</members>
+        <members>ALLO_UpdPaymentAllocations_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
