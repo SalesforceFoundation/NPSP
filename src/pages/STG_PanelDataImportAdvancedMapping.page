@@ -161,7 +161,9 @@
 
         <script type="text/javascript">
             function toggle() {
-                if (document.getElementById('{!$Component.form.enableDIFMToggle}').checked) {
+                let toggle = document.getElementById('{!$Component.form.enableDIFMToggle}');
+                if (toggle.checked) {
+                    toggle.setAttribute('disabled', 'true');
                     enableDataImportFieldMapping();
                 } else {
                     disableDataImportFieldMapping();
