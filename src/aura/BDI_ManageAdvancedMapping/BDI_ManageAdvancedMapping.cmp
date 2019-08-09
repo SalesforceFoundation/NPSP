@@ -6,7 +6,7 @@
             <c:bdiFieldMappings ondeployment="{!c.handleDeploymentNotification}"/>
 
             <c:utilPlatformEventListener
-                    channelName="/event/DeploymentEvent__e"
+                    channelName="DeploymentEvent__e"
                     isShowToastEnabled="true"
                     isConsoleLogEnabled="false"
                     aura:id="platformEventListener"/>
