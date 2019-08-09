@@ -881,8 +881,8 @@ private with sharing  class ALLO_PaymentSync_TEST {
         where Payment__c = :payments[0].Id
         order by Amount__c DESC]);
 
-        System.assert(paidPaymentAllocationList.size() == 1, 'The allocation list size is incorrect. It should be 1, but it is actually: ' + paidPaymentAllocationList.size());
-        System.assert(paidPaymentAllocationList[0].Amount__c == 500, 'The allocation amount should be $250, but it is actually: ' + paidPaymentAllocationList[0].Amount__c);
+        System.assertEquals(1, paidPaymentAllocationList.size());
+        System.assertEquals(500, paidPaymentAllocationList[0].Amount__c);
 
         List<Allocation__c> secondPaymentList = new List<Allocation__c>([select Id,
                 Opportunity__c,
@@ -896,9 +896,9 @@ private with sharing  class ALLO_PaymentSync_TEST {
         where Payment__c = :payments[1].Id
         order by Amount__c DESC]);
 
-        System.assert(secondPaymentList.size() == 2, 'The allocation list size is incorrect. It should be 2, but it is actually: ' + secondPaymentList.size());
-        System.assert(secondPaymentList[0].Amount__c == 250, 'The allocation amount should be $250, but it is actually: ' + secondPaymentList[0].Amount__c);
-        System.assert(secondPaymentList[1].Amount__c == 250, 'The allocation amount should be $250, but it is actually: ' + secondPaymentList[1].Amount__c);
+        System.assertEquals(2, secondPaymentList.size());
+        System.assertEquals(250, secondPaymentList[0].Amount__c);
+        System.assertEquals(250, secondPaymentList[1].Amount__c);
 
 
         Test.stopTest();
