@@ -580,7 +580,6 @@ public class ERR_RecordError {
         return (dmlError != null) ? ERR_Handler.getStatusCode(dmlError.getStatusCode()) : '(Error not available.)';
     }
 
-
     /*******************************************************************************************************
     * @description Returns the status of the error that happened as a result of a DML operation performed through
     *              the Database class as a string.
