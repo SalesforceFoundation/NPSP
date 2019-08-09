@@ -3,9 +3,12 @@ import {LightningElement, track, api} from 'lwc';
 import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { fireEvent } from 'c/pubsubNoPageRef';
+import getNamespacePrefix from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespacePrefix';
 
 export default class PlatformEventListener extends LightningElement {
-    @api channelName = '/event/DeploymentEvent__e'; //Default
+    @api platformEventName = 'DeploymentEvent__e'; //Default
+    _channelName;
+    _namespacePrefix;
     subscription = {};
 
     @api isShowToastEnabled = false;
@@ -16,8 +19,22 @@ export default class PlatformEventListener extends LightningElement {
     _deploymentResponses = new Map();
 
     connectedCallback() {
+        this.init();
+    }
+
+    init = async() => {
+        this._namespacePrefix = await getNamespacePrefix();
+        this.handleChannelName();
         this.handleSubscribe();
         setDebugFlag(this.isDebugFlagEnabled);
+    }
+
+    handleChannelName() {
+        if (this._namespacePrefix && this._namespacePrefix !== '') {
+            this._channelName = `/event/${this._namespacePrefix}__${this.platformEventName}`;
+        } else {
+            this._channelName = `/event/${this.platformEventName}`;
+        }
     }
 
     @api
@@ -66,7 +83,7 @@ export default class PlatformEventListener extends LightningElement {
         };
 
         // Invoke subscribe method of empApi. Pass reference to messageCallback
-        subscribe(this.channelName, -1, messageCallback).then(response => {
+        subscribe(this._channelName, -1, messageCallback).then(response => {
             // Response contains the subscription information on successful subscribe call
             this.subscription = response;
         });
