@@ -166,11 +166,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             for (Opportunity opp : newList) {
                 // get the opp with payments
                 Opportunity oppWithPayment = oppsById.get(opp.Id);
-
-                Decimal totalPaid = 0;
-                for (npe01__OppPayment__c pmt : oppWithPayment.npe01__OppPayment__r) {
-                    totalPaid += (pmt.npe01__Paid__c && pmt.npe01__Payment_Amount__c != null) ? pmt.npe01__Payment_Amount__c : 0;
-                }
+                Decimal totalPaid = OPP_OpportunityAmountSync_SVC.getTotalPaidPaymentsAmount(oppWithPayment);
 
                 if (OPP_StageMappingUtil.isOpportunityFinalized(opp) && opp.Amount != totalPaid) {
                     opp.addError(System.Label.Opp_Amount_Not_Equal_Error);

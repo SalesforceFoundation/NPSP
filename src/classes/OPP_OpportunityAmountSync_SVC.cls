@@ -46,11 +46,7 @@ public class OPP_OpportunityAmountSync_SVC {
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         
         for (Opportunity opp : opportunitiesByIds.values()) {
-            Decimal totalPaid = 0;
-
-            for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
-                totalPaid += (pmt.npe01__Paid__c && pmt.npe01__Payment_Amount__c != null) ? pmt.npe01__Payment_Amount__c : 0;
-            }
+            Decimal totalPaid = getTotalPaidPaymentsAmount(opp);
 
             Boolean addOppToList = (OPP_StageMappingUtil.isOpportunityFinalized(opp) && opp.Amount != totalPaid) ||
                     (!OPP_StageMappingUtil.isOpportunityFinalized(opp) && opp.Amount < totalPaid);
@@ -62,6 +58,21 @@ public class OPP_OpportunityAmountSync_SVC {
         }
 
         return oppsToUpdate;
+    }
+
+    /**
+     * @description calculates the total amount from the paid payments on opportunity
+     * @param Opportunity with list of attached payments
+     * @return Decimal totalPaid: the sum of the amounts for the paid payments on this opportunity
+     */
+    public static Decimal getTotalPaidPaymentsAmount(Opportunity oppWithPayment) {
+      Decimal totalPaid = 0;
+
+      for (npe01__OppPayment__c pmt : oppWithPayment.npe01__OppPayment__r) {
+          totalPaid += (pmt.npe01__Paid__c && pmt.npe01__Payment_Amount__c != null) ? pmt.npe01__Payment_Amount__c : 0;
+      }
+
+      return totalPaid;
     }
 
 }
