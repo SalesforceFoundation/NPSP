@@ -795,7 +795,7 @@ private class BDI_AdditionalObjectService_TEST {
                             MasterLabel = 'fakeHonoreeLastNameSFDOTest34',
                             Data_Import_Field_Mapping_Set__c = opptFieldMappings[0].Data_Import_Field_Mapping_Set__c,
                             Required__c = 'Yes',
-                            Source_Field_API_Name__c = 'Contact1_Alternate_Email__c',
+                            Source_Field_API_Name__c = DataImport__c.Contact1_Alternate_Email__c.getDescribe().getName(),
                             Target_Field_API_Name__c = 'LastName' );
 
         Data_Import_Field_Mapping__mdt honoreeAccountId = 
@@ -803,7 +803,7 @@ private class BDI_AdditionalObjectService_TEST {
                             MasterLabel = 'fakeHonoreeAcctSFDOTest34',
                             Data_Import_Field_Mapping_Set__c = opptFieldMappings[0].Data_Import_Field_Mapping_Set__c,
                             Required__c = 'No',
-                            Source_Field_API_Name__c = 'Account1Imported__c',
+                            Source_Field_API_Name__c = DataImport__c.Account1Imported__c.getDescribe().getName(),
                             Target_Field_API_Name__c = 'AccountId' );
 
         Data_Import_Field_Mapping__mdt[] honoreeFieldMappings = 
