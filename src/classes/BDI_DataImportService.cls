@@ -318,7 +318,7 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description holds the list of DataImport records we are currently processing
     */
-    global List<DataImport__c> listDI;
+    global List<DataImport__c> listDI = new List<DataImport__c>();
 
     /*******************************************************************************************************
     * @description holds the data import settings to use for this batch.  these may be either from
