@@ -440,8 +440,29 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 if (dataImportDFR != null) {
 
                     if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
+                        /******
                         String targetObject = BDI_DataImportService.getTargetObject(dataImportDFR.name);
                         String targetField = BDI_DataImportService.getTargetField(dataImportDFR.name);
+                        DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject, targetField);
+                        */
+
+                        String targetObject = '';
+                        String targetField = '';
+                        BDI_TargetFields targetFields = BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField.get(dataImportDFR.getSObjectField());
+                        Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject = targetFields.getTargetFieldsByTargetObject();
+
+                        // One DI field can be mapped to multiple target fields although it will be rare and presents some issues
+                        // with picklists; here we will return info for the first match
+                        for (Schema.SObjectType targetSObjType: targetFieldsByTargetObject.keySet()) {
+                            String aTargetObjectName = targetSObjType.getDescribe().getName();
+                            if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(aTargetObjectName)) {
+                                targetObject = aTargetObjectName;
+                                List<SObjectField> mappedTargetFields = new List<SObjectField> (targetFieldsByTargetObject.get(targetSObjType));
+                                if(mappedTargetFields.size() > 0) {
+                                    targetField = mappedTargetFields[0].getDescribe().getName();
+                                }
+                            }
+                        }
                         DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject, targetField);
 
                         Column col = new Column();
