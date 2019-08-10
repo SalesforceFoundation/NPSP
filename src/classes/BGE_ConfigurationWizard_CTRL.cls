@@ -276,18 +276,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             }
         }
 
-        // TODO: Sort the results!
-        /** 
-        List<String> sortedFieldLabels = new List<String>(filteredDFRMap.keySet());
-        sortedFieldLabels.sort();
-
-        List<Schema.DescribeFieldResult> sortedDFRs = new List<Schema.DescribeFieldResult>();
-        for (String fieldLabel : sortedFieldLabels) {
-            sortedDFRs.add(filteredDFRMap.get(fieldLabel));
-        }
-
-        return sortedDFRs;
-        */
         return filteredTargetFieldsBySourceField;
     }
 
