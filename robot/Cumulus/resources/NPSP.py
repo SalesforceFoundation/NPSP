@@ -1127,11 +1127,11 @@ class NPSP(object):
 
             self.batch_apex_wait("BDI_DataImport_BATCH")
         except Exception as e:
-            python_display(repr(e))
-            python_display(e)
+            self.python_display(repr(e))
+            self.python_display(e)
             import traceback
             tb = traceback.format_exc()
-            python_display(tb)
+            self.python_display(tb)
 
     def python_display(self, title, *value, say=False):
         if isinstance(value, str):
