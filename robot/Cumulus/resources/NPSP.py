@@ -1120,11 +1120,18 @@ class NPSP(object):
 
     def batch_data_import(self, batchsize):
         """"Do a BDI import using the API and wait for it to complete"""
-        self.run_apex("""BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-                ID ApexJobId = Database.executeBatch(bdi, %d);
-                """ % int(batchsize))
+        try:
+            self.run_apex("""BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+                    ID ApexJobId = Database.executeBatch(bdi, %d);
+                    """ % int(batchsize))
 
-        self.batch_apex_wait("BDI_DataImport_BATCH")
+            self.batch_apex_wait("BDI_DataImport_BATCH")
+        except Exception as e:
+            python_display(repr(e))
+            python_display(e)
+            import traceback
+            tb = traceback.format_exc()
+            python_display(tb)
 
     def python_display(self, title, *value, say=False):
         if isinstance(value, str):
