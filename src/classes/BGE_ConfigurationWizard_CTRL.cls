@@ -151,7 +151,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return JSON.serialize(model);
     }
 
-    /*******************************************************************************************************
+    /**************************************************************************
     * @description Retrieves the related list of fields.
     * @return list of BGE Fields.
     */
@@ -159,42 +159,73 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         List<BGEField> fields = new List<BGEField>();
 
-        //List<DescribeFieldResult> dfrs = getRelevantFields(objectGroupNameByAllowedObjects.keySet());
-        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = getRelevantFields();
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
+            getRelevantFields();
 
-        for (SObjectField sourceSObjField: targetFieldsBySourceField.keySet()) {
-            Schema.DescribeFieldResult sourceFieldDFR = sourceSObjField.getDescribe();
-            BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceSObjField);
-            for (Schema.SObjectType targetSObjType: targetFields.getTargetFieldsByTargetObject().keySet()) {
-            
-                if (!BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(targetSObjType.getDescribe().getName())) {
-                    continue;
+        Map<String, List<Schema.SObjectField>> sourceFieldsByFieldLabel = 
+            new Map<String, List<Schema.SObjectField>>();
+        List<String> sortedSourceFieldLabels = new List<String>();
+
+        // sort the fields by label alphabetical
+        for (Schema.SObjectField sourceSObjField: targetFieldsBySourceField.keySet()) {
+            String sourceFieldLabel = sourceSObjField.getDescribe().getLabel();
+            sortedSourceFieldLabels.add(sourceFieldLabel);
+            if (!sourceFieldsByFieldLabel.containsKey(sourceFieldLabel)) {
+                sourceFieldsByFieldLabel.put(
+                    sourceFieldLabel, 
+                    new List<Schema.SObjectField>());
+            }
+            sourceFieldsByFieldLabel.get(sourceFieldLabel).add(sourceSObjField);
+        }
+        sortedSourceFieldLabels.sort();
+
+        // nested loops because fields can have the same label and we have to roll out the list 
+        // of fields that share a single label, should that occur
+        for (String sourceSObjFieldLabel: sortedSourceFieldLabels) {
+            List<Schema.SObjectField> sourceSObjFields = 
+                sourceFieldsByFieldLabel.get(sourceSObjFieldLabel);
+            for (Schema.SObjectField sourceSObjField: sourceSObjFields) {
+                Schema.DescribeFieldResult sourceFieldDFR = 
+                    sourceSObjField.getDescribe();
+                BDI_TargetFields targetFields = 
+                    targetFieldsBySourceField.get(sourceSObjField);
+                for (Schema.SObjectType targetSObjType: 
+                        targetFields.getTargetFieldsByTargetObject().keySet()) {
+                
+                    if (!BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(
+                        targetSObjType.getDescribe().getName())) {
+                        continue;
+                    }
+
+                    BGEField field = new BGEField();
+                    field.name = sourceFieldDFR.getName();
+                    // TODO: pull these labels from target fields' schema based on help text mapping
+                    Boolean fieldHasSpacesAndObjName = sourceFieldDFR.getLabel().contains(' ') && 
+                        sourceFieldDFR.getLabel().split(' ',2)[0] == field.sObjectName;
+                    field.label = (fieldHasSpacesAndObjName) ? 
+                        sourceFieldDFR.getLabel().split(' ',2)[1] : 
+                        sourceFieldDFR.getLabel();
+
+                    field.sObjectName = targetSObjType.getDescribe().getName();
+                    field.sObjectLabel = targetSObjType.getDescribe().getLabel();
+
+                    if (conditionallyRequiredFields.contains(field.name)) {
+                        field.conditionallyRequired = true;
+                    }
+
+                    field.type = UTIL_LightningComponentSupport.getLightningInputDataType(
+                            sourceFieldDFR.getType());
+                    field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
+
+                    fields.add(field);
                 }
-
-                BGEField field = new BGEField();
-                field.name = sourceFieldDFR.getName();
-                // TODO: pull these labels from target fields' schema based on help text mapping
-                Boolean fieldHasSpacesAndObjName = sourceFieldDFR.getLabel().contains(' ') && sourceFieldDFR.getLabel().split(' ',2)[0] == field.sObjectName;
-                field.label = (fieldHasSpacesAndObjName) ? sourceFieldDFR.getLabel().split(' ',2)[1] : sourceFieldDFR.getLabel();
-
-                field.sObjectName = targetSObjType.getDescribe().getName();
-                field.sObjectLabel = targetSObjType.getDescribe().getLabel();
-
-                if (conditionallyRequiredFields.contains(field.name)) {
-                    field.conditionallyRequired = true;
-                }
-
-                field.type = UTIL_LightningComponentSupport.getLightningInputDataType(sourceFieldDFR.getType());
-                field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
-
-                fields.add(field);
             }
         }
 
         return fields;
     }
 
-    /*******************************************************************************************************
+    /**************************************************************************
     * @description Returns the Data Import DFRs for a set of target objects
     * @return list of DescribeFieldResults
     */
@@ -205,24 +236,27 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'Donation_Record_Type_Name__c'
         };
 
-        Map<SObjectField, BDI_TargetFields> filteredTargetFieldsBySourceField = new Map<SObjectField, BDI_TargetFields>();
+        Map<SObjectField, BDI_TargetFields> filteredTargetFieldsBySourceField = 
+            new Map<SObjectField, BDI_TargetFields>();
 
         BDI_FieldMapping fieldMapping = BDI_DataImportService.getDefaultFieldMapping();
 
-        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField;
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
+            BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField;
 
         for (SObjectField sourceSObjField: targetFieldsBySourceField.keySet()) {
             Schema.DescribeFieldResult sourceDFR = sourceSObjField.getDescribe();
-            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(sourceDFR.getName());
-
-            System.debug(' ***** Testing DI field for BGE: '+dataImportFieldApiName);
+            String dataImportFieldApiName = 
+                UTIL_Namespace.StrTokenRemoveNSPrefix(sourceDFR.getName());
 
             // get objects the field is mapped to
             BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceSObjField);
-            Set<SObjectType> targetObjectTypesMappedFromField = targetFields.getTargetFieldsByTargetObject().keySet();
+            Set<SObjectType> targetObjectTypesMappedFromField = 
+                targetFields.getTargetFieldsByTargetObject().keySet();
             Boolean mappedToAllowedObject = false;
             for (SObjectType sObjType: targetObjectTypesMappedFromField) {
-                if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(sObjType.getDescribe().getName())) {
+                if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(
+                        sObjType.getDescribe().getName())) {
                     mappedToAllowedObject = true;
                     break;
                 }
@@ -257,8 +291,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return filteredTargetFieldsBySourceField;
     }
 
-    /*******************************************************************************************************
-    * @description Retrieves the default active fields for a new Batch or Template in a JSON String
+    /**************************************************************************
+    * @description Retrieves the default active fields for a new Batch or 
+    *     Template in a JSON String
     */
     public static String getDefaultActiveFields() {
         List<BGEField> fields = new List<BGEField>();
