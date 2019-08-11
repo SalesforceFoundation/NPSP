@@ -1132,6 +1132,7 @@ class NPSP(object):
             import traceback
             tb = traceback.format_exc()
             self.python_display(tb)
+            raise e
 
     def python_display(self, title, *value, say=False):
         if isinstance(value, str):
