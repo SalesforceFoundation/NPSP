@@ -760,7 +760,7 @@ public class ALLO_AllocationsUtil {
                             (String)allocation.get('CurrencyIsoCode'),
                             (String)targetObj.get('CurrencyIsoCode'),
                             allocation.Amount__c
-                                );
+                        );
                     }
                     allocation.put('CurrencyIsoCode', targetObj.get('CurrencyIsoCode'));
                 }
@@ -1222,7 +1222,7 @@ public class ALLO_AllocationsUtil {
     }
 
     /*****************************************
-     * Helper Methods - Allocation Maps
+     * Helper Methods - Process Exclusions
      *****************************************/
 
     /*******************************************************************************************************
