@@ -36,5 +36,15 @@
 */
 @IsTest
 public class ALLO_UpdPaymentAllocations_TEST {
+    // TODO: Confirm job ends and Record Errors Added if Payment Allocations Configuration is not Correct
+    // TODO: Confirm Error Batch is not executed if there are errors in Payment Allocations Configuration
+    // TODO: Confirm basic allocation / processing for Opportunities and Payments that need Allocations
+
+    // TODO: Method: processRecords
+    // Confirm uses existing ERR_RecordError class if passed in
+    // Confirm it does/does not commit and clear Errors based on commitAndClearRecordErrors
+
+    // TODO: Batch: ALLO_UpdPaymentAllocations_ERR_BATCH
+    // Manually create Error Record for Opportunity configured to run through process successfully.  Execute Error Batch.  Confirm Retry Pending? value for Error record is cleared, etc. after the Allocations were successfully processed by the error Phase of the Batch job
 
 }
