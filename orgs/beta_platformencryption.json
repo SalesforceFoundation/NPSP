@@ -1,7 +1,6 @@
 {
   "orgName": "NPSP - Beta Org - Platform Encryption",
   "edition": "Developer",
-  "instance": "cs46",
   "features": [
     "PlatformEncryption"
   ],
