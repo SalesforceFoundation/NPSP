@@ -39,6 +39,10 @@ public class ALLO_UpdPaymentAllocations_TEST {
     // TODO: Confirm job ends and Record Errors Added if Payment Allocations Configuration is not Correct
     // TODO: Confirm Error Batch is not executed if there are errors in Payment Allocations Configuration
     // TODO: Confirm basic allocation / processing for Opportunities and Payments that need Allocations
+                // Make sure One opportunity in test batch has invalid Allocations, and two payments one needing resized allocations, and one needing new allocations
+                    // The resize of the payment allocations should still occur, but copying the allocations from the parent for the one without allocations should be skipped
+                // Make sure there is an Opportunity with valid allocations, and payments to propogate to
+                // Make sure there is an Opportunity with a null/zero amount and Allocations to convert to percent and zero out.  It should also have a Payment with allocations to zero out as well
 
     // TODO: Method: processRecords
     // Confirm uses existing ERR_RecordError class if passed in
