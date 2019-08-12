@@ -166,7 +166,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
         Set<Id> successfullyProcessed = ALLO_AllocationsUtil.determineSucessfullyProcessedRecords(oppIds, recExcl);
 
         if (commitAndClearRecordErrors) {
-            // Clear Retry Pending and add Retry Successful for Records that were successful that have exiting errors flagged for Retry
+            // Clear Retry Pending and add Retry Successful for Records that were successful that have existing errors flagged for Retry
             recs.recErrs.clearErrors(successfullyProcessed, Label.errErrorRecordRetrySuccessful);
             // Commit all pending errors
             recs.recErrs.processErrors();
