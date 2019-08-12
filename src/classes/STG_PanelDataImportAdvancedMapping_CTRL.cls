@@ -141,9 +141,18 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     public PageReference navigate() {
         String namespace = UTIL_Namespace.getNamespace();
-        if (namespace != 'npsp') {
-            componentUrl = componentUrl.replace('npsp__','c__');
+        String newPrefix;
+
+        //If the namespace being used is not npsp then replace with the current namespace if there is one
+        if (namespace != UTIL_Namespace.NPSP_NS) {
+            if (!String.isBlank(namespace)) {
+                newPrefix = namespace;
+            } else {
+                newPrefix = 'c';
+            }
+            componentUrl = componentUrl.replace(UTIL_Namespace.NPSP_NS + '__', newPrefix + '__');
         }
+
         PageReference advancedMapping = new PageReference(componentUrl);
         advancedMapping.setRedirect(true);
         return advancedMapping;

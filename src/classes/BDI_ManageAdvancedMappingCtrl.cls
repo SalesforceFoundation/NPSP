@@ -36,10 +36,13 @@
 */
 public class BDI_ManageAdvancedMappingCtrl {
     
-    /** @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed) */
+    /*******************************************************************************************************
+    * @description Returns a wrapper class containing the current namespace and the npsp namespace defined 
+    * in UTIL_Namespace class.
+    */
     @AuraEnabled(cacheable=true)
-    public static string getNamespacePrefix() {
-        return UTIL_Namespace.getNamespace();
+    public static NamespaceWrapper getNamespaceWrapper() {
+        return new NamespaceWrapper();
     }
 
     /*******************************************************************************************************
@@ -232,9 +235,9 @@ public class BDI_ManageAdvancedMappingCtrl {
 
             String diFieldMappingSetFieldName = 'npsp__Data_Import_Field_Mapping_Set__c';
             String targetObjectMappingFieldName = 'npsp__Target_Object_Mapping__c';
-            if (NAMESPACE != 'npsp') {
-                diFieldMappingSetFieldName = diFieldMappingSetFieldName.replaceFirst('npsp__', '');
-                targetObjectMappingFieldName = targetObjectMappingFieldName.replaceFirst('npsp__', '');
+            if (NAMESPACE != UTIL_Namespace.NPSP_NS) {
+                diFieldMappingSetFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment(diFieldMappingSetFieldName);
+                targetObjectMappingFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment(targetObjectMappingFieldName);
             }
 
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since
@@ -283,8 +286,8 @@ public class BDI_ManageAdvancedMappingCtrl {
                 (DataImportObjectMappingWrapper)JSON.deserialize(objectMappingString, DataImportObjectMappingWrapper.class);
 
             String diObjMappingSetFieldName = 'npsp__Data_Import_Object_Mapping_Set__c';
-            if (NAMESPACE != 'npsp') {
-                diObjMappingSetFieldName = diObjMappingSetFieldName.replaceFirst('npsp__','');
+            if (NAMESPACE != UTIL_Namespace.NPSP_NS) {
+                diObjMappingSetFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment(diObjMappingSetFieldName);
             }
 
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since 
@@ -474,15 +477,15 @@ public class BDI_ManageAdvancedMappingCtrl {
             String sourceFieldAPIName = fieldMapping.Source_Field_API_Name__c;
             String targetFieldAPIName = fieldMapping.Target_Field_API_Name__c;
 
-            if (NAMESPACE != 'npsp') {
+            if (NAMESPACE != UTIL_Namespace.NPSP_NS) {
                 dataImport = 'DataImport__c';
                 objectAPIName =
-                    UTIL_Namespace.removeNSPrefixNpspOnly(
+                    UTIL_Namespace.alignSchemaNSWithEnvironment(
                         fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
                 sourceFieldAPIName =
-                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                    UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Source_Field_API_Name__c);
                 targetFieldAPIName =
-                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Field_API_Name__c);
+                    UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Target_Field_API_Name__c);
             }
 
             Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
@@ -715,5 +718,22 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
         List<String> mappedFieldNamesList = new List<String>(mappedFieldNamesSet);
         return mappedFieldNamesList;
+    }
+
+    /*******************************************************************************************************
+    * @description Simple class to contain both the current namespace, and the npsp namespace variable for
+    * use in constructing/modifying urls and schema names in lightning web components. Wrapped in a class
+    * to reduce calls.
+    */
+    public class NamespaceWrapper {
+        @AuraEnabled
+        public String currentNamespace {get;set;}
+        @AuraEnabled
+        public String npspNamespace {get;set;}  
+
+        public NamespaceWrapper(){
+            this.currentNamespace = UTIL_Namespace.getNamespace();
+            this.npspNamespace = UTIL_Namespace.NPSP_NS;
+        }
     }
 }// BDI_ManageAdvancedMappingCtrl

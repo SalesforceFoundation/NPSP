@@ -63,8 +63,8 @@ private class BDI_FieldMappingCustomMetadata_TEST {
         String namespace = UTIL_Namespace.getNamespace();
         String sampleField = 'npsp__Account1_City__c';
         
-        if (namespace != 'npsp') {
-            sampleField = UTIL_Namespace.removeNSPrefixNpspOnly(sampleField);
+        if (namespace != UTIL_Namespace.NPSP_NS) {
+            sampleField = UTIL_Namespace.alignSchemaNSWithEnvironment(sampleField);
         }
         //Sample one of the fields to convfirm it is mapped correctly.
         System.assertEquals('BillingCity',accountFieldMapping.get(sampleField));

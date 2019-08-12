@@ -97,6 +97,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     @api objectOptions;
     @api isModalOpen = false;
     @api diObjectMappingSetDevName;
+    @api namespaceWrapper;
 
     @track isLoading;
     @track inSave = false;
@@ -112,8 +113,6 @@ export default class bdiObjectMappingModal extends LightningElement {
     alreadyMappedDIFieldsMap;
     dataImportFieldData;
     dataImportFieldMappingSourceNames;
-
-    @api namespace;
 
     constructor() {
         super();
@@ -566,8 +565,15 @@ export default class bdiObjectMappingModal extends LightningElement {
             for (let i = 0; i < this.excludedDIFields.length; i++) {
                 let field = this.excludedDIFields[i].toLowerCase();
 
-                if (this.namespace !== 'npsp') {
-                    field = field.replace('npsp__','');
+                if (this.namespaceWrapper.currentNamespace !== this.namespaceWrapper.npspNamespace) {
+                    let newPrefix;
+
+                    if (this.namespaceWrapper.currentNamespace) {
+                        newPrefix = this.namespaceWrapper.currentNamespace + '__';
+                    } else {
+                        newPrefix = '';
+                    }
+                    field = field.replace(this.namespaceWrapper.npspNamespace + '__',newPrefix);
                 }
 
                 this.alreadyMappedDIFieldsMap.set(field,'');
