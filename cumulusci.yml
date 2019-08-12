@@ -145,6 +145,39 @@ tasks:
             options:
                 outputdir: robot/Cumulus/results
 
+    platformencryption_deploy_permset:
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/platformencryption_permset
+            namespace_inject: $project_config.project__package__namespace
+
+    platformencryption_assign_permset:
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                PermissionSet p = [
+                    SELECT Id, Name
+                    FROM PermissionSet
+                    WHERE Name = 'Encryption'
+                ];
+
+                insert new PermissionSetAssignment(
+                    PermissionSetId = p.Id,
+                    AssigneeId = UserInfo.getUserId()
+                );
+
+    platformencryption_create_tenant_secret:
+        description: 'Create a placeholder Tenant Secret to use Platform Encryption'
+        class_path: cumulusci.tasks.sfdx.SFDXOrgTask
+        options:
+            command: 'force:data:record:create -s TenantSecret -v "Description=test"'
+
+    platformencryption_deploy_field_configuration:
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/platformencryption_fields
+            namespace_inject: $project_config.project__package__namespace
+
     pmd:
         description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
         class_path: tasks.pmd.PMDTask
@@ -405,6 +438,18 @@ flows:
             1:
                 task: add_second_currency
 
+    config_platformencryption:
+        description: 'Configure Platform Encryption org to encrypt standard fields'
+        steps:
+            1:
+                task: platformencryption_deploy_permset
+            2:
+                task: platformencryption_assign_permset
+            3:
+                task: platformencryption_create_tenant_secret
+            4:
+                task: platformencryption_deploy_field_configuration
+
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
         steps:
@@ -484,6 +529,8 @@ orgs:
             config_file: orgs/beta_multicurrency.json
         beta_personaccounts:
             config_file: orgs/beta_personaccounts.json
+        beta_platformencryption:
+            config_file: orgs/beta_platformencryption.json
         beta_statecountry:
             config_file: orgs/beta_statecountry.json
         prerelease:
