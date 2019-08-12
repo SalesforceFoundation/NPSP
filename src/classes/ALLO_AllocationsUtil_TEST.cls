@@ -62,7 +62,7 @@ public class ALLO_AllocationsUtil_TEST {
         // in the RecordsForReview variable oppsById
 
     /*******************************************************************************************************
-     * Main Class Tests
+     * Main Class Tests [Critical Path is covering as many as possible in this section]
      ********************************************************************************************************/
     //TODO: Method: determineRecordsRequiringReview, isRequiresReview, isExcluded, getExcludedOpportunityRecordtypes, getExcludedOpportunityTypes
     // Confirm that Opportunities that are excluded for either RecordType or Type are not processed/included
