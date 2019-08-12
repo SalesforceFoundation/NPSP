@@ -206,30 +206,6 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     }
 
     /**
-     * @description Returns Full Query's Field List
-     * @return String SOQL Query fragment consisting of fields and subqueries to retrieve, part between outer select and from
-     */
-    public override String getSOQLFullQueryFieldList() {
-        return  'Id, ' +
-                'Amount, ' +
-                'CloseDate, ' +
-                'Name, ' +
-                'npe03__Recurring_Donation__c, ' +
-                'StageName, ' +
-                'LastModifiedDate, ' +
-                '(select    Id, ' +
-                            'npe01__Payment_Amount__c, ' +
-                            'npe01__Payment_Date__c, ' +
-                            'npe01__Scheduled_Date__c, ' +
-                            'npe01__Written_Off__c, ' +
-                            'npe01__Paid__c, ' +
-                            'npe01__Opportunity__c, ' +
-                            'LastModifiedDate, ' +
-                            'Name ' +
-                'from npe01__OppPayment__r)';
-    }
-
-    /**
      * @description If Payment Allocations Configuration is Invalid, it will short circuit the batch so it does not process any records
      * @return String Where clause
      */
@@ -244,7 +220,8 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
      * @param isComplete boolean value that indicates whether or not this is the final invocation, or will be executing against additional chunks
      */
     public override void doFinish(Database.BatchableContext bc , Boolean isComplete) {
-        if (isComplete) {
+        // Only update the LastJobStartTime for this Batch, and execute the Error Batch if the Payment Allocations Configuration is valid and this Batch if fully complete (has completed all chunks, if LDVMode or has finished processing if non LDV Mode)
+        if (isComplete && this.paymentAllocConfigurationValid) {
             allocationsSettings.LastJobStartTimePaymentAllocations__c = this.jobStart;
             upsert allocationsSettings;
 
