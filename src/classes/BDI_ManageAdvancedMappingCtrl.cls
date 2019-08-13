@@ -46,7 +46,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     @AuraEnabled(cacheable=true)
-    public static NamespaceWrapper getNamespacePrefix() {
+    public static String getNamespacePrefix() {
         return UTIL_Namespace.getNamespace();
     }
 
