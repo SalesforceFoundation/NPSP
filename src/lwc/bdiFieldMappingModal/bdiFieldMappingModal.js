@@ -247,7 +247,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     */
     collectMappedTargetMappings(fieldMappings) {
         this.mappedTargetFieldApiNames =
-            fieldMappings.map( fieldMapping => fieldMapping.Target_Field_API_Name);
+            fieldMappings.map(fieldMapping => fieldMapping.Target_Field_API_Name);
     }
 
     /*******************************************************************************
