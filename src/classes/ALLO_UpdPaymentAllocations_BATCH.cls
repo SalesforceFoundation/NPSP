@@ -95,21 +95,22 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
         if (this.jobStart == null) {
             this.jobStart = System.now();
         }
-        this.paymentAllocConfigurationValid = validatePaymentAllocationsConfiguration();
+        this.paymentAllocConfigurationValid = validatePaymentAllocationsConfiguration(PROCESS_NAME);
     }
 
     /**
      * @description Validates that Payment Allocations are configured correctly.  Returns false if not correct.  Also logs an error.
      * Returns true, if there are no Payment Allocation configuration Issues
+     * @param processName Name of Process Configuration Errors should be associated with
      * @returns Boolean true if Payment Allocations Config is valid, and false otherwise
      */
-    private Boolean validatePaymentAllocationsConfiguration() {
+    public static Boolean validatePaymentAllocationsConfiguration(String processName) {
         List<String> paCfgProblems = ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();
         if (paCfgProblems.size() > 0) {
             String errorMsg = System.Label.alloPaymentAllocationBatchConfigError + '\r\n' + String.join(paCfgProblems, '\r\n');
             AlloPaymentAllocationBatchException apabe = new AlloPaymentAllocationBatchException(errorMsg);
 
-            ERR_Handler.processError(apabe, PROCESS_NAME);
+            ERR_Handler.processError(apabe, processName);
         }
         // Valid if no messages added
         return (paCfgProblems.size() == 0);
