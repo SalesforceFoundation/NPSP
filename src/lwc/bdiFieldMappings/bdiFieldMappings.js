@@ -9,8 +9,8 @@ import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
-import getMappedDISourceFields
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getMappedDISourceFields';
+import getDataImportObjectName
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getDataImportObjectName';
 
 // Import custom labels
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
@@ -90,6 +90,8 @@ export default class bdiFieldMappings extends LightningElement {
     deploymentTimer;
     deploymentTimeout = 10000;
 
+    _dataImportApiName;
+
     @api
     get noFieldMappings() {
         return !this.fieldMappings || this.fieldMappings.length === 0;
@@ -125,13 +127,13 @@ export default class bdiFieldMappings extends LightningElement {
         try {
             this.isLoading = true;
 
-            // Get all data import field describes
-            this.diFieldDescribes =
-                await getObjectFieldDescribes({objectName: 'DataImport__c'});
+            this._dataImportApiName = await getDataImportObjectName();
 
-            // Get mapped data import field describes
-            this.mappedDiFieldDescribes =
-                await getMappedDISourceFields();
+            // Get all the data import field describes
+            if (!this.diFieldDescribes) {
+                this.diFieldDescribes =
+                    await getObjectFieldDescribes({objectName: this._dataImportApiName});
+            }
 
             // Get all the target object field describes based on the currently
             // selected object mapping
