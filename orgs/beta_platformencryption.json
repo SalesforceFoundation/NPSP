@@ -1,6 +1,10 @@
 {
-  "orgName": "NPSP - Trial Org",
-  "template": "0TT1I000006q2o6",
+  "orgName": "NPSP - Beta Org - Platform Encryption",
+  "edition": "Developer",
+  "features": [
+    "PlatformEncryption"
+  ],
+  "hasSampleData": "true",
   "settings": {
     "orgPreferenceSettings": {
       "chatterEnabled": true,
