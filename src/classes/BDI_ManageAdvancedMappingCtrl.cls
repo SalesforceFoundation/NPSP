@@ -174,7 +174,25 @@ public class BDI_ManageAdvancedMappingCtrl {
     */
     @AuraEnabled
     public static FieldInfo[] getObjectFieldDescribes(String objectName) {
+        return getObjectFieldDescribes(objectName,false);
+    }
+
+    /*******************************************************************************************************
+    * @description Gets all the field describes from a given object, and retrieves the reference object information.
+    *
+    * @param objectName: Object name
+    * @param includeReferenceToObjectList: Boolean indicating whether the reference to objects should be returned 
+    * as part of field info.
+    *
+    * @return List: List of BDI_ManageAdvancedMappingCtrl.FieldInfo
+    */
+    @AuraEnabled
+    public static FieldInfo[] getObjectFieldDescribes(String objectName, Boolean includeReferenceToObjectList) {
         FieldInfo[] fieldInfos = new List<FieldInfo>();
+
+        if (includeReferenceToObjectList == null) {
+            includeReferenceToObjectList = false;
+        }
 
         Map<String, Schema.DescribeFieldResult> fieldDescribes =
             UTIL_Describe.getAllFieldsDescribe(objectName);
@@ -184,7 +202,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             //Only include fields that are createable by the current user
             //This will filter out System / formula fields
             if (fieldDescribes.get(key).isCreateable()) {
-                fieldInfos.add(new FieldInfo(fieldDescribes.get(key)));
+                fieldInfos.add(new FieldInfo(fieldDescribes.get(key),includeReferenceToObjectList));
             }
         }
 
@@ -530,11 +548,32 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String label;
         @AuraEnabled public String value;
         @AuraEnabled public String displayType;
+        @AuraEnabled public String[] referenceToObjectList;
 
         public FieldInfo(DescribeFieldResult dfr) {
             this.value = dfr.getName();
             this.label = dfr.getLabel();
             this.displayType = dfr.getType().name();
+        }
+
+        public FieldInfo(DescribeFieldResult dfr, Boolean includeReferenceToObjectList) {
+            this.value = dfr.getName();
+            this.label = dfr.getLabel();
+            this.displayType = dfr.getType().name();
+
+            if (includeReferenceToObjectList) {
+                this.referenceToObjectList = new String[]{};
+                if (dfr.getType().name() == 'REFERENCE') {
+
+                    List<Schema.sObjectType> objTypes = dfr.getReferenceTo();
+                    
+                    if (objTypes != null) {
+                        for (Schema.sObjectType objType : objTypes) {
+                            this.referenceToObjectList.add(objType.getDescribe().getName().toLowerCase());
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -677,7 +716,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         for (String key : fieldDescribes.keySet()) {
             Schema.DescribeFieldResult dfr = fieldDescribes.get(key);
 
-            if (dfr.getType().name() == 'REFERENCE' && fieldDescribes.get(key).isCreateable() ) {
+            if (dfr.getType().name() == 'REFERENCE' && dfr.isCreateable()) {
 
                 List<Schema.sObjectType> objTypes = dfr.getReferenceTo();
 
