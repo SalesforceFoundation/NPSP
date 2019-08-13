@@ -156,6 +156,16 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
+    * @description Get the namespaced/un-namespaced api name of DataImport__c
+    *
+    * @return String: API name of DataImport__c
+    */
+    @AuraEnabled
+    public static String getDataImportObjectName() {
+        return DataImport__c.SObjectType.getDescribe().getName();
+    }
+
+    /*******************************************************************************************************
     * @description Gets all the field describes from a given object.
     *
     * @param objectName: Object name
@@ -165,8 +175,6 @@ public class BDI_ManageAdvancedMappingCtrl {
     @AuraEnabled
     public static FieldInfo[] getObjectFieldDescribes(String objectName) {
         FieldInfo[] fieldInfos = new List<FieldInfo>();
-
-        objectName = UTIL_Namespace.StrAllNSPrefix(objectName);
 
         Map<String, Schema.DescribeFieldResult> fieldDescribes =
             UTIL_Describe.getAllFieldsDescribe(objectName);
