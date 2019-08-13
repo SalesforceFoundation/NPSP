@@ -6693,10 +6693,10 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <protected>false</protected>
         <shortDescription>stgHelpAdvancedMapping4</shortDescription>
         <value>
-            &lt;b&gt;This message will no longer be displayed if you leave this page!&lt;/b&gt; We couldn't convert some of your existing Help Text mappings because they are invalid. Read more about &lt;a href=&quot;https://powerofus.force.com/NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;common Help Text mapping issues&lt;/a&gt;. &lt;b&gt;Please take a screenshot of this page or copy the information in the table below to track updates you need to make to these mappings.&lt;/b&gt;
+            &lt;b&gt;This message won't be displayed if you leave this page! Take a screenshot of this page or copy the information in the table below to track the Help Text mappings you need correct. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            To correct these mappings you may want to disable Advanced Mapping; correct the invalid Help Text mappings; and enable Advanced Mapping again. Alternatively, you add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
+            We couldn't convert some of your existing Help Text mappings because they're invalid. &lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
         </value>
     </labels>
     <labels>
