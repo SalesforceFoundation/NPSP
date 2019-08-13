@@ -11,6 +11,8 @@ import getObjectFieldDescribes
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
 import getDataImportObjectName
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getDataImportObjectName';
+import getMappedDISourceFields
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getMappedDISourceFields';
 
 // Import custom labels
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
@@ -135,6 +137,10 @@ export default class bdiFieldMappings extends LightningElement {
                     await getObjectFieldDescribes({objectName: this._dataImportApiName});
             }
 
+            // Get mapped data import field describes
+            this.mappedDiFieldDescribes =
+                await getMappedDISourceFields();
+
             // Get all the target object field describes based on the currently
             // selected object mapping
             let objectAPIName =
@@ -174,7 +180,6 @@ export default class bdiFieldMappings extends LightningElement {
     */
     handleDeploymentTimeout(event) {
         if (this.displayFieldMappings) {
-            console.log('in bdiFieldMappings handleDeploymentResponse');
             let that = this;
             this.deploymentTimer = setTimeout(function() {
                 that.isLoading = false;
@@ -377,7 +382,6 @@ export default class bdiFieldMappings extends LightningElement {
     * @param {object} error: Event holding error details
     */
     handleError(error) {
-        console.log('Error: ', error);
         if (error && error.status && error.body) {
             this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {

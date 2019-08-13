@@ -60,6 +60,10 @@ export default class utilSearchableCombobox extends LightningElement {
     handleSearchkeyChange(searchKey) {
         let results = [];
 
+        if (!this.searchableOptions) {
+            this.searchableOptions = this.options;
+        }
+
         for(let i = 0; i < this.searchableOptions.length; i++) {
             if (this.searchableOptions[i].label.toLowerCase().indexOf(searchKey.toLowerCase()) != -1) {
                 let result = {

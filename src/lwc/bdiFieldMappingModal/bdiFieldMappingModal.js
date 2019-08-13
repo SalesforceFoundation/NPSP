@@ -83,8 +83,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     @api targetFieldsByLabelByDisplayType;
 
-    @track mappedDIFieldLabels = [];
-    @track mappedTargetFieldLabels = [];
+    @track mappedTargetFieldApiNames = [];
 
     // Map of Display Types
     validTargetTypesBySourceType = {
@@ -207,6 +206,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         try {
             this.hasSourceFieldErrors = false;
             this.hasTargetFieldErrors = false;
+            this.collectMappedTargetMappings(event.fieldMappings);
             this.objectMapping = event.objectMapping;
             this.diFieldDescribes = event.diFieldDescribes;
             this.mappedDiFieldDescribes = event.mappedDiFieldDescribes;
@@ -238,6 +238,16 @@ export default class bdiFieldMappingModal extends LightningElement {
         }
 
         this.isLoading = false
+    }
+
+    /*******************************************************************************
+    * @description Loops through and collects target fields that are already mapped
+    *
+    * @param {array} fieldMappings: List of field mappings from bdiFieldMappings
+    */
+    collectMappedTargetMappings(fieldMappings) {
+        this.mappedTargetFieldApiNames =
+            fieldMappings.map( fieldMapping => fieldMapping.Target_Field_API_Name);
     }
 
     /*******************************************************************************
@@ -294,7 +304,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 // Include the data import field if it hasn't already been mapped
                 // or if it's the currently selected field (i.e. editing)
-                if (!this.mappedTargetFieldLabels.includes(fieldInfos[i].label) ||
+                if (!this.mappedTargetFieldApiNames.includes(fieldInfos[i].value) ||
                     this.selectedTargetFieldLabel === fieldInfos[i].label) {
                     let labelOption = {
                         label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
@@ -559,7 +569,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @param {object} error: Event holding error details
     */
     handleError(error) {
-        console.log('Error: ', error);
         if (error && error.status && error.body) {
             this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {
