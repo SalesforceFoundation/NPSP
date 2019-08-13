@@ -204,29 +204,32 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         //Assert closed Opp not included
         System.assertEquals(3, oppWrappers.size(),
                 'The three open Opportunities should be returned in the list of Opp Wrappers.');
-        Set<Id> returnedOppIds = new Set<Id>();
+        
+        Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappersByOppId = new 
+                Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>();
+
         for (BGE_DataImportBatchEntry_CTRL.OpportunityWrapper opportunityWrapper : oppWrappers) {
-            returnedOppIds.add(opportunityWrapper.opportunity.Id);
+            oppWrappersByOppId.put(opportunityWrapper.opportunity.Id, opportunityWrapper);
         }
-        System.assertNotEquals(true, returnedOppIds.contains(closedOppWithPaidAndUnpaidPmts.Id),
+        System.assertNotEquals(true, oppWrappersByOppId.containsKey(closedOppWithPaidAndUnpaidPmts.Id),
                 'The closed Opportunity should not be returned in the Opp Wrappers.');
 
-        System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
-        System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
+        System.assert(oppWrappersByOppId.containsKey(oppWithPmt.Id));
+        System.assertEquals(0, oppWrappersByOppId.get(oppWithPmt.Id).unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payments in the Opp Wrapper.');
-        System.assertEquals(true, oppWrappers[0].hasNonWrittenOffPayments,
+        System.assertEquals(true, oppWrappersByOppId.get(oppWithPmt.Id).hasNonWrittenOffPayments,
                 'This Opportunity should have a Payment in the Opp Wrapper.');
 
-        System.assertEquals(oppWithoutPmt.Id, oppWrappers[1].opportunity.Id);
-        System.assertEquals(0, oppWrappers[1].unpaidPayments.size(),
+        System.assert(oppWrappersByOppId.containsKey(oppWithoutPmt.Id));
+        System.assertEquals(0, oppWrappersByOppId.get(oppWithoutPmt.Id).unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
-        System.assertEquals(false, oppWrappers[1].hasNonWrittenOffPayments,
+        System.assertEquals(false, oppWrappersByOppId.get(oppWithoutPmt.Id).hasNonWrittenOffPayments,
                 'This Opportunity should not have a Payment in the Opp Wrapper.');
 
-        System.assertEquals(oppWithPaidAndUnpaidPmts.Id, oppWrappers[2].opportunity.Id);
-        System.assertEquals(1, oppWrappers[2].unpaidPayments.size(),
+        System.assert(oppWrappersByOppId.containsKey(oppWithPaidAndUnpaidPmts.Id));
+        System.assertEquals(1, oppWrappersByOppId.get(oppWithPaidAndUnpaidPmts.Id).unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
-        System.assertEquals(true, oppWrappers[2].hasNonWrittenOffPayments,
+        System.assertEquals(true, oppWrappersByOppId.get(oppWithPaidAndUnpaidPmts.Id).hasNonWrittenOffPayments,
                 'This Opportunity should not have a Payment in the Opp Wrapper.');
     }
 
@@ -255,19 +258,26 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
                 createOppWrappers(oppWrappersJSON);
 
+        Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappersByOppId = new 
+                Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>();
+
+        for (BGE_DataImportBatchEntry_CTRL.OpportunityWrapper opportunityWrapper : oppWrappers) {
+            oppWrappersByOppId.put(opportunityWrapper.opportunity.Id, opportunityWrapper);
+        }
+
         System.assertEquals(2, oppWrappers.size(),
                 'Both of this Donors Opportunities should be returned in the list of Opp Wrappers.');
 
-        System.assertEquals(oppWithPmt.Id, oppWrappers[0].opportunity.Id);
-        System.assertEquals(0, oppWrappers[0].unpaidPayments.size(),
+        System.assert(oppWrappersByOppId.containsKey(oppWithPmt.Id));
+        System.assertEquals(0, oppWrappersByOppId.get(oppWithPmt.Id).unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payments in the Opp Wrapper.');
-        System.assertEquals(true, oppWrappers[0].hasNonWrittenOffPayments,
+        System.assertEquals(true, oppWrappersByOppId.get(oppWithPmt.Id).hasNonWrittenOffPayments,
                 'This Opportunity should have a Payment in the Opp Wrapper.');
 
-        System.assertEquals(oppWithoutPmt.Id, oppWrappers[1].opportunity.Id);
-        System.assertEquals(0, oppWrappers[1].unpaidPayments.size(),
+        System.assert(oppWrappersByOppId.containsKey(oppWithoutPmt.Id));
+        System.assertEquals(0, oppWrappersByOppId.get(oppWithoutPmt.Id).unpaidPayments.size(),
                 'This Opportunity should not have any unpaid Payment in the Opp Wrapper.');
-        System.assertEquals(false, oppWrappers[1].hasNonWrittenOffPayments,
+        System.assertEquals(false, oppWrappersByOppId.get(oppWithoutPmt.Id).hasNonWrittenOffPayments,
                 'This Opportunity should not have a Payment in the Opp Wrapper.');
     }
 
