@@ -45,11 +45,6 @@ public class BDI_ManageAdvancedMappingCtrl {
         return new NamespaceWrapper();
     }
 
-    @AuraEnabled(cacheable=true)
-    public static String getNamespacePrefix() {
-        return UTIL_Namespace.getNamespace();
-    }
-
     /*******************************************************************************************************
     * @description Instance of BDI_FieldMappingCustomMetadata
     */
