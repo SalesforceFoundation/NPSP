@@ -71,8 +71,11 @@ public class ALLO_PaymentSync_SVC {
         Map<Id, Decimal> totalPaymentAllocationsByGAU = new Map<Id, Decimal>();
         Map<Id, Decimal> totalPaidPaymentAllocationsByGAU = new Map<Id, Decimal>();
 
-        //the ratio of the sum of payment amounts (paid or unpaid, not written off) to the opportunity amount
+        //the ratio of the sum of payment amounts (unpaid, not written off) to the opportunity amount
         Decimal scheduleRatio = 0;
+
+        //the ratio of the sum of payment amounts (paid or unpaid, not written off) to the opportunity amount
+        Decimal scalingRatio = 0;
         Decimal totalUnpaidPayments = 0;
         Decimal totalPaidUnpaidPayments = 0;
     }
@@ -241,16 +244,17 @@ public class ALLO_PaymentSync_SVC {
                 }
             }
 
+            // Need this value to accurately calculate the percentage used when recalculating allocations on the Opportunity (from the changes to
+            // the payment allocations)
+            context.totalPaidUnpaidPayments = totalPaymentsPaidUnpaid;
+
             if (opportunity.Amount != null && opportunity.Amount != 0) {
 
                 // The schedule ratio should only take into account the unpaid payments that are left since the ratio is for remaining unpaid allocations. 
                 // We aren't currently taking into account the paid amount currently, but this may change in the future. 
                 context.scheduleRatio = context.totalUnpaidPayments / opportunity.Amount;
+                context.scalingRatio = context.totalPaidUnpaidPayments / opportunity.Amount;
             }
-
-            // Need this value to accurately calculate the percentage used when recalculating allocations on the Opportunity (from the changes to
-            // the payment allocations)
-            context.totalPaidUnpaidPayments = totalPaymentsPaidUnpaid;
 
             contextByOpportunity.put(context.opportunity.id, context);
         }
@@ -440,6 +444,7 @@ public class ALLO_PaymentSync_SVC {
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
+            Decimal newScaledTotalPaymentAllocations = totalOpportunityAllocations * context.scalingRatio;
 
             // Default Allocation will be handled outside of this loop
             if (gau == UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
@@ -457,7 +462,7 @@ public class ALLO_PaymentSync_SVC {
 
                 //validation: if the total of payment allocations already paid is greater than the opportunity
                 //allocations for that GAU, we can't sync and must throw an error
-                if (totalPaidPaymentAllocations > newTotalPaymentAllocations ||
+                if (totalPaidPaymentAllocations > newScaledTotalPaymentAllocations ||
                     totalPaidPaymentAllocations > totalOpportunityAllocations) {
 
                     if(context.triggerAllocationsByGAUId.containsKey(gau)) {
@@ -491,9 +496,7 @@ public class ALLO_PaymentSync_SVC {
                         if (!paymentToAllocationMap.containsKey(payment.Id)) {
                             if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) {
                                 paymentsWithExistingGAU.add(payment.Id);
-                                Decimal unpaidAllocationAmount = newTotalPaymentAllocations - totalPaidPaymentAllocations;
                                 Decimal paymentRatio =  context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
-                                Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
 
                                 // Remove current allocation amount from total as it is changing
                                 removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
@@ -625,6 +628,7 @@ public class ALLO_PaymentSync_SVC {
             Decimal remainder = paymentAmt - allocAmt;
             List<Allocation__c> defaultAllocs = defaultAllocsByPayment.get(payment.Id);
             Allocation__c defaultAlloc = null;
+
             if ((defaultAllocs != null) && (defaultAllocs.size() > 0)) {
                 defaultAlloc = defaultAllocs.get(0);
                 for (Integer i = 1; i < defaultAllocs.size(); i++) { // Remove any duplicates
