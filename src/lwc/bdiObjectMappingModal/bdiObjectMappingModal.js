@@ -41,6 +41,7 @@ import bdiOMUIOfGroupHelp from '@salesforce/label/c.bdiOMUIOfGroupHelp';
 import bdiOMUIThroughFieldHelp from '@salesforce/label/c.bdiOMUIThroughFieldHelp';
 import bdiOMUIErrorNoValidThroughThisField from '@salesforce/label/c.bdiOMUIErrorNoValidThroughThisField';
 import bdiOMUIErrorDupeName from '@salesforce/label/c.bdiOMUIErrorDupeName';
+import bdiOMUIErrorLabelNameTooLong from '@salesforce/label/c.bdiOMUIErrorLabelNameTooLong';
 import bdiOMUIErrorInvalidValues from '@salesforce/label/c.bdiOMUIErrorInvalidValues';
 import bdiOMUIErrorNoUnmappedFieldsPt1 from '@salesforce/label/c.bdiOMUIErrorNoUnmappedFieldsPt1';
 import bdiOMUIErrorNoUnmappedFieldsPt2 from '@salesforce/label/c.bdiOMUIErrorNoUnmappedFieldsPt2';
@@ -74,6 +75,7 @@ export default class bdiObjectMappingModal extends LightningElement {
         bdiOMUIThroughFieldHelp,
         bdiOMUIErrorNoValidThroughThisField,
         bdiOMUIErrorDupeName,
+        bdiOMUIErrorLabelNameTooLong,
         bdiOMUIErrorInvalidValues,
         bdiOMUIErrorNoUnmappedFieldsPt1,
         bdiOMUIErrorNoUnmappedFieldsPt2,
@@ -331,22 +333,30 @@ export default class bdiObjectMappingModal extends LightningElement {
 
         let result = [...this.template.querySelectorAll('lightning-combobox,lightning-input')]
         .reduce((validSoFar, inputCmp) => {
-                    //Special validation to make sure label name is not reused within the same Object Mapping set
+                    //Special validation for label name
                     if (inputCmp.name === 'masterLabel' && this.row.MasterLabel && this.objectMappings) {
-                        let dupeFound = false;
+                        let errorFound = false;
 
-                        for (let i = 0; i < this.objectMappings.length; i++) {
-                            let tempObjMapping = this.objectMappings[i];
+                        //Check to see if label name is too long
+                        if (this.row.MasterLabel.length > 40) {
+                            errorFound = true;
+                            inputCmp.setCustomValidity(this.customLabels.bdiOMUIErrorLabelNameTooLong);
+                        } else {
+                            //If the length passes then check whether it is a dupe name.
+                            for (let i = 0; i < this.objectMappings.length; i++) {
+                                let tempObjMapping = this.objectMappings[i];
 
-                            //If the labels are the same, but the Ids are not then throw an error
-                            if (tempObjMapping.MasterLabel === this.row.MasterLabel
-                                && tempObjMapping.Id !== this.row.Id) {
+                                //If the labels are the same, but the Ids are not then throw an error
+                                if (tempObjMapping.MasterLabel === this.row.MasterLabel
+                                    && tempObjMapping.Id !== this.row.Id) {
 
-                                dupeFound = true;
-                                inputCmp.setCustomValidity(this.customLabels.bdiOMUIErrorDupeName);
+                                    errorFound = true;
+                                    inputCmp.setCustomValidity(this.customLabels.bdiOMUIErrorDupeName);
+                                }
                             }
                         }
-                        if(!dupeFound){
+                        //Clear validity if no error found.
+                        if(!errorFound){
                             inputCmp.setCustomValidity('');
                         }
                     }
