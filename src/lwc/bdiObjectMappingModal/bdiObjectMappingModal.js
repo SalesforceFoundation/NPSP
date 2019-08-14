@@ -8,6 +8,8 @@ import getRelationshipFieldOptions
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getRelationshipFieldOptions';
 import getMappedDISourceFields
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getMappedDISourceFields';
+import getDataImportObjectName
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getDataImportObjectName';
 
 import { registerListener, unregisterAllListeners, fireEvent }
     from 'c/pubsubNoPageRef';
@@ -115,6 +117,8 @@ export default class bdiObjectMappingModal extends LightningElement {
 
     @api namespace;
 
+    _dataImportApiName;
+
     constructor() {
         super();
         this.escapeFunction = this.escapeFunction.bind(this);
@@ -154,9 +158,21 @@ export default class bdiObjectMappingModal extends LightningElement {
         registerListener('closeModal', this.handleCloseModal, this);
         registerListener('objectNameChange',this.handleObjectAPINameChange,this);
 
-        this.setDefaultValues();
-        this.getDataImportFieldDescribes();
-        this.getDataImportMappedFields();
+        this.init();
+    }
+
+    /*******************************************************************************
+    * @description Group up various get data calls to apex
+    */
+    init = async() => {
+        try {
+            this._dataImportApiName = await getDataImportObjectName();
+            this.setDefaultValues();
+            this.getDataImportFieldDescribes();
+            this.getDataImportMappedFields();
+        } catch(error) {
+            this.handleError(error);
+        }
     }
 
     /*******************************************************************************
@@ -481,7 +497,8 @@ export default class bdiObjectMappingModal extends LightningElement {
     * for the ImportedRecordFieldName and ImportedRecordStatusField Name picklists.
     */    
     getDataImportFieldDescribes() {
-        getObjectFieldDescribes({objectName: 'DataImport__c'})
+        getObjectFieldDescribes({objectName: this._dataImportApiName,
+                                includeReferenceToObjectList: true })
             .then((data) => {
                 this.dataImportFieldData = data;
                 this.refreshImportRecordFieldOptions();
@@ -513,9 +530,19 @@ export default class bdiObjectMappingModal extends LightningElement {
                         value: fieldData.value
                     }
         
-                    if (fieldData.value !== this.row.Imported_Record_Status_Field_Name &&
-                        (fieldData.displayType === 'REFERENCE' || fieldData.displayType === 'STRING')) {
-                        this.diImportRecordFieldOptions.push(labelOption);
+                    if (fieldData.value !== this.row.Imported_Record_Status_Field_Name) {
+
+                        if (fieldData.displayType === 'REFERENCE' 
+                            && fieldData.referenceToObjectList
+                            && (this.row.Object_API_Name 
+                                && fieldData.referenceToObjectList.includes(this.row.Object_API_Name.toLowerCase())
+                                || !this.row.Object_API_Name)){
+
+                            this.diImportRecordFieldOptions.push(labelOption);
+                            
+                        } else if (fieldData.displayType === 'STRING') {
+                            this.diImportRecordFieldOptions.push(labelOption);
+                        }
                     }
         
                     if (fieldData.value !== this.row.Imported_Record_Field_Name &&
@@ -605,6 +632,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     handleObjectAPINameChange(event){
         this.row.Object_API_Name = event.detail.value;
         this.getRelationshipFieldOptions();
+        this.refreshImportRecordFieldOptions();
     }
 
     /*******************************************************************************
