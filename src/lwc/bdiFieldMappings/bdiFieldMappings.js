@@ -253,14 +253,16 @@ export default class bdiFieldMappings extends LightningElement {
     * the currently selected object and child field mappings.
     */
     handleOpenModal() {
-        fireEvent(this.pageRef, 'openModal', {
-            objectMapping: this.objectMapping,
-            row: undefined,
-            fieldMappings: this.fieldMappings,
-            diFieldDescribes: this.diFieldDescribes,
-            mappedDiFieldDescribes: this.mappedDiFieldDescribes,
-            targetObjectFieldDescribes: this.targetObjectFieldDescribes,
-        });
+        if (this.displayFieldMappings) {
+            fireEvent(this.pageRef, 'openModal', {
+                objectMapping: this.objectMapping,
+                row: undefined,
+                fieldMappings: this.fieldMappings,
+                diFieldDescribes: this.diFieldDescribes,
+                mappedDiFieldDescribes: this.mappedDiFieldDescribes,
+                targetObjectFieldDescribes: this.targetObjectFieldDescribes,
+            });
+        }
     }
 
     /*******************************************************************************
