@@ -57,6 +57,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     @api isModalOpen = false;
     @api modalMode = 'new';
     @api diFieldDescribes;
+    @api mappedDiFieldDescribes;
     @api targetObjectFieldDescribes;
 
     @track isLoading;
@@ -65,6 +66,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     @track selectedSourceFieldLabel;
     @track selectedSourceFieldAPIName;
     @track sourceFieldLabelOptions;
+    @track searchableSourceFieldLabelOptions;
     @track selectedSourceFieldDisplayType;
     @track selectedSourceFieldDisplayTypeLabel;
     @track hasSourceFieldErrors;
@@ -81,8 +83,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     @api targetFieldsByLabelByDisplayType;
 
-    @track mappedDIFieldLabels = [];
-    @track mappedTargetFieldLabels = [];
+    @track mappedTargetFieldApiNames = [];
 
     // Map of Display Types
     validTargetTypesBySourceType = {
@@ -205,9 +206,11 @@ export default class bdiFieldMappingModal extends LightningElement {
         try {
             this.hasSourceFieldErrors = false;
             this.hasTargetFieldErrors = false;
+            this.collectMappedTargetMappings(event.fieldMappings);
             this.objectMapping = event.objectMapping;
-
-            this.collectMappedDataImportFields(event.fieldMappings);
+            this.diFieldDescribes = event.diFieldDescribes;
+            this.mappedDiFieldDescribes = event.mappedDiFieldDescribes;
+            this.targetObjectFieldDescribes = event.targetObjectFieldDescribes;
 
             this.row = event.row;
 
@@ -228,8 +231,8 @@ export default class bdiFieldMappingModal extends LightningElement {
                 this.clearSelections();
             }
 
-            this.setDataImportFieldDescribes(this.diFieldDescribes);
-            this.setTargetObjectFieldDescribes(this.targetObjectFieldDescribes);
+            this.getSourceFieldOptions(this.diFieldDescribes);
+            this.getTargetFieldOptions(this.targetObjectFieldDescribes);
         } catch(error) {
             this.handleError(error);
         }
@@ -238,49 +241,44 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Loops through and collects the source field label and target field
-    * labels of existing field mappings for the currently selected object mapping
+    * @description Loops through and collects target fields that are already mapped
     *
     * @param {array} fieldMappings: List of field mappings from bdiFieldMappings
     */
-    collectMappedDataImportFields(fieldMappings) {
-        this.mappedDIFieldLabels = [];
-        this.mappedTargetFieldLabels = [];
-
-        for (let i = 0; i < fieldMappings.length; i++) {
-            let fieldMapping = fieldMappings[i];
-
-            this.mappedDIFieldLabels.push(fieldMapping.Source_Field_Label);
-            this.mappedTargetFieldLabels.push(fieldMapping.Target_Field_Label);
-        }
+    collectMappedTargetMappings(fieldMappings) {
+        this.mappedTargetFieldApiNames =
+            fieldMappings.map(fieldMapping => fieldMapping.Target_Field_API_Name);
     }
 
     /*******************************************************************************
-    * @description Creates a map of data import field labels by field API name and a
-    * map of data import field API names by field label.
+    * @description Generates picklist options for the sourceFieldLabel picklist and
+    * the searchableOptions picklist
     *
     * @param {FieldInfo[]} fieldInfos: List of BDI_ManageAdvancedMappingCtrl.FieldInfos
     * from the Data Import object
     */
-    setDataImportFieldDescribes(fieldInfos) {
+    getSourceFieldOptions(fieldInfos) {
         try {
             this.sourceFieldLabelOptions = [];
+            this.searchableSourceFieldLabelOptions = [];
             let diFieldsByAPIName = {};
 
             for (let i = 0; i < fieldInfos.length; i++) {
+                let labelOption = {
+                    label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
+                    value: fieldInfos[i].value,
+                    displayTypeLabel: fieldInfos[i].displayTypeLabel
+                }
+
+                this.searchableSourceFieldLabelOptions.push(labelOption);
+                diFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
 
                 // Include the data import field if it hasn't already been mapped
                 // or if it's the currently selected field (i.e. editing)
-                if (!this.mappedDIFieldLabels.includes(fieldInfos[i].label) ||
+                if (!this.mappedDiFieldDescribes.includes(fieldInfos[i].value.toLowerCase()) ||
                     this.selectedSourceFieldLabel === fieldInfos[i].label) {
-                    let labelOption = {
-                        label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
-                        value: fieldInfos[i].value,
-                        displayTypeLabel: fieldInfos[i].displayTypeLabel
-                    }
 
                     this.sourceFieldLabelOptions.push(labelOption);
-                    diFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
                 }
             }
             this.sourceFieldLabelOptions = this.sortBy(this.sourceFieldLabelOptions, 'label');
@@ -291,13 +289,12 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Creates a map of target object field labels by field API name and a
-    * map of target object field API names by field label.
+    * @description Generates picklist options for the targetFieldLabel picklist
     *
     * @param {FieldInfo[]} fieldInfos: List of BDI_ManageAdvancedMappingCtrl.FieldInfos
     * from the Data Import object
     */
-    setTargetObjectFieldDescribes(fieldInfos) {
+    getTargetFieldOptions(fieldInfos) {
         try {
             this.targetFieldLabelOptions = [];
             let targetFieldsByAPIName = {};
@@ -307,7 +304,7 @@ export default class bdiFieldMappingModal extends LightningElement {
 
                 // Include the data import field if it hasn't already been mapped
                 // or if it's the currently selected field (i.e. editing)
-                if (!this.mappedTargetFieldLabels.includes(fieldInfos[i].label) ||
+                if (!this.mappedTargetFieldApiNames.includes(fieldInfos[i].value) ||
                     this.selectedTargetFieldLabel === fieldInfos[i].label) {
                     let labelOption = {
                         label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
@@ -475,6 +472,14 @@ export default class bdiFieldMappingModal extends LightningElement {
     */
     handleSourceFieldLabelChange(event) {
         if (event) {
+            let existsInDiPicklist = this.sourceFieldLabelOptions.find(
+                option => option.value.toLowerCase() == event.detail.value.toLowerCase());
+
+            if (existsInDiPicklist === undefined) {
+                this.sourceFieldLabelOptions.push(event.detail);
+                this.sourceFieldLabelOptions = this.sortBy(this.sourceFieldLabelOptions, 'label');
+            }
+
             let fieldAPIName = event.detail.value;
             let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
 
@@ -564,7 +569,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @param {object} error: Event holding error details
     */
     handleError(error) {
-        console.log('Error: ', error);
         if (error && error.status && error.body) {
             this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {
