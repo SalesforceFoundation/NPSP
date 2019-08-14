@@ -307,6 +307,11 @@ public class ALLO_AllocationsUtil {
         Map<Id, Set<Id>> rdIdToOppIds = new Map<Id, Set<Id>>();
 
         for (Opportunity opp :oppsById.values()) {
+
+            if (isExcluded(opp)) { // Skip all review of an Opportunity that is excluded...
+                continue;
+            }
+
             recsForReview.oppsAllocations.put(opp.Id, new List<Allocation__c>());
 
             if (opp.npe03__Recurring_Donation__c != null) {
@@ -755,7 +760,7 @@ public class ALLO_AllocationsUtil {
             for (Allocation__c allocation : listAlloForInsert) {
                 //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode to the same one as the parent
                 if (IS_MULTICURRENCY_ORG) {
-                    if (allocation.Amount__c!=null) {
+                    if (allocation.Amount__c != null) {
                         allocation.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
                             (String)allocation.get('CurrencyIsoCode'),
                             (String)targetObj.get('CurrencyIsoCode'),
@@ -772,10 +777,10 @@ public class ALLO_AllocationsUtil {
                 //Calculate proportional amount for non-percentage based Payment allocations
                 // convertToPercentages must be true, the Percentage null, sourceAmount cannot be null and either Default Allocations are not enabled or the allocation is not for the Default Allocation
                 if (convertToPercentages && allocation.Percent__c == null & sourceAmount != null) {
-                    allocation.Percent__c = allocation.Amount__c / sourceAmount * 100;
+                    allocation.Percent__c = ((allocation.Amount__c != null) ? allocation.Amount__c : 0) / sourceAmount * 100;
                     allocation.Amount__c = (amount * allocation.Percent__c * .01).setScale(2);
                 }
-                remainder -= allocation.Amount__c;
+                remainder -= (allocation.Amount__c != null) ? allocation.Amount__c : 0;
             }
 
             //if our remainder is not the same sign as the amount, only create percentage based Allocations
@@ -786,7 +791,7 @@ public class ALLO_AllocationsUtil {
                 for (Allocation__c allocation : listAlloForInsert) {
                     if (allocation.Percent__c != null) {
                         allocResults.allocationsForInsert.add(allocation);
-                        remainder -= allocation.Amount__c;
+                        remainder -= (allocation.Amount__c != null) ? allocation.Amount__c : 0;
                     }
                 }
 
@@ -858,7 +863,7 @@ public class ALLO_AllocationsUtil {
                 }
 
                 // Amount requires sign update.  Only allowed for Payments...
-                if (allocation.Payment__c != null && ((curAllocAmount > 0 && parentAmount < 0) || (curAllocAmount < 0 && parentAmount > 0))) {
+                if (allocation.Payment__c != null && curAllocAmount != null && ((curAllocAmount > 0 && parentAmount < 0) || (curAllocAmount < 0 && parentAmount > 0))) {
                     curAllocAmount = -1 * curAllocAmount;
                     updatesToAllocation = true;
                 }
@@ -1449,7 +1454,7 @@ public class ALLO_AllocationsUtil {
                 return true;
             }
 
-            allocAmount += alloc.Amount__c;
+            allocAmount += (alloc.Amount__c != null) ? alloc.Amount__c : 0;
 
             if (IS_MULTICURRENCY_ORG) { // Only check if CurrencyIsoCode is different if Multi Currency Organization
                 String alloCurrencyIsoCode = (String) alloc.get('CurrencyIsoCode');
