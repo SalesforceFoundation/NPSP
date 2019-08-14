@@ -1,15 +1,14 @@
 {
-  "orgName": "NPSP - Prerelease Workspace",
+  "orgName": "NPSP - Prerelease Beta Test Org",
+  "instance": "cs46",
   "edition": "Developer",
-  "instance": "CS46",
   "hasSampleData": "true",
   "settings": {
     "orgPreferenceSettings": {
       "chatterEnabled": true,
       "disableParallelApexTesting": true,
       "notesReservedPref01": true,
-      "s1DesktopEnabled": true,
-      "translation": true
+      "s1DesktopEnabled": true
     }
   }
 }
