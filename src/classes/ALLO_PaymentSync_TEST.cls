@@ -832,6 +832,78 @@ private with sharing  class ALLO_PaymentSync_TEST {
         Test.stopTest();
     }
 
+    /*******************************************************************************************************
+    * @description Test when an opportunity is fully scheduled with one paid payment and one scheduled payment,
+    * updating the allocations should not change the paid payment allocation. However, it should update the
+    * schedule payment's allocations.
+    ********************************************************************************************************/
+    @isTest
+    private static void testSyncOpportunityToPaymentWithFullyScheduledPartiallyPaid() {
+        setupForTests();
+        makeGAUs(1);
+        opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 100, General_Accounting_Unit__c = gaus[0].Id));
+        insert alloForInsert;
+
+        makePayments(1000, 2);
+
+        npe01__OppPayment__c paidPayment = new npe01__OppPayment__c(Id = payments[0].Id, npe01__Paid__c = true);
+        update paidPayment;
+
+        Allocation__c oppAllocation = [select Id,
+                Opportunity__c,
+                Payment__c,
+                General_Accounting_Unit__c,
+                General_Accounting_Unit__r.Name,
+                Amount__c,
+                Percent__c
+        from Allocation__c
+        where Opportunity__c = :opportunity.Id
+        AND General_Accounting_Unit__c =: gaus[0].Id
+        order by Amount__c DESC];
+
+        oppAllocation.Percent__c = 50;
+
+        Test.startTest();
+        update oppAllocation;
+
+        List<Allocation__c> paidPaymentAllocations = new List<Allocation__c>([select Id,
+                Opportunity__c,
+                Payment__c,
+                Payment__r.npe01__Paid__c,
+                General_Accounting_Unit__c,
+                General_Accounting_Unit__r.Name,
+                Amount__c,
+                Percent__c
+        from Allocation__c
+        where Payment__c = :payments[0].Id
+        order by Amount__c DESC]);
+
+        System.assertEquals(1, paidPaymentAllocations.size(), 'Paid Payment Allocation size');
+        System.assertEquals(500, paidPaymentAllocations[0].Amount__c, 'Paid Payment amount');
+
+        List<Allocation__c> secondPaymentAllocations = new List<Allocation__c>([select Id,
+                Opportunity__c,
+                Payment__c,
+                Payment__r.npe01__Paid__c,
+                General_Accounting_Unit__c,
+                General_Accounting_Unit__r.Name,
+                Amount__c,
+                Percent__c
+        from Allocation__c
+        where Payment__c = :payments[1].Id
+        order by Amount__c DESC]);
+
+        System.assertEquals(2, secondPaymentAllocations.size(), 'Payment Allocation size');
+        System.assertEquals(250, secondPaymentAllocations[0].Amount__c, 'Payment amount');
+        System.assertEquals(250, secondPaymentAllocations[1].Amount__c, 'Payment amount');
+
+
+        Test.stopTest();
+    }
+
     private static void setupForTests() {
         defaultGau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'Default GAU' LIMIT 1];
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
