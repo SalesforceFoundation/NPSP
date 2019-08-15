@@ -758,7 +758,7 @@ public with sharing class BDI_MigrationMappingUtility {
             Map<String, Object> fieldValues;
             if (this.isDeleted != true) {
 
-                if (NAMESPACE != UTIL_Namespace.NPSP_NS) {
+                if (UTIL_Namespace.shouldAlignNamespace) {
                     this.targetFieldAPIName =
                         UTIL_Namespace.alignSchemaNSWithEnvironment(this.targetFieldAPIName);
                 }
@@ -847,7 +847,7 @@ public with sharing class BDI_MigrationMappingUtility {
                     this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
                     this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
 
-                    if (NAMESPACE != UTIL_Namespace.NPSP_NS) {
+                    if (UTIL_Namespace.shouldAlignNamespace) {
                         this.targetFieldAPIName =
                             UTIL_Namespace.alignSchemaNSWithEnvironment(this.targetFieldAPIName);
                     }

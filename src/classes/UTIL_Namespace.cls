@@ -44,9 +44,10 @@ public class UTIL_Namespace {
 
     /******************************************************************************************************
     * @description Constant value for the npsp namespace, for use only when necessary in replacing hardcoded
-    * namespace prefixes in field/object name strings Custom Settings/Custom Metadata
+    * namespace prefixes in field/object name strings Custom Settings/Custom Metadata.  This should not be
+    * modified regardless of which namespace this code is being packaged in.
     *******************************************************************************************************/
-    public static final String NPSP_NS = 'npsp';
+    public static final String HARDCODED_NPSP_NAMESPACE = 'npsp';
 
     /*******************************************************************************************************
     * @description Finds the namespace for the current context.
@@ -106,8 +107,8 @@ public class UTIL_Namespace {
     ********************************************************************************************************/
     public static String StrTokenRemoveNSPrefix(String str) {
         if (str != null) {
-            if (str.startsWith(NPSP_NS + '__')) {
-                str = str.replaceFirst(NPSP_NS + '__', '');
+            if (str.startsWith(HARDCODED_NPSP_NAMESPACE + '__')) {
+                str = str.replaceFirst(HARDCODED_NPSP_NAMESPACE + '__', '');
             }
                 
             if(getNamespace() != '' && str.startsWith(getNamespace() + '__')) {
@@ -125,8 +126,8 @@ public class UTIL_Namespace {
     ********************************************************************************************************/
     public static String StrTokenRemoveClassNSPrefix(String str) {
         if (str != null) {
-            if (str.startsWith(NPSP_NS + '.')) {
-                str = str.replaceFirst(NPSP_NS + '.', '');
+            if (str.startsWith(HARDCODED_NPSP_NAMESPACE + '.')) {
+                str = str.replaceFirst(HARDCODED_NPSP_NAMESPACE + '.', '');
             }
 
             if(getNamespace() != '' && str.startsWith(getNamespace() + '.')) {
@@ -227,4 +228,18 @@ public class UTIL_Namespace {
         return newName;
     }
 
+    /*******************************************************************************************************
+    * @description Will return true if the namespace currently being applied to Util_Namespace is different
+    * from the hardcoded NPSP namespace, which indicates that the namespace on certain field/object and class
+    * names stored in metadata may need to be changed.
+    * @return shouldAlignNamespace Boolean : indicates whether the namespace needs to be aligned
+    ********************************************************************************************************/    
+    public static Boolean shouldAlignNamespace {
+        get {
+            if (shouldAlignNamespace == null) {
+                shouldAlignNamespace = (UTIL_Namespace.getNamespace() != UTIL_Namespace.HARDCODED_NPSP_NAMESPACE);
+            }
+            return shouldAlignNamespace;
+        } set;
+    }
 }

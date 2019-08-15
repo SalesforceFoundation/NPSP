@@ -175,7 +175,7 @@ public class BDI_MigrationMappingHelper {
         String namespace = UTIL_Namespace.getNamespace();
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
-            if (namespace != UTIL_Namespace.NPSP_NS) {
+            if (UTIL_Namespace.shouldAlignNamespace) {
                 fieldMapping.Source_Field_API_Name__c =
                     UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Source_Field_API_Name__c);
                 fieldMapping.Target_Object_Mapping__r.Object_API_Name__c =

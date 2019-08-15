@@ -496,7 +496,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             String sourceFieldAPIName = fieldMapping.Source_Field_API_Name__c;
             String targetFieldAPIName = fieldMapping.Target_Field_API_Name__c;
 
-            if (NAMESPACE != UTIL_Namespace.NPSP_NS) {
+            if (UTIL_Namespace.shouldAlignNamespace) {
                 objectAPIName =
                     UTIL_Namespace.alignSchemaNSWithEnvironment(
                         fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
@@ -772,7 +772,7 @@ public class BDI_ManageAdvancedMappingCtrl {
 
         public NamespaceWrapper(){
             this.currentNamespace = UTIL_Namespace.getNamespace();
-            this.npspNamespace = UTIL_Namespace.NPSP_NS;
+            this.npspNamespace = UTIL_Namespace.HARDCODED_NPSP_NAMESPACE;
         }
     }
 }// BDI_ManageAdvancedMappingCtrl

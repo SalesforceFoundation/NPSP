@@ -142,7 +142,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
     private void retrieveCustMetadata(){
         //If the code is not in the npsp namespace, then the npsp field prefixes will need to be systematically removed.
-        Boolean removeNPSPNamespace = (UTIL_Namespace.getNamespace() != UTIL_Namespace.NPSP_NS);
+        Boolean removeNPSPNamespace = (UTIL_Namespace.shouldAlignNamespace);
 
         diFieldMappingSet = [SELECT id, DeveloperName, 
                         Data_Import_Object_Mapping_Set__c,

@@ -113,7 +113,7 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
         namespace = namespace == '' ? null : namespace;
 
         System.assertEquals(actualNamespace, namespace);
-        System.assertEquals(UTIL_Namespace.NPSP_NS, nsWrapper.npspNamespace);
+        System.assertEquals(UTIL_Namespace.HARDCODED_NPSP_NAMESPACE, nsWrapper.npspNamespace);
     }
 
     /*******************************************************************************************************
