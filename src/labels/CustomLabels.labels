@@ -2987,7 +2987,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error displayed when Group Name is too long.</shortDescription>
-        <value>Error: Group Name is too long, please shorten to 40 characters or less.</value>
+        <value>Error: Group Name is too long, please shorten to 40 characters or fewer.</value>
     </labels>
     <labels>
         <fullName>bdiOMUIErrorNoUnmappedFieldsPt1</fullName>
