@@ -88,6 +88,50 @@ public with sharing class STG_SettingsManager_TEST {
         UTIL_UnitTestData_TEST.assertPageHasError('Test Exception');
     }
 
+    /*********************************************************************************************************
+    * @description Verifies if it unchecks the default allocations enabled checkbox and clears the value 
+      of default id in allocations settings when no GAU is found.
+    * @return void
+    */
+    @isTest
+    private static void shouldRemoveAllocDefaultIfGauDoesNotExist() {
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+
+        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
+        STG_Panel.stgService.stgAllo.Default__c = 'a9302003536469';
+        upsert STG_Panel.stgService.stgAllo;
+
+        Test.startTest();
+        ctrl.onNpspSettingsLoad();
+        Test.stopTest();
+
+        System.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be unchecked');
+        System.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should not be filled in.');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies Default GAU is not cleared if default GAU is present.
+    * @return void
+    */
+    @isTest
+    private static void shouldNotRemoveAllocDefaultIfGauExist() {
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
+        insert gau;
+
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+        
+        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
+        STG_Panel.stgService.stgAllo.Default__c = gau.id;
+        upsert STG_Panel.stgService.stgAllo;
+
+        Test.startTest();
+        ctrl.onNpspSettingsLoad();
+        Test.stopTest();
+
+        System.assertEquals(true, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be checked');
+        System.assertEquals(gau.id, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should be filled in.');
+    }
+
      
     /*********************************************************************************************************
     * @description Tests the DataBoundMultiSelect control used in Settings
