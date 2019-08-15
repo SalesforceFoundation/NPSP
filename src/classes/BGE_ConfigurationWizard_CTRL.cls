@@ -151,7 +151,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return JSON.serialize(model);
     }
 
-    /**************************************************************************
+    /*******************************************************************************************************
     * @description Retrieves the related list of fields.
     * @return list of BGE Fields.
     */
@@ -225,7 +225,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return fields;
     }
 
-    /**************************************************************************
+    /*******************************************************************************************************
     * @description Returns the Data Import DFRs for a set of target objects
     * @return list of DescribeFieldResults
     */
@@ -279,7 +279,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return filteredTargetFieldsBySourceField;
     }
 
-    /**************************************************************************
+    /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or 
     *     Template in a JSON String
     */
