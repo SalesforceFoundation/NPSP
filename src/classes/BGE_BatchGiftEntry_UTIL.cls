@@ -330,8 +330,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                 String targetObject = '';
                 String targetField = '';
 
-                // One DI field can be mapped to multiple target fields although it will be rare and presents some issues
-                // with picklists; here we will return info for the first match
+                // One DI field can be mapped to multiple target fields although it will be rare and presents some 
+                // issues with picklists; here we will return info for the first match
                 for (Schema.SObjectType targetSObjType: targetFieldsByTargetObject.keySet()) {
                     String aTargetObjectName = targetSObjType.getDescribe().getName();
                     if (objectGroupNameByAllowedObjects.containsKey(aTargetObjectName)) {
