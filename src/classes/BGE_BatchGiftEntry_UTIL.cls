@@ -251,7 +251,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @param items list of Strings
     * @param maxItems the maximum number of Strings from the list to retain
     * @return String the truncated list of strings, separated by a comma
-    * @example truncateList(new List<String>{ 'apple', 'orange', 'banana', 'pear' }, 2); // returns 'apple, orange ...'
+    * @example truncateList(new List<String>{ 'apple', 'orange', 'banana', 'pear' }, 2); // returns 'apple, 
+    *  orange ...'
     */
     @TestVisible
     private static String truncateList(List<String> items, Integer maxItems) {
@@ -280,16 +281,20 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         for (String field : batchFieldNames) {
             if (field != 'Id') {
                 field = UTIL_Namespace.StrAllNSPrefix(field);
-                fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), field));
+                fieldsToCheck.add(UTIL_Describe.getFieldDescribe(
+                    UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), field));
             }
         }
 
         // Donation Amount and Donation Date are also required
-        fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c')));
-        fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c')));
+        fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c')));
+        fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c')));
 
         // Lookup from Data Import row to Data Import Batch is also required
-        fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('NPSP_Data_Import_Batch__c')));
+        fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('NPSP_Data_Import_Batch__c')));
 
         checkFieldPermissions(fieldsToCheck);
     }
@@ -306,8 +311,11 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
         String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
 
-        Schema.DisplayType rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase());
-        Schema.DescribeFieldResult sourceFieldDFR = UTIL_Describe.getFieldDescribe(dataImportObject, dataImportField.toLowerCase());
+        Schema.DisplayType rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(
+            dataImportObject, dataImportField.toLowerCase());
+
+        Schema.DescribeFieldResult sourceFieldDFR = UTIL_Describe.getFieldDescribe(
+            dataImportObject, dataImportField.toLowerCase());
 
         if (rawSourceFieldType == Schema.DisplayType.Picklist) {
             options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
@@ -316,7 +324,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
             if (targetFieldsBySourceField.containsKey(sourceFieldDFR.getSObjectField())) {
                 BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceFieldDFR.getSObjectField());
-                Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject = targetFields.getTargetFieldsByTargetObject();
+                Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject = 
+                    targetFields.getTargetFieldsByTargetObject();
 
                 String targetObject = '';
                 String targetField = '';
@@ -327,7 +336,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                     String aTargetObjectName = targetSObjType.getDescribe().getName();
                     if (objectGroupNameByAllowedObjects.containsKey(aTargetObjectName)) {
                         targetObject = aTargetObjectName;
-                        List<SObjectField> mappedTargetFields = new List<SObjectField> (targetFieldsByTargetObject.get(targetSObjType));
+                        List<SObjectField> mappedTargetFields = 
+                            new List<SObjectField> (targetFieldsByTargetObject.get(targetSObjType));
                         if(mappedTargetFields.size() > 0) {
                             targetField = mappedTargetFields[0].getDescribe().getName();
                         }
@@ -339,7 +349,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                 if (targetFieldType == Schema.DisplayType.PICKLIST) {
                     options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
                 } else if (targetField == 'RecordTypeId') {
-                    options = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(UTIL_Describe.getSObjectType(targetObject));
+                    options = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(
+                        UTIL_Describe.getSObjectType(targetObject));
                 }
             }
         }
