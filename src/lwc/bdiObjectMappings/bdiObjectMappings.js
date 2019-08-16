@@ -5,8 +5,8 @@ import getObjectOptions from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.get
 import createDataImportObjectMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportObjectMapping';
 import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
-import getNamespacePrefix
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespacePrefix';
+import getNamespaceWrapper
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 import bdiOMUIChildParentLabel from '@salesforce/label/c.bdiOMUIChildParentLabel';
@@ -45,14 +45,16 @@ export default class bdiObjectMappings extends LightningElement {
     @api objectOptions;
     @track objectMappings;
 
-    namespace;
     @track npspSettingsURL = '/lightning/n/npsp__NPSP_Settings';  
 
     deploymentTimer;
     deploymentTimeout = 10000;
 
     diObjectMappingSetDevName;
-
+    npspNS;
+    namespace;
+    namespaceWrapper;
+    
     customLabels = {
         bdiOMUIChildParentLabel,
         bdiOMUIGroupNameLabel,
@@ -119,14 +121,23 @@ export default class bdiObjectMappings extends LightningElement {
     * @description retrieves the namespace prefix
     */
     getPackageNamespace() {
-        getNamespacePrefix()
+        getNamespaceWrapper()
             .then((data) => {
-                this.namespace = data;
-
+                this.namespaceWrapper = data;
+                this.namespace = data.currentNamespace;
+                this.npspNS = data.npspNamespace;
                 //if we are not in a namespaced npsp org then remove the prefix from
                 //the page url.
-                if (this.namespace !== 'npsp') {
-                    this.npspSettingsURL = this.npspSettingsURL.replace('npsp__','');
+                if (this.namespace !== this.npspNS) {
+                    let newPrefix;
+
+                    if (this.namespace) {
+                        newPrefix = this.namespace + '__';
+                    } else {
+                        newPrefix = '';
+                    }
+
+                    this.npspSettingsURL = this.npspSettingsURL.replace(this.npspNS +'__',newPrefix);
                 }
             })
             .catch((error) => {
@@ -255,7 +266,7 @@ export default class bdiObjectMappings extends LightningElement {
     * it is a core object mapping.
     */
     getRowActions(row, doneCallback) {
-        console.log('customlabel is: ' + bdiOMUIViewFieldMappingsLabel);
+
         const actions = [
             { label: bdiOMUIViewFieldMappingsLabel, name: 'goToFieldMappings' }
         ];
@@ -281,7 +292,6 @@ export default class bdiObjectMappings extends LightningElement {
     */
     handleDeploymentTimeout(event) {
         if (this.displayObjectMappings) {
-            console.log('in bdiFieldMappings handleDeploymentResponse');
             let that = this;
             this.deploymentTimer = setTimeout(function() {
                 that.isLoading = false;
