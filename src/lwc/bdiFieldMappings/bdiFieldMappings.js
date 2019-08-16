@@ -143,8 +143,8 @@ export default class bdiFieldMappings extends LightningElement {
 
             // Get all the target object field describes based on the currently
             // selected object mapping
-            let objectAPIName =
-                this.objectMapping.Object_API_Name || this.objectMapping.npsp__Object_API_Name;
+            let objectAPIName = this.objectMapping.Object_API_Name;
+
             this.targetObjectFieldDescribes =
                 await getObjectFieldDescribes({objectName: objectAPIName});
 

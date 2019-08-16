@@ -132,7 +132,7 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
                     //if we aren't in the npsp namespace, remove those tokens from help text
                     //also removes tokens from actual detected namespace, if we happen to be
                     //in a non-npsp namespace
-                    if (UTIL_Namespace.getNamespace() != 'npsp') {
+                    if (UTIL_Namespace.shouldAlignNamespace) {
                         String fieldNameOld = fieldName;
                         fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
 

@@ -102,14 +102,14 @@ public class ERR_AsyncErrors_TEST {
             Async_Error_Check_Last_Run__c = null
         );
 
-        stub.currentNamespace = 'npsp';
+        stub.currentNamespace = UTIL_Namespace.HARDCODED_NPSP_NAMESPACE;
 
         stub.pendingAsyncJobErrors = new List<ERR_AsyncErrors.AsyncApexJobWrapper>();
 
         stub.execute(null);
 
         System.assertEquals(
-            'npsp',
+            UTIL_Namespace.HARDCODED_NPSP_NAMESPACE,
             stub.pendingAsyncJobErrorsNamespace
         );
     }
