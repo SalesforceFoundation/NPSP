@@ -1556,6 +1556,7 @@
         <members>bdiOMUIEditModalTitle</members>
         <members>bdiOMUIErrorDupeName</members>
         <members>bdiOMUIErrorInvalidValues</members>
+        <members>bdiOMUIErrorLabelNameTooLong</members>
         <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
         <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
         <members>bdiOMUIErrorNoValidThroughThisField</members>
