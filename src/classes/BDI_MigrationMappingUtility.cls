@@ -382,7 +382,7 @@ public with sharing class BDI_MigrationMappingUtility {
         for (HelpTextFieldMapping helpTextFieldMapping : helpTextFieldMappings) {
 
             String unnamespacedDIFieldName =
-                UTIL_Namespace.removeNSPrefixNpspOnly(helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
+                UTIL_Namespace.alignSchemaNSWithEnvironment(helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
             Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(unnamespacedDIFieldName);
 
             Boolean isException = false;
@@ -758,9 +758,9 @@ public with sharing class BDI_MigrationMappingUtility {
             Map<String, Object> fieldValues;
             if (this.isDeleted != true) {
 
-                if (NAMESPACE != 'npsp') {
+                if (UTIL_Namespace.shouldAlignNamespace) {
                     this.targetFieldAPIName =
-                        UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                        UTIL_Namespace.alignSchemaNSWithEnvironment(this.targetFieldAPIName);
                 }
 
                 fieldValues = new Map<String, Object>{
@@ -847,9 +847,9 @@ public with sharing class BDI_MigrationMappingUtility {
                     this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
                     this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
 
-                    if (NAMESPACE != 'npsp') {
+                    if (UTIL_Namespace.shouldAlignNamespace) {
                         this.targetFieldAPIName =
-                            UTIL_Namespace.removeNSPrefixNpspOnly(this.targetFieldAPIName);
+                            UTIL_Namespace.alignSchemaNSWithEnvironment(this.targetFieldAPIName);
                     }
 
                     checkRequiredFields();
