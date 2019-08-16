@@ -51,7 +51,7 @@ private with sharing class BDI_DataImportService_TEST {
 
         System.assertEquals('Contact1_Foo__c', BDI_DataImportService.strDICustomIDField('Contact1', 'Foo__c'));
 
-        String expectedCustomIdField = UTIL_Namespace.getNamespace().equalsIgnoreCase('npsp')
+        String expectedCustomIdField = UTIL_Namespace.getNamespace().equalsIgnoreCase(UTIL_Namespace.HARDCODED_NPSP_NAMESPACE)
             ? 'npsp__Contact1_Bar__c'
             : 'Contact1_Bar__c';
         System.assertEquals(expectedCustomIdField, BDI_DataImportService.strDICustomIDField('Contact1', 'npsp__Bar__c'));
