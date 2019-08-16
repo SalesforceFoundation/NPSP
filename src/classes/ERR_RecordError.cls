@@ -73,8 +73,8 @@ public class ERR_RecordError {
         this.existingErrorsByRecordId = new Map<String, Error__c>();
 
         for (Error__c err : existingErrors) {
-            if (err.Id != null && err.Related_Record_Id__c != null) { // Only add if Error__c record is already inserted, and has a Related_Record_Id__c value
-                this.existingErrorsByRecordId.put(err.Related_Record_Id__c, err);
+            if (err.Id != null && err.Related_Record_ID__c != null) { // Only add if Error__c record is already inserted, and has a Related_Record_ID__c value
+                this.existingErrorsByRecordId.put(err.Related_Record_ID__c, err);
             }
         }
 
@@ -101,16 +101,16 @@ public class ERR_RecordError {
                                             Error_Type__c,
                                             Full_Message__c,
                                             Object_Type__c,
-                                            Related_Record_Id__c,
+                                            Related_Record_ID__c,
                                             Record_URL__c,
                                             Retry_Pending__c
                                 FROM Error__c
-                                WHERE      Related_Record_Id__c IN :ids AND
+                                WHERE      Related_Record_ID__c IN :ids AND
                                             Context_Type__c = :context
                                 ];
 
         for (Error__c error : errors) {
-            this.existingErrorsByRecordId.put(error.Related_Record_Id__c, error);
+            this.existingErrorsByRecordId.put(error.Related_Record_ID__c, error);
         }
     }
 
@@ -307,13 +307,13 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Takes a list of Errors, and updates the existing Errors map using the errors Related Record Id
+    * @description Takes a list of Errors, and updates the existing Errors map using the errors Related Record ID
     * as a key
     * @param errs List of Errors to be processed into the Existing Errors Map
     */
     @testVisible private void refreshExistingErrorsMap(List<Error__c> errs) {
         for (Error__c err : errs) {
-            this.existingErrorsByRecordId.put (err.Related_Record_Id__c, err);
+            this.existingErrorsByRecordId.put (err.Related_Record_ID__c, err);
         }
     }
 
@@ -362,7 +362,7 @@ public class ERR_RecordError {
         error.Object_Type__c = objectType;
         error.Context_Type__c = context;
         error.Retry_Pending__c = true;
-        error.Related_Record_Id__c = objId;
+        error.Related_Record_ID__c = objId;
 
         Database.Error dmlError;
 
@@ -377,7 +377,7 @@ public class ERR_RecordError {
             dmlError = getFirstDmlError(undeleteResult.getErrors());
         }
 
-        error.Record_URL__c = ERR_Handler.getRecordURL(error.Related_Record_Id__c);
+        error.Record_URL__c = ERR_Handler.getRecordURL(error.Related_Record_ID__c);
         error.Error_Type__c = getStatusCode(dmlError);
         String errorMessage = getDmlMessage(dmlError);
         error.Full_Message__c = updateFullMessage(error.Datetime__c, '', errorMessage);
@@ -403,8 +403,8 @@ public class ERR_RecordError {
         error.Context_Type__c = context;
         error.Retry_Pending__c = true;
 
-        error.Related_Record_Id__c = objId;
-        error.Record_URL__c = ERR_Handler.getRecordURL(error.Related_Record_Id__c);
+        error.Related_Record_ID__c = objId;
+        error.Record_URL__c = ERR_Handler.getRecordURL(error.Related_Record_ID__c);
         error.Error_Type__c = statusCode;
         error.Full_Message__c = updateFullMessage(error.Datetime__c, '', message);
 
