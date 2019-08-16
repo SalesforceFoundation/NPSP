@@ -1,9 +1,8 @@
-
 import {LightningElement, track, api} from 'lwc';
 import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import getNamespacePrefix from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespacePrefix';
+import getNamespaceWrapper from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
@@ -26,7 +25,7 @@ export default class PlatformEventListener extends LightningElement {
     @api channelName;
 
     _fullChannelName;
-    _namespacePrefix;
+    nsWrapper;
     subscription = {};
 
     @api isShowToastEnabled = false;
@@ -41,7 +40,8 @@ export default class PlatformEventListener extends LightningElement {
     }
 
     init = async() => {
-        this._namespacePrefix = await getNamespacePrefix();
+        this.nsWrapper = await getNamespaceWrapper();
+
         this.handleChannelName();
         this.handleSubscribe();
         setDebugFlag(this.isDebugFlagEnabled);
@@ -49,8 +49,9 @@ export default class PlatformEventListener extends LightningElement {
 
     classifyChannelName() {
         let isFullName = this.channelName && this.channelName.includes('/event/');
-        let isNamespaceContext = this._namespacePrefix && this._namespacePrefix !== '';
-        let isChannelNamespaced = this.channelName && this.channelName.includes(`${this._namespacePrefix}__`);
+
+        let isNamespaceContext = this.nsWrapper.currentNamespace && this.nsWrapper.currentNamespace !== '';
+        let isChannelNamespaced = this.channelName && this.channelName.includes(`${this.nsWrapper.currentNamespace}__`);
 
         if (isFullName) {
             return channelNameContexts.IS_FULL_NAME;
@@ -80,7 +81,7 @@ export default class PlatformEventListener extends LightningElement {
                 break;
 
             case channelNameContexts.IN_NAMESPACE_CONTEXT_NOT_NAMESPACED:
-                this._fullChannelName = `/event/${this._namespacePrefix}__${this.channelName}`;
+                this._fullChannelName = `/event/${this.nsWrapper.currentNamespace}__${this.channelName}`;
                 break;
 
             case channelNameContexts.NOT_IN_NAMESPACE_CONTEXT:
@@ -95,11 +96,14 @@ export default class PlatformEventListener extends LightningElement {
                 break;
 
             default: {
-                let namespace =
-                    this._namespacePrefix && this._namespacePrefix != '' ? this._namespacePrefix + '__' : '';
+                let namespace = this.getNamespacePrefixString();
                 this._fullChannelName = `/event/${namespace}DeploymentEvent__e`;
             }
         }
+    }
+
+    getNamespacePrefixString(){
+        return this.nsWrapper.currentNamespace && this.nsWrapper.currentNamespace !== '' ? this.nsWrapper.currentNamespace + '__' : '';
     }
 
     @api
@@ -112,10 +116,11 @@ export default class PlatformEventListener extends LightningElement {
     }
 
     showToast(response){
-        const status =
-            response.data.payload.Status__c || response.data.payload.npsp__Status__c;
-        const deploymentId =
-            response.data.payload.DeploymentId__c || response.data.payload.npsp__DeploymentId__c;
+        let nsPrefix = this.getNamespacePrefixString();
+
+        const status = response.data.payload[nsPrefix + 'Status__c'];
+        const deploymentId = response.data.payload[nsPrefix + 'DeploymentId__c'];
+
         const evt = new ShowToastEvent({
             title: 'Deployment completed with Status: ' + status,
             message: 'Deployment Id: ' + deploymentId,
@@ -125,10 +130,11 @@ export default class PlatformEventListener extends LightningElement {
     }
 
     log(response) {
-        const status =
-            response.data.payload.Status__c || response.data.payload.npsp__Status__c;
-        const deploymentId =
-            response.data.payload.DeploymentId__c || response.data.payload.npsp__DeploymentId__c;
+        let nsPrefix = this.getNamespacePrefixString();
+        
+        const status = response.data.payload[nsPrefix + 'Status__c'];
+        const deploymentId = response.data.payload[nsPrefix + 'DeploymentId__c'];
+
         console.log('Deployment Event received! ' +
             'Deployment Id: ' + deploymentId +
             ' with Status: ' + status);
@@ -155,8 +161,9 @@ export default class PlatformEventListener extends LightningElement {
     }
 
     handleEventReceived(response) {
-        const deploymentId =
-            response.data.payload.DeploymentId__c || response.data.payload.npsp__DeploymentId__c;
+        let nsPrefix = this.getNamespacePrefixString();
+        const deploymentId = response.data.payload[nsPrefix + 'DeploymentId__c'];
+
         if (this.isMonitored(deploymentId)) {
             if (this.isShowToastEnabled) {
                 fireEvent(this.pageRef, 'deploymentResponse', { response: response });

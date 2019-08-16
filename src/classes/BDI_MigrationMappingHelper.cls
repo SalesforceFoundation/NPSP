@@ -175,11 +175,11 @@ public class BDI_MigrationMappingHelper {
         String namespace = UTIL_Namespace.getNamespace();
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
-            if (namespace != 'npsp') {
+            if (UTIL_Namespace.shouldAlignNamespace) {
                 fieldMapping.Source_Field_API_Name__c =
-                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                    UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Source_Field_API_Name__c);
                 fieldMapping.Target_Object_Mapping__r.Object_API_Name__c =
-                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
+                    UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
             }
             fieldMappingsBySourceFieldName.put(
                 fieldMapping.Target_Object_Mapping__r.Object_API_Name__c
