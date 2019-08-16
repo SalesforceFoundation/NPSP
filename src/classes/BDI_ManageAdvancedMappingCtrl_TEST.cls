@@ -97,19 +97,23 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
         '"Relationship_To_Predecessor":null}';
 
     /*******************************************************************************************************
-    * @description Test that we get the current namespace
+    * @description Test that we get the current namespace and npsp namespace
     */
     @isTest
-    static void shouldReturnCurrentPackageNamespace() {
+    static void shouldReturnNamespaceWrapper() {
         ApexClass controllerClass = [SELECT NamespacePrefix
             FROM ApexClass
             WHERE Name = :'BDI_ManageAdvancedMappingCtrl'];
+
         String actualNamespace = controllerClass.NamespacePrefix;
 
-        String namespace = BDI_ManageAdvancedMappingCtrl.getNamespacePrefix();
+        BDI_ManageAdvancedMappingCtrl.NamespaceWrapper nsWrapper = BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper();
+
+        String namespace = nsWrapper.currentNamespace;
         namespace = namespace == '' ? null : namespace;
 
         System.assertEquals(actualNamespace, namespace);
+        System.assertEquals(UTIL_Namespace.HARDCODED_NPSP_NAMESPACE, nsWrapper.npspNamespace);
     }
 
     /*******************************************************************************************************
