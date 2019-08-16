@@ -72,6 +72,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
                 String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
                 String sourceField = dataImportFieldMapping.Source_Field_API_Name__c;
+
                 SObjectField sourceSObjectField =
                         UTIL_Describe.getFieldDescribe(
                                 sourceObject, sourceField).getSobjectField();
