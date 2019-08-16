@@ -953,7 +953,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
                        AND General_Accounting_Unit__c =: defaultGau.id
                        order by Amount__c DESC];
 
-        System.assert(oppAllocation.Percent__c == null, 'There should not be a percentage for the Deault GAU');
+        System.assertEquals(null, oppAllocation.Percent__c, 'Default Allocation Percentage');
     }
 
     /*** Helpers ***/
