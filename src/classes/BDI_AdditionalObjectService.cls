@@ -323,7 +323,7 @@ public with sharing class BDI_AdditionalObjectService {
 
         if (objMapping.Custom_Mapping_Logic_Class__c != null) {
             Type custLogicClassType = Type.forName(
-                UTIL_Namespace.adjustNPSPNamespace(objMapping.Custom_Mapping_Logic_Class__c));
+                UTIL_Namespace.alignClassNSWithEnvironment(objMapping.Custom_Mapping_Logic_Class__c));
             objMappingLogicClass = (BDI_ObjectMappingLogic)custLogicClassType.newInstance();
         } else {
             objMappingLogicClass = new BDI_ObjectMappingLogic();

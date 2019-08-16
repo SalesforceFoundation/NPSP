@@ -43,7 +43,7 @@ public with sharing virtual class BDI_ObjectMappingLogic {
             return objWraps;
         }
 
-        Map<String, Schema.DescribeFieldResult> sourceFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.adjustNPSPNamespace('npsp__DataImport__c'));
+        Map<String, Schema.DescribeFieldResult> sourceFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__DataImport__c'));
         
         for (BDI_ObjectWrapper objWrap : objWraps) {
             Map<String, Schema.DescribeFieldResult> targetFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
