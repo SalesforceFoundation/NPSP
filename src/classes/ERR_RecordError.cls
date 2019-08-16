@@ -50,7 +50,7 @@ public class ERR_RecordError {
     * @description Constructor for the ERR_RecordError class.  It should include a context that represents the
     * process these Record Errors should be associated with.
     * @param context The process or batch to be associated with any errors processed via this instance
-    *                of RecordErrors
+    *                of RecordErrors.  It is stored in the Error Records Context Type field
     */
     public ERR_RecordError (String context) {
         if (String.isNotBlank(context)) {
