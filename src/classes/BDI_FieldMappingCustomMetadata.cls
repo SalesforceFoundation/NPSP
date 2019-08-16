@@ -72,6 +72,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
                 String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
                 String sourceField = dataImportFieldMapping.Source_Field_API_Name__c;
+
                 SObjectField sourceSObjectField =
                         UTIL_Describe.getFieldDescribe(
                                 sourceObject, sourceField).getSobjectField();
@@ -134,7 +135,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
             //Retreive the Data Import Settings to determine the default field mapping set.
             Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
 
-            fieldMappingSetName = UTIL_Namespace.adjustNPSPNamespace(dis.Default_Data_Import_Field_Mapping_Set__c);
+            fieldMappingSetName = UTIL_Namespace.alignSchemaNSWithEnvironment(dis.Default_Data_Import_Field_Mapping_Set__c);
         }
 
         return fieldMappingSetName;
@@ -142,7 +143,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
     private void retrieveCustMetadata(){
         //If the code is not in the npsp namespace, then the npsp field prefixes will need to be systematically removed.
-        Boolean removeNPSPNamespace = (UTIL_Namespace.getNamespace() != 'npsp');
+        Boolean removeNPSPNamespace = (UTIL_Namespace.shouldAlignNamespace);
 
         diFieldMappingSet = [SELECT id, DeveloperName, 
                         Data_Import_Object_Mapping_Set__c,
@@ -184,12 +185,12 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                                         AND Is_Deleted__c = false
                                     ORDER BY MasterLabel ASC]) {
 
-            // Removing the npsp namespace since the code is not currently packaged.
+            // Removing the npsp namespace and potentially adding a new namespace if UTIL_Namespace is under a different namespace
             if (removeNPSPNamespace) {
-               diom.Imported_Record_Field_Name__c = UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Field_Name__c);
-               diom.Imported_Record_Status_Field_Name__c = UTIL_Namespace.adjustNPSPNamespace(diom.Imported_Record_Status_Field_Name__c);
-               diom.Object_API_Name__c = UTIL_Namespace.adjustNPSPNamespace(diom.Object_API_Name__c);
-               diom.Relationship_Field__c = UTIL_Namespace.adjustNPSPNamespace(diom.Relationship_Field__c);
+               diom.Imported_Record_Field_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(diom.Imported_Record_Field_Name__c);
+               diom.Imported_Record_Status_Field_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(diom.Imported_Record_Status_Field_Name__c);
+               diom.Object_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(diom.Object_API_Name__c);
+               diom.Relationship_Field__c = UTIL_Namespace.alignSchemaNSWithEnvironment(diom.Relationship_Field__c);
             }
 
             objMappingsByDevName.put(diom.DeveloperName, diom);
@@ -212,8 +213,8 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
                 // Removing the npsp namespace since the code is not currently packaged.
                 if (removeNPSPNamespace) {
-                   difm.Source_Field_API_Name__c = UTIL_Namespace.adjustNPSPNamespace(difm.Source_Field_API_Name__c);
-                   difm.Target_Field_API_Name__c = UTIL_Namespace.adjustNPSPNamespace(difm.Target_Field_API_Name__c);
+                   difm.Source_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(difm.Source_Field_API_Name__c);
+                   difm.Target_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(difm.Target_Field_API_Name__c);
                 }
 
                 Data_Import_Field_Mapping__mdt[] tempDifms = new Data_Import_Field_Mapping__mdt[]{};
