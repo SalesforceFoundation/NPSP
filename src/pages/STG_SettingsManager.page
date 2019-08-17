@@ -215,7 +215,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelErrorLogNav"><a href="#" onclick="ShowPanel('idPanelErrorLog');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavErrorLog}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelErrorNotifNav"><a href="#" onclick="ShowPanel('idPanelErrorNotif');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavErrorNotify}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelTDTMNav"><a href="#" onclick="ShowPanel('idPanelTDTM');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavTriggerConfig}</a></li>
-                                <!--<li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelDataImportAdvancedMappingNav"><a href="#" onclick="ShowPanel('idPanelDataImportAdvancedMapping');return false;" class="slds-grow slds-m-left_large">{!$Label.bdiAdvancedMapping}</a></li>-->
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelDataImportAdvancedMappingNav"><a href="#" onclick="ShowPanel('idPanelDataImportAdvancedMapping');return false;" class="slds-grow slds-m-left_large">{!$Label.bdiAdvancedMapping}</a></li>
                             </ul>
                         </ul>
                     </nav>
@@ -395,9 +395,9 @@
                     <apex:include pageName="STG_PanelTDTM" />
                 </div>
 
-                <!--<div class="panel noborder" id="idPanelDataImportAdvancedMapping" style="display:none" >
+                <div class="panel noborder" id="idPanelDataImportAdvancedMapping" style="display:none" >
                     <apex:include pageName="STG_PanelDataImportAdvancedMapping" />
-                </div>-->
+                </div>
             </div>
         </div>
     </div>
