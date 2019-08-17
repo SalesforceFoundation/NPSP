@@ -39,7 +39,7 @@ public class ERR_RecordError {
 
    public class RecordErrorHandlerException extends Exception { }
 
-    private Map<String, Error__c> existingErrorsByRecordId = new Map<String, Error__c>();
+    private Map<String, Error__c> existingErrorsByRecordID = new Map<String, Error__c>();
 
     private String context;
 
@@ -50,7 +50,7 @@ public class ERR_RecordError {
     * @description Constructor for the ERR_RecordError class.  It should include a context that represents
     *              the process these Record Errors should be associated with.
     * @param context The process or batch to be associated with any errors processed via this instance
-    *                of RecordErrors
+    *                of RecordErrors.  It is stored in the Error Records Context Type field
     */
     public ERR_RecordError (String context) {
         if (String.isNotBlank(context)) {
@@ -70,11 +70,11 @@ public class ERR_RecordError {
     *         statement
     */
     public ERR_RecordError withExistingErrors(List<Error__c> existingErrors) {
-        this.existingErrorsByRecordId = new Map<String, Error__c>();
+        this.existingErrorsByRecordID = new Map<String, Error__c>();
 
         for (Error__c err : existingErrors) {
-            if (err.Id != null && err.Related_Record_Id__c != null) { // Only add if Error__c record is already inserted, and has a Related_Record_Id__c value
-                this.existingErrorsByRecordId.put(err.Related_Record_Id__c, err);
+            if (err.Id != null && err.Related_Record_ID__c != null) { // Only add if Error__c record is already inserted, and has a Related_Record_ID__c value
+                this.existingErrorsByRecordID.put(err.Related_Record_ID__c, err);
             }
         }
 
@@ -83,10 +83,9 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Queries the Errors object using the Context Type configured for this RecordErrors
-    *              instance, and the list of sObjects passed in to populate a map of existing errors by
-    *              "Related Record Id", which are kept in an internal map and used when other errors are
-    *              added to determine if it is an update or an insert
-    * operation.
+    * instance, and the list of sObjects passed in to populate a map of existing errors by
+    * "Related Record ID", which are kept in an internal map and used when other errors are added to
+    * determine if it is an update or an insert operation.
     * @param sObjects the list of sObjects to determine if errors are present for
     */
     public void retrieveExistingErrorsFor (List<SObject> sObjects) {
@@ -102,16 +101,18 @@ public class ERR_RecordError {
                                             Error_Type__c,
                                             Full_Message__c,
                                             Object_Type__c,
-                                            Related_Record_Id__c,
+                                            Related_Record_ID__c,
                                             Record_URL__c,
-                                            Retry_Pending__c
+                                            Retry_Pending__c,
+                                            Email_Sent__c,
+                                            Posted_In_Chatter__c
                                 FROM Error__c
-                                WHERE      Related_Record_Id__c IN :ids AND
+                                WHERE      Related_Record_ID__c IN :ids AND
                                             Context_Type__c = :context
                                 ];
 
         for (Error__c error : errors) {
-            this.existingErrorsByRecordId.put(error.Related_Record_Id__c, error);
+            this.existingErrorsByRecordID.put(error.Related_Record_ID__c, error);
         }
     }
 
@@ -125,7 +126,7 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Returns a list of Errors for records to be inserted that did not previously have Errors
-    *              for that Record and Process.
+    *              for that Record and Context Type.
     * @return List of Errors to be inserted
     */
     @testVisible private List<Error__c> getErrorsForInsert() {
@@ -134,8 +135,8 @@ public class ERR_RecordError {
 
 
     /*******************************************************************************************************
-    * @description Returns a list of Errors for records to be updated because they was a previous Error
-    *              record present for that Record Id and process
+    * @description Returns a list of Errors for records to be updated because there was a previous Error
+    *              record present for that Record ID and Context Type
     * @return List of Errors to be updated
     */
     @testVisible private List<Error__c> getErrorsForUpdate() {
@@ -156,8 +157,8 @@ public class ERR_RecordError {
     @testVisible private Error__c get(String recordId) {
         if (updRecordErrors.containsKey(recordId)) {
             return updRecordErrors.get(recordId);
-        } else if (existingErrorsByRecordId.containsKey(recordId)) {
-            return existingErrorsByRecordId.get(recordId);
+        } else if (existingErrorsByRecordID.containsKey(recordId)) {
+            return existingErrorsByRecordID.get(recordId);
         } else if (insRecordErrors.containsKey(recordId)) {
             return insRecordErrors.get(recordId);
         } else {
@@ -167,9 +168,9 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Adds/or replaces an error in either the insert or update error map.  If the Error record
-    *              has a Salesforce Id, it will put it in the update map.  Otherwise, it will put it in the
-    *              insert map.
-    * @param recordId The Record Id of the Salesforce record associated with the Error
+    *              has a Salesforce ID, it will put it in the update map.  Otherwise, it will put it in
+    *              the insert map.
+    * @param recordId The Record ID of the Salesforce record associated with the Error
     * @param Error__c The error record
     */
     @testVisible private void put(String recordId, Error__c error) {
@@ -181,9 +182,9 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Adds a single Error by Record Id to the appropriate insert or update map, if an error
+    * @description Adds a single Error by Record ID to the appropriate insert or update map, if an error
     *              occurred (isSuccess() of the dmlResult != true).
-    * @param recordId The Record Id of the Salesforce record associated with the Error
+    * @param recordId The Record ID of the Salesforce record associated with the Error
     * @param dmlResult The result of the DML Operation
     * @param sObj The record the error is associated with
     */
@@ -214,12 +215,12 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Adds errors by Record Ids to the appropriate insert or update map, if an error
+    * @description Adds errors by Record IDs to the appropriate insert or update map, if an error
     *              occurred (isSuccess() of the dmlResult != true).  The three lists are ordinal, and
     *              should be the same length.  The information provided in each parameter will be
     *              associated together by it's position in the list.
     * @param dmlResults The list of result of the DML Operation
-    * @param errorIdForSObject The List of Record Ids that match each dmlResult, in terms of errors
+    * @param errorIdForSObject The List of Record IDs that match each dmlResult, in terms of errors
     * @param sObjects The list of records any errors are associated with
     */
     public void addErrors(List<Object> dmlResults, List<Id> errorIdForSObject, List<SObject> sObjects) {
@@ -231,8 +232,8 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Adds a single Error by Record Id to the appropriate insert or update map.
-    * @param recordId The Record Id of the Salesforce record associated with the Error
+    * @description Adds a single Error by Record ID to the appropriate insert or update map.
+    * @param recordId The Record ID of the Salesforce record associated with the Error
     * @param errorMessage The erorr to add
     * @param sObj The record the error is associated with
     */
@@ -263,23 +264,23 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Adds errors by Record Ids to the appropriate insert or update map.  The two parameters
-    *              are keyed by the Record Id associated with the error
-    * @param errorMessagesByRecordId Error Messages to add, keyed by Record Id
-    * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the
+    * @description Adds errors by Record IDs to the appropriate insert or update map.  The two parameters
+    *              are keyed by the Record ID associated with the error
+    * @param errorMessagesByRecordID Error Messages to add, keyed by Record ID
+    * @param sObjects Map of SObjects associated with the errors, keyed by Record ID associated with the
     *        Error
     */
-    public void addErrors(Map<String, String> errorMessagesByRecordId, Map<String, SObject> sObjects) {
-        if (errorMessagesByRecordId != null && !errorMessagesByRecordId.isEmpty()) {
-            for(String soId :errorMessagesByRecordId.keySet()) {
-                addError(soId, errorMessagesByRecordId.get(soId), sObjects.get(soId));
+    public void addErrors(Map<String, String> errorMessagesByRecordID, Map<String, SObject> sObjects) {
+        if (errorMessagesByRecordID != null && !errorMessagesByRecordID.isEmpty()) {
+            for(String soId :errorMessagesByRecordID.keySet()) {
+                addError(soId, errorMessagesByRecordID.get(soId), sObjects.get(soId));
             }
         }
     }
 
     /*******************************************************************************************************
     * @description Clears errors, if they exist in the Map
-    * @param recordId The Record Id of the Salesforce record associated with the Error
+    * @param recordId The Record ID of the Salesforce record associated with the Error
     * @param message The message to add
     */
     public void clearError(String recordId, String message) {
@@ -298,8 +299,8 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Resets the Retry Pending flag and adds a message for a Set of RecordIds.  It only does
-    * this if the recordId is present in map of Errors by Record Id
+    * @description Resets the Retry Pending flag and adds a message for a Set of Record IDs.  It only does
+    * this if the recordID is present in map of Errors by Record ID
     * @param Set<String> recordIds
     * @param String message
     */
@@ -310,8 +311,8 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Resets the Retry Pending flag and adds a message for a Set of RecordIds.  It only does
-    *              this for recordIds that are present in the map of Errors by Record Id
+    * @description Resets the Retry Pending flag and adds a message for a Set of Record IDs.  It only does
+    *              this for record IDs that are present in the map of Errors by Record ID
     * @param Set<String> recordIds
     * @param String message
     */
@@ -324,8 +325,8 @@ public class ERR_RecordError {
     /*******************************************************************************************************
     * @description Executes DML for any pending inserts and updates.  Then, it updates the Existing Errors
     *              Map using the inserted and updated data
-    * @param errorMessagesByRecordId Error Messages to add, keyed by Record Id
-    * @param sObjects Map of SObjects associated with the errors, keyed by Record Id associated with the
+    * @param errorMessagesByRecordID Error Messages to add, keyed by Record ID
+    * @param sObjects Map of SObjects associated with the errors, keyed by Record ID associated with the
     *        Error
     */
     public void processErrors() {
@@ -356,13 +357,13 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
-    * @description Takes a list of Errors, and updates the existing Errors map using the errors Related
-    *              Record Id as a key
+    * @description Takes a list of Errors, and updates the existing Errors map using the errors
+    *              Related Record ID as a key
     * @param errs List of Errors to be processed into the Existing Errors Map
     */
     @testVisible private void refreshExistingErrorsMap(List<Error__c> errs) {
         for (Error__c err : errs) {
-            this.existingErrorsByRecordId.put (err.Related_Record_Id__c, err);
+            this.existingErrorsByRecordID.put (err.Related_Record_ID__c, err);
         }
     }
 
@@ -413,7 +414,7 @@ public class ERR_RecordError {
         error.Object_Type__c = objectType;
         error.Context_Type__c = context;
         error.Retry_Pending__c = true;
-        error.Related_Record_Id__c = objId;
+        error.Related_Record_ID__c = objId;
 
         Database.Error dmlError;
 
@@ -428,7 +429,7 @@ public class ERR_RecordError {
             dmlError = getFirstDmlError(undeleteResult.getErrors());
         }
 
-        error.Record_URL__c = ERR_Handler.getRecordURL(error.Related_Record_Id__c);
+        error.Record_URL__c = ERR_Handler.getRecordURL(error.Related_Record_ID__c);
         error.Error_Type__c = getStatusCode(dmlError);
         String errorMessage = getDmlMessage(dmlError);
         error.Full_Message__c = updateFullMessage(error.Datetime__c, '', errorMessage);
@@ -454,8 +455,8 @@ public class ERR_RecordError {
         error.Context_Type__c = context;
         error.Retry_Pending__c = true;
 
-        error.Related_Record_Id__c = objId;
-        error.Record_URL__c = ERR_Handler.getRecordURL(error.Related_Record_Id__c);
+        error.Related_Record_ID__c = objId;
+        error.Record_URL__c = ERR_Handler.getRecordURL(error.Related_Record_ID__c);
         error.Error_Type__c = statusCode;
         error.Full_Message__c = updateFullMessage(error.Datetime__c, '', message);
 
@@ -479,6 +480,11 @@ public class ERR_RecordError {
 
         error.Datetime__c = System.now();
         error.Retry_Pending__c = true;
+        // Set to false so it will repost to chatter on update
+        error.Posted_in_Chatter__c = false;
+        // Set to false so it will resend email on update
+        error.Email_Sent__c = false;
+
 
         Database.Error dmlError;
 
@@ -515,6 +521,10 @@ public class ERR_RecordError {
     @testVisible private static Error__c updateRecordError (Error__c error, String message, String statusCode) {
         error.Datetime__c = System.now();
         error.Retry_Pending__c = true;
+        // Set to false so it will repost to chatter on update
+        error.Posted_in_Chatter__c = false;
+        // Set to false so it will resend email on update
+        error.Email_Sent__c = false;
         error.Error_Type__c = statusCode;
         error.Full_Message__c = updateFullMessage(error.Datetime__c, error.Full_Message__c, message);
 
@@ -534,6 +544,10 @@ public class ERR_RecordError {
     @testVisible private static Error__c clearRecordError (Error__c error, String message) {
         error.Datetime__c = System.now();
         error.Retry_Pending__c = false;
+        // Setting so it does not send email
+        error.Email_Sent__c = true;
+        // Setting so it does post to chatter
+        error.Posted_in_Chatter__c = false;
         error.Full_Message__c = updateFullMessage(error.Datetime__c, error.Full_Message__c, message);
 
         UTIL_Debug.debug('**** clearRecordError() returns error: ' + error);
