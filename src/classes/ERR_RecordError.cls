@@ -103,7 +103,9 @@ public class ERR_RecordError {
                                             Object_Type__c,
                                             Related_Record_ID__c,
                                             Record_URL__c,
-                                            Retry_Pending__c
+                                            Retry_Pending__c,
+                                            Email_Sent__c,
+                                            Posted_In_Chatter__c
                                 FROM Error__c
                                 WHERE      Related_Record_ID__c IN :ids AND
                                             Context_Type__c = :context
@@ -426,6 +428,11 @@ public class ERR_RecordError {
 
         error.Datetime__c = System.now();
         error.Retry_Pending__c = true;
+        // Set to false so it will repost to chatter on update
+        error.Posted_in_Chatter__c = false;
+        // Set to false so it will resend email on update
+        error.Email_Sent__c = false;
+
 
         Database.Error dmlError;
 
@@ -460,6 +467,10 @@ public class ERR_RecordError {
     @testVisible private static Error__c updateRecordError (Error__c error, String message, String statusCode) {
         error.Datetime__c = System.now();
         error.Retry_Pending__c = true;
+        // Set to false so it will repost to chatter on update
+        error.Posted_in_Chatter__c = false;
+        // Set to false so it will resend email on update
+        error.Email_Sent__c = false;
         error.Error_Type__c = statusCode;
         error.Full_Message__c = updateFullMessage(error.Datetime__c, error.Full_Message__c, message);
 
