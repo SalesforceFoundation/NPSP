@@ -1153,3 +1153,33 @@ class NPSP(object):
     def pause(self, message):
         self.python_display(message, message, say=True)
         input(message)
+
+
+def monkeypatch_batch_py():
+    from cumulusci.core.exceptions import SalesforceException
+
+    """This is a hack which should never be merged!!!!"""
+    def _run_task(self):
+        self.poll_interval_s = int(self.options.get("poll_interval", 10))
+
+        self._poll()  # will block until poll_complete
+
+        self.logger.info("Job is complete.")
+
+        if not self.success:
+            self.logger.info("There were some batch failures.")
+            raise SalesforceException(repr(self.batch), **self.batch)
+
+        self.logger.info(
+            "%s took %d seconds to process %d batches.",
+            self.batch["ApexClass"]["Name"],
+            self.delta,
+            self.batch["TotalJobItems"],
+        )
+
+        return self.success
+
+    from cumulusci.tasks.apex.batch import BatchApexWait
+    BatchApexWait._run_task = _run_task
+
+    monkeypatch_batch_py()
