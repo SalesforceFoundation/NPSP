@@ -86,15 +86,17 @@ global abstract class TDTM_Runnable {
         List<Schema.SObjectField> allFields = objResult.fields.getMap().values();
 
         //Getting the records the IDs refer to
-        String qn = 'select ';
-        for(Integer i = 0; i < allFields.size() - 1; i++) //add all fields, except last, to query
+        String qn = 'SELECT ';
+        for (Integer i = 0; i < allFields.size() - 1; i++) { //add all fields, except last, to query
             qn += ' ' + allFields[i] + ', ';
+        }
         qn += ' ' + allFields[allFields.size() - 1]; //add last field to query
-        qn += ' from ' + objectName + ' where id IN ';
+        qn += ' FROM ' + objectName + ' WHERE Id IN ';
 
-        List<SObject> newlist;
-        if (newIds != null)
-            newlist = Database.query(qn + ':newIds order by Id');
+        List<SObject> newList;
+        if (newIds != null) {
+            newList = Database.query(qn + ':newIds ORDER BY Id');
+        }
         List<SObject> oldlist;
         if (serializedOldList != null){
             //we dont need to sort old list here as it is already sorted
@@ -103,17 +105,19 @@ global abstract class TDTM_Runnable {
                 oldlist.add((sObject) JSON.deserialize(oldRecord, sObject.class));
             }
         }
+
         //Call the non-future method
         Type classType = Type.forName(classToRunName);
         Object classInstance;
-        if(classType != null)
+        if (classType != null) {
             classInstance = classType.newInstance();
-        if(classInstance instanceof TDTM_Runnable) {
+        }
+        if (classInstance instanceof TDTM_Runnable) {
             TDTM_Runnable runnable = (TDTM_Runnable) classInstance;
             //WARNING: we have queried all the fields that would be available in the records themselves, but NOT the fields
             //from related (parent or child) records. Those would need to be queried independently in the class itself (see
             //ERR_ParentAccountUpdater2_TEST class for an example on how to do that).
-            DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
+            DmlWrapper dmlWrapper = runnable.run(newList, oldList, triggerAction, objResult);
 
             //Process the result. In this case we cannot pass the original Trigger.new and Trigger.old, since we are
             //in a future
