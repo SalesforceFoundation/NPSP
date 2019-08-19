@@ -39,7 +39,7 @@
   <fields>
     <name>Source_Field__c</name>
     <help>このレベルの基準となる金額と期間を定義する対象オブジェクトの項目 (API 参照名)。</help>
-    <label>集計元フィールド名</label>
+    <label>集計元項目名</label>
   </fields>
   <fields>
     <name>Target__c</name>

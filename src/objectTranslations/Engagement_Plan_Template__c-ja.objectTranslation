@@ -37,7 +37,7 @@
   </fields>
   <fields>
     <name>Skip_Weekends__c</name>
-    <help>選択した場合、エンゲージメント計画の期日が土曜日または日曜日になりることはありません。</help>
+    <help>選択した場合、エンゲージメント計画の期日が土曜日または日曜日になることはありません。</help>
     <label>週末をスキップ</label>
   </fields>
   <fields>

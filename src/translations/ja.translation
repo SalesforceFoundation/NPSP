@@ -538,7 +538,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_Return</name>
-        <label>{0} に戻る</label>
+        <label>[{0}] に戻る</label>
     </customLabels>
     <customLabels>
         <name>CRLP_RollupsByFilterGroup</name>
