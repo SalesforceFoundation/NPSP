@@ -57,63 +57,63 @@ global abstract class TDTM_Runnable {
      * @description Calls the run method of the class, as a future. To be called dynamically from TDTM_TriggerHandler. 
      * We need this method because Apex won't let us call a non-static method from a separate object instance.
      * @param newIds The IDs of the records that were passed to the trigger as trigger.new.
-     * @param oldIds The IDs of the records that were passed to the trigger as trigger.old.
+     * @param serializedOldList The list of serialized records that were passed to the trigger as trigger.old.
      * @param action The event (before insert, after insert,...) that caused the class to run.
      * @param objectName The name of the SObject the class runs for.
      * @param classToRunName The name of the class to run.
      * @return void
      */
-    public void runFutureNonStatic(Set<Id> newIds, Set<Id> oldIds, String action, String objectName, String classToRunName) {
-        runFuture(newIds, oldIds, action, objectName, classToRunName);
+    public void runFutureNonStatic(Set<Id> newIds, List<String> serializedOldList, String action, String objectName, String classToRunName) {
+        runFuture(newIds, serializedOldList, action, objectName, classToRunName);
     }
     
     /*******************************************************************************************************
      * @description Calls the run method of the class, as a future.
      * @param newIds The IDs of the records that were passed to the trigger as trigger.new.
-     * @param oldIds The IDs of the records that were passed to the trigger as trigger.old.
+     * @param serializedOldList The list of serialized records that were passed to the trigger as trigger.old..
      * @param action The event (before insert, after insert,...) that caused the class to run.
      * @param objectName The name of the SObject the class runs for.
      * @param classToRunName The name of the class to run.
      * @return void
      */
     @future
-    public static void runFuture(Set<Id> newIds, Set<Id> oldIds, String action, String objectName, String classToRunName) {
-        
+    public static void runFuture(Set<Id> newIds, List<String> serializedOldList, String action, String objectName, String classToRunName) {
+
         Schema.DescribeSObjectResult objResult = UTIL_Describe.getObjectDescribe(objectName);
         TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
-        
+
         //Get all fields for the object
         List<Schema.SObjectField> allFields = objResult.fields.getMap().values();
-        
+
         //Getting the records the IDs refer to
-        String qn = 'SELECT ';
-        for (Integer i = 0; i < allFields.size() - 1; i++) { //add all fields, except last, to query
+        String qn = 'select ';
+        for(Integer i = 0; i < allFields.size() - 1; i++) //add all fields, except last, to query
             qn += ' ' + allFields[i] + ', ';
-        }
         qn += ' ' + allFields[allFields.size() - 1]; //add last field to query
-        qn += ' FROM ' + objectName + ' WHERE Id IN ';
+        qn += ' from ' + objectName + ' where id IN ';
 
-        List<SObject> newList;
-        if (newIds != null) {
-            newList = Database.query(qn + ':newIds ORDER BY Id');
+        List<SObject> newlist;
+        if (newIds != null)
+            newlist = Database.query(qn + ':newIds order by Id');
+        List<SObject> oldlist;
+        if (serializedOldList != null){
+            //we dont need to sort old list here as it is already sorted
+            oldlist = new List<SObject>();
+            for(String oldRecord : serializedOldList){
+                oldlist.add((sObject) JSON.deserialize(oldRecord, sObject.class));
+            }
         }
-        List<SObject> oldList;
-        if (oldIds != null) {
-            oldList = Database.query(qn + ':oldIds ORDER BY Id');
-        }
-
         //Call the non-future method
         Type classType = Type.forName(classToRunName);
-        Object classInstance; 
-        if (classType != null) {
+        Object classInstance;
+        if(classType != null)
             classInstance = classType.newInstance();
-        }
-        if (classInstance instanceof TDTM_Runnable) {
+        if(classInstance instanceof TDTM_Runnable) {
             TDTM_Runnable runnable = (TDTM_Runnable) classInstance;
             //WARNING: we have queried all the fields that would be available in the records themselves, but NOT the fields
             //from related (parent or child) records. Those would need to be queried independently in the class itself (see
             //ERR_ParentAccountUpdater2_TEST class for an example on how to do that).
-            DmlWrapper dmlWrapper = runnable.run(newList, oldList, triggerAction, objResult);
+            DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
 
             //Process the result. In this case we cannot pass the original Trigger.new and Trigger.old, since we are
             //in a future

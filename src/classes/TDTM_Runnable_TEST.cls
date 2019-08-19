@@ -150,7 +150,37 @@ private with sharing class TDTM_Runnable_TEST {
 
         insert dmlWrapper.objectsToInsert;
     }
+	
+	 /***************************************************************************
+    * @description This test verifies that the old list (Trigger.old) is getting serialized properly for runFuture method of the TDTM_Runnable
+    **/
+    @isTest
+    private static void testSerializeOldListForAsyncMethods() {
+        String runFutureAccountName = 'New Acc Name';
 
+        insert new Trigger_Handler__c(
+                Active__c = true,
+                Asynchronous__c = true,
+                Class__c = 'ERR_SerializeOldListForAsync_TEST',
+                Load_Order__c = 1,
+                Object__c = 'Contact',
+                Trigger_Action__c = 'AfterUpdate;'
+        );
+
+        Contact contact = [SELECT Name, AccountId FROM Contact LIMIT 1][0];
+        contact.FirstName = 'New First Name';
+
+        Account acc = [SELECT Name FROM Account WHERE Id = :contact.AccountId LIMIT 1][0];
+        System.assertNotEquals(runFutureAccountName, acc.Name, 'Account name must not be: "New Account Name"');
+
+        Test.startTest();
+        update contact;
+        Test.stopTest();
+        Account actualAccount = [SELECT Name FROM Account WHERE Id = :acc.Id];
+
+        // Ensure 'ERR_SerializeOldListForAsync_TEST' trigger handler future method processing has been applied
+        System.assertEquals(runFutureAccountName, actualAccount.Name, 'Account name must be: "New Account Name"');
+    }
 
     // Helpers
     //////////////
