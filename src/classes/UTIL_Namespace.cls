@@ -41,6 +41,14 @@ public class UTIL_Namespace {
     * @description String helper property for getNamespace() method.
     *******************************************************************************************************/
     private static string plainNamespace;
+
+    /******************************************************************************************************
+    * @description Constant value for the npsp namespace, for use only when necessary in replacing hardcoded
+    * namespace prefixes in field/object name strings Custom Settings/Custom Metadata.  This should not be
+    * modified regardless of which namespace this code is being packaged in.
+    *******************************************************************************************************/
+    public static final String HARDCODED_NPSP_NAMESPACE = 'npsp';
+
     /*******************************************************************************************************
     * @description Finds the namespace for the current context.
     * @return string The current namespace as a string, or a blank string if we're not in a namespaced context.
@@ -97,23 +105,48 @@ public class UTIL_Namespace {
     * @param str token name 
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
-    public static string StrTokenRemoveNSPrefix(string str) {
-        if(str.startsWith('npsp__'))
-            str = str.replaceFirst('npsp__', '');
-        if (getNamespace() != '' && str.startsWith(getNamespace() + '__'))
-            str = str.replaceFirst(getNamespace() + '__', '');
+    public static String StrTokenRemoveNSPrefix(String str) {
+        if (str != null) {
+            if (str.startsWith(HARDCODED_NPSP_NAMESPACE + '__')) {
+                str = str.replaceFirst(HARDCODED_NPSP_NAMESPACE + '__', '');
+            }
+                
+            if(getNamespace() != '' && str.startsWith(getNamespace() + '__')) {
+                str = str.replaceFirst(getNamespace() + '__', '');
+            }
+        }
+            
+        return str;
+    }
+
+    /*******************************************************************************************************
+    * @description Removes NPSP class prefix or dynamically removes current NS prefix.
+    * @param str : the class name to have the namespace removed.
+    * @return str : class name with namespace prefix removed.
+    ********************************************************************************************************/
+    public static String StrTokenRemoveClassNSPrefix(String str) {
+        if (str != null) {
+            if (str.startsWith(HARDCODED_NPSP_NAMESPACE + '.')) {
+                str = str.replaceFirst(HARDCODED_NPSP_NAMESPACE + '.', '');
+            }
+
+            if(getNamespace() != '' && str.startsWith(getNamespace() + '.')) {
+                str = str.replaceFirst(getNamespace() + '.', '');
+            }
+        }
+
         return str;
     }
     
     /*******************************************************************************************************
     * @description Static method that takes a string of a multiple potential field names or object names.  
-    * If it is a custom object or field (name ends with __c, __r or __mdt), it prepends the namespace prefix if required.
+    * If it is a custom object or field (name ends with __c, __r, __mdt, or __e), it prepends the namespace prefix if required.
     * If we are in a managed package, tokens in dynamic SOQL must include the package namespace prefix.
     * If you ever deploy this package as unmanaged, this routine will do nothing!
     * @param str string that contains 0 or more token names 
     * @return same string with token names, namespace prefixed, if required.
     ********************************************************************************************************/
-    public static string StrAllNSPrefix(string str) {
+    public static String StrAllNSPrefix(String str) {
         if (str == null || getNamespace() == '') {
             // There is no current package namespace, or the field is null
             return str;
@@ -122,7 +155,7 @@ public class UTIL_Namespace {
             return str;
         }
 
-        Pattern pat = Pattern.Compile('[a-zA-z0-9]*__(?:c|r|mdt)');
+        Pattern pat = Pattern.Compile('[a-zA-z0-9]*__(?:c|r|mdt|e)');
         Matcher match = pat.matcher(str);
         return match.replaceAll(getNamespace()+'__$0');
     }
@@ -148,34 +181,65 @@ public class UTIL_Namespace {
     }
 
     /*******************************************************************************************************
-    * @description Only remove npsp prefix, don't attempt to remove others
-    * 
-    * @param str token name 
-    * @return token name, with namespace prefix removed, if present.
+    * @description If running in non-namespaced or non-npsp namespaced environment, this method will strip
+    * off the NPSP prefix of a field or object name and replace it with the current namespace of the 
+    * UTIL_Namespace if appropriate.
+    * @param name : the field or object name to have the namespace removed or replaced.
+    * @return name : the field or object name with namespace prefix removed or replaced.
     ********************************************************************************************************/
-    public static string removeNSPrefixNpspOnly(string str) {
-        if (str != null) {
-            if (str.startsWith('npsp__')) {
-                str = str.replaceFirst('npsp__', '');
-            } else if (str.startsWith('npsp.')) {
-                str = str.replaceFirst('npsp.', '');
+    public static String alignSchemaNSWithEnvironment(String name) {
+        String newName;
+
+        if (name != null) {
+
+            newName = StrTokenRemoveNSPrefix(name);
+
+            //If a prefix was removed by StrTokenRemoveNSPrefix then attempt to add the current NS for
+            //UTIL_Namespace (if there is one).
+            if (newName != name) {
+                newName = StrAllNSPrefix(newName);
             }
         }
 
-        return str;
+        return newName;
     }
 
     /*******************************************************************************************************
-    * @description If running in non-npsp namespace environment, then remove npsp from field/object names.
-    * 
-    * @param str token name 
-    * @return token name, with namespace prefix removed, if present.
+    * @description If running in non-namespaced or non-npsp namespaced environment, this method will strip
+    * off the NPSP prefix of a class name and replace it with the current namespace of the 
+    * UTIL_Namespace if appropriate.
+    * @param name : the class name to have the namespace removed or replaced.
+    * @return name : the class name with namespace prefix removed or replaced.
     ********************************************************************************************************/
-    public static String adjustNPSPNamespace(String name) {
-        if (getNamespace() != 'npsp') {
-            name = removeNSPrefixNpspOnly(name);
+    public static String alignClassNSWithEnvironment(String name) {
+        String newName;
+
+        if (name != null) {
+
+            newName = StrTokenRemoveClassNSPrefix(name);
+
+            //If a prefix was removed by StrTokenRemoveClassNSPrefix then attempt to add the current NS for
+            //UTIL_Namespace (if there is one).
+            if (newName != name) {
+                newName = StrTokenNSPrefixDotNotation(newName);
+            }
         }
-        return name;
+
+        return newName;
     }
 
+    /*******************************************************************************************************
+    * @description Will return true if the namespace currently being applied to Util_Namespace is different
+    * from the hardcoded NPSP namespace, which indicates that the namespace on certain field/object and class
+    * names stored in metadata may need to be changed.
+    * @return shouldAlignNamespace Boolean : indicates whether the namespace needs to be aligned
+    ********************************************************************************************************/    
+    public static Boolean shouldAlignNamespace {
+        get {
+            if (shouldAlignNamespace == null) {
+                shouldAlignNamespace = (UTIL_Namespace.getNamespace() != UTIL_Namespace.HARDCODED_NPSP_NAMESPACE);
+            }
+            return shouldAlignNamespace;
+        } set;
+    }
 }

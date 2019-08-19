@@ -241,7 +241,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static String runSingleDryRun(Id dataImportId, Id batchId) {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
-            List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(getDataImportRecordsByIds(batchId, new List<Id>{dataImportId}));
+            List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(
+                getDataImportRecordsByIds(batchId, new List<Id>{dataImportId}));
+                
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
 
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
@@ -258,7 +260,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description runs BDI Dry Run against all Data Import records based on the processing settings of a given batch
+    * @description runs BDI Dry Run against all Data Import records based on the processing settings of a 
+    *  given batch
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return DataImportModel with updated data import record row and updated totals for the batch
     */
@@ -276,14 +279,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             }
 
             if (rawDataImportsToPrepareForDryRun.size() > 0) {
-                List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(rawDataImportsToPrepareForDryRun);
+                List<DataImport__c> dataImportListToRun = 
+                    prepareDataImportsForDryRun(rawDataImportsToPrepareForDryRun);
                 BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
             }
 
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
 
             List<DataImportRow> rows = new List<DataImportRow>();
-            List<DataImport__c> dataImportsToReturn = getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
+            List<DataImport__c> dataImportsToReturn = 
+                getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
             for (DataImport__c di : dataImportsToReturn) {
                 DataImportRow processedDataImportRow = new DataImportRow(di);
                 rows.add(processedDataImportRow);
@@ -309,7 +314,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             Database.update(dataImport);
             return runSingleDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
-            String saveErrorMessage = String.format(Label.CRLP_SaveError, new List<String>{Schema.SObjectType.DataImport__c.getName()});
+            String saveErrorMessage = String.format(Label.CRLP_SaveError, 
+                new List<String>{Schema.SObjectType.DataImport__c.getName()});
             throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
         }
     }
@@ -401,7 +407,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return Decimal amount
     */
     private static AggregateResult[] getDataImportBatchTotalAmount(Id recordId) {
-        return [SELECT Sum(Donation_Amount__c)amount FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
+        return [
+            SELECT Sum(Donation_Amount__c)amount 
+            FROM DataImport__c 
+            WHERE NPSP_Data_Import_Batch__c =: recordId
+        ];
     }
 
     /*******************************************************************************************************
@@ -440,8 +450,32 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 if (dataImportDFR != null) {
 
                     if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
-                        String targetObject = BDI_DataImportService.getTargetObject(dataImportDFR.name);
-                        String targetField = BDI_DataImportService.getTargetField(dataImportDFR.name);
+
+                        String targetObject = '';
+                        String targetField = '';
+                        BDI_TargetFields targetFields = 
+                            BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField.get(
+                                dataImportDFR.getSObjectField());
+
+                        Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject = 
+                            targetFields.getTargetFieldsByTargetObject();
+
+                        // One DI field can be mapped to multiple target fields although it will be rare 
+                        // and presents some issues with picklists; here we will return info for the first 
+                        // match
+                        for (Schema.SObjectType targetSObjType: targetFieldsByTargetObject.keySet()) {
+                            String aTargetObjectName = targetSObjType.getDescribe().getName();
+                            if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(
+                                aTargetObjectName)) {
+
+                                targetObject = aTargetObjectName;
+                                List<SObjectField> mappedTargetFields = 
+                                    new List<SObjectField> (targetFieldsByTargetObject.get(targetSObjType));
+                                if(mappedTargetFields.size() > 0) {
+                                    targetField = mappedTargetFields[0].getDescribe().getName();
+                                }
+                            }
+                        }
                         DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject, targetField);
 
                         Column col = new Column();
