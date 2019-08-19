@@ -1120,11 +1120,19 @@ class NPSP(object):
 
     def batch_data_import(self, batchsize):
         """"Do a BDI import using the API and wait for it to complete"""
-        self.run_apex("""BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-                ID ApexJobId = Database.executeBatch(bdi, %d);
-                """ % int(batchsize))
+        try:
+            self.run_apex("""BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+                    ID ApexJobId = Database.executeBatch(bdi, %d);
+                    """ % int(batchsize))
 
-        self.batch_apex_wait("BDI_DataImport_BATCH")
+            self.batch_apex_wait("BDI_DataImport_BATCH")
+        except Exception as e:
+            self.python_display(repr(e))
+            self.python_display(e)
+            import traceback
+            tb = traceback.format_exc()
+            self.python_display(tb)
+            raise e
 
     def python_display(self, title, *value, say=False):
         if isinstance(value, str):
@@ -1145,3 +1153,33 @@ class NPSP(object):
     def pause(self, message):
         self.python_display(message, message, say=True)
         input(message)
+
+
+def monkeypatch_batch_py():
+    from cumulusci.core.exceptions import SalesforceException
+
+    """This is a hack which should never be merged!!!!"""
+    def _run_task(self):
+        self.poll_interval_s = int(self.options.get("poll_interval", 10))
+
+        self._poll()  # will block until poll_complete
+
+        self.logger.info("Job is complete.")
+
+        if not self.success:
+            self.logger.info("There were some batch failures.")
+            raise SalesforceException(repr(self.batch), **self.batch)
+
+        self.logger.info(
+            "%s took %d seconds to process %d batches.",
+            self.batch["ApexClass"]["Name"],
+            self.delta,
+            self.batch["TotalJobItems"],
+        )
+
+        return self.success
+
+    from cumulusci.tasks.apex.batch import BatchApexWait
+    BatchApexWait._run_task = _run_task
+
+monkeypatch_batch_py()
