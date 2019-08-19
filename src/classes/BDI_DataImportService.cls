@@ -795,66 +795,6 @@ global with sharing class BDI_DataImportService {
     private class BDIException extends Exception {}
 
     /*******************************************************************************************************
-    * @description returns the target object (api name) for a given Data Import field
-    * @param sourceFieldName the api name of the Data Import field
-    * @return String the api name of the target object for that field, derived from the help text
-    */
-    public static String getTargetObject(String sourceFieldName) {
-
-        // record type is special-cased by BDI so in some orgs, it has no help text
-        // BGE needs this object for display purposes only
-        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
-            return 'Opportunity';
-        }
-
-        sourceFieldName = sourceFieldName.toLowerCase();
-        String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
-        String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
-
-        switch on targetObject {
-            when 'Account', 'Contact', 'Opportunity' {
-                return targetObject;
-            }
-            when 'Payment' {
-                return 'npe01__OppPayment__c';
-            }
-            when 'Household' {
-                return 'npo02__Household__c';
-            }
-            when 'Address' {
-                return UTIL_Namespace.StrTokenNSPrefix('Address__c');
-            }
-            when else {
-                // any unhandled object names in help text will be ignored but shouldn't throw a blocking error
-                return targetObject;
-            }
-        }
-
-    }
-
-    /*******************************************************************************************************
-    * @description returns the target field api name for a given Data Import field
-    * @param sourceFieldName the api name of the Data Import field
-    * @return String the api name of the target field for that source field, derived from the help text
-    */
-    public static String getTargetField(String sourceFieldName) {
-
-        // record type is special-cased by BDI so in some orgs, it has no help text
-        // BGE needs this for display purposes only
-        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
-            return 'RecordTypeId';
-        }
-
-        sourceFieldName = sourceFieldName.toLowerCase();
-        String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
-        String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
-
-        return targetField;
-    }
-
-    /*******************************************************************************************************
     * @description returns a map of fields from the DataImport to fields for the given 'object',
     * from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property.
     * @param dataImportObjectName the bdi object we care about (Contact1, Contact2, Account1, etc)
