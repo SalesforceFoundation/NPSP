@@ -78,13 +78,13 @@ global abstract class TDTM_Runnable {
      */
     @future
     public static void runFuture(Set<Id> newIds, List<String> serializedOldList, String action, String objectName, String classToRunName) {
-	
+	 
         Schema.DescribeSObjectResult objResult = UTIL_Describe.getObjectDescribe(objectName);
         TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
-	
+	 
         //Get all fields for the object
         List<Schema.SObjectField> allFields = objResult.fields.getMap().values();
-	
+	 
         //Getting the records the IDs refer to
         String qn = 'SELECT ';
         for (Integer i = 0; i < allFields.size() - 1; i++) { //add all fields, except last, to query
@@ -102,7 +102,7 @@ global abstract class TDTM_Runnable {
             //we dont need to sort old list here as it is already sorted
             oldlist = new List<SObject>();
             for(String oldRecord : serializedOldList){
-                oldlist.add((sObject) JSON.deserialize(oldRecord, sObject.class));
+                oldlist.add((SObject) JSON.deserialize(oldRecord, SObject.class));
             }
         }
 

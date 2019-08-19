@@ -219,28 +219,28 @@ public class TDTM_TriggerHandler {
      * @param thisAction Trigger Event (Insert, Update, Delete, ...)
      * @param describeObj SObjectDescribe of the target object
      */
-    private static void runAsync(TDTM_Runnable classToRun, String classToRunName, List<Sobject> newList,
-            List<Sobject> oldList, TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
+    private static void runAsync(TDTM_Runnable classToRun, String classToRunName, List<SObject> newList,
+            List<SObject> oldList, TDTM_Runnable.Action thisAction, Schema.DescribeSObjectResult describeObj) {
 
-       Set<Id> setNewId;
-       if (newList != null) {
-           Map<Id,SObject> nm = new Map<Id,SObject>(newList);
-           setNewId = new Set<Id>(nm.keySet());
-       }
-	   
+        Set<Id> setNewId;
+        if (newList != null) {
+            Map<Id,SObject> nm = new Map<Id,SObject>(newList);
+            setNewId = new Set<Id>(nm.keySet());
+        }
+
         //Only serializing old list not new list (to prevent any accidental overwriting in future method)
         List<String> serializedOldList;
         if(oldlist != null) {
             serializedOldList = new List<String>();
             Map<Id,Sobject> om = new Map<Id,SObject>(oldlist);
             List <Id> listOldId = new List<Id>(om.keySet());
-			//Sorting the list so that a sObject have same index in both newList and oldList
+            //Sorting the list so that a sObject have same index in both newList and oldList
             listOldId.sort();
             for(Id recordId : listOldId){
                 serializedOldList.add(JSON.serialize(om.get(recordId)));
             }
         }
-		
+
         classToRun.runFutureNonStatic(setNewId, serializedOldList, thisAction.name(), describeObj.getName(), classToRunName);
     }
 
