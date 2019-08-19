@@ -44,8 +44,8 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
         Map<String, Schema.DescribeFieldResult> sourceFieldDescByFieldName = UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImport__c.getName());
 
-        String PAYMENT_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Payment__c');
-        String OPPORTUNITY_FIELDNAME = UTIL_Namespace.adjustNPSPNamespace('npsp__Opportunity__c');
+        String PAYMENT_FIELDNAME = SObjectType.Allocation__c.fields.Payment__c.Name;
+        String OPPORTUNITY_FIELDNAME = SObjectType.Allocation__c.fields.Opportunity__c.Name;
 
         for (BDI_ObjectWrapper objWrap : objWraps) {
             Map<String, Schema.DescribeFieldResult> targetFieldDescByFieldName = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
