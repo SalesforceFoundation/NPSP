@@ -1168,7 +1168,7 @@ def monkeypatch_batch_py():
 
         if not self.success:
             self.logger.info("There were some batch failures.")
-            raise SalesforceException(repr(self.batch), **self.batch)
+            raise SalesforceException(repr(self.batch), self.batch)
 
         self.logger.info(
             "%s took %d seconds to process %d batches.",
