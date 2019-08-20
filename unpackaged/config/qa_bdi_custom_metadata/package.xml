@@ -2,6 +2,7 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>Data_Import_Field_Mapping.ASC_Amount_cac3e1cd0</members>
+        <members>Data_Import_Field_Mapping.ASC_Opportunity_cac3e1cd0</members>
         <members>Data_Import_Field_Mapping.ASC_Role_f8860e39d</members>
         <members>Data_Import_Field_Mapping.CO1_Date_2cb21281d</members>
         <members>Data_Import_Field_Mapping.CO1_Date_37b322bd6</members>
