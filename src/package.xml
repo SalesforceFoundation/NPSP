@@ -1897,6 +1897,7 @@
         <members>mtchFindMatchedGiftsSectionHeader</members>
         <members>mtchFindMoreGifts</members>
         <members>mtchFindMoreGiftsInfo</members>
+        <members>mtchNotFindMoreGifts</members>
         <members>mtchItems</members>
         <members>mtchSearchCriteriaEmpty</members>
         <members>mtchSelectCbxTitle</members>
