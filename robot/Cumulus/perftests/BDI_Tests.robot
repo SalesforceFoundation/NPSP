@@ -76,11 +76,14 @@ Report BDI
 
     @{result} =   Salesforce Query  Account  
     ...           select=COUNT(Id)
+    ...           BillingCity=Come By Chance
+
 
     Python Display  Accounts imported    ${result}[0][expr0]
 
     @{result} =   Salesforce Query  Contact  
     ...           select=COUNT(Id)
+    ...           Title=HRH
 
     Python Display  Contacts imported    ${result}[0][expr0]
 
