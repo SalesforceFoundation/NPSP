@@ -1168,7 +1168,11 @@ def monkeypatch_batch_py():
 
         if not self.success:
             self.logger.info("There were some batch failures.")
-            raise SalesforceException(repr(self.batch), self.batch)
+            vals = {key:value for key, value in self.batch if key in 
+                    ["Id", "Status", "ExtendedStatus", "NumberOfErrors",
+                    "JobItemsProcessed", "TotalJobItems"
+                    ]}
+            raise SalesforceException("Incorrect number of jobs processed", vals)
 
         self.logger.info(
             "%s took %d seconds to process %d batches.",
