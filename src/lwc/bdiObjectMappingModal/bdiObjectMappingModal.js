@@ -8,6 +8,8 @@ import getRelationshipFieldOptions
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getRelationshipFieldOptions';
 import getMappedDISourceFields
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getMappedDISourceFields';
+import getDataImportObjectName
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getDataImportObjectName';
 
 import { registerListener, unregisterAllListeners, fireEvent }
     from 'c/pubsubNoPageRef';
@@ -39,6 +41,7 @@ import bdiOMUIOfGroupHelp from '@salesforce/label/c.bdiOMUIOfGroupHelp';
 import bdiOMUIThroughFieldHelp from '@salesforce/label/c.bdiOMUIThroughFieldHelp';
 import bdiOMUIErrorNoValidThroughThisField from '@salesforce/label/c.bdiOMUIErrorNoValidThroughThisField';
 import bdiOMUIErrorDupeName from '@salesforce/label/c.bdiOMUIErrorDupeName';
+import bdiOMUIErrorLabelNameTooLong from '@salesforce/label/c.bdiOMUIErrorLabelNameTooLong';
 import bdiOMUIErrorInvalidValues from '@salesforce/label/c.bdiOMUIErrorInvalidValues';
 import bdiOMUIErrorNoUnmappedFieldsPt1 from '@salesforce/label/c.bdiOMUIErrorNoUnmappedFieldsPt1';
 import bdiOMUIErrorNoUnmappedFieldsPt2 from '@salesforce/label/c.bdiOMUIErrorNoUnmappedFieldsPt2';
@@ -72,6 +75,7 @@ export default class bdiObjectMappingModal extends LightningElement {
         bdiOMUIThroughFieldHelp,
         bdiOMUIErrorNoValidThroughThisField,
         bdiOMUIErrorDupeName,
+        bdiOMUIErrorLabelNameTooLong,
         bdiOMUIErrorInvalidValues,
         bdiOMUIErrorNoUnmappedFieldsPt1,
         bdiOMUIErrorNoUnmappedFieldsPt2,
@@ -97,6 +101,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     @api objectOptions;
     @api isModalOpen = false;
     @api diObjectMappingSetDevName;
+    @api namespaceWrapper;
 
     @track isLoading;
     @track inSave = false;
@@ -113,7 +118,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     dataImportFieldData;
     dataImportFieldMappingSourceNames;
 
-    @api namespace;
+    _dataImportApiName;
 
     constructor() {
         super();
@@ -154,9 +159,21 @@ export default class bdiObjectMappingModal extends LightningElement {
         registerListener('closeModal', this.handleCloseModal, this);
         registerListener('objectNameChange',this.handleObjectAPINameChange,this);
 
-        this.setDefaultValues();
-        this.getDataImportFieldDescribes();
-        this.getDataImportMappedFields();
+        this.init();
+    }
+
+    /*******************************************************************************
+    * @description Group up various get data calls to apex
+    */
+    init = async() => {
+        try {
+            this._dataImportApiName = await getDataImportObjectName();
+            this.setDefaultValues();
+            this.getDataImportFieldDescribes();
+            this.getDataImportMappedFields();
+        } catch(error) {
+            this.handleError(error);
+        }
     }
 
     /*******************************************************************************
@@ -316,22 +333,30 @@ export default class bdiObjectMappingModal extends LightningElement {
 
         let result = [...this.template.querySelectorAll('lightning-combobox,lightning-input')]
         .reduce((validSoFar, inputCmp) => {
-                    //Special validation to make sure label name is not reused within the same Object Mapping set
+                    //Special validation for label name
                     if (inputCmp.name === 'masterLabel' && this.row.MasterLabel && this.objectMappings) {
-                        let dupeFound = false;
+                        let errorFound = false;
 
-                        for (let i = 0; i < this.objectMappings.length; i++) {
-                            let tempObjMapping = this.objectMappings[i];
+                        //Check to see if label name is too long
+                        if (this.row.MasterLabel.length > 40) {
+                            errorFound = true;
+                            inputCmp.setCustomValidity(this.customLabels.bdiOMUIErrorLabelNameTooLong);
+                        } else {
+                            //If the length passes then check whether it is a dupe name.
+                            for (let i = 0; i < this.objectMappings.length; i++) {
+                                let tempObjMapping = this.objectMappings[i];
 
-                            //If the labels are the same, but the Ids are not then throw an error
-                            if (tempObjMapping.MasterLabel === this.row.MasterLabel
-                                && tempObjMapping.Id !== this.row.Id) {
+                                //If the labels are the same, but the Ids are not then throw an error
+                                if (tempObjMapping.MasterLabel === this.row.MasterLabel
+                                    && tempObjMapping.Id !== this.row.Id) {
 
-                                dupeFound = true;
-                                inputCmp.setCustomValidity(this.customLabels.bdiOMUIErrorDupeName);
+                                    errorFound = true;
+                                    inputCmp.setCustomValidity(this.customLabels.bdiOMUIErrorDupeName);
+                                }
                             }
                         }
-                        if(!dupeFound){
+                        //Clear validity if no error found.
+                        if(!errorFound){
                             inputCmp.setCustomValidity('');
                         }
                     }
@@ -481,7 +506,8 @@ export default class bdiObjectMappingModal extends LightningElement {
     * for the ImportedRecordFieldName and ImportedRecordStatusField Name picklists.
     */    
     getDataImportFieldDescribes() {
-        getObjectFieldDescribes({objectName: 'DataImport__c'})
+        getObjectFieldDescribes({objectName: this._dataImportApiName,
+                                includeReferenceToObjectList: true })
             .then((data) => {
                 this.dataImportFieldData = data;
                 this.refreshImportRecordFieldOptions();
@@ -513,9 +539,19 @@ export default class bdiObjectMappingModal extends LightningElement {
                         value: fieldData.value
                     }
         
-                    if (fieldData.value !== this.row.Imported_Record_Status_Field_Name &&
-                        (fieldData.displayType === 'REFERENCE' || fieldData.displayType === 'STRING')) {
-                        this.diImportRecordFieldOptions.push(labelOption);
+                    if (fieldData.value !== this.row.Imported_Record_Status_Field_Name) {
+
+                        if (fieldData.displayType === 'REFERENCE' 
+                            && fieldData.referenceToObjectList
+                            && (this.row.Object_API_Name 
+                                && fieldData.referenceToObjectList.includes(this.row.Object_API_Name.toLowerCase())
+                                || !this.row.Object_API_Name)){
+
+                            this.diImportRecordFieldOptions.push(labelOption);
+                            
+                        } else if (fieldData.displayType === 'STRING') {
+                            this.diImportRecordFieldOptions.push(labelOption);
+                        }
                     }
         
                     if (fieldData.value !== this.row.Imported_Record_Field_Name &&
@@ -566,8 +602,15 @@ export default class bdiObjectMappingModal extends LightningElement {
             for (let i = 0; i < this.excludedDIFields.length; i++) {
                 let field = this.excludedDIFields[i].toLowerCase();
 
-                if (this.namespace !== 'npsp') {
-                    field = field.replace('npsp__','');
+                if (this.namespaceWrapper.currentNamespace !== this.namespaceWrapper.npspNamespace) {
+                    let newPrefix;
+
+                    if (this.namespaceWrapper.currentNamespace) {
+                        newPrefix = this.namespaceWrapper.currentNamespace + '__';
+                    } else {
+                        newPrefix = '';
+                    }
+                    field = field.replace(this.namespaceWrapper.npspNamespace + '__',newPrefix);
                 }
 
                 this.alreadyMappedDIFieldsMap.set(field,'');
@@ -605,6 +648,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     handleObjectAPINameChange(event){
         this.row.Object_API_Name = event.detail.value;
         this.getRelationshipFieldOptions();
+        this.refreshImportRecordFieldOptions();
     }
 
     /*******************************************************************************
