@@ -74,7 +74,7 @@ def make_factories(session, classes, Factory):
         npsp__WO_SuggestedMaintenanceDate__c = now()
         npsp__WO_Subject__c = factory.Sequence(lambda n: f"test{n + 1}")
         npsp__Contact1_Lastname__c = "Some Contact"
-        npsp__Account1_City__c = "Come By Chance"
+        npsp__Account1_Country__c = "Canada"
         npsp__Contact1_Title__c = "HRH"
         # npsp__ASC_Role__c = "match"
         # npsp__ASC_Amount__c = 100

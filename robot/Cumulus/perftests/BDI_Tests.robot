@@ -76,8 +76,7 @@ Report BDI
 
     @{result} =   Salesforce Query  Account  
     ...           select=COUNT(Id)
-    ...           BillingCity=Come By Chance
-
+    ...           BillingCountry=Canada
 
     Python Display  Accounts imported    ${result}[0][expr0]
 

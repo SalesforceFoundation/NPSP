@@ -19,6 +19,7 @@ DataImport:
     fields:
         npsp__Account1_Name__c: npsp__Account1_Name__c
         npsp__Account1_City__c: npsp__Account1_City__c
+        npsp__Account1_Country__c: npsp__Account1_Country__c
         npsp__Contact1_Lastname__c: npsp__Contact1_Lastname__c
         npsp__Contact1_Title__c: npsp__Contact1_Title__c
         npsp__Donation_Amount__c: npsp__Donation_Amount__c
