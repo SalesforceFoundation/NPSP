@@ -1168,7 +1168,8 @@ def monkeypatch_batch_py():
 
         if not self.success:
             self.logger.info("There were some batch failures.")
-            vals = {key:value for key, value in self.batch if key in 
+            vals = {key:value for key, value in self.batch.items() 
+                        if key in 
                     ["Id", "Status", "ExtendedStatus", "NumberOfErrors",
                     "JobItemsProcessed", "TotalJobItems"
                     ]}
