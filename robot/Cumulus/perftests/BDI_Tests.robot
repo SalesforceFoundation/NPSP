@@ -19,6 +19,8 @@ Suite Setup      Run Keywords   Setup BDI
 ...                             AND  Workaround Bug
 ...                             AND  Clear DataImport Records   
 ...                             AND  Generate Data
+Test Teardown      Run Keywords   Report BDI
+
 
 *** Keywords ***
 Clear DataImport Records
@@ -53,6 +55,34 @@ Setup BDI
     ...               Sleep     ${time_to_pause_after_changing_mode}
     Ensure Custom Metadata Was Deployed
 
+Report BDI
+    @{result} =   Salesforce Query  npsp__DataImport__c  
+    ...           select=COUNT(Id)
+    ...           npsp__Status__c=Imported
+
+    ${imported_records} =   Set Variable    ${result}[0][expr0]
+
+    Python Display  npsp__DataImport__c imported    ${result}[0][expr0]
+
+    @{result} =   Salesforce Query  npsp__CustomObject3__c  
+    ...           select=COUNT(Id)
+
+    Python Display  npsp__CustomObject3__c imported    ${result}[0][expr0]
+
+    @{result} =   Salesforce Query  npe01__OppPayment__c  
+    ...           select=COUNT(Id)
+
+    Python Display  npe01__OppPayment__c imported    ${result}[0][expr0]
+
+    @{result} =   Salesforce Query  Account  
+    ...           select=COUNT(Id)
+
+    Python Display  Accounts imported    ${result}[0][expr0]
+
+    @{result} =   Salesforce Query  Contact  
+    ...           select=COUNT(Id)
+
+    Python Display  Contacts imported    ${result}[0][expr0]
 
 Ensure Custom Metadata Was Deployed
     ${Default_Object_Mapping_Set} =   Salesforce Query  npsp__Data_Import_Object_Mapping__mdt
