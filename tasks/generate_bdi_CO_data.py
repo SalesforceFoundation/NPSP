@@ -123,7 +123,7 @@ def make_records(batch_size, factories):
         counter=Adder(0),
         npsp__Donation_Donor__c="Contact1",
         npsp__Opp_Do_Not_Automatically_Create_Payment__c=False,
-        npsp__Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"Contact{o.counter(0)}"),
+        npsp__Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"Contact {o.counter(0)}"),
         npsp__Opportunity_Contact_Role_1_Role__c="Influencer",
         npsp__CO1_Text__c=factory.LazyAttribute(lambda o: f"text{o.counter(0)}"),
         npsp__GAU_Allocation_1_GAU__c=gau.id,
