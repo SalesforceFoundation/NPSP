@@ -55,6 +55,8 @@
         <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
+        <members>ALLO_ScheduleAllocationBatch</members>
+        <members>ALLO_ScheduleAllocationBatch_TEST</members>
         <members>ALLO_UpdPaymentAllocations_BATCH</members>
         <members>ALLO_UpdPaymentAllocations_ERR_BATCH</members>
         <members>ALLO_UpdPaymentAllocations_TEST</members>
@@ -786,8 +788,10 @@
         <members>Allocations_Settings__c.Excluded_Opp_RecTypes__c</members>
         <members>Allocations_Settings__c.Excluded_Opp_Types__c</members>
         <members>Allocations_Settings__c.LastJobStartTimePaymentAllocations__c</members>
+        <members>Allocations_Settings__c.Payment_Allocations_Batch_Size__c</members>
         <members>Allocations_Settings__c.Payment_Allocations_Enabled__c</members>
         <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
+        <members>Allocations_Settings__c.Run_Payment_Allocations_Batch_Nightly__c</members>
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
@@ -1454,12 +1458,12 @@
         <members>alloModifyCurrency</members>
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
-        <members>alloObjectUnsupported</members>
         <members>alloNullZeroInvalidStateError</members>
+        <members>alloObjectUnsupported</members>
         <members>alloOverallocatedError</members>
         <members>alloPaidPmtsExceedsOpp</members>
-        <members>alloPaymentAllocationBatchConfigError</members>
         <members>alloPaymentAllocationBatchAllocationError</members>
+        <members>alloPaymentAllocationBatchConfigError</members>
         <members>alloPaymentAllocationBatchRecordError</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPaymentOverallocatedError</members>

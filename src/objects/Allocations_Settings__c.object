@@ -54,8 +54,20 @@
         <description>The last time the Payment Allocations batch job ran successfully</description>
         <externalId>false</externalId>
         <label>Last Job Start Time Payment Allocations</label>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Allocations_Batch_Size__c</fullName>
+        <externalId>false</externalId>
+        <label>Payment Allocations Batch Size</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Payment_Allocations_Enabled__c</fullName>
@@ -80,6 +92,14 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Run_Payment_Allocations_Batch_Nightly__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Run Payment Allocations Batch Nightly</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Use_Fiscal_Year_for_Rollups__c</fullName>
