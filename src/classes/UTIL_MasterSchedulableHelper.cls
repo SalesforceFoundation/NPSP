@@ -80,6 +80,14 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     'NPSP 08 - Level Assignment Updates'        => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'},
                     'NPSP 09 - Data Import Batch Processing'    => new List<String>{'0 0 22 ? * *', 'BDI_DataImportBatch_SCHED'}
                 };
+
+                if (UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c == true &&
+                    UTIL_CustomSettingsFacade.getAllocationsSettings().Run_Payment_Allocations_Batch_Nightly__c == true) {
+                    defaultScheduledJobs.put('ABACUS 01 - Payment Allocations - Payment Allocation Batch', new List<String>{'0 0 2 ? * *', 'ALLO_ScheduleAllocationBatch'});
+                } else {
+                    jobsToAbort.add('ABACUS 01 - Payment Allocations - Payment Allocation Batch');
+                }
+
                 if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
                     // When the Customizable Rollups Engine is enabled, the actual rollup job target classes change, but
                     // keep the naming similar and stagger the job start times slightly.
