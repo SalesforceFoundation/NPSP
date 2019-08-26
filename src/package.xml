@@ -1028,8 +1028,8 @@
         <members>Error__c.Full_Message__c</members>
         <members>Error__c.Object_Type__c</members>
         <members>Error__c.Posted_in_Chatter__c</members>
+        <members>Error__c.Related_Record_ID__c</members>
         <members>Error__c.Record_URL__c</members>
-        <members>Error__c.Related_Record_Id__c</members>
         <members>Error__c.Retry_Pending__c</members>
         <members>Error__c.Stack_Trace__c</members>
         <members>General_Accounting_Unit__c.Active__c</members>
@@ -1585,6 +1585,7 @@
         <members>bdiOMUIEditModalTitle</members>
         <members>bdiOMUIErrorDupeName</members>
         <members>bdiOMUIErrorInvalidValues</members>
+        <members>bdiOMUIErrorLabelNameTooLong</members>
         <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
         <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
         <members>bdiOMUIErrorNoValidThroughThisField</members>
