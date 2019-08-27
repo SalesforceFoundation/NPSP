@@ -633,9 +633,7 @@ public with sharing class BDI_AdditionalObjectService {
         String errorMessageToAppend;
         if (objectWrapper.objMapping.Imported_Record_Status_Field_Name__c != null) {
 
-            String importedRecordStatusField = UTIL_Namespace.StrAllNSPrefix(
-                    objectWrapper.objMapping.Imported_Record_Status_Field_Name__c
-            );
+            String importedRecordStatusField = objectWrapper.objMapping.Imported_Record_Status_Field_Name__c;
 
             String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
                     DataImport__c.SObjectType.getDescribe().getName(),
