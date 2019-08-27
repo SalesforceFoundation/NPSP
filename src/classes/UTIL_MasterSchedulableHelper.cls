@@ -83,9 +83,9 @@ public without sharing class UTIL_MasterSchedulableHelper {
 
                 if (UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c == true &&
                     UTIL_CustomSettingsFacade.getAllocationsSettings().Run_Payment_Allocations_Batch_Nightly__c == true) {
-                    defaultScheduledJobs.put('ABACUS 01 - Payment Allocations - Payment Allocation Batch', new List<String>{'0 0 2 ? * *', 'ALLO_ScheduleAllocationBatch'});
+                    defaultScheduledJobs.put('Payment Allocations - Payment Allocation Batch', new List<String>{'0 0 2 ? * *', 'ALLO_ScheduleAllocationBatch'});
                 } else {
-                    jobsToAbort.add('ABACUS 01 - Payment Allocations - Payment Allocation Batch');
+                    jobsToAbort.add('Payment Allocations - Payment Allocation Batch');
                 }
 
                 if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {

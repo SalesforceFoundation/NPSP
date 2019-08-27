@@ -32,9 +32,10 @@
 * @date 2019
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
-* @description Schedulable job to initiate Payment Allocation batch job.
+* @description Schedulable class to initiate Payment Allocation batch job.
 */
-public with sharing class ALLO_ScheduleAllocationBatch implements Schedulable{
+public with sharing class ALLO_UpdPaymentAllocations_SCHED implements Schedulable{
+    final Integer DEFAULT_BATCH_SIZE = 200;
 
     /**
      * @description This method gets executed whenever it is time for the schedulable job to run. It kicks off the Payment Allocation Batch job.
@@ -44,7 +45,7 @@ public with sharing class ALLO_ScheduleAllocationBatch implements Schedulable{
 
         // Get the batch size
         Allocations_Settings__c allocationSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        Integer batchSize = 200;
+        Integer batchSize = DEFAULT_BATCH_SIZE;
 
         if (allocationSettings.Payment_Allocations_Batch_Size__c != null && allocationSettings.Payment_Allocations_Batch_Size__c != 0) {
             batchSize = Integer.valueOf(allocationSettings.Payment_Allocations_Batch_Size__c);

@@ -59,5 +59,28 @@ private class ALLO_UpdPaymentAllocations_TEST {
     // TODO: Batch: ALLO_UpdPaymentAllocations_ERR_BATCH
     // Manually create Error Record for Opportunity configured to run through process successfully.  Execute Error Batch.  Confirm Retry Pending? value for Error record is cleared, etc. after the Allocations were successfully processed by the error Phase of the Batch job
 
+    /*******************************************************************************************************
+    * @description This method tests to make sure the schedulable class kicks off the batch class appropriately.
+    ********************************************************************************************************/
+    static testMethod void testSchedulableExecutionRunsBatch() {
+        String CRON_EXP = '0 0 0 15 3 ? *';
 
+
+        Test.startTest();
+
+        String jobId = System.schedule('ScheduleApexClassTest',  CRON_EXP, new ALLO_UpdPaymentAllocations_SCHED());
+        CronTrigger ct = [SELECT Id, CronExpression, TimesTriggered, NextFireTime FROM CronTrigger WHERE ID = :jobId];
+        System.assertEquals(CRON_EXP, ct.CronExpression);
+        System.assertEquals(0, ct.TimesTriggered);
+
+        Test.stopTest();
+
+        String batchClassName = UTIL_Namespace.StrTokenNSPrefix('ALLO_UpdPaymentAllocations_BATCH');
+        List<ApexClass> batchClasses = [SELECT Id FROM ApexClass WHERE Name =: batchClassName];
+
+        Integer batchJobAsyncJobCount = [SELECT COUNT() FROM AsyncApexJob WHERE ApexClassId =: batchClasses[0].Id];
+
+        System.assertEquals(1, batchJobAsyncJobCount, 'The batch job was not executed');
+        // Add assert here to validate result
+    }
 }
