@@ -40,6 +40,20 @@ private class ALLO_UpdPaymentAllocations_TEST {
     @isTest
     private static void incorrectPaymentAllocationsConfigurationLogsErrors() {
 
+UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
+       new Allocations_Settings__c(
+              Payment_Allocations_Enabled__c = false,
+              Default_Allocations_Enabled__c = false
+        )
+);
+
+Test.startTest();
+
+Database.executeBatch(new ALLO_UpdPaymentAllocations_BATCH(), TEST_BATCH_SIZE);
+
+Test.stopTest();
+
+// Query Error__c object, assert presence of configuration error for payment allocations batch
 
         //Database.excecuteBatch(new ALLO_UpdPaymentAllocations_TEST);
 
