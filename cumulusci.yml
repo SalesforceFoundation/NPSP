@@ -166,7 +166,7 @@ tasks:
         options:
             suites: robot/Cumulus/perftests/
             outputdir: robot/Cumulus/results
-            vars: field_mapping_method:Data Import Field Mapping,cleanup_first:core
+            vars: field_mapping_method:Data Import Field Mapping,count:5000
 
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -534,8 +534,6 @@ flows:
                 flow: qa_org_namespaced
             3:
                 task: performance_tests_CO
-                options:
-                    vars: field_mapping_method:Data Import Field Mapping,count:5000
 
     test_performance:
         steps:
