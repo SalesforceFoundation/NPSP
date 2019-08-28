@@ -1092,7 +1092,7 @@ class NPSP(object):
        object api name, record_id and the data u want to verify"""    
        if(ns_ind=='ns'):
            ns=self.get_npsp_namespace_prefix()
-           table=ns + "DataImportBatch__c"
+           table=ns + obj_api
        else:
             table=obj_api
        rec=self.salesforce.salesforce_get(table,rec_id)
