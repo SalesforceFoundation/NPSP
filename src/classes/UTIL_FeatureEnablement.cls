@@ -42,6 +42,19 @@ public without sharing class UTIL_FeatureEnablement {
         PilotEnabled
     }
 
+    /**
+     * @description public implementation to determine if the RecurringDonations 2.0 (RD2) Pilot
+     * has been enabled in the License Management Org (Wilma) for the current org (by OrgId)
+     * @return Is PilotEnable set to true
+     */
+    public static Boolean isRecurringDonations2PilotEnabled() {
+        return new UTIL_FeatureEnablement().isEnabled( FeatureName.PilotEnabled.name() );
+    }
+
+    // ==============================================================================
+    // PRIVATE INSTANCE METHODS USED BY PUBLIC STATIC METHOD(S) ABOVE
+    // ==============================================================================
+
     @TestVisible
     private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
 
@@ -55,12 +68,4 @@ public without sharing class UTIL_FeatureEnablement {
         return featureManager.checkPackageBooleanValue(apiName);
     }
 
-    /**
-     * @description public implementation to determine if the RecurringDonations 2.0 (RD2) Pilot
-     * has been enabled in the License Management Org (Wilma) for the current org (by OrgId)
-     * @return Is PilotEnable set to true
-     */
-    public static Boolean isRecurringDonations2PilotEnabled() {
-        return new UTIL_FeatureEnablement().isEnabled( FeatureName.PilotEnabled.name() );
-    }
 }
