@@ -140,7 +140,7 @@ tasks:
         class_path: tasks.generate_bdi_data.GenerateBDIData
         options:
             mapping: 'datasets/bdi_benchmark/mapping.yml'
-            num_records: 5000
+            num_records: 17000
             debug_db_path: /tmp/temp_db.db
 
     gen_test_data_bdi_ci:
@@ -148,7 +148,7 @@ tasks:
         class_path: tasks.generate_bdi_CO_data.GenerateBDIData_CO
         options:
             mapping: 'tasks.generate_bdi_CO_data.GenerateBDIData_CO'
-            num_records: 5000
+            num_records: 17000
 
     performance_tests_help_text:
         description: Runs Robot Framework performance tests
@@ -166,7 +166,7 @@ tasks:
         options:
             suites: robot/Cumulus/perftests/
             outputdir: robot/Cumulus/results
-            vars: field_mapping_method:Data Import Field Mapping,count:5000
+            vars: field_mapping_method:Data Import Field Mapping,count:17000
 
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy

@@ -133,7 +133,7 @@ Workaround Bug
 
 *** Test Cases ***
 
-Import a data batch via the API - COs - No ASCs - 5000 / 250
+Import a data batch via the API - COs - No ASCs - 17000 / 250
 
     Batch Data Import   250
 
