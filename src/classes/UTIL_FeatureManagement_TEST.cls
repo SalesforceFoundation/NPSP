@@ -38,20 +38,50 @@
 */
 @isTest
 public with sharing class UTIL_FeatureManagement_TEST {
+
     @isTest
-    private static void callsSetPackageBooleanValue() {
-        new UTIL_FeatureManagement().setPackageBooleanValue(
+    private static void shouldCallSetPackageBooleanValue() {
+        UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
+            Test.createStub(UTIL_FeatureManagement.class, new Mock());
+
+        mockFM.setPackageBooleanValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
             false
+        );
+
+        System.assertEquals(false, mockFM.checkPackageBooleanValue(
+            UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name())
         );
     }
 
     @isTest
-    private static void callsSetPackageIntegerValue() {
-        new UTIL_FeatureManagement().setPackageIntegerValue(
+    private static void shouldCallSetPackageIntegerValue() {
+        UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
+            Test.createStub(UTIL_FeatureManagement.class, new Mock());
+
+        mockFM.setPackageIntegerValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(),
             1
         );
+
+        System.assertEquals(1, mockFM.checkPackageIntegerValue(
+            UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name())
+        );
+    }
+
+    @isTest
+    private static void shouldCallCheckPackageBooleanValue() {
+        UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
+            Test.createStub(UTIL_FeatureManagement.class, new Mock());
+
+        mockFM.setPackageBooleanValue( UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(),
+            true
+        );
+
+        UTIL_FeatureEnablement featureEnablement = new UTIL_FeatureEnablement();
+        featureEnablement.featureManager = mockFM;
+        System.assertEquals(true,
+            featureEnablement.IsEnabled(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name()));
     }
 
     /*******************************************************************************************************************
@@ -76,6 +106,14 @@ public with sharing class UTIL_FeatureManagement_TEST {
 
                 when 'setPackageIntegerValue' {
                     packageIntegerValuesByName.put((String) listOfArgs[0], (Integer) listOfArgs[1]);
+                }
+
+                when 'checkPackageBooleanValue' {
+                    return packageBooleanValuesByName.get((String) listOfArgs[0]);
+                }
+
+                when 'checkPackageIntegerValue' {
+                    return packageIntegerValuesByName.get((String) listOfArgs[0]);
                 }
             }
             return null;
