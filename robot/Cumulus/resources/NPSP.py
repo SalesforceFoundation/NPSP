@@ -1199,7 +1199,7 @@ class NPSP(object):
     def pause(self, message):
         self.python_display(message, message, say=True)
         input(message)
-        
+
 def monkeypatch_batch_py():
     from cumulusci.core.exceptions import SalesforceException
 
@@ -1212,12 +1212,13 @@ def monkeypatch_batch_py():
         self.logger.info("Job is complete.")
 
         if not self.success:
-            self.logger.info("There were some batch failures.")
-            vals = {key:value for key, value in self.batch.items() 
-                        if key in 
+            self.logger.info("There may have been some batch failures.")
+            vals = {key:value for key, value in self.batch.items()
+                        if key in
                     ["Id", "Status", "ExtendedStatus", "NumberOfErrors",
                     "JobItemsProcessed", "TotalJobItems"
                     ]}
+            self.logger.info("Error values:")
             self.logger.info(repr(vals))
             if vals["NumberOfErrors"] > 0:
                 raise SalesforceException("There were import errors", vals)
