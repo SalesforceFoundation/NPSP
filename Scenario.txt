@@ -1,2 +1,2 @@
-This scenario represents an import of 17,000 DIs which should generate about
-120,000 objects
+This scenario represents an import of 12,000 DIs which should generate about
+84,000 objects
