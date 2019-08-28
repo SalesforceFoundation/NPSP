@@ -39,6 +39,10 @@
 @isTest
 public with sharing class UTIL_FeatureManagement_TEST {
 
+    /**
+     * @description Validate that the call to setPackageBooleanValue returns the correct value
+     * in the mock
+     */
     @isTest
     private static void shouldCallSetPackageBooleanValue() {
         UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
@@ -54,6 +58,10 @@ public with sharing class UTIL_FeatureManagement_TEST {
         );
     }
 
+    /**
+     * @description Validate that the call to SetPackageIntegerValue returns the correct value
+     * in the mock
+     */
     @isTest
     private static void shouldCallSetPackageIntegerValue() {
         UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
@@ -69,6 +77,11 @@ public with sharing class UTIL_FeatureManagement_TEST {
         );
     }
 
+    /**
+     * @description Validate that a boolean feature parameter can be mocked, and that the
+     * expected value is returned by the call ti isEnabled() when the mocked
+     * UTIL_FeatureManagement instance is injected into the FeatureEnablement class
+     */
     @isTest
     private static void shouldCallCheckPackageBooleanValue() {
         UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
@@ -81,7 +94,7 @@ public with sharing class UTIL_FeatureManagement_TEST {
         UTIL_FeatureEnablement featureEnablement = new UTIL_FeatureEnablement();
         featureEnablement.featureManager = mockFM;
         System.assertEquals(true,
-            featureEnablement.IsEnabled(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name()));
+            featureEnablement.isEnabled(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name()));
     }
 
     /*******************************************************************************************************************

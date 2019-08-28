@@ -51,7 +51,7 @@ public without sharing class UTIL_FeatureEnablement {
      * @return Boolean
      */
     @TestVisible
-    private Boolean IsEnabled(String apiName) {
+    private Boolean isEnabled(String apiName) {
         return featureManager.checkPackageBooleanValue(apiName);
     }
 
@@ -60,7 +60,7 @@ public without sharing class UTIL_FeatureEnablement {
      * has been enabled in the License Management Org (Wilma) for the current org (by OrgId)
      * @return Is PilotEnable set to true
      */
-    public static Boolean IsRecurringDonations2PilotEnabled() {
+    public static Boolean isRecurringDonations2PilotEnabled() {
         return new UTIL_FeatureEnablement().isEnabled( FeatureName.PilotEnabled.name() );
     }
 }
