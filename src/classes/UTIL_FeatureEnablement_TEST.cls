@@ -44,14 +44,14 @@ private class UTIL_FeatureEnablement_TEST {
      * force the IsPilotEnabled static method to return true
      */
     @isTest
-    static void shouldReturnTrueForPilotEnabled() {
-        UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
+    private static void shouldReturnTrueWhenPilotEnabled() {
+        UTIL_FeatureManagement featureManagement = (UTIL_FeatureManagement)
             Test.createStub(UTIL_FeatureManagement.class, new UTIL_FeatureManagement_TEST.Mock());
 
         UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
-        featureEnablement.featureManager = mockFM;
+        featureEnablement.featureManagement = featureManagement;
 
-        mockFM.setPackageBooleanValue(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), true);
+        featureManagement.setPackageBooleanValue(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), true);
 
         System.assertEquals(true, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
     }
@@ -60,7 +60,7 @@ private class UTIL_FeatureEnablement_TEST {
      * @description Validates that the default for the IsPilotEnabled static method is false
      */
     @isTest
-    static void shouldReturnFalseForPilotEnabled() {
+    private static void shouldReturnFalseWhenPilotEnabled() {
         System.assertEquals(false, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
     }
 }

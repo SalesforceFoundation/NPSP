@@ -40,8 +40,7 @@
 public with sharing class UTIL_FeatureManagement_TEST {
 
     /**
-     * @description Validate that the call to setPackageBooleanValue returns the correct value
-     * in the mock
+     * @description  Validates feature management package Boolean value is set
      */
     @isTest
     private static void shouldCallSetPackageBooleanValue() {
@@ -58,8 +57,7 @@ public with sharing class UTIL_FeatureManagement_TEST {
     }
 
     /**
-     * @description Validate that the call to SetPackageIntegerValue returns the correct value
-     * in the mock
+     * @description  Validates feature management package Integer value is set
      */
     @isTest
     private static void shouldCallSetPackageIntegerValue() {
@@ -76,9 +74,7 @@ public with sharing class UTIL_FeatureManagement_TEST {
     }
 
     /**
-     * @description Validate that a boolean feature parameter can be mocked, and that the
-     * expected value is returned by the call ti isEnabled() when the mocked
-     * UTIL_FeatureManagement instance is injected into the FeatureEnablement class
+     * @description Validates feature management Boolean value can be retrieved as it was set
      */
     @isTest
     private static void shouldCallCheckPackageBooleanValue() {

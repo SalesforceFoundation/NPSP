@@ -42,12 +42,16 @@ public without sharing class UTIL_FeatureEnablement {
         PilotEnabled
     }
 
-    private static UTIL_FeatureEnablement feInstance;
+    @TestVisible
+    private UTIL_FeatureManagement featureManagement = new UTIL_FeatureManagement();
+
+    private static UTIL_FeatureEnablement featureEnablement;
+
     public static UTIL_FeatureEnablement getInstance() {
-        if (feInstance == null) {
-            feInstance = new UTIL_FeatureEnablement();
+        if (featureEnablement == null) {
+            featureEnablement = new UTIL_FeatureEnablement();
         }
-        return feInstance;
+        return featureEnablement;
     }
 
     /**
@@ -63,9 +67,6 @@ public without sharing class UTIL_FeatureEnablement {
     // PRIVATE INSTANCE METHODS USED BY PUBLIC STATIC METHOD(S) ABOVE
     // ==============================================================================
 
-    @TestVisible
-    private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
-
     /**
      * @description Retrieve a boolean as "IsEnabled" for the specified Feature Parameter api name
      * @param apiName
@@ -73,7 +74,7 @@ public without sharing class UTIL_FeatureEnablement {
      */
     @TestVisible
     private Boolean isEnabled(String apiName) {
-        return featureManager.checkPackageBooleanValue(apiName);
+        return featureManagement.checkPackageBooleanValue(apiName);
     }
 
 }
