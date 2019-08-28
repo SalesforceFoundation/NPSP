@@ -1218,7 +1218,9 @@ def monkeypatch_batch_py():
                     ["Id", "Status", "ExtendedStatus", "NumberOfErrors",
                     "JobItemsProcessed", "TotalJobItems"
                     ]}
-            raise SalesforceException("Incorrect number of jobs processed", vals)
+            self.logger.info(repr(vals))
+            if vals["NumberOfErrors"] > 0:
+                raise SalesforceException("There were import errors", vals)
 
         self.logger.info(
             "%s took %d seconds to process %d batches.",
