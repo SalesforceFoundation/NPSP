@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019, Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -31,49 +31,36 @@
 * @author Salesforce.org
 * @date 2019
 * @group Utilities
-* @description Services ready to feature enablement within NPSP via LmoToSubscriber Feature Parameters
+* @group-content
+* @description Test for UTIL_FeatureManagement class. Mainly for code coverage since you can't assert on
+* System.FeatureManagement method execution
+*
 */
-public without sharing class UTIL_FeatureEnablement {
+@isTest
+private class UTIL_FeatureEnablement_TEST {
 
     /**
-     * @description Define the specific FeatureParameter ApiNames that are supported in FeatureEnablement
+     * @description Validates that the FeatureEnablement.FeatureManagement class can be mocked to
+     * force the IsPilotEnabled static method to return true
      */
-    public enum FeatureName {
-        PilotEnabled
-    }
+    @isTest
+    static void shouldReturnTrueForPilotEnabled() {
+        UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
+            Test.createStub(UTIL_FeatureManagement.class, new UTIL_FeatureManagement_TEST.Mock());
 
-    private static UTIL_FeatureEnablement feInstance;
-    public static UTIL_FeatureEnablement getInstance() {
-        if (feInstance == null) {
-            feInstance = new UTIL_FeatureEnablement();
-        }
-        return feInstance;
+        UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
+        featureEnablement.featureManager = mockFM;
+
+        mockFM.setPackageBooleanValue(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), true);
+
+        System.assertEquals(true, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
     }
 
     /**
-     * @description public implementation to determine if the RecurringDonations 2.0 (RD2) Pilot
-     * has been enabled in the License Management Org (Wilma) for the current org (by OrgId)
-     * @return Is PilotEnable set to true
+     * @description Validates that the default for the IsPilotEnabled static method is false
      */
-    public static Boolean isRecurringDonations2PilotEnabled() {
-        return UTIL_FeatureEnablement.getInstance().isEnabled( FeatureName.PilotEnabled.name() );
+    @isTest
+    static void shouldReturnFalseForPilotEnabled() {
+        System.assertEquals(false, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
     }
-
-    // ==============================================================================
-    // PRIVATE INSTANCE METHODS USED BY PUBLIC STATIC METHOD(S) ABOVE
-    // ==============================================================================
-
-    @TestVisible
-    private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
-
-    /**
-     * @description Retrieve a boolean as "IsEnabled" for the specified Feature Parameter api name
-     * @param apiName
-     * @return Boolean
-     */
-    @TestVisible
-    private Boolean isEnabled(String apiName) {
-        return featureManager.checkPackageBooleanValue(apiName);
-    }
-
 }

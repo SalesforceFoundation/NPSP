@@ -45,15 +45,14 @@ public with sharing class UTIL_FeatureManagement_TEST {
      */
     @isTest
     private static void shouldCallSetPackageBooleanValue() {
-        UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
-            Test.createStub(UTIL_FeatureManagement.class, new Mock());
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
 
-        mockFM.setPackageBooleanValue(
+        featureMgt.setPackageBooleanValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
             false
         );
 
-        System.assertEquals(false, mockFM.checkPackageBooleanValue(
+        System.assertEquals(false, featureMgt.checkPackageBooleanValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name())
         );
     }
@@ -64,15 +63,14 @@ public with sharing class UTIL_FeatureManagement_TEST {
      */
     @isTest
     private static void shouldCallSetPackageIntegerValue() {
-        UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
-            Test.createStub(UTIL_FeatureManagement.class, new Mock());
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
 
-        mockFM.setPackageIntegerValue(
+        featureMgt.setPackageIntegerValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(),
             1
         );
 
-        System.assertEquals(1, mockFM.checkPackageIntegerValue(
+        System.assertEquals(1, featureMgt.checkPackageIntegerValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name())
         );
     }
@@ -84,17 +82,14 @@ public with sharing class UTIL_FeatureManagement_TEST {
      */
     @isTest
     private static void shouldCallCheckPackageBooleanValue() {
-        UTIL_FeatureManagement mockFM = (UTIL_FeatureManagement)
-            Test.createStub(UTIL_FeatureManagement.class, new Mock());
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
 
-        mockFM.setPackageBooleanValue( UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(),
+        featureMgt.setPackageBooleanValue( UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(),
             true
         );
 
-        UTIL_FeatureEnablement featureEnablement = new UTIL_FeatureEnablement();
-        featureEnablement.featureManager = mockFM;
         System.assertEquals(true,
-            featureEnablement.isEnabled(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name()));
+            new UTIL_FeatureEnablement().isEnabled(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name()));
     }
 
     /*******************************************************************************************************************
