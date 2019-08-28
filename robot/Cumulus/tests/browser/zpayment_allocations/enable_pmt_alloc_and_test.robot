@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/PaymentPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Enable Payment Allocations
@@ -19,21 +21,21 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Click Link    &{payment}[Name]    
     Select Window
     Select Tab    Related
-    Verify Allocations    Payment Allocations
+    Load Page Object        Detail    npe01__OppPayment__c
+    Verify Payment Allocations    
     ...    &{def_gau}[Name]=$100.00
     Click Wrapper Related List Button    Payment Allocations    New
     Populate Lookup Field    General Accounting Unit    &{gau}[Name]
     Populate Field    Amount    40
     Click Modal Button    Save
     Wait Until Modal Is Closed
-    Verify Allocations    Payment Allocations
+    Verify Payment Allocations    
     ...    &{def_gau}[Name]=$60.00
     ...    &{gau}[Name]=$40.00     
     Select Tab    Details
     Click Link    &{opportunity}[Name]
     Select Tab    Related
-    Load Related List    GAU Allocations
-    Verify Gau Allocations    GAU Allocations
+    Verify Allocations    GAU Allocations
     ...    &{def_gau}[Name]=$60.00
     ...    &{gau}[Name]=$40.00
 
@@ -44,14 +46,13 @@ Update GAU Allocations and Verify Payment Allocations Sync
     Add GAU Allocation    Percent 0    60
     Click Button    Save
     Unselect Frame
-    Load Related List    GAU Allocations
-    Verify Gau Allocations    GAU Allocations
+    Verify Allocations    GAU Allocations
     ...    &{def_gau}[Name]=$40.00
     ...    &{gau}[Name]=$60.00
     # As a workaround for lightning cache issue, going to the payment record directly as it would reload the record
     Go To Record Home    &{payment}[Id]
     Select Tab    Related
-    Verify Allocations    Payment Allocations
+    Verify Payment Allocations    
     ...    &{def_gau}[Name]=$40.00
     ...    &{gau}[Name]=$60.00
     
