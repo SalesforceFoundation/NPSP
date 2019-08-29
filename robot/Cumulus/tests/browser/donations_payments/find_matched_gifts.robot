@@ -36,21 +36,17 @@ Find Matching Gifts
     Click Button With Value    Save 
     Reload Page
     Select Tab    Related  
-    Select Relatedlist    Contact Roles
-    Verify Related List Field Values
+    Verify Related Object Field Values    Contact Roles
     ...                     &{contact1}[FirstName] &{contact1}[LastName]=Matched Donor
     ...                     &{contact2}[FirstName] &{contact2}[LastName]=Matched Donor
     Go To Record Home  &{opportunity3}[Id]
     Select Tab    Related
-    Select Relatedlist    Partial Soft Credits
-    Verify Related List Field Values
-    ...                     &{contact1}[LastName] Household=$50.00
-    ...                     &{contact2}[LastName] Household=$25.00  
+    Verify Related Object Field Values    Partial Soft Credits
+    ...                     &{contact1}[FirstName] &{contact1}[LastName]=$50.00
+    ...                     &{contact2}[FirstName] &{contact2}[LastName]=$25.00  
     Go To Record Home  &{opportunity3}[Id]
     Select Tab    Related
-    Load Related List    Matched Gifts
-    Click Viewall Related List    Matched Gifts
-    Verify Related List Field Values
+    Verify Related Object Field Values    Matched Gifts
     ...                     &{opportunity1}[Name]=$50.00
     ...                     &{opportunity2}[Name]=$25.00  
     Go To Record Home  &{opportunity1}[Id]
