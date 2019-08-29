@@ -323,7 +323,7 @@ public with sharing class BDI_AdditionalObjectService {
 
         if (objMapping.Custom_Mapping_Logic_Class__c != null) {
             Type custLogicClassType = Type.forName(
-                UTIL_Namespace.adjustNPSPNamespace(objMapping.Custom_Mapping_Logic_Class__c));
+                UTIL_Namespace.alignClassNSWithEnvironment(objMapping.Custom_Mapping_Logic_Class__c));
             objMappingLogicClass = (BDI_ObjectMappingLogic)custLogicClassType.newInstance();
         } else {
             objMappingLogicClass = new BDI_ObjectMappingLogic();
@@ -633,9 +633,7 @@ public with sharing class BDI_AdditionalObjectService {
         String errorMessageToAppend;
         if (objectWrapper.objMapping.Imported_Record_Status_Field_Name__c != null) {
 
-            String importedRecordStatusField = UTIL_Namespace.StrAllNSPrefix(
-                    objectWrapper.objMapping.Imported_Record_Status_Field_Name__c
-            );
+            String importedRecordStatusField = objectWrapper.objMapping.Imported_Record_Status_Field_Name__c;
 
             String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
                     DataImport__c.SObjectType.getDescribe().getName(),

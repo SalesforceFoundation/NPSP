@@ -36,10 +36,13 @@
 */
 public class BDI_ManageAdvancedMappingCtrl {
     
-    /** @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed) */
+    /*******************************************************************************************************
+    * @description Returns a wrapper class containing the current namespace and the npsp namespace defined 
+    * in UTIL_Namespace class.
+    */
     @AuraEnabled(cacheable=true)
-    public static string getNamespacePrefix() {
-        return UTIL_Namespace.getNamespace();
+    public static NamespaceWrapper getNamespaceWrapper() {
+        return new NamespaceWrapper();
     }
 
     /*******************************************************************************************************
@@ -156,6 +159,16 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
+    * @description Get the namespaced/un-namespaced api name of DataImport__c
+    *
+    * @return String: API name of DataImport__c
+    */
+    @AuraEnabled
+    public static String getDataImportObjectName() {
+        return DataImport__c.SObjectType.getDescribe().getName();
+    }
+
+    /*******************************************************************************************************
     * @description Gets all the field describes from a given object.
     *
     * @param objectName: Object name
@@ -164,9 +177,25 @@ public class BDI_ManageAdvancedMappingCtrl {
     */
     @AuraEnabled
     public static FieldInfo[] getObjectFieldDescribes(String objectName) {
+        return getObjectFieldDescribes(objectName,false);
+    }
+
+    /*******************************************************************************************************
+    * @description Gets all the field describes from a given object, and retrieves the reference object information.
+    *
+    * @param objectName: Object name
+    * @param includeReferenceToObjectList: Boolean indicating whether the reference to objects should be returned 
+    * as part of field info.
+    *
+    * @return List: List of BDI_ManageAdvancedMappingCtrl.FieldInfo
+    */
+    @AuraEnabled
+    public static FieldInfo[] getObjectFieldDescribes(String objectName, Boolean includeReferenceToObjectList) {
         FieldInfo[] fieldInfos = new List<FieldInfo>();
 
-        objectName = UTIL_Namespace.StrAllNSPrefix(objectName);
+        if (includeReferenceToObjectList == null) {
+            includeReferenceToObjectList = false;
+        }
 
         Map<String, Schema.DescribeFieldResult> fieldDescribes =
             UTIL_Describe.getAllFieldsDescribe(objectName);
@@ -176,7 +205,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             //Only include fields that are createable by the current user
             //This will filter out System / formula fields
             if (fieldDescribes.get(key).isCreateable()) {
-                fieldInfos.add(new FieldInfo(fieldDescribes.get(key)));
+                fieldInfos.add(new FieldInfo(fieldDescribes.get(key),includeReferenceToObjectList));
             }
         }
 
@@ -230,12 +259,8 @@ public class BDI_ManageAdvancedMappingCtrl {
             DataImportFieldMappingWrapper fieldMappingWrapper =
                 (DataImportFieldMappingWrapper)JSON.deserialize(fieldMappingString, DataImportFieldMappingWrapper.class);
 
-            String diFieldMappingSetFieldName = 'npsp__Data_Import_Field_Mapping_Set__c';
-            String targetObjectMappingFieldName = 'npsp__Target_Object_Mapping__c';
-            if (NAMESPACE != 'npsp') {
-                diFieldMappingSetFieldName = diFieldMappingSetFieldName.replaceFirst('npsp__', '');
-                targetObjectMappingFieldName = targetObjectMappingFieldName.replaceFirst('npsp__', '');
-            }
+            String diFieldMappingSetFieldName = SObjectType.Data_Import_Field_Mapping__mdt.fields.Data_Import_Field_Mapping_Set__c.Name;
+            String targetObjectMappingFieldName = SObjectType.Data_Import_Field_Mapping__mdt.fields.Target_Object_Mapping__c.Name;
 
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since
             //that is what is required for the custom metadata creation.  This can't be done with the normal constructor
@@ -282,10 +307,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             DataImportObjectMappingWrapper objMappingWrapper = 
                 (DataImportObjectMappingWrapper)JSON.deserialize(objectMappingString, DataImportObjectMappingWrapper.class);
 
-            String diObjMappingSetFieldName = 'npsp__Data_Import_Object_Mapping_Set__c';
-            if (NAMESPACE != 'npsp') {
-                diObjMappingSetFieldName = diObjMappingSetFieldName.replaceFirst('npsp__','');
-            }
+            String diObjMappingSetFieldName = SObjectType.Data_Import_Object_Mapping__mdt.fields.Data_Import_Object_Mapping_Set__c.Name;
 
             //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since 
             //that is what is required for the custom metadata creation.  This can't be done with the normal constructor
@@ -469,20 +491,19 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String Target_Field_Display_Type_Label;
 
         public DataImportFieldMappingWrapper(Data_Import_Field_Mapping__mdt fieldMapping) {
-            String dataImport = 'npsp__DataImport__c';
+            String dataImport = SobjectType.DataImport__c.Name;
             String objectAPIName = fieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
             String sourceFieldAPIName = fieldMapping.Source_Field_API_Name__c;
             String targetFieldAPIName = fieldMapping.Target_Field_API_Name__c;
 
-            if (NAMESPACE != 'npsp') {
-                dataImport = 'DataImport__c';
+            if (UTIL_Namespace.shouldAlignNamespace) {
                 objectAPIName =
-                    UTIL_Namespace.removeNSPrefixNpspOnly(
+                    UTIL_Namespace.alignSchemaNSWithEnvironment(
                         fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
                 sourceFieldAPIName =
-                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+                    UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Source_Field_API_Name__c);
                 targetFieldAPIName =
-                    UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Target_Field_API_Name__c);
+                    UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Target_Field_API_Name__c);
             }
 
             Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
@@ -522,11 +543,32 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String label;
         @AuraEnabled public String value;
         @AuraEnabled public String displayType;
+        @AuraEnabled public String[] referenceToObjectList;
 
         public FieldInfo(DescribeFieldResult dfr) {
             this.value = dfr.getName();
             this.label = dfr.getLabel();
             this.displayType = dfr.getType().name();
+        }
+
+        public FieldInfo(DescribeFieldResult dfr, Boolean includeReferenceToObjectList) {
+            this.value = dfr.getName();
+            this.label = dfr.getLabel();
+            this.displayType = dfr.getType().name();
+
+            if (includeReferenceToObjectList) {
+                this.referenceToObjectList = new String[]{};
+                if (dfr.getType().name() == 'REFERENCE') {
+
+                    List<Schema.sObjectType> objTypes = dfr.getReferenceTo();
+                    
+                    if (objTypes != null) {
+                        for (Schema.sObjectType objType : objTypes) {
+                            this.referenceToObjectList.add(objType.getDescribe().getName().toLowerCase());
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -669,7 +711,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         for (String key : fieldDescribes.keySet()) {
             Schema.DescribeFieldResult dfr = fieldDescribes.get(key);
 
-            if (dfr.getType().name() == 'REFERENCE' && fieldDescribes.get(key).isCreateable() ) {
+            if (dfr.getType().name() == 'REFERENCE' && dfr.isCreateable()) {
 
                 List<Schema.sObjectType> objTypes = dfr.getReferenceTo();
 
@@ -715,5 +757,22 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
         List<String> mappedFieldNamesList = new List<String>(mappedFieldNamesSet);
         return mappedFieldNamesList;
+    }
+
+    /*******************************************************************************************************
+    * @description Simple class to contain both the current namespace, and the npsp namespace variable for
+    * use in constructing/modifying urls and schema names in lightning web components. Wrapped in a class
+    * to reduce calls.
+    */
+    public class NamespaceWrapper {
+        @AuraEnabled
+        public String currentNamespace {get;set;}
+        @AuraEnabled
+        public String npspNamespace {get;set;}  
+
+        public NamespaceWrapper(){
+            this.currentNamespace = UTIL_Namespace.getNamespace();
+            this.npspNamespace = UTIL_Namespace.HARDCODED_NPSP_NAMESPACE;
+        }
     }
 }// BDI_ManageAdvancedMappingCtrl

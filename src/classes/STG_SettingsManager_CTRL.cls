@@ -70,13 +70,16 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     * @return void 
     */
     public void onNpspSettingsLoad() {
+
         //Set TDTM config
         STG_InstallScript installScript = new STG_InstallScript();
         installScript.runNewOrgScript();
 
         UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
 
-       if (STG_Panel.runningUserIsAdmin()) {
+        if (STG_Panel.runningUserIsAdmin()) {
+            validateAllocationSettings();
+
             cleanupRecordTypeSettings();
 
             UTIL_MasterSchedulableHelper.setScheduledJobs();
@@ -103,4 +106,29 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         }
     }
 
+    /*********************************************************************************************************
+    * @description Clears Default GAU settings if the specified GAU does not exist or 
+      has been deleted.
+    * @return void 
+    */
+    private void validateAllocationSettings() {
+        if (String.isBlank(STG_Panel.stgService.stgAllo.Default__c)) {
+            return;
+        }
+
+        List<General_Accounting_Unit__c> gaus = [
+            SELECT Id, Name 
+            FROM General_Accounting_Unit__c 
+            WHERE Id = :STG_Panel.stgService.stgAllo.Default__c
+        ];
+        if (gaus.isEmpty()) {
+            //Uncheck the checkbox and clear the default GAU value
+            STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
+            STG_Panel.stgService.stgAllo.Default__c = null;
+            
+            if (!Test.isRunningTest()) {
+                upsert STG_Panel.stgService.stgAllo;
+            }
+        }
+    }
 }
