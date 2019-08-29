@@ -10,7 +10,7 @@ Update a Trigger Handler to Exclude a Username
     [tags]  unstable
 
     # Create a Contact so Trigger Handler records are created
-    &{contact1} =                API Create Contact           Email=skristem@robot.com
+    &{account} =                 API Create Organization Account
 
     # Navigate to Recurring Donation Trigger Handler Record and exclude Scratch User
     @{triggerhandler} =          Salesforce Query             Trigger_Handler__c
@@ -28,7 +28,7 @@ Update a Trigger Handler to Exclude a Username
     ${uppercaseusername} =       Convert To Uppercase         ${scratchuser}[0][Username]
     Populate Form
     ...                          Usernames to Exclude=${uppercaseusername}
-    Click Button    Save
+    Click Button                 Save
 
     # Create a Recurring Donation and verify no Opportunities are created
     &{contact} =                 API Create Contact           Email=jjoseph@robot.com

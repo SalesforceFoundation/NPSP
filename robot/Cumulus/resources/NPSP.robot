@@ -137,15 +137,6 @@ API Create DataImport
     &{data_import} =     Salesforce Get  ${ns}DataImport__c  ${dataimport_id}
     [return]         &{data_import} 
 
-API Modify Trigger
-    [Arguments]      ${contact_id}      &{fields}
-    Salesforce Update       Contact     ${contact_id}
-    ...                     &{fields}
-    @{records} =  Salesforce Query      Contact
-    ...              select=Id,FirstName,LastName,Email
-    ...              Id=${contact_id}
-    &{contact} =  Get From List  ${records}  0
-    [return]         &{contact}
    
 Create Contact
     ${first_name} =           Generate Random String
