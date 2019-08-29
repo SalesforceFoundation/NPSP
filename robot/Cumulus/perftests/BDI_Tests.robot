@@ -8,7 +8,7 @@ ${time_to_pause_after_changing_mode} =  0
 # tests won't work if there are records of these types in existence.
 ${core_objs_for_cleanup} =  npsp__DataImport__c,npsp__CustomObject3__c,npe01__OppPayment__c
 # you could also clean these up to have a cleaner test
-${other_objs_for_cleanup} =   Opportunity,Account,Contact,npsp__CustomObject1__c,MaintenancePlan,npsp__General_Accounting_Unit__c
+${other_objs_for_cleanup} =   Opportunity,Account,Contact,npsp__CustomObject1__c,MaintenancePlan,npsp__General_Accounting_Unit__c,WorkOrder
 ${cleanup_first} =   core   # could also be "all" for maximum cleanliness or "none" for fresh scratch orgs
 
 *** Settings ***
