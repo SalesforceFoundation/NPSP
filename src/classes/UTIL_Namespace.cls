@@ -248,7 +248,7 @@ public class UTIL_Namespace {
     ********************************************************************************************************/
     public static boolean isCustomerOrg() {
         try {
-            return UserInfo.isCurrentUserLicensed('npsp');
+            return UserInfo.isCurrentUserLicensed(HARDCODED_NPSP_NAMESPACE);
         } catch (Exception ex) {}
         return false;
     }
