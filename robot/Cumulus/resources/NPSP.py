@@ -513,9 +513,17 @@ class NPSP(object):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
-            self.selenium.wait_until_page_contains_element(locator)
-            self.selenium.page_should_contain_element(locator)
+            self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
             
+    def verify_related_object_field_values(self, rel_object,**kwargs):
+        """verifies the specified field,value pairs in the related object page (table format)""" 
+        self.salesforce.load_related_list(rel_object)
+        self.select_relatedlist(rel_object)
+        for name, value in kwargs.items():
+            locator= npsp_lex_locators['object']['field-value'].format(name,value)
+            self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
+    
+    
     def page_contains_record(self,title):   
         """Validates if the specified record is present on the page"""   
         locator= npsp_lex_locators['object']['record'].format(title)
@@ -524,7 +532,9 @@ class NPSP(object):
                          
                
     def click_special_object_button(self, title):
+        """Clicks a button in an object's actions but doesn't wait for a model to open"""
         locator = npsp_lex_locators['object']['button'].format(title)
+        self.selenium.wait_until_element_is_visible(locator,error="Button "+ title +" not found on the page")
         self.selenium.get_webelement(locator).click()
         
     def click_eng_plan_dropdown(self, title):
@@ -741,21 +751,14 @@ class NPSP(object):
            p_count=len(list_ele)
            assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)  
            
-    def verify_allocations(self,header, **kwargs):
-       """To verify allocations, header is related list
-          key is value in td element, value is value in th element     
-       """
-       for key, value in kwargs.items():
-           locator = npsp_lex_locators['record']['related']['allocations'].format(header,key)
-           ele = self.selenium.get_webelement(locator).text
-           assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)     
            
-    def verify_gau_allocations(self,header, **kwargs):
+    def verify_allocations(self,header, **kwargs):
        """To verify allocations, header is related list
           key is value in 1st td element, value is value in 2nd element     
        """
+       self.salesforce.load_related_list(header)
        for key, value in kwargs.items():
-           locator = npsp_lex_locators['gaus']['allocations'].format(header,key,value)
+           locator = npsp_lex_locators['record']['related']['allocations'].format(header,key,value)
            self.selenium.wait_until_page_contains_element(locator,error="Expected {} allocation of {} was not found".format(key,value))
 #            ele = self.selenium.get_webelement(locator).text
 #            assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)                      
@@ -1091,7 +1094,7 @@ class NPSP(object):
        object api name, record_id and the data u want to verify"""    
        if(ns_ind=='ns'):
            ns=self.get_npsp_namespace_prefix()
-           table=ns + "DataImportBatch__c"
+           table=ns + obj_api
        else:
             table=obj_api
        rec=self.salesforce.salesforce_get(table,rec_id)
@@ -1161,4 +1164,10 @@ class NPSP(object):
         """  
         locator = npsp_lex_locators["record"]["related"]["button"].format(heading, button_title)
         element = self.selenium.driver.find_element_by_xpath(locator)
-        self.selenium.driver.execute_script('arguments[0].click()', element)    
+        self.selenium.driver.execute_script('arguments[0].click()', element)   
+        
+    def change_view_to(self,view_name):
+        """Changes the view on the object page to the selected view"""
+        self.select_object_dropdown()
+        locator=npsp_lex_locators['link'].format(view_name)
+        self.selenium.click_element(locator)     
