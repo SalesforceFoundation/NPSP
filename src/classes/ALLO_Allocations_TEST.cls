@@ -799,6 +799,238 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(8, queryAllo[0].Amount__c, 'The default allocation should be of the total amount of the Opportunity.');
     }
 
+    /*******************************************************************************************************
+    * @description Tests that the default Allocation is created with a zero amount when default
+    * Allocations are created and the Opportunity Amount is 0 via ALLO_ALLOCATION_TDTM trigger
+    ********************************************************************************************************/
+    @isTest
+    private static void defaultAllocationsForZeroAmountOpportunityShouldRemainOnCreate() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        insert defaultGau;
+
+        General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
+        insert otherGau;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 0, null, null);
+
+        Test.startTest();
+
+        insert opps;
+
+        Test.stopTest();
+
+        list<Allocation__c>  allos = getAllocationsOrderByAmount();
+        System.assertEquals(1, allos.size(), 'One allocation should be present.');
+        system.assertEquals(0, allos[0].Amount__c, 'Allocation Amount');
+        System.assertEquals(defaultGau.Id, allos[0].General_Accounting_Unit__c, 'Allocation should be for the default');
+        System.assertEquals(opps[0].Id, allos[0].Opportunity__c, 'Opportunity');
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that $0 Allocations (Percentage based and fixed Amount) can be added for a $0
+    * Opportunity
+    ********************************************************************************************************/
+    @isTest
+    private static void createZeroAmountAllocationsForZeroAmountOpportunity() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'GAU 2');
+        gaus.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'GAU 3');
+        gaus.add(gau3);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 0, null, null);
+
+        insert opps;
+
+        Test.startTest();
+
+        List<Allocation__c> newAllos = new List<Allocation__c>();
+
+        // Percentaage Allocation for 50% to GAU 1
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau1.Id,
+                Percent__c = 50,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        // Fix Amount Allocation for $0 to GAU 2
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau2.Id,
+                Amount__c = 0,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        insert newAllos;
+
+        Test.stopTest();
+
+        List<Allocation__c> allos = getAllocationsOrderByPercent(opps[0].Id);
+        System.assertEquals (2, allos.size(), '# of Allocations');
+        System.assertEquals (gau1.Name, allos[1].General_Accounting_Unit__r.Name, 'Allocation 1 - GAU');
+        System.assertEquals (0, allos[1].Amount__c, 'Allocation 1 - Amount');
+        System.assertEquals (50, allos[1].Percent__c, 'Allocation 1 - Percent');
+        System.assertEquals (gau2.Name, allos[0].General_Accounting_Unit__r.Name, 'Allocation 0 - GAU');
+        System.assertEquals (0, allos[0].Amount__c, 'Allocation 0 - Amount');
+        System.assertEquals (null, allos[0].Percent__c, 'Allocation 0 - Percent');
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that Allocations are updated and preserved when changing an Opportunity from a
+    * non zero to a zero amount
+    ********************************************************************************************************/
+    @isTest
+    private static void chamgeOpportunityAmountFromNonZeroToZero() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'GAU 2');
+        gaus.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'GAU 3');
+        gaus.add(gau3);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 10, null, null);
+
+        insert opps;
+
+        List<Allocation__c> newAllos = new List<Allocation__c>();
+
+        // Percentaage Allocation for 50% to GAU 1
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau1.Id,
+                Percent__c = 50,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        // Fix Amount Allocation for $0 to GAU 2
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau2.Id,
+                Amount__c = 0,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        insert newAllos;
+
+        Test.startTest();
+
+        for (Opportunity opp : opps) {
+            opp.Amount = 0;
+        }
+
+        update opps;
+
+        Test.stopTest();
+
+        List<Allocation__c> allos = getAllocationsOrderByPercent(opps[0].Id);
+        System.assertEquals (2, allos.size(), '# of Allocations');
+        System.assertEquals (gau1.Name, allos[1].General_Accounting_Unit__r.Name, 'Allocation 1 - GAU');
+        System.assertEquals (0, allos[1].Amount__c, 'Allocation 1 - Amount');
+        System.assertEquals (50, allos[1].Percent__c, 'Allocation 1 - Percent');
+        System.assertEquals (gau2.Name, allos[0].General_Accounting_Unit__r.Name, 'Allocation 0 - GAU');
+        System.assertEquals (0, allos[0].Amount__c, 'Allocation 0 - Amount');
+        System.assertEquals (null, allos[0].Percent__c, 'Allocation 0 - Percent');
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that an error is generated if Opportunity Amount is 0 and a non zero fixed
+    * Amount Allocation is added
+    ********************************************************************************************************/
+    @isTest
+    private static void generateErrorForNonZeroFixedAmountAllocationIfOpportunityAmountIsZero() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'GAU 2');
+        gaus.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'GAU 3');
+        gaus.add(gau3);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 0, null, null);
+
+        insert opps;
+
+        Test.startTest();
+
+        List<Allocation__c> newAllos = new List<Allocation__c>();
+
+        // Percentaage Allocation for 50% to GAU 1
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau1.Id,
+                Percent__c = 50,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        // Fix Amount Allocation for $0 to GAU 2
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau2.Id,
+                Amount__c = 10,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        try{
+            insert newAllos;
+            System.assert(false, 'Expected an exception due to Opportunity being Overallocated.');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(Label.alloTotalExceedsOppAmt), 'Expected Exception Text: ' + Label.alloExceedsOppAmount + '; Actual: ' + e.getMessage());
+        }
+
+        Test.stopTest();
+    }
+
+
+
     // Helpers
     ////////////
 
