@@ -126,12 +126,13 @@ private class TDTM_Config_API_Test {
     private static void testCachedRecordsCreateNoTriggerRecords() {
         // Test the below scenario only if it is not customer org
         // Create a account to trigger the TDTM Triggerhandler
-        if (!UTIL_Namespace.isCustomerOrg()) {
-            Account acct = new Account(Name='Test Account 876');
-            insert acct;
-            List<Trigger_Handler__c> handlers = [select id, name from Trigger_Handler__c];
-            System.assertEquals(0, handlers.size());
+        if (UTIL_Namespace.isCustomerOrg()) {
+            return;
         }
+        Account acct = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1,null)[0];
+        insert acct;
+        List<Trigger_Handler__c> handlers = [select id, name from Trigger_Handler__c];
+        System.assertEquals(0, handlers.size());    
     }
 
 }
