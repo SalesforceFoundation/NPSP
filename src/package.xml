@@ -327,6 +327,12 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>RD2_InterfaceApi</members>
+        <members>RD2_NamingService</members>
+        <members>RD2_NamingService_TEST</members>
+        <members>RD2_Settings</members>
+        <members>RD2_Settings_TEST</members>
+        <members>RD2_TestRecurringDonationBuilder</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -1183,6 +1189,7 @@
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.EnableAutomaticNaming__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
@@ -1397,6 +1404,7 @@
         <members>RP_WebinarLinkLabel</members>
         <members>RP_YoutubeChannel</members>
         <members>RecurringDonationAccountAndContactError</members>
+        <members>RecurringDonationNameSuffix</members>
         <members>Saved</members>
         <members>Settings_not_Saved</members>
         <members>SmartyStreets_Help_Text</members>

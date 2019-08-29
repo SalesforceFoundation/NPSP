@@ -14,4 +14,14 @@
         <type>Number</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>EnableAutomaticNaming__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Defines if Recurring Donations naming is auto-generated as: {!DonorName} {CurrencySymbol}{!Amount}{ISO Code} - Recurring</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Defines if Recurring Donations naming is auto-generated as: {!DonorName} {CurrencySymbol}{!Amount}{ISO Code} - Recurring</inlineHelpText>
+        <label>Enable Automatic Naming</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
 </CustomObject>
