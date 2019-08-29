@@ -2313,6 +2313,8 @@
         <members>stgPowerOfUsHub</members>
         <members>stgReset</members>
         <members>stgSelectOne</members>
+        <members>stgStatusEnabled</members>
+        <members>stgStatusDisabled</members>
         <members>stgTools</members>
         <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>

@@ -19,13 +19,13 @@
                     </div>
 
                     <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
-                        <span class="slds-form-element__label slds-m-bottom_none">Customizable Rollups</span>
+                        <span class="slds-form-element__label slds-m-bottom_none">{!$Label.CRLP_RollupSummary}</span>
                         <apex:inputCheckbox onClick="onToggle(); return false;" id="enableCRLPToggle" html-name="checkbox-toggle-2" value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}"
                             html-aria-describedby="checkbox-toggle-2" />
                         <span class="slds-checkbox_faux_container" aria-live="assertive">
                             <span class="slds-checkbox_faux"></span>
-                            <span class="slds-checkbox_on">Enabled</span>
-                            <span class="slds-checkbox_off">Disabled</span>
+                            <span class="slds-checkbox_on">{!$Label.stgStatusEnabled}</span>
+                            <span class="slds-checkbox_off">{!$Label.stgStatusDisabled}</span>
                         </span>
                     </label>
 
@@ -49,7 +49,7 @@
                 <br/>
 
                 <div class="slds-section">
-                    <div class="slds-section-title_divider">Reset Customizable Rollups</div>
+                    <div class="slds-section-title_divider">{!$Label.stgCRLPReset}</div>
                 </div>
 
                 <div class="slds-m-vertical_medium">

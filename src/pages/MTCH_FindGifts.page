@@ -28,7 +28,7 @@
         <apex:form >
 
             <!-- PAGE HEADER -->
-            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
+            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!$ObjectType.Opportunity.label}"
                            parentAction="/006" parentRecordName="{!Opportunity.Name}"
                            parentRecordAction="/{!Opportunity.Id}" headerLabel="{!$Label.mtchFindMatchedGiftsSectionHeader}"
                            icon="opportunity" iconCategory="standard"
