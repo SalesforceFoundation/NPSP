@@ -47,4 +47,4 @@ Update a Trigger Handler to Exclude a Username
     Load Related List            Recurring Donations
     Check Related List Values    Recurring Donations          Robot Recurring Donation
     Load Related List            Opportunities
-    Verify Occurrence            Opportunities                0
+    Verify Occurrence            Opportunities                0 
