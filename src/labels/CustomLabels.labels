@@ -1462,7 +1462,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resources Page - Title</shortDescription>
-        <value>Welcome to Salesforce and the</value>
+        <value>Welcome to Salesforce and the Nonprofit Success Pack (NPSP)!</value>
     </labels>
     <labels>
         <fullName>RP_TrailheadLinkLabel</fullName>
