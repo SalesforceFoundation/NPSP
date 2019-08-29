@@ -53,5 +53,5 @@ class NPSPSettingsPage(BasePage):
                     i += 1
             else:
                 raise AssertionError(
-                    "Timed out waiting for Configure Advanced Mapping button to display"
+                    "Timed out waiting for Advanced Mapping is enabled to display"
                 )

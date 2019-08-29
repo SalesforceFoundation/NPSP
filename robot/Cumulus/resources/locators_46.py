@@ -27,13 +27,13 @@ npsp_lex_locators={
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
             'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
-            'title':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]',
+            'title':'//div[contains(@class, "slds-card")]/header//a[./span[text()="{}"]]',
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
             'item':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//h3//a",
             'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
             'link':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//table[contains(@class,'forceRecordLayout')]/tbody/tr[.//th/div/a[contains(@class,'textUnderline')]][.//td//span[text()='{}']]/th//a",
             'dd-link':'//div[contains(@class,"actionMenu")]//a[@title="{}"]',
-            'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/th",
+            'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/td[2]/span[text()='{}']",
          },
     },
     "alert": "//span[contains(@class,'toastMessage')]/a",
@@ -46,6 +46,7 @@ npsp_lex_locators={
     'frame_by_name': "//iframe[contains(@name, '${}')]",
     'id':'//*[contains(@id,"{}")]',
     'button':'//input[contains(@value,"{}")]',
+    'link':'//a[./span[text()="{}"]]',
     'link-text':'//a[text()="{}"]',
     'link-title':'//a[@title="{}"]',
     'checkbox':{
@@ -121,7 +122,7 @@ npsp_lex_locators={
         'record':'//tbody//a[text()= "{}"]',
         'button': "css: div.windowViewMode-normal ul.forceActionsContainer.oneActionsRibbon a[title='{}']",
         'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
-        
+        'field-value':'//tbody/tr[./th//a[text()="{}"]]/td[.//span[text()="{}"]]',
     },
     'engagement_plan':{
         'input_box':'//fieldset[./legend[text()="{}"]]/div[@class="slds-grid"]//div[@class="requiredInput"]/input',
@@ -145,10 +146,10 @@ npsp_lex_locators={
         'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
         'text':'//*[@id="j_id0:vfForm:j_id76:util_formfield:inputx:util_inputfield:inputX"]',
         'field-value':"//div[contains(@class,'slds-form-element')][./span[text()='{}']]/following-sibling::div",
+        'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/th",
         },
     'gaus':{
         'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',
-        'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/td[2]/span[text()='{}']",
         },
     'npsp_settings':{
         'panel_sub_link':'//ul/li/a[text()="{}"]',
@@ -165,6 +166,7 @@ npsp_lex_locators={
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
+        'checkbox':'//tr[./th//a[@title="{}"]]/td//span[@class="slds-checkbox--faux"]'
         },
     'bge':{
         'checkbox':'//label/span[text()="{}"]//parent::label/span[@class="slds-checkbox_faux"]',
