@@ -513,7 +513,7 @@ class NPSP(object):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
-            self.selenium.wait_until_page_contains_element(locator,error="could not find field with specified value on the page")
+            self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
             
     def verify_related_object_field_values(self, rel_object,**kwargs):
         """verifies the specified field,value pairs in the related object page (table format)""" 
@@ -521,7 +521,7 @@ class NPSP(object):
         self.select_relatedlist(rel_object)
         for name, value in kwargs.items():
             locator= npsp_lex_locators['object']['field-value'].format(name,value)
-            self.selenium.wait_until_page_contains_element(locator,error="could not find field with specified value on the page")
+            self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
     
     
     def page_contains_record(self,title):   
@@ -532,7 +532,9 @@ class NPSP(object):
                          
                
     def click_special_object_button(self, title):
+        """Clicks a button in an object's actions but doesn't wait for a model to open"""
         locator = npsp_lex_locators['object']['button'].format(title)
+        self.selenium.wait_until_element_is_visible(locator,error="Button "+ title +" not found on the page")
         self.selenium.get_webelement(locator).click()
         
     def click_eng_plan_dropdown(self, title):
@@ -1162,4 +1164,10 @@ class NPSP(object):
         """  
         locator = npsp_lex_locators["record"]["related"]["button"].format(heading, button_title)
         element = self.selenium.driver.find_element_by_xpath(locator)
-        self.selenium.driver.execute_script('arguments[0].click()', element)    
+        self.selenium.driver.execute_script('arguments[0].click()', element)   
+        
+    def change_view_to(self,view_name):
+        """Changes the view on the object page to the selected view"""
+        self.select_object_dropdown()
+        locator=npsp_lex_locators['link'].format(view_name)
+        self.selenium.click_element(locator)     

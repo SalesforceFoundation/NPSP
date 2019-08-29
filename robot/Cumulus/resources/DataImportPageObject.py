@@ -11,11 +11,7 @@ class DataImportPage(ListingPage):
         return self.builtin.get_library_instance('NPSP')
     
     
-    def change_view_to(self,view_name):
-        """Changes the view on the object page to the selected view"""
-        self.npsp.select_object_dropdown()
-        locator=npsp_lex_locators['link'].format(view_name)
-        self.selenium.click_element(locator)
+    
         
     def click(self,btn_name):
         """Clicks button with specified name on Data Import Page"""
