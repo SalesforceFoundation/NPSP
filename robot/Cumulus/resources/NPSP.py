@@ -21,11 +21,11 @@ from cumulusci.tasks.apex.anon import AnonymousApexTask
 from cumulusci.core.config import TaskConfig
 from cumulusci.tasks.apex.batch import BatchApexWait
 
-from locators_45 import npsp_lex_locators as locators_45
 from locators_46 import npsp_lex_locators as locators_46
+from locators_47 import npsp_lex_locators as locators_47
 locators_by_api_version = {
+    47.0: locators_47,   # winter '20
     46.0: locators_46,  # Summer '19
-    45.0: locators_45,  # Spring '19
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
