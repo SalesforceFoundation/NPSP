@@ -1,13 +1,10 @@
 from datetime import date, datetime
 import math
 
-from .generate_bdi_CO_data import GenerateBDIData_CO
 import factory
-from .factory_utils import Adder
+from .factory_utils import Adder, Models
 
 # Per https://salesforce.quip.com/gLfGAPtqVzUS
-
-Models = GenerateBDIData_CO.Models
 
 
 def now():
