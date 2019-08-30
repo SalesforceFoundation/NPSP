@@ -147,7 +147,7 @@ tasks:
         description: 'Generate test data for BDI benchmarks into an org'
         class_path: tasks.generate_bdi_CO_data.GenerateBDIData_CO
         options:
-            mapping: 'tasks.generate_bdi_CO_data.GenerateBDIData_CO'
+            mapping: 'datasets/bdi_benchmark/mapping-CO.yml'
             num_records: 12000
 
     performance_tests_help_text:
