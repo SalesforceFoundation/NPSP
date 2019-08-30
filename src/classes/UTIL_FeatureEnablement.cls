@@ -63,10 +63,6 @@ public without sharing class UTIL_FeatureEnablement {
         return UTIL_FeatureEnablement.getInstance().isEnabled( FeatureName.PilotEnabled.name() );
     }
 
-    // ==============================================================================
-    // PRIVATE INSTANCE METHODS USED BY PUBLIC STATIC METHOD(S) ABOVE
-    // ==============================================================================
-
     /**
      * @description Retrieve a boolean as "IsEnabled" for the specified Feature Parameter api name
      * @param apiName
