@@ -352,6 +352,20 @@ private with sharing  class ALLO_PaymentSync_TEST {
             'Failure message should contain ' + labelMsg);
 
         errMessage = '';
+
+        try {
+            Allocation__c allocationToUpdate = queryAllocations[1];
+            allocationToUpdate.General_Accounting_Unit__c = gaus[0].Id;
+            update allocationToUpdate;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        labelMsg = String.format(System.Label.alloRemoveOppWithPmt, new String[] {opportunity.Name, opportunity.Id, queryAllocations[1].Name, queryAllocations[1].Id});
+        System.assert(errMessage.contains(labelMsg),
+                'Failure message should contain ' + labelMsg);
+
+        errMessage = '';
         try {
             queryAllocations[2].Amount__c = 200;
             queryAllocations[2].Percent__c = 20.0;

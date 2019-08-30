@@ -62,6 +62,11 @@ public class ALLO_PaymentSync_SVC {
         //This is needed for deletes, where deleted allocation is not available in other context vars
         Map<Id, Allocation__c> triggerAllocationsByGAUId = new Map<Id, Allocation__c>();
 
+        // This is a mapping of the GAU Id to Allocation for the trigger.old for updates and deletes, but trigger.new for insert.
+        // This is used for the validation where the we make sure the allocation on the opportunity level
+        // isn't removed/updated if there are paid payments associated with it.
+        Map<Id, Allocation__c> oldTriggerAllocationsByGAUIdForValidation = new Map<Id, Allocation__c>();
+
         //list of allocations by GAU
         Map<Id, List<Allocation__c>> opportunityAllocationsByGAU = new Map<Id, List<Allocation__c>>();
         Map<Id, List<Allocation__c>> paymentAllocationsByGAU = new Map<Id, List<Allocation__c>>();
@@ -106,12 +111,13 @@ public class ALLO_PaymentSync_SVC {
     * @description Constructor for Payment Sync Service
     * @param List<Allocation__c> allocations - a list of Allocations to process
     ********************************************************************************************************/
-    public ALLO_PaymentSync_SVC(List<Allocation__c> allocations) {
+    public ALLO_PaymentSync_SVC(List<Allocation__c> allocations, List<Allocation__c> allocationsForValidation) {
 
         Set<Id> paymentIds = new Set<Id>();
         Set<Id> opportunityIds = new Set<Id>();
         Map<Id, List<npe01__OppPayment__c>> paymentsByOpportunityId = new Map<Id, List<npe01__OppPayment__c>>();
         Map<Id, Map<Id, Allocation__c>> triggerAllocationsByGAUByParentId = new Map<Id, Map<Id, Allocation__c>>();
+        Map<Id, Map<Id, Allocation__c>> oldTriggerAllocationsByGAUByParentIdForValidation = new Map<Id, Map<Id, Allocation__c>>();
 
         // Just so we are not repeatedly retrieving it in loops.  It is cached, but still..
         Id defaultGAU = UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c;
@@ -136,6 +142,21 @@ public class ALLO_PaymentSync_SVC {
 
             if (allocation.Payment__c != null) {
                 paymentIds.add(allocation.Payment__c);
+            }
+        }
+
+        for (Allocation__C allocation : allocationsForValidation) {
+            Map<Id, Allocation__c> allocationsByGAUId = null;
+
+            // Determine if parent of Allocation is Opportunity or Payment
+            Id parentId = (allocation.Opportunity__c != null) ? allocation.Opportunity__c : allocation.Payment__c;
+
+            if (parentId != null) {
+                allocationsByGAUID = (oldTriggerAllocationsByGAUByParentIdForValidation.containsKey(parentId)) ? oldTriggerAllocationsByGAUByParentIdForValidation.get(parentId) : new Map<Id, Allocation__c>();
+                if(!oldTriggerAllocationsByGAUByParentIdForValidation.containsKey(parentId)) {
+                    oldTriggerAllocationsByGAUByParentIdForValidation.put(parentId, allocationsByGAUId);
+                }
+                allocationsByGAUId.put(allocation.General_Accounting_Unit__c, allocation);
             }
         }
 
@@ -177,6 +198,12 @@ public class ALLO_PaymentSync_SVC {
                 context.triggerAllocationsByGAUId = triggerAllocationsByGAUByParentId.get(opportunity.Id);
             } else {
                 context.triggerAllocationsByGAUId = new Map<Id, Allocation__c>();
+            }
+
+            if (oldTriggerAllocationsByGAUByParentIdForValidation.containsKey(opportunity.Id)) {
+                context.oldTriggerAllocationsByGAUIdForValidation = oldTriggerAllocationsByGAUByParentIdForValidation.get(opportunity.Id);
+            } else {
+                context.oldTriggerAllocationsByGAUIdForValidation = new Map<Id, Allocation__c>();
             }
 
             for (Allocation__c oppAllocation : opportunity.Allocations__r) {
@@ -440,7 +467,7 @@ public class ALLO_PaymentSync_SVC {
     ********************************************************************************************************/
     public void syncOpportunityAllocationsToPayments(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
-        
+
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
@@ -588,18 +615,18 @@ public class ALLO_PaymentSync_SVC {
         //handle payment allocations for deleted opportunity allocations
         for (Id gau : context.paymentAllocationsByGAU.keySet()) {
             if (!context.opportunityAllocationsByGAU.containsKey(gau) && gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
-
-                 for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
+                for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
                     npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
 
                     //since we can't delete paid payment allocations
                     //add error to opportunity allocation if we have paid payment allocations for this GAU
+
                     if (payment.npe01__Paid__c &&
-                        context.triggerAllocationsByGAUId.containsKey(gau)) {
+                        context.oldTriggerAllocationsByGAUIdForValidation.containsKey(gau)) {
                         // flag the allocation we are attempting to delete with an error;
                         // this record is not available in the opportunityAllocationsByGAU map
-                        String gauName = context.triggerAllocationsByGAUId.get(gau).Name;
-                        String gauId = context.triggerAllocationsByGAUId.get(gau).Id;
+                        String gauName = context.oldTriggerAllocationsByGAUIdForValidation.get(gau).Name;
+                        String gauId = context.oldTriggerAllocationsByGAUIdForValidation.get(gau).Id;
                         throw new PaymentSyncException(String.format(Label.alloRemoveOppWithPmt, new String[] {context.Opportunity.Name, context.Opportunity.Id, gauName, gauId}));
                     } else {
                         if (!payment.npe01__Paid__c) {
