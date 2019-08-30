@@ -33,7 +33,7 @@ class BatchDataTask(BaseTask):
         database_url = self.options.get("database_url")
         if not database_url:
             sqlite_path = "generated_data.db"
-            self.logger.info("No database URL: creating sqlite file {sqlite_path}")
+            self.logger.info(f"No database URL: creating sqlite file {sqlite_path}")
             database_url = "sqlite:///" + sqlite_path
 
         num_records = int(self.options["num_records"])
