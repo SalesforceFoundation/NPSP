@@ -264,8 +264,8 @@ public class UTIL_AbstractCommon_BATCH_TEST {
     @isTest
     public static void validateValidQuery() {
         // UserInfo.getUserId is not valid for Account, but doesn't matter for this test because we are only validating syntactical correctness.
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UserInfo.getUserId() + '\' or Id=\'' + UserInfo.getUserId() + '\' or Id=\'' + UserInfo.getUserId() + '\'');
-        tab.setTestWhereClause('Id= \'' + UserInfo.getUserId() + '\' or Id=\'' + UserInfo.getUserId() + '\' or Id=\'' + UserInfo.getUserId() + '\'');
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
+        tab.setTestWhereClause('OwnerId= \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
 
         System.assertEquals(null, tab.validateQuery(), 'No Exception expected');
     }
@@ -275,9 +275,9 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      */
     @isTest
     public static void validateInvalidQuery() {
-        // UserInfo.getUserId is not valid for Account, but doesn't matter for this test because we are only validating syntactical correctness, or in this case, a lack of...
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UserInfo.getUserId() + '\' or Id=\'' + UserInfo.getUserId() + '\' or Id=\'' + UserInfo.getUserId() + '\'');
-        tab.setTestWhereClause('Id equals \'' + UserInfo.getUserId() + '\' or Id equals \'' + UserInfo.getUserId() + '\' or Id equals \'' + UserInfo.getUserId() + '\'');
+        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
+        //Invalid Where Clause
+        tab.setTestWhereClause('OwnerId equals \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
 
         System.assertNotEquals(null, tab.validateQuery(), 'Exception expected');
     }
