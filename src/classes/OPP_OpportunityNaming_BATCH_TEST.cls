@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019, Salesforce.org
+    Copyright (c) 2015, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2019
+* @date 2015
 * @group Opportunity
 * @group-content
 * @description Unit Tests for the Opportunity Naming batch job
@@ -50,15 +50,16 @@ private with sharing class OPP_OpportunityNaming_BATCH_TEST {
      */
     @isTest
     private static void shouldRenameOpportunitiesInChunks() {
-        OPP_OpportunityNaming_BATCH.defaultQueryLimit = NUM_OPPS - 1;
         OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
 
         Test.startTest();
         Database.executeBatch(batch);
         Test.stopTest();
 
+        // Record count for test is small enough for only one execution
+        // LDV Chunking etc. tested for base class
         List<AsyncApexJob> jobsApexBatch = queryOppNamingBatchJobs();
-        System.assertEquals(2, jobsApexBatch.size(), 'Batch should run for each chunk of opportunities');
+        System.assertEquals(1, jobsApexBatch.size(), 'Batch should run for each chunk of opportunities');
 
         for (Opportunity opp : [SELECT Name FROM Opportunity]) {
             System.assertEquals(false, opp.Name.startsWith('Test Opp'),
@@ -67,137 +68,29 @@ private with sharing class OPP_OpportunityNaming_BATCH_TEST {
     }
 
     /**
-     * @description Confirms that batch query locator retrieves Opportunitie in order of Id
+     * @description Constructs Batch with a different Batch Size
      */
     @isTest
-    private static void shouldQueryAllOpportunitiesInIdOrder() {
-        List<Opportunity> testOpps = [SELECT Id FROM Opportunity ORDER BY Id];
-
-        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH(testOpps[0].Id);
-
-        String query = batch.start(null).getQuery();
-        List<Opportunity> queriedOpps = Database.query(query);
-        System.assertEquals(NUM_OPPS - 1, queriedOpps.size(), 'Only the offset opportunities should have been returned');
-
-        testOpps.remove(0);
-        for (Integer i = 0; i < NUM_OPPS - 1; i++) {
-            System.assertEquals(testOpps[i].Id, queriedOpps[i].Id,
-                'The opportunities should have been queried in order of Id');
-        }
+    private static void constructBatchWithDifferentBatchSize() {
+        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH(10);
+        System.assertEquals (10, batch.getBatchSize(), 'Batch Size');
     }
 
     /**
-     * @description Confirms that batch query locator uses an Id offset when constructed with an Id parameter
+     * @description Coverage of Schedulable Method
      */
-    @isTest
-    private static void shouldQueryOffsetOpportunitiesWhenGivenId() {
-        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
-        List<Opportunity> testOpps = [SELECT Id FROM Opportunity ORDER BY Id];
-
-        String query = batch.start(null).getQuery();
-        List<Opportunity> queriedOpps = Database.query(query);
-        System.assertEquals(NUM_OPPS, queriedOpps.size(), 'All of the opportunities should have been returned');
-
-        for (Integer i = 0; i < NUM_OPPS; i++) {
-            System.assertEquals(testOpps[i].Id, queriedOpps[i].Id,
-                'The opportunities should have been queried in order of Id');
-        }
-    }
-
-    /**
-     * @description Confirms that batch query locator is limited
-     */
-    @isTest
-    private static void shouldLimitQuery() {
-        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
-        String query = batch.start(null).getQuery();
-        System.assert(query.endsWith('LIMIT 10000000'), 'The query should have the correct limit');
-    }
-
-    /**
-     * @description Confirms that the execute method tracks the Id of the last Opportunity processed
-     */
-    @isTest
-    private static void shouldTrackLastOpportunityIdProcessed() {
-        List<Opportunity> testOpps = [SELECT Id, Name FROM Opportunity ORDER BY Id];
-
+    static testMethod void testSchedulable() {
         OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
 
         Test.startTest();
-        batch.execute(null,testOpps);
+
+        String CRON_EXP = '0 0 23 * * ?';
+        String jobId = System.schedule('Test Sched', CRON_EXP, batch);
+        CronTrigger ct = [SELECT Id, CronExpression, TimesTriggered, NextFireTime FROM CronTrigger WHERE id = :jobId];
+        System.assertEquals(CRON_EXP, ct.CronExpression);
+        System.assertEquals(0, ct.TimesTriggered);
+
         Test.stopTest();
-
-        Id expectedId = testOpps[NUM_OPPS - 1].Id;
-        System.assertEquals(expectedId, batch.lastOppIdProcessed,
-            'The execute method should track the Id of the last opportunity processed');
-    }
-
-    /**
-     * @description Confirms that the finish method chains the next batch with an offset
-     * of the last Opportunity Id processed
-     */
-    @isTest
-    private static void shouldChainNextBatchOffsetByLastRecordProcessed() {
-        List<Opportunity> testOpps = [SELECT Id FROM Opportunity ORDER BY Id];
-
-        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
-        batch.lastOppIdProcessed = testOpps[0].Id;
-
-        Test.startTest();
-        batch.finish(null);
-        Test.stopTest();
-
-        List<AsyncApexJob> jobsApexBatch = queryOppNamingBatchJobs();
-        System.assertEquals(1, jobsApexBatch.size(), 'The naming batch should be started again');
-
-        Opportunity offsetOpportunity = [SELECT Name FROM Opportunity WHERE Id = :testOpps[0].Id];
-        System.assert(offsetOpportunity.Name.startsWith('Test Opp'),
-            'The offset opportunity should not have been processed in the chained batch');
-
-        for (Opportunity opp : [SELECT Name FROM Opportunity WHERE Id != :testOpps[0].Id]) {
-            System.assertEquals(false, opp.Name.startsWith('Test Opp'),
-                'The remaining opportunities should have been renamed: ' + opp.Name);
-        }
-    }
-
-    /**
-     * @description Confirms that the finish method does not chain the next batch
-     * if it fails to capture the last Opportunity Id processed
-     */
-    @isTest
-    private static void shouldNotChainNextBatchIfLastOppIdProcessedIsNull() {
-        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
-
-        Test.startTest();
-        batch.finish(null);
-        Test.stopTest();
-
-        List<AsyncApexJob> jobsApexBatch = [
-            SELECT Id FROM AsyncApexJob
-            WHERE JobType = 'BatchApex'
-            AND ApexClass.Name = 'OPP_OpportunityNaming_BATCH'
-        ];
-
-        System.assert(jobsApexBatch.isEmpty(), 'The naming batch should not be started again');
-    }
-
-    /**
-     * @description Confirms that the finish method does not chain the next batch
-     * if there are no more records to process
-     */
-    @isTest
-    private static void shouldNotChainNextBatchIfThereAreNoMoreRecordsToProcess() {
-        List<Opportunity> testOpps = [SELECT Id FROM Opportunity ORDER BY Id];
-
-        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
-        batch.lastOppIdProcessed = testOpps[testOpps.size()-1].Id;
-
-        Test.startTest();
-        batch.finish(null);
-        Test.stopTest();
-
-        List<AsyncApexJob> jobsApexBatch = queryOppNamingBatchJobs();
-        System.assert(jobsApexBatch.isEmpty(), 'The naming batch should not be started again');
     }
 
     /**
