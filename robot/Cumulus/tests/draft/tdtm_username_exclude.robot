@@ -25,9 +25,12 @@ Update a Trigger Handler to Exclude a Username
     Select Tab                   Details
     Click Link                   link=Show more actions
     Click Link                   link=Edit
+    Capture Page Screenshot
     ${uppercaseusername} =       Convert To Uppercase         ${scratchuser}[0][Username]
+    Capture Page Screenshot
     Populate Form
     ...                          Usernames to Exclude=${uppercaseusername}
+    Capture Page Screenshot
     Click Button                 Save
 
     # Create a Recurring Donation and verify no Opportunities are created
