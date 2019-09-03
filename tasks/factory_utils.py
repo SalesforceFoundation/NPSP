@@ -2,7 +2,7 @@ import collections
 from abc import ABC, abstractmethod
 from importlib import import_module
 
-from factory import enums, Factory
+from factory import enums, Factory, base
 
 from .data_generation_base import BatchDataTask
 
@@ -31,21 +31,12 @@ class Adder:
 class Factories:
     unflushed_record_counter = 0
 
-    def __init__(self, session, collection):
-        """This class can deal with dicts of factory classes,
-           or module namespaces.
-
-           In the namespace-case it will also filter out objects which are
-           note FactoryBoy classes."""
-        if isinstance(collection, collections.Mapping):
-            pass
-        else:
-            collection = {name: value for name, value in vars(collection)}
+    def __init__(self, session, orm_classes, collection):
+        """Add a session to factories and then store them."""
 
         self.factory_classes = {
             key: self.add_session(value, session)
             for key, value in collection.items()
-            if isinstance(value, type) and issubclass(value, Factory)
         }
 
     @staticmethod
@@ -59,6 +50,7 @@ class Factories:
         cls = self.factory_classes.get(classname, None)
         assert cls, f"Cannot find a factory class named {classname}. Did you misspell it?"
         for _ in range(batchsize):
+            print("Creating", cls, cls._meta.sqlalchemy_session, _)
             cls.create(**kwargs)
 
     def __getitem__(self, name):
@@ -69,46 +61,50 @@ class BaseDataFactory(BatchDataTask, ABC):
     """Abstract base class for any FactoryBoy based generator"""
     def generate_data(self, session, engine, base, num_records):
         raw_factories = self.make_factories(base.classes)
-        factories = Factories(session, raw_factories)
-        self.generate_data_with_factories(num_records, factories)
+        factories = Factories(session, base.classes, raw_factories)
+        self.make_records(num_records, factories)
+        session.flush()
+        session.close()
 
     @abstractmethod
     def make_factories(self, classes):
         pass
 
     @abstractmethod
-    def generate_data_with_factories(self, num_records, factories):
+    def make_records(self, num_records, factories):
         pass
 
 
 class ModuleDataFactory(BaseDataFactory):
-    class Models:
-        pass
+    datafactory_classes_module = None
 
     def make_factories(self, classes):
-        global Models
-        for cls in classes:
-            setattr(Models, cls.__name__, cls)
-
-        assert self.datafactory_classes_module
+        if not self.datafactory_classes_module:
+            self.datafactory_classes_module = self.__module__
         module = import_module(self.datafactory_classes_module)
-        _reset_Models()  # ensure no leakage
-        return vars(module)
+        module_contents = vars(module)
 
-    def generate_data_with_factories(self, num_records, factories):
-        assert self.datafactory_generator_module
-        module = import_module(self.datafactory_generator_module)
-        generator_func = getattr(module, "make_records")
-        assert generator_func
-        return generator_func(num_records, factories)
+        def replace_model(f):
+            f._meta.model = classes[f._meta.model]
+            return f
+        factories = {name: replace_model(f)
+                     for name, f in module_contents.items()
+                     if isinstance(f, base.FactoryMetaClass)}
+        assert factories['GAU'], factories
+
+        return factories
 
 
 ##  Note: this is used as a mutable global variable to emulate how models
 ##        in e.g. Django work. This should only be a problem in a
 ##        multithreaded environment and I believe that CCI is far from being
 ##        multi-thread compatible.
-class Models:
-    pass
+class _Models:
+    def __getattr__(self, name):
+        return name
+
+
+Models = _Models()
 
 
 def _reset_Models():

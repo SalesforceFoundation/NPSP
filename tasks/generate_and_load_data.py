@@ -12,6 +12,10 @@ class GenerateAndLoadData(BaseSalesforceApiTask):
     task_docs = """
     Use the `num_records` option to specify how many records to generate.
     Use the `mappings` option to specify a mapping file.
+    Use 'data_generation_task' to specify what Python class to use to generate the data.
+
+    By default it creates the data in a temporary file and then cleans it up later. Specify database_url if you
+    need more control than that.
     """
 
     task_options = {
@@ -20,8 +24,10 @@ class GenerateAndLoadData(BaseSalesforceApiTask):
             "required": True},
         "mapping": {"description": "A mapping YAML file to use",
                          "required": True},
-        "data_generation_task": {"description": "Fully qualified class path of a task to generate the data.",
-                         "required": True},
+        "data_generation_task": {"description": "Fully qualified class path of a task to generate the data. Use cumulusci.tasks.bulkdata.factory_generator if you would like to use a Factory Module.",
+                         "required": False},
+        "data_generation_options": {"description": "Options to pass to the data generator.",
+                         "required": False},
         "database_url": {"description": "A URL to store the database (defaults to a transient SQLite file)",
                          "required": ""},
     }
@@ -36,7 +42,9 @@ class GenerateAndLoadData(BaseSalesforceApiTask):
                 database_url = f"sqlite:///" + sqlite_path
 
             subtask_options = {**self.options, "mapping": mapping_file, "database_url": database_url}
-            class_path = self.options["data_generation_task"]
+            class_path = self.options.get("data_generation_task", None)
+            if not class_path:
+                class_path = "cumulusci.tasks."
 
             task_class = import_global(class_path)
             task_config = TaskConfig({"options": subtask_options})
