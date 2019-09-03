@@ -189,7 +189,7 @@ tasks:
 
     run_tests:
         options:
-            retry_errors:
+            retry_failures:
                 - "unable to obtain exclusive access to this record"
                 - "UNABLE_TO_LOCK_ROW"
             retry_always: True
