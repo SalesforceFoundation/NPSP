@@ -1,8 +1,7 @@
-import collections
 from abc import ABC, abstractmethod
 from importlib import import_module
 
-from factory import enums, Factory, base
+from factory import enums, base
 
 from .data_generation_base import BatchDataTask
 
@@ -29,28 +28,31 @@ class Adder:
 # Thin collector for the factories and a place to try to achieve better
 # scalability than the create_batch function from FactoryBoy.
 class Factories:
-    unflushed_record_counter = 0
-
     def __init__(self, session, orm_classes, collection):
         """Add a session to factories and then store them."""
 
         self.factory_classes = {
-            key: self.add_session(value, session)
+            key: self.add_session(value, session, orm_classes)
             for key, value in collection.items()
         }
 
     @staticmethod
-    def add_session(fact, session):
+    def add_session(fact, session, orm_classes):
         "Attach the session to the factory"
         fact._meta.sqlalchemy_session = session
         fact._meta.sqlalchemy_session_persistence = "commit"
+
+        # if the model is just a string name, find a real class that matches
+        # that name
+        if isinstance(fact._meta.model, str):
+            fact._meta.model = orm_classes[fact._meta.model]
+
         return fact
 
     def create_batch(self, classname, batchsize, **kwargs):
         cls = self.factory_classes.get(classname, None)
         assert cls, f"Cannot find a factory class named {classname}. Did you misspell it?"
         for _ in range(batchsize):
-            print("Creating", cls, cls._meta.sqlalchemy_session, _)
             cls.create(**kwargs)
 
     def __getitem__(self, name):
@@ -77,38 +79,30 @@ class BaseDataFactory(BatchDataTask, ABC):
 
 class ModuleDataFactory(BaseDataFactory):
     datafactory_classes_module = None
+    # override to nominate a module to serve as the collection of modules
 
     def make_factories(self, classes):
         if not self.datafactory_classes_module:
+            # by default look for classes in the same place that the derived class came from
             self.datafactory_classes_module = self.__module__
         module = import_module(self.datafactory_classes_module)
         module_contents = vars(module)
 
-        def replace_model(f):
-            f._meta.model = classes[f._meta.model]
-            return f
-        factories = {name: replace_model(f)
+        # filter out other cruft from the file
+        factories = {name: f
                      for name, f in module_contents.items()
                      if isinstance(f, base.FactoryMetaClass)}
-        assert factories['GAU'], factories
 
         return factories
 
 
-##  Note: this is used as a mutable global variable to emulate how models
-##        in e.g. Django work. This should only be a problem in a
-##        multithreaded environment and I believe that CCI is far from being
-##        multi-thread compatible.
 class _Models:
+    """Stand in for the models module of a framework like Django"""
     def __getattr__(self, name):
+        # Instead of returning model objects, return strings as stand-ins.
+        # Later we'll replace the strings with real model objects after
+        # doing the mapping.yml introspection.
         return name
 
 
 Models = _Models()
-
-
-def _reset_Models():
-    global Models
-
-    class Models:
-        pass

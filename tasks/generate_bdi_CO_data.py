@@ -69,7 +69,7 @@ class GenerateBDIData_CO(ModuleDataFactory):
         )
 
 
-class MaintenancePlan(factory.Factory):
+class MaintenancePlan(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Models.MaintenancePlan
 
@@ -80,7 +80,7 @@ class MaintenancePlan(factory.Factory):
     NextSuggestedMaintenanceDate = now()
 
 
-class DataImport(factory.Factory):
+class DataImport(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Models.npsp__DataImport__c
 
@@ -117,9 +117,8 @@ class DataImport(factory.Factory):
     # npsp__ASC_Amount__c = 100
 
 
-class GAU(factory.Factory):
+class GAU(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Models.npsp__General_Accounting_Unit__c
-
 
     id = factory.Sequence(lambda n: n + 1)
