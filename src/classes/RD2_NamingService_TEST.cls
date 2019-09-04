@@ -94,10 +94,7 @@ public with sharing class RD2_NamingService_TEST {
         RD2_NamingService service = buildAutomaticNamingService(acc);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedName = String.format(
-            '{0} {1}100.25 - ' + System.Label.RecurringDonationNameSuffix,
-            new String[]{ acc.Name, userDefaultCurrencySymbol }
-        );
+        String expectedName = acc.Name + ' ' + userDefaultCurrencySymbol + '100.25 - ' + System.Label.RecurringDonationNameSuffix;
         System.assertEquals(expectedName, rd.Name, 'The name should match.');
     }
 
@@ -122,10 +119,7 @@ public with sharing class RD2_NamingService_TEST {
 
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedName = String.format(
-            '{0} {1}100.25 - ' + System.Label.RecurringDonationNameSuffix,
-            new String[]{ contact.LastName, userDefaultCurrencySymbol }
-        );
+        String expectedName = contact.LastName + ' ' + userDefaultCurrencySymbol + '100.25 - ' + System.Label.RecurringDonationNameSuffix;
         System.assertEquals(expectedName, rd.Name, 'The name should match.');
     }
 
@@ -164,10 +158,7 @@ public with sharing class RD2_NamingService_TEST {
         RD2_NamingService service = buildAutomaticNamingService(acc);        
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedName = String.format(
-            '{0} {1}100 - ' + System.Label.RecurringDonationNameSuffix,
-            new String[]{ acc.Name, userDefaultCurrencySymbol }
-        );
+        String expectedName = acc.Name + ' ' + userDefaultCurrencySymbol + '100 - ' + System.Label.RecurringDonationNameSuffix;
         System.assertEquals(expectedName, rd.Name, 'The amount format should match.');
     }
 
@@ -352,15 +343,11 @@ public with sharing class RD2_NamingService_TEST {
         oldRds[1].npe03__Amount__c = 180;
         
         RD2_NamingService service = buildAutomaticNamingService(acc);
-
         service.autogenerateNamesOnChange(new Map<Id, npe03__Recurring_Donation__c>(rds), new Map<Id, npe03__Recurring_Donation__c>(oldRds));
 
         System.assertEquals('foo', rds[0].Name, 'RD Name should not change when construct key fields are unchanged');
 
-        String expectedName = String.format(
-            '{0} {1}200 - ' + System.Label.RecurringDonationNameSuffix,
-            new String[]{ acc.Name, userDefaultCurrencySymbol }
-        );
+        String expectedName = acc.Name + ' ' + userDefaultCurrencySymbol + '200 - ' + System.Label.RecurringDonationNameSuffix;
         System.assertEquals(expectedName, rds[1].Name, 'RD Name should change when construct key fields are changed');
     }
 
@@ -392,19 +379,13 @@ public with sharing class RD2_NamingService_TEST {
         };
 
         RD2_NamingService service = buildAutomaticNamingService();
-
         service.autogenerateNames(rds);
 
-        String expectedName = String.format(
-            '{0} {1}100 - ' + System.Label.RecurringDonationNameSuffix,
-            new String[]{ acc.Name, userDefaultCurrencySymbol }
-        );
+        String expectedName = acc.Name + ' ' + userDefaultCurrencySymbol + '100 - ' + System.Label.RecurringDonationNameSuffix;
         System.assertEquals(expectedName, rds[0].Name, 'The Account name should be queried and incorporated.');
 
-        expectedName = String.format(
-            '{0} {1} {2}200 - ' + System.Label.RecurringDonationNameSuffix,
-            new String[]{ contact.FirstName, contact.LastName, userDefaultCurrencySymbol }
-        );
+        expectedName = contact.FirstName + ' ' + contact.LastName 
+            + ' ' + userDefaultCurrencySymbol + '200 - ' + System.Label.RecurringDonationNameSuffix;
         System.assertEquals(expectedName, rds[1].Name, 'The Contact name should be queried and incorporated.');
     }
 
@@ -426,7 +407,7 @@ public with sharing class RD2_NamingService_TEST {
     private static RD2_NamingService buildAutomaticNamingService(List<Account> accounts, List<Contact> contacts) {
         RD2_NamingService service = buildAutomaticNamingService();
 
-        DonorGatewayMock donorGateway = new DonorGatewayMock()
+        RD2_Donor_TEST.GatewayMock donorGateway = new RD2_Donor_TEST.GatewayMock()
             .withDonors(accounts)
             .withDonors(contacts);
         service.donorGateway = donorGateway;
@@ -466,31 +447,6 @@ public with sharing class RD2_NamingService_TEST {
             LastName = 'Smith',
             Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType)
         );
-    }
-
-    /***
-    * @description Mock for the Donor Gateway instance returning donors
-    */
-    public class DonorGatewayMock implements RD2_InterfaceApi.DonorGateway {
-        private Map<Id, RD2_InterfaceApi.Donor> donorById = new Map<Id, RD2_InterfaceApi.Donor>();
-
-        public DonorGatewayMock withDonors(List<Account> accounts) {
-            for (Account acc : accounts) {
-                donorById.put(acc.Id, new RD2_InterfaceApi.Donor(acc.Id, acc.Name));
-            }
-            return this;
-        }
-
-        public DonorGatewayMock withDonors(List<Contact> contacts) {
-            for (Contact c : contacts) {
-                donorById.put(c.Id, new RD2_InterfaceApi.Donor(c.Id, c.FirstName, c.LastName));
-            }
-            return this;
-        }
-
-        public Map<Id, RD2_InterfaceApi.Donor> getDonors(List<npe03__Recurring_Donation__c> rds) {
-            return donorById;
-        }
     }
 
 }

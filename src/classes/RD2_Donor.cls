@@ -31,40 +31,71 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Recurring Donations API
+* @description Recurring Donations Donor record and gateway classes
 *
 */
-public with sharing class RD2_InterfaceApi {
+public with sharing class RD2_Donor {
 
-    public interface Settings {
-        Boolean isAutomaticNamingEnabled();
-    }
-
-    public interface NamingService {
-        void autogenerateNames(List<npe03__Recurring_Donation__c> rds);
-        void autogenerateNamesOnChange(Map<Id, npe03__Recurring_Donation__c> rdById, Map<Id, npe03__Recurring_Donation__c> oldRdById);
-    }
-
-    public interface DonorGateway {
-        Map<Id, Donor> getDonors(List<npe03__Recurring_Donation__c> rds);
+    public interface IGateway {
+        Map<Id, Record> getDonors(List<npe03__Recurring_Donation__c> rds);
     }
 
     /***
-    * @description 
+    * @description Donor Record
     */
-    public class Donor {
-        public Id recordId;
-        public String name;
+    public class Record {
+        public Id recordId { get; private set; }
+        public String name { get; private set; }
 
-        public Donor(Id recordId, String name) {
+        public Record(Id recordId, String name) {
             this.recordId = recordId;
             this.name = name;
         }
 
-        public Donor(Id recordId, String firstName, String lastName) {
+        public Record(Id recordId, String firstName, String lastName) {
             this.recordId = recordId;
             this.name = (String.isBlank(firstName) ? '' : firstName + ' ') + lastName;
             this.name.trim();
+        }
+    }
+
+    /***
+    * @description Gateway to retrieve donor information
+    */
+    public class Gateway implements IGateway {
+
+        /***
+        * @description Returns donor information
+        */
+        public Map<Id, Record> getDonors(List<npe03__Recurring_Donation__c> rds) {
+            Map<Id, Record> donorById = new Map<Id, Record>();
+            Set<Id> accountIds = new Set<Id>();
+            Set<Id> contactIds = new Set<Id>();
+
+            for (npe03__Recurring_Donation__c rd : rds) {
+                accountIds.add(rd.npe03__Organization__c);
+                contactIds.add(rd.npe03__Contact__c);
+            }
+            accountIds.remove(null);
+            contactIds.remove(null);
+
+            for (Account acc : [
+                SELECT Name
+                FROM Account
+                WHERE Id IN :accountIds
+            ]) {
+                donorById.put(acc.Id, new Record(acc.Id, acc.Name));
+            }
+
+            for (Contact c : [
+                SELECT FirstName, LastName
+                FROM Contact
+                WHERE Id IN :contactIds
+            ]) {
+                donorById.put(c.Id, new Record(c.Id, c.FirstName, c.LastName));
+            }
+
+            return donorById;
         }
     }
 

@@ -34,7 +34,7 @@
 * @description Recurring Donations Naming Service
 *
 */
-public with sharing class RD2_NamingService implements RD2_InterfaceApi.NamingService {
+public with sharing class RD2_NamingService {
 
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
     public static final Integer MAX_NAME_LENGTH = 80;
@@ -43,7 +43,7 @@ public with sharing class RD2_NamingService implements RD2_InterfaceApi.NamingSe
     * @description Contains Recurring Donations V2 settings 
     */
     @TestVisible
-    private RD2_InterfaceApi.Settings settings {
+    private RD2_Settings settings {
         get {
             if (settings == null) {
                 settings = new RD2_Settings();
@@ -57,10 +57,10 @@ public with sharing class RD2_NamingService implements RD2_InterfaceApi.NamingSe
     * @description Used to get Donor (Account/Contact) information
     */
     @TestVisible
-    private RD2_InterfaceApi.DonorGateway donorGateway {
+    private RD2_Donor.IGateway donorGateway {
         get {
             if (donorGateway == null) {
-                donorGateway = new DonorGateway();
+                donorGateway = new RD2_Donor.Gateway();
             }
             return donorGateway;
         }
@@ -137,7 +137,7 @@ public with sharing class RD2_NamingService implements RD2_InterfaceApi.NamingSe
             return;
         }
 
-        Map<Id, RD2_InterfaceApi.Donor> donorById = donorGateway.getDonors(rds);
+        Map<Id, RD2_Donor.Record> donorById = donorGateway.getDonors(rds);
 
         for (npe03__Recurring_Donation__c rd : rds) {
             rd.Name = constructName(rd, donorById);
@@ -146,10 +146,12 @@ public with sharing class RD2_NamingService implements RD2_InterfaceApi.NamingSe
 
     /***
     * @description Constructs recurring donation name
-    * Name formatting: "{!DonorName} {ISO Code} {!Amount} - Recurring"
+    * Name formatting: 
+    *   If multi-currency, then "{!DonorName} {ISO Code} {!Amount} - Recurring".
+    *   Otherwise, then "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
     */
-    private String constructName(npe03__Recurring_Donation__c rd,  Map<Id, RD2_InterfaceApi.Donor> donorById) {
-        RD2_InterfaceApi.Donor donor = rd.npe03__Contact__c != null
+    private String constructName(npe03__Recurring_Donation__c rd,  Map<Id, RD2_Donor.Record> donorById) {
+        RD2_Donor.Record donor = rd.npe03__Contact__c != null
             ? donorById.get(rd.npe03__Contact__c)
             : donorById.get(rd.npe03__Organization__c);
 
@@ -186,47 +188,5 @@ public with sharing class RD2_NamingService implements RD2_InterfaceApi.NamingSe
 
         return formattedAmount;
     }
-
-
-
-    /***
-    * @description Gateway to retrieve donor information
-    */
-    public class DonorGateway implements RD2_InterfaceApi.DonorGateway {
-
-        /***
-        * @description Returns donor information
-        */
-        public Map<Id, RD2_InterfaceApi.Donor> getDonors(List<npe03__Recurring_Donation__c> rds) {
-            Map<Id, RD2_InterfaceApi.Donor> donorById = new Map<Id, RD2_InterfaceApi.Donor>();
-            Set<Id> accountIds = new Set<Id>();
-            Set<Id> contactIds = new Set<Id>();
-
-            for (npe03__Recurring_Donation__c rd : rds) {
-                if (rd.npe03__Contact__c != null) {
-                    contactIds.add(rd.npe03__Contact__c);
-                } else {
-                    accountIds.add(rd.npe03__Organization__c);
-                }
-            }
-
-            for (Account acc : [
-                SELECT Name
-                FROM Account
-                WHERE Id IN :accountIds
-            ]) {
-                donorById.put(acc.Id, new RD2_InterfaceApi.Donor(acc.Id, acc.Name));
-            }
-
-            for (Contact c : [
-                SELECT FirstName, LastName
-                FROM Contact
-                WHERE Id IN :contactIds
-            ]) {
-                donorById.put(c.Id, new RD2_InterfaceApi.Donor(c.Id, c.FirstName, c.LastName));
-            }
-
-            return donorById;
-        }
-    }
+    
 }

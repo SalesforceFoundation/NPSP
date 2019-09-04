@@ -34,7 +34,7 @@
 * @description Retrieves Recurring Donations V2 configuration
 *
 */
-public with sharing class RD2_Settings implements RD2_InterfaceApi.Settings {
+public with sharing class RD2_Settings {
 
     /***
     * @description Contains Recurring Donations V2 settings 
