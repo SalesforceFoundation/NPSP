@@ -68,6 +68,7 @@ Create New gift and process batch and validate
     ...    custom_url=automation.com
     ...    custom_textarea=this is custom batch
     Populate Field By Placeholder    Search Campaigns    ${campaign}[Name]
+    Click Link    ${campaign}[Name]    
     Click Field And Select Date    Donation Date    Today
     Click Field And Select Date    custom_date    Today
     Select Value From BGE DD    custom_picklist    2

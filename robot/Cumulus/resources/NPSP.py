@@ -1010,7 +1010,8 @@ class NPSP(object):
 
     def click_link_with_text(self, text):
         self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
-        element = self.selenium.driver.find_element_by_link_text(text)
+        locator = npsp_lex_locators['link-text'].format(text)
+        element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)  
     
     def verify_expected_batch_values(self, batch_id,**kwargs):

@@ -49,6 +49,7 @@ npsp_lex_locators={
     'link':'//a[./span[text()="{}"]]',
     'link-text':'//a[text()="{}"]',
     'link-title':'//a[@title="{}"]',
+    'link-contains':'//a[contains(@title,"{}")]',
     'checkbox':{
         'model-checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
         'details-checkbox':'//label[@class="slds-checkbox__label"][./span[text()="{}"]]/span[contains(@class,"slds-checkbox_faux")]',
@@ -129,9 +130,10 @@ npsp_lex_locators={
         'dropdown':'//div[contains(@class,"slds-p-top_small")]/label[text()="{}"]/following-sibling::div/select',
         'checkbox':'//div[contains(@class,"slds-p-top_small")]/label[@class="slds-checkbox"][./span/following-sibling::{}[text()="{}"]/]',
         'button':'//div[contains(@class,"slds-button-group")][.//span[text()="toTask {}"]]/button[contains(text(),"{}")]',
-        'check_eng_plan':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a',
-        'dd':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a/ancestor::th/following-sibling::td//lightning-primitive-icon',
-        'tasks':'//div[@class="slds-section__content"]/ul/li//a[text()="{}"]',
+        'activity-button':'//button[contains(@class,"{}")]',
+        'check_eng_plan':'//h2/a/span[@title="{}"]//ancestor::div[contains(@class, "slds-card__header slds-grid")]/following-sibling::div//tbody/tr/th/div/a',
+        'dd':'//h2/a/span[@title="{}"]//ancestor::div[contains(@class,"slds-card__header slds-grid")]/following-sibling::div//tbody/tr/th/div/a/ancestor::th/following-sibling::td//lightning-primitive-icon',
+        'tasks':'//div[contains(@class,"slds-section__content")]/ul/li//a[text()="{}"]',
     },
     'levels':{
         'id':'//input[contains(@id,"{}")]',
