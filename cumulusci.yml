@@ -41,7 +41,7 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: ldv_tests/src
-        
+
     deploy_dev_config:
         description: Deploys the post-install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -96,7 +96,7 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: unpackaged/config/delete
-    
+
     ensure_record_type:
         name: Ensure Opportunity Record Types
         description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
@@ -116,7 +116,7 @@ tasks:
         options:
             path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot
             output: robot/Cumulus/doc/Keywords.html
-            
+
     update_admin_profile:
         options:
             package_xml: lib/admin_profile.xml
@@ -290,6 +290,13 @@ tasks:
                 STG_SettingsService.stgService.stgCRLP.AccountHardCreditNonSkew_Incremental__c = true;
                 STG_SettingsService.stgService.stgCRLP.ContactHardCreditNonSkew_Incremental__c = true;
                 STG_SettingsService.stgService.saveAll();
+
+    deploy_rd2_unmanaged:
+        description: Deploy unmanaged field and layout changes into the org that are needed after enabling RD2 in an org
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/rd2_post_config
+            namespace_inject: $project_config.project__package__namespace
 
     add_second_currency:
         description: Add CAD as a 2nd currency for a multicurrency org

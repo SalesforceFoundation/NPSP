@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <name>npe03__Paid_Amount__c</name>
+        <label>Total Paid Amount</label>
+    </fields>
+    <fields>
+        <name>npe03__Total_Paid_Installments__c</name>
+        <label>Number Of Paid Installments</label>
+    </fields>
+    <fields>
+        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+        <label>DEPRECATED-Always use last day of month</label>
+    </fields>
+    <fields>
+        <name>npe03__Installment_Amount__c</name>
+        <label>DEPRECATED-Installment Amount</label>
+    </fields>
+    <fields>
+        <name>npe03__Installments__c</name>
+        <label>DEPRECATED-Installments</label>
+    </fields>
+    <fields>
+        <name>npe03__Open_Ended_Status__c</name>
+        <label>DEPRECATED-Open Ended Status</label>
+    </fields>
+    <fields>
+        <name>npe03__Schedule_Type__c</name>
+        <label>DEPRECATED-Schedule Type</label>
+    </fields>
+    <fields>
+        <name>npe03__Total__c</name>
+        <label>DEPRECATED-Total</label>
+    </fields>
+</CustomObjectTranslation>
