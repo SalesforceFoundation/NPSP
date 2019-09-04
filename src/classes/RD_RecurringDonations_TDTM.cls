@@ -55,7 +55,8 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         }
             
         map<string, npe03__Custom_Installment_Settings__c> customInstallmentsMap
-                = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings();
+            = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings();
+
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             set<Id> setRDId = new set<Id>();
@@ -70,6 +71,8 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
             // newlist will be null.  copy over oldlist, so we can use common loop below.
             newlist = oldlist;
         }
+
+        autogenerateNames(newlist, oldlist, triggerAction);
 
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
@@ -115,6 +118,20 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
 
         dispatchToIntegrationGateway(newlist, oldlist, triggerAction);
         return null;
+    }
+
+    /***
+    * @description Autogenerates recurring donation names 
+    */
+    private void autogenerateNames(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+        RD2_NamingService namingService = new RD2_NamingService();
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            namingService.autogenerateNames(rds);
+            
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            namingService.autogenerateNamesOnChange(rds, oldRds);
+        }
     }
 
     /*******************************************************************************************************

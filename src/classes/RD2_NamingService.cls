@@ -43,7 +43,7 @@ public with sharing class RD2_NamingService {
     * @description Contains Recurring Donations V2 settings 
     */
     @TestVisible
-    private RD2_Settings settings {
+    private static RD2_Settings settings {
         get {
             if (settings == null) {
                 settings = new RD2_Settings();
@@ -96,20 +96,21 @@ public with sharing class RD2_NamingService {
     /***
     * @description Autogenerates recurring donation names if Name construct fields have changed
     */
-    public void autogenerateNamesOnChange(Map<Id, npe03__Recurring_Donation__c> rdById, Map<Id, npe03__Recurring_Donation__c> oldRdById) {
+    public void autogenerateNamesOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
         if (!settings.isAutomaticNamingEnabled()) {
             return;
         }
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        Map<Id, npe03__Recurring_Donation__c> oldRdById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
+        List<npe03__Recurring_Donation__c> changedRds = new List<npe03__Recurring_Donation__c>();
 
-        for (npe03__Recurring_Donation__c rd : rdById.values()) {
+        for (npe03__Recurring_Donation__c rd : rds) {
             if (hasChanged(rd, oldRdById.get(rd.Id))) {
-                rds.add(rd);
+                changedRds.add(rd);
             }
         }
 
-        autogenerateNames(rds);
+        autogenerateNames(changedRds);
     }
 
     /***
@@ -148,7 +149,7 @@ public with sharing class RD2_NamingService {
     * @description Constructs recurring donation name
     * Name formatting: 
     *   If multi-currency, then "{!DonorName} {ISO Code} {!Amount} - Recurring".
-    *   Otherwise, then "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
+    *   Otherwise, "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
     */
     private String constructName(npe03__Recurring_Donation__c rd,  Map<Id, RD2_Donor.Record> donorById) {
         RD2_Donor.Record donor = rd.npe03__Contact__c != null

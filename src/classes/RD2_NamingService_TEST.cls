@@ -55,7 +55,7 @@ public with sharing class RD2_NamingService_TEST {
             .build();
         
         RD2_NamingService service = new RD2_NamingService();
-        service.settings = (RD2_Settings) Test.createStub(RD2_Settings.class, new RD2_Settings_TEST.Stub());
+        RD2_NamingService.settings = (RD2_Settings) Test.createStub(RD2_Settings.class, new RD2_Settings_TEST.Stub());
 
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -343,7 +343,7 @@ public with sharing class RD2_NamingService_TEST {
         oldRds[1].npe03__Amount__c = 180;
         
         RD2_NamingService service = buildAutomaticNamingService(acc);
-        service.autogenerateNamesOnChange(new Map<Id, npe03__Recurring_Donation__c>(rds), new Map<Id, npe03__Recurring_Donation__c>(oldRds));
+        service.autogenerateNamesOnChange(rds, oldRds);
 
         System.assertEquals('foo', rds[0].Name, 'RD Name should not change when construct key fields are unchanged');
 
@@ -382,11 +382,11 @@ public with sharing class RD2_NamingService_TEST {
         service.autogenerateNames(rds);
 
         String expectedName = acc.Name + ' ' + userDefaultCurrencySymbol + '100 - ' + System.Label.RecurringDonationNameSuffix;
-        System.assertEquals(expectedName, rds[0].Name, 'The Account name should be queried and incorporated.');
+        System.assertEquals(expectedName, rds[0].Name, 'The Account name should be queried and incorporated into the name');
 
         expectedName = contact.FirstName + ' ' + contact.LastName 
             + ' ' + userDefaultCurrencySymbol + '200 - ' + System.Label.RecurringDonationNameSuffix;
-        System.assertEquals(expectedName, rds[1].Name, 'The Contact name should be queried and incorporated.');
+        System.assertEquals(expectedName, rds[1].Name, 'The Contact name should be queried and incorporated into the name');
     }
 
 
@@ -421,7 +421,7 @@ public with sharing class RD2_NamingService_TEST {
     private static RD2_NamingService buildAutomaticNamingService() {
         RD2_NamingService service = new RD2_NamingService();
 
-        service.settings = (RD2_Settings) Test.createStub(
+        RD2_NamingService.settings = (RD2_Settings) Test.createStub(
             RD2_Settings.class, 
             new RD2_Settings_TEST.Stub().withAutomaticNamingEnabled()
         );
