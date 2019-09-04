@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>Cantidad de cuotas (donaciones) que se esperan recibir. Para donaciones recurrentes con duración fija solamente.</help>
+        <label>Deprecated-Cantidad de cuotas</label>
+        <name>npe03__Installments__c</name>
+    </fields>
+    <fields>
+        <help>Elegir Abierto para donaciones recurrentes sin fecha de fin. Elegir Ninguno para donaciones recurrentes con duración fija. Elegir Cerrada para donaciones recurrentes cerradas/finalizadas.</help>
+        <label>Deprecated-Estado de final abierto</label>
+        <name>npe03__Open_Ended_Status__c</name>
+    </fields>
+    <fields>
+        <help>Especifica como se debe calcular el importe de las oportunidades recurrentes, basado en el campo Monto. Solo para donaciones recurrentes con duración fija.</help>
+        <label>Deprecated-Criterio</label>
+        <name>npe03__Schedule_Type__c</name>
+    </fields>
+    <fields>
+        <help>Para donaciones recurrentes sin final abierto, es la suma del importe de todas las oportunidades.</help>
+        <label>Deprecated-Total</label>
+        <name>npe03__Total__c</name>
+    </fields>
+</CustomObjectTranslation>

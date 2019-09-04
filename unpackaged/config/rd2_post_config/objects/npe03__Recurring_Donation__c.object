@@ -195,12 +195,6 @@
                     <label>Monthly</label>
                 </value>
                 <value>
-                    <fullName>Quarterly</fullName>
-                    <default>false</default>
-                    <isActive>false</isActive>
-                    <label>Quarterly</label>
-                </value>
-                <value>
                     <fullName>Yearly</fullName>
                     <default>false</default>
                     <label>Yearly</label>
@@ -214,6 +208,12 @@
                     <fullName>1st and 15th</fullName>
                     <default>false</default>
                     <label>1st and 15th</label>
+                </value>
+                <value>
+                    <fullName>Quarterly</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Quarterly</label>
                 </value>
             </valueSetDefinition>
         </valueSet>

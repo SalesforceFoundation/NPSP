@@ -13,7 +13,6 @@
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Day_of_Month__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <!--
     <fieldPermissions>
         <editable>true</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%InstallmentFrequency__c</field>
@@ -26,11 +25,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Starting_On__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%PaymentMethod__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -39,17 +33,6 @@
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CurrentYearValue__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%ExternalId__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    -->
     <fieldPermissions>
         <editable>false</editable>
         <field>npe03__Recurring_Donation__c.npe03__Paid_Amount__c</field>
