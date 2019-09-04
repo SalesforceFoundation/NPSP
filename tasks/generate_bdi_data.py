@@ -115,7 +115,7 @@ def make_factories(session, classes, Factory):
 
     class DataImport(Factory):
         class Meta(BaseMeta):
-            model = classes.npsp__DataImport__c
+            model = classes.DataImport__c
 
         class Params:
             date_adder = "Adder not set"
@@ -123,19 +123,19 @@ def make_factories(session, classes, Factory):
             AccountAdder = Adder(0)
 
         id = factory.Sequence(lambda n: n + 1)
-        npsp__Donation_Date__c = factory.LazyAttribute(
+        Donation_Date__c = factory.LazyAttribute(
             lambda o: START_DATE + timedelta(days=o.date_adder(1) - 1)
         )
 
-        npsp__Account1_Name__c = factory.LazyAttribute(
-            lambda o: f"Account {o.AccountAdder(1)}" if o.npsp__Donation_Donor__c == "Account1" else None
+        Account1_Name__c = factory.LazyAttribute(
+            lambda o: f"Account {o.AccountAdder(1)}" if o.Donation_Donor__c == "Account1" else None
         )
 
-        npsp__Contact1_Lastname__c = factory.LazyAttribute(
-            lambda o: f"Contact {o.ContactAdder(1)}" if o.npsp__Donation_Donor__c == "Contact1" else None
+        Contact1_Lastname__c = factory.LazyAttribute(
+            lambda o: f"Contact {o.ContactAdder(1)}" if o.Donation_Donor__c == "Contact1" else None
         )
 
-        npsp__Do_Not_Automatically_Create_Payment__c = "FALSE"
+        Do_Not_Automatically_Create_Payment__c = "FALSE"
 
     return Factories(session, vars())
 
@@ -227,64 +227,64 @@ def make_matching_import_records(batch_size, factories):
 
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=100,
-        npsp__Donation_Donor__c="Account1",
+        Donation_Amount__c=100,
+        Donation_Donor__c="Account1",
         date_adder=Adder(),
     )
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=200,
-        npsp__Donation_Donor__c="Account1",
-        npsp__Qualified_Date__c="2020-01-01",
+        Donation_Amount__c=200,
+        Donation_Donor__c="Account1",
+        Qualified_Date__c="2020-01-01",
         date_adder=Adder(),
     )
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=50,
-        npsp__Donation_Donor__c="Account1",
+        Donation_Amount__c=50,
+        Donation_Donor__c="Account1",
         date_adder=Adder(),
     )
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=400,
-        npsp__Donation_Donor__c="Account1",
+        Donation_Amount__c=400,
+        Donation_Donor__c="Account1",
         date_adder=Adder(),
     )
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=500,
-        npsp__Donation_Donor__c="Account1",
+        Donation_Amount__c=500,
+        Donation_Donor__c="Account1",
         date_adder=Adder(),
     )
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=600,
-        npsp__Donation_Donor__c="Contact1",
+        Donation_Amount__c=600,
+        Donation_Donor__c="Contact1",
         date_adder=Adder(),
     )
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=700,
-        npsp__Donation_Donor__c="Contact1",
-        npsp__Qualified_Date__c="2020-01-01",
+        Donation_Amount__c=700,
+        Donation_Donor__c="Contact1",
+        Qualified_Date__c="2020-01-01",
         date_adder=Adder(),
     )
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=50,
-        npsp__Donation_Donor__c="Contact1",
+        Donation_Amount__c=50,
+        Donation_Donor__c="Contact1",
         date_adder=Adder(),
     )
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=900,
-        npsp__Donation_Donor__c="Contact1",
+        Donation_Amount__c=900,
+        Donation_Donor__c="Contact1",
         date_adder=Adder(),
     )
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=1000,
-        npsp__Donation_Donor__c="Contact1",
+        Donation_Amount__c=1000,
+        Donation_Donor__c="Contact1",
         date_adder=Adder(),
     )
 
@@ -298,10 +298,10 @@ def make_nonmatching_import_records(batch_size, factories):
     newadder = Adder(0)
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=100,
-        npsp__Donation_Donor__c="Account1",
-        npsp__Do_Not_Automatically_Create_Payment__c="FALSE",
-        npsp__Account1_Name__c=factory.LazyAttribute(
+        Donation_Amount__c=100,
+        Donation_Donor__c="Account1",
+        Do_Not_Automatically_Create_Payment__c="FALSE",
+        Account1_Name__c=factory.LazyAttribute(
             lambda o: f"Account{o.AccountAdder(1)}"
         ),
         AccountAdder=newadder,
@@ -310,10 +310,10 @@ def make_nonmatching_import_records(batch_size, factories):
 
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=200,
-        npsp__Donation_Donor__c="Account1",
-        npsp__Do_Not_Automatically_Create_Payment__c="TRUE",
-        npsp__Account1_Name__c=factory.LazyAttribute(
+        Donation_Amount__c=200,
+        Donation_Donor__c="Account1",
+        Do_Not_Automatically_Create_Payment__c="TRUE",
+        Account1_Name__c=factory.LazyAttribute(
             lambda o: f"Account{o.AccountAdder(1)}"
         ),
         AccountAdder=newadder,
@@ -324,11 +324,11 @@ def make_nonmatching_import_records(batch_size, factories):
 
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=300,
-        npsp__Donation_Donor__c="Contact1",
-        npsp__Do_Not_Automatically_Create_Payment__c="FALSE",
+        Donation_Amount__c=300,
+        Donation_Donor__c="Contact1",
+        Do_Not_Automatically_Create_Payment__c="FALSE",
         ContactAdder=contactadder,
-        npsp__Contact1_Lastname__c=factory.LazyAttribute(
+        Contact1_Lastname__c=factory.LazyAttribute(
             lambda o: f"Contact{o.ContactAdder(1)}"
         ),
         date_adder=Adder(),
@@ -336,10 +336,10 @@ def make_nonmatching_import_records(batch_size, factories):
 
     create_batch(
         "DataImport",
-        npsp__Donation_Amount__c=400,
-        npsp__Donation_Donor__c="Contact1",
-        npsp__Do_Not_Automatically_Create_Payment__c="TRUE",
-        npsp__Contact1_Lastname__c=factory.LazyAttribute(
+        Donation_Amount__c=400,
+        Donation_Donor__c="Contact1",
+        Do_Not_Automatically_Create_Payment__c="TRUE",
+        Contact1_Lastname__c=factory.LazyAttribute(
             lambda o: f"Contact{o.ContactAdder(1)}"
         ),
         ContactAdder=contactadder,

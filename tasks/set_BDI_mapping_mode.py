@@ -32,6 +32,15 @@ class SetBDIMappingMode(AnonymousApexTask):
         },
     }
 
+    def get_org_namespace_prefix(self):
+        managed = self.options.get("managed") or False
+        namespaced = self.options.get("namespaced") or False
+
+        if managed or namespaced:
+            return "npsp__"
+        else:
+            return ""
+
     def _validate_options(self):
         if self.options.get("mode") == "Help Text":
             self.options["apex"] = self.help_text_apex
@@ -54,6 +63,7 @@ class SetBDIMappingMode(AnonymousApexTask):
         raise AssertionError("Data Import mode never updated!")
 
     def _get_di_mode(self):
-        soql = "SELECT npsp__Field_Mapping_Method__c FROM npsp__Data_Import_Settings__c"
+        soql = "SELECT {token}Field_Mapping_Method__c FROM {token}Data_Import_Settings__c"
+        soql = soql.format(token=self.get_org_namespace_prefix())
         res = self.sf.query_all(soql)
-        return res['records'][0]['npsp__Field_Mapping_Method__c']
+        return res['records'][0]['{token}Field_Mapping_Method__c'.format(token=self.get_org_namespace_prefix())]
