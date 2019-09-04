@@ -38,7 +38,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
 
     private Map<String, Object> valuesByFieldName;
 
-    /*******************************************************************************************************************
+    /***
     * @description Constructor sets default values
     */
     public RD2_TestRecurringDonationBuilder() {
@@ -48,7 +48,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
         valuesByFieldName.put('Name', 'TestRecurringDonation');
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Opportunity Id
     */
     public RD2_TestRecurringDonationBuilder withId(Id rdId) {
@@ -56,7 +56,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Name
     */
     public RD2_TestRecurringDonationBuilder withName(String name) {
@@ -64,7 +64,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Account
     */
     public RD2_TestRecurringDonationBuilder withAccount(Id accountId) {
@@ -72,7 +72,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Contact
     */
     public RD2_TestRecurringDonationBuilder withContact(Id contactId) {
@@ -80,7 +80,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Amount
     */
     public RD2_TestRecurringDonationBuilder withAmount(Decimal amount) {
@@ -88,7 +88,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets CurrencyIsoCode
     */
     public RD2_TestRecurringDonationBuilder withCurrencyIsoCode(String ccyIsoCode) {
@@ -96,7 +96,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Builds npe03__Recurring_Donation__c sObject based on the provided values
     */
     public npe03__Recurring_Donation__c build() {

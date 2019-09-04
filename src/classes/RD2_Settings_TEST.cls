@@ -37,7 +37,7 @@
 @isTest
 public with sharing class RD2_Settings_TEST {
 
-    /*******************************************************************************************************************
+    /***
     * @description Verifies configuration when settings is not set up
     */
     @isTest
@@ -47,7 +47,7 @@ public with sharing class RD2_Settings_TEST {
         System.assertEquals(false, settings.isAutomaticNamingEnabled(), 'Automatic Naming should be disabled by default');
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verifies set configuration
     */
     @isTest

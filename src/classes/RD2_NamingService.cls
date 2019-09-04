@@ -169,7 +169,7 @@ public with sharing class RD2_NamingService {
     * @description Formats amount used to construct the name
     */
     private String formatAmount(npe03__Recurring_Donation__c rd) {
-        String formattedAmount = String.valueOf(rd.npe03__Amount__c); 
+        String formattedAmount = rd.npe03__Amount__c == null ? '' : rd.npe03__Amount__c.format();
 
         if (formattedAmount.endsWith('.00')) {
             formattedAmount = formattedAmount.removeEnd('.00');
