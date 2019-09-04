@@ -17,9 +17,9 @@
     <fields>
         <fullName>EnableAutomaticNaming__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Defines if Recurring Donations naming is auto-generated as: {!DonorName} {CurrencySymbol}{!Amount}{ISO Code} - Recurring</description>
+        <description>Indicates if naming is automated. When multi-currency is enabled, the name format is: {!DonorName} {ISO Code} {!Amount} - Recurring. Otherwise, {!DonorName} {CurrencySymbol}{!Amount} - Recurring.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Defines if Recurring Donations naming is auto-generated as: {!DonorName} {CurrencySymbol}{!Amount}{ISO Code} - Recurring</inlineHelpText>
+        <inlineHelpText>Indicates if naming is automated. When multi-currency is enabled, the name format is: {!DonorName} {ISO Code} {!Amount} - Recurring. Otherwise, {!DonorName} {CurrencySymbol}{!Amount} - Recurring.</inlineHelpText>
         <label>Enable Automatic Naming</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
