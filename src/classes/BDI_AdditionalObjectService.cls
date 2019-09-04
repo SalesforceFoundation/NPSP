@@ -441,7 +441,10 @@ public with sharing class BDI_AdditionalObjectService {
         Boolean result = true;
         if (objWrap.dataImport.get(predecessor.Imported_Record_Field_Name__c) == null) {
             result = false;
-            logError(objWrap, System.label.bdiAdditionalObjPredNotFound);
+            String error = String.format(
+                System.Label.bdiAdditionalObjPredNotFound,
+                new List<String>{predecessor.MasterLabel});
+            logError(objWrap, error);
         }
         return result;
     }
