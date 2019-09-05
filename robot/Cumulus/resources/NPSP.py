@@ -1188,6 +1188,8 @@ class NPSP(object):
             axe.run(%s, options, cb);
         """ % context
         results = self.selenium.execute_async_javascript(runScript)
+        self.log_raw_results(results)
+        self.selenium.capture_page_screenshot()
         return results
     
     
@@ -1218,6 +1220,11 @@ class NPSP(object):
             self.print_result(rule, "Incomplete (requires manual review)", logger.warn)
         return len(results["incomplete"])
     
+    def warn_on_violations_rules(self,results):
+        """ Prints a warn for any rules that couldn't be determined automatically. Returns the number of such warnings. """
+        for rule in results["violations"]:
+            self.print_result(rule, "violation", logger.warn)
+        return len(results["violations"])
     
     def fail_if_there_are_violations(self,results):
         """If there are violations on the page, returns the keyword as failed and gives the details of violations on the page"""
@@ -1253,14 +1260,14 @@ class NPSP(object):
         for node in result["nodes"]:
             targetString = ""
             for target in node["target"]:
-                if type(target) is str or type(target) is unicode:
+                if type(target) is str :
                     targetString += target
                 elif type(target) is list:
                     for frame_target in target:
                         targetString += ">> %s" % frame_target
     
             message += "<li>Target: <b>%s</b><br/>HTML: %s" % (targetString, escape(node["html"]))
-    
+            print  ("inside for loop")
             if len(node["any"]) > 0:
                 any_message = "<br/><b>Fix at least one of:</b><ul>"
                 for check in node["any"]:
@@ -1280,6 +1287,7 @@ class NPSP(object):
     
         logFunc(message, html=True)
         logger.debug(json.dumps(result, indent=4))
+        print  ("exiting print results")
         
       
 
