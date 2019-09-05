@@ -16,7 +16,7 @@
         <description>Result of the last CustomMetadataType deployment</description>
         <externalId>false</externalId>
         <inlineHelpText>JSON for the CMT deployment result
-{ &quot;jobId&quot;: &quot;repsonse&quot; }</inlineHelpText>
+{ "jobId": "repsonse" }</inlineHelpText>
         <label>CMT API Deployment Result</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -24,7 +24,7 @@
     </fields>
     <fields>
         <fullName>Rollups_IncrementalLastNDays_FldOverride__c</fullName>
-        <description></description>
+        <description />
         <externalId>false</externalId>
         <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the field used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job. Defaults to SystemModStamp.</inlineHelpText>
         <label>Incremental: Last N Days Field Override</label>
@@ -76,7 +76,7 @@
     </fields>
     <fields>
         <fullName>Rollups_IncrementalLastNDays_ValOverride__c</fullName>
-        <description></description>
+        <description />
         <externalId>false</externalId>
         <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the calculated number of days used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job.</inlineHelpText>
         <label>Incremental: Last N Days Value Override</label>

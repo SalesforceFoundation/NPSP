@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <customSettingsType>Hierarchy</customSettingsType>
     <description>Settings that control your error management configuration.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Async_Error_Check_Last_Run__c</fullName>
-        <description>If checked, NPSP&apos;s error handling framework is disabled.</description>
+        <description>If checked, NPSP's error handling framework is disabled.</description>
         <externalId>false</externalId>
         <inlineHelpText>Used to keep track of the most recent execution of the Async job error logger</inlineHelpText>
         <label>Async Error Check Last Run</label>
@@ -16,9 +16,9 @@
     <fields>
         <fullName>Disable_Error_Handling__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>If checked, NPSP&apos;s error handling framework is disabled.</description>
+        <description>If checked, NPSP's error handling framework is disabled.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If checked, NPSP&apos;s error handling framework is disabled.</inlineHelpText>
+        <inlineHelpText>If checked, NPSP's error handling framework is disabled.</inlineHelpText>
         <label>Disable Error Handling</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -26,7 +26,7 @@
     <fields>
         <fullName>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>When checked, NPSP won&apos;t automatically schedule default recurring jobs.
+        <description>When checked, NPSP won't automatically schedule default recurring jobs.
 
 These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling.
 
@@ -34,8 +34,8 @@ When checked, every time you visit the NPSP Settings page, NPSP verifies that th
 
 To view these jobs, search for Scheduled Jobs in Salesforce Setup.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When checked, NPSP won&apos;t automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling.</inlineHelpText>
-        <label>Don&apos;t Auto Schedule Default NPSP Jobs</label>
+        <inlineHelpText>When checked, NPSP won't automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling.</inlineHelpText>
+        <label>Don't Auto Schedule Default NPSP Jobs</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -54,7 +54,7 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</description>
         <defaultValue>false</defaultValue>
         <description>Flag that determines whether to send error notifications.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Check this if you&apos;d like the system to post notifications for certain type of errors.</inlineHelpText>
+        <inlineHelpText>Check this if you'd like the system to post notifications for certain type of errors.</inlineHelpText>
         <label>Error Notifications</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -72,9 +72,9 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</description>
     <fields>
         <fullName>Respect_Duplicate_Rule_Settings__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Ensures that the &quot;Allow&quot; setting (on the Duplicate Rule) is respected when duplicates are identified.</description>
+        <description>Ensures that the "Allow" setting (on the Duplicate Rule) is respected when duplicates are identified.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved.</inlineHelpText>
+        <inlineHelpText>Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to "Allow," duplicates will be saved.</inlineHelpText>
         <label>Respect Duplicate Rule Settings</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -84,7 +84,7 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</description>
         <defaultValue>true</defaultValue>
         <description>Flag that indicates whether errors are going to be stored in the database.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Check this if you&apos;d like errors to be stored in the database.</inlineHelpText>
+        <inlineHelpText>Check this if you'd like errors to be stored in the database.</inlineHelpText>
         <label>Store Errors</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
