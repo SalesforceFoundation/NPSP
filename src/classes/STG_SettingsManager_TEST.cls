@@ -96,17 +96,48 @@ public with sharing class STG_SettingsManager_TEST {
     @isTest
     private static void shouldRemoveAllocDefaultIfGauDoesNotExist() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+        List<Apexpages.Message> msgs;
 
+        //set payment allocations to true for the error messages
+        STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = true;
         STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
         STG_Panel.stgService.stgAllo.Default__c = 'a9302003536469';
         upsert STG_Panel.stgService.stgAllo;
 
         Test.startTest();
         ctrl.onNpspSettingsLoad();
+        msgs = Apexpages.getMessages();
         Test.stopTest();
 
         System.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be unchecked');
         System.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should not be filled in.');
+        System.assert(msgs[0].getDetail().contains(Label.stgGauWithPaymentEnabledError));
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies if it displays error message when payment allocations is disabled and default GAU 
+     is enabled, also clears custom settings when no GAU is found.
+    * @return void
+    */
+    @isTest
+    private static void shouldDisplayErrorMessageWhenPaymentdisabled() {
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+        List<Apexpages.Message> msgs;
+
+        //set payment allocations to true for the error messages
+        STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = false;
+        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
+        STG_Panel.stgService.stgAllo.Default__c = 'a9302003536469';
+        upsert STG_Panel.stgService.stgAllo;
+
+        Test.startTest();
+        ctrl.onNpspSettingsLoad();
+        msgs = Apexpages.getMessages();
+        Test.stopTest();
+
+        System.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be unchecked');
+        System.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should not be filled in.');
+        System.assert(msgs[0].getDetail().contains(Label.stgGauWithOutPaymentEnabledError));
     }
 
     /*********************************************************************************************************
