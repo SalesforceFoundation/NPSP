@@ -106,6 +106,11 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         }
     }
 
+    /*******************************************************************************************************
+    * @description our exception object for validating allocation settings.
+    */
+    private class HealthCheckException extends Exception {}
+
     /*********************************************************************************************************
     * @description Clears Default GAU settings if the specified GAU does not exist or 
       has been deleted.
@@ -115,7 +120,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         if (String.isBlank(STG_Panel.stgService.stgAllo.Default__c)) {
             return;
         }
-
+       
         List<General_Accounting_Unit__c> gaus = [
             SELECT Id, Name 
             FROM General_Accounting_Unit__c 
@@ -128,6 +133,14 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
             
             if (!Test.isRunningTest()) {
                 upsert STG_Panel.stgService.stgAllo;
+            }
+            if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgGauWithPaymentEnabledError));
+                ERR_Handler.processError(new HealthCheckException(Label.stgGauWithPaymentEnabledError), ERR_Handler_API.Context.STTG);
+            }
+            else {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgGauWithOutPaymentEnabledError));
+                ERR_Handler.processError(new HealthCheckException(Label.stgGauWithOutPaymentEnabledError), ERR_Handler_API.Context.STTG);
             }
         }
     }

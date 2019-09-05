@@ -6655,6 +6655,22 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <value>Error in {0}: {1}</value>
     </labels>
     <labels>
+        <fullName>stgGauWithPaymentEnabledError</fullName>
+        <categories>Validation Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgGauwithPaymentEnabledError</shortDescription>
+        <value>You must enable Default Allocations in order to allocate at the payment level. Please open the GAU Allocations page in NPSP Settings to update the Default Allocation Setting.</value>
+    </labels>
+    <labels>
+        <fullName>stgGauWithOutPaymentEnabledError</fullName>
+        <categories>Validation Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgGauwithoutPaymentEnabledError</shortDescription>
+        <value>An Invalid Default GAU has been removed. Please open the GAU Allocations page in NPSP Settings to review the Default Allocation Settings.</value>
+    </labels>
+    <labels>
         <fullName>stgHHNameRefreshTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
