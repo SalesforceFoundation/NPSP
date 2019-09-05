@@ -1160,12 +1160,15 @@ class NPSP(object):
         return self._run_subtask(SetBDIMappingMode, mode=mode)
 
     def _get_di_mode(self):
-        soql = "SELECT npsp__Field_Mapping_Method__c FROM npsp__Data_Import_Settings__c"
+        token = self.get_org_namespace_prefix()
+        soql = "SELECT {token}Field_Mapping_Method__c FROM {token}Data_Import_Settings__c"
+        soql = soql.format(token=token)
         res = self.cumulusci.sf.query_all(soql)
-        return res['records'][0]['npsp__Field_Mapping_Method__c']
+        return res['records'][0]['{token}Field_Mapping_Method__c'.format(token=token)]
 
     def batch_data_import(self, batchsize):
         """"Do a BDI import using the API and wait for it to complete"""
+        self.python_display("Batch data import. Batch size:", batchsize)
         try:
             self.run_apex("""BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
                     ID ApexJobId = Database.executeBatch(bdi, %d);
