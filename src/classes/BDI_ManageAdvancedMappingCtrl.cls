@@ -546,7 +546,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String[] referenceToObjectList;
         @AuraEnabled public Boolean isBooleanMappable;
         private String[] picklistOptions = new String[]{};
-        private List<List<String>> allowedPicklistValues =
+        private List<List<String>> allowedPicklistOptions =
             new List<List<String>>{
                 new List<String>{'true', 'false'},
                 new List<String>{'yes', 'no'},
@@ -591,10 +591,10 @@ public class BDI_ManageAdvancedMappingCtrl {
 
                 picklistOptions.sort();
 
-                for (String[] allowedVals : allowedPicklistValues) {
-                    allowedVals.sort();
+                for (String[] allowedOptions : allowedPicklistOptions) {
+                    allowedOptions.sort();
 
-                    if (picklistOptions.equals(allowedVals)) {
+                    if (picklistOptions.equals(allowedOptions)) {
                         this.isBooleanMappable = true;
                     }
                 }
