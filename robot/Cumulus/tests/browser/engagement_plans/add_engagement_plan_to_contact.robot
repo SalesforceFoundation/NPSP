@@ -21,6 +21,7 @@ Create a Contact and Add Engagement Plan
 Delete Engagement Plan
     [tags]  unstable
     ${plan_num}    Verify Eng Plan Exists    Engagement Plans    True
+    Click Element With Locator    toast-close
     Click Related Item Popup Link    Engagement Plans    ${plan_num}    Delete
     Click Modal Button        Delete
     Verify Occurrence    Engagement Plans    0    
