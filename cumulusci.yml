@@ -142,7 +142,7 @@ tasks:
         options:
             suites: robot/Cumulus/perftests/
             outputdir: robot/Cumulus/results
-            vars: field_mapping_method:Help Text,cleanup_first:core
+            vars: field_mapping_method:Help Text,cleanup_first:core,count:20
 
     performance_tests_CO:
         description: Runs Robot Framework performance tests for BGE-BDI Complex Objects
@@ -151,7 +151,7 @@ tasks:
         options:
             suites: robot/Cumulus/perftests/
             outputdir: robot/Cumulus/results
-            vars: field_mapping_method:Data Import Field Mapping,count:12000
+            vars: field_mapping_method:Data Import Field Mapping,count:12,cleanup_first:core,data_generation_task:tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -505,7 +505,7 @@ flows:
         description: 'Creates a BDI org and runs a performance test'
         steps:
             1:
-                flow: qa_org_namespaced
+                flow: qa_org
             4:
                 task: performance_tests_help_text
                 options:
@@ -516,7 +516,7 @@ flows:
         description: 'Creates a BGE-BDI test org and runs a CO performance test'
         steps:
             1:
-                flow: qa_org_namespaced
+                flow: qa_org
             3:
                 task: performance_tests_CO
 
