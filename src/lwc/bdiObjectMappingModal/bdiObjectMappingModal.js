@@ -140,7 +140,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     * @description Dynamically determines style classes for the section.
     */
     get sectionClasses() {
-        return this.isModalOpen ? 'slds-modal slds-fade-in-open' : 'slds-modal slds-hidden';
+        return this.isModalOpen ? 'slds-modal slds-fade-in-open' : 'slds-modal slds-hide';
     }
     /*******************************************************************************
     * @description Dynamically determines style classes for the backdrop.
