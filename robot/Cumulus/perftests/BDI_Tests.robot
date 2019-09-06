@@ -3,7 +3,7 @@
 ${count} =   12       # use a multiple of 4
 ${database_url} =    
 ${field_mapping_method} =  
-${time_to_pause_after_changing_mode} =  0
+${persistent_org} = 
 
 # tests won't work if there are records of these types in existence.
 ${core_objs_for_cleanup} =  DataImport__c,CustomObject3__c,CustomObject1__c
@@ -27,19 +27,11 @@ Test Teardown      Run Keywords   Report BDI
 
 *** Keywords ***
 Clear DataImport Records
-    ${all_objects} =   Catenate    ${core_objs_for_cleanup}  ,   ${other_objs_for_cleanup}
-    # changed below to disable the "none" option temporarily.
-    ${cleanup_objects} =   Set Variable If
-    ...             "${cleanup_first}"=="core"  ${core_objs_for_cleanup}
-    ...             "${cleanup_first}"=="all"  ${all_objects}
-    ...             "${cleanup_first}"=="none"  ${core_objs_for_cleanup}     Error
-    Should not be equal     ${cleanup_objects}      Error     
-    ...                     Cleanup mode was not one of "core", "all" or "none"
-    Run keyword if  "${cleanup_objects}"!="NONE"
-    ...    Delete   ${cleanup_objects}
-
-    Delete     Account     where=BillingCountry\='Tuvalu'    hardDelete=True
-    Clear Generated Records
+    ${persistent_org} =     Convert To Boolean      ${persistent_org}
+    Run keyword if  ${persistent_org}    
+    ...    Python Display     Persistent org     ${persistent_org}
+    ...    ELSE         Transient org      
+    Run keyword if  ${persistent_org}     Clear Generated Records
 
 Clear Generated Records
     Python Display  Clearing
@@ -62,10 +54,6 @@ Generate Data
 Setup BDI
     Configure BDI     ${field_mapping_method}
 
-    Run Keyword If    ${time_to_pause_after_changing_mode}
-    ...               Python Display    Pausing ${time_to_pause_after_changing_mode}    Seconds
-    Run Keyword If    ${time_to_pause_after_changing_mode}
-    ...               Sleep     ${time_to_pause_after_changing_mode}
     Run Keyword If    '${field_mapping_method}'=='Data Import Field Mapping'
     ...               Ensure Custom Metadata Was Deployed
 
