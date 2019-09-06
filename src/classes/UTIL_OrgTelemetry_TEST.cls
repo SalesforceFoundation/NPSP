@@ -121,6 +121,7 @@ private class UTIL_OrgTelemetry_TEST {
 
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
 
+        // TODO: Is this no longer a test that needs to be respected? Or am I doing something wrong???
         System.assertEquals(currQueryCount, Limits.getQueries(), 'There should no new queries executed because these only reference static custom setting');
         Test.stopTest();
 
@@ -171,6 +172,14 @@ private class UTIL_OrgTelemetry_TEST {
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_BDICMT.name()
             ),
             'setPackageBooleanValue should have been called with the feature IsEnabled_BDICMT'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.RD2_Enabled.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature RD2_Enabled'
         );
     }
 
