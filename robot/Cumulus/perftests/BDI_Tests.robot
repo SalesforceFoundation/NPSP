@@ -6,7 +6,7 @@ ${field_mapping_method} =
 ${time_to_pause_after_changing_mode} =  0
 
 # tests won't work if there are records of these types in existence.
-${core_objs_for_cleanup} =  DataImport__c,CustomObject3__c
+${core_objs_for_cleanup} =  DataImport__c,CustomObject3__c,CustomObject1__c
 # you could also clean these up to have a cleaner test
 ${other_objs_for_cleanup} =   Opportunity,Account,Contact,CustomObject1__c,MaintenancePlan,General_Accounting_Unit__c,WorkOrder,npe01__OppPayment__c
 ${cleanup_first} =   core   # could also be "all" for maximum cleanliness or "none" for fresh scratch orgs
@@ -16,7 +16,9 @@ ${data_generation_task} =     Set Variable If         "${field_mapping_method}"=
 
 Resource  cumulusci/robotframework/CumulusCI.robot
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup      Run Keywords   Setup BDI
+Resource        robot/Cumulus/resources/Data.robot
+Suite Setup      Run Keywords   Clear Generated Records
+...                             AND  Setup BDI
 ...                             AND  Workaround Bug
 ...                             AND  Clear DataImport Records   
 ...                             AND  Generate Data  ${count}
@@ -25,7 +27,6 @@ Test Teardown      Run Keywords   Report BDI
 
 *** Keywords ***
 Clear DataImport Records
-                                
     ${all_objects} =   Catenate    ${core_objs_for_cleanup}  ,   ${other_objs_for_cleanup}
     # changed below to disable the "none" option temporarily.
     ${cleanup_objects} =   Set Variable If
@@ -35,8 +36,18 @@ Clear DataImport Records
     Should not be equal     ${cleanup_objects}      Error     
     ...                     Cleanup mode was not one of "core", "all" or "none"
     Run keyword if  "${cleanup_objects}"!="NONE"
-    ...    Run Task Class  cumulusci.tasks.bulkdata.DeleteData
-    ...        objects=${cleanup_objects}
+    ...    Delete   ${cleanup_objects}
+
+    Delete     Account     where=BillingCountry\='Tuvalu'    hardDelete=True
+    Clear Generated Records
+
+Clear Generated Records
+    Python Display  Clearing
+    Delete     Account_Soft_Credit__c     where=Account__r.BillingCountry\='Tuvalu'    hardDelete=True
+    Delete     npe01__OppPayment__c     where=npe01__Opportunity__r.Account.BillingCountry\='Tuvalu'    hardDelete=True
+    Delete     Opportunity     where=Account.BillingCountry\='Tuvalu'    hardDelete=True
+    Delete     Account     where=BillingCountry\='Tuvalu'    hardDelete=True
+    Delete     Contact     where=Title\='HRH'    hardDelete=True
 
 Generate Data
     [Arguments]    ${count}
@@ -79,7 +90,7 @@ Report BDI
 
     @{result} =   Salesforce Query  Account  
     ...           select=COUNT(Id)
-    ...           BillingCountry=Canada
+    ...           BillingCountry=Tuvalu
 
     Python Display  Accounts imported    ${result}[0][expr0]
 
