@@ -1,8 +1,5 @@
 *** Variables ***
-
-${count} =   12       # use a multiple of 4
 ${database_url} =    
-${field_mapping_method} =  
 ${persistent_org} = 
 
 # tests won't work if there are records of these types in existence.
@@ -17,22 +14,9 @@ ${data_generation_task} =     Set Variable If         "${field_mapping_method}"=
 Resource  cumulusci/robotframework/CumulusCI.robot
 Resource        robot/Cumulus/resources/NPSP.robot
 Resource        robot/Cumulus/resources/Data.robot
-Suite Setup      Run Keywords   Clear Generated Records
-...                             AND  Setup BDI
-...                             AND  Workaround Bug
-...                             AND  Clear DataImport Records   
-...                             AND  Generate Data  ${count}
-Test Teardown      Run Keywords   Report BDI
-
+Suite Setup       Workaround Bug
 
 *** Keywords ***
-Clear DataImport Records
-    ${persistent_org} =     Convert To Boolean      ${persistent_org}
-    Run keyword if  ${persistent_org}    
-    ...    Python Display     Persistent org     ${persistent_org}
-    ...    ELSE         Python Display          Transient org      
-    Run keyword if  ${persistent_org}     Clear Generated Records
-
 Clear Generated Records
     Python Display  Clearing
     Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c
@@ -54,6 +38,7 @@ Generate Data
     ...                 data_generation_task=${data_generation_task}
 
 Setup BDI
+    [Arguments]     ${field_mapping_method}
     Configure BDI     ${field_mapping_method}
 
     Run Keyword If    '${field_mapping_method}'=='Data Import Field Mapping'
@@ -115,13 +100,6 @@ Display Failures
 
     Python Display      Failures   ${length}
 
-    ## TODO: How to recognize my new payments?
-    #
-    # @{payments} =   Salesforce Query  npe01__OppPayment__c
-    # ...           select=COUNT(Id)
-
-    # Python Display      Number of payments created    ${payments}[0][expr0]
-
     Python Display      Example Failure   Id: ${failures[0]['Id']}
     ...                                   Status__c: ${failures[0]['Status__c']}
     ...                                   PaymentImported__c: ${failures[0]['PaymentImported__c']}
@@ -129,40 +107,31 @@ Display Failures
     ...                                   FailureInformation__c: ${failures[0]['FailureInformation__c']}
 
 Workaround Bug
+    Return From Keyword If      ${persistent_org}   # persistent orgs don't have this bug
     Run Task Class      tasks.generate_and_load_data.GenerateAndLoadData
     ...                 num_records=${4}
     ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
     ...                 data_generation_task=tasks.generate_bdi_CO_data.GenerateBDIData_CO
-
+    Setup BDI       Data Import Field Mapping
     Batch Data Import   1000
 
 
+Validate Data
+    [Arguments]     ${count}
+    ${success} =    Assert Query Count Equals    ${count}     DataImport__c       Status__c=Imported
+    Run Keyword Unless   ${success}      Display Failures
+    # double-check
+    ${success} =    Assert Query Count Equals    ${count}     CustomObject3__c
+    Run Keyword Unless   ${success}      Display Failures
+
+Reset Everything
+    [Arguments]                 ${count}    ${bdi_mode}
+    Clear Generated Records
+    Setup BDI                   ${bdi_mode}
+    Generate Data               ${count}
+
 *** Test Cases ***
-
-Import a data batch via the API - COs - No ASCs - 12000 / 250
-
+BGE/BDI Import - 1000 /250
+    [Setup]     Reset Everything    12    Data Import Field Mapping
+    [Teardown]     Validate Data      12
     Batch Data Import   250
-
-    ${count} =	Convert To Integer	${count}	
-
-    @{result} =   Salesforce Query  DataImport__c  
-    ...           select=COUNT(Id)
-    ...           Status__c=Imported
-
-    ${imported_records} =   Set Variable    ${result}[0][expr0]
-
-    Run Keyword If  ${imported_records}!=${count}
-    ...    Display Failures
-
-    Should Be Equal      ${imported_records}    ${count}
-
-    @{result} =   Salesforce Query  CustomObject3__c  
-    ...           select=COUNT(Id)
-
-    Should Be Equal     ${result}[0][expr0]     ${count}
-
-    ## TODO: How to recognize my newly created payments?
-    # @{result} =   Salesforce Query  npe01__OppPayment__c  
-    # ...           select=COUNT(Id)
-
-    # Should Be Equal     ${result}[0][expr0]     ${count}
