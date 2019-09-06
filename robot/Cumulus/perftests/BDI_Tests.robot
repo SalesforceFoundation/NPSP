@@ -30,7 +30,7 @@ Clear DataImport Records
     ${persistent_org} =     Convert To Boolean      ${persistent_org}
     Run keyword if  ${persistent_org}    
     ...    Python Display     Persistent org     ${persistent_org}
-    ...    ELSE         Transient org      
+    ...    ELSE         Python Display          Transient org      
     Run keyword if  ${persistent_org}     Clear Generated Records
 
 Clear Generated Records
