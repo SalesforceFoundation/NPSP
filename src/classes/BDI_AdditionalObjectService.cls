@@ -449,8 +449,10 @@ public with sharing class BDI_AdditionalObjectService {
         Boolean result = true;
         if (objWrap.dataImport.get(predecessor.Imported_Record_Field_Name__c) == null) {
             result = false;
-            System.debug(LoggingLevel.ERROR, 'objWrap.dataImport.get(predecessor.Imported_Record_Field_Name__c) == null');
-            logError(objWrap, System.label.bdiAdditionalObjPredNotFound);
+            String error = String.format(
+                System.Label.bdiAdditionalObjPredNotFound,
+                new List<String>{predecessor.MasterLabel});
+            logError(objWrap, error);
         }
         System.debug(LoggingLevel.ERROR, 'Returning result: ' + result);
         return result;
@@ -643,9 +645,7 @@ public with sharing class BDI_AdditionalObjectService {
         String errorMessageToAppend;
         if (objectWrapper.objMapping.Imported_Record_Status_Field_Name__c != null) {
 
-            String importedRecordStatusField = UTIL_Namespace.StrAllNSPrefix(
-                    objectWrapper.objMapping.Imported_Record_Status_Field_Name__c
-            );
+            String importedRecordStatusField = objectWrapper.objMapping.Imported_Record_Status_Field_Name__c;
 
             String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
                     DataImport__c.SObjectType.getDescribe().getName(),
