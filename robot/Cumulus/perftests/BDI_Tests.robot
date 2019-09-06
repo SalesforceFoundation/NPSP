@@ -111,7 +111,6 @@ Workaround Bug
     Setup BDI       Data Import Field Mapping
     Batch Data Import   1000
 
-
 Validate Data
     [Arguments]     ${count}
     ${success} =    Assert Query Count Equals    ${count}     DataImport__c       Status__c=Imported
