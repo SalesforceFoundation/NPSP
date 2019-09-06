@@ -372,6 +372,10 @@ public class ALLO_PaymentSync_SVC {
     ********************************************************************************************************/
     public void syncPaymentAllocationsToOpportunity(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
+
+        //get allocations settings
+        Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+
         //loop through allocations totals by GAU
         for (Id gau : context.totalPaymentAllocationsByGAU.keySet()) {
             Decimal totalPaymentAllocations = context.totalPaymentAllocationsByGAU.get(gau);
@@ -413,9 +417,14 @@ public class ALLO_PaymentSync_SVC {
                 Allocation__c newOppAllocation = new Allocation__c(
                     General_Accounting_Unit__c = gau,
                     Opportunity__c = context.opportunity.id,
-                    Amount__c = newGAUAmtForOpp,
-                    Percent__c = (context.Opportunity.Amount != 0) ? newGAUAmtFOrOpp / context.Opportunity.Amount * 100 : 0
+                    Amount__c = newGAUAmtForOpp
                 );
+
+                //only add the percent for non-default
+                if (!alloSettings.Default_Allocations_Enabled__c
+                    || (alloSettings.Default_Allocations_Enabled__c &&  gau != alloSettings.Default__c)) {
+                    newOppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? newGAUAmtFOrOpp / context.Opportunity.Amount * 100 : 0;
+                }
 
                 // Assumption: Opportunity Allocations should be maintained with Currency Type from Opportunity Record
                 if (UserInfo.isMultiCurrencyOrganization()) {

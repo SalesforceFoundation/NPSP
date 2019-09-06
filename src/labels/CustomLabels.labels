@@ -1958,7 +1958,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiAdditionalObjPredNotFound</shortDescription>
-        <value>Error: record not created. This record is dependent on another record which couldn&apos;t be found.</value>
+        <value>Error: record not created. This record is dependent on {0} which couldn&apos;&apos;t be found.</value>
     </labels>
     <labels>
         <fullName>bdiAdditionalObjRequiredFieldsNull</fullName>
@@ -2980,6 +2980,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Basic error which any modal field is missing or invalid.</shortDescription>
         <value>Blank or invalid values in one or more fields.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIErrorLabelNameTooLong</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when Group Name is too long.</shortDescription>
+        <value>Error: Group Name is too long, please shorten to 40 characters or fewer.</value>
     </labels>
     <labels>
         <fullName>bdiOMUIErrorNoUnmappedFieldsPt1</fullName>

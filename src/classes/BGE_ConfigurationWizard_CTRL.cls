@@ -47,6 +47,53 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     };
 
     /*******************************************************************************************************
+    * @description Fields to be blocked from BGE as they are required by the system
+    */
+    private static Set<String> bannedFields = new Set<String>{
+            'Account1Imported__c',
+            'Account1ImportStatus__c',
+            'Account2Imported__c',
+            'Account2ImportStatus__c',
+            'ApexJobId__c',
+            'Contact1Imported__c',
+            'Contact1ImportStatus__c',
+            'Contact2Imported__c',
+            'Contact2ImportStatus__c',
+            'DonationImported__c',
+            'DonationImportStatus__c',
+            'Donation_Possible_Matches__c',
+            'FailureInformation__c',
+            'HomeAddressImported__c',
+            'HomeAddressImportStatus__c',
+            'HouseholdAccountImported__c',
+            'ImportedDate__c',
+            'NPSP_Data_Import_Batch__c',
+            'PaymentImported__c',
+            'PaymentImportStatus__c',
+            'Payment_Possible_Matches__c',
+            'Status__c',
+            'Account2ImportStatus__c'
+        };
+
+    /*******************************************************************************************************
+    * @description these data types have been whitelisted since they already work with BGE
+    */ 
+    private static Set<Schema.DisplayType> allowedDataTypes = new Set<Schema.DisplayType>{
+            Schema.DisplayType.CURRENCY,
+            Schema.DisplayType.DATE,
+            Schema.DisplayType.STRING,
+            Schema.DisplayType.TEXTAREA,
+            Schema.DisplayType.DOUBLE,
+            Schema.DisplayType.PICKLIST,
+            Schema.DisplayType.EMAIL,
+            Schema.DisplayType.MULTIPICKLIST,
+            Schema.DisplayType.PHONE,
+            Schema.DisplayType.URL,
+            Schema.DisplayType.REFERENCE
+        };
+
+
+    /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
     * @param recordId Id of the record to be queried
     * @return JSON model of all template details data.
@@ -112,33 +159,69 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         List<BGEField> fields = new List<BGEField>();
 
-        Set<String> allowedObjects = new Set<String>{
-            'Opportunity',
-            'npe01__OppPayment__c'
-        };
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
+            getRelevantFields();
 
-        List<DescribeFieldResult> dfrs = getRelevantFields(allowedObjects);
+        Map<String, List<Schema.SObjectField>> sourceFieldsByFieldLabel = 
+            new Map<String, List<Schema.SObjectField>>();
+        List<String> sortedSourceFieldLabels = new List<String>();
 
-        for (DescribeFieldResult dfr : dfrs) {
-
-            BGEField field = new BGEField();
-            field.name = dfr.getName();
-            // TODO: pull these labels from target fields' schema based on help text mapping
-            Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
-            field.label = (fieldHasSpacesAndObjName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel();
-
-            field.sObjectName = BDI_DataImportService.getTargetObject(dfr.getName());
-            field.sObjectLabel = UTIL_Describe.getObjectLabel(field.sObjectName);
-
-            if (conditionallyRequiredFields.contains(field.name)) {
-                field.conditionallyRequired = true;
+        // sort the fields by label alphabetical
+        for (Schema.SObjectField sourceSObjField: targetFieldsBySourceField.keySet()) {
+            String sourceFieldLabel = sourceSObjField.getDescribe().getLabel();
+            sortedSourceFieldLabels.add(sourceFieldLabel);
+            if (!sourceFieldsByFieldLabel.containsKey(sourceFieldLabel)) {
+                sourceFieldsByFieldLabel.put(
+                    sourceFieldLabel, 
+                    new List<Schema.SObjectField>());
             }
-
-            field.type = UTIL_LightningComponentSupport.getLightningInputDataType(dfr.getType());
-            field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
-
-            fields.add(field);
+            sourceFieldsByFieldLabel.get(sourceFieldLabel).add(sourceSObjField);
         }
+        sortedSourceFieldLabels.sort();
+
+        // nested loops because fields can have the same label and we have to roll out the list 
+        // of fields that share a single label, should that occur
+        for (String sourceSObjFieldLabel: sortedSourceFieldLabels) {
+            List<Schema.SObjectField> sourceSObjFields = 
+                sourceFieldsByFieldLabel.get(sourceSObjFieldLabel);
+            for (Schema.SObjectField sourceSObjField: sourceSObjFields) {
+                Schema.DescribeFieldResult sourceFieldDFR = 
+                    sourceSObjField.getDescribe();
+                BDI_TargetFields targetFields = 
+                    targetFieldsBySourceField.get(sourceSObjField);
+                for (Schema.SObjectType targetSObjType: 
+                        targetFields.getTargetFieldsByTargetObject().keySet()) {
+                
+                    if (!BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(
+                        targetSObjType.getDescribe().getName())) {
+                        continue;
+                    }
+
+                    BGEField field = new BGEField();
+                    field.name = sourceFieldDFR.getName();
+                    // TODO: pull these labels from target fields' schema based on help text mapping
+                    Boolean fieldHasSpacesAndObjName = sourceFieldDFR.getLabel().contains(' ') && 
+                        sourceFieldDFR.getLabel().split(' ',2)[0] == field.sObjectName;
+                    field.label = (fieldHasSpacesAndObjName) ? 
+                        sourceFieldDFR.getLabel().split(' ',2)[1] : 
+                        sourceFieldDFR.getLabel();
+
+                    field.sObjectName = targetSObjType.getDescribe().getName();
+                    field.sObjectLabel = targetSObjType.getDescribe().getLabel();
+
+                    if (conditionallyRequiredFields.contains(field.name)) {
+                        field.conditionallyRequired = true;
+                    }
+
+                    field.type = UTIL_LightningComponentSupport.getLightningInputDataType(
+                            sourceFieldDFR.getType());
+                    field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
+
+                    fields.add(field);
+                }
+            }
+        }
+
         return fields;
     }
 
@@ -146,93 +229,59 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Returns the Data Import DFRs for a set of target objects
     * @return list of DescribeFieldResults
     */
-    public static List<Schema.DescribeFieldResult> getRelevantFields(Set<String> allowedObjects) {
-
-        Map<String, Schema.DescribeFieldResult> filteredDFRMap = new Map<String, Schema.DescribeFieldResult>();
-
-        Map<String, Schema.DescribeFieldResult> allFieldsMap =
-                UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
-
-        Set<String> bannedFields = new Set<String>{
-            'Account1Imported__c',
-            'Account1ImportStatus__c',
-            'Account2Imported__c',
-            'Account2ImportStatus__c',
-            'ApexJobId__c',
-            'Contact1Imported__c',
-            'Contact1ImportStatus__c',
-            'Contact2Imported__c',
-            'Contact2ImportStatus__c',
-            'DonationImported__c',
-            'DonationImportStatus__c',
-            'Donation_Possible_Matches__c',
-            'FailureInformation__c',
-            'HomeAddressImported__c',
-            'HomeAddressImportStatus__c',
-            'HouseholdAccountImported__c',
-            'ImportedDate__c',
-            'NPSP_Data_Import_Batch__c',
-            'PaymentImported__c',
-            'PaymentImportStatus__c',
-            'Payment_Possible_Matches__c',
-            'Status__c',
-            'Account2ImportStatus__c'
-        };
-
-        // these data types have been whitelisted since they already work with BGE
-        Set<Schema.DisplayType> allowedDataTypes = new Set<Schema.DisplayType>{
-            Schema.DisplayType.CURRENCY,
-            Schema.DisplayType.DATE,
-            Schema.DisplayType.STRING,
-            Schema.DisplayType.TEXTAREA,
-            Schema.DisplayType.DOUBLE,
-            Schema.DisplayType.PICKLIST,
-            Schema.DisplayType.EMAIL,
-            Schema.DisplayType.MULTIPICKLIST,
-            Schema.DisplayType.PHONE,
-            Schema.DisplayType.URL,
-            Schema.DisplayType.REFERENCE
-        };
+    public static Map<SObjectField, BDI_TargetFields> getRelevantFields() {
 
         // these fields have been whitelisted since they have special handling in BDI
         Set<String> allowedFields = new Set<String>{
             'Donation_Record_Type_Name__c'
         };
 
-        // looping through the fields on DataImport__c and remove unsupported data types
-        // Remove fields user doesn't have permission to update unless whitelisted
-        for (Schema.DescribeFieldResult dfr : allFieldsMap.values()) {
-            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
+        Map<SObjectField, BDI_TargetFields> filteredTargetFieldsBySourceField = 
+            new Map<SObjectField, BDI_TargetFields>();
 
-            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
+        BDI_FieldMapping fieldMapping = BDI_DataImportService.getDefaultFieldMapping();
+
+        Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
+            BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField;
+
+        for (SObjectField sourceSObjField: targetFieldsBySourceField.keySet()) {
+            Schema.DescribeFieldResult sourceDFR = sourceSObjField.getDescribe();
+            String dataImportFieldApiName = 
+                UTIL_Namespace.StrTokenRemoveNSPrefix(sourceDFR.getName());
+
+            // get objects the field is mapped to
+            BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceSObjField);
+            Set<SObjectType> targetObjectTypesMappedFromField = 
+                targetFields.getTargetFieldsByTargetObject().keySet();
+            Boolean mappedToAllowedObject = false;
+            for (SObjectType sObjType: targetObjectTypesMappedFromField) {
+                if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(
+                        sObjType.getDescribe().getName())) {
+                    mappedToAllowedObject = true;
+                    break;
+                }
+            }
 
             Boolean fieldAllowed = (
-                UTIL_Permissions.canUpdate(dfr, false)
-                && ((allowedObjects.contains(dataImportFieldMappedObject)
-                && allowedDataTypes.contains(dfr.type)
-                && !bannedFields.contains(dataImportFieldApiName)
-                && dfr.getInlineHelpText() != null)
-                || allowedFields.contains(dataImportFieldApiName))
+                UTIL_Permissions.canUpdate(sourceDFR, false)
+                && (mappedToAllowedObject
+                    && allowedDataTypes.contains(sourceDFR.type)
+                    && !bannedFields.contains(dataImportFieldApiName)
+                    || allowedFields.contains(dataImportFieldApiName)
+                )
             );
 
             if (fieldAllowed) {
-                filteredDFRMap.put(dfr.label, dfr);
+                filteredTargetFieldsBySourceField.put(sourceSObjField, targetFields);
             }
         }
 
-        List<String> sortedFieldLabels = new List<String>(filteredDFRMap.keySet());
-        sortedFieldLabels.sort();
-
-        List<Schema.DescribeFieldResult> sortedDFRs = new List<Schema.DescribeFieldResult>();
-        for (String fieldLabel : sortedFieldLabels) {
-            sortedDFRs.add(filteredDFRMap.get(fieldLabel));
-        }
-
-        return sortedDFRs;
+        return filteredTargetFieldsBySourceField;
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the default active fields for a new Batch or Template in a JSON String
+    * @description Retrieves the default active fields for a new Batch or 
+    *     Template in a JSON String
     */
     public static String getDefaultActiveFields() {
         List<BGEField> fields = new List<BGEField>();
