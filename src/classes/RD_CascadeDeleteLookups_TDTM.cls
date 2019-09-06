@@ -84,7 +84,17 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
                 WHERE Recurring_Donation__c IN :recurringDonationIds
                 OR Opportunity__c IN :relatedOpportunities
             ];
+
             result.addAll((List<SObject>) relatedAllocations);
+
+            List<npe01__OppPayment__c> paymentList = [
+                SELECT ID, npe01__Paid__c, Name
+                FROM npe01__OppPayment__c
+                WHERE npe01__Opportunity__c IN: relatedOpportunities
+            ];
+
+            result.addAll((List<Sobject>) paymentList);
+
 
             return result;
         }
@@ -197,6 +207,11 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
                         Opportunity closedWonOpportunity = (Opportunity) child;
                         error.addChildError(Label.ClosedWonOpportunities, closedWonOpportunity.Id, closedWonOpportunity.Name);
                     }
+
+                    if (isPaidPayment(child)) {
+                        npe01__OppPayment__c paidPayment = (npe01__OppPayment__c)child;
+                        error.addChildError(Label.PaidPayment, paidPayment.Id, paidPayment.Name);
+                    }
                 }
 
                 String errorMessage = error.getMessage();
@@ -220,6 +235,15 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
         }
 
         /*******************************************************************************************************
+        * @description Checks if the record is a paid payment.
+        * @param SObject The child record.
+        * @return Boolean.
+        ********************************************************************************************************/
+        private Boolean isPaidPayment(Sobject record) {
+            return (record instanceof  npe01__OppPayment__c && ((npe01__OppPayment__c)record).npe01__Paid__c);
+        }
+
+        /*******************************************************************************************************
         * @description Gets the children records fo the given Recurring Donation.
         * @param Id The Id of the deleted Recurring Donation.
         * @param List<SObject> The deleted Recurring Donations children.
@@ -233,7 +257,8 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
                     (child instanceof Allocation__c && (
                         ((Allocation__c) child).Recurring_Donation__c == deletedRecurringDonationId ||
                         ((Allocation__c) child).Opportunity__r.npe03__Recurring_Donation__c == deletedRecurringDonationId
-                    ))
+                    ) ||
+                    (child instanceof  npe01__OppPayment__c && ((npe01__OppPayment__c) child).npe01__Paid__c))
                 ) {
                     result.add(child);
                 }

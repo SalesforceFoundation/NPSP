@@ -1279,6 +1279,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Processing</value>
     </labels>
     <labels>
+        <fullName>PaidPayment</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PaidPayment</shortDescription>
+        <value>Paid Payments</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorAddDonationHeaderText</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>

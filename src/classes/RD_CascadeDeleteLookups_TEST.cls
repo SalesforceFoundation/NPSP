@@ -128,6 +128,58 @@ private class RD_CascadeDeleteLookups_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Attempts to delete recurring donation with paid payments, verifies
+    * exception is thrown.
+    */
+    static testMethod void testRDPaidPaymentDeleteException(){
+        List<Account> accounts = CDL_CascadeDeleteLookups_TEST.buildAccounts(1);
+        insert accounts;
+
+        TDTM_TriggerHandler.disableTDTM = true;
+
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        insert recurringDonations;
+
+        List<Opportunity> rdOpportunities = new List<Opportunity>();
+        rdOpportunities.addAll(CDL_CascadeDeleteLookups_TEST.buildRDOpportunities(recurringDonations, UTIL_UnitTestData_TEST.getClosedWonStage()));
+        insert rdOpportunities;
+
+        //Insert a paid payment
+        npe01__OppPayment__c newPayment = new npe01__OppPayment__c();
+        newPayment.npe01__Opportunity__c = rdOpportunities[0].ID;
+        newPayment.npe01__Payment_Amount__c = 8;
+        newPayment.npe01__Paid__c = true;
+
+        insert newPayment;
+
+        rdOpportunities[0].StageName = 'Prospecting';
+        update rdOpportunities;
+
+        // Get the payment's name.
+        List<npe01__OppPayment__c> queriedPayments = [SELECT Id, Name, npe01__Paid__c FROM npe01__OppPayment__c WHERE Id =: newPayment.Id];
+
+        Exception caughtException;
+        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(rdOpportunities[0].Name);
+        expectedError.addChildError(Label.PaidPayment, queriedPayments[0].Id, queriedPayments[0].Name);
+
+        TDTM_TriggerHandler.disableTDTM = false;
+
+        Test.startTest();
+        try{
+            delete recurringDonations;
+        } catch (Exception ex) {
+            caughtException = ex;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, caughtException, 'An exception should be caught.');
+        System.assert(caughtException.getMessage().containsIgnoreCase(queriedPayments[0].Id), 'Exception message is not the one expected');
+        System.assert(caughtException.getMessage().containsIgnoreCase(queriedPayments[0].Name), 'Exception message is not the one expected');
+        System.assert(caughtException.getMessage().contains(Label.PaidPayment), 'Exception message should mention Paid Payments.');
+    }
+
+    /*********************************************************************************************************
     * @description Attempts to delete 2 Recurring Donations, 1 with Closed Won Opportunity and the other one
     * with Closed Lost Opportunity. The first one should have an error, and its Closed Won Opportunity should 
     * not be deleted. The other one should be deleted, and its Closed Lost Opportunity deleted.
