@@ -14,6 +14,7 @@ ${data_generation_task} =     Set Variable If         "${field_mapping_method}"=
 Resource  cumulusci/robotframework/CumulusCI.robot
 Resource        robot/Cumulus/resources/NPSP.robot
 Resource        robot/Cumulus/resources/Data.robot
+Resource        robot/Cumulus/resources/BDI_API.robot
 Suite Setup       Workaround Bug
 
 *** Keywords ***
@@ -33,7 +34,7 @@ Generate Data
 
     Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
     ...                 num_records=${count}
-#    ...                 database_url=sqlite:////tmp/temp_db.db
+#    ...                 database_url=sqlite:////tmp/temp_db.db  # turn this on to look at the DB for debugging
     ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
     ...                 data_generation_task=${data_generation_task}
 
@@ -91,12 +92,10 @@ Ensure Custom Metadata Was Deployed
     Python Display      Custom Metadata Deployed        ${Migrated_Custom_Object_Mapping_Set_Length}
 
 Display Failures
-    @{failures} =   Salesforce Query  DataImport__c
-    ...           select=Id,Status__c,FailureInformation__c, PaymentImported__c, PaymentImportStatus__c
-    ...           Status__c=Failed
+    @{failures} =   Collect BDI Failures
     ${length} =  Get Length  ${failures}
     Run Keyword If  ${length} == 0  Log to Console  No failure records
-    Run Keyword If  ${length} == 0  Return From Keyword    False
+    Return From Keyword If       ${length}==0        False
 
     Python Display      Failures   ${length}
 
@@ -108,10 +107,7 @@ Display Failures
 
 Workaround Bug
     Return From Keyword If      ${persistent_org}   # persistent orgs don't have this bug
-    Run Task Class      tasks.generate_and_load_data.GenerateAndLoadData
-    ...                 num_records=${4}
-    ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
-    ...                 data_generation_task=tasks.generate_bdi_CO_data.GenerateBDIData_CO
+    Generate Data   4
     Setup BDI       Data Import Field Mapping
     Batch Data Import   1000
 
@@ -119,10 +115,10 @@ Workaround Bug
 Validate Data
     [Arguments]     ${count}
     ${success} =    Assert Query Count Equals    ${count}     DataImport__c       Status__c=Imported
-    Run Keyword Unless   ${success}      Display Failures
+    Run Keyword Unless   "${success}"=="Success"      Display Failures
     # double-check
     ${success} =    Assert Query Count Equals    ${count}     CustomObject3__c
-    Run Keyword Unless   ${success}      Display Failures
+    Run Keyword Unless   "${success}"=="Success"      Display Failures
 
 Reset Everything
     [Arguments]                 ${count}    ${bdi_mode}
@@ -131,7 +127,7 @@ Reset Everything
     Generate Data               ${count}
 
 *** Test Cases ***
-BGE/BDI Import - 1000 /250
-    [Setup]     Reset Everything    12    Data Import Field Mapping
-    [Teardown]     Validate Data      12
+BGE/BDI Import - 20000 /250
+    [Setup]     Reset Everything    20000    Data Import Field Mapping
+    [Teardown]     Validate Data      20000
     Batch Data Import   250
