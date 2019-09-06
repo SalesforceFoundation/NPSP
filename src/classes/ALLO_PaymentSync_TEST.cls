@@ -926,6 +926,48 @@ private with sharing  class ALLO_PaymentSync_TEST {
             )
         );
     }
+
+    /*******************************************************************************************************
+    * @description Test when changing the amount of a Payment with Allocations that if GAU is Default GAU then 
+    * percent is not populated.
+    ********************************************************************************************************/
+    @isTest
+    private static void testNoPercentOnDefaultGAU(){
+        setupForTests();
+        makePayments(2000, 2);
+        makeGAUs(1);  
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+        List<Allocation__c> pmtAllocs = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 100, General_Accounting_Unit__c = gaus[0].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> allocations = getAllocationsOrderByAmount();    
+
+        for (Allocation__c alloc : allocations) {
+            if (alloc.Payment__c != null) {
+                pmtAllocs.add(alloc);
+            }
+        }
+
+        pmtAllocs[1].Percent__c = 50;
+        update pmtAllocs;
+
+        Allocation__c oppAllocation = [select Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Opportunity__c = :opportunity.Id
+                       AND General_Accounting_Unit__c =: defaultGau.id
+                       order by Amount__c DESC];
+
+        System.assertEquals(null, oppAllocation.Percent__c, 'Default Allocation Percentage');
+    }
+
     /*** Helpers ***/
 
     private static void makePayments(Decimal totalAmount, Integer numberOfPayments) {
