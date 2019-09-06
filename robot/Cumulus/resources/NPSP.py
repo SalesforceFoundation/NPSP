@@ -1188,7 +1188,6 @@ class NPSP(object):
             axe.run(%s, options, cb);
         """ % context
         results = self.selenium.execute_async_javascript(runScript)
-        self.log_raw_results(results)
         self.selenium.capture_page_screenshot()
         return results
     

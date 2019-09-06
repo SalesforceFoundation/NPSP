@@ -283,6 +283,7 @@ Create Engagement Plan
     Wait Until Page Contains  Task 2
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
+    Run Accessibility Check
     Click Button    Save
     ${ns} =  Get NPSP Namespace Prefix
     ${eng_id} =           Get Current Record Id
@@ -367,3 +368,10 @@ Click Field And Select Date
     [Arguments]    ${field}    ${date}
     Click Element With Locator    bge.field-input    ${field}    
     Click BGE Button    ${date}    
+    
+Run Accessibility Check
+    Inject Axe Core Library
+    &{results}    Get Axe Analysis Results
+    Log Summary Of Results    ${results}
+    Warn On Incomplete Rules    ${results}
+    Warn On Violations Rules    ${results}    
