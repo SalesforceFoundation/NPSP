@@ -153,7 +153,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     get sectionClasses() {
-        return this.isModalOpen ? 'slds-modal slds-fade-in-open' : 'slds-modal slds-hidden';
+        return this.isModalOpen ? 'slds-modal slds-fade-in-open' : 'slds-modal slds-hide';
     }
 
     get backdropClasses() {
