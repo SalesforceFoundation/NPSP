@@ -4,15 +4,6 @@ GAU:
     fields:
         Name: Name
 
-# MaintenancePlan:
-#     sf_object: MaintenancePlan
-#     table: MaintenancePlan
-#     fields:
-#         Frequency: Frequency
-#         GenerationTimeframe: GenerationTimeframe
-#         StartDate: StartDate
-#         NextSuggestedMaintenanceDate: NextSuggestedMaintenanceDate
-
 DataImport:
     sf_object: DataImport__c
     table: DataImport__c
@@ -43,10 +34,6 @@ DataImport:
         CO3_Number__c: CO3_Number__c
         CO3_Picklist__c: CO3_Picklist__c
         CO3_Phone__c: CO3_Phone__c
-        WO_MinimumCrewSize__c: WO_MinimumCrewSize__c
-        WO_RecommendedCrewSize__c: WO_RecommendedCrewSize__c
-        WO_SuggestedMaintenanceDate__c: WO_SuggestedMaintenanceDate__c
-        WO_Subject__c: WO_Subject__c
         Opp_Do_Not_Automatically_Create_Payment__c: Opp_Do_Not_Automatically_Create_Payment__c
         ASC_Amount__c: ASC_Amount__c
         ASC_Role__c: ASC_Role__c
@@ -54,6 +41,3 @@ DataImport:
         GAU_Allocation_1_GAU__c:
             table: General_Accounting_Unit__c
             key_field: GAU_Allocation_1_GAU__c
-        # WO_MaintenancePlan__c:
-        #     table: MaintenancePlan
-        #     key_field: WO_MaintenancePlan__c
