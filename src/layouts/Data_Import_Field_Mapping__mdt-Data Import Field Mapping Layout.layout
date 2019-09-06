@@ -38,6 +38,10 @@
                 <behavior>Edit</behavior>
                 <field>Is_Deleted__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Match_On_This_Mapping__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

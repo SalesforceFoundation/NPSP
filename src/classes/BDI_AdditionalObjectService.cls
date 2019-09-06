@@ -111,6 +111,7 @@ public with sharing class BDI_AdditionalObjectService {
             for (Data_Import_Object_Mapping__mdt objMapping : currentTierOfObjMappings.values()) {
 
                 BDI_ObjectMappingLogic objMappingLogic = getObjectMappingLogicClass(objMapping);
+                BDI_ObjectMatchingLogic objMatchingLogic = getObjectMatchingLogicClass(objMapping);
 
                 Data_Import_Object_Mapping__mdt predecessor = 
                     fieldMappingCustomMetadata.objMappingsByDevName.get(objMapping.Predecessor__c);
@@ -121,6 +122,8 @@ public with sharing class BDI_AdditionalObjectService {
                 if (fieldMappings != null && fieldMappings.size() > 0) {
 
                     BDI_ObjectWrapper[] objWrapsForProcessing = new BDI_ObjectWrapper[]{};
+                    BDI_ObjectWrapper[] objWrapsForMatching = new BDI_ObjectWrapper[]{};
+
                     for (DataImport__c dataImport : dataImportRecords) {
 
                         BDI_ObjectWrapper objWrap = new BDI_ObjectWrapper(
@@ -141,19 +144,30 @@ public with sharing class BDI_AdditionalObjectService {
 
                             //If the predecessor doesn't exist, then update the Data import object with an error 
                             //and continue with the next dataImport.
-                            if (!predecessorExists(objWrap,predecessor)) {
-                                continue;
+                            if (!dataImportService.isDryRun) {
+                                if (!predecessorExists(objWrap,predecessor)) {
+                                    continue;
+                                }
                             }
 
+                            objWrapsForMatching.add(objWrap);
                         } else { 
 
                             //If there is an existing record then we don't need to perform the normal validation 
                             // and can proceed to populating the record with any non-null values.
                             objWrap.existingSObjectId = (Id)dataImport.get(objMapping.Imported_Record_Field_Name__c);
-
+                            objWrapsForProcessing.add(objWrap);
                         }
+                    }
 
-                        objWrapsForProcessing.add(objWrap);
+                    if (objWrapsForMatching.size() > 0){
+                        objMatchingLogic.matchObjects(objWrapsForMatching,dataImportService);
+                        for (BDI_ObjectWrapper objWrap : objWrapsForMatching) {
+                            //If the data import row did not trigger an error that resulted in Failure then proceed
+                            if (objWrap.dataImport.Status__c != System.label.bdiFailed) {
+                                objWrapsForProcessing.add(objWrap);
+                            }
+                        }
                     }
 
                     if (!dataImportService.isDryRun && objWrapsForProcessing.size() > 0) {
@@ -266,7 +280,7 @@ public with sharing class BDI_AdditionalObjectService {
                             objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name__c,
                                 System.label.bdiUpdated);
                         } else {
-                            logError(objWrap, result.getErrors()[0].getMessage());
+                            objWrap.logError(dataImportService.statusDIFailed(), result.getErrors()[0].getMessage());
                         }
                     }
                 }        
@@ -300,7 +314,7 @@ public with sharing class BDI_AdditionalObjectService {
                                 objWrapsForChildPredecessorUpdate.add(objWrap);
                             }
                         } else {
-                            logError(objWrap, result.getErrors()[0].getMessage());
+                            objWrap.logError(dataImportService.statusDIFailed(), result.getErrors()[0].getMessage());
                         }
                     }
                 }
@@ -314,8 +328,7 @@ public with sharing class BDI_AdditionalObjectService {
 
     /*******************************************************************************************************
     * @description Determines if there is a custom mapping logic class and constructs it if there is, 
-    *   otherwise returns the default
-    * mapping class.
+    *   otherwise returns the default mapping class.
     * @param objMapping The Data Import Object Mapping to look for a custom mapping logic class on.
     */
     private BDI_ObjectMappingLogic getObjectMappingLogicClass (Data_Import_Object_Mapping__mdt objMapping) {
@@ -331,6 +344,24 @@ public with sharing class BDI_AdditionalObjectService {
         return objMappingLogicClass;
     }
 
+
+    /*******************************************************************************************************
+    * @description Determines if there is a custom matching logic class and constructs it if there is, 
+    *   otherwise returns the default matching class.
+    * @param objMapping The Data Import Object Mapping to look for a custom matching logic class on.
+    */
+    private BDI_ObjectMatchingLogic getObjectMatchingLogicClass (Data_Import_Object_Mapping__mdt objMapping) {
+        BDI_ObjectMatchingLogic objMatchingLogicClass;
+
+        if (objMapping.Custom_Matching_Logic_Class__c != null) {
+            Type custLogicClassType = Type.forName(
+                UTIL_Namespace.alignClassNSWithEnvironment(objMapping.Custom_Mapping_Logic_Class__c));
+            objMatchingLogicClass = (BDI_ObjectMatchingLogic)custLogicClassType.newInstance();
+        } else {
+            objMatchingLogicClass = new BDI_ObjectMatchingLogic();
+        }
+        return objMatchingLogicClass;
+    }
 
     /*******************************************************************************************************
     * @description For newly created parent sobjects, this method updates the appropriate child predecessor
@@ -424,7 +455,7 @@ public with sharing class BDI_AdditionalObjectService {
 
                         String errorMessage = System.label.bdiAdditionalObjChildNotUpdated +
                                 result.getErrors()[0].getMessage();
-                        logError(objWrap, errorMessage);
+                        objWrap.logError(dataImportService.statusDIFailed(), errorMessage);
                     }
                 }
             }
@@ -444,7 +475,7 @@ public with sharing class BDI_AdditionalObjectService {
             String error = String.format(
                 System.Label.bdiAdditionalObjPredNotFound,
                 new List<String>{predecessor.MasterLabel});
-            logError(objWrap, error);
+            objWrap.logError(dataImportService.statusDIFailed(), error);
         }
         return result;
     }
@@ -499,7 +530,7 @@ public with sharing class BDI_AdditionalObjectService {
 
             } else if (anyNonImportedRecordFieldsPopulated && !allRequiredFieldsPopulated) {
                 requiredFieldErrorMsg = requiredFieldErrorMsg.removeEnd('; ').abbreviate(255);
-                logError(objWrap, requiredFieldErrorMsg);
+                objWrap.logError(dataImportService.statusDIFailed(), requiredFieldErrorMsg);
             }
         }
 
@@ -587,68 +618,5 @@ public with sharing class BDI_AdditionalObjectService {
             
         }
         return importedRecordFieldNames;
-    }
-
-    private void logError(BDI_ObjectWrapper objectWrapper, String errorMessage) {
-        objectWrapper.setDataImportStatus(BDI_DataImport_API.bdiFailed);
-
-        objectWrapper.setImportedRecordStatusError(errorMessage);
-
-        logCombinedFailureInformation(objectWrapper, errorMessage);
-
-        objectWrapper.setFailureInformation(
-                failureInformationByDataImportId.get(objectWrapper.dataImport.Id)
-        );
-    }
-
-    private Map<Id, String> failureInformationByDataImportId;
-
-    private void logCombinedFailureInformation(
-            BDI_ObjectWrapper objectWrapper,
-            String errorMessage) {
-
-        DataImport__c dataImport = objectWrapper.dataImport;
-        String errorMessageToAppend =
-                getFailureInformationErrorMessage(objectWrapper, errorMessage);
-
-        if (failureInformationByDataImportId == null) {
-            failureInformationByDataImportId = new Map<Id, String>();
-        }
-
-        String combinedErrorMessage =
-                failureInformationByDataImportId.get(dataImport.Id);
-
-        if (combinedErrorMessage == null) {
-            failureInformationByDataImportId.put(dataImport.Id, errorMessageToAppend);
-        } else {
-            failureInformationByDataImportId.put(dataImport.Id,
-                    String.join(
-                            new List<String>{
-                                    combinedErrorMessage, errorMessageToAppend
-                            }, '\n\n'));
-        }
-    }
-
-    private String getFailureInformationErrorMessage(
-            BDI_ObjectWrapper objectWrapper,
-            String errorMessage) {
-
-        String errorMessageToAppend;
-        if (objectWrapper.objMapping.Imported_Record_Status_Field_Name__c != null) {
-
-            String importedRecordStatusField = objectWrapper.objMapping.Imported_Record_Status_Field_Name__c;
-
-            String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
-                    DataImport__c.SObjectType.getDescribe().getName(),
-                    importedRecordStatusField).getLabel();
-
-            errorMessageToAppend = String.join(
-                    new List<String>{
-                            importedRecordStatusFieldLabel, errorMessage
-                    }, ':\n');
-        } else {
-            errorMessageToAppend = errorMessage;
-        }
-        return errorMessageToAppend;
     }
 }

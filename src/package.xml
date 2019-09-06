@@ -96,6 +96,7 @@
         <members>BDI_MigrationMappingUtility</members>
         <members>BDI_MigrationMappingUtility_TEST</members>
         <members>BDI_ObjectMappingLogic</members>
+        <members>BDI_ObjectMatchingLogic</members>
         <members>BDI_ObjectWrapper</members>
         <members>BDI_PerfLogger</members>
         <members>BDI_PerfLogger_TEST</members>
@@ -1126,11 +1127,13 @@
         <members>Data_Import_Field_Mapping_Set__mdt.Data_Import_Object_Mapping_Set__c</members>
         <members>Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c</members>
         <members>Data_Import_Field_Mapping__mdt.Is_Deleted__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Match_On_This_Mapping__c</members>
         <members>Data_Import_Field_Mapping__mdt.Required__c</members>
         <members>Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c</members>
         <members>Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c</members>
         <members>Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c</members>
         <members>Data_Import_Object_Mapping__mdt.Custom_Mapping_Logic_Class__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Custom_Matching_Logic_Class__c</members>
         <members>Data_Import_Object_Mapping__mdt.Data_Import_Object_Mapping_Set__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
@@ -1554,6 +1557,8 @@
         <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
+        <members>bdiObjMatchErrorMultipleMatch</members>
+        <members>bdiObjMatchErrorTooManyMatchingFields</members>
         <members>bdiOMUIChildParentHelp</members>
         <members>bdiOMUIChildParentLabel</members>
         <members>bdiOMUICreateModalTitle</members>

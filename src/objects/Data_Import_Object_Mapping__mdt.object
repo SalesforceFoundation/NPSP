@@ -14,6 +14,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Custom_Matching_Logic_Class__c</fullName>
+        <description>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMatchingLogic class and overrides the matchObjects method.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMatchingLogic class and overrides the matchObjects method.</inlineHelpText>
+        <label>Custom Matching Logic Class</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Data_Import_Object_Mapping_Set__c</fullName>
         <description>The Data Import Object Group containing this record.</description>
         <externalId>false</externalId>

@@ -34,6 +34,10 @@
                 <behavior>Edit</behavior>
                 <field>Custom_Mapping_Logic_Class__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Custom_Matching_Logic_Class__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

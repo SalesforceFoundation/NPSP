@@ -255,7 +255,7 @@ private class BDI_AdditionalObjectService_TEST {
                                         PaymentImportStatus__c,
                                         PaymentImported__c
                                     FROM DataImport__c]) {
-            System.debug('DataimportResult is: ' + di);
+
             if (di.Contact1_Lastname__c == 'TestGroupA01') {
                 testDataImportAResult = di;
             } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
@@ -576,9 +576,6 @@ private class BDI_AdditionalObjectService_TEST {
 
         }
 
-        System.debug('Test Data Import Result A is: ' + testDataImportAResult);
-
-        System.debug('Test Data Import Result B is: ' + testDataImportBResult);
         System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
         System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
@@ -637,10 +634,7 @@ private class BDI_AdditionalObjectService_TEST {
         testDataImportBResult.GAU_Allocation_2_Percent__c = 35;
         testDataImportBResult.Opportunity_Contact_Role_2_Role__c = 'Other';
 
-        System.debug('GAU ALLOCATION BEFORE UPDATE IS: ' + testDataImportAResult.GAU_Allocation_1_Imported__c);
-
         update new DataImport__c[]{testDataImportAResult, testDataImportBResult};
-
 
         Test.startTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
@@ -680,7 +674,6 @@ private class BDI_AdditionalObjectService_TEST {
                                         PaymentImportStatus__c,
                                         PaymentImported__c
                                     FROM DataImport__c]) {
-            System.debug('Found DI: ' + di);
             if (di.Contact1_Lastname__c == 'TestGroupA01') {
                 testDataImportAResult2 = di;
             } else if (di.Contact1_Lastname__c == 'TestGroupB01'){
@@ -706,7 +699,6 @@ private class BDI_AdditionalObjectService_TEST {
 
         for (OpportunityContactRole ocr : [SELECT Id, ContactId, OpportunityId, Role 
                                             FROM OpportunityContactRole]){
-            System.debug('OCR at end: ' + ocr);
             ocrAll.add(ocr);
             if (ocr.Id == testDataImportAResult.Opportunity_Contact_Role_1_Imported__c ) {
                 ocrA1 = ocr;
@@ -1228,7 +1220,7 @@ private class BDI_AdditionalObjectService_TEST {
         insert testGAU;
 
         DataImportBatch__c testBatch = new DataImportBatch__c(
-                Name='testBatch'
+                Name = 'testBatch'
         );
         insert testBatch;
 
@@ -1272,4 +1264,394 @@ private class BDI_AdditionalObjectService_TEST {
                 'The Batch should have been dry run-validated without errors.');
     }
 
+    @isTest
+    static void
+    shouldFindMatchForDIAndErrorOnMultiMatch() {
+
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = 
+            BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
+
+        //Remove one of the Allocations using GAU 1 so there is only one result.
+        for (DataImport__c di: diRecords) {
+            if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                di.GAU_Allocation_1_Amount__c = null;
+                di.GAU_Allocation_1_GAU__c = null;
+                di.GAU_Allocation_1_Percent__c = null;
+            }
+        }
+
+        //Run data import once to create records to match to.
+        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultFieldMapping());
+        bdiDIS.process(null, dis, diRecords);
+
+        DataImport__c existingDI1;
+        DataImport__c existingDI2;
+
+        //Retrieve the baseline DIs that were imported for later comparison.
+        for (DataImport__c di: [SELECT Id, 
+                                    Contact1_Lastname__c,
+                                    GAU_Allocation_1_Imported__c,
+                                    Status__c,
+                                    FailureInformation__c
+                                FROM DataImport__c ] ){
+
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                existingDI1 = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                existingDI2 = di;
+            }
+        }
+        
+        BDI_FieldMappingCustomMetadata bdiFMCM = BDI_FieldMappingCustomMetadata.getInstance();
+
+        Data_Import_Field_Mapping__mdt[] gau1FieldMappings = 
+            bdiFMCM.fieldMappingsByObjMappingDevName.get('GAU_Allocation_1');
+
+        //For this test we will attempt to match on the GAU lookup field.  This is not the kind of matching
+        //we would generally expect from users, but we are doing it here since we can't create additional
+        //fields. 
+        for (Data_Import_Field_Mapping__mdt difm : gau1FieldMappings) {
+            if (difm.DeveloperName == 'GAU_Allocation_1_GAU') {
+                difm.Match_On_This_Mapping__c = 'Yes';
+            }
+        }
+
+        General_Accounting_Unit__c gau1;
+        General_Accounting_Unit__c gau2;
+        
+        for (General_Accounting_Unit__c gau : [SELECT Id, Name 
+                                                FROM General_Accounting_Unit__c] ){
+            if (gau.Name == 'TestGroupA GAU 1') {
+                gau1 = gau;
+            } else {
+                gau2 = gau;
+            }
+        }
+        
+        DataImport__c diTest1 = new DataImport__c(Contact1_Firstname__c = 'Susie',
+                                            Contact1_Lastname__c = 'MatchTest1',
+                                            Contact1_Personal_Email__c = 'matchTest1@fakedata.com',
+                                            Contact1_Preferred_Email__c = 'matchTest1@fakedata.com',
+                                            Donation_Amount__c = 10000,
+                                            Donation_Date__c = Date.today(),
+                                            Donation_Description__c = null,
+                                            Donation_Donor__c = 'Contact1',
+                                            GAU_Allocation_1_Amount__c = 750,
+                                            GAU_Allocation_1_GAU__c = gau1.Id,
+                                            GAU_Allocation_1_Percent__c = 75,
+                                            Home_City__c = 'Fakeville',
+                                            Home_Country__c = 'United States',
+                                            Home_State_Province__c = 'California',
+                                            Home_Street__c = '500 Fake Blvd',
+                                            Home_Zip_Postal_Code__c = '94105');
+
+        DataImport__c diTest2 = new DataImport__c(Contact1_Firstname__c = 'John',
+                                            Contact1_Lastname__c = 'MatchTest2',
+                                            Contact1_Personal_Email__c = 'matchTest2@fakedata.com',
+                                            Contact1_Preferred_Email__c = 'matchTest2@fakedata.com',
+                                            Donation_Amount__c = 10000,
+                                            Donation_Date__c = Date.today(),
+                                            Donation_Description__c = null,
+                                            Donation_Donor__c = 'Contact1',
+                                            GAU_Allocation_1_Amount__c = 750,
+                                            GAU_Allocation_1_GAU__c = gau2.Id,
+                                            GAU_Allocation_1_Percent__c = 75,
+                                            Home_City__c = 'Faketown',
+                                            Home_Country__c = 'United States',
+                                            Home_State_Province__c = 'California',
+                                            Home_Street__c = '100 Main St',
+                                            Home_Zip_Postal_Code__c = '94105');
+
+        insert new DataImport__c[]{diTest1,diTest2};
+        Test.startTest();
+        DataImport__c[] diTestRecordsForProcessing = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
+
+        bdiDIS.process(null, dis, diTestRecordsForProcessing);
+        Test.stopTest();
+
+        Map<Id,DataImport__c> diResultMap = new Map<Id,DataImport__c>([SELECT Status__c,
+                                                                FailureInformation__c,
+                                                                Contact1_Title__c,
+                                                                GAU_Allocation_1_Import_Status__c,
+                                                                GAU_Allocation_1_Imported__c,
+                                                                GAU_Allocation_2_Import_Status__c,
+                                                                GAU_Allocation_2_Imported__c,
+                                                                Opportunity_Contact_Role_1_Imported__c,
+                                                                Opportunity_Contact_Role_1_ImportStatus__c,
+                                                                Opportunity_Contact_Role_2_Imported__c,
+                                                                Opportunity_Contact_Role_2_ImportStatus__c,
+                                                                Contact1_Lastname__c,
+                                                                Account1ImportStatus__c,
+                                                                Account1Imported__c, 
+                                                                Account2ImportStatus__c,
+                                                                Account2Imported__c,
+                                                                Contact1ImportStatus__c,
+                                                                Contact1Imported__c,
+                                                                Contact2ImportStatus__c,
+                                                                Contact2Imported__c,
+                                                                DonationCampaignImportStatus__c,
+                                                                DonationCampaignImported__c,
+                                                                DonationImportStatus__c,
+                                                                DonationImported__c,
+                                                                HomeAddressImportStatus__c,
+                                                                HomeAddressImported__c,
+                                                                HouseholdAccountImported__c,
+                                                                PaymentImportStatus__c,
+                                                                PaymentImported__c
+                                                            FROM DataImport__c
+                                                            WHERE Id =: diTest1.Id OR Id=: diTest2.Id]);
+
+        DataImport__c diTest1Result = diResultMap.get(diTest1.Id);
+        DataImport__c diTest2Result = diResultMap.get(diTest2.Id);
+
+        //Confirm that the first test DI did find a match, and updated instead of created.
+        System.assertEquals(existingDI1.GAU_Allocation_1_Imported__c, diTest1Result.GAU_Allocation_1_Imported__c);
+        System.assertEquals(System.label.bdiUpdated,diTest1Result.GAU_Allocation_1_Import_Status__c);
+        System.assertEquals(System.label.bdiImported,diTest1Result.Status__c);
+        System.assertEquals(null,diTest1Result.FailureInformation__c);
+
+        //Confirm that the second test di generated an error because multiple matches were found.
+        System.assertNotEquals(existingDI1.GAU_Allocation_1_Imported__c, diTest2Result.GAU_Allocation_1_Imported__c);
+        System.assert(diTest2Result.GAU_Allocation_1_Import_Status__c.contains(System.label.bdiObjMatchErrorMultipleMatch));
+        System.assertEquals(System.label.bdiFailed,diTest2Result.Status__c);
+        System.assert(diTest2Result.FailureInformation__c.contains(System.label.bdiObjMatchErrorMultipleMatch));
+
+    }
+
+    @isTest
+    static void
+    shouldFindMatchAndNoMatchInDryRun() {
+
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = 
+            BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
+
+        //Remove one of the Allocations using GAU 1 so there is only one result.
+        for (DataImport__c di: diRecords) {
+            if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                di.GAU_Allocation_1_Amount__c = null;
+                di.GAU_Allocation_1_GAU__c = null;
+                di.GAU_Allocation_1_Percent__c = null;
+            }
+        }
+
+        //Run data import once to create records to match to.
+        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultFieldMapping());
+        bdiDIS.process(null, dis, diRecords);
+
+        DataImport__c existingDI1;
+        DataImport__c existingDI2;
+
+        //Retrieve the baseline DIs that were imported for later comparison.
+        for (DataImport__c di: [SELECT Id, 
+                                    Contact1_Lastname__c,
+                                    GAU_Allocation_1_Imported__c,
+                                    GAU_Allocation_1_Import_Status__c,
+                                    Status__c,
+                                    FailureInformation__c
+                                FROM DataImport__c ] ){
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                existingDI1 = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                existingDI2 = di;
+            }
+        }
+        
+        BDI_FieldMappingCustomMetadata bdiFMCM = BDI_FieldMappingCustomMetadata.getInstance();
+
+        Data_Import_Field_Mapping__mdt[] gau1FieldMappings = 
+            bdiFMCM.fieldMappingsByObjMappingDevName.get('GAU_Allocation_1');
+
+        //For this test we will attempt to match on the GAU lookup field.  This is not the kind of matching
+        //we would generally expect from users, but we are doing it here since we can't create additional
+        //fields. 
+        for (Data_Import_Field_Mapping__mdt difm : gau1FieldMappings) {
+            if (difm.DeveloperName == 'GAU_Allocation_1_GAU') {
+                difm.Match_On_This_Mapping__c = 'Yes';
+            }
+        }
+
+        General_Accounting_Unit__c gau1;
+        General_Accounting_Unit__c gau2;
+        
+        for (General_Accounting_Unit__c gau : [SELECT Id, Name 
+                                                FROM General_Accounting_Unit__c] ){
+            if (gau.Name == 'TestGroupA GAU 1') {
+                gau1 = gau;
+            } else {
+                gau2 = gau;
+            }
+        }
+        
+        DataImport__c diTest1 = new DataImport__c(Contact1_Firstname__c = 'Susie',
+                                            Contact1_Lastname__c = 'MatchTest1',
+                                            Contact1_Personal_Email__c = 'matchTest1@fakedata.com',
+                                            Contact1_Preferred_Email__c = 'matchTest1@fakedata.com',
+                                            Donation_Amount__c = 10000,
+                                            Donation_Date__c = Date.today(),
+                                            Donation_Description__c = null,
+                                            Donation_Donor__c = 'Contact1',
+                                            GAU_Allocation_1_Amount__c = 750,
+                                            GAU_Allocation_1_GAU__c = gau1.Id,
+                                            GAU_Allocation_1_Percent__c = 75,
+                                            Home_City__c = 'Fakeville',
+                                            Home_Country__c = 'United States',
+                                            Home_State_Province__c = 'California',
+                                            Home_Street__c = '500 Fake Blvd',
+                                            Home_Zip_Postal_Code__c = '94105');
+
+        DataImport__c diTest2 = new DataImport__c(Contact1_Firstname__c = 'John',
+                                            Contact1_Lastname__c = 'MatchTest2',
+                                            Contact1_Personal_Email__c = 'matchTest2@fakedata.com',
+                                            Contact1_Preferred_Email__c = 'matchTest2@fakedata.com',
+                                            Donation_Amount__c = 10000,
+                                            Donation_Date__c = Date.today(),
+                                            Donation_Description__c = null,
+                                            Donation_Donor__c = 'Contact1',
+                                            GAU_Allocation_1_Amount__c = 750,
+                                            GAU_Allocation_1_GAU__c = gau2.Id,
+                                            GAU_Allocation_1_Percent__c = 75,
+                                            Home_City__c = 'Faketown',
+                                            Home_Country__c = 'United States',
+                                            Home_State_Province__c = 'California',
+                                            Home_Street__c = '100 Main St',
+                                            Home_Zip_Postal_Code__c = '94105');
+
+        insert new DataImport__c[]{diTest1,diTest2};
+        Test.startTest();
+        DataImport__c[] diTestRecordsForProcessing = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
+
+        //Instantiate a new bdi DIS to run in dry run mode
+        BDI_DataImportService bdiDIS2 = new BDI_DataImportService(true, BDI_DataImportService.getDefaultFieldMapping());
+        bdiDIS2.process(null, dis, diTestRecordsForProcessing);
+
+        Test.stopTest();
+
+
+        Map<Id,DataImport__c> diResultMap = new Map<Id,DataImport__c>([SELECT Status__c,
+                                                                FailureInformation__c,
+                                                                Contact1_Title__c,
+                                                                GAU_Allocation_1_Import_Status__c,
+                                                                GAU_Allocation_1_Imported__c,
+                                                                GAU_Allocation_2_Import_Status__c,
+                                                                GAU_Allocation_2_Imported__c,
+                                                                Opportunity_Contact_Role_1_Imported__c,
+                                                                Opportunity_Contact_Role_1_ImportStatus__c,
+                                                                Opportunity_Contact_Role_2_Imported__c,
+                                                                Opportunity_Contact_Role_2_ImportStatus__c,
+                                                                Contact1_Lastname__c,
+                                                                Account1ImportStatus__c,
+                                                                Account1Imported__c, 
+                                                                Account2ImportStatus__c,
+                                                                Account2Imported__c,
+                                                                Contact1ImportStatus__c,
+                                                                Contact1Imported__c,
+                                                                Contact2ImportStatus__c,
+                                                                Contact2Imported__c,
+                                                                DonationCampaignImportStatus__c,
+                                                                DonationCampaignImported__c,
+                                                                DonationImportStatus__c,
+                                                                DonationImported__c,
+                                                                HomeAddressImportStatus__c,
+                                                                HomeAddressImported__c,
+                                                                HouseholdAccountImported__c,
+                                                                PaymentImportStatus__c,
+                                                                PaymentImported__c
+                                                            FROM DataImport__c
+                                                            WHERE Id =: diTest1.Id OR Id=: diTest2.Id]);
+
+        DataImport__c diTest1Result = diResultMap.get(diTest1.Id);
+        DataImport__c diTest2Result = diResultMap.get(diTest2.Id);
+
+        //Confirm that the first test DI did find a match, and was set to Dry Run - Validated
+        System.assertEquals(existingDI1.GAU_Allocation_1_Imported__c, diTest1Result.GAU_Allocation_1_Imported__c);
+        System.assertEquals(System.label.bdiDryRunMatched,diTest1Result.GAU_Allocation_1_Import_Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiDryRunValidated,diTest1Result.Status__c);
+        System.assertEquals(null,diTest1Result.FailureInformation__c);
+
+        //Confirm that the second test di generated an error because multiple matches were found.
+        System.assertNotEquals(existingDI1.GAU_Allocation_1_Imported__c, diTest2Result.GAU_Allocation_1_Imported__c);
+        System.assert(diTest2Result.GAU_Allocation_1_Import_Status__c.contains(System.label.bdiObjMatchErrorMultipleMatch));
+        System.assertEquals(BDI_DataImport_API.bdiDryRunError,diTest2Result.Status__c);
+        System.assert(diTest2Result.FailureInformation__c.contains(System.label.bdiObjMatchErrorMultipleMatch));
+    }
+
+    @isTest
+    static void
+    shouldErrorOutDueToMultipleMatchingFields() {
+
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = 
+            BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
+
+        //Remove one of the Allocations using GAU 1 so there is only one result.
+        for (DataImport__c di: diRecords) {
+            if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                di.GAU_Allocation_1_Amount__c = null;
+                di.GAU_Allocation_1_GAU__c = null;
+                di.GAU_Allocation_1_Percent__c = null;
+            }
+        }
+
+        //Run data import once to create records to match to.
+        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultFieldMapping());
+
+        BDI_FieldMappingCustomMetadata bdiFMCM = BDI_FieldMappingCustomMetadata.getInstance();
+
+        Data_Import_Field_Mapping__mdt[] gau1FieldMappings = 
+            bdiFMCM.fieldMappingsByObjMappingDevName.get('GAU_Allocation_1');
+
+        //For this test we will set all the fieldmappings of the GAU 1 to match on which should generate an error. 
+        for (Data_Import_Field_Mapping__mdt difm : gau1FieldMappings) {
+            difm.Match_On_This_Mapping__c = 'Yes';
+        }
+
+        bdiDIS.process(null, dis, diRecords);
+
+        DataImport__c existingDI1;
+        DataImport__c existingDI2;
+
+        //Retrieve the baseline DIs that were imported for later comparison.
+        for (DataImport__c di: [SELECT Id, 
+                                    Contact1_Lastname__c,
+                                    GAU_Allocation_1_Imported__c,
+                                    GAU_Allocation_1_Import_Status__c,
+                                    Status__c,
+                                    FailureInformation__c
+                                FROM DataImport__c ] ){
+
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                existingDI1 = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                existingDI2 = di;
+            }
+        }
+
+        //Confirm that the second test di generated an error because multiple matching fields were found.
+        System.assertEquals(null,existingDI1.GAU_Allocation_1_Imported__c);
+        System.assertEquals(System.label.bdiObjMatchErrorTooManyMatchingFields,existingDI1.GAU_Allocation_1_Import_Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiFailed,existingDI1.Status__c);
+        System.assert(existingDI1.FailureInformation__c.contains(System.label.bdiObjMatchErrorTooManyMatchingFields));
+
+        //Confirm that the second test di was successfully imported since it didn't have any values for
+        //the GAU allocation fields and therefore did not attempt to create or match it.
+        System.assertEquals(null,existingDI2.GAU_Allocation_1_Imported__c);
+        System.assertEquals(null,existingDI2.GAU_Allocation_1_Import_Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,existingDI2.Status__c);
+        System.assertEquals(null,existingDI2.FailureInformation__c);
+
+    }
 }

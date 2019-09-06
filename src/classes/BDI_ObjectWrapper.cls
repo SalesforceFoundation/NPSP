@@ -83,4 +83,56 @@ public with sharing class BDI_ObjectWrapper {
     public void setFailureInformation(String failureInformation) {
         dataImport.FailureInformation__c = failureInformation;
     }
+
+    public void logError(String diErrorStatus, String errorMessage) {
+
+        if (diErrorStatus == null) {
+            diErrorStatus = BDI_DataImport_API.bdiFailed;
+        }
+
+        setDataImportStatus(diErrorStatus);
+
+        setImportedRecordStatusError(errorMessage);
+
+        logCombinedFailureInformation(errorMessage);
+    }
+
+    private void logCombinedFailureInformation(String errorMessage) {
+
+        String errorMessageToAppend = getFailureInformationErrorMessage(errorMessage);
+
+        String combinedErrorMessage = dataImport.FailureInformation__c;
+
+        //If the combined error message is null then just add the message, otherwise append
+        //to the end
+        if (combinedErrorMessage == null || combinedErrorMessage == '') {
+            combinedErrorMessage = errorMessageToAppend;
+        } else {
+            combinedErrorMessage = String.join(new List<String>{combinedErrorMessage, errorMessageToAppend}, '\n\n');
+        }
+
+        setFailureInformation(combinedErrorMessage);
+    }
+
+    private String getFailureInformationErrorMessage(String errorMessage) {
+
+        String errorMessageToAppend;
+        if (objMapping.Imported_Record_Status_Field_Name__c != null) {
+
+            String importedRecordStatusField = objMapping.Imported_Record_Status_Field_Name__c;
+
+            String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
+                    DataImport__c.SObjectType.getDescribe().getName(),
+                    importedRecordStatusField).getLabel();
+
+            errorMessageToAppend = String.join(
+                    new List<String>{
+                            importedRecordStatusFieldLabel, errorMessage
+                    }, ':\n');
+        } else {
+            errorMessageToAppend = errorMessage;
+        }
+        return errorMessageToAppend;
+    }
+    
 }

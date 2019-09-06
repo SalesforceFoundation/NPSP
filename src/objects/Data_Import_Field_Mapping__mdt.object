@@ -17,13 +17,39 @@
     </fields>
     <fields>
         <fullName>Is_Deleted__c</fullName>
-        <description>When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing.</description>
         <defaultValue>false</defaultValue>
+        <description>When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
         <inlineHelpText>When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing.</inlineHelpText>
         <label>Is Deleted</label>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Match_On_This_Mapping__c</fullName>
+        <description>Indicates whether this field mapping should be used for matching.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>Indicates whether this field mapping should be used for matching.</inlineHelpText>
+        <label>Match On This Mapping</label>
+        <required>false</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>No</fullName>
+                    <default>true</default>
+                    <label>No</label>
+                </value>
+                <value>
+                    <fullName>Yes</fullName>
+                    <default>false</default>
+                    <label>Yes</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
     <fields>
         <fullName>Required__c</fullName>
