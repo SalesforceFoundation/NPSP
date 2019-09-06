@@ -305,7 +305,7 @@ Create Level
     Set Focus To Element   xpath: //input[@value='Save']
     Click Button  Save
     Unselect Frame
-    Wait For Locator  spl-breadcrumb  Level
+    Wait For Locator  obj-header  Level
     ${level_id} =            Get Current Record Id
     Store Session Record  Level__c  ${level_id}
     [Return]    ${level_id}  ${level_name}

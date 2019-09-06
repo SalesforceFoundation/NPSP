@@ -4,6 +4,7 @@ npsp_lex_locators={
     'breadcrumb': "//li[contains(@class, 'slds-breadcrumb__item')]/span[text()='{}']",
     'spl-breadcrumb':"//div[@class= 'slds-media__body']/p[text()='{}']",
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
+    'obj-header':"//h1//*[text()='{}']",
     'placeholder': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
