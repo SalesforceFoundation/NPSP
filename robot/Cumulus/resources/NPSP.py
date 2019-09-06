@@ -51,16 +51,16 @@ class NPSP(object):
             client = self.cumulusci.tooling
             response = client._call_salesforce(
                 'GET', 'https://{}/services/data'.format(client.sf_instance))
-            latest_api_version = float(response.json()[-1]['version'])
-            if not latest_api_version in locators_by_api_version:
-                warnings.warn("Could not find locator library for API %d" % latest_api_version)
-                latest_api_version = max(locators_by_api_version.keys())
+            self.latest_api_version = float(response.json()[-1]['version'])
+            if not self.latest_api_version in locators_by_api_version:
+                warnings.warn("Could not find locator library for API %d" % self.latest_api_version)
+                self.latest_api_version = max(locators_by_api_version.keys())
         except RobotNotRunningError:
             # We aren't part of a running test, likely because we are
             # generating keyword documentation. If that's the case, assume
             # the latest supported version
-            latest_api_version = max(locators_by_api_version.keys())
-        locators = locators_by_api_version[latest_api_version]
+            self.latest_api_version = max(locators_by_api_version.keys())
+        locators = locators_by_api_version[self.latest_api_version]
         npsp_lex_locators.update(locators)
 
     @property
@@ -105,6 +105,14 @@ class NPSP(object):
 #         field.send_keys(Keys.ENTER)
 # #             field.send_keys(Keys.ARROW_DOWN)
         field.send_keys(Keys.ENTER)
+    
+    def populate_campaign(self,loc,value):
+        """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
+        self.populate_field_by_placeholder(loc, value)
+        print(self.latest_api_version)       
+        if self.latest_api_version == 47.0:
+            self.selenium.click_link(value)
+            
 
     def click_record_button(self, title):
         """ Pass title of the button to click the buttons on the records edit page. Usually save and cancel are the buttons seen.
