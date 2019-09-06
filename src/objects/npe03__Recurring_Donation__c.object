@@ -194,7 +194,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Defines the installment schedule of this Recurring Donation along with Installment Period. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</inlineHelpText>
         <label>Installment Frequency</label>
-        <precision>18</precision>
+        <precision>3</precision>
         <required>false</required>
         <scale>0</scale>
         <trackHistory>false</trackHistory>

@@ -13,11 +13,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>IsEnhancementEnabled__c</fullName>
+        <fullName>IsEnhancementRDEnabled__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>This option enables Enhanced Recurring Donations, and offers you the latest Recurring Donation features. &lt;b&gt;WARNING&lt;/b&gt;: When you enable this option, NPSP changes your existing Recurring Donation records and the Recurring Donations object to match the data model for Enhanced Recurring Donations. &lt;b&gt;This is an irreversible process&lt;/b&gt;. For complete details, see the NPSP product documentation.</description>
+        <description>This option enables Enhanced Recurring Donations, and offers you the latest Recurring Donation features. WARNING: When you enable this option, NPSP changes your existing Recurring Donation records and the Recurring Donations object to match the data model for Enhanced Recurring Donations. This is an irreversible process. For complete details, see the NPSP product documentation.</description>
         <externalId>false</externalId>
-        <inlineHelpText>This option enables Enhanced Recurring Donations, and offers you the latest Recurring Donation features. &lt;b&gt;WARNING&lt;/b&gt;: When you enable this option, NPSP changes your existing Recurring Donation records and the Recurring Donations object to match the dat</inlineHelpText>
+        <inlineHelpText>This option enables Enhanced Recurring Donations, and offers you the latest Recurring Donation features. WARNING: When you enable this option, NPSP changes your existing Recurring Donation records and the Recurring Donations object to match the data model</inlineHelpText>
         <label>Enhanced Recurring Donations</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
