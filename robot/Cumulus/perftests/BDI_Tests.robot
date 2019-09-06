@@ -35,9 +35,9 @@ Clear DataImport Records
 
 Clear Generated Records
     Python Display  Clearing
-    Delete     DataImport__c, CustomObject1, CustomObject3
+    Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c
     Delete     Account_Soft_Credit__c     where=Account__r.BillingCountry\='Tuvalu'    hardDelete=True
-    Delete     Allocation__c Where        where=Opportunity__r.Account.BillingCountry\='Tuvalu'
+    Delete     Allocation__c        where=Opportunity__r.Account.BillingCountry\='Tuvalu'
     Delete     npe01__OppPayment__c     where=npe01__Opportunity__r.Account.BillingCountry\='Tuvalu'    hardDelete=True
     Delete     Opportunity     where=Account.BillingCountry\='Tuvalu'    hardDelete=True
     Delete     Account     where=BillingCountry\='Tuvalu'    hardDelete=True
