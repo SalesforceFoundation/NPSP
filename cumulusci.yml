@@ -501,7 +501,7 @@ flows:
             3:
                 task: ensure_record_type
 
-    test_performance_help_text:
+    setup_and_test_performance_help_text:
         description: 'Creates a BDI org and runs a performance test'
         steps:
             1:
@@ -512,19 +512,22 @@ flows:
                     vars: field_mapping_method:Help Text,cleanup_first:none
                     # don't cleanup in this context because its slow
 
-    test_performance_CO:
+    setup_and_test_performance_CO:
         description: 'Creates a BGE-BDI test org and runs a CO performance test'
         steps:
             1:
                 flow: qa_org
             3:
                 task: performance_tests_CO
-                vars: field_mapping_method:Data Import Field Mapping,count:20000,cleanup_first:core,data_generation_task:tasks.generate_bdi_CO_data.GenerateBDIData_CO
+                options:
+                    vars: field_mapping_method:Data Import Field Mapping,count:20000,cleanup_first:core,data_generation_task:tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
     test_performance:
         steps:
             1:
-                flow: test_performance_CO
+                task: performance_tests_CO
+                options:
+                    vars: field_mapping_method:Data Import Field Mapping,count:20000,cleanup_first:core,data_generation_task:tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
     beta_dependencies:
         steps:
