@@ -7,7 +7,6 @@ ${core_objs_for_cleanup} =  DataImport__c,CustomObject3__c,CustomObject1__c
 # you could also clean these up to have a cleaner test
 ${other_objs_for_cleanup} =   Opportunity,Account,Contact,CustomObject1__c,MaintenancePlan,General_Accounting_Unit__c,WorkOrder,npe01__OppPayment__c
 ${cleanup_first} =   core   # could also be "all" for maximum cleanliness or "none" for fresh scratch orgs
-${data_generation_task} =     Set Variable If         "${field_mapping_method}"=="Help Text"  tasks.generate_bdi_data.generate_bdi_data         tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
 *** Settings ***
 
@@ -31,6 +30,8 @@ Clear Generated Records
 Generate Data
     [Arguments]    ${count}
     ${count} =  Convert To Integer	${count}
+    # ${data_generation_task} =     Set Variable If         "${field_mapping_method}"=="Help Text"  tasks.generate_bdi_data.generate_bdi_data         tasks.generate_bdi_CO_data.GenerateBDIData_CO
+    ${data_generation_task} =       tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
     Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
     ...                 num_records=${count}
