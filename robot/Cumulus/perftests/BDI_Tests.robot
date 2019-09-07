@@ -73,11 +73,6 @@ Validate Data
     Run Keyword Unless   "${result}"=="PASS"      Display BDI Failures
     Should be Equal     ${result}      PASS
 
-    # double-check
-    ${result} =    Check Row Count    ${count}     CustomObject3__c
-    Run Keyword Unless   "${result}"=="PASS"      Display BDI Failures
-    Should be Equal     ${result}      PASS
-
 Setup For Test
     [Arguments]                 ${count}    ${bdi_mode}
     Clear Generated Records
