@@ -527,7 +527,7 @@ flows:
             1:
                 task: performance_tests_CO
                 options:
-                    vars: field_mapping_method:Data Import Field Mapping,count:20000,cleanup_first:core,data_generation_task:tasks.generate_bdi_CO_data.GenerateBDIData_CO,persistent_org:True
+                    vars: persistent_org:True,exitonfailure:True
 
     beta_dependencies:
         steps:
