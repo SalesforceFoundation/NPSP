@@ -90,7 +90,9 @@ class DataImport(factory.alchemy.SQLAlchemyModelFactory):
     CO1_textarea__c = "Long text"
     CO1_url__c = "http://www.url.com/"
     CO1_text2__c = factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)}")
-    CO1_Currency2__c = 200   # ## CHECK THIS ONE IS FIXED
+    CO1_Currency2__c = 200
+    CO2_currency__c = 300
+    CO2_currency_2__c = 400
     CO3_Text__c = factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)}")
     CO3_Date__c = now()
     CO3_Currency__c = 100

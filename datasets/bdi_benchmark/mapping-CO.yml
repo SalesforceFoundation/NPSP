@@ -28,6 +28,8 @@ DataImport:
         CO1_url__c: CO1_url__c
         CO1_text2__c: CO1_text2__c
         CO1_Currency2__c: CO1_Currency2__c
+        CO2_currency__c: CO2_currency__c
+        CO2_currency_2__c: CO2_currency_2__c
         CO3_Text__c: CO3_Text__c
         CO3_Date__c: CO3_Date__c
         CO3_Currency__c: CO3_Currency__c
