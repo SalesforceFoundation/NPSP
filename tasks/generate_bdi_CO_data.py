@@ -37,6 +37,8 @@ class GenerateBDIData_CO(ModuleDataFactory):
             GAU_Allocation_1_GAU__c=gau.id,
             ASC_Role__c="match",
             ASC_Amount__c=100,
+            CO2_currency__c=300,
+            CO2_currency_2__c=400,
         )
         create_batch(
             "DataImport",
@@ -48,6 +50,8 @@ class GenerateBDIData_CO(ModuleDataFactory):
             GAU_Allocation_1_GAU__c=gau.id,
             ASC_Role__c="match",
             ASC_Amount__c=100,
+            CO2_currency__c=300,
+            CO2_currency_2__c=400,
         )
         create_batch(
             "DataImport",
@@ -91,8 +95,6 @@ class DataImport(factory.alchemy.SQLAlchemyModelFactory):
     CO1_url__c = "http://www.url.com/"
     CO1_text2__c = factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)}")
     CO1_Currency2__c = 200
-    CO2_currency__c = 300
-    CO2_currency_2__c = 400
     CO3_Text__c = factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)}")
     CO3_Date__c = now()
     CO3_Currency__c = 100
