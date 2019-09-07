@@ -8,7 +8,7 @@ Library        Data.py
 Assert Row Count
     [Arguments]     ${count}        ${object_name}      &{kwargs}
 
-    ${status}     @{result} =   Run Keyword And Ignore Error
+    ${status}     ${result} =   Run Keyword And Ignore Error
     ...           Salesforce Query  ${object_name}  
     ...           select=COUNT(Id)
     ...           &{kwargs}
@@ -19,7 +19,7 @@ Assert Row Count
 
     Return from keyword If    '${status}' != 'PASS'    ${status}
 
-    ${matching_records} =   Set Variable    @{result}[0][expr0]
+    ${matching_records} =   Set Variable    ${result}[0][expr0]
     Return from keyword If    ${matching_records}==${count}    PASS
     Should Be Equal         ${matching_records}     ${count}
 
