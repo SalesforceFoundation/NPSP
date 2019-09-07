@@ -46,30 +46,24 @@ Setup BDI
     ...               Ensure Custom Metadata Was Deployed
 
 Report BDI
-    @{result} =   Salesforce Query  DataImport__c  
-    ...           select=COUNT(Id)
+    ${result} =   Row Count      DataImport__c  
     ...           Status__c=Imported
 
-    ${imported_records} =   Set Variable    ${result}[0][expr0]
+    Python Display  DataImport__c imported    ${result}
 
-    Python Display  DataImport__c imported    ${result}[0][expr0]
+    ${result} =   Row Count     CustomObject3__c  
 
-    @{result} =   Salesforce Query  CustomObject3__c  
-    ...           select=COUNT(Id)
+    Python Display  CustomObject3__c imported    ${result}
 
-    Python Display  CustomObject3__c imported    ${result}[0][expr0]
-
-    @{result} =   Salesforce Query  Account  
-    ...           select=COUNT(Id)
+    ${result} =   Row Count  Account  
     ...           BillingCountry=Tuvalu
 
-    Python Display  Accounts imported    ${result}[0][expr0]
+    Python Display  Accounts imported    ${result}
 
-    @{result} =   Salesforce Query  Contact  
-    ...           select=COUNT(Id)
+    ${result} =   Row Count     Contact  
     ...           Title=HRH
 
-    Python Display  Contacts imported    ${result}[0][expr0]
+    Python Display  Contacts imported    ${result}
 
 Display Failures
     @{failures} =   Collect BDI Failures
@@ -99,14 +93,39 @@ Validate Data
     ${success} =    Assert Row Count    ${count}     CustomObject3__c
     Run Keyword Unless   "${success}"=="Success"      Display Failures
 
-Reset Everything
+Setup For Test
     [Arguments]                 ${count}    ${bdi_mode}
     Clear Generated Records
     Setup BDI                   ${bdi_mode}
     Generate Data               ${count}
 
 *** Test Cases ***
-BGE/BDI Import - 20000 /250
-    [Setup]     Reset Everything    20000    Data Import Field Mapping
-    [Teardown]     Validate Data      20000
+BGE/BDI Import - 1000 / 250
+    [Setup]     Setup For Test    1_000    Data Import Field Mapping
+    [Teardown]     Validate Data      1_000
+    Batch Data Import   250
+
+BGE/BDI Import - 10_000 / 250
+    [Setup]     Setup For Test    10_000    Data Import Field Mapping
+    [Teardown]     Validate Data      10_000
+    Batch Data Import   250
+
+BGE/BDI Import - 20_000 / 250
+    [Setup]     Setup For Test    20_000    Data Import Field Mapping
+    [Teardown]     Validate Data      20_000
+    Batch Data Import   250
+
+BGE/BDI Import - 40_000 / 250
+    [Setup]     Setup For Test    40_000    Data Import Field Mapping
+    [Teardown]     Validate Data      40_000
+    Batch Data Import   250
+
+BGE/BDI Import - 80_000 / 250
+    [Setup]     Setup For Test    80_000    Data Import Field Mapping
+    [Teardown]     Validate Data      80_000
+    Batch Data Import   250
+
+BGE/BDI Import - 120_000 / 250
+    [Setup]     Setup For Test    120_000    Data Import Field Mapping
+    [Teardown]     Validate Data      120_000
     Batch Data Import   250
