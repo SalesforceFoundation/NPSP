@@ -101,31 +101,31 @@ Setup For Test
 
 *** Test Cases ***
 BGE/BDI Import - 1000 / 250
-    [Setup]     Setup For Test    1_000    Data Import Field Mapping
-    [Teardown]     Validate Data      1_000
+    [Setup]     Setup For Test    1000    Data Import Field Mapping
+    [Teardown]     Validate Data      1000
     Batch Data Import   250
 
-BGE/BDI Import - 10_000 / 250
-    [Setup]     Setup For Test    10_000    Data Import Field Mapping
-    [Teardown]     Validate Data      10_000
+BGE/BDI Import - 10000 / 250
+    [Setup]     Setup For Test    10000    Data Import Field Mapping
+    [Teardown]     Validate Data      10000
     Batch Data Import   250
 
-BGE/BDI Import - 20_000 / 250
-    [Setup]     Setup For Test    20_000    Data Import Field Mapping
-    [Teardown]     Validate Data      20_000
+BGE/BDI Import - 20000 / 250
+    [Setup]     Setup For Test    20000    Data Import Field Mapping
+    [Teardown]     Validate Data      20000
     Batch Data Import   250
 
-BGE/BDI Import - 40_000 / 250
-    [Setup]     Setup For Test    40_000    Data Import Field Mapping
-    [Teardown]     Validate Data      40_000
+BGE/BDI Import - 40000 / 250
+    [Setup]     Setup For Test    40000    Data Import Field Mapping
+    [Teardown]     Validate Data      40000
     Batch Data Import   250
 
-BGE/BDI Import - 80_000 / 250
-    [Setup]     Setup For Test    80_000    Data Import Field Mapping
-    [Teardown]     Validate Data      80_000
+BGE/BDI Import - 80000 / 250
+    [Setup]     Setup For Test    80000    Data Import Field Mapping
+    [Teardown]     Validate Data      80000
     Batch Data Import   250
 
-BGE/BDI Import - 120_000 / 250
-    [Setup]     Setup For Test    120_000    Data Import Field Mapping
-    [Teardown]     Validate Data      120_000
+BGE/BDI Import - 120000 / 250
+    [Setup]     Setup For Test    120000    Data Import Field Mapping
+    [Teardown]     Validate Data      120000
     Batch Data Import   250
