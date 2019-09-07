@@ -69,11 +69,14 @@ Workaround Bug
 
 Validate Data
     [Arguments]     ${count}
-    ${success} =    Check Row Count    ${count}     DataImport__c       Status__c=Imported
-    Run Keyword Unless   "${success}"=="PASS"      Display BDI Failures
+    ${result} =    Check Row Count    ${count}     DataImport__c       Status__c=Imported
+    Run Keyword Unless   "${result}"=="PASS"      Display BDI Failures
+    Should be Equal     ${result}      PASS
+
     # double-check
-    ${success} =    Check Row Count    ${count}     CustomObject3__c
-    Run Keyword Unless   "${success}"=="PASS"      Display BDI Failures
+    ${result} =    Check Row Count    ${count}     CustomObject3__c
+    Run Keyword Unless   "${result}"=="PASS"      Display BDI Failures
+    Should be Equal     ${result}      PASS
 
 Setup For Test
     [Arguments]                 ${count}    ${bdi_mode}
