@@ -41,9 +41,9 @@ Setup Test Data
     ...        ${ns}Payment_Check_Reference_Number__c=${check}
     ...        ${org_ns}ASC_Amount__c=100
     ...        ${org_ns}ASC_Role__c=Influencer
-    ...        ${org_ns}GAU_Allocation_1_GAU__c=&{gau}[Id]
-    ...        ${org_ns}GAU_Allocation_1_Amount__c=100
-    ...        ${org_ns}Opportunity_Contact_Role_1_Role__c=Honoree
+    ...        ${ns}GAU_Allocation_1_GAU__c=&{gau}[Id]
+    ...        ${ns}GAU_Allocation_1_Amount__c=100
+    ...        ${ns}Opportunity_Contact_Role_1_Role__c=Honoree
     Set Global Variable     &{data_import}       &{data_import} 
 
 *** Test Cases ***
@@ -67,11 +67,11 @@ Create Data Import with Additional Objects via API and Verify Values
     ...    Amount=200.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    Verify Expected Values    ns       Account_Soft_Credit__c      &{data_import_upd}[${ns}AccountSoftCreditsImported__c]
-    ...    Amount__c=100.0
-    ...    Account__c=&{data_import_upd}[${ns}Account1Imported__c]
-    ...    Role__c=Influencer
-    ...    Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
+    Verify Expected Values    ns       Account_Soft_Credit__c      &{data_import_upd}[${org_ns}AccountSoftCreditsImported__c]
+    ...    ${ns}Amount__c=100.0
+    ...    ${ns}Account__c=&{data_import_upd}[${ns}Account1Imported__c]
+    ...    ${ns}Role__c=Influencer
+    ...    ${ns}Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     Verify Expected Values    nonns    npe01__OppPayment__c        &{data_import_upd}[${ns}PaymentImported__c]
     ...    npe01__Check_Reference_Number__c=${check}
     ...    npe01__Paid__c=True
