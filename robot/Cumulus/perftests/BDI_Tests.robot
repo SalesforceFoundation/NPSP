@@ -19,7 +19,7 @@ Suite Setup       Workaround Bug
 
 *** Keywords ***
 Clear Generated Records
-    Python Display  Clearing
+    Python Display  Clearing Generated Records
     Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c
     Delete     Account_Soft_Credit__c     where=Account__r.BillingCountry\='Tuvalu'    hardDelete=True
     Delete     Allocation__c        where=Opportunity__r.Account.BillingCountry\='Tuvalu'
@@ -59,11 +59,6 @@ Report BDI
 
     Python Display  CustomObject3__c imported    ${result}[0][expr0]
 
-    # @{result} =   Salesforce Query  npe01__OppPayment__c  
-    # ...           select=COUNT(Id)
-
-    # Python Display  npe01__OppPayment__c imported    ${result}[0][expr0]
-
     @{result} =   Salesforce Query  Account  
     ...           select=COUNT(Id)
     ...           BillingCountry=Tuvalu
@@ -75,21 +70,6 @@ Report BDI
     ...           Title=HRH
 
     Python Display  Contacts imported    ${result}[0][expr0]
-
-Ensure Custom Metadata Was Deployed
-    ${Default_Object_Mapping_Set} =   Salesforce Query  Data_Import_Object_Mapping__mdt
-    ...           select=Id
-    ...           Data_Import_Object_Mapping_Set__r.DeveloperName=Default_Object_Mapping_Set
-    ${Default_Object_Mapping_Set_Length} =  Get Length  ${Default_Object_Mapping_Set}
-
-    ${Migrated_Custom_Object_Mapping_Set} =   Salesforce Query  Data_Import_Object_Mapping__mdt
-    ...           select=Id
-    ...           Data_Import_Object_Mapping_Set__r.DeveloperName=Migrated_Custom_Object_Mapping_Set
-    ${Migrated_Custom_Object_Mapping_Set_Length} =  Get Length  ${Migrated_Custom_Object_Mapping_Set}
-
-    Should Be Equal     ${Default_Object_Mapping_Set_Length}    ${Migrated_Custom_Object_Mapping_Set_Length}
-
-    Python Display      Custom Metadata Deployed        ${Migrated_Custom_Object_Mapping_Set_Length}
 
 Display Failures
     @{failures} =   Collect BDI Failures
@@ -113,10 +93,10 @@ Workaround Bug
 
 Validate Data
     [Arguments]     ${count}
-    ${success} =    Assert Query Count Equals    ${count}     DataImport__c       Status__c=Imported
+    ${success} =    Assert Row Count    ${count}     DataImport__c       Status__c=Imported
     Run Keyword Unless   "${success}"=="Success"      Display Failures
     # double-check
-    ${success} =    Assert Query Count Equals    ${count}     CustomObject3__c
+    ${success} =    Assert Row Count    ${count}     CustomObject3__c
     Run Keyword Unless   "${success}"=="Success"      Display Failures
 
 Reset Everything
