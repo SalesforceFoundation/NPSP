@@ -1,6 +1,6 @@
 *** Variables ***
 ${database_url} =    
-${persistent_org} = 
+${persistent_org} =     ${False}
 
 # tests won't work if there are records of these types in existence.
 ${core_objs_for_cleanup} =  DataImport__c,CustomObject3__c,CustomObject1__c
@@ -65,20 +65,6 @@ Report BDI
 
     Python Display  Contacts imported    ${result}
 
-Display Failures
-    @{failures} =   Collect BDI Failures
-    ${length} =  Get Length  ${failures}
-    Run Keyword If  ${length} == 0  Log to Console  No failure records
-    Return From Keyword If       ${length}==0        False
-
-    Python Display      Failures   ${length}
-
-    Python Display      Example Failure   Id: ${failures[0]['Id']}
-    ...                                   Status__c: ${failures[0]['Status__c']}
-    ...                                   PaymentImported__c: ${failures[0]['PaymentImported__c']}
-    ...                                   PaymentImportStatus__c: ${failures[0]['PaymentImportStatus__c']}
-    ...                                   FailureInformation__c: ${failures[0]['FailureInformation__c']}
-
 Workaround Bug
     Return From Keyword If      ${persistent_org}   # persistent orgs don't have this bug
     Generate Data   4
@@ -87,11 +73,11 @@ Workaround Bug
 
 Validate Data
     [Arguments]     ${count}
-    ${success} =    Assert Row Count    ${count}     DataImport__c       Status__c=Imported
-    Run Keyword Unless   "${success}"=="Success"      Display Failures
+    ${success} =    Check Row Count    ${count}     DataImport__c       Status__c=Imported
+    Run Keyword Unless   "${success}"=="PASS"      Display BDI Failures
     # double-check
-    ${success} =    Assert Row Count    ${count}     CustomObject3__c
-    Run Keyword Unless   "${success}"=="Success"      Display Failures
+    ${success} =    Check Row Count    ${count}     CustomObject3__c
+    Run Keyword Unless   "${success}"=="PASS"      Display BDI Failures
 
 Setup For Test
     [Arguments]                 ${count}    ${bdi_mode}
@@ -100,37 +86,37 @@ Setup For Test
     Generate Data               ${count}
 
 *** Test Cases ***
-BGE/BDI Import - 1000 / 250 - 6.5 Objs/DI - 0.5 Acc,0.5 Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
+BGE/BDI Import - 1000 / 250 - 6.5 Objs/DI - 0.5Acc,0.5Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
     [Setup]     Setup For Test    1000    Data Import Field Mapping
     [Teardown]     Validate Data      1000
     Batch Data Import   250
 
-BGE/BDI Import - 10000 / 250 - 6.5 Objs/DI - 0.5 Acc,0.5 Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
+BGE/BDI Import - 10000 / 250 - 6.5 Objs/DI - 0.5Acc,0.5Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
     [Setup]     Setup For Test    10000    Data Import Field Mapping
     [Teardown]     Validate Data      10000
     Batch Data Import   250
 
-BGE/BDI Import - 20000 / 250 - 6.5 Objs/DI - 0.5 Acc,0.5 Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
+BGE/BDI Import - 20000 / 250 - 6.5 Objs/DI - 0.5Acc,0.5Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
     [Setup]     Setup For Test    20000    Data Import Field Mapping
     [Teardown]     Validate Data      20000
     Batch Data Import   250
 
-BGE/BDI Import - 40000 / 250 - 6.5 Objs/DI - 0.5 Acc,0.5 Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
+BGE/BDI Import - 40000 / 250 - 6.5 Objs/DI - 0.5Acc,0.5Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
     [Setup]     Setup For Test    40000    Data Import Field Mapping
     [Teardown]     Validate Data      40000
     Batch Data Import   250
 
-BGE/BDI Import - 80000 / 250 - 6.5 Objs/DI - 0.5 Acc,0.5 Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
+BGE/BDI Import - 80000 / 250 - 6.5 Objs/DI - 0.5Acc,0.5Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
     [Setup]     Setup For Test    80000    Data Import Field Mapping
     [Teardown]     Validate Data      80000
     Batch Data Import   250
 
-BGE/BDI Import - 120000 / 250 - 6.5 Objs/DI - 0.5 Acc,0.5 Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
+BGE/BDI Import - 120000 / 250 - 6.5 Objs/DI - 0.5Acc,0.5Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
     [Setup]     Setup For Test    120000    Data Import Field Mapping
     [Teardown]     Validate Data      120000
     Batch Data Import   250
 
-BGE/BDI Import - 200000 / 250 - 6.5 Objs/DI - 0.5 Acc,0.5 Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
+BGE/BDI Import - 200000 / 250 - 6.5 Objs/DI - 0.5Acc,0.5Con,1CO1,1CO2,1CO3,0.5Payments,1Allocation,0.5ASC,0.5 Opp
     [Setup]     Setup For Test    200000    Data Import Field Mapping
     [Teardown]     Validate Data      200000
     Batch Data Import   250

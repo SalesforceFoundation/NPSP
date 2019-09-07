@@ -5,7 +5,7 @@ Library        Data.py
 
 
 *** Keywords ***
-Assert Row Count
+Check Row Count
     [Arguments]     ${count}        ${object_name}      &{kwargs}
 
     ${status}     ${result} =   Run Keyword And Ignore Error
@@ -21,7 +21,8 @@ Assert Row Count
 
     ${matching_records} =   Set Variable    ${result}[0][expr0]
     Return from keyword If    ${matching_records}==${count}    PASS
-    Should Be Equal         ${matching_records}     ${count}
+    Run Keyword And Ignore Error      Should Be Equal         ${matching_records}     ${count}
+    Return From Keyword     FAIL
 
 Row Count
     [Arguments]     ${object_name}      &{kwargs}
