@@ -527,7 +527,6 @@ flows:
             1:
                 task: performance_tests_CO
                 options:
-                    exitonfailure: True
                     vars: persistent_org:True
 
     beta_dependencies:
