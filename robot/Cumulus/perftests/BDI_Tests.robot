@@ -16,10 +16,10 @@ Suite Setup       Workaround Bug
 Clear Generated Records
     Python Display  Clearing Generated Records
     Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c
-    Delete     Account_Soft_Credit__c     where=Account__r.BillingCountry\='Tuvalu'
-    Delete     Allocation__c        where=Opportunity__r.Account.BillingCountry\='Tuvalu'
-    Delete     npe01__OppPayment__c     where=npe01__Opportunity__r.Account.BillingCountry\='Tuvalu'
-    Delete     Opportunity     where=Account.BillingCountry\='Tuvalu'
+    Delete     Account_Soft_Credit__c     where=Account__r.BillingCountry\='Tuvalu' OR Opportunity__r.Primary_Contact__r.Title\='HRH'
+    Delete     Allocation__c        where=Opportunity__r.Primary_Contact__r.Title\='HRH' OR Opportunity__r.Account.BillingCountry\='Tuvalu'
+    Delete     npe01__OppPayment__c     where=npe01__Opportunity__r.Primary_Contact__r.Title\='HRH' OR npe01__Opportunity__r.Account.BillingCountry\='Tuvalu'
+    Delete     Opportunity     where=Primary_Contact__r.Title\='HRH' OR Account.BillingCountry\='Tuvalu'
     Delete     Account     where=BillingCountry\='Tuvalu'
     Delete     Contact     where=Title\='HRH'
 
