@@ -32,7 +32,7 @@ Generate Data
     Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
     ...                 num_records=${count}
 #    ...                 database_url=sqlite:////tmp/temp_db.db  # turn this on to look at the DB for debugging
-    ...                 mapping=datasets/bdi_benchmark/mapping-CO.yml
+    ...                 mapping=datasets/bdi_benchmark/mapping.yml
     ...                 data_generation_task=${data_generation_task}
 
 Setup BDI
