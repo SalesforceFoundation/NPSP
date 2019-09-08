@@ -111,10 +111,8 @@ API Create Relationship
 
 API Create Recurring Donation
     [Arguments]        &{fields}
-    ${name} =          Generate Random String
     ${ns} =            Get Npsp Namespace Prefix
     ${recurring_id} =  Salesforce Insert  npe03__Recurring_Donation__c
-    ...                Name=${name}
     ...                &{fields} 
     &{recurringdonation} =           Salesforce Get     npe03__Recurring_Donation__c  ${recurring_id}
     [return]           &{recurringdonation}

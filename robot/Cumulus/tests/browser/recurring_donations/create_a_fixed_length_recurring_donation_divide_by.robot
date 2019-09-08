@@ -9,30 +9,22 @@ Suite Teardown  Delete Records and Close Browser
 Create Fixed Length Recurring Donation Divide By
     
     #Create a Recurring Donation
+    ${ns} =  Get NPSP Namespace Prefix
     &{contact} =                 API Create Contact           Email=jjoseph@robot.com
     Go To Record Home            &{contact}[Id]
-    Click Link                   link=Show more actions
-    Click Link                   link=New Recurring Donation
-    Wait Until Modal Is Open
-    Populate Form
-    ...                          Recurring Donation Name=Robot Recurring Donation
-    ...                          Amount=1200 
-    ...                          Installments=12
-    Click Dropdown               Installment Period
-    Click Link                   link=Monthly
-    Click Dropdown               Schedule Type
-    Click Link                   link=Divide By
-    Click Modal Button           Save
-    @{recurringdonation} =       Salesforce Query             npe03__Recurring_Donation__c
-    ...                          select=Id
-    ...                          npe03__Contact__c=&{contact}[Id]
-    Go To Record Home            ${recurringdonation}[0][Id]
+    &{recurringdonation} =       API Create Recurring Donation  npe03__Contact__c=&{contact}[Id]
+    ...                          Name=Julian Recurring Donation
+    ...                          npe03__Amount__c=1200
+    ...                          npe03__Installments__c=12
+    ...                          npe03__Schedule_Type__c=Divide By
+    ...                          npe03__Installment_Period__c=Monthly
+    Go To Record Home            &{recurringdonation}[Id]
 
     #Find 1st Opportunity for Recurring Donation and Check Amount
     @{opportunity} =             Salesforce Query             Opportunity
     ...                          select=Id
-    ...                          npe03__Recurring_Donation__c=${recurringdonation}[0][Id]
-    ...                          Recurring_Donation_Installment_Name__c=(1 of 12)
+    ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
+    ...                          ${ns}Recurring_Donation_Installment_Name__c=(1 of 12)
     ...                          StageName=Pledged
     Go To Record Home            ${opportunity}[0][Id]
     Select Tab                   Details
@@ -41,8 +33,8 @@ Create Fixed Length Recurring Donation Divide By
     #Find 2nd Opportunity for Recurring Donation and Check Amount
     @{opportunity} =             Salesforce Query             Opportunity
     ...                          select=Id
-    ...                          npe03__Recurring_Donation__c=${recurringdonation}[0][Id]
-    ...                          Recurring_Donation_Installment_Name__c=(12 of 12)
+    ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
+    ...                          ${ns}Recurring_Donation_Installment_Name__c=(12 of 12)
     ...                          StageName=Pledged
     Go To Record Home            ${opportunity}[0][Id]
     Select Tab                   Details

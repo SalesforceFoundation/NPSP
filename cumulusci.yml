@@ -313,6 +313,11 @@ tasks:
                     - NPSP_General_Accounting_Unit
 
 flows:
+    install_regression:
+        steps:
+            1:
+                flow: dependencies
+    
     config_dev:
         steps:
             3:
