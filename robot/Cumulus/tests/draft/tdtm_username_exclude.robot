@@ -2,7 +2,20 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
+
+*** Keywords ***
+
+API Modify Trigger Handler
+    [Arguments]      ${triggerhandler_id}      &{fields}
+    ${ns} =  Get NPSP Namespace Prefix
+    Salesforce Update       ${ns}Trigger_Handler__c     ${triggerhandler_id}
+    ...                     &{fields}
+    @{records} =  Salesforce Query      ${ns}Trigger_Handler__c
+    ...              select=Id
+    ...              Id=${triggerhandler_id}
+    &{triggerhandler} =  Get From List  ${records}  0
+    [return]         &{triggerhandler}
 
 *** Test Cases ***
 
@@ -13,25 +26,30 @@ Update a Trigger Handler to Exclude a Username
     &{account} =                 API Create Organization Account
 
     # Navigate to Recurring Donation Trigger Handler Record and exclude Scratch User
-    @{triggerhandler} =          Salesforce Query             Trigger_Handler__c
+    ${ns} =  Get NPSP Namespace Prefix
+    @{triggerhandler} =          Salesforce Query             ${ns}Trigger_Handler__c
     ...                          select=Id
-    ...                          Class__c=RD_RecurringDonations_TDTM
+    ...                          ${ns}Class__c=RD_RecurringDonations_TDTM
 
     @{scratchuser} =             Salesforce Query             User
     ...                          select=Username
     ...                          Name=User User
 
     Go To Record Home            ${triggerhandler}[0][Id]
-    Select Tab                   Details
-    Click Link                   link=Show more actions
-    Click Link                   link=Edit
-    Capture Page Screenshot
     ${uppercaseusername} =       Convert To Uppercase         ${scratchuser}[0][Username]
-    Capture Page Screenshot
-    Populate Form
-    ...                          Usernames to Exclude=${uppercaseusername}
-    Capture Page Screenshot
-    Click Button                 Save
+    API Modify Trigger Handler   ${triggerhandler}[0][Id]     ${ns}Usernames_to_Exclude__c=${uppercaseusername}
+
+
+    # Select Tab                   Details
+    # Click Link                   link=Show more actions
+    # Click Link                   link=Edit
+    # Capture Page Screenshot
+    # ${uppercaseusername} =       Convert To Uppercase         ${scratchuser}[0][Username]
+    # Capture Page Screenshot
+    # Populate Form
+    # ...                          Usernames to Exclude=${uppercaseusername}
+    # Capture Page Screenshot
+    # Click Button                 Save
 
     # Create a Recurring Donation and verify no Opportunities are created
     &{contact} =                 API Create Contact           Email=jjoseph@robot.com
