@@ -9,7 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 Update a Trigger Handler to Exclude a Username
     [tags]  unstable
 
-    # Create a Contact so Trigger Handler records are created
+    # Create an Account so Trigger Handler records are created
     &{account} =                 API Create Organization Account
 
     # Navigate to Recurring Donation Trigger Handler Record and exclude Scratch User
