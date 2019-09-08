@@ -2,7 +2,7 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 
@@ -56,8 +56,12 @@ Update a Trigger Handler to Exclude a Username
     ...                          npe03__Installment_Period__c=Monthly
     Go To Record Home            &{recurringdonation}[Id]
     Go To Record Home            &{contact}[Id]
-    Select Tab  Related
-    Verify Occurrence            Opportunities                  0
+
+    #Verify no Opportunities were created
+    @{opportunity} =             Salesforce Query             Opportunity
+    ...                          select=Id
+    ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
+    Should be empty              ${opportunity}
 
     # Assist Teardown by Removing Excluded Username
     API Modify Trigger Handler   ${triggerhandler}[0][Id]       ${ns}Usernames_to_Exclude__c=
