@@ -32,20 +32,21 @@ class GenerateBDIData_CO(ModuleDataFactory):
             counter=Adder(0),
             Donation_Donor__c="Account1",
             Opp_Do_Not_Automatically_Create_Payment__c=False,
-            Account1_Name__c=factory.LazyAttribute(lambda o: f"Alan Alda {o.counter(0)} - BDI {JOB_ID}"),
+            Account1_Name__c=factory.LazyAttribute(lambda o: f"Alan Alda BDITEST {o.counter(0)} - {JOB_ID}"),
             CO1_Text__c=factory.LazyAttribute(lambda o: f"BDI Text {o.counter(0)} - BDI {JOB_ID}"),
             GAU_Allocation_1_GAU__c=gau.id,
             ASC_Role__c="match",
             ASC_Amount__c=100,
             CO2_currency__c=300,
             CO2_currency_2__c=400,
+            matching_account=True,
         )
         create_batch(
             "DataImport",
             counter=Adder(0),
             Donation_Donor__c="Account1",
             Opp_Do_Not_Automatically_Create_Payment__c=False,
-            Account1_Name__c=factory.LazyAttribute(lambda o: f"Boris Becker {o.counter(0)} - BDI {JOB_ID}"),
+            Account1_Name__c=factory.LazyAttribute(lambda o: f"Boris Becker BDITEST {o.counter(0)} - {JOB_ID}"),
             CO1_Text__c=factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)} - BDI {JOB_ID}"),
             GAU_Allocation_1_GAU__c=gau.id,
             ASC_Role__c="match",
@@ -58,29 +59,57 @@ class GenerateBDIData_CO(ModuleDataFactory):
             counter=Adder(0),
             Donation_Donor__c="Contact1",
             Opp_Do_Not_Automatically_Create_Payment__c=False,
-            Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"BDI Contact {o.counter(0)} - {JOB_ID}"),
+            Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"Charisma Carpenter BDITEST {o.counter(0)} - {JOB_ID}"),
             Opportunity_Contact_Role_1_Role__c="Influencer",
             CO1_Text__c=factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)} - {JOB_ID}"),
             GAU_Allocation_1_GAU__c=gau.id,
+            matching_contact=True,
         )
         create_batch(
             "DataImport",
             counter=Adder(0),
             Donation_Donor__c="Contact1",
             Opp_Do_Not_Automatically_Create_Payment__c=False,
-            Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"BDI Contact{o.counter(0)} - {JOB_ID}"),
+            Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"Danny Devito BDITEST {o.counter(0)} - {JOB_ID}"),
             Opportunity_Contact_Role_1_Role__c="Influencer",
             CO1_Text__c=factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)}"),
             GAU_Allocation_1_GAU__c=gau.id,
         )
 
 
+class AccountFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = Models.accounts
+
+
+class ContactFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = Models.contacts
+
+
 class DataImport(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Models.DataImport__c
+        exclude = ("account", "contact")
 
     class Params:
         counter = "Adder not set"
+        matching_account = factory.Trait(
+            account=factory.SubFactory(
+                AccountFactory,
+                name=factory.SelfAttribute("..Account1_Name__c"),
+                BillingStreet=factory.SelfAttribute("..Account1_Street__c"),
+                BillingCountry=factory.SelfAttribute("..Account1_Country__c"),
+                description="Pre-existing"
+            )
+        )
+        matching_contact = factory.Trait(
+            contact=factory.SubFactory(
+                ContactFactory, 
+                name=factory.SelfAttribute("..Contact1_Lastname__c"),
+                description="Pre-existing"
+            )
+        )
 
     id = factory.Sequence(lambda n: n + 1)
     Donation_Amount__c = factory.LazyAttribute(lambda o: o.counter(1) * 100)
@@ -102,7 +131,7 @@ class DataImport(factory.alchemy.SQLAlchemyModelFactory):
     CO3_Picklist__c = factory.Sequence(lambda i: f"Option{(i%3) + 1}")
     CO3_Phone__c = 123
     Account1_Country__c = "Tuvalu"
-    Contact1_Title__c = "HRH"
+    Account1_Street__c = "Cordova Street"
 
 
 class GAU(factory.alchemy.SQLAlchemyModelFactory):
