@@ -4,7 +4,6 @@ from locators_46 import npsp_lex_locators
 
 @pageobject("Listing", "DataImport__c")
 class DataImportPage(ListingPage):
-    object_name = "DataImport__c"
 
     @property
     def npsp(self):
