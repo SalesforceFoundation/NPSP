@@ -16,13 +16,13 @@ Suite Setup       Workaround Bug
 Clear Generated Records
     Python Display  Clearing Generated Records
     # Organized in dependency order
-    Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c
-    Delete     Account_Soft_Credit__c     where=Account__r.BillingCountry\='Tuvalu' OR Opportunity__r.Primary_Contact__r.Title\='HRH'
-    Delete     Allocation__c        where=Opportunity__r.Primary_Contact__r.Title\='HRH' OR Opportunity__r.Account.BillingCountry\='Tuvalu'
-    Delete     npe01__OppPayment__c     where=npe01__Opportunity__r.Primary_Contact__r.Title\='HRH' OR npe01__Opportunity__r.Account.BillingCountry\='Tuvalu'
-    Delete     Opportunity     where=Primary_Contact__r.Title\='HRH' OR Account.BillingCountry\='Tuvalu'
-    Delete     Account     where=BillingCountry\='Tuvalu'
-    Delete     Contact     where=Title\='HRH'
+    Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c      
+    Delete     Account_Soft_Credit__c     where=Account__r.Name Like '%BDITEST%' OR Opportunity__r.Primary_Contact__r.Name Like '%BDITEST%'
+    Delete     Allocation__c        where=Opportunity__r.Primary_Contact__r.Name Like '%BDITEST%' OR Opportunity__r.Account.Name Like '%BDITEST%'
+    Delete     npe01__OppPayment__c     where=npe01__Opportunity__r.Primary_Contact__r.Name Like '%BDITEST%' OR npe01__Opportunity__r.Account.Name Like '%BDITEST%'
+    Delete     Opportunity     where=Primary_Contact__r.Name Like '%BDITEST%' OR Account.Name Like '%BDITEST%'
+    Delete     Account     where=Name Like '%BDITEST%'
+    Delete     Contact     where=Name Like '%BDITEST%'
 
 Generate Data
     [Arguments]    ${count}
@@ -58,7 +58,7 @@ Report BDI
     Python Display  Accounts imported    ${result}
 
     ${result} =   Row Count     Contact  
-    ...           Title=HRH
+    ...           Name Like '%BDITEST%'
 
     Python Display  Contacts imported    ${result}
 
@@ -124,9 +124,4 @@ BGE/BDI Import - NoMatch - 80000 / 250 - 7.5 Objs/DI - 1Acc,0.5Con,1CO1,0.5CO2,1
 BGE/BDI Import - NoMatch - 120000 / 250 - 7.5 Objs/DI - 1Acc,0.5Con,1CO1,0.5CO2,1CO3,1Payments,1Allocation,0.5ASC,1 Opp
     [Setup]     Setup For Test    120000    Data Import Field Mapping
     [Teardown]     Validate Data      120000
-    Batch Data Import   250
-
-BGE/BDI Import - NoMatch - 200000 / 250 - 7.5 Objs/DI - 1Acc,0.5Con,1CO1,0.5CO2,1CO3,1Payments,1Allocation,0.5ASC,1 Opp
-    [Setup]     Setup For Test    200000    Data Import Field Mapping
-    [Teardown]     Validate Data      200000
     Batch Data Import   250
