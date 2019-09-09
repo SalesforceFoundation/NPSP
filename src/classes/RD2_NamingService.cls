@@ -94,6 +94,22 @@ public with sharing class RD2_NamingService {
     }
 
     /***
+    * @description Autogenerates recurring donation names 
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    public void autogenerateNames(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            autogenerateNames(rds);
+            
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            autogenerateNamesOnChange(rds, oldRds);
+        }
+    }
+
+    /***
     * @description Autogenerates recurring donation names if Name construct fields have changed
     */
     public void autogenerateNamesOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {

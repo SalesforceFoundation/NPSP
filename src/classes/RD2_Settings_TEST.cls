@@ -68,9 +68,15 @@ public with sharing class RD2_Settings_TEST {
     */
     public class Stub implements System.StubProvider {
         private Boolean isAutomaticNamingEnabled = false;
+        private Boolean isEnhancedRDEnabled = false;
 
         public Stub withAutomaticNamingEnabled() {
             isAutomaticNamingEnabled = true;
+            return this;
+        }
+
+        public Stub withEnhancedRDEnabled() {
+            isEnhancedRDEnabled = true;
             return this;
         }
 
@@ -85,6 +91,9 @@ public with sharing class RD2_Settings_TEST {
             switch on methodName {
                 when 'isAutomaticNamingEnabled' {
                     return isAutomaticNamingEnabled;
+
+                } when 'isEnhancedRDEnabled' {
+                    return isEnhancedRDEnabled;
 
                 } when else {
                     return null;

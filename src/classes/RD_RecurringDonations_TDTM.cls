@@ -34,6 +34,20 @@
 * @description Trigger Handler on Recurring Donations 
 */
 public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
+
+
+    @TestVisible
+    private RD2_NamingService namingService {
+        get {
+            if (namingService == null) {
+                namingService = new RD2_NamingService();
+            }
+            return namingService;
+        }
+        set;
+    }
+
+
     /*******************************************************************************************************
     * @description Trigger Handler on Recurring Donations.  Deals with creating/updating/deleting the opps
     * related to the Recurring Donations.
@@ -45,6 +59,10 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        if (RD2_EnablementService.isEnhancementEnabled) {
+            return null;
+        }
 
         map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>();
         list<npe03__Recurring_Donation__c> listRDUpdates = new list<npe03__Recurring_Donation__c>();
@@ -72,7 +90,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
             newlist = oldlist;
         }
 
-        autogenerateNames(newlist, oldlist, triggerAction);
+        namingService.autogenerateNames(newlist, oldlist, triggerAction);
 
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
@@ -118,20 +136,6 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
 
         dispatchToIntegrationGateway(newlist, oldlist, triggerAction);
         return null;
-    }
-
-    /***
-    * @description Autogenerates recurring donation names 
-    */
-    private void autogenerateNames(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
-        RD2_NamingService namingService = new RD2_NamingService();
-
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            namingService.autogenerateNames(rds);
-            
-        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            namingService.autogenerateNamesOnChange(rds, oldRds);
-        }
     }
 
     /*******************************************************************************************************

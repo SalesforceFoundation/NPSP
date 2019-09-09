@@ -30,42 +30,57 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group Settings
-* @description Retrieves Enchanced Recurring Donations configuration
+* @group Recurring Donations
+* @description Trigger on Recurring Donations when enhanced Recurring Donations are enabled
 *
 */
-public with sharing class RD2_Settings {
+public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
-    /***
-    * @description Contains Recurring Donations V2 settings 
-    */
-    private npe03__Recurring_Donations_Settings__c settings {
+    @TestVisible
+    private RD2_NamingService namingService {
         get {
-            if (settings == null) {
-                settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+            if (namingService == null) {
+                namingService = new RD2_NamingService();
             }
-            return settings;
+            return namingService;
         }
         set;
     }
 
-    /****
-    * @description Determines if a Recurring Donation name will be auto-generated
-    * @return Boolean
+    /***
+    * @description Trigger handler on Recurring Donations when enchancement is enabled
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    * @param objResult Recurring Donation SObject describe
+    * @return dmlWrapper
     */
-    public Boolean isAutomaticNamingEnabled() {
-        Boolean isEnabled = Boolean.valueOf(settings.EnableAutomaticNaming__c);
+    public override DmlWrapper run(
+        List<SObject> rds, List<SObject> oldRds, 
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
+    ) {
 
-        return isEnabled == true;
+        if (!RD2_EnablementService.isEnhancementEnabled) {
+            return null;
+        }
+
+        namingService.autogenerateNames(rds, oldRds, triggerAction);
+
+        dispatchToIntegrationGateway(rds, oldRds, triggerAction);
+
+        return null;
     }
 
-    /****
-    * @description Determines if enhanced Recurring Donation configuration has been enabled
-    * @return Boolean
+    /***
+    * @description Dispatches trigger records to integration gateway
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
-    public Boolean isEnhancedRDEnabled() {
-        Boolean isEnabled = Boolean.valueOf(settings.IsEnhancedRDEnabled__c);
-
-        return isEnabled == true;
+    private void dispatchToIntegrationGateway(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
+            integrationGateway.handleBeforeDelete(oldRds);
+        }
     }
+
 }

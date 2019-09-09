@@ -37,8 +37,8 @@
 @isTest
 public with sharing class RD2_NamingService_TEST {
     private static final Boolean isMultiCurrencyEnabled = UTIL_Currency.getInstance().isMultiCurrencyOrganization();
-    private static final String userDefaultCurrencySymbol = isMultiCurrencyEnabled
-        ? ''
+    private static final String currencyCodeOrSymbol = isMultiCurrencyEnabled
+        ? UserInfo.getDefaultCurrency() + ' '
         : UTIL_Currency.getInstance().getCurrencySymbol(UserInfo.getDefaultCurrency());
 
     private static Account acc = getAccountMock();
@@ -89,13 +89,13 @@ public with sharing class RD2_NamingService_TEST {
             .withName('foo')
             .withAccount(acc.Id)
             .withAmount(100.25)
+            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
             .build();
         
         RD2_NamingService service = buildAutomaticNamingService(acc);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedName = acc.Name + ' ' + userDefaultCurrencySymbol + '100.25 - ' + System.Label.RecurringDonationNameSuffix;
-        System.assertEquals(expectedName, rd.Name, 'The name should match.');
+        System.assertEquals(getExpectedName(acc, '100.25'), rd.Name, 'The name should match.');
     }
 
     /***
@@ -110,6 +110,7 @@ public with sharing class RD2_NamingService_TEST {
             .withAccount(acc.Id)
             .withContact(contact.Id)
             .withAmount(100.25)
+            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
             .build();
         
         RD2_NamingService service = buildAutomaticNamingService(
@@ -119,8 +120,7 @@ public with sharing class RD2_NamingService_TEST {
 
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedName = contact.LastName + ' ' + userDefaultCurrencySymbol + '100.25 - ' + System.Label.RecurringDonationNameSuffix;
-        System.assertEquals(expectedName, rd.Name, 'The name should match.');
+        System.assertEquals(getExpectedName(contact, '100.25'), rd.Name, 'The name should match.');
     }
 
     /***
@@ -153,13 +153,13 @@ public with sharing class RD2_NamingService_TEST {
         npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
+            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
             .build();
         
         RD2_NamingService service = buildAutomaticNamingService(acc);        
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedName = acc.Name + ' ' + userDefaultCurrencySymbol + '100 - ' + System.Label.RecurringDonationNameSuffix;
-        System.assertEquals(expectedName, rd.Name, 'The amount format should match.');
+        System.assertEquals(getExpectedName(acc, '100'), rd.Name, 'The amount format should match.');
     }
 
     /***
@@ -176,12 +176,13 @@ public with sharing class RD2_NamingService_TEST {
         npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
+            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
             .build();
         
         RD2_NamingService service = buildAutomaticNamingService(acc);        
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedSuffix = '... ' + userDefaultCurrencySymbol + '100 - ' + System.Label.RecurringDonationNameSuffix;
+        String expectedSuffix = '... ' + currencyCodeOrSymbol + '100 - ' + System.Label.RecurringDonationNameSuffix;
         System.assert(rd.Name.startsWith(origAccountName), 'Donor name should be included: ' + rd.Name);
         System.assert(rd.Name.endsWith(expectedSuffix), 'Donor name should be abbreviated: ' + rd.Name);
     }
@@ -325,11 +326,13 @@ public with sharing class RD2_NamingService_TEST {
                 .withName('foo')
                 .withAccount(acc.Id)
                 .withAmount(100)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
                 .build(),
             new RD2_TestRecurringDonationBuilder()
                 .withName('bar')
                 .withAccount(acc.Id)
                 .withAmount(200)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
                 .build()
         };
         UTIL_UnitTestData_TEST.setMockIds(rds);
@@ -347,8 +350,7 @@ public with sharing class RD2_NamingService_TEST {
 
         System.assertEquals('foo', rds[0].Name, 'RD Name should not change when construct key fields are unchanged');
 
-        String expectedName = acc.Name + ' ' + userDefaultCurrencySymbol + '200 - ' + System.Label.RecurringDonationNameSuffix;
-        System.assertEquals(expectedName, rds[1].Name, 'RD Name should change when construct key fields are changed');
+        System.assertEquals(getExpectedName(acc, '200'), rds[1].Name, 'RD Name should change when construct key fields are changed');
     }
 
     /***
@@ -370,23 +372,21 @@ public with sharing class RD2_NamingService_TEST {
                 .withName('foo')
                 .withAccount(acc.Id)
                 .withAmount(100)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
                 .build(),
             new RD2_TestRecurringDonationBuilder()
                 .withName('bar')
                 .withContact(contact.Id)
                 .withAmount(200)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
                 .build()
         };
 
         RD2_NamingService service = buildAutomaticNamingService();
         service.autogenerateNames(rds);
 
-        String expectedName = acc.Name + ' ' + userDefaultCurrencySymbol + '100 - ' + System.Label.RecurringDonationNameSuffix;
-        System.assertEquals(expectedName, rds[0].Name, 'The Account name should be queried and incorporated into the name');
-
-        expectedName = contact.FirstName + ' ' + contact.LastName 
-            + ' ' + userDefaultCurrencySymbol + '200 - ' + System.Label.RecurringDonationNameSuffix;
-        System.assertEquals(expectedName, rds[1].Name, 'The Contact name should be queried and incorporated into the name');
+        System.assertEquals(getExpectedName(acc, '100'), rds[0].Name, 'The Account name should be queried and incorporated into the name');
+        System.assertEquals(getExpectedName(contact, '200'), rds[1].Name, 'The Contact name should be queried and incorporated into the name');
     }
 
 
@@ -394,11 +394,28 @@ public with sharing class RD2_NamingService_TEST {
     // Helpers
     //////////////////
 
+
+    /***
+    * @description Builds expected name
+    */
+    public static String getExpectedName(Account acc, String amount) {
+        return acc.Name + ' ' + currencyCodeOrSymbol + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
+    }
+
+    /***
+    * @description Builds expected name
+    */
+    public static String getExpectedName(Contact contact, String amount) {
+        String contactName = (String.isBlank(contact.FirstName) ? '' : (contact.FirstName + ' ')) + contact.LastName;
+
+        return contactName + ' ' + currencyCodeOrSymbol + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
+    }
+
     /***
     * @description Builds naming service instance with specified Account as donor
     */
-    private static RD2_NamingService buildAutomaticNamingService(Account a) {
-        return buildAutomaticNamingService(new List<Account>{ a }, new List<Contact>());
+    private static RD2_NamingService buildAutomaticNamingService(Account acc) {
+        return buildAutomaticNamingService(new List<Account>{ acc }, new List<Contact>());
     }
 
     /***
@@ -419,14 +436,19 @@ public with sharing class RD2_NamingService_TEST {
     * @description Constructs naming service with Automatic Naming Enabled
     */
     private static RD2_NamingService buildAutomaticNamingService() {
-        RD2_NamingService service = new RD2_NamingService();
+        enableAutomaticNamingService();
 
+        return new RD2_NamingService();
+    }
+
+    /***
+    * @description Enables Automatic Naming Enabled for tests
+    */
+    public static void enableAutomaticNamingService() {
         RD2_NamingService.settings = (RD2_Settings) Test.createStub(
             RD2_Settings.class, 
             new RD2_Settings_TEST.Stub().withAutomaticNamingEnabled()
         );
-
-        return service;
     }
 
     /***

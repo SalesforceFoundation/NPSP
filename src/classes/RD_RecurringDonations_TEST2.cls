@@ -561,6 +561,49 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Test.stopTest();
     }  
     
+    /***
+     * @description Verifies Recurring Donations are returned when enhanced Recurring Donations are not enabled
+     */
+    @isTest 
+    private static void shouldReturnRDsWhenEnhancedRDsAreNotEnabled() {  
+        List<npe03__Recurring_Donation__c> records = executeBatchStart();
+
+        System.assertEquals(1, records.size(), 'Recurring Donation record should be returned from the start() method');       
+    } 
+    
+    /***
+     * @description Verifies Recurring Donations are not returned when enhanced Recurring Donations are enabled
+     */
+    @isTest 
+    private static void shouldNotReturnRDsWhenEnhancedRDsAreEnabled() {  
+        RD2_EnablementService.isEnhancementEnabled = true;
+
+        List<npe03__Recurring_Donation__c> records = executeBatchStart();
+
+        System.assertEquals(true, records.isEmpty(), 'No record should be returned from the start() method: ' + records);       
+    }  
+        
+    /***
+     * @description Executes Recurring Donations start() and returns Recurring Donations
+     */
+    private static List<npe03__Recurring_Donation__c> executeBatchStart() {  
+        RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();   
+
+        Account acc = RD_RecurringDonations_TEST.buildAccount();
+        insert acc;  
+
+        npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationYearlyInstallment(null);
+        rd.npe03__Organization__c = acc.Id;
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY;
+        insert rd;
+
+        RD_RecurringDonations_BATCH batch = new RD_RecurringDonations_BATCH();
+        String query = batch.start(null).getQuery();
+        
+        return Database.query(query);
+    }    
+
     @isTest
     private static void testBTN() {
         Account a = new Account(Name = 'TestA');

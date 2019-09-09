@@ -30,37 +30,42 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group Utilities
-* @group-content
-* @description Test for UTIL_FeatureManagement class. Mainly for code coverage since you can't assert on
-* System.FeatureManagement method execution
+* @group Recurring Donations
+* @description Enhanced Recurring Donations Enablement Service class
 *
 */
-@isTest
-private class UTIL_FeatureEnablement_TEST {
+public with sharing class RD2_EnablementService {
 
-    /**
-     * @description Validates that the FeatureEnablement.FeatureManagement class can be mocked to
-     * force the isEnhancedRDPilotEnabled() static method to return true
-     */
-    @isTest
-    private static void shouldReturnTrueWhenPilotIsEnabled() {
-        UTIL_FeatureManagement featureManagement = (UTIL_FeatureManagement)
-            Test.createStub(UTIL_FeatureManagement.class, new UTIL_FeatureManagement_TEST.Mock());
-
-        UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
-        featureEnablement.featureManagement = featureManagement;
-
-        featureManagement.setPackageBooleanValue(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), true);
-
-        System.assertEquals(true, UTIL_FeatureEnablement.isEnhancedRDPilotEnabled());
+    /***
+    * @description Contains enhanced Recurring Donations settings 
+    */
+    @TestVisible
+    private static RD2_Settings settings {
+        get {
+            if (settings == null) {
+                settings = new RD2_Settings();
+            }
+            return settings;
+        }
+        set;
     }
+	
+    /***
+    * @description Returns true if enhanced Recurring Donations are enabled
+    */
+    @TestVisible
+	public static Boolean isEnhancementEnabled {
+		get {
+			if (isEnhancementEnabled == null) {
+				isEnhancementEnabled = 
+					CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
+					&& USER_UserService.isUserRunningLightning()
+					&& UTIL_FeatureEnablement.isEnhancedRDPilotEnabled()
+					&& settings.isEnhancedRDEnabled();
+			}
+			return isEnhancementEnabled;
+		}
+		private set;
+	}
 
-    /**
-     * @description Validates that the default for the isEnhancedRDPilotEnabled() static method is false
-     */
-    @isTest
-    private static void shouldReturnFalseWhenPilotNotEnabled() {
-        System.assertEquals(false, UTIL_FeatureEnablement.isEnhancedRDPilotEnabled());
-    }
 }

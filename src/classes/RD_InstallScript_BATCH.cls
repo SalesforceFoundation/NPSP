@@ -40,6 +40,11 @@ public without sharing class RD_InstallScript_BATCH implements Database.Batchabl
     public RD_InstallScript_BATCH() {}
     
     public Database.QueryLocator start(Database.BatchableContext BC) {
+        // do not return records for processing when enhanced Recurring Donations are enabled
+        if (RD2_EnablementService.isEnhancementEnabled) {
+            query += ' LIMIT 0';
+        }
+        
         return Database.getQueryLocator(query);
     }
 
