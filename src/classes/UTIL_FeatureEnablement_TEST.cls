@@ -32,36 +32,35 @@
 * @date 2019
 * @group Utilities
 * @group-content
-* @description Wrapper class to allow for FeatureManagement method mocking in tests
+* @description Test for UTIL_FeatureManagement class. Mainly for code coverage since you can't assert on
+* System.FeatureManagement method execution
 *
 */
-public with sharing class UTIL_FeatureManagement {
+@isTest
+private class UTIL_FeatureEnablement_TEST {
 
     /**
-     * @description Wrapper for System.FeatureManagement.setPackageBooleanValue
+     * @description Validates that the FeatureEnablement.FeatureManagement class can be mocked to
+     * force the isRecurringDonations2PilotEnabled() static method to return true
      */
-    public void setPackageBooleanValue(String apiName, Boolean value) {
-        System.FeatureManagement.setPackageBooleanValue(apiName, value);
+    @isTest
+    private static void shouldReturnTrueWhenPilotIsEnabled() {
+        UTIL_FeatureManagement featureManagement = (UTIL_FeatureManagement)
+            Test.createStub(UTIL_FeatureManagement.class, new UTIL_FeatureManagement_TEST.Mock());
+
+        UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
+        featureEnablement.featureManagement = featureManagement;
+
+        featureManagement.setPackageBooleanValue(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), true);
+
+        System.assertEquals(true, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
     }
 
     /**
-     * @description Wrapper for System.FeatureManagement.setPackageIntegerValue
+     * @description Validates that the default for the isRecurringDonations2PilotEnabled() static method is false
      */
-    public void setPackageIntegerValue(String apiName, Integer value) {
-        System.FeatureManagement.setPackageIntegerValue(apiName, value);
-    }
-
-    /**
-     * @description Wrapper for System.FeatureManagement.checkPackageBooleanValue
-     */
-    public Boolean checkPackageBooleanValue(String apiName) {
-        return System.FeatureManagement.checkPackageBooleanValue(apiName);
-    }
-
-    /**
-     * @description Wrapper for System.FeatureManagement.checkPackageBooleanValue
-     */
-    public Integer checkPackageIntegerValue(String apiName) {
-        return System.FeatureManagement.checkPackageIntegerValue(apiName);
+    @isTest
+    private static void shouldReturnFalseWhenPilotNotEnabled() {
+        System.assertEquals(false, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
     }
 }
