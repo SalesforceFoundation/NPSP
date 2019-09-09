@@ -135,16 +135,7 @@ tasks:
                 - record_type: Opportunity.NPSP_Default
                   default: true
 
-    performance_tests_help_text:
-        description: Runs Robot Framework performance tests
-        class_path: cumulusci.tasks.robotframework.Robot
-        group: Performance Tests
-        options:
-            suites: robot/Cumulus/perftests/
-            outputdir: robot/Cumulus/results
-            vars: field_mapping_method:Help Text,cleanup_first:core,count:20
-
-    performance_tests_CO:
+    run_performance_test:
         description: Runs Robot Framework performance tests for BGE-BDI Complex Objects
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
@@ -500,43 +491,23 @@ flows:
             3:
                 task: ensure_record_type
 
-    setup_and_test_performance_help_text:
-        description: 'Creates a BDI org and runs a performance test'
-        steps:
-            1:
-                flow: qa_org
-            4:
-                task: performance_tests_help_text
-                options:
-                    vars: field_mapping_method:Help Text,cleanup_first:none
-                    # don't cleanup in this context because its slow
-
     setup_and_test_performance:
-        description: 'Creates a BGE-BDI test org and runs a CO performance test'
+        description: 'Creates a BGE-BDI test org and runs BGE/BDI performance tests'
         steps:
             1:
                 flow: qa_org
             3:
-                task: performance_tests_CO
+                task: run_performance_test
                 options:
-                    vars: field_mapping_method:Data Import Field Mapping,count:20000,cleanup_first:core,data_generation_task:tasks.generate_bdi_CO_data.GenerateBDIData_CO
+                    vars: persistent_org:False
 
     test_performance_persistent_org:
+        description: 'Runs BGE/BDI performance tests against a pre-existing org'
         steps:
             1:
-                task: performance_tests_CO
+                task: run_performance_test
                 options:
                     include: ultra-long
-                    vars: persistent_org:True
-            2:
-                task: performance_tests_CO
-                options:
-                    include: long
-                    vars: persistent_org:True
-            3:
-                task: performance_tests_CO
-                options:
-                    include: long
                     vars: persistent_org:True
 
     beta_dependencies:
