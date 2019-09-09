@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019 Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -31,37 +31,46 @@
 * @author Salesforce.org
 * @date 2019
 * @group Utilities
-* @group-content
-* @description Wrapper class to allow for FeatureManagement method mocking in tests
-*
+* @description Services ready to feature enablement within NPSP via LmoToSubscriber Feature Parameters
 */
-public with sharing class UTIL_FeatureManagement {
+public without sharing class UTIL_FeatureEnablement {
 
     /**
-     * @description Wrapper for System.FeatureManagement.setPackageBooleanValue
+     * @description Define the specific FeatureParameter ApiNames that are supported in FeatureEnablement
      */
-    public void setPackageBooleanValue(String apiName, Boolean value) {
-        System.FeatureManagement.setPackageBooleanValue(apiName, value);
+    public enum FeatureName {
+        PilotEnabled
+    }
+
+    @TestVisible
+    private UTIL_FeatureManagement featureManagement = new UTIL_FeatureManagement();
+
+    private static UTIL_FeatureEnablement featureEnablement;
+
+    public static UTIL_FeatureEnablement getInstance() {
+        if (featureEnablement == null) {
+            featureEnablement = new UTIL_FeatureEnablement();
+        }
+        return featureEnablement;
     }
 
     /**
-     * @description Wrapper for System.FeatureManagement.setPackageIntegerValue
+     * @description public implementation to determine if the RecurringDonations 2.0 (RD2) Pilot
+     * has been enabled in the License Management Org (Wilma) for the current org (by OrgId)
+     * @return Is PilotEnable set to true
      */
-    public void setPackageIntegerValue(String apiName, Integer value) {
-        System.FeatureManagement.setPackageIntegerValue(apiName, value);
+    public static Boolean isRecurringDonations2PilotEnabled() {
+        return UTIL_FeatureEnablement.getInstance().isEnabled( FeatureName.PilotEnabled.name() );
     }
 
     /**
-     * @description Wrapper for System.FeatureManagement.checkPackageBooleanValue
+     * @description Retrieve a boolean as "IsEnabled" for the specified Feature Parameter api name
+     * @param apiName
+     * @return Boolean
      */
-    public Boolean checkPackageBooleanValue(String apiName) {
-        return System.FeatureManagement.checkPackageBooleanValue(apiName);
+    @TestVisible
+    private Boolean isEnabled(String apiName) {
+        return featureManagement.checkPackageBooleanValue(apiName);
     }
 
-    /**
-     * @description Wrapper for System.FeatureManagement.checkPackageBooleanValue
-     */
-    public Integer checkPackageIntegerValue(String apiName) {
-        return System.FeatureManagement.checkPackageIntegerValue(apiName);
-    }
 }
