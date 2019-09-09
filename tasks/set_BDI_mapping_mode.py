@@ -55,6 +55,7 @@ class SetBDIMappingMode(AnonymousApexTask):
 
     def _run_task(self):
         super()._run_task()
+        self.logger.info("Deploying BDI mode {mode}".format(mode=self.options.get("mode")))
         for i in range(0, 600):
             if self._get_di_mode() == self.options.get("mode"):
                 return
