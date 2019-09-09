@@ -747,8 +747,6 @@ class NPSP(object):
         """clicks on the button on the payments page"""      
         locator=npsp_lex_locators['button'].format(title)
         self.selenium.get_webelement(locator).click()
-        if title == "Create Payments":
-            self.selenium.wait_until_page_does_not_contain_element(locator, error="Clicking Button "+ title +" was not successful")
         
          
     def verify_details(self, **kwargs):
