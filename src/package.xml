@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -457,6 +457,8 @@
         <members>UTIL_Debug</members>
         <members>UTIL_Describe</members>
         <members>UTIL_Describe_TEST</members>
+        <members>UTIL_FeatureEnablement</members>
+        <members>UTIL_FeatureEnablement_TEST</members>
         <members>UTIL_FeatureManagement</members>
         <members>UTIL_FeatureManagement_TEST</members>
         <members>UTIL_Finder</members>
@@ -2857,6 +2859,7 @@
         <members>IsEnabled_DefaultGAU</members>
         <members>IsEnabled_HouseholdAcctModel</members>
         <members>Org_IsEnabled_AdvancedMultiCurrency</members>
+        <members>PilotEnabled</members>
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
