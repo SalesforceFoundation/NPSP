@@ -70,15 +70,18 @@ Workaround Bug
 
 Validate Data
     [Arguments]     ${count}
+    Python Display      Validating ${TEST NAME}
     ${result} =    Check Row Count    ${count}     DataImport__c       Status__c=Imported
     Run Keyword Unless   "${result}"=="PASS"      Display BDI Failures
     Should be Equal     ${result}      PASS
 
 Setup For Test
     [Arguments]                 ${count}    ${bdi_mode}
+    Python Display      Preparing for ${TEST NAME}
     Clear Generated Records
     Setup BDI                   ${bdi_mode}
     Generate Data               ${count}
+    Python Display      Starting ${TEST NAME}
 
 *** Test Cases ***
 BGE/BDI Import - CO - 100 / 250 - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
