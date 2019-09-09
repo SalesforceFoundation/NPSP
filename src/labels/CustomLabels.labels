@@ -6684,7 +6684,7 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAdvancedMapping2</shortDescription>
-        <value>You can disable Advanced Mapping and go back to Help Text mapping, but any changes you make with Advanced Mapping will be lost.</value>
+        <value>You can disable Advanced Mapping and go back to Help Text mapping, but any changes you made with Advanced Mapping will be lost.</value>
     </labels>
     <labels>
         <fullName>stgHelpAdvancedMapping3</fullName>
