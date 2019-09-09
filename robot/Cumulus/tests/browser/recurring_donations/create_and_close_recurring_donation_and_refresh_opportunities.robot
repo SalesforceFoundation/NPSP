@@ -16,7 +16,8 @@ Create and Close a Recurring Donation and Refresh Opportunities
     ...                          npe03__Amount__c=100
     ...                          npe03__Installments__c=12
     ...                          npe03__Open_Ended_Status__c=Open
-     ...                         npe03__Installment_Period__c=Monthly
+    ...                          npe03__Installment_Period__c=Monthly
+    ...                          npe03__Date_Established__c=2019-07-08
     Go To Record Home            &{recurringdonation}[Id]
 
     #Find 1st Opportunity for Recurring Donation and Close It
@@ -41,8 +42,12 @@ Create and Close a Recurring Donation and Refresh Opportunities
     Click Link                   link=Closed Won
     Click Modal Button           Save
 
-    #Refresh Opportunities on Recurring Donation
+    #Close Recurring Donation and Refresh Opportunities
     Go To Record Home            &{recurringdonation}[Id]
+    Click Link                   link=Edit
+    Click Dropdown               Open Ended Status
+    Click Link                   link=Closed
+    Click Modal Button           Save
     Click Link                   link=Show more actions
     Click Link                   link=Refresh Opportunities
 
