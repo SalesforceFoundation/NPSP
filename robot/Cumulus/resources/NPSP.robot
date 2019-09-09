@@ -108,7 +108,15 @@ API Create Relationship
     # ...               Name=${plan_name}
     # ...               npsp__Description__c=This plan is created via Automation 
     # ...               &{fields}
-   
+
+API Create Recurring Donation
+    [Arguments]        &{fields}
+    ${ns} =            Get Npsp Namespace Prefix
+    ${recurring_id} =  Salesforce Insert  npe03__Recurring_Donation__c
+    ...                &{fields} 
+    &{recurringdonation} =           Salesforce Get     npe03__Recurring_Donation__c  ${recurring_id}
+    [return]           &{recurringdonation}
+
 API Create GAU
     [Arguments]      &{fields}
     ${name} =   Generate Random String
