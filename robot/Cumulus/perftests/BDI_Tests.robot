@@ -81,17 +81,62 @@ Setup For Test
     Generate Data               ${count}
 
 *** Test Cases ***
+BGE/BDI Import - CO - 100 / 250 - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
+    [Setup]     Setup For Test    100    Data Import Field Mapping
+    [Teardown]     Validate Data      100
+    [Tags]    ultra-short     advanced-mapping
+    Batch Data Import   250
+
+BGE/BDI Import - HT - 100 / 250 - 3.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con ,1Payment,1 Opp
+    [Setup]     Setup For Test    100    Help Text
+    [Teardown]     Validate Data      100
+    [Tags]    ultra-short     help-text
+    Batch Data Import   250
+
+BGE/BDI Import - CO - 1000 / 250 - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
+    [Setup]     Setup For Test    1000    Data Import Field Mapping
+    [Teardown]     Validate Data      1000
+    [Tags]    short     advanced-mapping
+    Batch Data Import   250
+
+BGE/BDI Import - HT - 1000 / 250 - 3.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con ,1Payment,1 Opp
+    [Setup]     Setup For Test    10000    Help Text
+    [Teardown]     Validate Data      10000
+    [Tags]    short     help-text
+    Batch Data Import   250
+
+BGE/BDI Import - CO - 10000 / 250 - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
+    [Setup]     Setup For Test    10000    Data Import Field Mapping
+    [Teardown]     Validate Data      10000
+    [Tags]    medium     advanced-mapping
+    Batch Data Import   250
+
+BGE/BDI Import - HT - 10000 / 250 - 3.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con ,1Payment,1 Opp
+    [Setup]     Setup For Test    10000    Help Text
+    [Teardown]     Validate Data      10000
+    [Tags]    medium     help-text
+    Batch Data Import   250
+
+BGE/BDI Import - CO - 120000 / 250 - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
+    [Setup]     Setup For Test    10000    Data Import Field Mapping
+    [Teardown]     Validate Data      10000
+    [Tags]    long     advanced-mapping
+    Batch Data Import   250
+
 BGE/BDI Import - HT - 120000 / 250 - 3.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con ,1Payment,1 Opp
     [Setup]     Setup For Test    120000    Help Text
     [Teardown]     Validate Data      120000
+    [Tags]    long     help-text
     Batch Data Import   250
 
 BGE/BDI Import - CO - 120000 / 250 - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
     [Setup]     Setup For Test    120000    Data Import Field Mapping
     [Teardown]     Validate Data      120000
+    [Tags]    long     advanced-mapping
     Batch Data Import   250
 
 BGE/BDI Import - CO - 1000000 / 250 - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
     [Setup]     Setup For Test    1000000    Data Import Field Mapping
     [Teardown]     Validate Data      1000000
+    [Tags]    ultra-long     advanced-mapping
     Batch Data Import   250

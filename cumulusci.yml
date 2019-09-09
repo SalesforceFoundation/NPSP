@@ -151,7 +151,6 @@ tasks:
         options:
             suites: robot/Cumulus/perftests/
             outputdir: robot/Cumulus/results
-            vars: field_mapping_method:Data Import Field Mapping,count:12,cleanup_first:core,data_generation_task:tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -527,6 +526,17 @@ flows:
             1:
                 task: performance_tests_CO
                 options:
+                    include: ultra-long
+                    vars: persistent_org:True
+            2:
+                task: performance_tests_CO
+                options:
+                    include: long
+                    vars: persistent_org:True
+            3:
+                task: performance_tests_CO
+                options:
+                    include: long
                     vars: persistent_org:True
 
     beta_dependencies:
