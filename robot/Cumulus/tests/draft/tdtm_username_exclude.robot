@@ -17,14 +17,6 @@ API Modify Trigger Handler
     &{triggerhandler} =          Get From List                  ${records}                    0
     [return]                     &{triggerhandler}
 
-API Create Recurring Donation
-    [Arguments]                  &{fields}
-    ${ns} =                      Get Npsp Namespace Prefix
-    ${recurring_id} =            Salesforce Insert              npe03__Recurring_Donation__c
-    ...                          &{fields} 
-    &{recurringdonation} =           Salesforce Get             npe03__Recurring_Donation__c  ${recurring_id}
-    [return]                     &{recurringdonation}
-
 *** Test Cases ***
 
 Update a Trigger Handler to Exclude a Username
