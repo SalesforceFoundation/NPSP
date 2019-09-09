@@ -13,7 +13,7 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
-    </fields>
+    </fields>    
     <fields>
         <fullName>IsEnhancedRDEnabled__c</fullName>
         <defaultValue>false</defaultValue>
