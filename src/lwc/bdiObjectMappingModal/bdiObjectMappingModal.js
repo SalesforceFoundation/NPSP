@@ -172,6 +172,7 @@ export default class bdiObjectMappingModal extends LightningElement {
             this.getDataImportFieldDescribes();
             this.getDataImportMappedFields();
         } catch(error) {
+            console.log('Error encountered in objectMappingModal init: ' + error);
             this.handleError(error);
         }
     }
@@ -258,6 +259,7 @@ export default class bdiObjectMappingModal extends LightningElement {
 
             this.isLoading = false;
         } catch(error) {
+            console.log('Error encountered in loadModalData: ' + error);
             this.handleError(error);
         }
     }
@@ -513,6 +515,7 @@ export default class bdiObjectMappingModal extends LightningElement {
                 this.refreshImportRecordFieldOptions();
             })
             .catch((error) => {
+                console.log('Error encountered in getDataImportFieldDescribes: ' + error);
                 this.handleError(error);
             });
     }
@@ -526,9 +529,10 @@ export default class bdiObjectMappingModal extends LightningElement {
     refreshImportRecordFieldOptions() {
         this.diImportRecordFieldOptions = [];
         this.diImportRecordStatusFieldOptions = [];
-
+        console.log('in refreshImportRecordFieldOptions namespace Wrapper is: ' + this.namespaceWrapper);
         let fieldsToExclude = this.getAlreadyMappedDIFields(); 
-        if (fieldsToExclude && this.dataImportFieldData) {
+        
+        if (fieldsToExclude && this.dataImportFieldData && this.namespaceWrapper) {
             
             for (let i = 0; i < this.dataImportFieldData.length; i++) {
                 let fieldData = this.dataImportFieldData[i];
@@ -594,9 +598,9 @@ export default class bdiObjectMappingModal extends LightningElement {
     * fields that should always be excluded.             
     */
     getAlreadyMappedDIFields() {
-        if (this.objectMappings && this.dataImportFieldMappingSourceNames) {
-
-            this.alreadyMappedDIFieldsMap = new Map();
+        this.alreadyMappedDIFieldsMap = new Map();
+        
+        if (this.objectMappings && this.dataImportFieldMappingSourceNames && this.namespaceWrapper) {
 
             // Making some baseline exclusions for DI system fields.
             for (let i = 0; i < this.excludedDIFields.length; i++) {
