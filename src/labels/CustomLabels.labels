@@ -2766,7 +2766,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when there are multiple matches returned</shortDescription>
-        <value>Error: Multiple matching records found for value of matching field:</value>
+        <value>Error: Multiple records match the value in the unique ID field:</value>
     </labels>
     <labels>
         <fullName>bdiObjMatchErrorTooManyMatchingFields</fullName>
