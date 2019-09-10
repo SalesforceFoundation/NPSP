@@ -1,9 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <fullName>%%%NAMESPACE%%%Day_of_Month__c</fullName>
+        <fullName>npe03__Amount__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Sets future monthly, custom monthly, or quarterly donation installments to the selected day of the month, regardless of Next Donation Date. NOTE: If the Always use last day of month checkbox is selected, it supersedes the Day of Month value.</inlineHelpText>
+        <inlineHelpText>The amount for each installment Opportunity.</inlineHelpText>
+        <label>Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>npe03__Date_Established__c</fullName>
+        <defaultValue>Today()</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>The initial inception date for this recurring donation. The default is the current date.</inlineHelpText>
+        <label>Date Established</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>npe03__Donor_Name__c</fullName>
+        <externalId>false</externalId>
+        <formula>if(
+            LEN(npe03__Contact__c)&gt;0,
+            npe03__Contact__r.FirstName  &amp; &quot; &quot; &amp; npe03__Contact__r.LastName,
+            npe03__Organization__r.Name
+            )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>The first and last name of the related Contact (if applicable).</inlineHelpText>
+        <label>Donor Name</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Day_of_Month__c</fullName>
+        <description>Sets the specific day of the month for future installments when the Installment Period is Monthly</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly.</inlineHelpText>
         <label>Day of Month</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
@@ -183,7 +224,7 @@
         <fullName>npe03__Installment_Period__c</fullName>
         <description>How often you’ll receive the donations. NOTE: Changing the installment period for an existing Fixed-Length Recurring Donation may result in the loss and re-creation of open opportunities. Any data associated with those opportunities may be lost.</description>
         <externalId>false</externalId>
-        <inlineHelpText>How often you’ll receive the donations. NOTE: Changing the installment period for an existing Fixed-Length Recurring Donation may result in the loss and re-creation of open opportunities. Any data associated with those opportunities may be lost.</inlineHelpText>
+        <inlineHelpText>Defines the installment schedule of this Recurring Donation along with Installment Frequency. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</inlineHelpText>
         <label>Installment Period</label>
         <valueSet>
             <restricted>false</restricted>
@@ -191,22 +232,26 @@
                 <sorted>false</sorted>
                 <value>
                     <fullName>Monthly</fullName>
-                    <default>false</default>
+                    <default>true</default>
+                    <isActive>true</isActive>
                     <label>Monthly</label>
                 </value>
                 <value>
                     <fullName>Yearly</fullName>
                     <default>false</default>
+                    <isActive>true</isActive>
                     <label>Yearly</label>
                 </value>
                 <value>
                     <fullName>Weekly</fullName>
                     <default>false</default>
+                    <isActive>true</isActive>
                     <label>Weekly</label>
                 </value>
                 <value>
                     <fullName>1st and 15th</fullName>
                     <default>false</default>
+                    <isActive>true</isActive>
                     <label>1st and 15th</label>
                 </value>
                 <value>
@@ -221,6 +266,55 @@
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>npe03__Last_Payment_Date__c</fullName>
+        <description>Date of the last payment for this Recurring Donation</description>
+        <externalId>false</externalId>
+        <inlineHelpText>NPSP calculates this value automatically based on the last time an installment Opportunity was marked paid (read only).</inlineHelpText>
+        <label>Last Donation Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>npe03__Paid_Amount__c</fullName>
+        <description>Total Amount paid on this Recurring Donation</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The total amount paid on this Recurring Donation. Calculated automatically as the total amount of all Closed/Won installment Opportunities (read only).</inlineHelpText>
+        <label>Paid Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>npe03__Total_Paid_Installments__c</fullName>
+        <description>Total number of installments paid on this Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of installment Opportunities paid on this Recurring Donation (read only).</inlineHelpText>
+        <label>Number of Paid Installments</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>npe03__Next_Payment_Date__c</fullName>
+        <description>Holds the date of the next recurring payment.  Manually editing this field will recalculate all future opportunity&apos;s close dates based on the scheduled defined.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Calculated automatically using the active Recurring Schedule(s). Read only.</inlineHelpText>
+        <label>Next Donation Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
     </fields>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Recurring Donations with no end date.</description>
