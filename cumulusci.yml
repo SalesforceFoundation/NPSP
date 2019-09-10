@@ -497,7 +497,7 @@ flows:
             1:
                 flow: qa_org
             3:
-                task: performance_tests
+                task: test_performance
                 options:
                     include: medium
                     vars: persistent_org:False
@@ -506,7 +506,7 @@ flows:
         description: 'Runs BGE/BDI performance tests against a pre-existing org'
         steps:
             1:
-                task: performance_tests
+                task: test_performance
                 options:
                     include: ultra-long
                     vars: persistent_org:True
