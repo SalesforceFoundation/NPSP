@@ -68,7 +68,7 @@ public with sharing class RD2_Settings_TEST {
     */
     public class Stub implements System.StubProvider {
         private Boolean isAutomaticNamingEnabled = false;
-        private Boolean isEnhancedRDEnabled = false;
+        private Boolean isRecurringDonations2Enabled = false;
 
         public Stub withAutomaticNamingEnabled() {
             isAutomaticNamingEnabled = true;
@@ -76,7 +76,7 @@ public with sharing class RD2_Settings_TEST {
         }
 
         public Stub withEnhancedRDEnabled() {
-            isEnhancedRDEnabled = true;
+            isRecurringDonations2Enabled = true;
             return this;
         }
 
@@ -92,8 +92,8 @@ public with sharing class RD2_Settings_TEST {
                 when 'isAutomaticNamingEnabled' {
                     return isAutomaticNamingEnabled;
 
-                } when 'isEnhancedRDEnabled' {
-                    return isEnhancedRDEnabled;
+                } when 'isRecurringDonations2Enabled' {
+                    return isRecurringDonations2Enabled;
 
                 } when else {
                     return null;

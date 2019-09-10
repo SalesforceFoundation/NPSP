@@ -63,8 +63,8 @@ public with sharing class RD2_Settings {
     * @description Determines if enhanced Recurring Donation configuration has been enabled
     * @return Boolean
     */
-    public Boolean isEnhancedRDEnabled() {
-        Boolean isEnabled = Boolean.valueOf(settings.IsEnhancedRDEnabled__c);
+    public Boolean isRecurringDonations2Enabled() {
+        Boolean isEnabled = Boolean.valueOf(settings.IsRecurringDonations2Enabled__c);
 
         return isEnabled == true;
     }

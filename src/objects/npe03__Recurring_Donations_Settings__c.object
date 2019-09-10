@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
+        <fullName>EnableAutomaticNaming__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If enabled, Salesforce automatically populates the Recurring Donation Name.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If enabled, Salesforce automatically populates the Recurring Donation Name.</inlineHelpText>
+        <label>Automatic Recurring Donation Naming</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>IsRecurringDonations2Enabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This option enables Enhanced Recurring Donations. WARNING: When you enable this option, NPSP changes your existing Recurring Donations records and the Recurring Donations object to match the data model for Enhanced Recurring Donations.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This option enables Enhanced Recurring Donations. WARNING: When you enable this option, NPSP changes your existing Recurring Donations records and the Recurring Donations object to match the data model for Enhanced Recurring Donations.</inlineHelpText>
+        <label>Enhanced Recurring Donations</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Recurring_Donation_Batch_Size__c</fullName>
         <defaultValue>50</defaultValue>
         <description>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits.</description>
@@ -13,25 +33,5 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
-    </fields>    
-    <fields>
-        <fullName>IsEnhancedRDEnabled__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>This option enables Enhanced Recurring Donations, and offers you the latest Recurring Donation features. WARNING: When you enable this option, NPSP changes your existing Recurring Donation records and the Recurring Donations object to match the data model for Enhanced Recurring Donations. This is an irreversible process. For complete details, see the NPSP product documentation.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>This option enables Enhanced Recurring Donations, and offers you the latest Recurring Donation features. WARNING: When you enable this option, NPSP changes your existing Recurring Donation records and the Recurring Donations object to match the data model</inlineHelpText>
-        <label>Enhanced Recurring Donations</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>EnableAutomaticNaming__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>If enabled, Salesforce automatically populates the Recurring Donation Name.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>If enabled, Salesforce automatically populates the Recurring Donation Name.</inlineHelpText>
-        <label>Automatic Recurring Donation Naming</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
+    </fields>   
 </CustomObject>

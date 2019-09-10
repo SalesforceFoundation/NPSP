@@ -41,7 +41,7 @@ private class UTIL_FeatureEnablement_TEST {
 
     /**
      * @description Validates that the FeatureEnablement.FeatureManagement class can be mocked to
-     * force the isEnhancedRDPilotEnabled() static method to return true
+     * force the isRecurringDonations2PilotEnabled() static method to return true
      */
     @isTest
     private static void shouldReturnTrueWhenPilotIsEnabled() {
@@ -53,14 +53,14 @@ private class UTIL_FeatureEnablement_TEST {
 
         featureManagement.setPackageBooleanValue(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), true);
 
-        System.assertEquals(true, UTIL_FeatureEnablement.isEnhancedRDPilotEnabled());
+        System.assertEquals(true, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
     }
 
     /**
-     * @description Validates that the default for the isEnhancedRDPilotEnabled() static method is false
+     * @description Validates that the default for the isRecurringDonations2PilotEnabled() static method is false
      */
     @isTest
     private static void shouldReturnFalseWhenPilotNotEnabled() {
-        System.assertEquals(false, UTIL_FeatureEnablement.isEnhancedRDPilotEnabled());
+        System.assertEquals(false, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
     }
 }

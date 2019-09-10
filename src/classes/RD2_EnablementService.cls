@@ -60,8 +60,8 @@ public with sharing class RD2_EnablementService {
 				isEnhancementEnabled = 
 					CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
 					&& USER_UserService.isUserRunningLightning()
-					&& UTIL_FeatureEnablement.isEnhancedRDPilotEnabled()
-					&& settings.isEnhancedRDEnabled();
+					&& UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled()
+					&& settings.isRecurringDonations2Enabled();
 			}
 			return isEnhancementEnabled;
 		}

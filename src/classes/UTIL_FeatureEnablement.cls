@@ -59,7 +59,7 @@ public without sharing class UTIL_FeatureEnablement {
      * has been enabled in the License Management Org (Wilma) for the current org (by OrgId)
      * @return Is PilotEnable set to true
      */
-    public static Boolean isEnhancedRDPilotEnabled() {
+    public static Boolean isRecurringDonations2PilotEnabled() {
         return UTIL_FeatureEnablement.getInstance().isEnabled( FeatureName.PilotEnabled.name() );
     }
 
