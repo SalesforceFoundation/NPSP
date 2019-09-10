@@ -7,6 +7,9 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Fixed Length Recurring Donation Multiply By
+    [Documentation]              This test verifies that Opportunities with the proper mulitplied amount are created for a Recurring Donation.
+    ...                          This test case also verified the correct number of opportunities are created and related Account, Contact, 
+    ...                          and Soft Credit Contact rollups are udpated.
     
     #Create two Contacts in the Same Household
     ${ns} =  Get NPSP Namespace Prefix

@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Fixed Length Recurring Donation Divide By
+    [Documentation]              This test verifies that Opportunities with the proper divided amount are created for a Recurring Donation.
     
     #Create a Recurring Donation
     ${ns} =  Get NPSP Namespace Prefix
