@@ -17,9 +17,9 @@
     <fields>
         <fullName>EnableAutomaticNaming__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>If enabled, Salesforce automatically populates the Recurring Donation Name using a default format: {!DonorName} {CurrencySymbol}{!Amount} - Recurring. When multi-currency is enabled, the name format is: {!DonorName} {ISO Code} {!Amount} - Recurring.</description>
+        <description>If enabled, Salesforce automatically populates the Recurring Donation Name.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If enabled, Salesforce automatically populates the Recurring Donation Name using a default format: {!DonorName} {CurrencySymbol}{!Amount} - Recurring. When multi-currency is enabled, the name format is: {!DonorName} {ISO Code} {!Amount} - Recurring.</inlineHelpText>
+        <inlineHelpText>If enabled, Salesforce automatically populates the Recurring Donation Name.</inlineHelpText>
         <label>Automatic Recurring Donation Naming</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
