@@ -80,12 +80,12 @@ public with sharing class UTIL_FeatureManagement_TEST {
     private static void shouldCallCheckPackageBooleanValue() {
         UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
 
-        featureMgt.setPackageBooleanValue( UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(),
+        featureMgt.setPackageBooleanValue( UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_AddressVerification.name(),
             true
         );
 
         System.assertEquals(true,
-            new UTIL_FeatureEnablement().isEnabled(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name()));
+            new UTIL_FeatureEnablement().isEnabled(UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_AddressVerification.name()));
     }
 
     /*******************************************************************************************************************
