@@ -38,54 +38,20 @@
 */
 @isTest
 public with sharing class UTIL_FeatureManagement_TEST {
-
-    /**
-     * @description  Validates feature management package Boolean value is set
-     */
     @isTest
-    private static void shouldCallSetPackageBooleanValue() {
-        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
-
-        featureMgt.setPackageBooleanValue(
+    private static void callsSetPackageBooleanValue() {
+        new UTIL_FeatureManagement().setPackageBooleanValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
             false
         );
-
-        System.assertEquals(false, featureMgt.checkPackageBooleanValue(
-            UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name())
-        );
     }
 
-    /**
-     * @description  Validates feature management package Integer value is set
-     */
     @isTest
-    private static void shouldCallSetPackageIntegerValue() {
-        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
-
-        featureMgt.setPackageIntegerValue(
+    private static void callsSetPackageIntegerValue() {
+        new UTIL_FeatureManagement().setPackageIntegerValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(),
             1
         );
-
-        System.assertEquals(1, featureMgt.checkPackageIntegerValue(
-            UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name())
-        );
-    }
-
-    /**
-     * @description Validates feature management Boolean value can be retrieved as it was set
-     */
-    @isTest
-    private static void shouldCallCheckPackageBooleanValue() {
-        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
-
-        featureMgt.setPackageBooleanValue( UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(),
-            true
-        );
-
-        System.assertEquals(true,
-            new UTIL_FeatureEnablement().isEnabled(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name()));
     }
 
     /*******************************************************************************************************************
@@ -110,14 +76,6 @@ public with sharing class UTIL_FeatureManagement_TEST {
 
                 when 'setPackageIntegerValue' {
                     packageIntegerValuesByName.put((String) listOfArgs[0], (Integer) listOfArgs[1]);
-                }
-
-                when 'checkPackageBooleanValue' {
-                    return packageBooleanValuesByName.get((String) listOfArgs[0]);
-                }
-
-                when 'checkPackageIntegerValue' {
-                    return packageIntegerValuesByName.get((String) listOfArgs[0]);
                 }
             }
             return null;
