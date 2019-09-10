@@ -551,7 +551,7 @@ public class BDI_ManageAdvancedMappingCtrl {
                 new List<String>{'true', 'false'},
                 new List<String>{'yes', 'no'},
                 new List<String>{'1', '0'},
-                new List<String>{'checked', 'unchecked', 'null'}};
+                new List<String>{'checked', 'unchecked'}};
 
         public FieldInfo(DescribeFieldResult dfr) {
             this.value = dfr.getName();
