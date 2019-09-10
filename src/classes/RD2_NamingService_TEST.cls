@@ -36,7 +36,7 @@
 */
 @isTest
 public with sharing class RD2_NamingService_TEST {
-    private static final Boolean isMultiCurrencyEnabled = UTIL_Currency.getInstance().isMultiCurrencyOrganization();
+    private static final Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
     private static final String currencyCodeOrSymbol = isMultiCurrencyEnabled
         ? UserInfo.getDefaultCurrency() + ' '
         : UTIL_Currency.getInstance().getCurrencySymbol(UserInfo.getDefaultCurrency());

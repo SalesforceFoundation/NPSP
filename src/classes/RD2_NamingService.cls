@@ -73,7 +73,7 @@ public with sharing class RD2_NamingService {
     private Boolean isMultiCurrencyEnabled {
         get {
             if (isMultiCurrencyEnabled == null) {
-                isMultiCurrencyEnabled = UTIL_Currency.getInstance().isMultiCurrencyOrganization();
+                isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
             }
             return isMultiCurrencyEnabled;
         }
