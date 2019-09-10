@@ -2142,7 +2142,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiDataImporterInfoLine1</shortDescription>
-        <value>Each import record can contain up to 2 Contacts, up to 2 Organizations, an optional Home Address, and an optional Donation.</value>
+        <value>If you're using Advanced Mapping you can map to any Salesforce object and field—standard or custom—that directly relates to Contacts, Accounts, and Opportunities. With Help Text mapping, each import record can contain up to 2 Contacts, up to 2 Organizations, an optional Home Address, and an optional Donation.</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterInfoLine2</fullName>
