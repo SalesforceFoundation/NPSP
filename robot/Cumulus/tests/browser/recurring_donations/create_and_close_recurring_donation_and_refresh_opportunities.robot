@@ -7,6 +7,8 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create and Close a Recurring Donation and Refresh Opportunities
+    [Documentation]              This test verifies that Opportunities for a Recurring Donation are properly closed when the recurring
+    ...                          donation is closed.
 
     #Create a Recurring Donation
     ${ns} =  Get NPSP Namespace Prefix

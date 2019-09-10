@@ -7,6 +7,8 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Recurring Donation And Check Rollups
+    [Documentation]              This test verifies that Account, Contact, and Soft Credit Contact rollups are udpated
+    ...                          when a Recurring Donation's Opportunities are Closed Won.
     
     #Create a Recurring Donation from a Contact
     ${ns} =  Get NPSP Namespace Prefix

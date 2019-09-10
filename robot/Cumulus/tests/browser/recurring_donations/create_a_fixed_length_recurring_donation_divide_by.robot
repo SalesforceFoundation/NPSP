@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Fixed Length Recurring Donation Divide By
+    [Documentation]              This test verifies that Opportunities with the proper divided amount are created for a Recurring Donation.
     
     #Create a Recurring Donation
     ${ns} =  Get NPSP Namespace Prefix
@@ -34,7 +35,7 @@ Create Fixed Length Recurring Donation Divide By
     @{opportunity} =             Salesforce Query             Opportunity
     ...                          select=Id
     ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
-    ...                          ${ns}Recurring_Donation_Installment_Name__c=(12 of 12)
+    ...                          ${ns}Recurring_Donation_Installment_Name__c=(2 of 12)
     ...                          StageName=Pledged
     Go To Record Home            ${opportunity}[0][Id]
     Select Tab                   Details
