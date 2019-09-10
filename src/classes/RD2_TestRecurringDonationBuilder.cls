@@ -92,7 +92,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
     * @description Sets CurrencyIsoCode
     */
     public RD2_TestRecurringDonationBuilder withCurrencyIsoCode(String ccyIsoCode) {
-        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+        if (UserInfo.isMultiCurrencyOrganization()) {
             valuesByFieldName.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, ccyIsoCode);
         }
         
