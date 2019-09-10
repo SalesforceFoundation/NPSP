@@ -135,7 +135,7 @@ tasks:
                 - record_type: Opportunity.NPSP_Default
                   default: true
 
-    run_performance_test:
+    test_performance:
         description: Runs Robot Framework performance tests for BGE-BDI Complex Objects
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
@@ -497,15 +497,16 @@ flows:
             1:
                 flow: qa_org
             3:
-                task: run_performance_test
+                task: performance_tests
                 options:
+                    include: medium
                     vars: persistent_org:False
 
     test_performance_persistent_org:
         description: 'Runs BGE/BDI performance tests against a pre-existing org'
         steps:
             1:
-                task: run_performance_test
+                task: performance_tests
                 options:
                     include: ultra-long
                     vars: persistent_org:True
