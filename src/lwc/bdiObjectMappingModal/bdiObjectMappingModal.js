@@ -598,9 +598,9 @@ export default class bdiObjectMappingModal extends LightningElement {
     * fields that should always be excluded.             
     */
     getAlreadyMappedDIFields() {
+        this.alreadyMappedDIFieldsMap = new Map();
+        
         if (this.objectMappings && this.dataImportFieldMappingSourceNames && this.namespaceWrapper) {
-
-            this.alreadyMappedDIFieldsMap = new Map();
 
             // Making some baseline exclusions for DI system fields.
             for (let i = 0; i < this.excludedDIFields.length; i++) {
