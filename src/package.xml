@@ -2855,11 +2855,8 @@
         <members>IsEnabled_DefaultGAU</members>
         <members>IsEnabled_HouseholdAcctModel</members>
         <members>Org_IsEnabled_AdvancedMultiCurrency</members>
-<<<<<<< .merge_file_gXpkYT
-        <members>RD2_Enabled</members>
-=======
+        <members>IsEnabled_RecurringDonations2</members>
         <members>PilotEnabled</members>
->>>>>>> .merge_file_VDb8hm
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
