@@ -861,7 +861,17 @@ global with sharing class BDI_DataImportService {
             if (!(value instanceof Boolean) && 
                 fieldIsBooleanDisplayType(destinationRecord, destinationField)) {
 
-                value = Boolean.valueOf(value);
+                Map<String, Boolean> picklistToBooleanMap = new Map<String, Boolean> {
+                    'true' => true,
+                    'false' => false,
+                    'yes' => true,
+                    'no' => false,
+                    '1' => true,
+                    '0' => false,
+                    'checked' => true,
+                    'unchecked' => false};
+
+                value = picklistToBooleanMap.get(String.valueOf(value).toLowerCase());
             }
 
             destinationRecord.put(destinationField, value);
