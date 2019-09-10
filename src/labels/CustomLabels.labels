@@ -2774,7 +2774,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when multiple matching fields are selected</shortDescription>
-        <value>Error: Only one field mapping can be used for matching per Object Group.</value>
+        <value>Error: Only one unique ID field can be used for matching per Object Group.</value>
     </labels>
     <labels>
         <fullName>bdiOMUIChildParentHelp</fullName>
