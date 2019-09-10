@@ -2918,9 +2918,9 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Object groups description part 3</shortDescription>
-        <value>Let’s look at the two GAU Allocation 1 and GAU Allocation 2 Object Groups as an example. These object groups link directly to the Opportunity object. At times, 
-            you may want to assign two GAU Allocations to a single Opportunity. To achieve this, in your import file enter the Opportunity information in the Donations columns, 
-            then include the first GAU in the GAU Allocations 1 columns and the second GAU Allocation in the GAU Allocations 2 columns. Because of the GAU Allocation 1 and 
+        <value>Let’s look at the two GAU Allocation 1 and GAU Allocation 2 Object Groups as an example. These object groups link directly to the Opportunity object. At times,
+            you may want to assign two GAU Allocations to a single Opportunity. To achieve this, in your import file enter the Opportunity information in the Donations columns,
+            then include the first GAU in the GAU Allocations 1 columns and the second GAU Allocation in the GAU Allocations 2 columns. Because of the GAU Allocation 1 and
             GAU Allocation 2 Object Mappings, when you import, the two GAU Allocations are both assigned to the Opportunity.</value>
     </labels>
     <labels>
@@ -2937,8 +2937,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Through This Field Helptext</shortDescription>
-        <value>The Lookup Relationship or Master-Detail field that connects your target object to the related Object Group. 
-            If the target object is a child of the related object, this field will be on the target object. Alternatively, 
+        <value>The Lookup Relationship or Master-Detail field that connects your target object to the related Object Group.
+            If the target object is a child of the related object, this field will be on the target object. Alternatively,
             if the target object is the parent of the related object, this field will be on the related object.</value>
     </labels>
     <labels>
@@ -6655,20 +6655,20 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <value>Error in {0}: {1}</value>
     </labels>
     <labels>
-        <fullName>stgGauWithPaymentEnabledError</fullName>
+        <fullName>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</fullName>
         <categories>Validation Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgGauwithPaymentEnabledError</shortDescription>
-        <value>You must enable Default Allocations in order to allocate at the payment level. Please open the GAU Allocations page in NPSP Settings to update the Default Allocation Setting.</value>
+        <shortDescription>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</shortDescription>
+        <value>You must enable Default Allocations in order to allocate at the payment level. Open the GAU Allocations page in NPSP Settings to update the Default Allocation Settings.</value>
     </labels>
     <labels>
-        <fullName>stgGauWithOutPaymentEnabledError</fullName>
+        <fullName>stgErrorMissingDefaultGauRecord</fullName>
         <categories>Validation Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgGauwithoutPaymentEnabledError</shortDescription>
-        <value>An Invalid Default GAU has been removed. Please open the GAU Allocations page in NPSP Settings to review the Default Allocation Settings.</value>
+        <shortDescription>stgErrorMissingDefaultGauRecord</shortDescription>
+        <value>A user deleted the Default GAU, so NPSP has disabled Default Allocations. Open the GAU Allocations page in NPSP Settings to update the Default Allocation Settings.</value>
     </labels>
     <labels>
         <fullName>stgHHNameRefreshTitle</fullName>
