@@ -20,8 +20,6 @@ API Modify Trigger Handler
 *** Test Cases ***
 
 Update a Trigger Handler to Exclude a Username
-    [Documentation]    This test case verifies that when a username is added to a Trigger Handler
-    ...                record for exclusion that triggers indeed do not run for that User.
     [tags]  unstable
 
     # Create an Account so Trigger Handler records are created
