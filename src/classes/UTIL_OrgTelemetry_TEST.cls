@@ -84,6 +84,8 @@ private class UTIL_OrgTelemetry_TEST {
         );
         insert rd;
 
+
+
         DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
 
         insert diBatch;
@@ -177,9 +179,9 @@ private class UTIL_OrgTelemetry_TEST {
         System.assertNotEquals(
             null,
             featureManagementMock.packageBooleanValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.RD2_Enabled.name()
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_RecurringDonations2.name()
             ),
-            'setPackageBooleanValue should have been called with the feature RD2_Enabled'
+            'setPackageBooleanValue should have been called with the feature IsEnabled_RecurringDonations2'
         );
     }
 
