@@ -546,12 +546,11 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String[] referenceToObjectList;
         @AuraEnabled public Boolean isBooleanMappable;
         private String[] picklistOptions = new String[]{};
+
+        // Restricting Picklist=>Bool mappings to only picklists with options 'true' and 'false'.
+        // Update BDI_DataImportService.copyDIFieldToDestinationRecord to handle more Picklist=>Bool mappings
         private List<List<String>> allowedPicklistOptions =
-            new List<List<String>>{
-                new List<String>{'true', 'false'},
-                new List<String>{'yes', 'no'},
-                new List<String>{'1', '0'},
-                new List<String>{'checked', 'unchecked'}};
+            new List<List<String>>{new List<String>{'true', 'false'}};
 
         public FieldInfo(DescribeFieldResult dfr) {
             this.value = dfr.getName();
