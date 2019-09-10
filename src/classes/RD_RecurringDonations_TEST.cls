@@ -107,7 +107,7 @@ public class RD_RecurringDonations_TEST {
         rds[1].npe03__Organization__c = a.id;
 
         Test.startTest();        
-        RD2_NamingService_TEST.enableAutomaticNamingService();
+        RD2_NamingService_TEST.enableAutomaticNaming();
 
         insert rds;
         Test.stopTest();
@@ -146,7 +146,7 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals('test', actualRd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
 
         Test.startTest();      
-        RD2_NamingService_TEST.enableAutomaticNamingService();
+        RD2_NamingService_TEST.enableAutomaticNaming();
 
         rd.npe03__Amount__c = 200;
         update rd;

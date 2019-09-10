@@ -436,7 +436,7 @@ public with sharing class RD2_NamingService_TEST {
     * @description Constructs naming service with Automatic Naming Enabled
     */
     private static RD2_NamingService buildAutomaticNamingService() {
-        enableAutomaticNamingService();
+        enableAutomaticNaming();
 
         return new RD2_NamingService();
     }
@@ -444,7 +444,7 @@ public with sharing class RD2_NamingService_TEST {
     /***
     * @description Enables Automatic Naming Enabled for tests
     */
-    public static void enableAutomaticNamingService() {
+    public static void enableAutomaticNaming() {
         RD2_NamingService.settings = (RD2_Settings) Test.createStub(
             RD2_Settings.class, 
             new RD2_Settings_TEST.Stub().withAutomaticNamingEnabled()
