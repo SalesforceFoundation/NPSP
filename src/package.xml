@@ -424,6 +424,7 @@
         <members>TDTM_DMLgt200_TEST</members>
         <members>TDTM_DefaultConfig</members>
         <members>TDTM_ObjectDataGateway</members>
+        <members>TDTM_ObjectDataGateway_TEST</members>
         <members>TDTM_ProcessControl</members>
         <members>TDTM_Runnable</members>
         <members>TDTM_RunnableMutable</members>
