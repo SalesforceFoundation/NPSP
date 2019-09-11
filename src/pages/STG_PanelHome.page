@@ -40,4 +40,6 @@
             <p><c:UTIL_HtmlOutput html="{!$Label.stgHelpPowerOfUsHub}" hasLink="true" /></p>
         </div>
     </div>
+    <apex:pageMessage summary="{!errorMsg}" severity="error" strength="3" id="gauWarningError" />
+
 </apex:page>
