@@ -42,12 +42,12 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @TestSetup
     private static void setUp() {
-		Account acc = new Account(Name = 'RD2 Trigger Handler Account');
-		insert acc;
+        Account acc = new Account(Name = 'RD2 Trigger Handler Account');
+        insert acc;
 
         Contact contact = UTIL_UnitTestData_TEST.getContact();
-		contact.AccountId = acc.Id;
-		insert contact;
+        contact.AccountId = acc.Id;
+        insert contact;
     }
 
   
@@ -62,13 +62,13 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
             new RD2_TestRecurringDonationBuilder()
-				.withContact(contact.Id)
-				.withAmount(100)
-				.build(),
-			new RD2_TestRecurringDonationBuilder()
-				.withAccount(contact.AccountId)
-				.withAmount(200)
-				.build()
+                .withContact(contact.Id)
+                .withAmount(100)
+                .build(),
+            new RD2_TestRecurringDonationBuilder()
+                .withAccount(contact.AccountId)
+                .withAmount(200)
+                .build()
         };
 
         Test.startTest();        
@@ -105,10 +105,10 @@ private with sharing class RD2_RecurringDonations_TEST {
         Contact contact = getContact();
 
         npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
-			.withName('foo')
-			.withAccount(contact.AccountId)
-			.withAmount(100)
-			.build();    
+            .withName('foo')
+            .withAccount(contact.AccountId)
+            .withAmount(100)
+            .build();    
         insert rd;
 
         rd = getRecurringDonation(rd.Id);
@@ -167,8 +167,8 @@ private with sharing class RD2_RecurringDonations_TEST {
 
 
 
-	// Helpers
-	///////////////////
+    // Helpers
+    ///////////////////
 
     /****
     * @description Returns contact record
