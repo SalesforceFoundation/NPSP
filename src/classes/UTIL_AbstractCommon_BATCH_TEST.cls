@@ -132,10 +132,6 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         System.assertEquals (7, aajobs.size(), '# of jobs present');
     }
 
-    // TODO - Fix this error:
-    // System.UnexpectedException: No more than one executeBatch can be called from within a test method.
-    // Please make sure the iterable returned from your start method matches the batch size, resulting in
-    // one executeBatch invocation.
     /*******************************************************************************************************************
      * @description Test Batch Execution when additional where clause is present (non LDV)
      */
@@ -146,11 +142,11 @@ public class UTIL_AbstractCommon_BATCH_TEST {
 
         Test.startTest();
         UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[0].Id + '\'');
-        tab.setTestChunkSize(10);
-        tab.setTestMaxNonLDVSize(10);
+        tab.setTestChunkSize(UTIL_AbstractCommon_BATCH.DEFAULT_LDV_CHUNK_SIZE);
+        tab.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
         tab.setExpectedResult(1);
 
-        Database.executeBatch(tab, 1);
+        Database.executeBatch(tab, 10);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -158,7 +154,6 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         System.assertEquals (1, aajobs.size(), '# of jobs present');
     }
 
-    // TODO - Commenting this out because it's the same basic logic as the two that are failing. Seems odd this one doesn't pass
     /*******************************************************************************************************************
      * @description Test Batch Execution when where clause is present (LDV)
      */
@@ -180,10 +175,6 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         System.assertEquals (7, aajobs.size(), '# of jobs present');
     }
 
-    // TODO - Fix this error:
-    // System.UnexpectedException: No more than one executeBatch can be called from within a test method.
-    // Please make sure the iterable returned from your start method matches the batch size, resulting in
-    // one executeBatch invocation.
     /*******************************************************************************************************************
      * @description Test Batch Execution when where clause is present (non LDV)
      */
@@ -195,11 +186,11 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         Test.startTest();
         UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10);
         tab.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
-        tab.setTestChunkSize(10);
-        tab.setTestMaxNonLDVSize(10);
+        tab.setTestChunkSize(UTIL_AbstractCommon_BATCH.DEFAULT_LDV_CHUNK_SIZE);
+        tab.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
         tab.setExpectedResult(1);
 
-        Database.executeBatch(tab, 1);
+        Database.executeBatch(tab, 10);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -239,8 +230,8 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         Test.startTest();
         UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\' or Id = \'' + accs[3].Id + '\'');
         tab.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\'');
-        tab.setTestChunkSize(10);
-        tab.setTestMaxNonLDVSize(10);
+        tab.setTestChunkSize(UTIL_AbstractCommon_BATCH.DEFAULT_LDV_CHUNK_SIZE);
+        tab.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
         tab.setExpectedResult(2);
 
         Database.executeBatch(tab, 10);
