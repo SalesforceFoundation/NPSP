@@ -35,6 +35,7 @@
 @isTest
 private with sharing class OPP_OpportunityNaming_BATCH_TEST {
     private static final Integer NUM_OPPS = 10;
+    private static final String CLOSED_WON_STAGE = UTIL_UnitTestData_TEST.getClosedWonStage();
 
     @TestSetup
     static void setup() {
@@ -94,15 +95,17 @@ private with sharing class OPP_OpportunityNaming_BATCH_TEST {
      * @description Creates a given number of test opportunities
      */
     private static List<Opportunity> createOpportunities(Integer numOpps) {
-        Account testAccount = new Account(Name = 'Test Account');
-        insert testAccount;
+        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts (1, null);
+        insert testAccounts;
         List<Opportunity> opps = new List<Opportunity>();
+
+
         for (Integer i = 0; i < numOpps; i++) {
             opps.add(
                 new Opportunity(
-                    AccountId = testAccount.Id,
+                    AccountId = testAccounts[0].Id,
                     Name = 'Test Opp ' + i,
-                    StageName = 'Closed Won',
+                    StageName = CLOSED_WON_STAGE,
                     CloseDate = Date.today()
                 )
             );
@@ -117,7 +120,7 @@ private with sharing class OPP_OpportunityNaming_BATCH_TEST {
     private static void createOpportunityNamingSetting() {
         Opportunity_Naming_Settings__c oppNamingSettings = new Opportunity_Naming_Settings__c(
             Name = 'foo',
-            Opportunity_Name_Format__c = '{!Account.Name} {!CloseDate}',
+            Opportunity_Name_Format__c = '{!Account.Id} {!CloseDate}',
             Attribution__c = Label.oppNamingBoth
         );
         insert oppNamingSettings;
