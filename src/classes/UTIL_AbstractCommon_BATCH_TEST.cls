@@ -132,14 +132,14 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         System.assertEquals (7, aajobs.size(), '# of jobs present');
     }
 
+    // TODO - Fix this error:
+    // System.UnexpectedException: No more than one executeBatch can be called from within a test method.
+    // Please make sure the iterable returned from your start method matches the batch size, resulting in
+    // one executeBatch invocation.
     /*******************************************************************************************************************
      * @description Test Batch Execution when additional where clause is present (non LDV)
      */
-    // @isTest
-    // TODO - Fix this error: 
-    // System.UnexpectedException: No more than one executeBatch can be called from within a test method. 
-    // Please make sure the iterable returned from your start method matches the batch size, resulting in 
-    // one executeBatch invocation.
+    @isTest
     public static void executeAddtlWhereClause() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
@@ -158,11 +158,11 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         System.assertEquals (1, aajobs.size(), '# of jobs present');
     }
 
+    // TODO - Commenting this out because it's the same basic logic as the two that are failing. Seems odd this one doesn't pass
     /*******************************************************************************************************************
      * @description Test Batch Execution when where clause is present (LDV)
      */
-    // @isTest
-    // TODO - Commenting this out because it's the same basic logic as the two that are failing. Seems odd this one doesn't pass
+    @isTest
     public static void executeWhereClauseLDV() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
@@ -180,14 +180,14 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         System.assertEquals (7, aajobs.size(), '# of jobs present');
     }
 
+    // TODO - Fix this error:
+    // System.UnexpectedException: No more than one executeBatch can be called from within a test method.
+    // Please make sure the iterable returned from your start method matches the batch size, resulting in
+    // one executeBatch invocation.
     /*******************************************************************************************************************
      * @description Test Batch Execution when where clause is present (non LDV)
      */
-    // @isTest
-    // TODO - Fix this error: 
-    // System.UnexpectedException: No more than one executeBatch can be called from within a test method. 
-    // Please make sure the iterable returned from your start method matches the batch size, resulting in 
-    // one executeBatch invocation.
+    @isTest
     public static void executeWhereClause() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;

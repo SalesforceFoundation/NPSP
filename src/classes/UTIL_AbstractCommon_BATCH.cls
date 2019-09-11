@@ -262,16 +262,16 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
     @testVisible private String getQueryNonLDVWhereClause() {
         String fullWhereClause = '';
 
-        String whereClause = getWhereClause();
+        String whereClause = this.getWhereClause();
 
         Boolean mainWhere = String.isNotBlank(whereClause);
-        Boolean addtlWhere = String.isNotBlank(additionalWhereClause);
+        Boolean addtlWhere = String.isNotBlank(this.additionalWhereClause);
         if (mainWhere && addtlWhere) {
-            return '(' + whereClause.trim() + ') AND (' + additionalWhereClause.trim() + ')';
+            return '(' + whereClause.trim() + ') AND (' + this.additionalWhereClause.trim() + ')';
         } else if (mainWhere && !addtlWhere) {
             return whereClause.trim();
         } else if (!mainWhere && addtlWhere) {
-            return additionalWhereClause.trim();
+            return this.additionalWhereClause.trim();
         } else {
             return '';
         }
