@@ -71,7 +71,7 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
         for (Trigger_Handler__c th : listTH) {
             Set<String> excludedUserNames = (th.Usernames_to_Exclude__c != null ?
                     new Set<String>(th.Usernames_to_Exclude__c.toLowerCase().split(';')) : new Set<String>());
-            if (th.Object__c == objectName && th.Trigger_Action__c.contains(strAction) && th.Active__c == true
+            if (th.Object__c == objectName && th.Trigger_Action__c != null && th.Trigger_Action__c.contains(strAction) && th.Active__c == true
                     && !excludedUserNames.contains(currUserName.toLowerCase())) {
                 listClasses.add(th);
             }
