@@ -118,12 +118,12 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
 
         String rdName = actualRdById.get(rds[0].id).Name;
-        System.assert(rdName.startsWith(c.FirstName + ' ' + c.LastName), 'RD name should start with Contact name');
-        System.assert(rdName.endsWith('100 - ' + System.Label.RecurringDonationNameSuffix), 'RD name should contain amount value');
+        System.assert(rdName.startsWith(c.FirstName + ' ' + c.LastName), 'Name should start with Contact name');
+        System.assert(rdName.endsWith('100 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
 
         rdName = actualRdById.get(rds[1].id).Name;
-        System.assert(rdName.startsWith(a.Name), 'RD name should start with Account name');
-        System.assert(rdName.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'RD name should contain amount value');
+        System.assert(rdName.startsWith(a.Name), 'Name should start with Account name');
+        System.assert(rdName.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
     }
 
     /***
@@ -139,11 +139,12 @@ public class RD_RecurringDonations_TEST {
         insert a;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonationMonthlyInstallment(null);
-        rd.npe03__Organization__c = a.id;            
+        rd.npe03__Organization__c = a.id;    
+        String originalName = rd.Name;        
         insert rd;
 
-        npe03__Recurring_Donation__c actualRd = getRecurringDonation(rd.Id);
-        System.assertEquals('test', actualRd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
+        rd = getRecurringDonation(rd.Id);
+        System.assertEquals(originalName, rd.Name, 'Name should be unchanged since Enable Automatic Naming is unchecked');
 
         Test.startTest();      
         RD2_NamingService_TEST.enableAutomaticNaming();
@@ -152,9 +153,9 @@ public class RD_RecurringDonations_TEST {
         update rd;
         Test.stopTest();
 
-        actualRd = getRecurringDonation(rd.Id);
-        System.assert(actualRd.Name.startsWith(a.Name), 'RD name should start with Account name');
-        System.assert(actualRd.Name.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'RD name should contain amount value');
+        rd = getRecurringDonation(rd.Id);
+        System.assert(rd.Name.startsWith(a.Name), 'Name should start with Account name');
+        System.assert(rd.Name.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
     }
     
     @isTest
