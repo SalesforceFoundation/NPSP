@@ -38,17 +38,32 @@
 */
 @isTest
 public with sharing class UTIL_FeatureManagement_TEST {
+
+    /**
+     * @description  Validates feature management package Boolean value is set
+     */
     @isTest
-    private static void callsSetPackageBooleanValue() {
-        new UTIL_FeatureManagement().setPackageBooleanValue(
+    private static void shouldCallSetPackageBooleanValue() {
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
+
+        featureMgt.setPackageBooleanValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
             false
         );
+
+        System.assertEquals(false, featureMgt.checkPackageBooleanValue(
+            UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name())
+        );
     }
 
+    /**
+     * @description  Validates feature management package Integer value is set
+     */
     @isTest
-    private static void callsSetPackageIntegerValue() {
-        new UTIL_FeatureManagement().setPackageIntegerValue(
+    private static void shouldCallSetPackageIntegerValue() {
+        UTIL_FeatureManagement featureMgt = new UTIL_FeatureManagement();
+
+        featureMgt.setPackageIntegerValue(
             UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(),
             1
         );
@@ -95,6 +110,14 @@ public with sharing class UTIL_FeatureManagement_TEST {
 
                 when 'setPackageIntegerValue' {
                     packageIntegerValuesByName.put((String) listOfArgs[0], (Integer) listOfArgs[1]);
+                }
+
+                when 'checkPackageBooleanValue' {
+                    return packageBooleanValuesByName.get((String) listOfArgs[0]);
+                }
+
+                when 'checkPackageIntegerValue' {
+                    return packageIntegerValuesByName.get((String) listOfArgs[0]);
                 }
             }
             return null;
