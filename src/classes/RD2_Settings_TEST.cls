@@ -45,22 +45,36 @@ public with sharing class RD2_Settings_TEST {
         RD2_Settings settings = new RD2_Settings();
         
         System.assertEquals(false, settings.isAutomaticNamingEnabled(), 'Automatic Naming should be disabled by default');
+        System.assertEquals(false, settings.isRecurringDonations2Enabled(), 'Enhancement should be disabled by default');
     }
 
     /***
-    * @description Verifies set configuration
+    * @description Verifies automatic naming configuration
     */
     @isTest
-    private static void shouldReturnEnableAutomaticNamingValue() {
+    private static void shouldReturnAutomaticNamingEnabledValue() {
         npe03__Recurring_Donations_Settings__c orgDefaults = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
         orgDefaults.EnableAutomaticNaming__c = true;
         upsert orgDefaults;
 
         RD2_Settings settings = new RD2_Settings();
         
-        System.assertEquals(true, settings.isAutomaticNamingEnabled(), 'Automatic Naming value should be returned');
+        System.assertEquals(true, settings.isAutomaticNamingEnabled(), 'Automatic Naming should be enabled');
     }
 
+    /***
+    * @description Verifies enhanced Recurring Donations enablement configuration
+    */
+    @isTest
+    private static void shouldReturnEnhancementEnabledValue() {
+        npe03__Recurring_Donations_Settings__c orgDefaults = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+        orgDefaults.IsRecurringDonations2Enabled__c = true;
+        upsert orgDefaults;
+
+        RD2_Settings settings = new RD2_Settings();
+        
+        System.assertEquals(true, settings.isRecurringDonations2Enabled(), 'Enhancement should be enabled');
+    }
 
 
     /****
@@ -75,7 +89,7 @@ public with sharing class RD2_Settings_TEST {
             return this;
         }
 
-        public Stub withEnhancedRDEnabled() {
+        public Stub withRecurringDonations2Enabled() {
             isRecurringDonations2Enabled = true;
             return this;
         }

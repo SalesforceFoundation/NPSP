@@ -49,6 +49,20 @@ public with sharing class RD2_EnablementService {
         }
         set;
     }
+
+    /***
+    * @description Contains attribute confirming if LEX is enabled
+    */
+    @TestVisible
+    private static Boolean isUserRunningLightning {
+        get {
+            if (isUserRunningLightning == null) {
+                isUserRunningLightning = USER_UserService.isUserRunningLightning();
+            }
+            return isUserRunningLightning;
+        }
+        set;
+    }
 	
     /***
     * @description Returns true if enhanced Recurring Donations are enabled
@@ -59,7 +73,7 @@ public with sharing class RD2_EnablementService {
 			if (isEnhancementEnabled == null) {
 				isEnhancementEnabled = 
 					CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
-					&& USER_UserService.isUserRunningLightning()
+					&& isUserRunningLightning
 					&& UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled()
 					&& settings.isRecurringDonations2Enabled();
 			}
