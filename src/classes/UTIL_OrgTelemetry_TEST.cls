@@ -123,7 +123,6 @@ private class UTIL_OrgTelemetry_TEST {
 
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
 
-        // TODO: Is this no longer a test that needs to be respected? Or am I doing something wrong???
         System.assertEquals(currQueryCount, Limits.getQueries(), 'There should no new queries executed because these only reference static custom setting');
         Test.stopTest();
 

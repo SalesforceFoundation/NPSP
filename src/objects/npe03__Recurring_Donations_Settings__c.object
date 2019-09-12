@@ -3,8 +3,10 @@
     <fields>
         <fullName>IsRecurringDonations2Enabled__c</fullName>
         <defaultValue>false</defaultValue>
+        <description>This option enables Enhanced Recurring Donations. WARNING: When you enable this option, NPSP changes your existing Recurring Donations records and the Recurring Donations object to match the data model for Enhanced Recurring Donations.</description>
         <externalId>false</externalId>
-        <label>Recurring Donations v2 Enabled</label>
+        <inlineHelpText>This option enables Enhanced Recurring Donations. WARNING: When you enable this option, NPSP changes your existing Recurring Donations records and the Recurring Donations object to match the data model for Enhanced Recurring Donations.</inlineHelpText>
+        <label>Enhanced Recurring Donations</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
