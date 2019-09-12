@@ -84,8 +84,6 @@ private class UTIL_OrgTelemetry_TEST {
         );
         insert rd;
 
-
-
         DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
 
         insert diBatch;
