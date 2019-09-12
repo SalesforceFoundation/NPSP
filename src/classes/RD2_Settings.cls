@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2019
 * @group Settings
-* @description Retrieves Enchanced Recurring Donations configuration
+* @description Retrieves Enhanced Recurring Donations configuration
 *
 */
 public with sharing class RD2_Settings {

@@ -60,7 +60,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        if (RD2_EnablementService.isEnhancementEnabled) {
+        if (RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
         }
 

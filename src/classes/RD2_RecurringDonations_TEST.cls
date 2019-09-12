@@ -56,7 +56,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameOnInsert() {
-        RD2_EnablementService.isEnhancementEnabled = true;
+        RD2_EnablementService.isRecurringDonations2Enabled = true;
 
         Contact contact = getContact();
 
@@ -96,7 +96,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameOnUpdate() {
-        RD2_EnablementService.isEnhancementEnabled = true;
+        RD2_EnablementService.isRecurringDonations2Enabled = true;
 
         RD2_NamingService.settings = (RD2_Settings) Test.createStub(
             RD2_Settings.class, new RD2_Settings_TEST.Stub()
@@ -133,7 +133,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldDispatchRDsToIntegrationGatewayOnBeforeDelete() {
-        RD2_EnablementService.isEnhancementEnabled = true;
+        RD2_EnablementService.isRecurringDonations2Enabled = true;
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c> {
             new RD2_TestRecurringDonationBuilder()

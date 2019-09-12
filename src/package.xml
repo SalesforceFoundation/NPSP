@@ -313,6 +313,7 @@
         <members>OPP_StageMappingCMT_TEST</members>
         <members>OPP_StageMappingUtil</members>
         <members>OPP_StageMappingUtil_TEST</members>
+        <members>OPP_TestOpportunityBuilder</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
         <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>

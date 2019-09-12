@@ -565,7 +565,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
      * @description Verifies Recurring Donations are returned when enhanced Recurring Donations are not enabled
      */
     @isTest 
-    private static void shouldReturnRDsWhenEnhancedRDsAreNotEnabled() {  
+    private static void shouldReturnRDsWhenEnhancementIsNotEnabled() {  
         List<npe03__Recurring_Donation__c> records = executeBatchStart();
 
         System.assertEquals(1, records.size(), 'Recurring Donation record should be returned from the start() method');       
@@ -575,8 +575,8 @@ private with sharing class RD_RecurringDonations_TEST2 {
      * @description Verifies Recurring Donations are not returned when enhanced Recurring Donations are enabled
      */
     @isTest 
-    private static void shouldNotReturnRDsWhenEnhancedRDsAreEnabled() {  
-        RD2_EnablementService.isEnhancementEnabled = true;
+    private static void shouldNotReturnRDsWhenEnhancementIsEnabled() {  
+        RD2_EnablementService.isRecurringDonations2Enabled = true;
 
         List<npe03__Recurring_Donation__c> records = executeBatchStart();
 

@@ -515,25 +515,6 @@ private with sharing class STG_PanelHealthCheck_TEST {
         } 
     }
 
-    /***
-    * @description Verifies defect record for invalid Recurring Donations record type Id is not built 
-    * when enhanced Recurring Donations are enabled
-    */ 
-    @isTest
-    private static void shouldNotCreateDefectResultForInvalidRDRecordTypeWhenEnhancedRDsAreEnabled() {
-        RD2_EnablementService.isEnhancementEnabled = true;
-
-        STG_PanelHealthCheck_CTRL healthCheck = new STG_PanelHealthCheck_CTRL();
-
-        STG_Panel.stgService.stgRD.npe03__Record_Type__c = 'InvalidRTId5'; 
-
-        healthCheck.verifyRecordTypes();
-
-        for (STG_PanelHealthCheck_CTRL.DetectResult dr : healthCheck.listDR) {
-            System.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, dr.strStatus, 'Defect Result status should match');
-        } 
-    }
-
     /*********************************************************************************************************
     * @description Verifies error defect result is created when Opportunity has duplicate primary OCRs
     * and "Disable Contact Role Automation" checked.

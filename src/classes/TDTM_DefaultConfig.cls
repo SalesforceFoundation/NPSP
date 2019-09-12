@@ -186,7 +186,7 @@ public without sharing class TDTM_DefaultConfig {
 
         // Enhanced Recurring Donations trigger handler
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
-              Class__c = 'RD2_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c',
+              Class__c = 'RD2_RecurringDonations_TDTM', Load_Order__c = 2, Object__c = 'npe03__Recurring_Donation__c',
               Trigger_Action__c = 'BeforeDelete;BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
 
         // OppRollups on Opportunity
@@ -403,10 +403,7 @@ public without sharing class TDTM_DefaultConfig {
         //Flag removed from line 57 of RD_RecurringDonations_TDTM
         npspToCumulusMap.put('npe03__DISABLE_Donations_trigger__c', 'RD_RecurringDonations_Opp_TDTM');
         //Flag removed from line 107 of RD_RecurringDonations_TDTM
-        String rdTriggerHandler = RD2_EnablementService.isEnhancementEnabled
-            ? 'RD2_RecurringDonations_TDTM'
-            : 'RD_RecurringDonations_TDTM';
-        npspToCumulusMap.put('npe03__DISABLE_RecurringDonations_trigger__c', rdTriggerHandler);
+        npspToCumulusMap.put('npe03__DISABLE_RecurringDonations_trigger__c', 'RD2_RecurringDonations_TDTM');
 
         //No code refs in Cumulus - ref in RelationshipCampaignMembers trigger in Relationshipsv
         npspToCumulusMap.put('npe4__DISABLE_RelationshipCM_trigger__c', 'REL_Relationships_Cm_TDTM');

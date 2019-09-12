@@ -65,19 +65,33 @@ public with sharing class RD2_EnablementService {
     }
     
     /***
+    * @description Returns true if enhanced Recurring Donations can be enabled
+    */
+    public static Boolean isRecurringDonations2Ready {
+        get {
+            if (isRecurringDonations2Ready == null) {
+                isRecurringDonations2Ready = 
+                    CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
+                    && isUserRunningLightning
+                    && UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
+            }
+            return isRecurringDonations2Ready;
+        }
+        private set;
+    }
+    
+    /***
     * @description Returns true if enhanced Recurring Donations are enabled
     */
     @TestVisible
-    public static Boolean isEnhancementEnabled {
+    public static Boolean isRecurringDonations2Enabled {
         get {
-            if (isEnhancementEnabled == null) {
-                isEnhancementEnabled = 
-                    CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
-                    && isUserRunningLightning
-                    && UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled()
+            if (isRecurringDonations2Enabled == null) {
+                isRecurringDonations2Enabled = 
+                    UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled()
                     && settings.isRecurringDonations2Enabled();
             }
-            return isEnhancementEnabled;
+            return isRecurringDonations2Enabled;
         }
         private set;
     }

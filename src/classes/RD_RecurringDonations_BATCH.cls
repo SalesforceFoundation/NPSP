@@ -86,7 +86,7 @@ Schedulable {
     */
     public database.Querylocator start(Database.BatchableContext bc) {
         // do not return records for processing when enhanced Recurring Donations are enabled
-        if (RD2_EnablementService.isEnhancementEnabled) {
+        if (RD2_EnablementService.isRecurringDonations2Enabled) {
             query += ' LIMIT 0';
         }
 

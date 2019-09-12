@@ -48,7 +48,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Trigger handler on Recurring Donations when enchancement is enabled
+    * @description Trigger handler on Recurring Donations when enhancement is enabled
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
@@ -60,7 +60,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
 
-        if (!RD2_EnablementService.isEnhancementEnabled) {
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
         }
 

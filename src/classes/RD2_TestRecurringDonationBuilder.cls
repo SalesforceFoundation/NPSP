@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Recurring Donations Builder
+* @description Recurring Donations Builder for unit tests
 *
 */
 public with sharing class RD2_TestRecurringDonationBuilder {

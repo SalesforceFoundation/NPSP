@@ -460,10 +460,8 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         checkMultiRecordTypeIds(Opportunity.sObjectType, STG_Panel.stgService.stgCon.Opp_RecTypes_Excluded_for_Payments__c, 
             'npe01__Contacts_And_Orgs_Settings__c', UTIL_Namespace.StrTokenNSPrefix('Opp_RecTypes_Excluded_for_Payments__c'), Label.stgNavDonations, Label.stgNavPayments);   
             
-        if (!RD2_EnablementService.isEnhancementEnabled) {
-            checkRecordTypeId(Opportunity.sObjectType, STG_Panel.stgService.stgRD.npe03__Record_Type__c, 
-                'npe03__Recurring_Donations_Settings__c', 'npe03__Record_Type__c', Label.stgNavRecurringDonations, Label.stgNavRecurringDonations); 
-        }
+        checkRecordTypeId(Opportunity.sObjectType, STG_Panel.stgService.stgRD.npe03__Record_Type__c, 
+            'npe03__Recurring_Donations_Settings__c', 'npe03__Record_Type__c', Label.stgNavRecurringDonations, Label.stgNavRecurringDonations); 
         
         checkMultiRecordTypeIds(Contact.sObjectType, STG_Panel.stgService.stgHH.npo02__Household_Creation_Excluded_Recordtypes__c, 
             'npo02__Households_Settings__c', 'npo02__Household_Creation_Excluded_Recordtypes__c', Label.stgNavPeople, Label.stgNavHouseholds);
