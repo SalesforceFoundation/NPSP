@@ -466,7 +466,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         checkMultiRecordTypeIds(Contact.sObjectType, STG_Panel.stgService.stgHH.npo02__Household_Creation_Excluded_Recordtypes__c, 
             'npo02__Households_Settings__c', 'npo02__Household_Creation_Excluded_Recordtypes__c', Label.stgNavPeople, Label.stgNavHouseholds);
         checkMultiRecordTypeIds(Contact.sObjectType, STG_Panel.stgService.stgHH.npo02__Household_OCR_Excluded_Recordtypes__c, 
-            'npo02__Households_Settings__c', 'npo02__Household_OCR_Excluded_Recordtypes__c', Label.stgNavDonations, Label.stgNavContactRoles);            
+            'npo02__Households_Settings__c', 'npo02__Household_OCR_Excluded_Recordtypes__c', Label.stgNavDonations, Label.stgNavContactRoles);
         if (! STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
             checkMultiRecordTypeIds(Opportunity.sObjectType, STG_Panel.stgService.stgAllo.Excluded_Opp_RecTypes__c,
                     UTIL_Namespace.StrTokenNSPrefix('Allocations_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Excluded_Opp_RecTypes__c'), Label.stgNavDonations, Label.stgNavAllocations);
