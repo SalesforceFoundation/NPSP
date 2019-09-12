@@ -43,8 +43,8 @@ public class ERR_RecordError {
 
     private String context;
 
-    private Map<String, Error__c> insRecordErrors = new Map<String, Error__c>();
-    private Map<String, Error__c> updRecordErrors = new Map<String, Error__c>();
+    private Map<ID, Error__c> insRecordErrors = new Map<Id, Error__c>();
+    private Map<ID, Error__c> updRecordErrors = new Map<Id, Error__c>();
 
     /*******************************************************************************************************
     * @description Constructor for the ERR_RecordError class.  It should include a context that represents
@@ -154,7 +154,7 @@ public class ERR_RecordError {
     * @param recordId Id of the Salesforce Record to get from the maps hierarchy
     * @return Error__c record, if found in any of the maps
     */
-    @testVisible private Error__c get(String recordId) {
+    @testVisible private Error__c get(Id recordId) {
         if (updRecordErrors.containsKey(recordId)) {
             return updRecordErrors.get(recordId);
         } else if (existingErrorsByRecordID.containsKey(recordId)) {
@@ -188,7 +188,7 @@ public class ERR_RecordError {
     * @param dmlResult The result of the DML Operation
     * @param sObj The record the error is associated with
     */
-    public void addError(String recordId, Object dmlResult, SObject sObj) {
+    public void addError(Id recordId, Object dmlResult, SObject sObj) {
         if (isDmlResultSuccess(dmlResult)) {
             return;
         }
@@ -241,7 +241,7 @@ public class ERR_RecordError {
     * @param errorMessage The erorr to add
     * @param sObj The record the error is associated with
     */
-    public void addError(String recordId, String errorMessage, SObject sObj) {
+    public void addError(Id recordId, String errorMessage, SObject sObj) {
         // Checks to see if this in already in the Record Errors List
         Error__c err = this.get(recordId);
 
@@ -274,7 +274,7 @@ public class ERR_RecordError {
     * @param sObjects Map of SObjects associated with the errors, keyed by Record ID associated with the
     *        Error
     */
-    public void addErrors(Map<String, String> errorMessagesByRecordID, Map<String, SObject> sObjects) {
+    public void addErrors(Map<Id, String> errorMessagesByRecordID, Map<Id, SObject> sObjects) {
         if (errorMessagesByRecordID == null || errorMessagesByRecordID.isEmpty()) {
             return;
         }
