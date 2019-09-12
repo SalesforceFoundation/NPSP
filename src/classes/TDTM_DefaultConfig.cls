@@ -403,7 +403,7 @@ public without sharing class TDTM_DefaultConfig {
         //Flag removed from line 57 of RD_RecurringDonations_TDTM
         npspToCumulusMap.put('npe03__DISABLE_Donations_trigger__c', 'RD_RecurringDonations_Opp_TDTM');
         //Flag removed from line 107 of RD_RecurringDonations_TDTM
-        npspToCumulusMap.put('npe03__DISABLE_RecurringDonations_trigger__c', 'RD2_RecurringDonations_TDTM');
+        npspToCumulusMap.put('npe03__DISABLE_RecurringDonations_trigger__c', 'RD_RecurringDonations_TDTM');
 
         //No code refs in Cumulus - ref in RelationshipCampaignMembers trigger in Relationshipsv
         npspToCumulusMap.put('npe4__DISABLE_RelationshipCM_trigger__c', 'REL_Relationships_Cm_TDTM');
