@@ -159,10 +159,12 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Trigger_Handler__c triggerHandler = [SELECT Active__c FROM Trigger_Handler__c WHERE Class__c = 'OPP_OpportunityContactRoles_TDTM'];
-        triggerHandler.Active__c = false;
-        update triggerHandler;
-        TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
+        // disable the OPP_OpportunityContactRoles_TDTM trigger
+        for (Trigger_Handler__c th : TDTM_Config_API.getCachedRecords()) {
+            if (th.Class__c == 'OPP_OpportunityContactRoles_TDTM') {
+                th.Active__c = false;
+            }
+        }
         
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
