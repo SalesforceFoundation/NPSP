@@ -53,13 +53,15 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     */
     public static string idPanelCurrent { get; set; }
 
+    /*******************************************************************************************************
+    * @description This string sets an error message when it clears the default GAU if it does not exist
+    */
+    public string errorMsg { get; set; }
+
     /*********************************************************************************************************
     * @description Action Method called by javascript when idPanelCurrent has been changed.
     * @return null
     */
-
-    public string errorMsg { get; set; }
-
     public PageReference setPanelCurrent() {
         // javascript caller auto-assigns to idPanelCurrent,
         // so nothing to do in this method.
@@ -143,8 +145,8 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
             } else {
                 errorMsg = System.Label.stgErrorMissingDefaultGauRecord;
             }
-            //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorMsg));
-            ERR_Handler.processError(new HealthCheckException(errorMsg), ERR_Handler_API.Context.STTG);
+
+            ERR_Handler.sendNotificationForError(new HealthCheckException(errorMsg), ERR_Handler_API.Context.STTG);
         }
     }
 }

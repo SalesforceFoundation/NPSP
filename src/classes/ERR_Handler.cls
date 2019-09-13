@@ -255,6 +255,17 @@ public class ERR_Handler {
         processError(e, context.name());
     }
 
+    /*******************************************************************************************************
+    * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+                   This method should be used from inside the NPSP package, instead of the same one with that same name
+                   that takes a String instead of an Enum as the second parameter.
+    * @param e Exception to create error record from.
+    * @param context The context the exception was raised on.
+    */
+    public static void sendNotificationForError(Exception e, ERR_Handler_API.Context context) {
+        sendNotificationForError(e, context.name());
+    }
 
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
@@ -268,11 +279,11 @@ public class ERR_Handler {
             processErrors(new Error__c[]{error}, context);
         }
     }
-    
-    
+
+
     /*******************************************************************************************************
     * @description Creates error records from passed in exceptions.
-    *   If the Error Settings is enabled, errors are stored in the database. 
+    *   If the Error Settings is enabled, errors are stored in the database.
     *   If the Error Settings has notification enabled, an email notificiation is sent.
     * @param exceptions List of exceptions.
     * @param context The context the exception was raised on.
@@ -283,7 +294,7 @@ public class ERR_Handler {
         for (Exception e : exceptions) {
             errors.add(createError(e, context.name()));
         }
-        
+
         processErrors(errors, context.name());
     }
 
@@ -307,6 +318,29 @@ public class ERR_Handler {
 
             //ERR_Notifier takes care of checking the settings itself.
             ERR_Notifier.sendErrorNotifications(context);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), do not generate apex page messages and sends error notifications (if enabled).
+    * @param errorRecords The errors to store.
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void sendNotificationForError(Exception e, String context) {
+        if (e != null) {
+            Error__c error = createError(e, context);
+            if (error != null) {
+                if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+                    UTIL_Debug.debug('**** Storing errorRecords: ' + error);
+                    Database.insert(error, false);
+            }
+
+            //ERR_Notifier takes care of checking the settings itself.
+            ERR_Notifier.sendErrorNotifications(context);
+
+            }
+
         }
     }
 
@@ -335,7 +369,7 @@ public class ERR_Handler {
             message = 'Stacktrace available at the time of saving the record - ';
         }
         error.Stack_Trace__c = message + stackTrace;
-        
+
         return error;
     }
 
@@ -409,7 +443,7 @@ public class ERR_Handler {
         UTIL_Debug.debug('**** createBatchError() returns error: ' + error);
         return error;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the URL of a record, if available.
     * @param saveResultId The id resulting from a DML operation of the Database class.
@@ -420,15 +454,15 @@ public class ERR_Handler {
         String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
         if (saveResultId != null)
             recordURL += saveResultId;
-        else            
+        else
             recordURL += objId;
-                     
+
         if (recordURL.startsWith('http:'))
             recordURL = recordURL.replaceFirst('http:', 'https:');
-            
+
         return recordURL;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the ID of the object the error is about if available.
     * @param error. The Error object.
@@ -440,7 +474,7 @@ public class ERR_Handler {
         }
         return null;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the status of the error that happened as a result of a DML operation performed through
     *              the Database class as a string.
@@ -449,7 +483,7 @@ public class ERR_Handler {
     */
     private static String getStatusCode(system.StatusCode status) {
         if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
-            return 'Required Field Missing';   
+            return 'Required Field Missing';
         else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
             return 'Custom Validation Rule Failed';
         else
