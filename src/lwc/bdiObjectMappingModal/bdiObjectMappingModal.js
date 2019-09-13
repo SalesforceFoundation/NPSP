@@ -172,7 +172,6 @@ export default class bdiObjectMappingModal extends LightningElement {
             this.getDataImportFieldDescribes();
             this.getDataImportMappedFields();
         } catch(error) {
-            console.log('Error encountered in objectMappingModal init: ' + error);
             this.handleError(error);
         }
     }
@@ -259,7 +258,6 @@ export default class bdiObjectMappingModal extends LightningElement {
 
             this.isLoading = false;
         } catch(error) {
-            console.log('Error encountered in loadModalData: ' + error);
             this.handleError(error);
         }
     }
@@ -515,7 +513,6 @@ export default class bdiObjectMappingModal extends LightningElement {
                 this.refreshImportRecordFieldOptions();
             })
             .catch((error) => {
-                console.log('Error encountered in getDataImportFieldDescribes: ' + error);
                 this.handleError(error);
             });
     }
@@ -529,9 +526,9 @@ export default class bdiObjectMappingModal extends LightningElement {
     refreshImportRecordFieldOptions() {
         this.diImportRecordFieldOptions = [];
         this.diImportRecordStatusFieldOptions = [];
-        console.log('in refreshImportRecordFieldOptions namespace Wrapper is: ' + this.namespaceWrapper);
+
         let fieldsToExclude = this.getAlreadyMappedDIFields(); 
-        
+
         if (fieldsToExclude && this.dataImportFieldData && this.namespaceWrapper) {
             
             for (let i = 0; i < this.dataImportFieldData.length; i++) {

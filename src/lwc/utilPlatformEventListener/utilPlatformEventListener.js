@@ -134,10 +134,6 @@ export default class PlatformEventListener extends LightningElement {
         
         const status = response.data.payload[nsPrefix + 'Status__c'];
         const deploymentId = response.data.payload[nsPrefix + 'DeploymentId__c'];
-
-        console.log('Deployment Event received! ' +
-            'Deployment Id: ' + deploymentId +
-            ' with Status: ' + status);
     }
 
     isMonitored(deploymentId) {
