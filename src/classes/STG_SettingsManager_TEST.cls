@@ -107,13 +107,15 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(0, [SELECT count() FROM Error__c]);
 
         Test.startTest();
-        ctrl.onNpspSettingsLoad();
-        msgs = Apexpages.getMessages();
+        try {
+            ctrl.onNpspSettingsLoad();
+        } catch (exception ex) {
+            System.assert(ex.getMessage().contains(Label.stgErrorMissingDefaultGauRecordWithPmtAllocEnabled));
+        }
         Test.stopTest();
 
         System.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be unchecked');
         System.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should not be filled in.');
-        System.assert(msgs[0].getDetail().contains(Label.stgErrorMissingDefaultGauRecordWithPmtAllocEnabled));
         System.assertEquals(1, [SELECT count() FROM Error__c]);
     }
 
@@ -136,13 +138,15 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(0, [SELECT count() FROM Error__c]);
 
         Test.startTest();
-        ctrl.onNpspSettingsLoad();
-        msgs = Apexpages.getMessages();
+         try {
+            ctrl.onNpspSettingsLoad();
+        } catch (exception ex) {
+            System.assert(ex.getMessage().contains(Label.stgErrorMissingDefaultGauRecord));
+        }
         Test.stopTest();
 
         System.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be unchecked');
         System.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should not be filled in.');
-        System.assert(msgs[0].getDetail().contains(Label.stgErrorMissingDefaultGauRecord));
         System.assertEquals(1, [SELECT count() FROM Error__c]);
     }
 
@@ -163,13 +167,14 @@ public with sharing class STG_SettingsManager_TEST {
         upsert STG_Panel.stgService.stgAllo;
 
         Test.startTest();
-        ctrl.onNpspSettingsLoad();
-        msgs = Apexpages.getMessages();
+        try {
+            ctrl.onNpspSettingsLoad();
+            System.assert(true, 'onNpspSettingsLoad should have thrown exception');
+        } catch (exception ex) {}
         Test.stopTest();
 
         System.assertEquals(true, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be checked');
         System.assertEquals(gau.id, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should be filled in.');
-        System.assert(msgs.size()==0);
         System.assertEquals(0, [SELECT count() FROM Error__c]);
     }
 
