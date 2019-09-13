@@ -316,7 +316,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * inspects the deployment status, and sets the hasDeploymentInProgress boolean
     */
     private void refreshCustomSettings() {
-        dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings = Data_Import_Settings__c.getInstance();
     }
 
     /*******************************************************************************************************
