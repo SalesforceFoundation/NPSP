@@ -107,6 +107,10 @@ private class UTIL_OrgTelemetry_TEST {
      */
     @IsTest
     private static void validateNPSPSettingsTelemetry() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c()
+        );
+
         UTIL_FeatureManagement_TEST.Mock asyncFeatureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
         UTIL_OrgTelemetry_SVC.asyncTelemetrySvc.featureManager =
             (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, asyncFeatureManagementMock);

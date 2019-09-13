@@ -233,9 +233,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private void handleNPSPSettings() {
         STG_SettingsService stgSvc = new STG_SettingsService();
         Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        if (Test.isRunningTest()) {
-            npe03__Recurring_Donations_Settings__c recurringDonations2Settings = UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c());
-        }
 
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
                 stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
