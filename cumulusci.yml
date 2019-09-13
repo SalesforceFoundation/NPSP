@@ -77,6 +77,13 @@ tasks:
             path: unpackaged/config/qa_namespaced
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_qa_bdi_metadata_config:
+        description: Deploys Custom Metadata for BDI QA
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/qa_bdi_custom_metadata
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
