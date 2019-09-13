@@ -1180,3 +1180,22 @@ class NPSP(object):
         self.select_object_dropdown()
         locator=npsp_lex_locators['link'].format(view_name)
         self.selenium.click_element(locator)     
+        
+    def wait_until_url_contains(self,exp_text):
+        """Waits for maximum of 30sec for current url to contain the text"""
+        self.builtin.log("This keyword can be removed once we support SeleniumLibrary 4.0.")
+        url=self.selenium.get_location()
+        for i in range(10):
+            i += 1
+            if i == 9:
+                raise AssertionError("Failed to find an url containing {} in 30 seconds".format(exp_text))
+            else:
+                try:
+                    if exp_text in url:
+                        return
+                except Exception:
+                    time.sleep(3)
+                            
+
+        
+            

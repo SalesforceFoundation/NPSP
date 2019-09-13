@@ -22,6 +22,7 @@ Create Engagement Plan and Edit to Add New Task
     Enter Task Id and Subject    Task 3    ${task3_1}
     Page Scroll To Locator    button    Save
     Click Button With Value    Save
+    Wait Until Url Contains    /view    
     Unselect Frame
     Verify Engagement Plan    ${plan_name}    ${task1_1}    ${sub_task1_1}     ${task2_1}    ${task3_1}
     
