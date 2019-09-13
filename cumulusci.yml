@@ -28,13 +28,6 @@ project:
         - github: https://github.com/SalesforceFoundation/Affiliations
 
 tasks:
-    turn_on_debug_logs:
-        class_path: tasks.debug_logs.TurnOnDebugLogs
-
-    download_debug_logs:
-        class_path: 
-            tasks.debug_logs.DownloadDebugLogs
-
     download_ldv_tests:
         description: Downloads the NPSP-LDV-Tests repository
         class_path: cumulusci.tasks.util.DownloadZip
@@ -136,7 +129,7 @@ tasks:
                   default: true
 
     test_performance:
-        description: Runs Robot Framework performance tests for BGE-BDI Complex Objects
+        description: Runs Robot Framework performance tests for BDI Complex Objects
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
         options:
@@ -492,7 +485,7 @@ flows:
                 task: ensure_record_type
 
     setup_and_test_performance:
-        description: 'Creates a BGE-BDI test org and runs BGE/BDI performance tests'
+        description: 'Creates a test org and runs BDI performance tests'
         steps:
             1:
                 flow: qa_org
@@ -503,7 +496,7 @@ flows:
                     vars: persistent_org:False
 
     test_performance_persistent_org:
-        description: 'Runs BGE/BDI performance tests against a pre-existing org'
+        description: 'Runs BDI performance tests against a pre-existing org'
         steps:
             1:
                 task: test_performance
