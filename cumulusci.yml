@@ -607,6 +607,7 @@ plans:
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
+
     reports:
         slug: reports
         title: Install Reports & Dashboards
