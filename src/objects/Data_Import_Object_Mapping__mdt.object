@@ -15,10 +15,10 @@
     </fields>
     <fields>
         <fullName>Custom_Matching_Logic_Class__c</fullName>
-        <description>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMatchingLogic class and overrides the matchObjects method.</description>
+        <description>If custom apex logic should be used to match the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMatchingLogic class and overrides the matchObjects method.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMatchingLogic class and overrides the matchObjects method.</inlineHelpText>
+        <inlineHelpText>If custom apex logic should be used to match the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMatchingLogic class and overrides the matchObjects method.</inlineHelpText>
         <label>Custom Matching Logic Class</label>
         <length>80</length>
         <required>false</required>

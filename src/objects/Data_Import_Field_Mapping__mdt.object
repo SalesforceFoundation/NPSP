@@ -27,10 +27,10 @@
     </fields>
     <fields>
         <fullName>Match_On_This_Mapping__c</fullName>
-        <description>Indicates whether this field mapping should be used for matching.</description>
+        <description>Indicates if this field mapping should be used for matching a unique ID.</description>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <inlineHelpText>Indicates whether this field mapping should be used for matching.</inlineHelpText>
+        <inlineHelpText>Indicates if this field mapping should be used for matching a unique ID.</inlineHelpText>
         <label>Match On This Mapping</label>
         <required>false</required>
         <type>Picklist</type>
