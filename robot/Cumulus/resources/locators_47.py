@@ -158,7 +158,7 @@ npsp_lex_locators={
     'npsp_settings':{
         'panel_sub_link':'//ul/li/a[text()="{}"]',
         'field_value':"//div[@class='slds-form-element'][./label[contains(text(),'{}')]]/div/span",
-        'side_panel':"//ul/div[contains(@id,'RecDonations')]/button[1]",
+        'side_panel':'//div[@id="{}"]//child::button[contains(@class,"chevronright")]',
         'list':"//div[contains(@class,'slds-form_horizontal')]/div[@class='slds-form-element']/label[text()='{}']/following-sibling::div/select",
         'multi_list':'//div[contains(@class,"slds-form_horizontal")]/div[@class="slds-form-element"][./label[text()="{}"]]/div//select',
         'list_val':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span[text()="{}"]',

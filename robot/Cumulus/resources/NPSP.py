@@ -1186,7 +1186,6 @@ class NPSP(object):
         self.builtin.log("This keyword can be removed once we support SeleniumLibrary 4.0.")
         url=self.selenium.get_location()
         for i in range(10):
-            i += 1
             if i == 9:
                 raise AssertionError("Failed to find an url containing {} in 30 seconds".format(exp_text))
             else:
@@ -1195,6 +1194,7 @@ class NPSP(object):
                         return
                 except Exception:
                     time.sleep(3)
+                    i += 1
                             
 
         

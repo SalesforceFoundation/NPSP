@@ -355,8 +355,8 @@ Open NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Choose Frame    Nonprofit Success Pack Settings
     Wait Until Element Is Visible  text:${topmenu}
-    Click Link With Text    text=${topmenu}
-    Sleep  1
+    # Click Link With Text    text=${topmenu}
+    Click Element With Locator    npsp_settings.side_panel    idPanelBulkProcesses
     Wait Until Element Is Visible  text:${submenu}
     Click Link With Text    text=${submenu}
     Sleep  1
