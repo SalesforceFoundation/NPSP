@@ -15,7 +15,7 @@ JOB_ID = datetime.now().isoformat().rsplit(":", 1)[0]
 START_DATE = date(2019, 1, 1)  # Per https://salesforce.quip.com/gLfGAPtqVzUS
 
 
-class GenerateBDIData_CO(ModuleDataFactory):
+class GenerateBDIData(ModuleDataFactory):
     """Generate data specific to the Honeybees test cases"""
     def make_records(self, num_records, factories):
         """Make the 4 batches of DIs described here:
@@ -105,7 +105,7 @@ class DataImport(factory.alchemy.SQLAlchemyModelFactory):
         )
         matching_contact = factory.Trait(
             contact=factory.SubFactory(
-                ContactFactory, 
+                ContactFactory,
                 name=factory.SelfAttribute("..Contact1_Lastname__c"),
                 description="Pre-existing"
             )

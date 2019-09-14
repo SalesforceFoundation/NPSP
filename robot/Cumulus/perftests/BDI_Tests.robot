@@ -2,7 +2,7 @@
 ${database_url} =    
 ${persistent_org} =     ${False}
 
-${data_generation_task} =       tasks.generate_bdi_CO_data.GenerateBDIData_CO
+${data_generation_task} =       tasks.generate_bdi_data.GenerateBDIData
 
 *** Settings ***
 
@@ -27,7 +27,6 @@ Clear Generated Records
 Generate Data
     [Arguments]    ${count}
     ${count} =  Convert To Integer	${count}
-    # ${data_generation_task} =     Set Variable If         "${field_mapping_method}"=="Help Text"  tasks.generate_bdi_data.generate_bdi_data         tasks.generate_bdi_CO_data.GenerateBDIData_CO
 
     Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
     ...                 num_records=${count}
