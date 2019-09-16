@@ -2,6 +2,7 @@
 
 Resource       cumulusci/robotframework/Salesforce.robot
 Resource       robot/Cumulus/resources/Data.robot
+Library        robot/Cumulus/resources/BDI_API.py
 
 
 *** Keywords ***

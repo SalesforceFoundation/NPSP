@@ -1,11 +1,7 @@
 import logging
-import time
-import sys
 import warnings
-import os
-import pprint
 
-from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
+from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
@@ -20,8 +16,9 @@ from email.mime import text
 
 from cumulusci.tasks.apex.anon import AnonymousApexTask
 from cumulusci.core.config import TaskConfig
-from cumulusci.tasks.apex.batch import BatchApexWait
-from tasks.set_BDI_mapping_mode import SetBDIMappingMode
+
+from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
+
 
 from locators_45 import npsp_lex_locators as locators_45
 from locators_46 import npsp_lex_locators as locators_46
@@ -33,7 +30,7 @@ locators_by_api_version = {
 npsp_lex_locators = {}
 
 @selenium_retry
-class NPSP(object):
+class NPSP(SalesforceRobotLibraryBase):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = 1.0
@@ -64,18 +61,6 @@ class NPSP(object):
             latest_api_version = max(locators_by_api_version.keys())
         locators = locators_by_api_version[latest_api_version]
         npsp_lex_locators.update(locators)
-
-    @property
-    def builtin(self):
-        return BuiltIn()
-
-    @property
-    def cumulusci(self):
-        return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
-
-    @property
-    def salesforce(self):
-        return self.builtin.get_library_instance('cumulusci.robotframework.Salesforce')
 
     def get_namespace_prefix(self, name):
         parts = name.split('__')
@@ -1160,65 +1145,6 @@ class NPSP(object):
         self.select_object_dropdown()
         locator=npsp_lex_locators['link'].format(view_name)
         self.selenium.click_element(locator)
-
-    def _run_subtask(self, taskclass, **options):
-        subtask_config = TaskConfig(
-                {"options": options}
-        )
-        return self.cumulusci._run_task(taskclass, subtask_config)
-
-    def batch_apex_wait(self, class_name):
-        return self._run_subtask(BatchApexWait, class_name=class_name)
-
-    def run_apex(self, code):
-        return self._run_subtask(AnonymousApexTask, apex=code)
-
-    def configure_BDI(self, mode):
-        return self._run_subtask(SetBDIMappingMode, mode=mode)
-
-    def _get_di_mode(self):
-        token = self.get_org_namespace_prefix()
-        soql = "SELECT {token}Field_Mapping_Method__c FROM {token}Data_Import_Settings__c"
-        soql = soql.format(token=token)
-        res = self.cumulusci.sf.query_all(soql)
-        return res['records'][0]['{token}Field_Mapping_Method__c'.format(token=token)]
-
-    def batch_data_import(self, batchsize):
-        """"Do a BDI import using the API and wait for it to complete"""
-        self.python_display("Batch data import. Batch size:", batchsize)
-        try:
-            self.run_apex("""BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-                    ID ApexJobId = Database.executeBatch(bdi, %d);
-                    """ % int(batchsize))
-
-            self.batch_apex_wait("BDI_DataImport_BATCH")
-        except Exception as e:
-            self.python_display(repr(e))
-            self.python_display(e)
-            import traceback
-            tb = traceback.format_exc()
-            self.python_display(tb)
-            raise e
-
-    def python_display(self, title, *value, say=False):
-        if isinstance(value, str):
-            pass
-        elif any(isinstance(value, t) for t in [list, dict, tuple]):
-            value = pprint.pformat(value)
-        else:
-            value = repr(value)
-        print(title, value)
-        sys.stderr.write(f"{title}: {value}\n")
-        value = value.replace("'", "")
-        value = value.replace('"', "")
-        value = value.replace('`', "")
-        os.system(f'echo "{title}: {value}"')
-        if say:
-            os.system(f'say {title}')
-
-    def pause(self, message):
-        self.python_display(message, message, say=True)
-        input(message)
 
 def monkeypatch_batch_py():
     from cumulusci.core.exceptions import SalesforceException
