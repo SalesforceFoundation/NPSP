@@ -14,7 +14,7 @@ Check Row Count
     ...           &{kwargs}
 
     Run Keyword if      '${status}' != 'PASS'
-    ...           Python Display    
+    ...           Output    
     ...           Salesforce query failed: probably timeout. ${object_name}    @{result}
 
     Return from keyword If    '${status}' != 'PASS'    ${status}
@@ -37,3 +37,9 @@ Row Count
     ${matching_records} =   Set Variable    ${result}[0][expr0]
 
     Return From Keyword     ${matching_records}
+
+Output
+    [Arguments]     ${title}      ${values}=None
+    Log     ${title}    console=True
+    Run Keyword If      ${values}   
+    ...    Log     ${values}    console=True       formatter=repr

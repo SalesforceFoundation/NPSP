@@ -14,7 +14,7 @@ Suite Setup       Workaround Bug
 
 *** Keywords ***
 Clear Generated Records
-    Python Display  Clearing Generated Records
+    Output  Clearing Generated Records
     # Organized in dependency order
     Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c      
     Delete     Account_Soft_Credit__c     where=Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR Account__r.Name Like '%BDITEST%'
@@ -45,21 +45,21 @@ Report BDI
     ${result} =   Row Count      DataImport__c  
     ...           Status__c=Imported
 
-    Python Display  DataImport__c imported    ${result}
+    Output  DataImport__c imported    ${result}
 
     ${result} =   Row Count     CustomObject3__c  
 
-    Python Display  CustomObject3__c imported    ${result}
+    Output  CustomObject3__c imported    ${result}
 
     ${result} =   Row Count  Account  
     ...           BillingCountry=Tuvalu
 
-    Python Display  Accounts imported    ${result}
+    Output  Accounts imported    ${result}
 
     ${result} =   Row Count     Contact  
     ...           Name Like '%BDITEST%'
 
-    Python Display  Contacts imported    ${result}
+    Output  Contacts imported    ${result}
 
 Workaround Bug
     Return From Keyword If      ${persistent_org}   # persistent orgs don't have this bug
@@ -69,18 +69,18 @@ Workaround Bug
 
 Validate Data
     [Arguments]     ${count}
-    Python Display      Validating ${TEST NAME}
+    Output      Validating ${TEST NAME}
     ${result} =    Check Row Count    ${count}     DataImport__c       Status__c=Imported
     Run Keyword Unless   "${result}"=="PASS"      Display BDI Failures
     Should be Equal     ${result}      PASS
 
 Setup For Test
     [Arguments]                 ${count}    ${bdi_mode}
-    Python Display      Preparing for ${TEST NAME}
+    Output      Preparing for ${TEST NAME}
     Clear Generated Records
     Setup BDI                   ${bdi_mode}
     Generate Data               ${count}
-    Python Display      Starting ${TEST NAME}
+    Output      Starting ${TEST NAME}
 
 *** Test Cases ***
 BGE/BDI Import - CO - 100 / 250 - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp

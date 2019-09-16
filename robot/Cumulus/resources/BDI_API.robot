@@ -25,7 +25,7 @@ Ensure Custom Metadata Was Deployed
 
     Should Be Equal     ${Default_Object_Mapping_Set_Length}    ${Migrated_Custom_Object_Mapping_Set_Length}
 
-    Python Display      Custom Metadata Deployed        ${Migrated_Custom_Object_Mapping_Set_Length}
+    Output      Custom Metadata Deployed        ${Migrated_Custom_Object_Mapping_Set_Length}
 
 Display BDI Failures
     @{failures} =   Collect BDI Failures
@@ -33,9 +33,9 @@ Display BDI Failures
     Run Keyword If  ${length} == 0  Log to Console  No failure records
     Return From Keyword If       ${length}==0        False
 
-    Python Display      Failures   ${length}
+    Output      Failures   ${length}
 
-    Python Display      Example Failure   Id: ${failures[0]['Id']}
+    Output      Example Failure   Id: ${failures[0]['Id']}
     ...                                   Status__c: ${failures[0]['Status__c']}
     ...                                   PaymentImported__c: ${failures[0]['PaymentImported__c']}
     ...                                   PaymentImportStatus__c: ${failures[0]['PaymentImportStatus__c']}
