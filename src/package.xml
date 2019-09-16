@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -332,6 +332,7 @@
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
         <members>RD2_RecurringDonationsGateway</members>
+        <members>RD2_RecurringDonationsGateway_TEST</members>
         <members>RD2_Settings</members>
         <members>RD2_Settings_TEST</members>
         <members>RD2_TestRecurringDonationBuilder</members>

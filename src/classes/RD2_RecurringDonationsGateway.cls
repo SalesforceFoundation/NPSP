@@ -53,10 +53,10 @@ public with sharing class RD2_RecurringDonationsGateway {
             SELECT 
                 Name, 
                 npe03__Organization__c,
-                npe03__Contact__c,
-                npe03__Amount__c
+                npe03__Contact__c
             FROM npe03__Recurring_Donation__c 
             WHERE npe03__Organization__c IN :accountIds
+            AND npe03__Contact__c = null
         ];
     }
     
@@ -76,8 +76,7 @@ public with sharing class RD2_RecurringDonationsGateway {
             SELECT 
                 Name, 
                 npe03__Organization__c,
-                npe03__Contact__c,
-                npe03__Amount__c
+                npe03__Contact__c
             FROM npe03__Recurring_Donation__c 
             WHERE npe03__Contact__c IN :contactIds
         ];
