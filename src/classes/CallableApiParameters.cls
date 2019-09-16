@@ -44,6 +44,12 @@ public class CallableApiParameters {
     public static final String PARAM_ROLLUP_DATA = 'RollupData';
     public static final String PARAM_ROLLUP_COMMIT = 'CommitToDatabase';
     public static final String PARAM_OPPORTUNITY_STAGE = 'OpportunityStage';
+    public static final String PARAM_CONTEXT_NAME = 'Context';
+    public static final String PARAM_ERR_MSGS_BY_RECORDID = 'ErrorMsgsByRecordId';
+    public static final String PARAM_DML_RESULTS_BY_RECORDID = 'DmlResultsByRecordId';
+    public static final String PARAM_SOBJECTS = 'SObjects';
+    public static final String PARAM_ERROR_MSG = 'ErrorMsg';
+    public static final String PARAM_EXCEPTION = 'Exception';
 
     private Map<String, Object> params;
 
@@ -57,7 +63,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a String value
-     * @param paramName
+     * @param paramName paramName to look in the parameter map under
      */
     public String getString(String paramName) {
         try {
@@ -70,7 +76,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a Boolean value
-     * @param paramName
+      * @param paramName paramName to look in the parameter map under
      */
     public Boolean getBoolean(String paramName) {
         try {
@@ -80,6 +86,12 @@ public class CallableApiParameters {
         }
         return null;
     }
+
+    /**
+     * @description Retrieve the specified Parameter as a Boolean value, and use the default if not found in the map
+     * @param paramName paramName to look in the parameter map under
+     * @param defaultValue Default if null
+     */
     public Boolean getBoolean(String paramName, Boolean defaultValue) {
         try {
             if (params.get(paramName) != null) {
@@ -89,6 +101,20 @@ public class CallableApiParameters {
             throwParameterException('Boolean', paramName);
         }
         return defaultValue;
+    }
+
+    /**
+     * @description Retrieve the specified Parameter as a Boolean value, and use the default if not found in the map
+     * @param paramName paramName to look in the parameter map under
+     * @param defaultValue Default if null
+     */
+    public Exception getException(String paramName) {
+        try {
+            return (Exception) params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Exception', paramName);
+        }
+        return null;
     }
 
     /**
@@ -116,6 +142,18 @@ public class CallableApiParameters {
         }
         return null;
     }
+    /**
+     * @description Retrieve the specified Parameter as a Set<String> collection
+     * @param paramName
+     */
+    public Map<Id, String> getStringsById(String paramName) {
+        try {
+            return (Map<Id, String>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Map<Id, String>', paramName);
+        }
+        return null;
+    }
 
     /**
      * @description Retrieve the specified Parameter as a List<SObject> collection
@@ -125,11 +163,36 @@ public class CallableApiParameters {
         try {
             return (List<SObject>)params.get(paramName);
         } catch (Exception ex) {
-            throwParameterException('List<Object>', paramName);
+            throwParameterException('List<SObject>', paramName);
         }
         return null;
     }
 
+    /**
+     * @description Retrieve the specified Parameter as a Map<Id, SObject> collection
+     * @param paramName
+     */
+    public Map<Id, SObject> getSObjectsById(String paramName) {
+        try {
+            return (Map<Id, SObject>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Map<Id, SObject>', paramName);
+        }
+        return null;
+    }
+
+    /**
+     * @description Retrieve the specified Parameter as a Map<Id, Object> collection
+     * @param paramName
+     */
+    public Map<Id, Object> getObjectsById(String paramName) {
+        try {
+            return (Map<Id, Object>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Map<Id, Object>', paramName);
+        }
+        return null;
+    }
     /**
      * @description Retrieve the specified Parameter as a List<CRLP_Rollup> collection. This expects to the parameter
      * value to be a JSON String. This method will deserialize and return as the appropriate data type.
