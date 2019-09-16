@@ -298,6 +298,13 @@ tasks:
             path: unpackaged/config/rd2_post_config
             namespace_inject: $project_config.project__package__namespace
 
+    validate_rd2_enabled:
+        description: Validates that Enhanced Recurring Donations has been enabled in an org
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            path: scripts/validate_rd2_enabled.cls
+            apex: validateRd2Enabled();
+
     add_second_currency:
         description: Add CAD as a 2nd currency for a multicurrency org
         class_path: tasks.multicurrency.ConfigureCAD
