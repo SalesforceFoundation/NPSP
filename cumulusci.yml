@@ -291,20 +291,6 @@ tasks:
                 STG_SettingsService.stgService.stgCRLP.ContactHardCreditNonSkew_Incremental__c = true;
                 STG_SettingsService.stgService.saveAll();
 
-    deploy_rd2_unmanaged:
-        description: Deploy unmanaged field and layout changes into the org that are needed after enabling RD2 in an org
-        class_path: cumulusci.tasks.salesforce.Deploy
-        options:
-            path: unpackaged/config/rd2_post_config
-            namespace_inject: $project_config.project__package__namespace
-
-    validate_rd2_enabled:
-        description: Validates that Enhanced Recurring Donations has been enabled in an org
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        options:
-            path: scripts/validate_rd2_enabled.cls
-            apex: validateRd2Enabled();
-
     add_second_currency:
         description: Add CAD as a 2nd currency for a multicurrency org
         class_path: tasks.multicurrency.ConfigureCAD
@@ -530,6 +516,19 @@ flows:
         steps:
             3:
                 task: ensure_record_type
+
+    rd2_post_enablement:
+        steps:
+            1:
+                task: execute_anon
+                options:
+                    path: scripts/validate_rd2_enabled.cls
+                    apex: validateRd2Enabled();
+            2:
+                task: deploy
+                options:
+                    path: unpackaged/config/rd2_post_config
+                    namespace_inject: $project_config.project__package__namespace
 
 orgs:
     scratch:

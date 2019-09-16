@@ -13,7 +13,6 @@ public static Boolean validateRd2Enabled() {
     }
     if (rdSettings == null || rdSettings.IsRecurringDonations2Enabled__c != true) {
         throw new SettingsException('Enhanced Recurring Donations must be enabled in this org in order to continue');
-        return false;
     }
 
     return true;

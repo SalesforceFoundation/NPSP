@@ -12,7 +12,6 @@
     <types>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Day_of_Month__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Date_Established__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Donor_Name__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Amount__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Paid_Amount__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c</members>

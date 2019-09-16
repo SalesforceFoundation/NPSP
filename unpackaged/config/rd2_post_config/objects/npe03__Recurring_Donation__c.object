@@ -24,23 +24,6 @@
         <type>Date</type>
     </fields>
     <fields>
-        <fullName>npe03__Donor_Name__c</fullName>
-        <externalId>false</externalId>
-        <formula>if(
-            LEN(npe03__Contact__c)&gt;0,
-            npe03__Contact__r.FirstName  &amp; &quot; &quot; &amp; npe03__Contact__r.LastName,
-            npe03__Organization__r.Name
-            )</formula>
-        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <inlineHelpText>The first and last name of the related Contact (if applicable).</inlineHelpText>
-        <label>Donor Name</label>
-        <required>false</required>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>%%%NAMESPACE%%%Day_of_Month__c</fullName>
         <description>Sets the specific day of the month for future installments when the Installment Period is Monthly</description>
         <externalId>false</externalId>
@@ -296,7 +279,7 @@
         <description>Total number of installments paid on this Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>Total number of installment Opportunities paid on this Recurring Donation (read only).</inlineHelpText>
-        <label>Number of Paid Installments</label>
+        <label>Total Paid Installments</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
