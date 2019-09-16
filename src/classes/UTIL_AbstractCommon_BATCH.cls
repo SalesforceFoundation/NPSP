@@ -264,13 +264,13 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
 
         String whereClause = this.getWhereClause();
 
-        Boolean mainWhere = String.isNotBlank(whereClause);
-        Boolean addtlWhere = String.isNotBlank(this.additionalWhereClause);
-        if (mainWhere && addtlWhere) {
+        Boolean hasMainWhereClause = String.isNotBlank(whereClause);
+        Boolean hasAddtlWhereClause = String.isNotBlank(this.additionalWhereClause);
+        if (hasMainWhereClause && hasAddtlWhereClause) {
             return '(' + whereClause.trim() + ') AND (' + this.additionalWhereClause.trim() + ')';
-        } else if (mainWhere && !addtlWhere) {
+        } else if (hasMainWhereClause && !hasAddtlWhereClause) {
             return whereClause.trim();
-        } else if (!mainWhere && addtlWhere) {
+        } else if (!hasMainWhereClause && hasAddtlWhereClause) {
             return this.additionalWhereClause.trim();
         } else {
             return '';

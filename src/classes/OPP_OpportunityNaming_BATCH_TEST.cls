@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
@@ -77,7 +77,8 @@ private with sharing class OPP_OpportunityNaming_BATCH_TEST {
     /**
      * @description Coverage of Schedulable Method
      */
-    static testMethod void testSchedulable() {
+    @isTest
+    private static void testSchedulable() {
         OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
 
         Test.startTest();

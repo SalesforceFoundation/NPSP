@@ -36,6 +36,7 @@
 public class UTIL_AbstractCommon_MOCK extends UTIL_AbstractCommon_BATCH {
 
     private Integer expectedResult;
+    private Boolean expectedLdvMode;
     private Integer testChunkSize = 1;
     private Integer testMaxNonLDVSize = 1;
     private String testWhereClause = '';
@@ -46,6 +47,14 @@ public class UTIL_AbstractCommon_MOCK extends UTIL_AbstractCommon_BATCH {
      */
     public void setExpectedResult(Integer anExpectedResult) {
         this.expectedResult = anExpectedResult;
+    }
+
+    /**
+     * @description sets the Number of Records we expect to find at the end of execution during tests.
+     * @param anExpectedResult - The Number of Records we expect to find
+     */
+    public void setExpectedLdvMode(Boolean anExpectedLdvMode) {
+        this.expectedLdvMode = anExpectedLdvMode;
     }
 
     // Initialize private variable for record count to 0
@@ -160,6 +169,7 @@ public class UTIL_AbstractCommon_MOCK extends UTIL_AbstractCommon_BATCH {
         if (isComplete) {
             System.debug('# of Account Records Found: ' + recCnt);
             System.assertEquals (expectedResult, recCnt, 'Account Count Mismatch');
+            System.assertEquals (expectedLdvMode, ldvMode, 'Expected LDV Mode');
         }
     }
 

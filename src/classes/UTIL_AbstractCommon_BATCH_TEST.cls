@@ -50,12 +50,13 @@ public class UTIL_AbstractCommon_BATCH_TEST {
 
         Test.startTest();
 
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10);
-        tab.setTestChunkSize(10);
-        tab.setTestMaxNonLDVSize(10);
-        System.assertEquals (10, tab.getBatchSize(), 'Batch Size');
-        tab.setExpectedResult(TEST_ACCOUNT_CNT);
-        Database.executeBatch(tab, 10);
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10);
+        mockAbstractCommon.setTestChunkSize(10);
+        mockAbstractCommon.setTestMaxNonLDVSize(10);
+        System.assertEquals (10, mockAbstractCommon.getBatchSize(), 'Batch Size');
+        mockAbstractCommon.setExpectedResult(TEST_ACCOUNT_CNT);
+        mockAbstractCommon.setExpectedLdvMode(false);
+        Database.executeBatch(mockAbstractCommon, 10);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -74,9 +75,10 @@ public class UTIL_AbstractCommon_BATCH_TEST {
 
         Test.startTest();
 
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(1, true, '');
-        tab.setExpectedResult(TEST_ACCOUNT_CNT);
-        Database.executeBatch(tab, 1);
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(1, true, '');
+        mockAbstractCommon.setExpectedResult(TEST_ACCOUNT_CNT);
+        mockAbstractCommon.setExpectedLdvMode(true);
+        Database.executeBatch(mockAbstractCommon, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -121,10 +123,11 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + accs[0].Id + '\'');
-        tab.setExpectedResult(1);
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(1, 'Id= \'' + accs[0].Id + '\'');
+        mockAbstractCommon.setExpectedResult(1);
+        mockAbstractCommon.setExpectedLdvMode(true);
 
-        Database.executeBatch(tab, 1);
+        Database.executeBatch(mockAbstractCommon, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -141,12 +144,11 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[0].Id + '\'');
-        tab.setTestChunkSize(UTIL_AbstractCommon_BATCH.DEFAULT_LDV_CHUNK_SIZE);
-        tab.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
-        tab.setExpectedResult(1);
-
-        Database.executeBatch(tab, 10);
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[0].Id + '\'');
+        mockAbstractCommon.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
+        mockAbstractCommon.setExpectedResult(1);
+        mockAbstractCommon.setExpectedLdvMode(false);
+        Database.executeBatch(mockAbstractCommon, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -163,11 +165,12 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10);
-        tab.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
-        tab.setExpectedResult(1);
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(1);
+        mockAbstractCommon.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
+        mockAbstractCommon.setExpectedResult(1);
+        mockAbstractCommon.setExpectedLdvMode(true);
 
-        Database.executeBatch(tab, 1);
+        Database.executeBatch(mockAbstractCommon, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -184,13 +187,13 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10);
-        tab.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
-        tab.setTestChunkSize(UTIL_AbstractCommon_BATCH.DEFAULT_LDV_CHUNK_SIZE);
-        tab.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
-        tab.setExpectedResult(1);
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10);
+        mockAbstractCommon.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
+        mockAbstractCommon.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
+        mockAbstractCommon.setExpectedResult(1);
+        mockAbstractCommon.setExpectedLdvMode(false);
 
-        Database.executeBatch(tab, 10);
+        Database.executeBatch(mockAbstractCommon, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -207,11 +210,12 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[1].Id + '\' or Id=\'' + accs[2].Id + '\' or Id=\'' + accs[3].Id + '\'');
-        tab.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id=\'' + accs[1].Id + '\' or Id=\'' + accs[2].Id + '\'');
-        tab.setExpectedResult(2);
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[1].Id + '\' or Id=\'' + accs[2].Id + '\' or Id=\'' + accs[3].Id + '\'');
+        mockAbstractCommon.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id=\'' + accs[1].Id + '\' or Id=\'' + accs[2].Id + '\'');
+        mockAbstractCommon.setExpectedResult(2);
+        mockAbstractCommon.setExpectedLdvMode(true);
 
-        Database.executeBatch(tab, 1);
+        Database.executeBatch(mockAbstractCommon, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -228,13 +232,13 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\' or Id = \'' + accs[3].Id + '\'');
-        tab.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\'');
-        tab.setTestChunkSize(UTIL_AbstractCommon_BATCH.DEFAULT_LDV_CHUNK_SIZE);
-        tab.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
-        tab.setExpectedResult(2);
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\' or Id = \'' + accs[3].Id + '\'');
+        mockAbstractCommon.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\'');
+        mockAbstractCommon.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
+        mockAbstractCommon.setExpectedResult(2);
+        mockAbstractCommon.setExpectedLdvMode(false);
 
-        Database.executeBatch(tab, 10);
+        Database.executeBatch(mockAbstractCommon, 10);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -248,10 +252,11 @@ public class UTIL_AbstractCommon_BATCH_TEST {
     public static void noRecordsReturned() {
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10);
-        tab.setExpectedResult(0);
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10);
+        mockAbstractCommon.setExpectedResult(0);
+        mockAbstractCommon.setExpectedLdvMode(false);
 
-        Database.executeBatch(tab, 1);
+        Database.executeBatch(mockAbstractCommon, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -264,10 +269,10 @@ public class UTIL_AbstractCommon_BATCH_TEST {
     @isTest
     public static void validateValidQuery() {
         // UserInfo.getUserId is not valid for Account, but doesn't matter for this test because we are only validating syntactical correctness.
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
-        tab.setTestWhereClause('OwnerId= \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
+        mockAbstractCommon.setTestWhereClause('OwnerId= \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
 
-        System.assertEquals(null, tab.validateQuery(), 'No Exception expected');
+        System.assertEquals(null, mockAbstractCommon.validateQuery(), 'No Exception expected');
     }
 
     /*******************************************************************************************************************
@@ -275,11 +280,11 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      */
     @isTest
     public static void validateInvalidQuery() {
-        UTIL_AbstractCommon_MOCK tab = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
+        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
         //Invalid Where Clause
-        tab.setTestWhereClause('OwnerId equals \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
+        mockAbstractCommon.setTestWhereClause('OwnerId equals \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
 
-        System.assertNotEquals(null, tab.validateQuery(), 'Exception expected');
+        System.assertNotEquals(null, mockAbstractCommon.validateQuery(), 'Exception expected');
     }
 
     // **************************** HELPER METHODS ****************************
