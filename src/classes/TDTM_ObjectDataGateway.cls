@@ -71,7 +71,7 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
         for (Trigger_Handler__c th : listTH) {
             Set<String> excludedUserNames = (th.Usernames_to_Exclude__c != null ?
                     new Set<String>(th.Usernames_to_Exclude__c.toLowerCase().split(';')) : new Set<String>());
-            if (th.Object__c == objectName && th.Trigger_Action__c.contains(strAction) && th.Active__c == true
+            if (th.Object__c == objectName && th.Trigger_Action__c != null && th.Trigger_Action__c.contains(strAction) && th.Active__c == true
                     && !excludedUserNames.contains(currUserName.toLowerCase())) {
                 listClasses.add(th);
             }
@@ -105,5 +105,29 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
             return listTH;
         }
         set;
+    }
+
+    /**
+     * @description Converts the default set of Trigger Handlers as created by the TDTM_DefaultConfig.getDefaultRecords()
+     * class into a properly sequenced list of handlers that are pushed into the static listTH collection above for
+     * use throughout all subsequent trigger operations in the current code context.
+     * Note: This is only for use in Unit Testing
+     * @param defaults TDTM_DefaultConfig.getDefaultRecords()
+     */
+    public static void setDefaultHandlers(List<Trigger_Handler__c> defaults) {
+        listTH = new List<Trigger_Handler__c>();
+        Map<Double, List<Trigger_Handler__c>> sortedHandlers = new Map<Double, List<Trigger_Handler__c>>();
+        for (Trigger_Handler__c th : defaults) {
+            if (!sortedHandlers.containsKey(th.Load_Order__c)) {
+                sortedHandlers.put(th.Load_Order__c, new List<Trigger_Handler__c>());
+            }
+            sortedHandlers.get(th.Load_Order__c).add(th);
+        }
+        List<Double> sortedList = new List<Double>(sortedHandlers.keySet());
+        sortedList.sort();
+        for (Double ordr : sortedList) {
+            listTH.addAll(sortedHandlers.get(ordr));
+        }
+        rowCount = listTH.size();
     }
 }

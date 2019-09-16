@@ -528,7 +528,8 @@ export default class bdiObjectMappingModal extends LightningElement {
         this.diImportRecordStatusFieldOptions = [];
 
         let fieldsToExclude = this.getAlreadyMappedDIFields(); 
-        if (fieldsToExclude && this.dataImportFieldData) {
+
+        if (fieldsToExclude && this.dataImportFieldData && this.namespaceWrapper) {
             
             for (let i = 0; i < this.dataImportFieldData.length; i++) {
                 let fieldData = this.dataImportFieldData[i];
@@ -594,9 +595,9 @@ export default class bdiObjectMappingModal extends LightningElement {
     * fields that should always be excluded.             
     */
     getAlreadyMappedDIFields() {
-        if (this.objectMappings && this.dataImportFieldMappingSourceNames) {
-
-            this.alreadyMappedDIFieldsMap = new Map();
+        this.alreadyMappedDIFieldsMap = new Map();
+        
+        if (this.objectMappings && this.dataImportFieldMappingSourceNames && this.namespaceWrapper) {
 
             // Making some baseline exclusions for DI system fields.
             for (let i = 0; i < this.excludedDIFields.length; i++) {

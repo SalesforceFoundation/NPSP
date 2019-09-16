@@ -544,6 +544,13 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String value;
         @AuraEnabled public String displayType;
         @AuraEnabled public String[] referenceToObjectList;
+        @AuraEnabled public Boolean isBooleanMappable;
+        private String[] picklistOptions = new String[]{};
+
+        // Restricting Picklist=>Bool mappings to only picklists with options 'true' and 'false'.
+        // Update BDI_DataImportService.copyDIFieldToDestinationRecord to handle more Picklist=>Bool mappings
+        private List<List<String>> allowedPicklistOptions =
+            new List<List<String>>{new List<String>{'true', 'false'}};
 
         public FieldInfo(DescribeFieldResult dfr) {
             this.value = dfr.getName();
@@ -566,6 +573,28 @@ public class BDI_ManageAdvancedMappingCtrl {
                         for (Schema.sObjectType objType : objTypes) {
                             this.referenceToObjectList.add(objType.getDescribe().getName().toLowerCase());
                         }
+                    }
+                }
+            }
+
+            if (dfr.getType() == Schema.DisplayType.PICKLIST) {
+                Set<String> picklistOptionsSet = new Set<String>();
+                Schema.PicklistEntry[] picklistEntry = dfr.getPicklistValues();
+
+                if (picklistEntry != null && picklistEntry.size() > 0) {
+                    for (Schema.PicklistEntry picklistValue : picklistEntry) {
+                        picklistOptionsSet.add(picklistValue.getLabel().toLowerCase());
+                    }
+                    picklistOptions.addAll(picklistOptionsSet);
+                }
+
+                picklistOptions.sort();
+
+                for (String[] allowedOptions : allowedPicklistOptions) {
+                    allowedOptions.sort();
+
+                    if (picklistOptions.equals(allowedOptions)) {
+                        this.isBooleanMappable = true;
                     }
                 }
             }
