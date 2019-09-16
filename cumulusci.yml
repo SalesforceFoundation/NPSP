@@ -484,7 +484,7 @@ flows:
             3:
                 task: ensure_record_type
 
-    setup_and_test_performance:
+    test_performance_scratch:
         description: 'Creates a test org and runs BDI performance tests'
         steps:
             1:
@@ -495,7 +495,7 @@ flows:
                     include: medium
                     vars: persistent_org:False
 
-    test_performance_persistent_org:
+    test_performance_LDV:
         description: 'Runs BDI performance tests against a pre-existing org'
         steps:
             1:
