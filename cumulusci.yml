@@ -96,7 +96,20 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: unpackaged/config/delete
-    
+
+    deploy_trailhead_config:
+        description: Deploys the metadata for Trailhead Playground config
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/trailhead
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_trailhead_delete_config:
+        description: Deploys the deletion metadata for Trailhead Playground config
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/trailhead_delete
+
     ensure_record_type:
         name: Ensure Opportunity Record Types
         description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
@@ -589,6 +602,9 @@ plans:
                 task: install_managed
             5:
                 flow: config_managed
+                steps:
+                    2:
+                        task: None
                 options:
                     deploy_reports:
                         unmanaged: False
@@ -596,10 +612,6 @@ plans:
                     deploy_post:
                         first:
                             name: NPSP Config for Salesforce Mobile App
-                    deploy_dev_config_delete:
-                        name: Delete Developer Edition Sample Profiles
-                        description: This deletes sample page layouts and profiles intended for Sales, Marketing, and Support use cases.
-                        is_required: False
                     deploy_trial_config:
                         name: NPSP Trial Experience
                     test_data_relationships:
@@ -607,6 +619,16 @@ plans:
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
+            6:
+                task: deploy_trailhead_config
+                options:
+                    unmanaged: False
+                ui_options:
+                    name: Trailhead Playground Configuration
+            7:
+                task: deploy_trailhead_delete_config
+                ui_options:
+                    name: Remove Default Metadata
     reports:
         slug: reports
         title: Install Reports & Dashboards
