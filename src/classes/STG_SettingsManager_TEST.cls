@@ -96,7 +96,6 @@ public with sharing class STG_SettingsManager_TEST {
     @isTest
     private static void shouldRemoveAllocDefaultIfGauDoesNotExist() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
-        List<Apexpages.Message> msgs;
 
         //set payment allocations to true for the error messages
         STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = true;
@@ -107,16 +106,13 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(0, [SELECT count() FROM Error__c]);
 
         Test.startTest();
-        try {
             ctrl.onNpspSettingsLoad();
-        } catch (exception ex) {
-            System.assert(ex.getMessage().contains(Label.stgErrorMissingDefaultGauRecordWithPmtAllocEnabled));
-        }
         Test.stopTest();
 
         System.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be unchecked');
         System.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should not be filled in.');
         System.assertEquals(1, [SELECT count() FROM Error__c]);
+        System.assertEquals(System.Label.stgErrorMissingDefaultGauRecordWithPmtAllocEnabled, ctrl.errorMsg);
     }
 
     /*********************************************************************************************************
@@ -127,7 +123,6 @@ public with sharing class STG_SettingsManager_TEST {
     @isTest
     private static void shouldDisplayErrorMessageWhenPaymentdisabled() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
-        List<Apexpages.Message> msgs;
 
         //set payment allocations to true for the error messages
         STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = false;
@@ -138,16 +133,13 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(0, [SELECT count() FROM Error__c]);
 
         Test.startTest();
-         try {
             ctrl.onNpspSettingsLoad();
-        } catch (exception ex) {
-            System.assert(ex.getMessage().contains(Label.stgErrorMissingDefaultGauRecord));
-        }
         Test.stopTest();
 
         System.assertEquals(false, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be unchecked');
         System.assertEquals(null, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should not be filled in.');
         System.assertEquals(1, [SELECT count() FROM Error__c]);
+        System.assertEquals(System.Label.stgErrorMissingDefaultGauRecord, ctrl.errorMsg);
     }
 
     /*********************************************************************************************************
@@ -156,7 +148,6 @@ public with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldNotRemoveAllocDefaultIfGauExist() {
-        List<Apexpages.Message> msgs;
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
 
@@ -167,15 +158,13 @@ public with sharing class STG_SettingsManager_TEST {
         upsert STG_Panel.stgService.stgAllo;
 
         Test.startTest();
-        try {
             ctrl.onNpspSettingsLoad();
-            System.assert(true, 'onNpspSettingsLoad should have thrown exception');
-        } catch (exception ex) {}
         Test.stopTest();
 
         System.assertEquals(true, STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c, 'Settings should be checked');
         System.assertEquals(gau.id, STG_Panel.stgService.stgAllo.Default__c, 'Default GAU value should be filled in.');
         System.assertEquals(0, [SELECT count() FROM Error__c]);
+        System.assertEquals(null, ctrl.errorMsg);
     }
 
 

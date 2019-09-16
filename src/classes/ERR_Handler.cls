@@ -255,17 +255,7 @@ public class ERR_Handler {
         processError(e, context.name());
     }
 
-    /*******************************************************************************************************
-    * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
-    *              notifications (if enabled).
-                   This method should be used from inside the NPSP package, instead of the same one with that same name
-                   that takes a String instead of an Enum as the second parameter.
-    * @param e Exception to create error record from.
-    * @param context The context the exception was raised on.
-    */
-    public static void sendNotificationForError(Exception e, ERR_Handler_API.Context context) {
-        sendNotificationForError(e, context.name());
-    }
+
 
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
@@ -279,7 +269,6 @@ public class ERR_Handler {
             processErrors(new Error__c[]{error}, context);
         }
     }
-
 
     /*******************************************************************************************************
     * @description Creates error records from passed in exceptions.
@@ -327,21 +316,20 @@ public class ERR_Handler {
     * @param context The context the errors were raised on.
     * @return void
     */
-    public static void sendNotificationForError(Exception e, String context) {
-        if (e != null) {
-            Error__c error = createError(e, context);
-            if (error != null) {
-                if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-                    UTIL_Debug.debug('**** Storing errorRecords: ' + error);
-                    Database.insert(error, false);
-            }
+    public static void sendErrorNotification(Exception e, String context) {
 
-            //ERR_Notifier takes care of checking the settings itself.
-            ERR_Notifier.sendErrorNotifications(context);
-
-            }
-
+        if (e == null) {
+            return;
         }
+
+        Error__c error = createError(e, context);
+        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+            UTIL_Debug.debug('**** Storing errorRecords: ' + error);
+            Database.insert(error, false);
+        }
+
+        //ERR_Notifier takes care of checking the settings itself.
+        ERR_Notifier.sendErrorNotifications(context);
     }
 
     /*******************************************************************************************************

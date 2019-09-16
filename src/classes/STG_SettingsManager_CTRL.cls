@@ -54,7 +54,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     public static string idPanelCurrent { get; set; }
 
     /*******************************************************************************************************
-    * @description This string sets an error message when it clears the default GAU if it does not exist
+    * @description This string sets an error message during NPSP Settings load.
     */
     public string errorMsg { get; set; }
 
@@ -146,7 +146,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
                 errorMsg = System.Label.stgErrorMissingDefaultGauRecord;
             }
 
-            ERR_Handler.sendNotificationForError(new HealthCheckException(errorMsg), ERR_Handler_API.Context.STTG);
+            ERR_Handler.sendErrorNotification(new HealthCheckException(errorMsg), ERR_Handler_API.Context.STTG.name());
         }
     }
 }
