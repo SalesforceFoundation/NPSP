@@ -331,6 +331,7 @@
         <members>RD2_Donor_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
+        <members>RD2_RecurringDonationsGateway</members>
         <members>RD2_Settings</members>
         <members>RD2_Settings_TEST</members>
         <members>RD2_TestRecurringDonationBuilder</members>

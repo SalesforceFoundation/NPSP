@@ -49,7 +49,7 @@ public with sharing class RD2_TestRecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Opportunity Id
+    * @description Sets the Id
     */
     public RD2_TestRecurringDonationBuilder withId(Id rdId) {
         valuesByFieldName.put('Id', rdId);
