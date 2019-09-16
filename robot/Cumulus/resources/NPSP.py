@@ -1,5 +1,6 @@
 import logging
 import warnings
+import time
 
 from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
