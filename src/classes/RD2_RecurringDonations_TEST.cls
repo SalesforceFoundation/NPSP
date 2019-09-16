@@ -36,6 +36,7 @@
 */
 @isTest
 private with sharing class RD2_RecurringDonations_TEST {
+    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
 
     /****
     * @description Creates data required for unit tests
@@ -78,7 +79,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         Test.stopTest();
         
         Map<Id, npe03__Recurring_Donation__c> actualRdById = new Map<Id, npe03__Recurring_Donation__c>(
-            getRecurringDonations(rds)
+            rdGateway.getRecords(rds)
         );
         System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
 
@@ -111,7 +112,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             .build();    
         insert rd;
 
-        rd = getRecurringDonation(rd.Id);
+        rd = rdGateway.getRecord(rd.Id);
         System.assertEquals('foo', rd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
 
         Test.startTest();      
@@ -121,7 +122,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         update rd;
         Test.stopTest();
 
-        rd = getRecurringDonation(rd.Id);
+        rd = rdGateway.getRecord(rd.Id);
         System.assert(rd.Name.startsWith(contact.Account.Name), 'Name should start with Account name');
         System.assert(rd.Name.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
     }
@@ -178,37 +179,6 @@ private with sharing class RD2_RecurringDonations_TEST {
             SELECT FirstName, LastName, AccountId, Account.Name
             FROM Contact
             LIMIT 1
-        ];
-    }
-
-    /***
-    * @description Retrieves recurring donation record for the specified Id
-    * @param rdId Id of the recurring donation
-    * @return npe03__Recurring_Donation__c
-    */
-    private static npe03__Recurring_Donation__c getRecurringDonation(Id rdId) {
-        return getRecurringDonations(new Set<Id>{ rdId })[0];
-    }
-
-    /***
-    * @description Retrieves recurring donation records for the specified records
-    * @param List<npe03__Recurring_Donation__c> recurring donations
-    * @return List<npe03__Recurring_Donation__c>
-    */
-    private static List<npe03__Recurring_Donation__c> getRecurringDonations(List<npe03__Recurring_Donation__c> rds) {
-        return getRecurringDonations(new Map<Id, npe03__Recurring_Donation__c>(rds).keySet());
-    }
-
-    /***
-    * @description Retrieves recurring donation records for the specified Ids
-    * @param rdIds Ids of the recurring donations
-    * @return List<npe03__Recurring_Donation__c>
-    */
-    private static List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
-        return [
-            SELECT Name, npe03__Paid_Amount__c
-            FROM npe03__Recurring_Donation__c 
-            WHERE Id IN :rdIds
         ];
     }
 

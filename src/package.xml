@@ -334,10 +334,10 @@
         <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
-        <members>RD2_RecurringDonations_TDTM</members>
-        <members>RD2_RecurringDonations_TEST</members>
         <members>RD2_RecurringDonationsGateway</members>
         <members>RD2_RecurringDonationsGateway_TEST</members>
+        <members>RD2_RecurringDonations_TDTM</members>
+        <members>RD2_RecurringDonations_TEST</members>
         <members>RD2_Settings</members>
         <members>RD2_Settings_TEST</members>
         <members>RD2_TestRecurringDonationBuilder</members>

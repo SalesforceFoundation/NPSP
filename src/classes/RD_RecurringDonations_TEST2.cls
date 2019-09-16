@@ -590,7 +590,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static List<npe03__Recurring_Donation__c> executeBatchStart() {  
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();   
 
-        Account acc = RD_RecurringDonations_TEST.buildAccount();
+        Account acc = buildAccount();
         insert acc;  
 
         npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationYearlyInstallment(null);

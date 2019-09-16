@@ -178,7 +178,7 @@ public with sharing class RD2_EnablementService_TEST {
         insert rd;
         Test.stopTest();
 
-        rd = getRecurringDonations(new Set<Id>{ rd.Id })[0];
+        rd = new RD2_RecurringDonationsGateway().getRecord(rd.Id);
         System.assertEquals(RD2_NamingService_TEST.getExpectedName(contact, '100'), rd.Name, 'Name should match');
     }
 
@@ -316,17 +316,6 @@ public with sharing class RD2_EnablementService_TEST {
             SELECT Amount, npe03__Recurring_Donation__c
             FROM Opportunity
             WHERE npe03__Recurring_Donation__c IN :rdIds
-        ];
-    }
-
-    /***
-    * @description Retrieves recurring donation records for the specified Id
-    */
-    private static List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
-        return [
-            SELECT Name, npe03__Next_Payment_Date__c, npe03__Last_Payment_Date__c, npe03__Paid_Amount__c
-            FROM npe03__Recurring_Donation__c 
-            WHERE Id IN :rdIds
         ];
     }
 
