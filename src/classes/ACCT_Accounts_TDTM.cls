@@ -61,10 +61,36 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
         configAccountForContact(listNew, listOld, triggerAction, listHHNew, listHHOld);
 
         // deal with any name changes for Household Accounts
-        if (listHHNew.size() > 0)
+        if (listHHNew.size() > 0) {
             HH_HouseholdNaming.handleHHNameUpdates(listHHNew, listHHOld, triggerAction, objResult);
+        }
+
+        updateRecurringDonationsName(listNew, listOld, triggerAction);
 
         return null;
+    }
+
+    /***
+     * @description Update Recurring Donations Name on Account name change.
+     * Applicable Accounts are not households.
+     */
+    private void updateRecurringDonationsName(List<SObject> accounts, List<SObject> oldAccounts, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction != TDTM_Runnable.Action.AfterUpdate) {
+            return;
+        }
+
+        Map<Id, SObject> oldAccountById = new Map<Id, SObject>(oldAccounts);
+        List<Id> accountIds = new List<Id>();
+
+        for (Account acc : (List<Account>) accounts) {
+            if (acc.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE
+                && acc.Name != oldAccountById.get(acc.Id).get('Name')
+            ) {
+                accountIds.add(acc.Id);
+            }
+        }
+
+        new RD2_NamingService().updateOnAccountChange(accountIds);
     }
 
     /*******************************************************************************************************

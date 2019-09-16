@@ -37,16 +37,17 @@
 private with sharing class RD_RecurringDonations_TEST2 {
     private static final Date DEFAULT_ESTABLISHED_DATE = RD_RecurringDonations_TEST.DEFAULT_ESTABLISHED_DATE;
     private static final Date TODAY = System.today();
+    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
 
     //test closing an opportunity for an open recurring donation
     @isTest
     private static void closeOppForOpenEndedRecurringDonationYearly() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
 
         npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationYearlyInstallment(null);
@@ -68,7 +69,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();
         
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);     
+        rd = rdGateway.getRecord(rd.id);     
         System.assertEquals(0, RD_RecurringDonations_TEST.getOpenOppCount(rd.Id));
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
@@ -77,10 +78,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void closeOpenEndedRecurringDonationMarkOppsClosedLost() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
 
         npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationWeeklyInstallment(c.Id);
@@ -106,10 +107,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void updateRecurringDonationWithClosedOpp() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;        
 
         npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationWeeklyInstallment(c.Id);
@@ -131,7 +132,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         update rd;
         Test.stopTest();        
         
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);     
+        rd = rdGateway.getRecord(rd.id);     
         
         System.assertEquals(1, RD_RecurringDonations_TEST.getOpenOppCount(rd.Id));
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
@@ -145,10 +146,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void shouldUpdateOpenOppCloseDatesWhenRecDonationNextDonationDateIsChanged() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
         
         Date nextDonationDate = TODAY.toStartOfMonth();
@@ -170,7 +171,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         update rd;
         Test.stopTest();
         
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id); 
+        rd = rdGateway.getRecord(rd.id); 
         System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'The RD Next Donation Date should be updated'); 
         
         actualOpps = RD_RecurringDonations_TEST.getOppsOrderByCloseDate(rd.Id);
@@ -185,10 +186,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void insertClosedOppForOpenEndedRecurringDonation() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
 
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
@@ -214,7 +215,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         insert o;
         Test.stopTest();
 
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);    
+        rd = rdGateway.getRecord(rd.id);    
         System.assertEquals(50, rd.npe03__Paid_Amount__c);
     }
     
@@ -223,10 +224,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void closeOppForOpenEndedRecurringDonationBadRecurrance() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
         
         Campaign camp = new Campaign(Name = 'MyTestCamp', isActive = true);
@@ -261,10 +262,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void closeRecurringDonationDeleteOpps() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
         
         Campaign camp = new Campaign(Name = 'MyTestCamp', isActive = true);
@@ -300,10 +301,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
         );
         insert cfm1;
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
 
         List<npe03__Recurring_Donation__c> rdlist = new List<npe03__Recurring_Donation__c>();
@@ -339,10 +340,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
             npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
         ));           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
 
         npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationYearlyInstallment(c.Id);
@@ -368,10 +369,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
         );
         insert cfm;
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
         
         npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationYearlyInstallment(c.Id);
@@ -403,7 +404,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             npe03__Opportunity_Forecast_Months__c = 12                
         ));         
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
 
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
@@ -445,7 +446,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             npe03__Opportunity_Forecast_Months__c = 12
         ));  
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
         rd.Name = 'test';
@@ -488,7 +489,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             npe03__Opportunity_Forecast_Months__c = 12
         ));         
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
         rd.Name = 'test';
@@ -533,10 +534,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     public static void testBatch() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
                     
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
 
         npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationWeeklyInstallment(null);
@@ -665,10 +666,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void testRDCustomFieldMappingFixedRD() {
         UTIL_Debug.debug('multiply: ' + System.Label.npe03.RecurringDonationMultiplyValue);
         UTIL_Debug.debug('divide: ' + System.Label.npe03.RecurringDonationDivideValue);
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);        
+        Contact c = buildContact(a.Id);        
         insert c;
         
         //Create new CFM
@@ -696,7 +697,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         update rd;
         Test.stopTest();
 
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);
+        rd = rdGateway.getRecord(rd.id);
         System.assertEquals(rd.name,'TestRD CFM Update');
 
         //check that opps have picked up the upated value of the RD field set through custom field mapping
@@ -713,10 +714,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void testRDCustomFieldMappingOpenRD() {
         UTIL_Debug.debug('multiply: ' + System.Label.npe03.RecurringDonationMultiplyValue);
         UTIL_Debug.debug('divide: ' + System.Label.npe03.RecurringDonationDivideValue);
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);        
+        Contact c = buildContact(a.Id);        
         insert c;
         
         //Create new CFM
@@ -751,7 +752,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         update rd;
         Test.stopTest();
 
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);
+        rd = rdGateway.getRecord(rd.id);
         System.assertEquals(rd.name, 'TestRD CFM Update');
 
         //check that opps have picked up the upated value of the RD field set through custom field mapping
@@ -766,10 +767,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void testInstallmentNumbers() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
         
         Campaign camp = new Campaign(Name = 'MyTestCamp', isActive = true);
@@ -816,7 +817,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             npe03__Maximum_Donations__c = 50
         ));
 
-        Contact c = RD_RecurringDonations_TEST.buildContact(null);
+        Contact c = buildContact(null);
         insert c;
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
@@ -849,7 +850,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
                 npe03__Maximum_Donations__c = 50
             ));
 
-        Contact c = RD_RecurringDonations_TEST.buildContact(null);
+        Contact c = buildContact(null);
         insert c;
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
@@ -904,7 +905,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
                 npe03__Maximum_Donations__c = 50
             ));
 
-        Contact c = RD_RecurringDonations_TEST.buildContact(null);
+        Contact c = buildContact(null);
         insert c;
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
@@ -1239,10 +1240,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void updateOpenEndedRecurringDonationsPaidAmountWithAClosedWonOpp() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
 
         //--------------------------------
@@ -1286,7 +1287,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         
         //--------------------------------
         // Confirm that only the First Opportunity has updated the Recurring Donation's npe03__Paid_Amount__c
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);    
+        rd = rdGateway.getRecord(rd.id);    
         System.assertEquals(50, rd.npe03__Paid_Amount__c);
 
         //--------------------------------
@@ -1297,7 +1298,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Confirm that the Second Opportunity has updated the Recurring Donation's npe03__Paid_Amount__c
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);    
+        rd = rdGateway.getRecord(rd.id);    
         System.assertEquals(150, rd.npe03__Paid_Amount__c);
     }
 
@@ -1311,10 +1312,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void updateMultipleOpenEndedRecurringDonationsPaidAmountWithAClosedWonOpp() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
         
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
 
         //--------------------------------
@@ -1360,10 +1361,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
         
         //--------------------------------
         // Confirm the Opportunity has updated only the Recurring Donation's (rd) npe03__Paid_Amount__c
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);    
+        rd = rdGateway.getRecord(rd.id);    
         System.assertEquals(50, rd.npe03__Paid_Amount__c);
 
-        r2 = RD_RecurringDonations_TEST.getRecurringDonation(r2.id);    
+        r2 = rdGateway.getRecord(r2.id);    
         System.assertEquals(null, r2.npe03__Paid_Amount__c);
         
         //--------------------------------
@@ -1374,10 +1375,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Confirm the Opportunity has updated the npe03__Paid_Amount__c for both Recurring Donations (rd & r2) 
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);    
+        rd = rdGateway.getRecord(rd.id);    
         System.assertEquals(null, rd.npe03__Paid_Amount__c);
 
-        r2 = RD_RecurringDonations_TEST.getRecurringDonation(r2.id);    
+        r2 = rdGateway.getRecord(r2.id);    
         System.assertEquals(50, r2.npe03__Paid_Amount__c);
     }
 
@@ -1390,10 +1391,10 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void updateOpenEndedRecurringDonationsPaidAmountByRemovingAClosedWonOpp() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
         
-        Account a = RD_RecurringDonations_TEST.buildAccount();
+        Account a = buildAccount();
         insert a;
 
-        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        Contact c = buildContact(a.Id);
         insert c;       
 
         //--------------------------------
@@ -1426,7 +1427,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         
         //--------------------------------
         // Confirm the Opportunity has updated the Recurring Donation's (rd) npe03__Paid_Amount__c
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);    
+        rd = rdGateway.getRecord(rd.id);    
         System.assertEquals(50, rd.npe03__Paid_Amount__c);
         
         //--------------------------------
@@ -1437,8 +1438,32 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Confirm the Opportunity has updated the npe03__Paid_Amount__c for both Recurring Donation (rd) 
-        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id);    
+        rd = rdGateway.getRecord(rd.id);    
         System.assertEquals(null, rd.npe03__Paid_Amount__c);
+    }
+
+
+    // Helpers
+    ////////////
+
+    /*******************************************************************************************************
+    * @description Builds an account record with default values
+    * @return Account
+    */
+    private static Account buildAccount() {
+        return new Account(Name = 'test Individual');
+    }
+
+    /*******************************************************************************************************
+    * @description Builds a contact record with default values
+    * @param accId Id of the account to assign to the contact
+    * @return Contact
+    */
+    private static Contact buildContact(Id accId) {
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        c.AccountId = accId;
+
+        return c;
     }
     
 

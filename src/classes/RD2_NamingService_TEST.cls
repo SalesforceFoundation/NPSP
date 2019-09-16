@@ -36,6 +36,8 @@
 */
 @isTest
 public with sharing class RD2_NamingService_TEST {
+    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
+
     private static final Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
     private static final String currencyCodeOrSymbol = isMultiCurrencyEnabled
         ? UserInfo.getDefaultCurrency() + ' '
@@ -167,11 +169,11 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldAbbreviateDonorNameIfLengthIsOverMax() {
-        final Integer maxLength = RD2_NamingService.MAX_NAME_LENGTH;
-        String padding = 'ABC123';
-        String origAccountName = acc.Name;
+        final Integer accountNameLength = 210;
+        String padding = 'Company';
 
-        acc.Name = String.valueOf(acc.Name).rightPad(maxLength, padding).left(maxLength);
+        acc.Name = String.valueOf(acc.Name).rightPad(accountNameLength, padding).left(accountNameLength);
+        System.assertEquals(accountNameLength, acc.Name.length(), 'Account Name should be of max length');
 
         npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
             .withAccount(acc.Id)
@@ -183,8 +185,10 @@ public with sharing class RD2_NamingService_TEST {
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
         String expectedSuffix = '... ' + currencyCodeOrSymbol + '100 - ' + System.Label.RecurringDonationNameSuffix;
-        System.assert(rd.Name.startsWith(origAccountName), 'Donor name should be included: ' + rd.Name);
-        System.assert(rd.Name.endsWith(expectedSuffix), 'Donor name should be abbreviated: ' + rd.Name);
+        String expectedName = acc.Name.left(RD2_NamingService.MAX_NAME_LENGTH - expectedSuffix.length()) + expectedSuffix;
+
+        System.assertEquals(expectedName, rd.Name, 'Recurring Donations Name should match.');
+        System.assertEquals(RD2_NamingService.MAX_NAME_LENGTH, rd.Name.length(), 'Recurring Donation Name should be of max length');
     }
 
     /***
@@ -358,13 +362,9 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldQueryForDonorInformation() {
-        acc = new Account(Name = 'RD2 Query Account');
-        insert acc;
+        insert acc = new Account(Name = 'RD2 Query Account');
 
-        Contact contact = new Contact(
-            FirstName = 'Jane',
-            LastName = 'RD2 Query Contact'
-        );
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
@@ -387,6 +387,80 @@ public with sharing class RD2_NamingService_TEST {
 
         System.assertEquals(getExpectedName(acc, '100'), rds[0].Name, 'The Account name should be queried and incorporated into the name');
         System.assertEquals(getExpectedName(contact, '200'), rds[1].Name, 'The Contact name should be queried and incorporated into the name');
+    }
+
+    /***
+    * @description Verifies Recurring Donation Name is updated for specified Accounts
+    */
+    @isTest
+    private static void shouldUpdateNameForSpecifiedAccounts() {
+        insert acc = new Account(Name = 'RD2 Organization');
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            new RD2_TestRecurringDonationBuilder()
+                .withAccount(acc.Id)
+                .withAmount(100)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build(),
+            new RD2_TestRecurringDonationBuilder()
+                .withName('foo')
+                .withContact(contact.Id)
+                .withAmount(200)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build()
+        };
+        insert rds;
+
+        RD2_NamingService service = buildAutomaticNamingService();
+        service.updateOnAccountChange(new List<Id>{ acc.Id });
+
+        for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
+            String expectedName = rd.npe03__Organization__c != null
+                ? RD2_NamingService_TEST.getExpectedName(acc, '100')
+                : 'foo';
+
+            System.assertEquals(expectedName, rd.Name, 'Recurring Donation name should be updated for the Account only');
+        }
+    }
+
+    /***
+    * @description Verifies Recurring Donation Name is updated for specified Contacts
+    */
+    @isTest
+    private static void shouldUpdateNameForSpecifiedContacts() {
+        insert acc = new Account(Name = 'RD2 Organization');
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            new RD2_TestRecurringDonationBuilder()
+                .withName('foo')
+                .withAccount(acc.Id)
+                .withAmount(100)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build(),
+            new RD2_TestRecurringDonationBuilder()
+                .withContact(contact.Id)
+                .withAmount(200)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build()
+        };
+        insert rds;
+
+        RD2_NamingService service = buildAutomaticNamingService();
+        service.updateOnContactChange(new Set<Id>{ contact.Id });
+
+        for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
+            String expectedName = rd.npe03__Contact__c != null
+                ? RD2_NamingService_TEST.getExpectedName(contact, '200')
+                : 'foo';
+
+            System.assertEquals(expectedName, rd.Name, 'Recurring Donation name should be updated for the Contact only');
+        }
     }
 
 

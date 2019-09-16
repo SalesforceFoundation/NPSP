@@ -38,6 +38,7 @@ public class RD_RecurringDonations_TEST {
 
     public static final Date DEFAULT_ESTABLISHED_DATE = Date.newInstance(1970,6,12);
     private static final Date TODAY = System.today();
+    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
 
     /*******************************************************************************************************
     * @description test method for insertOpportunities function 
@@ -113,7 +114,7 @@ public class RD_RecurringDonations_TEST {
         Test.stopTest();
         
         Map<Id, npe03__Recurring_Donation__c> actualRdById = new Map<Id, npe03__Recurring_Donation__c>(
-            getRecurringDonations(rds)
+            rdGateway.getRecords(rds)
         );
         System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
 
@@ -139,12 +140,8 @@ public class RD_RecurringDonations_TEST {
         insert a;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonationMonthlyInstallment(null);
-        rd.npe03__Organization__c = a.id;    
-        String originalName = rd.Name;        
+        rd.npe03__Organization__c = a.id;     
         insert rd;
-
-        rd = getRecurringDonation(rd.Id);
-        System.assertEquals(originalName, rd.Name, 'Name should be unchanged since Enable Automatic Naming is unchecked');
 
         Test.startTest();      
         RD2_NamingService_TEST.enableAutomaticNaming();
@@ -153,9 +150,9 @@ public class RD_RecurringDonations_TEST {
         update rd;
         Test.stopTest();
 
-        rd = getRecurringDonation(rd.Id);
-        System.assert(rd.Name.startsWith(a.Name), 'Name should start with Account name');
-        System.assert(rd.Name.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assert(rd.Name.startsWith(a.Name), 'RD name should start with Account name');
+        System.assert(rd.Name.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'RD name should contain amount value');
     }
     
     @isTest
@@ -658,7 +655,7 @@ public class RD_RecurringDonations_TEST {
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();        
         
-        rd = getRecurringDonation(rd.id);     
+        rd = rdGateway.getRecord(rd.id);     
         System.assertEquals(cOpp - 1, getOpenOppCount(rd.id));
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
@@ -693,7 +690,7 @@ public class RD_RecurringDonations_TEST {
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();
         
-        rd = getRecurringDonation(rd.id);    
+        rd = rdGateway.getRecord(rd.id);    
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
 
         originalOpps = new List<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id = :rd.id]);
@@ -731,7 +728,7 @@ public class RD_RecurringDonations_TEST {
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();
                 
-        rd = getRecurringDonation(rd.id); 
+        rd = rdGateway.getRecord(rd.id); 
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
         System.assertEquals(3, getOpenOppCount(rd.id));        
     }
@@ -774,7 +771,7 @@ public class RD_RecurringDonations_TEST {
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();        
         
-        rd = getRecurringDonation(rd.id);
+        rd = rdGateway.getRecord(rd.id);
         System.assert(26 <= getOpenOppCount(rd.id));
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
@@ -815,7 +812,7 @@ public class RD_RecurringDonations_TEST {
         update o;       
         Test.stopTest();        
         
-        rd = getRecurringDonation(rd.id);  
+        rd = rdGateway.getRecord(rd.id);  
         System.assertEquals(cOpp - 1,getOpenOppCount(rd.id));
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
@@ -858,7 +855,7 @@ public class RD_RecurringDonations_TEST {
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();        
         
-        rd = getRecurringDonation(rd.id);     
+        rd = rdGateway.getRecord(rd.id);     
         System.assertEquals(5, getOpenOppCount(rd.id));
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
@@ -900,7 +897,7 @@ public class RD_RecurringDonations_TEST {
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();        
         
-        rd = getRecurringDonation(rd.id);     
+        rd = rdGateway.getRecord(rd.id);     
         System.assertEquals(0, getOpenOppCount(rd.id));
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
@@ -912,7 +909,7 @@ public class RD_RecurringDonations_TEST {
     * @description Builds an account record with default values
     * @return Account
     */
-    public static Account buildAccount() {
+    private static Account buildAccount() {
         return new Account(Name = 'test Individual');
     }
 
@@ -921,12 +918,11 @@ public class RD_RecurringDonations_TEST {
     * @param accId Id of the account to assign to the contact
     * @return Contact
     */
-    public static Contact buildContact(Id accId) {
-        return new Contact(
-            FirstName = 'test',
-            LastName = 'contact',
-            AccountId = accId
-        );  
+    private static Contact buildContact(Id accId) {
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        c.AccountId = accId;
+
+        return c;
     }
 
     /*******************************************************************************************************
@@ -1092,37 +1088,6 @@ public class RD_RecurringDonations_TEST {
             FROM Opportunity 
             WHERE npe03__Recurring_Donation__c = :rdId 
             AND isClosed = false
-        ];
-    }
-
-    /*******************************************************************************************************
-    * @description Retrieves recurring donation record for the specified Id
-    * @param rdId Id of the recurring donation
-    * @return npe03__Recurring_Donation__c
-    */
-    public static npe03__Recurring_Donation__c getRecurringDonation(Id rdId) {
-        return getRecurringDonations(new Set<Id>{ rdId })[0];
-    }
-
-    /*******************************************************************************************************
-    * @description Retrieves recurring donation records for the specified records
-    * @param List<npe03__Recurring_Donation__c> recurring donations
-    * @return List<npe03__Recurring_Donation__c>
-    */
-    private static List<npe03__Recurring_Donation__c> getRecurringDonations(List<npe03__Recurring_Donation__c> rds) {
-        return getRecurringDonations(new Map<Id, npe03__Recurring_Donation__c>(rds).keySet());
-    }
-
-    /*******************************************************************************************************
-    * @description Retrieves recurring donation records for the specified Ids
-    * @param rdIds Ids of the recurring donations
-    * @return List<npe03__Recurring_Donation__c>
-    */
-    private static List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
-        return [
-            SELECT Name, npe03__Next_Payment_Date__c, npe03__Last_Payment_Date__c, npe03__Paid_Amount__c
-            FROM npe03__Recurring_Donation__c 
-            WHERE Id IN :rdIds
         ];
     }
  }

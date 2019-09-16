@@ -54,7 +54,7 @@ public with sharing class RD2_NamingService {
     }
 
     /***
-    * @description Used to get Donor (Account/Contact) information
+    * @description Returns Donor (Account/Contact) records
     */
     @TestVisible
     private RD2_Donor.IGateway donorGateway {
@@ -63,6 +63,20 @@ public with sharing class RD2_NamingService {
                 donorGateway = new RD2_Donor.Gateway();
             }
             return donorGateway;
+        }
+        set;
+    }
+
+    /***
+    * @description Returns Recurring Donation records
+    */
+    @TestVisible
+    private RD2_RecurringDonationsGateway rdGateway {
+        get {
+            if (rdGateway == null) {
+                rdGateway = new RD2_RecurringDonationsGateway();
+            }
+            return rdGateway;
         }
         set;
     }
@@ -91,6 +105,46 @@ public with sharing class RD2_NamingService {
             return userDefaultCurrencySymbol;
         }
         set;
+    }
+
+    /**
+    * @description Autogenerates recurring donation names when Account name has changed
+    */
+    public void updateOnAccountChange(List<Id> accountIds) {
+        if (!settings.isAutomaticNamingEnabled()) {
+            return;
+        }
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+
+        for (npe03__Recurring_Donation__c rd : rdGateway.getRecordsReferencingAccounts(accountIds)) {
+            rd.Name = System.Label.npo02.NameReplacementText;
+            rds.add(rd);
+        }
+
+        if (!rds.isEmpty()) {
+            UTIL_DMLService.updateRecords(rds);
+        }
+    }
+
+    /***
+    * @description Autogenerates recurring donation names when Contact name has changed
+    */
+    public void updateOnContactChange(Set<Id> contactIds) {
+        if (!settings.isAutomaticNamingEnabled()) {
+            return;
+        }
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+
+        for (npe03__Recurring_Donation__c rd : rdGateway.getRecordsReferencingContacts(contactIds)) {
+            rd.Name = System.Label.npo02.NameReplacementText;
+            rds.add(rd);
+        }
+
+        if (!rds.isEmpty()) {
+            UTIL_DMLService.updateRecords(rds);
+        }
     }
 
     /***

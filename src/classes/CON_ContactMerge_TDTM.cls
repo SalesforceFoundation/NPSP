@@ -303,10 +303,14 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         * @param masterContacts the collection of master contacts
         ********************************************************************************************************/
         private void fixupContactData(List<Contact> masterContacts) {
-            new RLLP_OppRollup().rollupContacts(new Map<Id, SObject>(masterContacts).keySet());
+            Set<Id> contactIds = new Map<Id, SObject>(masterContacts).keySet();
+
+            new RLLP_OppRollup().rollupContacts(contactIds);
 
             AFFL_Affiliations_TDTM.cleanupContactAffiliations(masterContacts);
             REL_Relationships_TDTM.cleanupContactRelationships(masterContacts);
+
+            new RD2_NamingService().updateOnContactChange(contactIds);
         }
 
         /*******************************************************************************************************
