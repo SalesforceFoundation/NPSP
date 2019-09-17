@@ -310,7 +310,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
             AFFL_Affiliations_TDTM.cleanupContactAffiliations(masterContacts);
             REL_Relationships_TDTM.cleanupContactRelationships(masterContacts);
 
-            new RD2_NamingService().updateOnContactChange(contactIds);
+            new RD2_NamingService().updateOnChange(null, contactIds);
         }
 
         /*******************************************************************************************************

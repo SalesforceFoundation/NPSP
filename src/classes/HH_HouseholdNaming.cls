@@ -127,9 +127,7 @@ public without sharing class HH_HouseholdNaming {
         	// all or nothing, so errors not lost
             UTIL_DMLService.updateRecords(hhupdatelist);
 
-            RD2_NamingService namingService = new RD2_NamingService();
-            namingService.updateOnAccountChange(hhIds);
-            namingService.updateOnContactChange(new Map<Id, Contact>(contactlist).keySet());
+            new RD2_NamingService().updateOnChange(hhIds, new Map<Id, Contact>(contactlist).keySet());
         }
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);

@@ -90,7 +90,7 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        new RD2_NamingService().updateOnAccountChange(accountIds);
+        new RD2_NamingService().updateOnChange(accountIds, null);
     }
 
     /*******************************************************************************************************
