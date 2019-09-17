@@ -2,7 +2,7 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 
 *** Test Cases ***
@@ -35,6 +35,7 @@ Find Matching Gifts
     Select Lightning Checkbox     &{Contact2}[FirstName] $25 donation
     Click Button With Value    Save 
     Reload Page
+    Wait Until Url Contains    /view
     Select Tab    Related  
     Verify Related Object Field Values    Contact Roles
     ...                     &{contact1}[FirstName] &{contact1}[LastName]=Matched Donor
