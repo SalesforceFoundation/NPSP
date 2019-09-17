@@ -324,7 +324,6 @@ public class ERR_Handler {
 
         Error__c error = createError(e, context);
         if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-            UTIL_Debug.debug('**** Storing errorRecords: ' + error);
             Database.insert(error, false);
         }
 
