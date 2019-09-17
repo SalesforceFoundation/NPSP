@@ -1190,7 +1190,8 @@ class NPSP(object):
             if i == 9:
                 raise AssertionError("Failed to find an url containing {} in 90 seconds".format(exp_text))
             if exp_text in url:
-                return
+                print(url)
+                break
             else:
                 time.sleep(10)
                 i += 1
