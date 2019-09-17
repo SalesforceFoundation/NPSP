@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
+    <applicationVisibilities>
+        <application>%%%NAMESPACE%%%Nonprofit_CRM</application>
+        <default>true</default>
+        <visible>true</visible>
+    </applicationVisibilities>
     <classAccesses>
         <apexClass>%%%NAMESPACE%%%ACCT_AccountMerge_TDTM</apexClass>
         <enabled>false</enabled>
@@ -2410,7 +2415,15 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <layoutAssignments>
-        <layout>Contact-%%%NAMESPACE%%%Contact Layout</layout>
+        <layout>Account-Household Lightning Layout</layout>
+        <recordType>Account.HH_Account</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Account-Organization Lightning Layout</layout>
+        <recordType>Account.Organization</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Contact-Contact Lightning Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>

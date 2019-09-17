@@ -426,6 +426,33 @@ flows:
                 options:
                     unmanaged: False
 
+    config_trailhead_playground:
+        steps:
+            1:
+                task: deploy_post
+                options:
+                    unmanaged: False
+            2:
+                task: deploy_trial_config
+                options:
+                    unmanaged: False
+            3:
+                task: update_admin_profile
+                options:
+                    package_xml: lib/trailhead_admin_profile.xml
+            4:
+                task: test_data_relationships
+            5:
+                task: deploy_reports
+                options:
+                    unmanaged: False
+            6:
+                task: deploy_trailhead_config
+                options:
+                    unmanaged: False
+            7:
+                task: deploy_trailhead_delete_config
+
     config_regression:
         steps:
             2:
@@ -601,13 +628,7 @@ plans:
             4:
                 task: install_managed
             5:
-                flow: config_managed
-                steps:
-                    2:
-                        task: None
-                options:
-                    deploy_reports:
-                        unmanaged: False
+                flow: config_trailhead_playground
                 ui_options:
                     deploy_post:
                         first:
@@ -619,16 +640,10 @@ plans:
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
-            6:
-                task: deploy_trailhead_config
-                options:
-                    unmanaged: False
-                ui_options:
-                    name: Trailhead Playground Configuration
-            7:
-                task: deploy_trailhead_delete_config
-                ui_options:
-                    name: Remove Default Metadata
+                    deploy_trailhead_config:
+                        name: Trailhead Playground Configuration
+                    deploy_trailhead_delete_config:
+                        name: Remove Default Metadata
     reports:
         slug: reports
         title: Install Reports & Dashboards
