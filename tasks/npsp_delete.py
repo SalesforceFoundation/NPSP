@@ -1,4 +1,4 @@
-### Delete this file when CCI supports deletes with where (i.e. Oct 2018)
+### Delete this file when CCI supports deletes with where (i.e. Nov 2019)
 ### Do a diff against cci's delete.py in case this one has evolved.
 import requests
 import time

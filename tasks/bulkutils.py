@@ -1,4 +1,4 @@
-### Delete this file when CCI supports deletes with where (i.e. Oct 2018)
+### Delete this file when CCI supports deletes with where (i.e. Nov 2019)
 
 import datetime
 import requests

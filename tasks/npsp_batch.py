@@ -1,4 +1,4 @@
-### Delete this file when CCI supports sophisticated error handling (i.e. Oct 2018)
+### Delete this file when CCI supports sophisticated error handling (i.e. Nov 2019)
 ### Do a diff against cci's batch.py in case this one has evolved.
 
 """ a task for waiting on a Batch Apex job to complete """
