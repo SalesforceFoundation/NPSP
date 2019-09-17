@@ -414,8 +414,10 @@ public with sharing class RD2_NamingService_TEST {
         };
         insert rds;
 
+        Test.startTest();
         RD2_NamingService service = buildAutomaticNamingService();
-        service.updateOnAccountChange(new List<Id>{ acc.Id });
+        service.updateOnChange(new List<Id>{ acc.Id }, null);
+        Test.stopTest();
 
         for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
             String expectedName = rd.npe03__Organization__c != null
@@ -451,8 +453,10 @@ public with sharing class RD2_NamingService_TEST {
         };
         insert rds;
 
+        Test.startTest();
         RD2_NamingService service = buildAutomaticNamingService();
-        service.updateOnContactChange(new Set<Id>{ contact.Id });
+        service.updateOnChange(null, new Set<Id>{ contact.Id });
+        Test.stopTest();
 
         for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
             String expectedName = rd.npe03__Contact__c != null
