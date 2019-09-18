@@ -67,7 +67,8 @@ Create New gift and process batch and validate
     ...    custom_phone=1234567890
     ...    custom_url=automation.com
     ...    custom_textarea=this is custom batch
-    Populate Field By Placeholder    Search Campaigns    ${campaign}[Name]
+    Populate Campaign    Search Campaigns    ${campaign}[Name]
+    
     Click Field And Select Date    Donation Date    Today
     Click Field And Select Date    custom_date    Today
     Select Value From BGE DD    custom_picklist    2
@@ -87,7 +88,7 @@ Verify Custom Fields on Payment and Donation
     ${date} =     Get Current Date    result_format=%Y-%m-%d       
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
-    Select Window    ${value} | Salesforce    7
+    Select Window    ${value} | Salesforce    10
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     ${org_ns} =  Get Org Namespace Prefix
