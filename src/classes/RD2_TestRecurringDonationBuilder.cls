@@ -34,7 +34,7 @@
 * @description Recurring Donations Builder for unit tests
 *
 */
-public with sharing class RD2_TestRecurringDonationBuilder {
+public without sharing class RD2_TestRecurringDonationBuilder {
 
     private Map<String, Object> valuesByFieldName;
 

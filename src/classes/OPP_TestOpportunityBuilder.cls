@@ -35,49 +35,21 @@
 *
 */
 @isTest
-public with sharing class OPP_TestOpportunityBuilder {
+public without sharing class OPP_TestOpportunityBuilder {
     private Map<String, Object> valuesByFieldName;
-    private String closedWonStage {
-        get {
-            if (closedWonStage == null) {                
-                closedWonStage = getStage(true);
-            }
-            return closedWonStage;
-        }
-        set;
-    }
 
-    private String openStage {
-        get {
-            if (openStage == null) {                
-                openStage = getStage(false);
-            }
-            return openStage;
-        }
-        set;
-    }
-
-    /*******************************************************************************************************************
+    /***
     * @description Constructor sets default values
     */
     public OPP_TestOpportunityBuilder() {
         valuesByFieldName = new Map<String, Object>();
         
         //defaults
-        valuesByFieldName.put('Name', 'TestOpportunity');
+        valuesByFieldName.put('Name', 'TestOpportunity' + UTIL_UnitTestData_TEST.getUniqueString());
         valuesByFieldName.put('CloseDate', Date.today());
     }
 
-    /*******************************************************************************************************************
-    * @description Gets Open (isWon = false) or Close (isWon = true) stage name
-    */
-    public String getStage(Boolean isWon) {
-        List<OpportunityStage> stages = [SELECT MasterLabel FROM OpportunityStage WHERE isActive = true AND isWon = :isWon];
-        
-        return stages.isEmpty() ? '' : stages[0].MasterLabel;
-    }
-
-    /*******************************************************************************************************************
+    /***
     * @description Sets Opportunity Id
     */
     public OPP_TestOpportunityBuilder withId(Id anId) {
@@ -85,7 +57,7 @@ public with sharing class OPP_TestOpportunityBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Name
     */
     public OPP_TestOpportunityBuilder withName(String name) {
@@ -93,14 +65,14 @@ public with sharing class OPP_TestOpportunityBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Account
     */
     public OPP_TestOpportunityBuilder withAccount(String name) {
         return withAccount(new Account(Name = name));
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Account
     */
     public OPP_TestOpportunityBuilder withAccount(Account acc) {
@@ -108,7 +80,7 @@ public with sharing class OPP_TestOpportunityBuilder {
         return withAccount(acc.Id);
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Account
     */
     public OPP_TestOpportunityBuilder withAccount(Id accId) {
@@ -116,7 +88,7 @@ public with sharing class OPP_TestOpportunityBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Campaign
     */
     public OPP_TestOpportunityBuilder withCampaign(Id campaignId) {
@@ -124,7 +96,7 @@ public with sharing class OPP_TestOpportunityBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Close Data
     */
     public OPP_TestOpportunityBuilder withCloseDate(Date dt) {
@@ -132,7 +104,7 @@ public with sharing class OPP_TestOpportunityBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Amount
     */
     public OPP_TestOpportunityBuilder withAmount(Decimal amount) {
@@ -140,23 +112,31 @@ public with sharing class OPP_TestOpportunityBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Determines the Closed Won stage value and sets StageName to it
     */
     public OPP_TestOpportunityBuilder withClosedWonStage() {        
-        valuesByFieldName.put('StageName', closedWonStage);
+        valuesByFieldName.put('StageName', UTIL_UnitTestData_TEST.getClosedWonStage());
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
+    * @description Determines the Closed Lost stage value and sets StageName to it
+    */
+    public OPP_TestOpportunityBuilder withClosedLostStage() {        
+        valuesByFieldName.put('StageName', UTIL_UnitTestData_TEST.getClosedLostStage());
+        return this;
+    }
+
+    /***
     * @description Determines the open stage value and sets StageName to it
     */
     public OPP_TestOpportunityBuilder withOpenStage() {        
-        valuesByFieldName.put('StageName', openStage);
+        valuesByFieldName.put('StageName', UTIL_UnitTestData_TEST.getOpenStage());
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets Recurring Donation Id on the Opportunity
     */
     public OPP_TestOpportunityBuilder withRecurringDonation(Id rdId) {        
@@ -164,7 +144,7 @@ public with sharing class OPP_TestOpportunityBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Adds Opportunity Line Items to the Opportunity
     */
     public OPP_TestOpportunityBuilder withOpportunityLineItems(List<SObject> items) {
@@ -172,7 +152,7 @@ public with sharing class OPP_TestOpportunityBuilder {
         return this;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Attaches child records to the Opportunity
     */
     Map<String, Object> makeArray(List<sObject> childRecords) {
@@ -184,7 +164,7 @@ public with sharing class OPP_TestOpportunityBuilder {
         return result;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Builds Opportunity sObject based on the provided values
     */
     public Opportunity build() {
