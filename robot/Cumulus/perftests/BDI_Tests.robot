@@ -16,13 +16,13 @@ Suite Setup       Workaround Bug
 Clear Generated Records
     Output  Clearing Generated Records
     # Organized in dependency order
-    Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c      
-    Delete     Account_Soft_Credit__c     where=Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR Account__r.Name Like '%BDITEST%'
-    Delete     Allocation__c        where=Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR Opportunity__r.Account.Name Like '%BDITEST%'
-    Delete     npe01__OppPayment__c     where=npe01__Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR npe01__Opportunity__r.Account.Name Like '%BDITEST%'
-    Delete     Opportunity     where=Primary_Contact__r.LastName Like '%BDITEST%' OR Account.Name Like '%BDITEST%'
-    Delete     Account     where=Name Like '%BDITEST%'
-    Delete     Contact     where=LastName Like '%BDITEST%'
+    Bulk Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c      
+    Bulk Delete     Account_Soft_Credit__c     where=Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR Account__r.Name Like '%BDITEST%'
+    Bulk Delete     Allocation__c        where=Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR Opportunity__r.Account.Name Like '%BDITEST%'
+    Bulk Delete     npe01__OppPayment__c     where=npe01__Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR npe01__Opportunity__r.Account.Name Like '%BDITEST%'
+    Bulk Delete     Opportunity     where=Primary_Contact__r.LastName Like '%BDITEST%' OR Account.Name Like '%BDITEST%'
+    Bulk Delete     Account     where=Name Like '%BDITEST%'
+    Bulk Delete     Contact     where=LastName Like '%BDITEST%'
 
 Generate Data
     [Arguments]    ${count}
@@ -62,6 +62,7 @@ Report BDI
     Output  Contacts imported    ${result}
 
 Workaround Bug
+    [Description]   The first BDI import often fails. W-035180
     Return From Keyword If      ${persistent_org}   # persistent orgs don't have this bug
     Generate Data   4
     Setup BDI       Data Import Field Mapping

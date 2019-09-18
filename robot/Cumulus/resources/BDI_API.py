@@ -7,7 +7,7 @@ class BDI_API(SalesforceRobotLibraryBase):
         return self._run_subtask(SetBDIMappingMode, mode=mode)
 
     def _get_di_mode(self):
-        token = self.get_org_namespace_prefix()
+        token = self.get_npsp_namespace_prefix()
         soql = "SELECT {token}Field_Mapping_Method__c FROM {token}Data_Import_Settings__c"
         soql = soql.format(token=token)
         res = self.cumulusci.sf.query_all(soql)
