@@ -1182,16 +1182,14 @@ class NPSP(object):
         self.selenium.click_element(locator)     
         
     def wait_until_url_contains(self,exp_text):
-        """Waits for maximum of 90sec for current url to contain the text"""
+        """Waits for maximum of 90sec for current url to contain the exp_text"""
         self.builtin.log("This keyword can be removed once we support SeleniumLibrary 4.0.")
         url=self.selenium.get_location()
         i=0
         for i in range(10):
             if i == 9:
                 raise AssertionError("Failed to find an url containing {} in 90 seconds".format(exp_text))
-            print ("outside of if ", url)
             if exp_text in url:
-                print(url)
                 break
             else:
                 time.sleep(10)
