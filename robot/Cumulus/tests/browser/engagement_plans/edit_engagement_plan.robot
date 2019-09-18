@@ -29,4 +29,5 @@ Create Engagement Plan and Edit to Add New Task
 *** Keywords ***
 Click New Task Button
     [Arguments]       ${frame_name}    ${ele_path}     @{others}
+    Wait Until Url Contains    /edit
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
