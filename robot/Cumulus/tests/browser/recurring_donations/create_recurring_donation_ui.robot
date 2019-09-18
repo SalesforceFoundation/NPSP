@@ -28,5 +28,4 @@ Create Open Recurring Donation With Monthly Installment
     Load Related List    Opportunities		
     Click ViewAll Related List    Opportunities		
     ${return_value}    Verify Payment Details		
-    Should be equal as strings    ${return_value}    12		
-    # Verify Opportunities    12
+    Should be equal as strings    ${return_value}    12

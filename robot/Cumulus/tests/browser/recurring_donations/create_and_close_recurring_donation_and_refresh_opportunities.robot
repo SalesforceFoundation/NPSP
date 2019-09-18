@@ -1,18 +1,22 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Suite Setup     Run Keywords
+...             Open Test Browser
+...             Setup Variables
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
-*** Test Cases ***
+*** Keywords ***
+Setup Variables
+    ${ns} =                      Get NPSP Namespace Prefix
+    Set Suite Variable           ${ns}
 
-Create and Close a Recurring Donation and Refresh Opportunities
-    [Documentation]              This test verifies that Opportunities for a Recurring Donation are properly closed when the recurring
-    ...                          donation is closed.
-
+Setup Test Data
     #Create a Recurring Donation
-    ${ns} =  Get NPSP Namespace Prefix
-    &{contact} =                 API Create Contact             Email=jjoseph@robot.com
+    &{contact} =                 API Create Contact           Email=jjoseph@robot.com
+    Set Suite Variable           ${contact}
+    Store Session Record         Account                      &{contact}[AccountId]
     &{recurringdonation} =       API Create Recurring Donation  npe03__Contact__c=&{contact}[Id]
     ...                          Name=Julian Recurring Donation
     ...                          npe03__Amount__c=100
@@ -20,13 +24,20 @@ Create and Close a Recurring Donation and Refresh Opportunities
     ...                          npe03__Open_Ended_Status__c=Open
     ...                          npe03__Installment_Period__c=Monthly
     ...                          npe03__Date_Established__c=2019-07-08
-    Go To Record Home            &{recurringdonation}[Id]
+    Set Suite Variable           ${recurringdonation}
+
+*** Test Cases ***
+
+Create and Close a Recurring Donation and Refresh Opportunities
+    [Documentation]              This test verifies that Opportunities for a Recurring Donation are properly closed when the recurring
+    ...                          donation is closed.
 
     #Find 1st Opportunity for Recurring Donation and Close It
     @{opportunity1} =            Salesforce Query             Opportunity
     ...                          select=Id
     ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
     ...                          ${ns}Recurring_Donation_Installment_Name__c=(1)
+    Store Session Record         Opportunity                  ${opportunity1}[0][Id]
     Go To Record Home            ${opportunity1}[0][Id]
     Click Link                   link=Edit
     Click Dropdown               Stage
@@ -38,6 +49,7 @@ Create and Close a Recurring Donation and Refresh Opportunities
     ...                          select=Id
     ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
     ...                          ${ns}Recurring_Donation_Installment_Name__c=(2)
+    Store Session Record         Opportunity                  ${opportunity2}[0][Id]
     Go To Record Home            ${opportunity2}[0][Id]
     Click Link                   link=Edit
     Click Dropdown               Stage
@@ -53,15 +65,11 @@ Create and Close a Recurring Donation and Refresh Opportunities
     Click Link                   link=Show more actions
     Click Link                   link=Refresh Opportunities
 
-    #Find 2nd Opportunity for Recurring Donation
-    @{opportunity} =             Salesforce Query             Opportunity
+    #Find 3rd Opportunity for Recurring Donation
+    @{opportunity3} =            Salesforce Query             Opportunity
     ...                          select=Id
     ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
     ...                          ${ns}Recurring_Donation_Installment_Name__c=(3)
-    Go To Record Home            ${opportunity}[0][Id]
+    Go To Record Home            ${opportunity3}[0][Id]
     Select Tab                   Details
     Confirm Value                Stage                        Closed Lost    Y
-
-    #Cleanup Closed Won Opportunities to assist Suite Teardown
-    Salesforce Delete            Opportunity              ${opportunity1}[0][Id]
-    Salesforce Delete            Opportunity              ${opportunity2}[0][Id]

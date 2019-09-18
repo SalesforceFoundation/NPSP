@@ -1,42 +1,57 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Suite Setup     Run Keywords
+...             Open Test Browser
+...             Setup Variables
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
-*** Test Cases ***
+*** Keywords ***
+Setup Variables
+    ${ns} =                      Get NPSP Namespace Prefix
+    Set Suite Variable           ${ns}
 
-Create Fixed Length Recurring Donation Divide By
-    [Documentation]              This test verifies that Opportunities with the proper divided amount are created for a Recurring Donation.
-    
-    #Create a Recurring Donation
-    ${ns} =  Get NPSP Namespace Prefix
+Setup Test Data
     &{contact} =                 API Create Contact           Email=jjoseph@robot.com
-    Go To Record Home            &{contact}[Id]
+    Set Suite Variable           ${contact}
+    Store Session Record         Account                      &{contact}[AccountId]
     &{recurringdonation} =       API Create Recurring Donation  npe03__Contact__c=&{contact}[Id]
     ...                          Name=Julian Recurring Donation
     ...                          npe03__Amount__c=1200
     ...                          npe03__Installments__c=12
     ...                          npe03__Schedule_Type__c=Divide By
     ...                          npe03__Installment_Period__c=Monthly
-    Go To Record Home            &{recurringdonation}[Id]
+    Set Suite Variable           ${recurringdonation}
+
+*** Test Cases ***
+
+Create Fixed Length Recurring Donation Divide By
+    [Documentation]              This test verifies that Opportunities with the proper divided amount are created for a Recurring Donation.
 
     #Find 1st Opportunity for Recurring Donation and Check Amount
-    @{opportunity} =             Salesforce Query             Opportunity
+    @{opportunity1} =            Salesforce Query             Opportunity
     ...                          select=Id
     ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
     ...                          ${ns}Recurring_Donation_Installment_Name__c=(1 of 12)
     ...                          StageName=Pledged
-    Go To Record Home            ${opportunity}[0][Id]
+    Go To Record Home            ${opportunity1}[0][Id]
     Select Tab                   Details
-    Confirm Value                Amount                       $100.00    Y
+    Confirm Value                Amount                       $100.00      Y
 
     #Find 2nd Opportunity for Recurring Donation and Check Amount
-    @{opportunity} =             Salesforce Query             Opportunity
+    @{opportunity2} =            Salesforce Query             Opportunity
     ...                          select=Id
     ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
     ...                          ${ns}Recurring_Donation_Installment_Name__c=(2 of 12)
     ...                          StageName=Pledged
-    Go To Record Home            ${opportunity}[0][Id]
+    Go To Record Home            ${opportunity2}[0][Id]
     Select Tab                   Details
-    Confirm Value                Amount                       $100.00    Y
+    Confirm Value                Amount                       $100.00      Y  
+
+
+
+
+
+
+ 
