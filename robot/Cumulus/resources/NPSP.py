@@ -1195,6 +1195,7 @@ class NPSP(object):
                 break
             else:
                 time.sleep(10)
+                url=self.selenium.get_location()
                 i += 1
                             
 
