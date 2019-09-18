@@ -21,11 +21,11 @@ from cumulusci.tasks.apex.anon import AnonymousApexTask
 from cumulusci.core.config import TaskConfig
 from cumulusci.tasks.apex.batch import BatchApexWait
 
-from locators_45 import npsp_lex_locators as locators_45
 from locators_46 import npsp_lex_locators as locators_46
+from locators_47 import npsp_lex_locators as locators_47
 locators_by_api_version = {
+    47.0: locators_47,   # winter '20
     46.0: locators_46,  # Summer '19
-    45.0: locators_45,  # Spring '19
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
@@ -51,16 +51,16 @@ class NPSP(object):
             client = self.cumulusci.tooling
             response = client._call_salesforce(
                 'GET', 'https://{}/services/data'.format(client.sf_instance))
-            latest_api_version = float(response.json()[-1]['version'])
-            if not latest_api_version in locators_by_api_version:
-                warnings.warn("Could not find locator library for API %d" % latest_api_version)
-                latest_api_version = max(locators_by_api_version.keys())
+            self.latest_api_version = float(response.json()[-1]['version'])
+            if not self.latest_api_version in locators_by_api_version:
+                warnings.warn("Could not find locator library for API %d" % self.latest_api_version)
+                self.latest_api_version = max(locators_by_api_version.keys())
         except RobotNotRunningError:
             # We aren't part of a running test, likely because we are
             # generating keyword documentation. If that's the case, assume
             # the latest supported version
-            latest_api_version = max(locators_by_api_version.keys())
-        locators = locators_by_api_version[latest_api_version]
+            self.latest_api_version = max(locators_by_api_version.keys())
+        locators = locators_by_api_version[self.latest_api_version]
         npsp_lex_locators.update(locators)
 
     @property
@@ -105,6 +105,14 @@ class NPSP(object):
 #         field.send_keys(Keys.ENTER)
 # #             field.send_keys(Keys.ARROW_DOWN)
         field.send_keys(Keys.ENTER)
+    
+    def populate_campaign(self,loc,value):
+        """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
+        self.populate_field_by_placeholder(loc, value)
+        print(self.latest_api_version)       
+        if self.latest_api_version == 47.0:
+            self.selenium.click_link(value)
+            
 
     def click_record_button(self, title):
         """ Pass title of the button to click the buttons on the records edit page. Usually save and cancel are the buttons seen.
@@ -1010,7 +1018,8 @@ class NPSP(object):
 
     def click_link_with_text(self, text):
         self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
-        element = self.selenium.driver.find_element_by_link_text(text)
+        locator = npsp_lex_locators['link-text'].format(text)
+        element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)  
     
     def verify_expected_batch_values(self, batch_id,**kwargs):
@@ -1171,3 +1180,22 @@ class NPSP(object):
         self.select_object_dropdown()
         locator=npsp_lex_locators['link'].format(view_name)
         self.selenium.click_element(locator)     
+        
+    def wait_until_url_contains(self,exp_text):
+        """Waits for maximum of 90sec for current url to contain the exp_text"""
+        self.builtin.log("This keyword can be removed once we support SeleniumLibrary 4.0.")
+        url=self.selenium.get_location()
+        i=0
+        for i in range(10):
+            if i == 9:
+                raise AssertionError("Failed to find an url containing {} in 90 seconds".format(exp_text))
+            if exp_text in url:
+                break
+            else:
+                time.sleep(10)
+                url=self.selenium.get_location()
+                i += 1
+                            
+
+        
+            
