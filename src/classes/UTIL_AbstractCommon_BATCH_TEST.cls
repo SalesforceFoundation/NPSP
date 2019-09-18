@@ -139,7 +139,7 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * @description Test Batch Execution when additional where clause is present (non LDV)
      */
     @isTest
-    public static void executeAddtlWhereClause() {
+    public static void shouldExecuteBatchJobInNonLdvModeWithAddtlWhereClause() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
@@ -249,7 +249,7 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * @description Test Batch Execution when no records are returned
      */
     @isTest
-    public static void noRecordsReturned() {
+    public static void shouldProperlyExecuteWithnoRecordsReturned() {
 
         Test.startTest();
         UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10);
