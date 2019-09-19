@@ -6,6 +6,7 @@ Accounts:
         BillingStreet: BillingStreet
         BillingCountry: BillingCountry
         description: description
+    record_type: Organization
 Contacts:
     sf_object: Contact
     table: contacts
