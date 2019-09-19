@@ -10,6 +10,7 @@ Add Existing Contact to Existing Household
     [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com
     &{contact2} =  API Create Contact
+    # Select App Launcher NPSP App
     Go To Record Home  &{contact2}[Id]
     Click Link    link=Edit
     Delete Icon    Account Name    &{contact2}[LastName] Household
@@ -18,5 +19,6 @@ Add Existing Contact to Existing Household
     Click Header Field Link  Account Name
     ${id}  Get Current Record Id
     Store Session Record    Account    ${id}
+    Select Tab    Related
     Verify Related List Items    Contacts    &{contact1}[FirstName] &{contact1}[LastName]
     Verify Related List Items    Contacts    &{contact2}[FirstName] &{contact2}[LastName]

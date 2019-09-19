@@ -9,6 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 Delete Contact from Household
     [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com
+    # Select App Launcher NPSP App
     Go To Record Home  &{contact1}[AccountId]
     ${contact_id2} =  New Contact for HouseHold
     Store Session Record    Contact    ${contact_id2}

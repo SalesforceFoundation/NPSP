@@ -191,6 +191,7 @@ Create Contact with Address
     [return]                  ${contact_id}     
 
 New Contact for HouseHold
+    Select Tab    Related
     Click Related List Button  Contacts    New 
     Wait Until Modal Is Open
     ${first_name} =           Generate Random String

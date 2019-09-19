@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Household With Name Only
+    # Select App Launcher NPSP App
     ${contact_id} =  Create Contact
     &{contact} =  Salesforce Get  Contact  ${contact_id} 
     Header Field Value    Account Name    &{contact}[LastName] Household
@@ -16,6 +17,7 @@ Create Household With Name Only
     
 Create Household With Name and Email
     [tags]  unstable
+    # Select App Launcher NPSP App
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Header Field Value    Account Name    &{contact}[LastName] Household
@@ -25,6 +27,7 @@ Create Household With Name and Email
 
     
 Create Household with Name and Address
+    # Select App Launcher NPSP App
     ${contact_id} =  Create Contact with Address
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Header Field Value    Account Name    &{contact}[LastName] Household

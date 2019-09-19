@@ -10,6 +10,7 @@ Delete Contact with Closed Won Opportunity from Household
     &{contact} =  API Create Contact    Email=skristem@robot.com 
     Store Session record    Account    &{contact}[AccountId] 
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $100 donation
+    # Select App Launcher NPSP App
     Go To Object Home    Contact    
     Select Row    &{Contact}[FirstName] &{Contact}[LastName]
     Click Link    title=Delete

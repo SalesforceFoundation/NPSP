@@ -8,6 +8,7 @@ npsp_lex_locators={
     'placeholder': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
+        "app_link" : "//div[@class='slds-card salesforceIdentityAppLauncherDesktopInternal']//section[@id='cards']//li[.//img[contains(@src,'/RGB_nspscolor')]]//a[@class='appTileTitle' and text()='Nonprofit Success Pack']"
     },
     'object_dd':'//h1[contains(@class,"slds-page-header__title")]//a',
     'main-header':{
