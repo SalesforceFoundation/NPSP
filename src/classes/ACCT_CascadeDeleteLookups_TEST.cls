@@ -54,9 +54,13 @@ private class ACCT_CascadeDeleteLookups_TEST {
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id IN :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildContactRDs(contacts));
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
+          .withDefaults()
+          .build(contacts);
+        recurringDonations.addAll(new TEST_RecurringDonationBuilder()
+          .withDefaults()
+          .build(accounts)
+        );
         insert recurringDonations;
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
@@ -118,9 +122,13 @@ private class ACCT_CascadeDeleteLookups_TEST {
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildContactRDs(contacts));
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
+          .withDefaults()
+          .build(contacts);
+        recurringDonations.addAll(new TEST_RecurringDonationBuilder()
+          .withDefaults()
+          .build(accounts)
+        );
         insert recurringDonations;
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');

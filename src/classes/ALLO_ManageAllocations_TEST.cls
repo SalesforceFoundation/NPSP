@@ -196,16 +196,16 @@ private class ALLO_ManageAllocations_TEST {
         insert acc;
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            Name = 'foo', 
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly, 
-            npe03__Date_Established__c=date.newinstance(1984,01,29), 
-            npe03__Organization__c = acc.id, 
-            npe03__Amount__c = 20,
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(1984,01,29))
+            .withAccount(acc.Id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
         insert rd;
+        
         list<Allocation__c> alloForInsert = new list<Allocation__c>();
         Allocation__c percentAllo = new Allocation__c(Recurring_Donation__c = rd.id, Percent__c = 50, General_Accounting_Unit__c = gau.id);
         alloForInsert.add(percentAllo);

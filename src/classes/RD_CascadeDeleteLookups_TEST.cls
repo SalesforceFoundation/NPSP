@@ -46,8 +46,9 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
+            .withDefaults()
+            .build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
@@ -100,8 +101,9 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
+            .withDefaults()
+            .build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
@@ -138,8 +140,9 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
+            .withDefaults()
+            .build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
@@ -228,8 +231,9 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
+            .withDefaults()
+            .build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
@@ -268,8 +272,9 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
+            .withDefaults()
+            .build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();

@@ -430,7 +430,7 @@ public class HH_HouseholdNaming_TEST {
         contact.AccountId = acc.Id;
         insert contact;
 
-        npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
             .withAmount(100.00)
             .withCurrencyIsoCode('USD')
@@ -487,7 +487,7 @@ public class HH_HouseholdNaming_TEST {
         Account acc = buildAccounts(1, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)[0];
         insert acc;
 
-        npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
             .withCurrencyIsoCode('USD')

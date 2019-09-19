@@ -36,7 +36,7 @@
 @isTest
 public class RD_RecurringDonations_TEST {
 
-    public static final Date DEFAULT_ESTABLISHED_DATE = Date.newInstance(1970,6,12);
+    public static final Date DEFAULT_ESTABLISHED_DATE = TEST_RecurringDonationBuilder.DEFAULT_ESTABLISHED_DATE;
     private static final Date TODAY = System.today();
     private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
 
@@ -142,12 +142,14 @@ public class RD_RecurringDonations_TEST {
         Account a = buildAccount();
         insert a;
 
+        String name = 'foo';
         npe03__Recurring_Donation__c rd = buildRecurringDonationMonthlyInstallment(null);
+        rd.name = name;
         rd.npe03__Organization__c = a.id;            
         insert rd;
 
         npe03__Recurring_Donation__c actualRd = rdGateway.getRecord(rd.Id);
-        System.assertEquals('test', actualRd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
+        System.assertEquals(name, actualRd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
 
         Test.startTest();        
         RD2_NamingService.settings = (RD2_Settings) Test.createStub(
@@ -371,17 +373,10 @@ public class RD_RecurringDonations_TEST {
         insert contacts;
         contacts = new List<Contact>([SELECT LastName, AccountId FROM Contact]);
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
-        for (Contact c : contacts) {
-            rds.add(new npe03__Recurring_Donation__c(
-                Name = 'Test' + c.LastName,
-                npe03__Amount__c = 100,
-                npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE,
-                npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                npe03__Contact__c = c.Id
-            ));
-        }
+        List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
+            .withDefaults()
+            .withAmount(100)
+            .build(contacts);
 
         // Execute the insert of Recurring Donations in start/stop Test to create Primary OCRs 
         // by utilizing npe01__Contact_Id_for_Role__c field on Opportunity if it exists. 
@@ -443,41 +438,38 @@ public class RD_RecurringDonations_TEST {
         
         Campaign camp = new Campaign(Name = 'Campaign', isActive = true);
         insert camp;
+
+        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
+            .withAmount(100)
+            .withDateEstablished(TODAY.toStartOfMonth())
+            .withOpenEndedStatusOpen();
         
-        List<npe03__Recurring_Donation__c> rdlist = new List<npe03__Recurring_Donation__c>();
-        
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'testweekly';
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        rd.npe03__Date_Established__c = TODAY.toStartOfMonth();
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rdlist.add(rd);
-        
-        
-        rd = rd.clone(false);
-        rd.Name = 'testmonthly';
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        rd.npe03__Contact__c = null;
-        rd.npe03__Organization__c = a.id;
-        rd.npe03__Recurring_Donation_Campaign__c = camp.id;
-        rdlist.add(rd);
-        
-        rd = rd.clone(false);
-        rd.Name = 'testquarterly';
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly;
-        rdlist.add(rd);
-        
-        rd = rd.clone(false);
-        rd.Name = 'testyearly';
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly;
-        rdlist.add(rd);
-        
-        rd = rd.clone(false);
-        rd.Name = 'testbadinstallment';
-        rd.npe03__Installment_Period__c = 'GarbageValue';
-        rdlist.add(rd);
+        List<npe03__Recurring_Donation__c> rdlist = new List<npe03__Recurring_Donation__c>{
+            rdBuilder
+                .withName('testweekly')
+                .withContact(c.Id)
+                .withInstallmentPeriodWeekly()
+                .build(),
+            rdBuilder
+                .withName('testmonthly')
+                .withAccount(a.Id)
+                .withContact(null)
+                .withCampaign(camp.Id)
+                .withInstallmentPeriodMonthly()
+                .build(),
+            rdBuilder
+                .withName('testquarterly')
+                .withInstallmentPeriodQuarterly()
+                .build(),
+            rdBuilder
+                .withName('testyearly')
+                .withInstallmentPeriodYearly()
+                .build(),
+            rdBuilder
+                .withName('testbadinstallment')
+                .withInstallmentPeriod('GarbageValue')
+                .build()
+        };
         
         test.startTest();
         insert rdlist;
@@ -977,16 +969,13 @@ public class RD_RecurringDonations_TEST {
     * @return npe03__Recurring_Donation__c
     */
     public static npe03__Recurring_Donation__c buildRecurringDonation(Id contactId, String installmentPeriod) {
-        return new npe03__Recurring_Donation__c(
-            Name = 'test',
-            npe03__Installments__c = 2,
-            npe03__Contact__c = contactId,
-            npe03__Amount__c = 100,
-            npe03__Installment_Period__c = installmentPeriod,
-            npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE,
-            npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-            npe03__Open_Ended_Status__c = 'None'
-        ); 
+        return new TEST_RecurringDonationBuilder()
+            .withDefaults()
+            .withAmount(100)
+            .withContact(contactId)
+            .withInstallmentPeriod(installmentPeriod)
+            .withOpenEndedStatusNone()
+            .build();
     }
 
     /*******************************************************************************************************

@@ -300,19 +300,16 @@ private class TDTM_DMLgt200_TEST {
         Test.startTest();
 
         // Insert the RecurringDonation records
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
-        for (Integer n=0; n<insertCnt; n++) {
-            rds.add(new npe03__Recurring_Donation__c(
-                Name = 'MASS INSERT TEST ' + n,
-                npe03__Installments__c = 2,
-                npe03__Contact__c = c.Id,
-                npe03__Amount__c = 100,
-                npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly,
-                npe03__Date_Established__c = date.newinstance(1970,6,12),
-                npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-                npe03__Open_Ended_Status__c = 'None'
-            ));
-        }
+        List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
+            .withInstallments(2)
+            .withContact(c.Id)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withDateEstablished(Date.newInstance(1970,6,12))
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusNone()
+            .build(insertCnt);
+
         Database.insert(rds);
         Test.stopTest();
 
@@ -487,15 +484,12 @@ private class TDTM_DMLgt200_TEST {
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
             Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
-        for (Integer i = 0; i < 20; i++) {
-            rds.add(new npe03__Recurring_Donation__c(
-                npe03__Contact__c = c.Id,
-                npe03__Amount__c = 100.0,
-                npe03__Installment_Period__c = 'Monthly',
-                npe03__Open_Ended_Status__c = 'Open'
-            ));
-        }
+        List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
+            .withContact(c.Id)
+            .withAmount(100.0)
+            .withInstallmentPeriodMonthly()
+            .withOpenEndedStatusOpen()
+            .build(20);
 
         insert rds;
 

@@ -907,7 +907,7 @@ private class CON_ContactMerge_TEST2 {
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
         for (Contact c : contacts) {
-            rds.add(new RD2_TestRecurringDonationBuilder()
+            rds.add(new TEST_RecurringDonationBuilder()
                 .withContact(c.Id)
                 .withAmount(100)
                 .withCurrencyIsoCode('USD')

@@ -519,15 +519,15 @@ private with sharing class ALLO_Allocations_TEST {
         insert acc;
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            Name = 'foo',
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
-            npe03__Date_Established__c= system.today(),
-            npe03__Organization__c = acc.id,
-            npe03__Amount__c = 20,
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(System.today())
+            .withAccount(acc.id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
+            
         // this initial creation of the RD with default allocations set up, which get copied to the opp
         // will be what we soql limit profile in this test (and thus the startTest/stopTest).
         Test.startTest();

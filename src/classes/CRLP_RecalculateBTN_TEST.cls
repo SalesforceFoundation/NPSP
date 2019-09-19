@@ -49,15 +49,15 @@ private class CRLP_RecalculateBTN_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
         insert gau;
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'test';
-        rd.npe03__Installments__c = 2;
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 1;
-        rd.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
-        rd.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        rd.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        rd.npe03__Open_Ended_Status__c = 'None'; 
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallments(2)
+            .withContact(c.Id)
+            .withAmount(1)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(1970,6,12))
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusNone()
+            .build();
         insert rd;
     }
 

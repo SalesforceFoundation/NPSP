@@ -335,7 +335,6 @@
         <members>RD2_RecurringDonationsGateway_TEST</members>
         <members>RD2_Settings</members>
         <members>RD2_Settings_TEST</members>
-        <members>RD2_TestRecurringDonationBuilder</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -444,6 +443,7 @@
         <members>TDTM_TriggerHandler</members>
         <members>TDTM_TriggerScaffolds_TEST</members>
         <members>TDTM_iTableDataGateway</members>
+        <members>TEST_RecurringDonationBuilder</members>
         <members>USER_InActiveUser_TDTM</members>
         <members>USER_InActiveUser_TDTM_TEST</members>
         <members>USER_MixedDML_TEST</members>
