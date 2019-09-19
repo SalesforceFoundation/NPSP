@@ -134,7 +134,8 @@ tasks:
         group: Performance Tests
         options:
             suites: robot/Cumulus/perftests/
-            outputdir: robot/Cumulus/results
+            options:
+                outputdir: robot/Cumulus/results
 
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy

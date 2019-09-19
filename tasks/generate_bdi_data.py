@@ -2,7 +2,7 @@ import math
 from datetime import date, datetime
 
 import factory
-from .factory_utils import Adder, ModuleDataFactory, Models
+from cumulusci.tasks.bulkdata.factory_utils import Adder, ModuleDataFactory, Models
 
 
 def now():

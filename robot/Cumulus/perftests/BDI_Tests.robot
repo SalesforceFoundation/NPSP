@@ -62,7 +62,7 @@ Report BDI
     Output  Contacts imported    ${result}
 
 Workaround Bug
-    [Description]   The first BDI import often fails. W-035180
+    [Documentation]   The first BDI import often fails. W-035180
     Return From Keyword If      ${persistent_org}   # persistent orgs don't have this bug
     Generate Data   4
     Setup BDI       Data Import Field Mapping
