@@ -61,9 +61,8 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
         configAccountForContact(listNew, listOld, triggerAction, listHHNew, listHHOld);
 
         // deal with any name changes for Household Accounts
-        if (listHHNew.size() > 0) {
+        if (listHHNew.size() > 0)
             HH_HouseholdNaming.handleHHNameUpdates(listHHNew, listHHOld, triggerAction, objResult);
-        }
 
         return null;
     }
