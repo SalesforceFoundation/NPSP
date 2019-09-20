@@ -3759,6 +3759,47 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>engagementPlanTwoLookups</shortDescription>
         <value>You can enter a value for only one of the following fields: Account, Contact, Campaign, Case, Opportunity, or Recurring Donation.</value>
     </labels>
+    <!-- err Prefix designates Labels used in the ERR_ classes.  -->
+    <labels>
+        <fullName>errErrorNoContext</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>errErrorNoContext</shortDescription>
+        <value>No process context supplied to constructor</value>
+    </labels>
+    <labels>
+        <fullName>errErrorTypeOther</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>errErrorTypeOther</shortDescription>
+        <value>Other</value>
+    </labels>
+    <labels>
+        <fullName>errErrorTypeRequiredFieldMissing</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>errErrorTypeRequiredFieldMissing</shortDescription>
+        <value>Required Field Missing</value>
+    </labels>
+    <labels>
+        <fullName>errErrorTypeValidationFailed</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>errErrorTypeValidationFailed</shortDescription>
+        <value>Custom Validation Rule Failed</value>
+    </labels>
+    <labels>
+        <fullName>errErrorUnsupportedDMLType</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>errErrorUnsupportedDMLType</shortDescription>
+        <value>Unsupported Operation: Unable to log an Error for this type of DML operation.</value>
+    </labels>
     <labels>
         <fullName>exceptionDeletePermission</fullName>
         <categories>Error</categories>
