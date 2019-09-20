@@ -57,7 +57,6 @@ public with sharing class RD2_NamingService_TEST {
             .build();
         
         RD2_NamingService service = new RD2_NamingService();
-        RD2_NamingService.settings = (RD2_Settings) Test.createStub(RD2_Settings.class, new RD2_Settings_TEST.Stub());
 
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -388,85 +387,7 @@ public with sharing class RD2_NamingService_TEST {
         System.assertEquals(getExpectedName(acc, '100'), rds[0].Name, 'The Account name should be queried and incorporated into the name');
         System.assertEquals(getExpectedName(contact, '200'), rds[1].Name, 'The Contact name should be queried and incorporated into the name');
     }
-
-    /***
-    * @description Verifies Recurring Donation Name is updated for specified Accounts
-    */
-    @isTest
-    private static void shouldUpdateNameForSpecifiedAccounts() {
-        insert acc = new Account(Name = 'RD2 Organization');
-
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            new TEST_RecurringDonationBuilder()
-                .withAccount(acc.Id)
-                .withAmount(100)
-                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
-                .build(),
-            new TEST_RecurringDonationBuilder()
-                .withName('foo')
-                .withContact(contact.Id)
-                .withAmount(200)
-                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
-                .build()
-        };
-        insert rds;
-
-        Test.startTest();
-        RD2_NamingService service = buildAutomaticNamingService();
-        service.updateOnChange(new List<Id>{ acc.Id }, null);
-        Test.stopTest();
-
-        for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
-            String expectedName = rd.npe03__Organization__c != null
-                ? RD2_NamingService_TEST.getExpectedName(acc, '100')
-                : 'foo';
-
-            System.assertEquals(expectedName, rd.Name, 'Recurring Donation name should be updated for the Account only');
-        }
-    }
-
-    /***
-    * @description Verifies Recurring Donation Name is updated for specified Contacts
-    */
-    @isTest
-    private static void shouldUpdateNameForSpecifiedContacts() {
-        insert acc = new Account(Name = 'RD2 Organization');
-
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            new TEST_RecurringDonationBuilder()
-                .withName('foo')
-                .withAccount(acc.Id)
-                .withAmount(100)
-                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
-                .build(),
-            new TEST_RecurringDonationBuilder()
-                .withContact(contact.Id)
-                .withAmount(200)
-                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
-                .build()
-        };
-        insert rds;
-
-        Test.startTest();
-        RD2_NamingService service = buildAutomaticNamingService();
-        service.updateOnChange(null, new Set<Id>{ contact.Id });
-        Test.stopTest();
-
-        for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
-            String expectedName = rd.npe03__Contact__c != null
-                ? RD2_NamingService_TEST.getExpectedName(contact, '200')
-                : 'foo';
-
-            System.assertEquals(expectedName, rd.Name, 'Recurring Donation name should be updated for the Contact only');
-        }
-    }
-
+    
 
 
     // Helpers
@@ -523,10 +444,12 @@ public with sharing class RD2_NamingService_TEST {
     * @description Enables Automatic Naming Enabled for tests
     */
     public static void enableAutomaticNaming() {
-        RD2_NamingService.settings = (RD2_Settings) Test.createStub(
-            RD2_Settings.class, 
-            new RD2_Settings_TEST.Stub().withAutomaticNamingEnabled()
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                EnableAutomaticNaming__c = true
+            )
         );
+        //set the property to null so it can be reloaded for tests? //TODO
     }
 
     /***

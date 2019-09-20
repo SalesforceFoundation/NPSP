@@ -108,10 +108,7 @@ public class RD_RecurringDonations_TEST {
         rds[1].npe03__Organization__c = a.id;
 
         Test.startTest();        
-        RD2_NamingService.settings = (RD2_Settings) Test.createStub(
-            RD2_Settings.class, 
-            new RD2_Settings_TEST.Stub().withAutomaticNamingEnabled()
-        );
+        RD2_NamingService_TEST.enableAutomaticNaming();
 
         insert rds;
         Test.stopTest();
@@ -122,12 +119,10 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
 
         String rdName = actualRdById.get(rds[0].id).Name;
-        System.assert(rdName.startsWith(c.FirstName + ' ' + c.LastName), 'RD name should start with Contact name');
-        System.assert(rdName.endsWith('100 - ' + System.Label.RecurringDonationNameSuffix), 'RD name should contain amount value');
+        System.assertEquals(RD2_NamingService_TEST.getExpectedName(c, '100'), rdName, 'RD name should match');
 
         rdName = actualRdById.get(rds[1].id).Name;
-        System.assert(rdName.startsWith(a.Name), 'RD name should start with Account name');
-        System.assert(rdName.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'RD name should contain amount value');
+        System.assertEquals(RD2_NamingService_TEST.getExpectedName(a, '200'), rdName, 'RD name should match');
     }
 
     /***
@@ -135,10 +130,6 @@ public class RD_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameOnUpdate() {
-        RD2_NamingService.settings = (RD2_Settings) Test.createStub(
-            RD2_Settings.class, new RD2_Settings_TEST.Stub()
-        );
-
         Account a = buildAccount();
         insert a;
 
@@ -148,22 +139,18 @@ public class RD_RecurringDonations_TEST {
         rd.npe03__Organization__c = a.id;            
         insert rd;
 
-        npe03__Recurring_Donation__c actualRd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(name, actualRd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(name, rd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
 
         Test.startTest();        
-        RD2_NamingService.settings = (RD2_Settings) Test.createStub(
-            RD2_Settings.class, 
-            new RD2_Settings_TEST.Stub().withAutomaticNamingEnabled()
-        );
+        RD2_NamingService_TEST.enableAutomaticNaming();
 
         rd.npe03__Amount__c = 200;
         update rd;
         Test.stopTest();
 
-        actualRd = rdGateway.getRecord(rd.Id);
-        System.assert(actualRd.Name.startsWith(a.Name), 'RD name should start with Account name');
-        System.assert(actualRd.Name.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'RD name should contain amount value');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_NamingService_TEST.getExpectedName(a, '200'), rd.Name, 'RD name should match');
     }
     
     @isTest

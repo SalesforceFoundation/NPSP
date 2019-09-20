@@ -126,8 +126,6 @@ public without sharing class HH_HouseholdNaming {
         if (!hhupdatelist.isEmpty()) {
         	// all or nothing, so errors not lost
             UTIL_DMLService.updateRecords(hhupdatelist);
-
-            new RD2_NamingService().updateOnChange(hhIds, new Map<Id, Contact>(contactlist).keySet());
         }
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
