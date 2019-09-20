@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>Refresh_Opportunities</customButtons>
+    <customButtons>npe03__Refresh_Opportunities</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -27,10 +27,6 @@
             <layoutItems>
                 <behavior>Required</behavior>
                 <field>npe03__Amount__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>npe03__Total__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -70,6 +66,10 @@
             <layoutItems>
                 <behavior>Required</behavior>
                 <field>npe03__Installment_Period__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%Day_of_Month__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
@@ -127,9 +127,6 @@
     </layoutSections>
     <quickActionList>
         <quickActionListItems>
-            <quickActionName>NewNote</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
             <quickActionName>NewTask</quickActionName>
         </quickActionListItems>
     </quickActionList>
@@ -142,6 +139,16 @@
         <relatedList>Opportunity.npe03__Recurring_Donation__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <customButtons>%%%NAMESPACE%%%Manage_Allocations</customButtons>
+        <excludeButtons>MassChangeOwner</excludeButtons>
+        <excludeButtons>New</excludeButtons>
+        <fields>NAME</fields>
+        <fields>%%%NAMESPACE%%%General_Accounting_Unit__c</fields>
+        <fields>%%%NAMESPACE%%%Amount__c</fields>
+        <fields>%%%NAMESPACE%%%Percent__c</fields>
+        <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Recurring_Donation__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <relatedList>RelatedNoteList</relatedList>
     </relatedLists>
     <relatedLists>
@@ -152,4 +159,10 @@
     <showInteractionLogPanel>true</showInteractionLogPanel>
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
+    <summaryLayout>
+        <masterLabel>00h17000003gkRd</masterLabel>
+        <sizeX>4</sizeX>
+        <sizeY>0</sizeY>
+        <summaryLayoutStyle>Default</summaryLayoutStyle>
+    </summaryLayout>
 </Layout>
