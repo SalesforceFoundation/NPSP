@@ -202,6 +202,7 @@ New Contact for HouseHold
     Wait Until Modal Is Closed
     Go To Object Home         Contact
     Click Link                link= ${first_name} ${last_name}
+    Wait Until Url Contains    /view
     ${contact_id} =           Get Current Record Id
     Store Session Record      Account  ${contact_id}
     [return]                  ${contact_id} 
@@ -284,6 +285,7 @@ Create Engagement Plan
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
     Click Button    Save
+    Wait Until Url Contains    /view
     ${ns} =  Get NPSP Namespace Prefix
     ${eng_id} =           Get Current Record Id
     Store Session Record    ${ns}Engagement_Plan_Template__c    ${eng_id}
@@ -305,7 +307,7 @@ Create Level
     Set Focus To Element   xpath: //input[@value='Save']
     Click Button  Save
     Unselect Frame
-    Wait For Locator  spl-breadcrumb  Level
+    Wait For Locator  obj-header  Level
     ${level_id} =            Get Current Record Id
     Store Session Record  Level__c  ${level_id}
     [Return]    ${level_id}  ${level_name}
@@ -353,8 +355,8 @@ Open NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Choose Frame    Nonprofit Success Pack Settings
     Wait Until Element Is Visible  text:${topmenu}
-    Click Link With Text    text=${topmenu}
-    Sleep  1
+    # Click Link With Text    text=${topmenu}
+    Click Element With Locator    npsp_settings.side_panel    idPanelBulkProcesses
     Wait Until Element Is Visible  text:${submenu}
     Click Link With Text    text=${submenu}
     Sleep  1
