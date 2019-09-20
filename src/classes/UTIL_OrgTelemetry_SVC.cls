@@ -73,7 +73,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_BDICMT,
         IsEnabled_CustomizableRollups,
         IsEnabled_DefaultGAU,
-        IsEnabled_RecurringDonations2,
         Data_CountErrorLog,
         Data_CountOppsWithMultiplePayments,
         /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
@@ -246,8 +245,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_BDICMT.name(),
                 (stgSvc.stgDI.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false));
-        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_RecurringDonations2.name(),
-                (stgSvc.stgRD.IsRecurringDonations2Enabled__c == true));
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
