@@ -40,15 +40,15 @@ public with sharing class RD2_NamingService {
     public static final Integer MAX_NAME_LENGTH = 80;
 
     /***
-    * @description Contains Recurring Donations V2 settings 
+    * @description Checks if the Recurring Donation automatic naming is turned on
     */
     @TestVisible
-    private static RD2_Settings settings {
+    private Boolean isAutomaticNamingEnabled {
         get {
-            if (settings == null) {
-                settings = new RD2_Settings();
+            if (isAutomaticNamingEnabled == null) {
+                isAutomaticNamingEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().EnableAutomaticNaming__c == true;
             }
-            return settings;
+            return isAutomaticNamingEnabled;
         }
         set;
     }
@@ -127,7 +127,7 @@ public with sharing class RD2_NamingService {
     * @description Autogenerates recurring donation names if Name construct fields have changed
     */
     public void autogenerateNamesOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
-        if (!settings.isAutomaticNamingEnabled()) {
+        if (!isAutomaticNamingEnabled) {
             return;
         }
 
@@ -164,7 +164,7 @@ public with sharing class RD2_NamingService {
     * @description Autogenerates recurring donation names for all specified records
     */
     public void autogenerateNames(List<npe03__Recurring_Donation__c> rds) {
-        if (!settings.isAutomaticNamingEnabled() || rds == null || rds.isEmpty()) {
+        if (!isAutomaticNamingEnabled || rds == null || rds.isEmpty()) {
             return;
         }
 
@@ -219,29 +219,4 @@ public with sharing class RD2_NamingService {
 
         return formattedAmount;
     }
-
-    /***
-     * @description Updates Recurring Donation names on Account and/or Contact Name change
-     */
-    public void updateOnChange(List<Id> accountIds, Set<Id> contactIds) {
-        if (!settings.isAutomaticNamingEnabled()) {
-            return;
-        }
-
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
-
-        for (npe03__Recurring_Donation__c rd : rdGateway.getRecordsReferencingAccounts(accountIds)) {
-            rd.Name = System.Label.npo02.NameReplacementText;
-            rds.add(rd);
-        }
-
-        for (npe03__Recurring_Donation__c rd : rdGateway.getRecordsReferencingContacts(contactIds)) {
-            rd.Name = System.Label.npo02.NameReplacementText;
-            rds.add(rd);
-        }
-
-        if (!rds.isEmpty()) {
-            UTIL_DMLService.updateRecords(rds);
-        }
-    }    
 }

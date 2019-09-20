@@ -886,50 +886,6 @@ private class CON_ContactMerge_TEST2 {
         System.assertEquals(company.Id, mergedContact.Primary_Affiliation__c, 'The merged contact has the correct primary affiliation.');
     }
 
-    /***
-     * @description Verifies Recurring Donations are renamed on Contact merge
-     */
-    @isTest
-    private static void shouldRenameRecurringDonationsOnContactMerge() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c(npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR)
-        );        
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c(npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR)
-        );
-        RD2_NamingService_TEST.enableAutomaticNaming();
-        
-        List<Contact> contacts = new List<Contact>{
-            UTIL_UnitTestData_TEST.getContact(),
-            UTIL_UnitTestData_TEST.getContact()
-        };
-        insert contacts;  
-
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
-        for (Contact c : contacts) {
-            rds.add(new TEST_RecurringDonationBuilder()
-                .withContact(c.Id)
-                .withAmount(100)
-                .withCurrencyIsoCode('USD')
-                .build()
-            );
-        }
-        insert rds;
-        
-        Contact masterContact = contacts[0];
-        CON_ContactMerge_CTRL controller = setupPageController(contacts, 'test');
-        CON_ContactMerge_TEST.selectMasterRecord(controller, masterContact.Id);
-
-        Test.startTest();
-        controller.mergeContacts();
-        Test.stopTest();
-        
-        for (npe03__Recurring_Donation__c rd : new RD2_RecurringDonationsGateway().getRecords(rds)) {
-            System.assertEquals(RD2_NamingService_TEST.getExpectedName(masterContact, '100'), rd.Name, 
-                'Recurring Donation name should be updated on Contact merge');
-        }
-    }  
-
 
     // Helpers
     ////////////////
