@@ -2860,7 +2860,6 @@
         <members>IsEnabled_CustomizableRollups</members>
         <members>IsEnabled_DefaultGAU</members>
         <members>IsEnabled_HouseholdAcctModel</members>
-        <members>IsEnabled_RecurringDonations2</members>
         <members>Org_IsEnabled_AdvancedMultiCurrency</members>
         <members>PilotEnabled</members>
         <name>FeatureParameterBoolean</name>
