@@ -252,7 +252,7 @@ private class CallableDispatchService_ERR_TEST {
         for (Account acc : accs) {
             Error__c err = errs.get(acc.Id);
             System.assertEquals(true, err.Full_Message__c.contains('All set!'), 'Check for clear message: ' + err.Full_Message__c);
-            System.assertEquals (true, err.Retry_Pending__c, 'Set to false when Error Retry is cleared');
+            System.assertEquals (false, err.Retry_Pending__c, 'Set to false when Error Retry is cleared');
         }
     }
 
