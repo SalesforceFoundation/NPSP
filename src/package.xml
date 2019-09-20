@@ -632,6 +632,7 @@
         <members>TDTM_Lead</members>
         <members>TDTM_Level</members>
         <members>TDTM_Opportunity</members>
+        <members>TDTM_OpportunityContactRole</members>
         <members>TDTM_PartialSoftCredit</members>
         <members>TDTM_Payment</members>
         <members>TDTM_RecurringDonation</members>
