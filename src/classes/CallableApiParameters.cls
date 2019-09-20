@@ -44,12 +44,6 @@ public class CallableApiParameters {
     public static final String PARAM_ROLLUP_DATA = 'RollupData';
     public static final String PARAM_ROLLUP_COMMIT = 'CommitToDatabase';
     public static final String PARAM_OPPORTUNITY_STAGE = 'OpportunityStage';
-    public static final String PARAM_CONTEXT_NAME = 'Context';
-    public static final String PARAM_ERR_MSGS_BY_RECORDID = 'ErrorMsgsByRecordId';
-    public static final String PARAM_DML_RESULTS_BY_RECORDID = 'DmlResultsByRecordId';
-    public static final String PARAM_SOBJECTS = 'SObjects';
-    public static final String PARAM_ERROR_MSG = 'ErrorMsg';
-    public static final String PARAM_EXCEPTION = 'Exception';
 
     private Map<String, Object> params;
 
@@ -169,30 +163,18 @@ public class CallableApiParameters {
     }
 
     /**
-     * @description Retrieve the specified Parameter as a Map<Id, SObject> collection
+     * @description Retrieve the specified Parameter as a List<Object> collection
      * @param paramName
      */
-    public Map<Id, SObject> getSObjectsById(String paramName) {
+    public List<Object> getObjects(String paramName) {
         try {
-            return (Map<Id, SObject>)params.get(paramName);
+            return (List<Object>)params.get(paramName);
         } catch (Exception ex) {
-            throwParameterException('Map<Id, SObject>', paramName);
+            throwParameterException('List<Object>', paramName);
         }
         return null;
     }
 
-    /**
-     * @description Retrieve the specified Parameter as a Map<Id, Object> collection
-     * @param paramName
-     */
-    public Map<Id, Object> getObjectsById(String paramName) {
-        try {
-            return (Map<Id, Object>)params.get(paramName);
-        } catch (Exception ex) {
-            throwParameterException('Map<Id, Object>', paramName);
-        }
-        return null;
-    }
     /**
      * @description Retrieve the specified Parameter as a List<CRLP_Rollup> collection. This expects to the parameter
      * value to be a JSON String. This method will deserialize and return as the appropriate data type.

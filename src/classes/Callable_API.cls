@@ -86,27 +86,10 @@ global with sharing class Callable_API implements System.Callable {
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
                 return crlpApiSvc.isCrlpEnabled();
 
-            } when 'err.adderror' {
-                String context = paramService.getString(CallableApiParameters.PARAM_CONTEXT_NAME);
-                String errorMsg = paramService.getString(CallableApiParameters.PARAM_ERROR_MSG);
-                ERR_Handler.processError(errorMsg, context);
-
-            } when 'err.addexception' {
-                String context = paramService.getString(CallableApiParameters.PARAM_CONTEXT_NAME);
-                Exception exc = paramService.getException(CallableApiParameters.PARAM_EXCEPTION);
-                ERR_Handler.processError(exc, context);
-
-            } when 'err.addrecorderrors' {
-                String context = paramService.getString(CallableApiParameters.PARAM_CONTEXT_NAME);
-                Map<Id, String> errMsgsByRecordId = paramService.getStringsById(CallableApiParameters.PARAM_ERR_MSGS_BY_RECORDID);
-                Map<Id, SObject> sObjects = paramService.getSObjectsById(CallableApiParameters.PARAM_SOBJECTS);
-
-
-            } when 'err.addrecorddmlerrors' {
-                String context = paramService.getString(CallableApiParameters.PARAM_CONTEXT_NAME);
-                Map<Id, Object> dmlResultsByRecordId = paramService.getObjectsById(CallableApiParameters.PARAM_DML_RESULTS_BY_RECORDID);
-                Map<Id, SObject> sObjects = paramService.getSObjectsById(CallableApiParameters.PARAM_SOBJECTS);
-
+            } when 'err.dispatchaction' {
+                // Since there are multiple actions that can be invoked, the ERR_Dispatch_API will get the remaining params out of the
+                // parameter service depending on which action was invoked
+                return CallableDispatchService_ERR.dispatch(paramService);
 
             } when else {
                 throw new MalformedMethodInvocationException(
