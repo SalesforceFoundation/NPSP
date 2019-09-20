@@ -43,7 +43,7 @@ public with sharing class RD2_NamingService {
     * @description Checks if the Recurring Donation automatic naming is turned on
     */
     @TestVisible
-    private Boolean isAutomaticNamingEnabled {
+    private static Boolean isAutomaticNamingEnabled {
         get {
             if (isAutomaticNamingEnabled == null) {
                 isAutomaticNamingEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().EnableAutomaticNaming__c == true;
