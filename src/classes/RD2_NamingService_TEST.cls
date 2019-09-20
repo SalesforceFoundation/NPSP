@@ -443,7 +443,7 @@ public with sharing class RD2_NamingService_TEST {
     /***
     * @description Enables Automatic Naming Enabled for tests
     */
-    public static void enableAutomaticNaming() {
+    public static void enableAutomaticNaming() {        
         RD2_NamingService.isAutomaticNamingEnabled = true;
 
         /*
@@ -457,7 +457,6 @@ public with sharing class RD2_NamingService_TEST {
             )
         );
         */
-        
     }
 
     /***
