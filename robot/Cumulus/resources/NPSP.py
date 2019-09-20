@@ -1,9 +1,8 @@
 import logging
-import re
-import time
 import warnings
+import time
 
-from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
+from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
@@ -14,12 +13,13 @@ from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
-import sys
 from email.mime import text
 
 from cumulusci.tasks.apex.anon import AnonymousApexTask
 from cumulusci.core.config import TaskConfig
-from cumulusci.tasks.apex.batch import BatchApexWait
+
+from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
+
 
 from locators_46 import npsp_lex_locators as locators_46
 from locators_47 import npsp_lex_locators as locators_47
@@ -31,7 +31,7 @@ locators_by_api_version = {
 npsp_lex_locators = {}
 
 @selenium_retry
-class NPSP(object):
+class NPSP(SalesforceRobotLibraryBase):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = 1.0
@@ -62,18 +62,6 @@ class NPSP(object):
             self.latest_api_version = max(locators_by_api_version.keys())
         locators = locators_by_api_version[self.latest_api_version]
         npsp_lex_locators.update(locators)
-
-    @property
-    def builtin(self):
-        return BuiltIn()
-
-    @property
-    def cumulusci(self):
-        return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
-
-    @property
-    def salesforce(self):
-        return self.builtin.get_library_instance('cumulusci.robotframework.Salesforce')
 
     def get_namespace_prefix(self, name):
         parts = name.split('__')
@@ -1146,27 +1134,6 @@ class NPSP(object):
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
 
-    def batch_data_import(self, batchsize):
-        """"Do a BDI import using the API and wait for it to complete"""
-
-        code = """Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-                diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
-                update diSettings;
-                BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-                ID ApexJobId = Database.executeBatch(bdi, %d);
-                """ % int(batchsize)
-        subtask_config = TaskConfig(
-                {"options": {"apex" : code}}
-        )
-
-        self.cumulusci._run_task(AnonymousApexTask, subtask_config)
-
-        subtask_config = TaskConfig(
-                {"options": {"class_name" : "BDI_DataImport_BATCH"}}
-        )
-
-        self.cumulusci._run_task(BatchApexWait, subtask_config)
-        
     def click_wrapper_related_list_button(self,heading,button_title):  
         """Clicks a button in the heading of a related list when the related list is enclosed in wrapper.
            Waits for a modal to open after clicking the button.
@@ -1195,7 +1162,3 @@ class NPSP(object):
                 time.sleep(10)
                 url=self.selenium.get_location()
                 i += 1
-                            
-
-        
-            
