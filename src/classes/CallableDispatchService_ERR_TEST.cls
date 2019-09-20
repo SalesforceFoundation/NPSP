@@ -238,6 +238,7 @@ private class CallableDispatchService_ERR_TEST {
 
         params.clear();
         params.put(CallableDispatchService_ERR.PARAM_DISPATCH_ACTION_TYPE, 'clearrecorderrors');
+        params.put(CallableDispatchService_ERR.PARAM_CONTEXT_NAME, 'Test Context');
         params.put(CallableDispatchService_ERR.PARAM_SOBJECTS, accs);
         params.put(CallableDispatchService_ERR.PARAM_MESSAGE, 'All set!');
 
