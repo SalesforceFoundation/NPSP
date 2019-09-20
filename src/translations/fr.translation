@@ -769,7 +769,7 @@ Si vous n’êtes pas sûr de savoir comment résoudre ces erreurs, publiez un m
     </customLabels>
     <customLabels>
         <name>RP_Title</name>
-        <label>Bienvenue sur Salesforce et le</label>
+        <label>Bienvenue dans Salesforce et le Nonprofit Success Pack (NPSP) !</label>
     </customLabels>
     <customLabels>
         <name>RP_TrailheadLinkLabel</name>
@@ -1035,7 +1035,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiBehaviorExactMatchOrCreate</name>
-        <label>Correspondance unique ou Créer - Importer un enregistrement s’il correspond à un enregistrement unique existant. Créer un nouvel enregistrement si aucune correspondance unique n’est trouvée.</label>
+        <label>Correspondance unique ou Créer - Importer si un enregistrement unique existe. Créer si aucune correspondance unique n'existe.</label>
     </customLabels>
     <customLabels>
         <name>bdiBehaviorRequireBestMatch</name>
@@ -1654,7 +1654,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>conMergeSelectAll</name>
-        <label>Sélectionner tous</label>
+        <label>Sélectionner tout</label>
     </customLabels>
     <customLabels>
         <name>conMergeSelectContact</name>
@@ -2570,7 +2570,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>mtchItems</name>
-        <label>{0} éléments</label>
+        <label>{0} élément(s)</label>
     </customLabels>
     <customLabels>
         <name>mtchSearchCriteriaEmpty</name>
@@ -2634,7 +2634,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>pmtWizardBtnRemovePaidPayments</name>
-        <label>Supprimer des paiements payés et annulés</label>
+        <label>Supprimer les paiements payés et annulés</label>
     </customLabels>
     <customLabels>
         <name>pmtWizardClosedLost</name>
@@ -3081,7 +3081,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>stgCRLPReset</name>
-        <label>Réinitialiser les cumuls personnalisables</label>
+        <label>Rétablir les valeurs par défaut</label>
     </customLabels>
     <customLabels>
         <name>stgDefaultValue</name>
@@ -3277,7 +3277,7 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable3</name>
         <label>
-            Supprimes les nouveaux cumuls, groupes de filtres et règles de filtrage que vous avez créés lors de l’utilisation des cumuls personnalisables ET rétablit tous les cumuls hérités NPSP à leur comportement par défaut.
+            Supprime les nouveaux cumuls, groupes de filtres et règles de filtrage que vous avez créés lors de l’utilisation des cumuls personnalisables ET rétablit tous les cumuls hérités NPSP à leur comportement par défaut.
         </label>
     </customLabels>
     <customLabels>
@@ -4286,6 +4286,14 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
     <customLabels>
         <name>stgSelectOne</name>
         <label>Sélectionner un</label>
+    </customLabels>
+    <customLabels>
+        <name>stgStatusEnabled</name>
+        <label>Activé</label>
+    </customLabels>
+    <customLabels>
+        <name>stgStatusDisabled</name>
+        <label>Désactivé</label>
     </customLabels>
     <customLabels>
         <name>stgTools</name>

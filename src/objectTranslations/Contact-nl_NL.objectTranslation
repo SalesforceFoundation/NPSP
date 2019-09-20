@@ -106,12 +106,12 @@
     <name>Primary_Affiliation__c</name>
     <help>De Account die als Primair is aangeduid in de lijst van Organisatieaffiliaties van deze Contactpersoon.</help>
     <relationshipLabel>Niet gebruiken. Gebruik Organisatieaffiliatie.</relationshipLabel>
-    <label>Primaire Affiliatie</label>
+    <label>Primair verband</label>
   </fields>
   <fields>
     <name>Primary_Contact__c</name>
     <help>Geeft aan of deze Contactpersoon is aangesteld als de Primaire Contactpersoon voor zijn Account (enkel lezen).</help>
-    <label>Primaire Contactpersoon</label>
+    <label>Primaire contactpersoon</label>
   </fields>
   <fields>
     <name>Soft_Credit_Last_N_Days__c</name>

@@ -498,7 +498,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_HardCredit</name>
-        <label>Hard Credit</label>
+        <label>"Hard Credit"</label>
     </customLabels>
     <customLabels>
         <name>CRLP_DisplayError</name>
@@ -768,7 +768,7 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
     </customLabels>
     <customLabels>
         <name>RP_Title</name>
-        <label>Welkom bij Salesforce en de</label>
+        <label>Welkom bij Salesforce en het Nonprofit Success Pack (NPSP)!</label>
     </customLabels>
     <customLabels>
         <name>RP_TrailheadLinkLabel</name>
@@ -776,7 +776,7 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
     </customLabels>
     <customLabels>
         <name>RP_TrailheadParagraph</name>
-        <label>Maak kennis met het Nonprofit Success Pack door de basics van Salesforce en het beheer van donors en vrijwilligers te leren.</label>
+        <label>Maak kennis met het Nonprofit Success Pack door de grondbeginselen van Salesforce en het beheer van donors en vrijwilligers te leren.</label>
     </customLabels>
     <customLabels>
         <name>RP_TrailheadSubtitle</name>
@@ -1034,7 +1034,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bdiBehaviorExactMatchOrCreate</name>
-        <label>Enkele Overeenkomst of Maken - Importeer een record als deze overeenkomt met één enkele bestaande record; maak een nieuwe record als er geen enkelvoudige overeenkomst wordt gevonden.</label>
+        <label>Eén overeenkomst, of Maken - Importeer een record als deze overeenkomt met één enkele bestaande record; maak een nieuwe record als er geen enkelvoudige overeenkomst wordt gevonden.</label>
     </customLabels>
     <customLabels>
         <name>bdiBehaviorRequireBestMatch</name>
@@ -1348,11 +1348,11 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeBatchSelectedFields</name>
-        <label>Geselecteerde Velden</label>
+        <label>Geselecteerde velden</label>
     </customLabels>
     <customLabels>
         <name>bgeBatchAvailableFields</name>
-        <label>Beschikbare Velden</label>
+        <label>Beschikbare velden</label>
     </customLabels>
     <customLabels>
         <name>bgeBatchBatchProcessSizeHelp</name>
@@ -1376,7 +1376,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeBatchDonorLookupInfo</name>
-        <label>Selecteer de te gebruiken velden voor het invoeren van gifts in deze batch. Donortype en een Account- of Contactpersoonopzoeking verschijnen altijd. U ziet enkel de velden waar u toegang toe hebt.</label>
+        <label>Selecteer de te gebruiken velden voor het invoeren van gifts in deze batch. Donortype en opzoekopdrachten voor Account en Contactpersoon worden altijd weergegeven. U ziet alleen de velden waartoe u toegang hebt.</label>
     </customLabels>
     <customLabels>
         <name>bgeBatchErrorRequiredFields</name>
@@ -1496,7 +1496,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeGridAllGifts</name>
-        <label>Alle Giften</label>
+        <label>Alle giften</label>
     </customLabels>
     <customLabels>
         <name>bgeGridDonorType</name>
@@ -1544,7 +1544,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeGridTotalCount</name>
-        <label>Totale Telling:</label>
+        <label>Totale telling:</label>
     </customLabels>
     <customLabels>
         <name>bgeGridWarningRequiredTotalsExpected</name>
@@ -1552,7 +1552,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeBatchDryRun</name>
-        <label>Testuitvoering Batch</label>
+        <label>Testuitvoering van batch</label>
     </customLabels>
     <customLabels>
         <name>bgeMatchingAlert</name>
@@ -1568,7 +1568,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeNewGift</name>
-        <label>Nieuwe Gift</label>
+        <label>Nieuwe gift</label>
     </customLabels>
     <customLabels>
         <name>bgeProcessBatch</name>
@@ -1580,7 +1580,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeWizardShowAdvancedOptions</name>
-        <label>Geavanceerde Opties weergeven</label>
+        <label>Geavanceerde opties weergaven</label>
     </customLabels>
     <customLabels>
         <name>bgeWizardHideAdvancedOptions</name>
@@ -2344,7 +2344,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>lblFormalGreeting</name>
-        <label>Formele Begroeting</label>
+        <label>Formele begroeting</label>
     </customLabels>
     <customLabels>
         <name>lblHousehold</name>
@@ -2352,11 +2352,11 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>lblHouseholdName</name>
-        <label>Huishoudennaam</label>
+        <label>Naam van huishouden</label>
     </customLabels>
     <customLabels>
         <name>lblInformalGreeting</name>
-        <label>Informele Begroeting</label>
+        <label>Informele begroeting</label>
     </customLabels>
     <customLabels>
         <name>lblLastName</name>
@@ -2512,7 +2512,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>lvlBtnSaveAndNew</name>
-        <label>Opslaan &amp; Nieuw</label>
+        <label>Opslaan en nieuw</label>
     </customLabels>
     <customLabels>
         <name>lvlErrorDuplicateLookups</name>
@@ -2728,7 +2728,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>pmtWizardSubtitle</name>
-        <label>Maak een of meer Betalingen voor deze Opportunity</label>
+        <label>Een of meer betalingen voor deze opportunity verrichten</label>
     </customLabels>
     <customLabels>
         <name>pmtWizardToBeCreated</name>
@@ -3078,7 +3078,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>stgCRLPReset</name>
-        <label>Aanpasbare Totaliseringen opnieuw instellen</label>
+        <label>Herstellen naar standaardinstellingen</label>
     </customLabels>
     <customLabels>
         <name>stgDefaultValue</name>
@@ -3265,7 +3265,7 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of op
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
         <label>
-            Wanneer u Aanpasbare Totaliseringen voor het eerst inschakelt, converteren we uw bestaande totaliseringen en de 87 out-of-box NPSP-totaliseringen automatisch in Aanpasbare Totaliseringen. Voor alle details raadpleegt u &lt;a href="https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations" target="_blank"&gt;dit document&lt;/a&gt;.
+            Wanneer u Aanpasbare Totaliseringen voor het eerst inschakelt, converteren we uw bestaande totaliseringen en de 87 kant-en-klare NPSP-totaliseringen automatisch in Aanpasbare Totaliseringen. Voor alle details raadpleegt u &lt;a href="https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations" target="_blank"&gt;dit document&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
             U kunt uitschakelen en terugkeren naar verouderde totaliseringen, maar nieuwe totaliseringen of wijzigingen van totaliseringen/filters die zijn aangebracht in Aanpasbare Totaliseringen worden niet toegepast op uw verouderde totaliseringsinstellingen.</label>
     </customLabels>
@@ -4282,6 +4282,14 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
         <label>Eén selecteren</label>
     </customLabels>
     <customLabels>
+        <name>stgStatusEnabled</name>
+        <label>Ingeschakeld</label>
+    </customLabels>
+    <customLabels>
+        <name>stgStatusDisabled</name>
+        <label>Uitgeschakeld</label>
+    </customLabels>
+    <customLabels>
         <name>stgTools</name>
         <label>Hulpmiddelen</label>
     </customLabels>
@@ -4311,7 +4319,7 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
     </customTabs>
     <customTabs>
         <name>Batch_Gift_Entry</name>
-        <label>Batch Giftinvoer</label>
+        <label>Batchinvoer van giften</label>
     </customTabs>
     <customTabs>
         <name>NPSP_Settings</name>

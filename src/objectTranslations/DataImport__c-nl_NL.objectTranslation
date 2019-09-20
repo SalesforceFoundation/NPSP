@@ -482,7 +482,7 @@
   <fields>
     <name>Payment_Check_Reference_Number__c</name>
     <help>Payment.npe01__Check_Reference_Number__c</help>
-    <label>Betalingscheque/ Referentienummer</label>
+    <label>Betalingscheque/referentienummer</label>
   </fields>
   <fields>
     <name>Payment_Method__c</name>

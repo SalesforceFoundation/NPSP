@@ -235,7 +235,7 @@
     <name>Primary_Contact__c</name>
     <help>De Primaire Contactpersoon voor deze Opportunity. Als dit een Individuele Donatie is, schrijft NPSP de Donatie toe aan de Primaire Contactpersoon. Als het een Organisatiedonatie is, schrijft NPSP een soft credit toe aan de Primaire Contactpersoon.</help>
     <relationshipLabel>Opportunities</relationshipLabel>
-    <label>Primaire Contactpersoon</label>
+    <label>Primaire contactpersoon</label>
   </fields>
   <fields>
     <name>Qualified_Date__c</name>

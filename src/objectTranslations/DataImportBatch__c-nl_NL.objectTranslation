@@ -37,7 +37,7 @@
   <fields>
     <name>Donation_Matching_Behavior__c</name>
     <help>Definieert hoe NPSP moet omgaan met overeenkomende Donaties.</help>
-    <label>Gedrag Overeenkomst Donatie</label>
+    <label>Overeenkomstenpatroon voor donatie</label>
     <picklistValues>
       <masterLabel>Do Not Match</masterLabel>
       <translation>Niet Laten Overeenkomen</translation>
@@ -76,12 +76,12 @@
   <fields>
     <name>Expected_Count_of_Gifts__c</name>
     <help>Het aantal giften die naar verwachting in deze Batch zullen worden ingevoerd.</help>
-    <label>Verwachte Telling van Giften</label>
+    <label>Verwachte telling van giften</label>
   </fields>
   <fields>
     <name>Expected_Total_Batch_Amount__c</name>
     <help>Het verwachte totale bedrag van alle giften ingevoerd in deze Batch.</help>
-    <label>Verwachte Totale Bedrag van Batch</label>
+    <label>Verwachte totale bedrag van batch</label>
   </fields>
   <fields>
     <name>GiftBatch__c</name>

@@ -102,7 +102,7 @@
   <fields>
     <name>Membership_Span__c</name>
     <help>El número de años que este hogar ha tenido una afiliación (solo lectura)</help>
-    <label>Duración de la afiliación</label>
+    <label>Duración de la membresía</label>
   </fields>
   <fields>
     <name>Membership_Status__c</name>

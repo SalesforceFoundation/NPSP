@@ -769,7 +769,7 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
     </customLabels>
     <customLabels>
         <name>RP_Title</name>
-        <label>Le damos la bienvenida a Salesforce y al</label>
+        <label>¡Le damos la bienvenida a Salesforce y al Nonprofit Success Pack (NPSP)!</label>
     </customLabels>
     <customLabels>
         <name>RP_TrailheadLinkLabel</name>
@@ -3081,7 +3081,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>stgCRLPReset</name>
-        <label>Restablecer Totalizaciones personalizables</label>
+        <label>Restablecer valores predeterminados</label>
     </customLabels>
     <customLabels>
         <name>stgDefaultValue</name>
@@ -4282,6 +4282,14 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customLabels>
         <name>stgSelectOne</name>
         <label>Seleccionar uno</label>
+    </customLabels>
+    <customLabels>
+        <name>stgStatusEnabled</name>
+        <label>Activado</label>
+    </customLabels>
+    <customLabels>
+        <name>stgStatusDisabled</name>
+        <label>Desactivado</label>
     </customLabels>
     <customLabels>
         <name>stgTools</name>

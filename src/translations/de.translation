@@ -768,7 +768,7 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
     </customLabels>
     <customLabels>
         <name>RP_Title</name>
-        <label>Willkommen bei Salesforce und </label>
+        <label>Willkommen bei Salesforce und dem Nonprofit Success Pack (NPSP)!</label>
     </customLabels>
     <customLabels>
         <name>RP_TrailheadLinkLabel</name>
@@ -3079,7 +3079,7 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
     </customLabels>
     <customLabels>
         <name>stgCRLPReset</name>
-        <label>Anpassbare Rollups zurücksetzen</label>
+        <label>Auf Standardeinstellungen zurücksetzen</label>
     </customLabels>
     <customLabels>
         <name>stgDefaultValue</name>
@@ -4283,6 +4283,14 @@ Hinweis: Die Registerkarte "NPSP-Einstellungen" ist in der Nonprofit Success Pac
     <customLabels>
         <name>stgSelectOne</name>
         <label>Ein Element auswählen</label>
+    </customLabels>
+    <customLabels>
+        <name>stgStatusEnabled</name>
+        <label>Aktiviert</label>
+    </customLabels>
+    <customLabels>
+        <name>stgStatusDisabled</name>
+        <label>Deaktiviert</label>
     </customLabels>
     <customLabels>
         <name>stgTools</name>
