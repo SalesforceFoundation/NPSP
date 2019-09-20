@@ -192,15 +192,15 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'test';
-        rd.npe03__Installments__c = 0;
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
-        rd.OwnerId = System.UserInfo.getUserId();
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallments(0)
+            .withContact(c.Id)
+            .withAmount(100)
+            .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
+            .withOpenEndedStatusOpen()
+            .withNextPaymentDate(TODAY.toStartOfMonth())
+            .withOwnerId()
+            .build();
         insert rd;        
         
         Opportunity o = new Opportunity();
@@ -407,13 +407,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account a = buildAccount();
         insert a;
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'test';
-        rd.npe03__Organization__c = a.id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rd.npe03__Next_Payment_Date__c = TODAY;
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withAccount(a.Id)
+            .withAmount(100)
+            .withInstallmentPeriodWeekly()
+            .withOpenEndedStatusOpen()
+            .withNextPaymentDate(TODAY)
+            .build();
         insert rd;    
         
         //create some opps
@@ -448,13 +448,14 @@ private with sharing class RD_RecurringDonations_TEST2 {
         
         Account a = buildAccount();
         insert a;
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'test';
-        rd.npe03__Organization__c = a.id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rd.npe03__Next_Payment_Date__c = TODAY;
+        
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withAccount(a.Id)
+            .withAmount(100)
+            .withInstallmentPeriodWeekly()
+            .withOpenEndedStatusOpen()
+            .withNextPaymentDate(TODAY)
+            .build();
         insert rd;      
         
          //create some opps
@@ -491,13 +492,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
         
         Account a = buildAccount();
         insert a;
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'test';
-        rd.npe03__Organization__c = a.id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rd.npe03__Next_Payment_Date__c = TODAY;
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withAccount(a.Id)
+            .withAmount(100)
+            .withInstallmentPeriodWeekly()
+            .withOpenEndedStatusOpen()
+            .withNextPaymentDate(TODAY)
+            .build();
         insert rd;                   
         
         //create some opps
@@ -730,14 +731,14 @@ private with sharing class RD_RecurringDonations_TEST2 {
         insert cfm;
 
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'TestRD CFM Insert';
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        rd.npe03__Date_Established__c = TODAY;
-        rd.npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue;
-        rd.npe03__Open_Ended_Status__c = 'Open'; 
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(c.Id)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withDateEstablished(TODAY)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build(); 
         insert rd;
         
         //check that opps have picked up the value of the RD field set through custom field mapping
@@ -822,14 +823,15 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
         // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'test28th';
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        rd.npe03__Date_Established__c = TODAY.toStartOfMonth().addDays(27);
-        rd.npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withName('test28th')
+            .withContact(c.Id)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withDateEstablished(TODAY.toStartOfMonth().addDays(27))
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
 
         Test.startTest();
         insert rd;
@@ -854,15 +856,6 @@ private with sharing class RD_RecurringDonations_TEST2 {
         insert c;
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
-        // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'test30th';
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        rd.npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-
         // Find a start date for a month that has 30 days and calculate an offset from the current month
         // to use in the asserts below to account for the fact that Opp installments are only created from
         // the current month forward even if the start date is months in the future. Theoretically could just
@@ -875,8 +868,18 @@ private with sharing class RD_RecurringDonations_TEST2 {
             startDt = startDt.addMonths(2).toStartOfMonth().addDays(-1);
             opps30thMonthOffset++;
         }
-        rd.npe03__Date_Established__c = startDt;
-        rd.npe03__Next_Payment_Date__c = null;
+
+        // This should create Installments with a date of the 28th.
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withName('test30th')
+            .withContact(c.Id)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .withDateEstablished(startDt)
+            .withNextPaymentDate(null)
+            .build();
 
         Test.startTest();
         insert rd;
@@ -910,15 +913,16 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
         // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'testEndOfMonth';
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        rd.npe03__Date_Established__c = TODAY.toStartOfMonth().addDays(12);    // this shouldn't matter
-        rd.npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rd.Always_Use_Last_Day_Of_Month__c = true;
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withName('testEndOfMonth')
+            .withContact(c.Id)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withDateEstablished(TODAY.toStartOfMonth().addDays(12))    // this shouldn't matter
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .withAlwaysUseLastDayOfMonth(true)
+            .build();
 
         Test.startTest();
         insert rd;
@@ -941,14 +945,12 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
-            Name = 'NextDonationDate',
-            npe03__Next_Payment_Date__c = nextDonationDate,
-            npe03__Date_Established__c = dateEstablished,
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = false,
-            Day_Of_Month__c = null
-        );
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+            .withNextPaymentDate(nextDonationDate)
+            .withDateEstablished(dateEstablished)
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(false)
+            .build();
 
         for (Integer i = 0; i < 3; i++) {
             recurringDonation.npe03__Next_Payment_Date__c = nextDonationDate.addDays(-i);
@@ -966,14 +968,12 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Date expectedDate = installmentDate;
         Date actualDate;
 
-        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
-            Name = 'DateProvided',
-            npe03__Next_Payment_Date__c = nextDonationDate,
-            npe03__Date_Established__c = dateEstablished,
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = false,
-            Day_Of_Month__c = null
-        );
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+            .withNextPaymentDate(nextDonationDate)
+            .withDateEstablished(dateEstablished)
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(false)
+            .build();
 
         actualDate = RD_RecurringDonations.adjustDayOfMonth(installmentDate, recurringDonation);
         System.assertEquals(expectedDate, actualDate);
@@ -986,14 +986,12 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
-            Name = 'EstablishedDate',
-            npe03__Next_Payment_Date__c = null,
-            npe03__Date_Established__c = dateEstablished,
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = false,
-            Day_Of_Month__c = null
-        );
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+            .withNextPaymentDate(null)
+            .withDateEstablished(dateEstablished)
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(false)
+            .build();
 
         for (Integer i = 0; i < 3; i++) {
             expectedDay = dateEstablished.day();
@@ -1009,14 +1007,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Date expectedDate;
         Date actualDate;
 
-        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
-            Name = 'EstablishedDate',
-            npe03__Next_Payment_Date__c = dateEstablished,
-            npe03__Date_Established__c = dateEstablished,
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = false,
-            Day_Of_Month__c = null
-        );
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+            .withNextPaymentDate(dateEstablished)
+            .withDateEstablished(dateEstablished)
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(false)
+            .withDayOfMonth(null)
+            .build();
 
         for (Integer i = 0; i < 3; i++) {
             expectedDate = installmentDate.addDays(i);
@@ -1033,14 +1030,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
-            Name = 'AlwaysEndOfMonth',
-            npe03__Next_Payment_Date__c = nextDonationDate,
-            npe03__Date_Established__c = dateEstablished,
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = true,
-            Day_Of_Month__c = '11'
-        );
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+            .withNextPaymentDate(nextDonationDate)
+            .withDateEstablished(dateEstablished)
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(true)
+            .withDayOfMonth('11')
+            .build();
 
         expectedDay = Date.daysInMonth(installmentDate.year(), installmentDate.Month());
         actualDay = RD_RecurringDonations.adjustDayOfMonth(installmentDate, recurringDonation).day();
@@ -1055,14 +1051,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
-            Name = 'DayOfMonth',
-            npe03__Next_Payment_Date__c = nextDonationDate,
-            npe03__Date_Established__c = dateEstablished,
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = false,
-            Day_Of_Month__c = '11'
-        );
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+            .withNextPaymentDate(nextDonationDate)
+            .withDateEstablished(dateEstablished)
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(false)
+            .withDayOfMonth('11')
+            .build();
 
         expectedDay = Integer.valueOf(recurringDonation.Day_Of_Month__c);
         actualDay = RD_RecurringDonations.adjustDayOfMonth(installmentDate, recurringDonation).day();
@@ -1080,12 +1075,12 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void nextDonationDateIsGreaterOrEqualToDateEstablished() {
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            npe03__Date_Established__c = Date.newInstance(2000, 11, 19),//day is greater than Day of Month
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = false,
-            Day_Of_Month__c = '15'
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withDateEstablished(Date.newInstance(2000, 11, 19)) //day is greater than Day of Month
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(false)
+            .withDayOfMonth('15')
+            .build();
 
         System.assertEquals(Date.newInstance(2000, 12, 15), RD_RecurringDonations.getStartDate(rd),
             'Expecting Next Donation Date to be greater than Date Established');
@@ -1102,13 +1097,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void nextDonationDateIsCalculatedBasedOnDayOfMonthAndCurrentNextDonationDate() {
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            npe03__Date_Established__c = Date.newInstance(2000, 11, 19),
-            npe03__Next_Payment_Date__c = Date.newInstance(2000, 11, 21),
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = false,
-            Day_Of_Month__c = '20'// Day of Month is in between Date Established and Next Donation Date
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withDateEstablished(Date.newInstance(2000, 11, 19)) 
+            .withNextPaymentDate(Date.newInstance(2000, 11, 21))
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(false)
+            .withDayOfMonth('20') // Day of Month is in between Date Established and Next Donation Date
+            .build();
 
         System.assertEquals(Date.newInstance(2000, 11, 20), RD_RecurringDonations.getStartDate(rd),
             'Expecting Next Donation Date in the same month as Next Donation Date');
@@ -1139,13 +1134,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void closeDateIsCalculatedBasedOnDayOfMonthStartDateEndOfMonth() {
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            npe03__Date_Established__c = Date.newInstance(2000, 9, 19),
-            npe03__Next_Payment_Date__c = Date.newInstance(2000, 9, 21),
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = false,
-            Day_Of_Month__c = '31'// Day of Month that does not exist in the current Next Donation Date
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withDateEstablished(Date.newInstance(2000, 9, 19)) 
+            .withNextPaymentDate(Date.newInstance(2000, 9, 21))
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(false)
+            .withDayOfMonth('31') // Day of Month that does not exist in the current Next Donation Date
+            .build();
 
         Date expectedStartDate = Date.newInstance(2000, 9, 30);
         System.assertEquals(expectedStartDate, RD_RecurringDonations.getStartDate(rd),
@@ -1167,13 +1162,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void closeDateIsCalculatedBasedOnDayOfMonth() {
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            npe03__Date_Established__c = Date.newInstance(2000, 7, 19),
-            npe03__Next_Payment_Date__c = Date.newInstance(2000, 7, 21),
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            Always_Use_Last_Day_Of_Month__c = false,
-            Day_Of_Month__c = '31'// Day of Month exists in the current Next Donation Date
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withDateEstablished(Date.newInstance(2000, 7, 19)) 
+            .withNextPaymentDate(Date.newInstance(2000, 7, 21))
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(false)
+            .withDayOfMonth('31') // Day of Month exists in the current Next Donation Date
+            .build();
 
         Date expectedStartDate = Date.newInstance(2000, 7, 31);
         System.assertEquals(expectedStartDate, RD_RecurringDonations.getStartDate(rd),
@@ -1203,18 +1198,17 @@ private with sharing class RD_RecurringDonations_TEST2 {
             Name='Orphan2',
             npe03__Open_Ended_Status__c= Label.npe03.RecurringDonationOpenStatus
         ));
-        rdList.add(new npe03__Recurring_Donation__c(
-            Name = 'test',
-            npe03__Contact__c = con.id,
-            npe03__Amount__c = 100,
-            npe03__Installments__c = 2,
-            npe03__Installment_Period__c = Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE,
-            npe03__Schedule_Type__c = Label.npe03.RecurringDonationMultiplyValue,
-            npe03__Open_Ended_Status__c = Label.npe03.RecurringDonationOpenStatus,
-            npe03__Next_Payment_Date__c = TODAY
-        ));
-
+        rdList.add(new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withAmount(100)
+            .withInstallments(2)
+            .withInstallmentPeriodMonthly()
+            .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .withNextPaymentDate(TODAY)
+            .build()
+        );
 
         //disable triggers to skip opp creation and validation, which would prevent the insertion of the orphan
         //orphaned RDs may exist due to a historical lack of RD cascade deletion when contacts and accounts were deleted
@@ -1248,15 +1242,15 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Setup the Recurring Donation
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'TestRD';
-        rd.npe03__Installments__c = 0;
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
-        rd.OwnerId = System.UserInfo.getUserId();
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallments(0)
+            .withContact(c.Id)
+            .withAmount(100)
+            .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
+            .withOpenEndedStatusOpen()
+            .withNextPaymentDate(TODAY.toStartOfMonth())
+            .withOwnerId()
+            .build();
         insert rd;        
         
         //--------------------------------
@@ -1320,28 +1314,21 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Setup the First Recurring Donation
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'TestRD1';
-        rd.npe03__Installments__c = 0;
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
-        rd.OwnerId = System.UserInfo.getUserId();
+        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
+            .withInstallments(0)
+            .withContact(c.Id)
+            .withAmount(100)
+            .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
+            .withOpenEndedStatusOpen()
+            .withNextPaymentDate(TODAY.toStartOfMonth())
+            .withOwnerId();
+
+        npe03__Recurring_Donation__c rd = rdBuilder.build();
         insert rd;        
         
         //--------------------------------
         // Setup the Second Recurring Donation
-        npe03__Recurring_Donation__c r2 = new npe03__Recurring_Donation__c();
-        r2.Name = 'TestRD2';
-        r2.npe03__Installments__c = 0;
-        r2.npe03__Contact__c = c.Id;
-        r2.npe03__Amount__c = 100;
-        r2.npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE;
-        r2.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        r2.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
-        r2.OwnerId = System.UserInfo.getUserId();
+        npe03__Recurring_Donation__c r2 = rdBuilder.build();
         insert r2;    
 
         //--------------------------------
@@ -1399,15 +1386,15 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Setup the First Recurring Donation
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'TestRD1';
-        rd.npe03__Installments__c = 0;
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 100;
-        rd.npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
-        rd.OwnerId = System.UserInfo.getUserId();
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallments(0)
+            .withContact(c.Id)
+            .withAmount(100)
+            .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
+            .withOpenEndedStatusOpen()
+            .withNextPaymentDate(TODAY.toStartOfMonth())
+            .withOwnerId()
+            .build();
         insert rd;        
         
         //--------------------------------

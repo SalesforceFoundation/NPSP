@@ -63,52 +63,6 @@ public class CDL_CascadeDeleteLookups_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Creates Contact Recurring Donations.
-    * @param List<Contact> The Contacts records that are used to create the Recurring Donations.
-    * @return List<npe03__Recurring_Donation__c> The created Contact Recurring Donations.
-    ********************************************************************************************************/
-    public static List<npe03__Recurring_Donation__c> buildContactRDs(List<Contact> testContacts) {
-        List<npe03__Recurring_Donation__c> result = new List<npe03__Recurring_Donation__c>();
-        for (Contact testContact : testContacts) {
-            result.add(
-                new npe03__Recurring_Donation__c(
-                    Name = 'CON_RD',
-                    npe03__Installments__c = 2,
-                    npe03__Amount__c = 1,
-                    npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                    npe03__Date_Established__c = Date.newinstance(1970,6,12),
-                    npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                    npe03__Contact__c = testContact.Id
-                )
-            );
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Creates Organizational Recurring Donations.
-    * @param List<Account> The Accounts records that are used to create the Recurring Donations.
-    * @return List<npe03__Recurring_Donation__c> The created Organizational Recurring Donations.
-    ********************************************************************************************************/
-    public static List<npe03__Recurring_Donation__c> buildOrganizationalRDs(List<Account> testAccounts) {
-        List<npe03__Recurring_Donation__c> result = new List<npe03__Recurring_Donation__c>();
-        for (Account testAccount : testAccounts) {
-            result.add(
-                new npe03__Recurring_Donation__c(
-                    Name = 'ORG_RD' + testAccount.Name,
-                    npe03__Installments__c = 2,
-                    npe03__Amount__c = 1,
-                    npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                    npe03__Date_Established__c = Date.newinstance(1970,6,12),
-                    npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                    npe03__Organization__c = testAccount.Id
-                )
-            );
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
     * @description Creates Opportunities.
     * @param List<Account> The Accounts records that are used to create the Opportunities.
     * @return List<Opportunity> The created Opportunities.

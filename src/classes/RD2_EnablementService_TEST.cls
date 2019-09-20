@@ -54,7 +54,7 @@ public with sharing class RD2_EnablementService_TEST {
     private static void shouldCreateNewOppOnInsertWhenEnhancementIsNotEnabled() {
         RD2_EnablementService.isRecurringDonations2Enabled = false;
 
-        npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(getContact().Id)
             .withAmount(100)
             .build();
@@ -75,7 +75,7 @@ public with sharing class RD2_EnablementService_TEST {
     private static void shouldNotCreateNewOppOnInsertWhenEnhancementIsEnabled() {
         RD2_EnablementService.isRecurringDonations2Enabled = true;
 
-        npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(getContact().Id)
             .withAmount(100)
             .build();
@@ -96,7 +96,7 @@ public with sharing class RD2_EnablementService_TEST {
     private static void shouldCreateOrUpdateOppOnUpdateWhenEnhancementIsNotEnabled() {
         RD2_EnablementService.isRecurringDonations2Enabled = false;
 
-        npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(getContact().Id)
             .withAmount(100)
             .build();
@@ -122,7 +122,7 @@ public with sharing class RD2_EnablementService_TEST {
 
         Contact contact = getContact();
 
-        npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
             .withAmount(100)
             .build();
@@ -168,7 +168,7 @@ public with sharing class RD2_EnablementService_TEST {
 
         Contact contact = getContact();
 
-        npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withName('foo')
             .withContact(contact.Id)
             .withAmount(100)

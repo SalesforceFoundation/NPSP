@@ -62,11 +62,11 @@ private with sharing class RD2_RecurringDonations_TEST {
         Contact contact = getContact();
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            new RD2_TestRecurringDonationBuilder()
+            new TEST_RecurringDonationBuilder()
                 .withContact(contact.Id)
                 .withAmount(100)
                 .build(),
-            new RD2_TestRecurringDonationBuilder()
+            new TEST_RecurringDonationBuilder()
                 .withAccount(contact.AccountId)
                 .withAmount(200)
                 .build()
@@ -105,7 +105,7 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         Contact contact = getContact();
 
-        npe03__Recurring_Donation__c rd = new RD2_TestRecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withName('foo')
             .withAccount(contact.AccountId)
             .withAmount(100)
@@ -137,7 +137,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         RD2_EnablementService.isRecurringDonations2Enabled = true;
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c> {
-            new RD2_TestRecurringDonationBuilder()
+            new TEST_RecurringDonationBuilder()
                 .withAccount(UTIL_UnitTestData_TEST.mockId(Account.SObjectType))
                 .withAmount(100)
                 .withId(UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType))

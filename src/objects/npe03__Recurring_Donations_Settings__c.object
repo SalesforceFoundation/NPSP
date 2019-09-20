@@ -11,6 +11,18 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>InstallmentOppStageName__c</fullName>
+        <description>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</inlineHelpText>
+        <label>Stage Name for Installment Opportunities</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>IsRecurringDonations2Enabled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>This option enables Enhanced Recurring Donations. IMPORTANT: You must enable Enhanced Recurring Donations in NPSP Settings. Enabling in Custom Settings may cause data inconsistencies.</description>

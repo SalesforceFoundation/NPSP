@@ -52,13 +52,13 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
         insert contact;
 
         insert new List<npe03__Recurring_Donation__c>{
-            new RD2_TestRecurringDonationBuilder()
+            new TEST_RecurringDonationBuilder()
                 .withName('foo')
                 .withAccount(acc.Id)
                 .withAmount(100)
                 .withCurrencyIsoCode('USD')
                 .build(),
-            new RD2_TestRecurringDonationBuilder()
+            new TEST_RecurringDonationBuilder()
                 .withName('bar')
                 .withContact(contact.Id)
                 .withAmount(200)
