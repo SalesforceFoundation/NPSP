@@ -135,11 +135,9 @@ public class RD_RecurringDonations_TEST {
 
         String name = 'foo';
         npe03__Recurring_Donation__c rd = buildRecurringDonationMonthlyInstallment(null);
+        rd.Name = name;
         rd.npe03__Organization__c = a.id;     
         insert rd;
-        
-        rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(name, rd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
 
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(name, rd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');

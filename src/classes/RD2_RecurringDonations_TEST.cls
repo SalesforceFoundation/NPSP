@@ -99,10 +99,6 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static void shouldAutogenerateNameOnUpdate() {
         RD2_EnablementService.isRecurringDonations2Enabled = true;
 
-        RD2_NamingService.settings = (RD2_Settings) Test.createStub(
-            RD2_Settings.class, new RD2_Settings_TEST.Stub()
-        );
-
         Contact contact = getContact();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()

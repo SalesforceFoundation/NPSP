@@ -588,6 +588,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.npe03__Update_Check_Interval__c = 90;
             settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
 
+            settings.IsRecurringDonations2Enabled__c = false;
             settings.EnableAutomaticNaming__c = false;
 
             List<RecordType> oppRecordTypes = [select id from RecordType where sobjecttype = 'Opportunity' and IsActive = true];
@@ -838,6 +839,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.npe03__Error_Email_Notifications__c = settings.npe03__Error_Email_Notifications__c;
         recurringDonationsSettings.Recurring_Donation_Batch_Size__c = settings.Recurring_Donation_Batch_Size__c;
 
+        recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
         recurringDonationsSettings.EnableAutomaticNaming__c = settings.EnableAutomaticNaming__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;

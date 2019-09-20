@@ -346,10 +346,13 @@ public with sharing class RD2_EnablementService_TEST {
     /***
     * @description Stubs custom settings configuration to enable enhanced Recurring Donations
     */
-    private static void configureRecurringDonations2Enabled() {
-        RD2_EnablementService.settings = (RD2_Settings) Test.createStub(
-            RD2_Settings.class, 
-            new RD2_Settings_TEST.Stub().withRecurringDonations2Enabled()
+    private static void configureRecurringDonations2Enabled() {        
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                IsRecurringDonations2Enabled__c = true,
+                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Opportunity_Forecast_Months__c = 12
+            )
         );
     }
 

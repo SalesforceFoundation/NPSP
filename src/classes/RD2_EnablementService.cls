@@ -37,20 +37,6 @@
 public with sharing class RD2_EnablementService {
 
     /***
-    * @description Contains enhanced Recurring Donations settings 
-    */
-    @TestVisible
-    private static RD2_Settings settings {
-        get {
-            if (settings == null) {
-                settings = new RD2_Settings();
-            }
-            return settings;
-        }
-        set;
-    }
-
-    /***
     * @description Contains attribute confirming if LEX is enabled
     */
     @TestVisible
@@ -88,8 +74,8 @@ public with sharing class RD2_EnablementService {
         get {
             if (isRecurringDonations2Enabled == null) {
                 isRecurringDonations2Enabled = 
-                    UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled()
-                    && settings.isRecurringDonations2Enabled();
+                    UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true
+                    && UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
             }
             return isRecurringDonations2Enabled;
         }

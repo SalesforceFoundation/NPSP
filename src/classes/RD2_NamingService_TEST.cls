@@ -444,12 +444,20 @@ public with sharing class RD2_NamingService_TEST {
     * @description Enables Automatic Naming Enabled for tests
     */
     public static void enableAutomaticNaming() {
+        RD2_NamingService.isAutomaticNamingEnabled = true;
+
+        /*
+        Recurring donation insert starts failing when RD custom settings are set in tests;
+
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
-                EnableAutomaticNaming__c = true
+                EnableAutomaticNaming__c = true,
+                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Opportunity_Forecast_Months__c = 12
             )
         );
-        //set the property to null so it can be reloaded for tests? //TODO
+        */
+        
     }
 
     /***
