@@ -333,6 +333,8 @@
         <members>RD2_Donor_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
+        <members>RD2_RecurringDonationNaming_TDTM</members>
+        <members>RD2_RecurringDonationNaming_TEST</members>
         <members>RD2_RecurringDonationsGateway</members>
         <members>RD2_RecurringDonationsGateway_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>

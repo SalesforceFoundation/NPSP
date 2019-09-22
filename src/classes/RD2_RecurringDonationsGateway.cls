@@ -41,13 +41,15 @@ public with sharing class RD2_RecurringDonationsGateway {
     * @param accountIds Account Ids
     * @return List<npe03__Recurring_Donation__c>
     */
-    public List<npe03__Recurring_Donation__c> getRecordsReferencingAccounts(List<Id> accountIds) {
-        if (accountIds == null || accountIds.isEmpty()) {
+    public List<npe03__Recurring_Donation__c> getRecordsReferencingAccounts(Set<Id> accountIds) {
+        if (accountIds == null) {
             return new List<npe03__Recurring_Donation__c>();
         }
 
-        Set<Id> uniqueIds = new Set<Id>(accountIds);
-        uniqueIds.remove(null);
+        accountIds.remove(null);
+        if (accountIds.isEmpty()) {
+            return new List<npe03__Recurring_Donation__c>();
+        }
 
         return [
             SELECT 
@@ -66,11 +68,14 @@ public with sharing class RD2_RecurringDonationsGateway {
     * @return List<npe03__Recurring_Donation__c>
     */
     public List<npe03__Recurring_Donation__c> getRecordsReferencingContacts(Set<Id> contactIds) {
-        if (contactIds == null || contactIds.isEmpty()) {
+        if (contactIds == null) {
             return new List<npe03__Recurring_Donation__c>();
         }
 
         contactIds.remove(null);
+        if (contactIds.isEmpty()) {
+            return new List<npe03__Recurring_Donation__c>();
+        }
         
         return [
             SELECT 

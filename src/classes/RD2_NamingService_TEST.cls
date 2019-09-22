@@ -389,6 +389,86 @@ public with sharing class RD2_NamingService_TEST {
     }
     
 
+    /***
+    * @description Verifies Recurring Donation Name is updated for specified Account
+    */
+    @isTest
+    private static void shouldUpdateNameForSpecifiedAccounts() {
+        insert acc = new Account(Name = 'RD2 Organization');
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            new TEST_RecurringDonationBuilder()
+                .withAccount(acc.Id)
+                .withAmount(100)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withName('foo')
+                .withContact(contact.Id)
+                .withAmount(200)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build()
+        };
+        insert rds;
+
+        Test.startTest();
+        enableAutomaticNaming();
+
+        System.enqueueJob(new RD2_NamingService.NamingQueueable(new Set<Id>{ acc.Id }, Account.SObjectType));
+        Test.stopTest();
+
+        for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
+            String expectedName = rd.npe03__Organization__c != null
+                ? RD2_NamingService_TEST.getExpectedName(acc, '100')
+                : 'foo';
+
+            System.assertEquals(expectedName, rd.Name, 'Recurring Donation name should be updated for the Account only');
+        }
+    }
+
+    /***
+    * @description Verifies Recurring Donation Name is updated for specified Contacts
+    */
+    @isTest
+    private static void shouldUpdateNameForSpecifiedContacts() {
+        insert acc = new Account(Name = 'RD2 Organization');
+
+        Contact testContact = UTIL_UnitTestData_TEST.getContact();
+        insert testContact;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            new TEST_RecurringDonationBuilder()
+                .withName('foo')
+                .withAccount(acc.Id)
+                .withAmount(100)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withContact(testContact.Id)
+                .withAmount(200)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build()
+        };
+        insert rds;
+
+        Test.startTest();
+        enableAutomaticNaming();
+
+        System.enqueueJob(new RD2_NamingService.NamingQueueable(new Set<Id>{ testContact.Id }, Contact.SObjectType));
+        Test.stopTest();
+
+        for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
+            String expectedName = rd.npe03__Contact__c != null
+                ? RD2_NamingService_TEST.getExpectedName(testContact, '200')
+                : 'foo';
+
+            System.assertEquals(expectedName, rd.Name, 'Recurring Donation name should be updated for the Contact only');
+        }
+    }
+
 
     // Helpers
     //////////////////
@@ -447,7 +527,11 @@ public with sharing class RD2_NamingService_TEST {
         RD2_NamingService.isAutomaticNamingEnabled = true;
 
         /*
-        Recurring donation insert starts failing when RD custom settings are set in tests;
+        Recurring donation DML operation start failing when RD custom settings are (re)set in tests.
+        Thus, RD2_NamingService.isAutomaticNamingEnabled is set for all calling methods instead
+        setting the RD custom settings field. This way we can isolate the error source in the case of exception
+        since common static custom settings var is unchanged.
+        The RD2_NamingService class does test the custom setting field setup and retrieval.
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(

@@ -43,14 +43,14 @@ public with sharing class RD2_NamingService {
     * @description Checks if the Recurring Donation automatic naming is turned on
     */
     @TestVisible
-    private static Boolean isAutomaticNamingEnabled {
+    public static Boolean isAutomaticNamingEnabled {
         get {
             if (isAutomaticNamingEnabled == null) {
                 isAutomaticNamingEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().EnableAutomaticNaming__c == true;
             }
             return isAutomaticNamingEnabled;
         }
-        set;
+        private set;
     }
 
     /***
@@ -63,20 +63,6 @@ public with sharing class RD2_NamingService {
                 donorGateway = new RD2_Donor.Gateway();
             }
             return donorGateway;
-        }
-        set;
-    }
-
-    /***
-    * @description Returns Recurring Donation records
-    */
-    @TestVisible
-    private RD2_RecurringDonationsGateway rdGateway {
-        get {
-            if (rdGateway == null) {
-                rdGateway = new RD2_RecurringDonationsGateway();
-            }
-            return rdGateway;
         }
         set;
     }
@@ -203,5 +189,95 @@ public with sharing class RD2_NamingService {
         }
 
         return formattedAmount;
+    }
+
+    /***
+    * @description
+    */
+    public class NamingQueueable implements Queueable {
+        Set<Id> recordIds;
+        SObjectType sObjType;
+
+        /***
+        * @description Returns Recurring Donation records
+        */
+        @TestVisible
+        private RD2_RecurringDonationsGateway rdGateway {
+            get {
+                if (rdGateway == null) {
+                    rdGateway = new RD2_RecurringDonationsGateway();
+                }
+                return rdGateway;
+            }
+            set;
+        }
+
+        /***
+        * @description
+        */
+        public NamingQueueable(Set<Id> recordIds, SObjectType sObjType) {
+            this.recordIds = recordIds;
+            this.sObjType = sObjType;
+        }
+
+        /***
+        * @description
+        */
+        public void execute(QueueableContext context) {
+            if (recordIds == null || recordIds.isEmpty() || !RD2_NamingService.isAutomaticNamingEnabled) {
+                return;
+            }
+
+            updateNameOnChange();
+        }
+
+        /***
+        * @description Updates Recurring Donation names on Account and/or Contact Name change
+        */
+        private void updateNameOnChange() {
+            List<npe03__Recurring_Donation__c> rds = getAccountRecurringDonations();
+            rds.addAll(getContactRecurringDonations());
+
+            if (!rds.isEmpty()) {
+                UTIL_DMLService.updateRecords(rds);
+            }
+        } 
+
+        /***
+        * @description
+        */
+        private List<npe03__Recurring_Donation__c> getAccountRecurringDonations() {
+            List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+
+            if (sObjType != Account.SObjectType) {
+                return rds; 
+            }
+
+            for (npe03__Recurring_Donation__c rd : rdGateway.getRecordsReferencingAccounts(recordIds)) {
+                rd.Name = System.Label.npo02.NameReplacementText;
+                rds.add(rd);
+            }
+
+            return rds;
+        }
+
+        /***
+        * @description
+        */
+        private List<npe03__Recurring_Donation__c> getContactRecurringDonations() {
+            List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+
+            if (sObjType != Contact.SObjectType) {
+                return rds; 
+            }
+
+            for (npe03__Recurring_Donation__c rd : rdGateway.getRecordsReferencingContacts(recordIds)) {
+                rd.Name = System.Label.npo02.NameReplacementText;
+                rds.add(rd);
+            }
+
+            return rds;            
+        }
+
     }
 }

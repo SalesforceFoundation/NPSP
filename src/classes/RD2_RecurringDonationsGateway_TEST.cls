@@ -36,9 +36,10 @@
 */
 @isTest
 private with sharing class RD2_RecurringDonationsGateway_TEST {
-    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
-    private static String TEST_NAME = 'Recurring Donation Gateway';
+    private static final String TEST_NAME = 'Recurring Donation Gateway';
 
+    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
+    
     /***
      * Creates test data
      */
@@ -74,7 +75,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
     private static void shouldReturnRecordsForSpecifiedAccount() {
         Account acc = getAccount();
         List<npe03__Recurring_Donation__c> rds = rdGateway.getRecordsReferencingAccounts(
-            new List<Id>{ acc.Id, getContact().Id, null, acc.Id }
+            new Set<Id>{ acc.Id, getContact().Id, null, acc.Id }
         );
 
         System.assertEquals(1, rds.size(), 'Number of returned records should match');
