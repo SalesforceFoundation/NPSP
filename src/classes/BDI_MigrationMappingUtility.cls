@@ -199,7 +199,7 @@ public with sharing class BDI_MigrationMappingUtility {
     */
     public BDI_MigrationMappingUtility(BDI_MigrationMappingHelper helper) {
         this.helper = helper;
-        this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        this.dataImportSettings = Data_Import_Settings__c.getInstance();
         this.referenceObjectMappingsByDeveloperName =
             helper.getObjectMappingsBySetDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
     }
