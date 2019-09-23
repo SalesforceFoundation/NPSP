@@ -244,7 +244,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_CustomizableRollups.name(),
                 (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_BDICMT.name(),
-                (stgSvc.stgDI.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false));
+                (Data_Import_Settings__c.getInstance().Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING));
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
