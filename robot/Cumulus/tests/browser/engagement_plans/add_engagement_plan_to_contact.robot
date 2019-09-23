@@ -29,5 +29,5 @@ Delete Engagement Plan
 Verify Tasks Exist Under Activity
     [tags]  unstable
     Scroll Page To Location    0    0
-    Click Span Button    More Steps
+    Click Element With Locator    engagement_plan.activity-button    showMoreButton
     Check Activity Tasks    ${task1}    ${sub_task}    ${task2}
