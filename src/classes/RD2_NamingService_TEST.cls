@@ -39,6 +39,7 @@ public with sharing class RD2_NamingService_TEST {
     private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
 
     private static final Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+
     private static final String currencyCodeOrSymbol = isMultiCurrencyEnabled
         ? UserInfo.getDefaultCurrency() + ' '
         : UTIL_Currency.getInstance().getCurrencySymbol(UserInfo.getDefaultCurrency());
@@ -147,7 +148,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Verifies formatted name amount does not contain .00 
+    * @description Verifies formatted name amount does not contain trailing zeros (.00 or .0)
     */
     @isTest
     private static void shouldReturnAmountWithoutTrailingZeros() {
@@ -164,7 +165,8 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Verifies donor name is abbreviated if total name construct is longer than max name length
+    * @description Verifies donor name is abbreviated if total name construct is longer 
+    * than max name length on Recurring Donations (80 chars)
     */
     @isTest
     private static void shouldAbbreviateDonorNameIfLengthIsOverMax() {
@@ -191,7 +193,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Should mark record as changed when Account has changed
+    * @description Should mark Recurring Donation record as changed when its Account has changed
     */
     @isTest
     private static void shouldReturnTrueWhenAccountHasChanged() {
@@ -215,7 +217,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Should mark record as changed when Contact has changed
+    * @description Should mark Recurring Donation record as changed when its Contact has changed
     */
     @isTest
     private static void shouldReturnTrueWhenContactHasChanged() {
@@ -239,7 +241,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Should mark record as changed when Amount has changed
+    * @description Should mark Recurring Donation record as changed when its Amount has changed
     */
     @isTest
     private static void shouldReturnTrueWhenAmountHasChanged() {
@@ -257,7 +259,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Should mark record as changed when CurrencyIsoCode has changed
+    * @description Should mark Recurring Donation record as changed when its CurrencyIsoCode has changed
     */
     @isTest
     private static void shouldReturnTrueWhenCurrencyHasChanged() {
@@ -281,7 +283,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Should mark record as changed when name contains REPLACE keyword has changed
+    * @description Should mark Recurring Donation record as changed when its when name contains REPLACE keyword
     */
     @isTest
     private static void shouldReturnTrueWhenNameIsTheReplaceKeyword() {
@@ -300,7 +302,8 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Should not mark record as changed when no field used in the name construct has changed
+    * @description Should not mark Recurring Donation record as changed 
+    * when no field used in the name construct has changed
     */
     @isTest
     private static void shouldReturnFalseWhenNameConstructKeyFieldsAreUnchanged() {
@@ -320,7 +323,8 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Verifies name is auto-generated only for records having name construct fields changed
+    * @description Verifies name is auto-generated only for Recurring Donation records 
+    * having name construct fields changed
     */
     @isTest
     private static void shouldAutogenerateNameWhenNameConstructKeyFieldsAreChanged() {
@@ -389,6 +393,86 @@ public with sharing class RD2_NamingService_TEST {
     }
     
 
+    /***
+    * @description Verifies Recurring Donation Name is updated for the specified Account
+    */
+    @isTest
+    private static void shouldUpdateNameForSpecifiedAccounts() {
+        insert acc = new Account(Name = 'RD2 Organization');
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            new TEST_RecurringDonationBuilder()
+                .withAccount(acc.Id)
+                .withAmount(100)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withName('foo')
+                .withContact(contact.Id)
+                .withAmount(200)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build()
+        };
+        insert rds;
+
+        Test.startTest();
+        enableAutomaticNaming();
+
+        System.enqueueJob(new RD2_NamingService.NamingQueueable(new Set<Id>{ acc.Id }, Account.SObjectType));
+        Test.stopTest();
+
+        for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
+            String expectedName = rd.npe03__Organization__c != null
+                ? RD2_NamingService_TEST.getExpectedName(acc, '100')
+                : 'foo';
+
+            System.assertEquals(expectedName, rd.Name, 'Recurring Donation name should be updated for the Account only');
+        }
+    }
+
+    /***
+    * @description Verifies Recurring Donation Name is updated for the specified Contact
+    */
+    @isTest
+    private static void shouldUpdateNameForSpecifiedContacts() {
+        insert acc = new Account(Name = 'RD2 Organization');
+
+        Contact testContact = UTIL_UnitTestData_TEST.getContact();
+        insert testContact;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            new TEST_RecurringDonationBuilder()
+                .withName('foo')
+                .withAccount(acc.Id)
+                .withAmount(100)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withContact(testContact.Id)
+                .withAmount(200)
+                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .build()
+        };
+        insert rds;
+
+        Test.startTest();
+        enableAutomaticNaming();
+
+        System.enqueueJob(new RD2_NamingService.NamingQueueable(new Set<Id>{ testContact.Id }, Contact.SObjectType));
+        Test.stopTest();
+
+        for (npe03__Recurring_Donation__c rd : rdGateway.getRecords(rds)) {
+            String expectedName = rd.npe03__Contact__c != null
+                ? RD2_NamingService_TEST.getExpectedName(testContact, '200')
+                : 'foo';
+
+            System.assertEquals(expectedName, rd.Name, 'Recurring Donation name should be updated for the Contact only');
+        }
+    }
+
 
     // Helpers
     //////////////////
@@ -396,6 +480,9 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Builds expected name
+    * @param acc Recurring Donation Account
+    * @param amount String representation of the expected Amount value in the name
+    * @return String Expected Recurring Donation name
     */
     public static String getExpectedName(Account acc, String amount) {
         return acc.Name + ' ' + currencyCodeOrSymbol + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
@@ -403,6 +490,9 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Builds expected name
+    * @param contact Recurring Donation Contact
+    * @param amount String representation of the expected Amount value in the name
+    * @return String Expected Recurring Donation name
     */
     public static String getExpectedName(Contact contact, String amount) {
         String contactName = (String.isBlank(contact.FirstName) ? '' : (contact.FirstName + ' ')) + contact.LastName;
@@ -412,6 +502,8 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Builds naming service instance with specified Account as donor
+    * @param acc Recurring Donation Account
+    * @return RD2_NamingService Instance of the Recurring Donation Naming Service
     */
     private static RD2_NamingService buildAutomaticNamingService(Account acc) {
         return buildAutomaticNamingService(new List<Account>{ acc }, new List<Contact>());
@@ -419,6 +511,9 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Builds naming service instance with specified Accounts and Contacts as donors
+    * @param accounts Recurring Donation Accounts to be returned from the Mock Donor gateway 
+    * @param contacts Recurring Donation Contacts to be returned from the Mock Donor gateway 
+    * @return RD2_NamingService Instance of the Recurring Donation Naming Service
     */
     private static RD2_NamingService buildAutomaticNamingService(List<Account> accounts, List<Contact> contacts) {
         RD2_NamingService service = buildAutomaticNamingService();
@@ -433,6 +528,7 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Constructs naming service with Automatic Naming Enabled
+    * @return RD2_NamingService Instance of the Recurring Donation Naming Service
     */
     private static RD2_NamingService buildAutomaticNamingService() {
         enableAutomaticNaming();
@@ -442,12 +538,17 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Enables Automatic Naming Enabled for tests
+    * @return none
     */
     public static void enableAutomaticNaming() {        
         RD2_NamingService.isAutomaticNamingEnabled = true;
 
         /*
-        Recurring donation insert starts failing when RD custom settings are set in tests;
+        Recurring donation DML operation start failing when RD custom settings are (re)set in tests.
+        Thus, RD2_NamingService.isAutomaticNamingEnabled is set for all calling methods instead
+        setting the RD custom settings field. This way we can isolate the error source in the case of exception
+        since common static custom settings var is unchanged.
+        The RD2_NamingService class does test the custom setting field setup and retrieval.
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
@@ -461,6 +562,7 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Builds an Account and sets mock Id as the Id
+    * @return Account Mock Account record
     */
     private static Account getAccountMock() {
         return new Account(
@@ -471,6 +573,7 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Builds a Contact and sets mock Id as the Id
+    * @return Mock Contact record
     */
     private static Contact getContactMock() {
         return new Contact(

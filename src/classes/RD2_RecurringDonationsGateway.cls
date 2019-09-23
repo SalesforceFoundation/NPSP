@@ -37,17 +37,19 @@
 public with sharing class RD2_RecurringDonationsGateway {
 
     /***
-    * @description Retrieves recurring donation records for the specified Account Ids
+    * @description Retrieves Recurring Donation records for specified Account Ids
     * @param accountIds Account Ids
     * @return List<npe03__Recurring_Donation__c>
     */
-    public List<npe03__Recurring_Donation__c> getRecordsReferencingAccounts(List<Id> accountIds) {
-        if (accountIds == null || accountIds.isEmpty()) {
+    public List<npe03__Recurring_Donation__c> getRecordsReferencingAccounts(Set<Id> accountIds) {
+        if (accountIds == null) {
             return new List<npe03__Recurring_Donation__c>();
         }
 
-        Set<Id> uniqueIds = new Set<Id>(accountIds);
-        uniqueIds.remove(null);
+        accountIds.remove(null);
+        if (accountIds.isEmpty()) {
+            return new List<npe03__Recurring_Donation__c>();
+        }
 
         return [
             SELECT 
@@ -61,16 +63,19 @@ public with sharing class RD2_RecurringDonationsGateway {
     }
     
     /***
-    * @description Retrieves recurring donation records for the specified Contact Ids
+    * @description Retrieves Recurring Donation records for specified Contact Ids
     * @param contactIds Contact Ids
     * @return List<npe03__Recurring_Donation__c>
     */
     public List<npe03__Recurring_Donation__c> getRecordsReferencingContacts(Set<Id> contactIds) {
-        if (contactIds == null || contactIds.isEmpty()) {
+        if (contactIds == null) {
             return new List<npe03__Recurring_Donation__c>();
         }
 
         contactIds.remove(null);
+        if (contactIds.isEmpty()) {
+            return new List<npe03__Recurring_Donation__c>();
+        }
         
         return [
             SELECT 
@@ -83,7 +88,7 @@ public with sharing class RD2_RecurringDonationsGateway {
     }
 
     /***
-    * @description Retrieves recurring donation record for the specified Id
+    * @description Retrieves Recurring Donation record for the specified Id
     * @param rdId Id of the recurring donation
     * @return npe03__Recurring_Donation__c
     */
@@ -92,7 +97,7 @@ public with sharing class RD2_RecurringDonationsGateway {
     }
 
     /***
-    * @description Retrieves recurring donation records for the specified records
+    * @description Retrieves Recurring Donation records for the specified records
     * @param List<npe03__Recurring_Donation__c> Recurring donations
     * @return List<npe03__Recurring_Donation__c>
     */
@@ -105,7 +110,7 @@ public with sharing class RD2_RecurringDonationsGateway {
     }
 
     /***
-    * @description Retrieves recurring donation records for the specified Ids
+    * @description Retrieves Recurring Donation records for the specified Ids
     * @param rdIds Ids of the recurring donations
     * @return List<npe03__Recurring_Donation__c>
     */

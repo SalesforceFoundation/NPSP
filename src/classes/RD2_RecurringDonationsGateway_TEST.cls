@@ -36,9 +36,10 @@
 */
 @isTest
 private with sharing class RD2_RecurringDonationsGateway_TEST {
-    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
-    private static String TEST_NAME = 'Recurring Donation Gateway';
+    private static final String TEST_NAME = 'Recurring Donation Gateway';
 
+    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
+    
     /***
      * Creates test data
      */
@@ -68,13 +69,13 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
     }
 
     /***
-    * @description Verifies Recurring Donations are returned for specified Account
+    * @description Verifies Recurring Donations are returned for the specified Account
     */
     @isTest
     private static void shouldReturnRecordsForSpecifiedAccount() {
         Account acc = getAccount();
         List<npe03__Recurring_Donation__c> rds = rdGateway.getRecordsReferencingAccounts(
-            new List<Id>{ acc.Id, getContact().Id, null, acc.Id }
+            new Set<Id>{ acc.Id, getContact().Id, null, acc.Id }
         );
 
         System.assertEquals(1, rds.size(), 'Number of returned records should match');
@@ -82,7 +83,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
     }
 
     /***
-    * @description Verifies Recurring Donations are returned for specified Contact
+    * @description Verifies Recurring Donations are returned for the specified Contact
     */
     @isTest
     private static void shouldReturnRecordsForSpecifiedContact() {
@@ -95,7 +96,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
     }
 
     /***
-    * @description Verifies Recurring Donations are returned for specified Ids
+    * @description Verifies Recurring Donations are returned for specified Recurring Donation Ids
     */
     @isTest
     private static void shouldReturnRecords() {
@@ -115,6 +116,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
 
     /***
      * @description Returns Account created as the test data in this class
+     * @return Account
      */
     private static Account getAccount() {
         return [
@@ -126,6 +128,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
 
     /***
      * @description Returns Contact created as the test data in this class
+     * @return Contact
      */
     private static Contact getContact() {
         return [
