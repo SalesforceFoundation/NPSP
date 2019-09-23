@@ -35,7 +35,12 @@
 *
 */
 public without sharing class RD2_RecurringDonationNaming_TDTM extends TDTM_Runnable {
+    private static final SObjectType ACCOUNT_SOBJECT_TYPE = Account.SObjectType;
+    private static final SObjectType CONTACT_SOBJECT_TYPE = Contact.SObjectType;
 
+    /***
+    * @description Represents Recurring Donation Naming Service instance
+    */
     @TestVisible
     private RD2_NamingService namingService {
         get {
@@ -49,7 +54,8 @@ public without sharing class RD2_RecurringDonationNaming_TDTM extends TDTM_Runna
 
     /***
     * @description 
-    * Trigger handler on Account/Contact SObject updating related Recurring Donations' name
+    * Trigger handler on Account/Contact SObject 
+    * to update related Recurring Donations' name asynchronously
     * if the Account/Contact name has been changed. 
     *
     * @param sObjects Trigger.new records
@@ -84,13 +90,17 @@ public without sharing class RD2_RecurringDonationNaming_TDTM extends TDTM_Runna
     }
 
     /***
-    * @description 
+    * @description Specifies if the Account/Contact record Name has been changed
+    * @param record Updated Account/Contact record
+    * @param oldRecord Old Account/Contact records
+    * @param sObjType SObjectType of the provided record
+    * @return Boolean Indication if the Account/Contact Name is changed
     */
     private Boolean hasChanged(SObject record, SObject oldRecord, SObjectType sObjType) {
-        if (sObjType == Account.SObjectType) {
+        if (sObjType == ACCOUNT_SOBJECT_TYPE) {
             return (String) record.get('Name') != (String) oldRecord.get('Name');
 
-        } else if (sObjType == Contact.SObjectType) {
+        } else if (sObjType == CONTACT_SOBJECT_TYPE) {
             return (String) record.get('FirstName') != (String) oldRecord.get('FirstName') 
                 || (String) record.get('LastName') != (String) oldRecord.get('LastName');
         }

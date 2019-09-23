@@ -38,7 +38,7 @@
 public with sharing class RD2_Donor_TEST {
 
     /***
-    * @description Verifies Donor Name is set correctly based on Account data
+    * @description Verifies Donor Name is set correctly based on the Account data
     */
     @isTest
     private static void shouldSetDonorWhenAccountDataIsProvided() {
@@ -53,7 +53,7 @@ public with sharing class RD2_Donor_TEST {
     }
 
     /***
-    * @description Verifies Donor Name is set correctly based on Contact data
+    * @description Verifies Donor Name is set correctly based on the Contact data
     */
     @isTest
     private static void shouldSetDonorWhenContactDataIsProvided() {
@@ -69,7 +69,7 @@ public with sharing class RD2_Donor_TEST {
     }
 
     /***
-    * @description Verifies Donor Name includes Contact LastName only when FirstName is not provided
+    * @description Verifies Donor Name includes Contact LastName when FirstName is not provided
     */
     @isTest
     private static void shouldSetDonorWhenContactFirstNameIsNotProvided() {
@@ -84,7 +84,8 @@ public with sharing class RD2_Donor_TEST {
     }
 
     /***
-    * @description Verifies Donor (Account/Contact) names are queried in order to construct the name
+    * @description Verifies Donor (Account/Contact) names are queried 
+    * in order to construct the Recurring Donation name
     */
     @isTest
     private static void shouldReturnReferencedAccountsAndContactsAsDonors() {
@@ -127,6 +128,11 @@ public with sharing class RD2_Donor_TEST {
     public class GatewayMock implements RD2_Donor.IGateway {
         private Map<Id, RD2_Donor.Record> donorById = new Map<Id, RD2_Donor.Record>();
 
+        /***
+        * @description Specifies Account records to return as donor data
+        * @param accounts Account records
+        * @return GatewayMock Mock Donor Gateway instance
+        */
         public GatewayMock withDonors(List<Account> accounts) {
             for (Account acc : accounts) {
                 donorById.put(acc.Id, new RD2_Donor.Record(acc.Id, acc.Name));
@@ -134,6 +140,11 @@ public with sharing class RD2_Donor_TEST {
             return this;
         }
 
+        /***
+        * @description Specifies Contact records to return as donor data
+        * @param contacts Contact records
+        * @return GatewayMock Mock Donor Gateway instance
+        */
         public GatewayMock withDonors(List<Contact> contacts) {
             for (Contact c : contacts) {
                 donorById.put(c.Id, new RD2_Donor.Record(c.Id, c.FirstName, c.LastName));
@@ -141,6 +152,11 @@ public with sharing class RD2_Donor_TEST {
             return this;
         }
 
+        /***
+        * @description Returns donor data for the specified Recurring Donation records
+        * @param rds Recurring Donation records
+        * @return Map<Id, RD2_Donor.Record> Donors by Id
+        */
         public Map<Id, RD2_Donor.Record> getDonors(List<npe03__Recurring_Donation__c> rds) {
             return donorById;
         }

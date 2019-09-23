@@ -36,6 +36,9 @@
 */
 public with sharing class RD2_Donor {
 
+    /***
+    * @description Donor Gateway interface
+    */
     public interface IGateway {
         Map<Id, Record> getDonors(List<npe03__Recurring_Donation__c> rds);
     }
@@ -47,11 +50,22 @@ public with sharing class RD2_Donor {
         public Id recordId { get; private set; }
         public String name { get; private set; }
 
+        /***
+        * @description Constructor
+        * @param recordId Account record Id
+        * @param name Account record name
+        */
         public Record(Id recordId, String name) {
             this.recordId = recordId;
             this.name = name;
         }
 
+        /***
+        * @description Constructor
+        * @param recordId Contact record Id
+        * @param firstName Contact record FirstName
+        * @param lastName Contact record LastName
+        */
         public Record(Id recordId, String firstName, String lastName) {
             this.recordId = recordId;
             this.name = (String.isBlank(firstName) ? '' : firstName + ' ') + lastName;
@@ -65,7 +79,9 @@ public with sharing class RD2_Donor {
     public class Gateway implements IGateway {
 
         /***
-        * @description Returns donor information
+        * @description Returns donor information for provided Recurring Donation records
+        * @param rds Recurring Donation records
+        * @return Map<Id, Record> Donor records by Id
         */
         public Map<Id, Record> getDonors(List<npe03__Recurring_Donation__c> rds) {
             Map<Id, Record> donorById = new Map<Id, Record>();

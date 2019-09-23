@@ -69,7 +69,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
     }
 
     /***
-    * @description Verifies Recurring Donations are returned for specified Account
+    * @description Verifies Recurring Donations are returned for the specified Account
     */
     @isTest
     private static void shouldReturnRecordsForSpecifiedAccount() {
@@ -83,7 +83,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
     }
 
     /***
-    * @description Verifies Recurring Donations are returned for specified Contact
+    * @description Verifies Recurring Donations are returned for the specified Contact
     */
     @isTest
     private static void shouldReturnRecordsForSpecifiedContact() {
@@ -96,7 +96,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
     }
 
     /***
-    * @description Verifies Recurring Donations are returned for specified Ids
+    * @description Verifies Recurring Donations are returned for specified Recurring Donation Ids
     */
     @isTest
     private static void shouldReturnRecords() {
@@ -116,6 +116,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
 
     /***
      * @description Returns Account created as the test data in this class
+     * @return Account
      */
     private static Account getAccount() {
         return [
@@ -127,6 +128,7 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
 
     /***
      * @description Returns Contact created as the test data in this class
+     * @return Contact
      */
     private static Contact getContact() {
         return [

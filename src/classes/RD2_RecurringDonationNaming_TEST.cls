@@ -72,7 +72,7 @@ private with sharing class RD2_RecurringDonationNaming_TEST {
 
     /***
     * @description Verifies Recurring Donation name is not updated 
-    * when RD automatic naming is not enabled
+    * when Recurring Donation automatic naming is not enabled
     */
     @isTest
     private static void shouldNotUpdateRDNameWhenAutomaticNamingIsNotEnabled() { 
@@ -92,7 +92,7 @@ private with sharing class RD2_RecurringDonationNaming_TEST {
 
     /***
     * @description Verifies Recurring Donation name is not updated 
-    * when RD automatic naming is enabled
+    * when Recurring Donation automatic naming is enabled
     * and Contact name is unchanged. 
     */
     @isTest
@@ -115,7 +115,7 @@ private with sharing class RD2_RecurringDonationNaming_TEST {
 
     /***
     * @description Verifies Recurring Donation name is updated 
-    * when RD automatic naming is enabled
+    * when Recurring Donation automatic naming is enabled
     * and Contact name is changed. 
     */
     @isTest
@@ -138,7 +138,7 @@ private with sharing class RD2_RecurringDonationNaming_TEST {
 
     /***
     * @description Verifies Recurring Donation name is updated 
-    * when RD automatic naming is enabled
+    * when Recurring Donation automatic naming is enabled
     * and Contact FirstName is null.
     */
     @isTest
@@ -161,7 +161,7 @@ private with sharing class RD2_RecurringDonationNaming_TEST {
 
     /***
     * @description Verifies Recurring Donation name is updated 
-    * when RD automatic naming is enabled
+    * when Recurring Donation automatic naming is enabled
     * and Account name is changed. 
     */
     @isTest
@@ -188,6 +188,7 @@ private with sharing class RD2_RecurringDonationNaming_TEST {
 
     /***
      * @description Returns Account created as the test data in this class
+     * @return Account
      */
     private static Account getAccount() {
         return [
@@ -199,6 +200,7 @@ private with sharing class RD2_RecurringDonationNaming_TEST {
 
     /***
      * @description Returns Contact created as the test data in this class
+     * @return Contact
      */
     private static Contact getContact() {
         return [

@@ -51,6 +51,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets default values
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withDefaults() {
         return this
@@ -63,6 +64,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets the Id
+    * @param rdId Recurring Donation Id
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withId(Id rdId) {
         valuesByFieldName.put('Id', rdId);
@@ -71,6 +74,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets the mock Id
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withMockId() {
         valuesByFieldName.put('Id', UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType));
@@ -79,6 +83,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets the Owner to the current user Id
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOwnerId() {
         valuesByFieldName.put('OwnerId', System.UserInfo.getUserId());
@@ -88,6 +93,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Name
+    * @param name Recurring Donation Name
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withName(String name) {
         valuesByFieldName.put('Name', name);
@@ -96,6 +103,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Account
+    * @param accountId Account Id
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withAccount(Id accountId) {
         valuesByFieldName.put('npe03__Organization__c', accountId);
@@ -104,6 +113,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Contact
+    * @param contactId Contact Id
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withContact(Id contactId) {
         valuesByFieldName.put('npe03__Contact__c', contactId);
@@ -112,6 +123,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Amount
+    * @param amount Amount
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withAmount(Decimal amount) {
         valuesByFieldName.put('npe03__Amount__c', amount);
@@ -120,6 +133,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets CurrencyIsoCode
+    * @param ccyIsoCode CurrencyIsoCode value
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withCurrencyIsoCode(String ccyIsoCode) {
         if (UserInfo.isMultiCurrencyOrganization()) {
@@ -131,6 +146,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Date Established
+    * @param dt Date
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withDateEstablished(Date dt) {
         valuesByFieldName.put('npe03__Date_Established__c', dt);
@@ -139,6 +156,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Next Payment Date
+    * @param dt Date
+    * @return TEST_RecurringDonationBuilder Builder instance    
     */
     public TEST_RecurringDonationBuilder withNextPaymentDate(Date dt) {
         valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
@@ -147,6 +166,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets if the last day of month should be used
+    * @param shouldUse Indicates if the field should be set to true or false
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withAlwaysUseLastDayOfMonth(Boolean shouldUse) {
         valuesByFieldName.put('Always_Use_Last_Day_Of_Month__c', shouldUse);
@@ -155,6 +176,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Day of Month
+    * @param dayOfMonth Day of Month value
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withDayOfMonth(String dayOfMonth) {
         valuesByFieldName.put('Day_Of_Month__c', dayOfMonth);
@@ -163,14 +186,17 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets number of Installments
+    * @param numberOfInstallments Number of Installments
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
-    public TEST_RecurringDonationBuilder withInstallments(Integer size) {
-        valuesByFieldName.put('npe03__Installments__c', size);
+    public TEST_RecurringDonationBuilder withInstallments(Integer numberOfInstallments) {
+        valuesByFieldName.put('npe03__Installments__c', numberOfInstallments);
         return this;
     }
 
     /***
     * @description Sets Installment Period to Yearly
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodYearly() {
         return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodYearly);
@@ -178,6 +204,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Installment Period to Quarterly
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodQuarterly() {
         return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly);
@@ -185,6 +212,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Installment Period to Monthly
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodMonthly() {
         return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodMonthly);
@@ -192,6 +220,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Installment Period to Weekly
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodWeekly() {
         return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodWeekly);
@@ -199,6 +228,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Installment Period
+    * @param installmentPeriod Installment Period
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriod(String installmentPeriod) {
         valuesByFieldName.put('npe03__Installment_Period__c', installmentPeriod);
@@ -207,6 +238,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Schedule Type
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withScheduleTypeMultiplyValue() {
         valuesByFieldName.put('npe03__Schedule_Type__c', System.Label.npe03.RecurringDonationMultiplyValue);
@@ -215,6 +247,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Open Ended Status to Open Status
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatusOpen() {
         return withOpenEndedStatus(System.Label.npe03.RecurringDonationOpenStatus);
@@ -222,6 +255,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Open Ended Status to Closed Status
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatusClosed() {
         return withOpenEndedStatus(System.Label.npe03.RecurringDonationClosedStatus);
@@ -229,6 +263,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Open Ended Status to None
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatusNone() {
         return withOpenEndedStatus('None');
@@ -236,6 +271,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Open Ended Status
+    * @param status Status value
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatus(String status) {
         valuesByFieldName.put('npe03__Open_Ended_Status__c', status);
@@ -244,6 +281,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Recurring Donation Campaign
+    * @param campaignId Campaign Id
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withCampaign(Id campaignId) {
         valuesByFieldName.put('npe03__Recurring_Donation_Campaign__c', campaignId);
@@ -253,6 +292,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Builds Recurring Donation sObject based on the provided values
+    * @return npe03__Recurring_Donation__c Recurring Donation record
     */
     public npe03__Recurring_Donation__c build() {
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
@@ -266,6 +306,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Builds "size" number of Recurring Donation records based on already provided values
+    * @param size Number of Recurring Donation records
+    * @return List<npe03__Recurring_Donation__c> Recurring Donation records
     */
     public List<npe03__Recurring_Donation__c> build(Integer size) {
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
@@ -282,6 +324,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Builds Recurring Donation records for each provided Contact
+    * @param contacts Contact records to build Recurring Donation record for
+    * @return List<npe03__Recurring_Donation__c> Recurring Donation records
     */
     public List<npe03__Recurring_Donation__c> build(List<Contact> contacts) {
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
@@ -299,6 +343,8 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Builds Recurring Donation records for each provided Account
+    * @param accounts Account records to build Recurring Donation record for
+    * @return List<npe03__Recurring_Donation__c> Recurring Donation records
     */
     public List<npe03__Recurring_Donation__c> build(List<Account> accounts) {
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
