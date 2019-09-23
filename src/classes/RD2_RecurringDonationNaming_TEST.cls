@@ -182,6 +182,75 @@ private with sharing class RD2_RecurringDonationNaming_TEST {
         System.assertEquals(RD2_NamingService_TEST.getExpectedName(acc, '100'), rd.Name, 'Recurring Donation name should be updated');
     }
 
+    /***
+    * @description Verifies Recurring Donation name is updated when referenced Contact name has been changed
+    * Note: Execute Contact dml in start/stopTest() to complete Household future jobs
+    */  
+    @isTest
+    private static void shouldUpdateRDNameWhenContactAndHouseholdNameChange() {
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        RD2_NamingService_TEST.enableAutomaticNaming();
+
+        Account acc = UTIL_UnitTestData_TEST.createMultipleTestAccounts(
+            1, CAO_Constants.HH_ACCOUNT_TYPE
+        )[0];
+        insert acc;
+
+        Contact contact = getContact();
+        contact.AccountId = acc.Id;
+        update contact;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(contact.Id)
+            .withAmount(100.00)
+            .withCurrencyIsoCode('USD')
+            .build();
+        insert rd;
+
+        Test.startTest();
+        contact.FirstName += ' changed';
+        update contact;
+        Test.stopTest();
+        
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_NamingService_TEST.getExpectedName(contact, '100'), rd.Name, 'Recurring Donation name should be updated');
+    }
+
+    /***
+    * @description Verifies Recurring Donation name is updated when referenced Organization name has been changed
+    */  
+    @isTest
+    private static void shouldUpdateRDNameWhenOrganizationNameChanges() {
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        RD2_NamingService_TEST.enableAutomaticNaming();
+
+        Account acc = UTIL_UnitTestData_TEST.createMultipleTestAccounts(
+            1, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+        )[0];
+        insert acc;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withAccount(acc.Id)
+            .withAmount(100.00)
+            .withCurrencyIsoCode('USD')
+            .build();
+        insert rd;
+
+        Test.startTest();
+        acc.Name += ' changed';
+        update acc;
+        Test.stopTest();
+        
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_NamingService_TEST.getExpectedName(acc, '100'), rd.Name, 'Recurring Donation name should be updated');
+    }
+
 
     // Helpers
     ///////////////
@@ -204,7 +273,8 @@ private with sharing class RD2_RecurringDonationNaming_TEST {
      */
     private static Contact getContact() {
         return [
-            SELECT FirstName, LastName, npe01__Preferred_Email__c
+            SELECT FirstName, LastName, npe01__Preferred_Email__c,
+                AccountId, Account.Name
             FROM Contact
             WHERE FirstName = :TEST_NAME
         ];

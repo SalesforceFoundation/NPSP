@@ -814,105 +814,147 @@ private class CON_ContactMerge_TEST2 {
             system.assertEquals(1, cOCRWinnerSibling);
             system.assertEquals(null, accLoser.npo02__NumberOfClosedOpps__c);            
             system.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
-        }
-        
+        }        
     }
 
-        /*******************************************************************************************************
-        * @description Merge two Contacts where the master has no affiliations and the merged contact has a
-        ** primary affiliation.
-        **/
-        @isTest
-        static void mergeContactsWithAffiliation() {
+    /*******************************************************************************************************
+    * @description Merge two Contacts where the master has no affiliations and the merged contact has a
+    ** primary affiliation.
+    **/
+    @isTest
+    static void mergeContactsWithAffiliation() {
+    
+        Account company = new Account(name = 'Foo Company');
+        insert company;
+
+        List<Contact> objectsToInsert = new List<Contact>();
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.LastName = '1Contact_forTests_Merge';
+        con.Description = 'First Contact';
+
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        con2.Description = 'Second Contact';
+        con2.Primary_Affiliation__c = company.Id;
+
+        objectsToInsert.add(con);
+        objectsToInsert.add(con2);
+
+        insert objectsToInsert;
         
-            Account company = new Account(name = 'Foo Company');
-            insert company;
+        List<Contact> contactsToMerge = [
+            SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c
+            FROM Contact 
+            ORDER BY Id
+        ];
+        con = contactsToMerge[0];
+        con2 = contactsToMerge[1];
 
-            List<Contact> objectsToInsert = new List<Contact>();
-            Contact con = UTIL_UnitTestData_TEST.getContact();
-            con.LastName = '1Contact_forTests_Merge';
-            con.Description = 'First Contact';
+        List<npe5__Affiliation__c> affiliations = [
+            SELECT Id, npe5__Contact__c, npe5__EndDate__c, npe5__Organization__c, 
+                npe5__Primary__c, npe5__Role__c, npe5__StartDate__c, npe5__Status__c, npe5__Description__c
+            FROM npe5__Affiliation__c 
+            WHERE npe5__Contact__c IN :contactsToMerge
+        ];
 
-            Contact con2 = UTIL_UnitTestData_TEST.getContact();
-            con2.LastName = '2Contact_forTests_Merge';
-            con2.Description = 'Second Contact';
-            con2.Primary_Affiliation__c = company.Id;
+        System.assertEquals(1, affiliations.size(), 'Affiliations are created for the contact');
+        
+        CON_ContactMerge_CTRL controller = setupPageController(contactsToMerge, 'test');
+        CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
 
-            objectsToInsert.add(con);
-            objectsToInsert.add(con2);
-
-            insert objectsToInsert;
-            
-            List<Contact> contactsToMerge = [
-                SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c
-                FROM Contact 
-                ORDER BY Id
-            ];
-            con = contactsToMerge[0];
-            con2 = contactsToMerge[1];
-
-            List<npe5__Affiliation__c> affiliations = [
-                SELECT Id, npe5__Contact__c, npe5__EndDate__c, npe5__Organization__c, 
-                    npe5__Primary__c, npe5__Role__c, npe5__StartDate__c, npe5__Status__c, npe5__Description__c
-                FROM npe5__Affiliation__c 
-                WHERE npe5__Contact__c IN :contactsToMerge
-            ];
-
-            System.assertEquals(1, affiliations.size(), 'Affiliations are created for the contact');
-            
-            CON_ContactMerge_CTRL controller = setupPageController(contactsToMerge, 'test');
-            CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
-
-            //Select the primary affiliation of the one that is not the one we selected as master
-            List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;  
-            for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
-                if (row.fieldName == UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c')) {
-                    row.selectedValue = String.valueOf(con2.id);
-                    break;
-                }
+        //Select the primary affiliation of the one that is not the one we selected as master
+        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;  
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+            if (row.fieldName == UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c')) {
+                row.selectedValue = String.valueOf(con2.id);
+                break;
             }
-
-            Test.startTest();
-            controller.mergeContacts();
-            Test.stopTest();
-
-            Contact mergedContact = [
-                SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c
-                FROM Contact 
-                WHERE Id = :con.Id
-            ];
-
-            System.assertEquals('First Contact', mergedContact.Description, 'The merged contact has the correct description.');
-            System.assertEquals(company.Id, mergedContact.Primary_Affiliation__c, 'The merged contact has the correct primary affiliation.');
-
         }
 
-        /*******************************************************************************************************
-        * @description Setup the page controller with the correct search and contacts
-        ** 
-        **/
-        private static CON_ContactMerge_CTRL setupPageController(List<Contact> contactsToMerge, String searchText) {
-            Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        Test.startTest();
+        controller.mergeContacts();
+        Test.stopTest();
 
-            CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-            controller.searchText = searchText;
-            Integer contactSize = contactsToMerge.size();
+        Contact mergedContact = [
+            SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c
+            FROM Contact 
+            WHERE Id = :con.Id
+        ];
 
-            //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-            List<Id> fixedSearchResults=new Id[contactSize]; 
-            
-            for (Integer i = 0; i < contactSize; i ++ ) {
-                fixedSearchResults[i] = contactsToMerge[i].Id;
-            }
-            
-            Test.setFixedSearchResults(fixedSearchResults); 
-            controller.search();
+        System.assertEquals('First Contact', mergedContact.Description, 'The merged contact has the correct description.');
+        System.assertEquals(company.Id, mergedContact.Primary_Affiliation__c, 'The merged contact has the correct primary affiliation.');
+    }
 
-            for (Integer i = 0; i < contactSize; i ++ ) {
-                controller.searchResults[i].selected = true;
-            }
-            controller.nextStep();
+    /***
+     * @description Verifies Recurring Donations are renamed on Contact merge
+     */
+    @isTest
+    private static void shouldRenameRecurringDonationsOnContactMerge() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR)
+        );        
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c(npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR)
+        );
+        RD2_NamingService_TEST.enableAutomaticNaming();
+        
+        List<Contact> contacts = new List<Contact>{
+            UTIL_UnitTestData_TEST.getContact(),
+            UTIL_UnitTestData_TEST.getContact()
+        };
+        insert contacts;  
 
-            return controller;
+        List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
+            .withAmount(100)
+            .withCurrencyIsoCode('USD')
+            .build(contacts);
+        insert rds;
+        
+        Contact masterContact = contacts[0];
+        CON_ContactMerge_CTRL controller = setupPageController(contacts, 'test');
+        CON_ContactMerge_TEST.selectMasterRecord(controller, masterContact.Id);
+
+        Test.startTest();
+        controller.mergeContacts();
+        Test.stopTest();
+        
+        for (npe03__Recurring_Donation__c rd : new RD2_RecurringDonationsGateway().getRecords(rds)) {
+            System.assertEquals(RD2_NamingService_TEST.getExpectedName(masterContact, '100'), rd.Name, 
+                'Recurring Donation name should be updated on Contact merge');
         }
+    }  
+
+
+    // Helpers
+    ////////////////
+    
+
+    /*******************************************************************************************************
+    * @description Setup the page controller with the correct search and contacts
+    ** 
+    **/
+    private static CON_ContactMerge_CTRL setupPageController(List<Contact> contactsToMerge, String searchText) {
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        controller.searchText = searchText;
+        Integer contactSize = contactsToMerge.size();
+
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        List<Id> fixedSearchResults=new Id[contactSize]; 
+        
+        for (Integer i = 0; i < contactSize; i ++ ) {
+            fixedSearchResults[i] = contactsToMerge[i].Id;
+        }
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        controller.search();
+
+        for (Integer i = 0; i < contactSize; i ++ ) {
+            controller.searchResults[i].selected = true;
+        }
+        controller.nextStep();
+
+        return controller;
+    }
 }
