@@ -7,7 +7,7 @@
   </fields>
   <fields>
     <name>Default_Assignee__c</name>
-    <help>Lorsque le champ « Attribué à » d’une tâche de plan d’engagement est laissé vide, à qui la tâche doit-elle être attribuée ?</help>
+    <help>Le bénéficiaire auquel la tâche est attribuée lorsque le champ « Attribué à » d'une tâche de plan d'engagement est vide.</help>
     <label>Bénéficiaire par défaut</label>
     <picklistValues>
       <masterLabel>Owner of Object for Engagement Plan</masterLabel>

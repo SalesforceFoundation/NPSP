@@ -3,6 +3,6 @@
   <fields>
     <name>Number_of_Household_Members__c</name>
     <help>het aantal Contactpersonen in het Huishouden.</help>
-    <label>Aantal Leden van het Huishouden</label>
+    <label>Aantal leden van het huishouden</label>
   </fields>
 </CustomObjectTranslation>

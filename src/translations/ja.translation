@@ -774,7 +774,7 @@
     </customLabels>
     <customLabels>
         <name>RP_Title</name>
-        <label>ようこそ ｰ Salesforce と</label>
+        <label>Salesforce および Nonprofit Success Pack (NPSP) をご利用いただきありがとうございます。</label>
     </customLabels>
     <customLabels>
         <name>RP_TrailheadLinkLabel</name>
@@ -3080,7 +3080,7 @@
     </customLabels>
     <customLabels>
         <name>stgCRLPReset</name>
-        <label>カスタマイズ可能な積み上げ集計をリセット</label>
+        <label>デフォルトにリセット</label>
     </customLabels>
     <customLabels>
         <name>stgDefaultValue</name>
@@ -4294,6 +4294,14 @@
     <customLabels>
         <name>stgSelectOne</name>
         <label>1 つ選択</label>
+    </customLabels>
+    <customLabels>
+        <name>stgStatusEnabled</name>
+        <label>有効</label>
+    </customLabels>
+    <customLabels>
+        <name>stgStatusDisabled</name>
+        <label>無効</label>
     </customLabels>
     <customLabels>
         <name>stgTools</name>

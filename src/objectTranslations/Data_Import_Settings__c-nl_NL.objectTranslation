@@ -33,7 +33,7 @@
   <fields>
     <name>Donation_Matching_Behavior__c</name>
     <help>Bepaalt hoe de Data Import omgaat met een Matching Gift. Er moet een waarde gekozen worden.</help>
-    <label>Gedrag Overeenkomst Donatie</label>
+    <label>Overeenkomstenpatroon voor donatie</label>
   </fields>
   <fields>
     <name>Donation_Matching_Implementing_Class__c</name>

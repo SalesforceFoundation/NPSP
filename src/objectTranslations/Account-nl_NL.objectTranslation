@@ -112,7 +112,7 @@
   <fields>
     <name>Number_of_Household_Members__c</name>
     <help>Het aantal Contactpersonen die lid zijn van dit Huishouden.</help>
-    <label>Aantal Leden van het Huishouden</label>
+    <label>Aantal leden van het huishouden</label>
   </fields>
   <webLinks>
     <name>Manage_Household</name>
