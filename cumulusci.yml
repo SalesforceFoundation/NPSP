@@ -128,16 +128,8 @@ tasks:
                 - record_type: Opportunity.NPSP_Default
                   default: true
 
-    test_data_bdi:
-        description: 'Generate and load test data for BDI benchmarks into an org'
-        class_path: tasks.generate_bdi_data.GenerateBDIData
-        options:
-            mapping_yaml: 'datasets/bdi_benchmark/mapping.yml'
-            num_records: 5000
-            debug_db_path: /tmp/temp_db.db
-
-    performance_tests:
-        description: Runs Robot Framework performance tests
+    test_performance:
+        description: Runs Robot Framework performance tests for BDI Complex Objects
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
         options:
@@ -493,24 +485,25 @@ flows:
             3:
                 task: ensure_record_type
 
-    test_performance:
-        description: 'Creates a BDI org and runs a performance test'
+    test_performance_scratch:
+        description: 'Creates a test org and runs BDI performance tests'
         steps:
             1:
-                flow: dev_org_namespaced
-            2:
-                task: deploy
-                options:
-                    unmanaged: False
-                    path: unpackaged/config/perf
-                    namespace_inject: $project_config.project__package__namespace
+                flow: qa_org
             3:
-                task: update_admin_profile
-            4:
-                task: performance_tests
+                task: test_performance
                 options:
-                    options:
-                        outputdir: .
+                    include: medium
+                    vars: persistent_org:False
+
+    test_performance_LDV:
+        description: 'Runs BDI performance tests against a pre-existing org'
+        steps:
+            1:
+                task: test_performance
+                options:
+                    include: ultra-long
+                    vars: persistent_org:True
 
     beta_dependencies:
         steps:
