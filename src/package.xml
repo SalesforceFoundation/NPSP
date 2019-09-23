@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -221,6 +221,8 @@
         <members>CallableApiParameters_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>CallableDispatchService_ERR_TEST</members>
+        <members>CallableDispatchService_ERR</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>

@@ -135,9 +135,8 @@ public class ERR_RecordError {
 
 
     /*******************************************************************************************************
-    * @description Returns a list of Errors for records to be updated because they was a previous Error
-    *              record
-    * present for that Record ID and Context Type
+    * @description Returns a list of Errors for records to be updated because there was a previous Error
+    *              record present for that Record ID and Context Type
     * @return List of Errors to be updated
     */
     @testVisible private List<Error__c> getErrorsForUpdate() {
@@ -491,7 +490,7 @@ public class ERR_RecordError {
     *              be prepended with the latest message and timestamp, and truncated to 5K.  The Error
     *              Type will be updated based on the StatusCode of the Result.  The Datetime field will be
     *              updated to the current timestamp.  Retry_Pending__c will be set to true, indicated it
-    *              should try the record again, if possible.
+    *              should try to process the record again, if possible.
     * @param error The error record to be updated.
     * @param result The result of the Database DML operation. It cannot be more specific than Object,
     *               because the result of the different DML operations that the Database class can
@@ -513,37 +512,8 @@ public class ERR_RecordError {
             dmlError = getFirstDmlError(undeleteResult.getErrors());
         }
 
-        error.Error_Type__c = getStatusCode(dmlError);
-        error.Full_Message__c = updateFullMessage(error.Datetime__c, error.Full_Message__c, getDmlMessage(dmlError));
-
-        UTIL_Debug.debug('**** updateRecordError() returns error: ' + error);
-        return error;
-    }
-
-    /*******************************************************************************************************
-    * @description Updates an existing error record associated with a specific context and record from the
-    *              result of a DML operation performed through the Database class.  Full_Message__c will be
-    *              prepended with the latest message and timestamp, and truncated to 5K.  The Error Type
-    *              will be updated based on the StatusCode of the Result.  The Datetime field will be
-    *              updated to the current timestamp.  Retry_Pending__c will be set to true, indicated it
-    *              should try to process the record again, if possible.
-    * @param error The error record to be updated.
-    * @param message The full message of all the errors for a given job and compiled IDs.
-    * @param statusCode The code associated with the error
-    * @return The error record.
-    */
-    @testVisible private static Error__c updateRecordError (Error__c error, String message, String statusCode) {
-        error.Datetime__c = System.now();
-        error.Retry_Pending__c = true;
-        // Set to false so it will repost to chatter on update
-        error.Posted_in_Chatter__c = false;
-        // Set to false so it will resend email on update
-        error.Email_Sent__c = false;
-        error.Error_Type__c = statusCode;
-        error.Full_Message__c = updateFullMessage(error.Datetime__c, error.Full_Message__c, message);
-
-        UTIL_Debug.debug('**** updateRecordError() returns error: ' + error);
-        return error;
+        // Use non DML variant of updateRecordError after determining statusCode and error message
+        return updateRecordError(error, getDmlMessage(dmlError), getStatusCode(dmlError));
     }
 
     /*******************************************************************************************************
@@ -564,7 +534,6 @@ public class ERR_RecordError {
         error.Posted_in_Chatter__c = false;
         error.Full_Message__c = updateFullMessage(error.Datetime__c, error.Full_Message__c, message);
 
-        UTIL_Debug.debug('**** clearRecordError() returns error: ' + error);
         return error;
     }
 

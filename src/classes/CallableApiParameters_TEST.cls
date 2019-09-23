@@ -157,7 +157,8 @@ private class CallableApiParameters_TEST {
             'BooleanFalse' => false,
             'ListString' => new List<String>{ 'Value1' },
             'SetString' => new Set<String>{ 'Value1' },
-            'ListSObject' => new List<SObject>{ new Opportunity(Name = 'Opportunity') }
+            'ListSObject' => new List<SObject>{ new Opportunity(Name = 'Opportunity') },
+            'ListObject' => new List<Object>{'Value', true}
         };
 
         CallableApiParameters service = new CallableApiParameters(params);
@@ -185,6 +186,11 @@ private class CallableApiParameters_TEST {
         System.assertEquals(1, rtnListSObject.size());
         System.assertEquals(Opportunity.SObjectType, rtnListSObject[0].getSObjectType());
         System.assertEquals('Opportunity', rtnListSObject[0].get('Name'));
+
+        List<Object> rtnListObject = service.getObjects('ListObject');
+        System.assertEquals(2, rtnListObject.size());
+        System.assertEquals('Value', (String)rtnListObject.get(0));
+        System.assertEquals(true, (Boolean)rtnListObject.get(1));
     }
 
     /**

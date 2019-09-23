@@ -46,8 +46,8 @@ private class ERR_RecordErrorReprocessBatch_TEST {
 
         ERR_RecordError recordError = new ERR_RecordError(ERR_RecordErrorReprocessBatch_MOCK.PROCESS_NAME);
 
-        Map<String, String> errors= new Map<String, String>();
-        Map<String, SObject> sObjects = new Map<String, SObject>();
+        Map<Id, String> errors= new Map<Id, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
 
         for (Account acc :accs) {
             errors.put (acc.Id, 'Error1 for ' + acc.Name);
@@ -76,7 +76,7 @@ private class ERR_RecordErrorReprocessBatch_TEST {
         Database.executeBatch(reprocessBatch, 200);
         Test.stopTest();
 
-        Map<String, Error__c> errorsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errorsByRecordId = getErrorsByRecordId();
 
         for (Integer i = 0; i < accs.size(); i++) {
             Error__c err = errorsByRecordId.get(accs.get(i).Id);
@@ -121,7 +121,7 @@ private class ERR_RecordErrorReprocessBatch_TEST {
     /**
      * @description Helper method to retrieve all error records into a Map by Salesforce Id
      */
-    private static Map<String, Error__c> getErrorsByRecordId() {
+    private static Map<Id, Error__c> getErrorsByRecordId() {
         List<Error__c> errs =  [SELECT  Id,
                                         Context_Type__c,
                                         Datetime__c,
@@ -133,7 +133,7 @@ private class ERR_RecordErrorReprocessBatch_TEST {
                                         Retry_Pending__c
                                 FROM Error__c];
 
-        Map<String, Error__c> errsByRecordId = new Map<String, Error__c>();
+        Map<Id, Error__c> errsByRecordId = new Map<Id, Error__c>();
 
         for (Error__c err : errs) {
             errsByRecordId.put (err.Related_Record_Id__c, err);

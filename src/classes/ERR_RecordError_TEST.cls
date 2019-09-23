@@ -538,7 +538,7 @@ private class ERR_RecordError_TEST {
         errs = getErrors();
         System.assertEquals(7, errs.size(), '# of Errors should be 7');
 
-        Map<String, Error__c> errsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
 
         for (Account acc : accs) {
             Error__c err = errsByRecordId.get(acc.Id);
@@ -598,7 +598,7 @@ private class ERR_RecordError_TEST {
         errs = getErrors();
         System.assertEquals(7, errs.size(), '# of Errors should be 7');
 
-        Map<String, Error__c> errsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
 
         for (Account acc : accs) {
             Error__c err = errsByRecordId.get(acc.Id);
