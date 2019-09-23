@@ -3637,7 +3637,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>conMergeErrorNoDeleteRecAccess</shortDescription>
-        <value>You do not have proper permissions for the selected records </value>
+        <value>You don't have the record sharing permissions to merge these Contacts. Your system administrator may need to adjust organization-wide sharing settings, sharing rules, or user roles.</value>
     </labels>
     <labels>
         <fullName>conMergeErrNoPersonAccounts</fullName>
