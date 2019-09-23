@@ -169,6 +169,7 @@ private with sharing class RD2_RecurringDonations_TEST {
 
     /****
     * @description Returns contact record
+    * @return Contact
     */
     private static Contact getContact() {
         return [

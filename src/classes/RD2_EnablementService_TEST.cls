@@ -279,6 +279,7 @@ public with sharing class RD2_EnablementService_TEST {
 
     /****
     * @description Returns contact record
+    * @return Contact
     */
     private static Contact getContact() {
         return [
@@ -290,9 +291,12 @@ public with sharing class RD2_EnablementService_TEST {
 
     /****
     * @description Builds an Opportunity for the Recurring Donation record
+    * @param rdId Recurring Donation Id
+    * @param accountId Account Id
+    * @return Opportunity 
     */
     private static Opportunity buildOpportunity(Id rdId, Id accountId) {
-        return new OPP_TestOpportunityBuilder()
+        return new TEST_OpportunityBuilder()
             .withName('foo')
             .withAmount(100)
             .withAccount(accountId)
@@ -303,6 +307,8 @@ public with sharing class RD2_EnablementService_TEST {
 
     /****
     * @description Returns Opportunities associated with the specified Recurring Donation
+    * @param rdId Recurring Donation Id
+    * @return List<Opportunity>
     */
     private static List<Opportunity> getOpportunities(Id rdId) {
         return getOpportunities(new Set<Id>{ rdId });
@@ -310,6 +316,8 @@ public with sharing class RD2_EnablementService_TEST {
 
     /****
     * @description Returns Opportunities associated with specified Recurring Donations
+    * @param rdIds Recurring Donation Ids
+    * @return List<Opportunity>
     */
     private static List<Opportunity> getOpportunities(Set<Id> rdIds) {
         return [
@@ -321,6 +329,8 @@ public with sharing class RD2_EnablementService_TEST {
 
     /***
     * @description Enables or disables customizable rollups for testing
+    * @param isEnabled Indicates if the CRLP should be enabled in the custom settings
+    * @param none
     */
     private static void setCustomizableRollups(Boolean isEnabled) {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
@@ -330,6 +340,8 @@ public with sharing class RD2_EnablementService_TEST {
 
     /***
     * @description Stubs PilotEnabled feature parameter enablement
+    * @param isEnabled Indicates if the PilotEnabled should be enabled using a Mock feature management
+    * @return none
     */
     private static void setPilotEnabledFeatureParameter(Boolean isEnabled) {
         UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
@@ -345,6 +357,7 @@ public with sharing class RD2_EnablementService_TEST {
 
     /***
     * @description Stubs custom settings configuration to enable enhanced Recurring Donations
+    * @return none
     */
     private static void configureRecurringDonations2Enabled() {        
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(

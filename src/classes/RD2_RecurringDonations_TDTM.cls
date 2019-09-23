@@ -35,7 +35,10 @@
 *
 */
 public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
-
+    
+    /***
+    * @description Recurring Donation naming service instance
+    */
     @TestVisible
     private RD2_NamingService namingService {
         get {
