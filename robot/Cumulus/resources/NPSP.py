@@ -1232,7 +1232,7 @@ class NPSP(object):
         return len(results["incomplete"])
     
     def warn_on_violations_rules(self,results):
-        """ Prints a warn for any rules that couldn't be determined automatically. Returns the number of such warnings. """
+        """ If there are violations on the page, logs as warning and gives the details of violations on the page """
         for rule in results["violations"]:
             self.print_result(rule, "violation", logger.warn)
         return len(results["violations"])
@@ -1278,7 +1278,6 @@ class NPSP(object):
                         targetString += ">> %s" % frame_target
     
             message += "<li>Target: <b>%s</b><br/>HTML: %s" % (targetString, escape(node["html"]))
-            print  ("inside for loop")
             if len(node["any"]) > 0:
                 any_message = "<br/><b>Fix at least one of:</b><ul>"
                 for check in node["any"]:
@@ -1298,7 +1297,6 @@ class NPSP(object):
     
         logFunc(message, html=True)
         logger.debug(json.dumps(result, indent=4))
-        print  ("exiting print results")
            
         
     def change_view_to(self,view_name):
