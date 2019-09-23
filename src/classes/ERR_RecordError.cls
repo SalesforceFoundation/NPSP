@@ -288,6 +288,50 @@ public class ERR_RecordError {
     }
 
     /*******************************************************************************************************
+    * @description Clears errors, if they exist in the Map
+    * @param recordId The Record ID of the Salesforce record associated with the Error
+    * @param message The message to add
+    */
+    public void clearError(String recordId, String message) {
+        // Checks to see if this in already in the Record Errors List
+        Error__c err = this.get(recordId);
+
+        // Only clear error if Error is found and Retry Pending is true
+        if (err != null && err.Retry_Pending__c) {
+            err = clearRecordError(
+                err,
+                message
+            );
+            // Put into list
+            this.put(recordId, err);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Resets the Retry Pending flag and adds a message for a Set of Record IDs.  It only does
+    * this if the recordID is present in map of Errors by Record ID
+    * @param Set<String> recordIds
+    * @param String message
+    */
+    public void clearErrors(Set<String> recordIds, String message) {
+        for (String recordId :recordIds) {
+            clearError(recordId, message);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Resets the Retry Pending flag and adds a message for a Set of Record IDs.  It only does
+    *              this for record IDs that are present in the map of Errors by Record ID
+    * @param Set<String> recordIds
+    * @param String message
+    */
+    public void clearErrors(Set<Id> recordIds, String message) {
+        for (String recordId :recordIds) {
+            clearError((String) recordId, message);
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Executes DML for any pending inserts and updates.  Then, it updates the Existing Errors
     *              Map using the inserted and updated data
     * @param errorMessagesByRecordID Error Messages to add, keyed by Record ID
@@ -472,6 +516,27 @@ public class ERR_RecordError {
 
         // Use non DML variant of updateRecordError after determining statusCode and error message
         return updateRecordError(error, getDmlMessage(dmlError), getStatusCode(dmlError));
+    }
+
+    /*******************************************************************************************************
+    * @description Updates an existing error record, clearing the retry pending flag.  Full_Message__c
+    *              will be prepended with the latest message and timestamp, and truncated to 5K.  The
+    *              Datetime field will be updated to the current timestamp.  Retry_Pending__c will be set
+    *              to false, indicating it should NOT try the record again.
+    * @param error The error record to be updated.
+    * @param message The full message to add when clearing the Retry Pending? status.
+    * @return The error record.
+    */
+    @testVisible private static Error__c clearRecordError (Error__c error, String message) {
+        error.Datetime__c = System.now();
+        error.Retry_Pending__c = false;
+        // Setting so it does not send email
+        error.Email_Sent__c = true;
+        // Setting so it does post to chatter
+        error.Posted_in_Chatter__c = false;
+        error.Full_Message__c = updateFullMessage(error.Datetime__c, error.Full_Message__c, message);
+
+        return error;
     }
 
     /*******************************************************************************************************

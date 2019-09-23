@@ -492,6 +492,183 @@ private class ERR_RecordError_TEST {
         }
     }
 
+   /*******************************************************************************************************
+    * @description Unit Tests for setting Retry Pending? to false, and adding a message for individual
+    * records
+    */
+    @IsTest
+    private static void shouldClearErrorForEachRecordError() {
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(7, null);
+        insert accs;
+
+        ERR_RecordError recordError = new ERR_RecordError('Test');
+
+        Map<Id, String> errors= new Map<Id, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
+
+        for (Account acc :accs) {
+            errors.put (acc.Id, 'Error1 for ' + acc.Name);
+            sObjects.put(acc.Id, acc);
+        }
+
+        recordError.addErrors(errors, sObjects);
+        for (Account acc :accs) {
+            errors.put (acc.Id, 'Error2 for ' + acc.Name);
+        }
+        recordError.addErrors(errors, sObjects);
+        // Initial creation of error records
+        if (recordError.isNewErrorsPresent()) {
+            recordError.processErrors();
+        }
+
+        List<Error__c> errs = getErrors();
+
+        //Switching to a different ERR_RecordError instance to simulate handling existing errors via "with"
+        ERR_RecordError recordError2 = new ERR_RecordError('Test').withExistingErrors(errs);
+
+
+        for (Account acc :accs) {
+            recordError2.clearError (acc.Id, 'Error Resolved for ' + acc.Name);
+        }
+
+        if (recordError2.isNewErrorsPresent()) {
+            recordError2.processErrors();
+        }
+
+        errs = getErrors();
+        System.assertEquals(7, errs.size(), '# of Errors should be 7');
+
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
+
+        for (Account acc : accs) {
+            Error__c err = errsByRecordId.get(acc.Id);
+            System.assertEquals (false, err.Retry_Pending__c, 'Retry Pending?');
+            System.assertEquals ('Test', err.Context_Type__c, 'Context Type');
+            System.assertEquals (true, err.Full_Message__c.contains(acc.Name), 'Full Message [Name]');
+            System.assertEquals (true, err.Full_Message__c.contains('Error Resolved'), 'Full Message [Error Resolved]');
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Unit Tests for setting Retry Pending? to false, and adding a message for a Set of
+    * Records.  The Set of Record Ids is of Type Set<String>
+    */
+    @IsTest
+    private static void shouldClearErrorsStringVariantForRecordErrors() {
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(7, null);
+        insert accs;
+
+        ERR_RecordError recordError = new ERR_RecordError('Test');
+
+        Map<Id, String> errors= new Map<Id, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
+
+        for (Account acc :accs) {
+            errors.put (acc.Id, 'Error1 for ' + acc.Name);
+            sObjects.put(acc.Id, acc);
+        }
+
+        recordError.addErrors(errors, sObjects);
+        for (Account acc :accs) {
+            errors.put (acc.Id, 'Error2 for ' + acc.Name);
+        }
+        recordError.addErrors(errors, sObjects);
+        // Initial creation of error records
+        if (recordError.isNewErrorsPresent()) {
+            recordError.processErrors();
+        }
+
+        List<Error__c> errs = getErrors();
+
+        //Switching to a different ERR_RecordError instance to simulate handling existing errors via "with"
+        ERR_RecordError recordError2 = new ERR_RecordError('Test').withExistingErrors(errs);
+        Set<String> accIds = new Set<String>();
+
+        for (Account acc : accs) {
+            accIds.add(acc.Id);
+        }
+
+        recordError2.clearErrors (accIds, 'Error Resolved for record');
+
+
+        if (recordError2.isNewErrorsPresent()) {
+            recordError2.processErrors();
+        }
+
+        errs = getErrors();
+        System.assertEquals(7, errs.size(), '# of Errors should be 7');
+
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
+
+        for (Account acc : accs) {
+            Error__c err = errsByRecordId.get(acc.Id);
+            System.assertEquals (false, err.Retry_Pending__c, 'Retry Pending?');
+            System.assertEquals ('Test', err.Context_Type__c, 'Context Type');
+            System.assertEquals (true, err.Full_Message__c.contains(acc.Name), 'Full Message [Name]');
+            System.assertEquals (true, err.Full_Message__c.contains('Error Resolved for record'), 'Full Message [Error Resolved for record]');
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Unit Tests for setting Retry Pending? to false, and adding a message for a Set of
+    * Records.  The Set of Record Ids is of Type Set<Id>
+    */
+    @IsTest
+    private static void shouldClearErrorsIdVariantForRecordErrors() {
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(7, null);
+        insert accs;
+
+        ERR_RecordError recordError = new ERR_RecordError('Test');
+
+        Map<Id, String> errors= new Map<Id, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
+
+        for (Account acc :accs) {
+            errors.put (acc.Id, 'Error1 for ' + acc.Name);
+            sObjects.put(acc.Id, acc);
+        }
+
+        recordError.addErrors(errors, sObjects);
+        for (Account acc :accs) {
+            errors.put (acc.Id, 'Error2 for ' + acc.Name);
+        }
+        recordError.addErrors(errors, sObjects);
+        // Initial creation of error records
+        if (recordError.isNewErrorsPresent()) {
+            recordError.processErrors();
+        }
+
+        List<Error__c> errs = getErrors();
+
+        //Switching to a different ERR_RecordError instance to simulate handling existing errors via "with"
+        ERR_RecordError recordError2 = new ERR_RecordError('Test').withExistingErrors(errs);
+        Set<ID> accIds = new Set<Id>();
+
+        for (Account acc : accs) {
+            accIds.add(acc.Id);
+        }
+
+        recordError2.clearErrors (accIds, 'Error Resolved for record');
+
+
+        if (recordError2.isNewErrorsPresent()) {
+            recordError2.processErrors();
+        }
+
+        errs = getErrors();
+        System.assertEquals(7, errs.size(), '# of Errors should be 7');
+
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
+
+        for (Account acc : accs) {
+            Error__c err = errsByRecordId.get(acc.Id);
+            System.assertEquals (false, err.Retry_Pending__c, 'Retry Pending?');
+            System.assertEquals ('Test', err.Context_Type__c, 'Context Type');
+            System.assertEquals (true, err.Full_Message__c.contains(acc.Name), 'Full Message [Name]');
+            System.assertEquals (true, err.Full_Message__c.contains('Error Resolved for record'), 'Full Message [Error Resolved for record]');
+        }
+    }
+
     /*******************************************************************************************************
     * @description Unit Tests to confirm exception behavior when an unsupported DML Type is passed to the Record
     * Error classes.  Only SaveResult, DeleteResult, and UndeleteResult are currently supported.

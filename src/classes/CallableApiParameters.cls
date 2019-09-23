@@ -57,7 +57,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a String value
-     * @param paramName
+     * @param paramName paramName to look in the parameter map under
      */
     public String getString(String paramName) {
         try {
@@ -70,7 +70,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a Boolean value
-     * @param paramName
+     * @param paramName paramName to look in the parameter map under
      */
     public Boolean getBoolean(String paramName) {
         try {
@@ -80,6 +80,12 @@ public class CallableApiParameters {
         }
         return null;
     }
+
+    /**
+     * @description Retrieve the specified Parameter as a Boolean value, and use the default if not found in the map
+     * @param paramName paramName to look in the parameter map under
+     * @param defaultValue Default if null
+     */
     public Boolean getBoolean(String paramName, Boolean defaultValue) {
         try {
             if (params.get(paramName) != null) {
@@ -92,6 +98,20 @@ public class CallableApiParameters {
     }
 
     /**
+     * @description Retrieve the specified Parameter as a Boolean value, and use the default if not found in the map
+     * @param paramName paramName to look in the parameter map under
+     * @param defaultValue Default if null
+     */
+    public Exception getException(String paramName) {
+        try {
+            return (Exception) params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Exception', paramName);
+        }
+        return null;
+    }
+
+/**
      * @description Retrieve the specified Parameter as a List<String> collection
      * @param paramName
      */
@@ -118,12 +138,38 @@ public class CallableApiParameters {
     }
 
     /**
+     * @description Retrieve the specified Parameter as a Set<String> collection
+     * @param paramName
+     */
+    public Map<Id, String> getStringsById(String paramName) {
+        try {
+            return (Map<Id, String>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Map<Id, String>', paramName);
+        }
+        return null;
+    }
+
+    /**
      * @description Retrieve the specified Parameter as a List<SObject> collection
      * @param paramName
      */
     public List<SObject> getSObjects(String paramName) {
         try {
             return (List<SObject>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('List<SObject>', paramName);
+        }
+        return null;
+    }
+
+  /**
+     * @description Retrieve the specified Parameter as a List<Object> collection
+     * @param paramName
+     */
+    public List<Object> getObjects(String paramName) {
+        try {
+            return (List<Object>)params.get(paramName);
         } catch (Exception ex) {
             throwParameterException('List<Object>', paramName);
         }
