@@ -39,10 +39,12 @@ public with sharing class RD2_EnablementService {
     /**
      * @description Enhanced Recurring Donation enablement service instance
      */
+    @TestVisible
     private static RD2_EnablementService enablementService;
 
     /**
      * @description Returns enhanced Recurring Donation enablement service instance
+     * @return RD2_EnablementService Enhanced Recurring Donation enablement service
      */
     public static RD2_EnablementService getInstance() {
         if (enablementService == null) {

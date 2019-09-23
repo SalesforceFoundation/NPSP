@@ -57,7 +57,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameOnInsert() {
-        RD2_EnablementService.isRecurringDonations2Enabled = true;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
 
@@ -97,7 +97,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameOnUpdate() {
-        RD2_EnablementService.isRecurringDonations2Enabled = true;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
 
@@ -130,7 +130,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldDispatchRDsToIntegrationGatewayOnBeforeDelete() {
-        RD2_EnablementService.isRecurringDonations2Enabled = true;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c> {
             new TEST_RecurringDonationBuilder()

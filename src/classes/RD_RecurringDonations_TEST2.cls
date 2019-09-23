@@ -578,7 +578,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
      */
     @isTest 
     private static void shouldNotReturnRDsWhenEnhancementIsEnabled() {  
-        RD2_EnablementService.isRecurringDonations2Enabled = true;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         List<npe03__Recurring_Donation__c> records = executeBatchStart();
 
