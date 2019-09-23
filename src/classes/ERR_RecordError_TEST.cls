@@ -237,8 +237,8 @@ private class ERR_RecordError_TEST {
 
         ERR_RecordError recordError = new ERR_RecordError('Test');
 
-        Map<String, String> errors= new Map<String, String>();
-        Map<String, SObject> sObjects = new Map<String, SObject>();
+        Map<Id, String> errors= new Map<Id, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
 
         for (Account acc :accs) {
             errors.put (acc.Id, 'Error1 for ' + acc.Name);
@@ -265,7 +265,7 @@ private class ERR_RecordError_TEST {
         List<Error__c> errs = getErrors();
         System.assertEquals(7, errs.size(), '# of Errors in System');
 
-        Map<String, Error__c> errsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
 
         for (Account acc :accs) {
             Error__c err = errsByRecordId.get(acc.Id);
@@ -288,7 +288,7 @@ private class ERR_RecordError_TEST {
 
         ERR_RecordError recordError = new ERR_RecordError('Test');
 
-        Map<String, SObject> sObjects = new Map<String, SObject>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
 
         for (Account acc :accs) {
             sObjects.put(acc.Id, acc);
@@ -312,7 +312,7 @@ private class ERR_RecordError_TEST {
         List<Error__c> errs = getErrors();
         System.assertEquals(7, errs.size(), '# of Errors in System');
 
-        Map<String, Error__c> errsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
 
         for (Account acc :accs) {
             Error__c err = errsByRecordId.get(acc.Id);
@@ -386,8 +386,8 @@ private class ERR_RecordError_TEST {
 
         ERR_RecordError recordError = new ERR_RecordError('Test');
 
-        Map<String, String> errors= new Map<String, String>();
-        Map<String, SObject> sObjects = new Map<String, SObject>();
+        Map<Id, String> errors= new Map<ID, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
 
         for (Account acc :accs) {
             errors.put (acc.Id, 'Error1 for ' + acc.Name);
@@ -420,7 +420,7 @@ private class ERR_RecordError_TEST {
         List<Error__c> errs = getErrors();
         System.assertEquals(7, errs.size(), '# of Errors should be 7');
 
-        Map<String, Error__c> errsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
 
         for (Account acc : accs) {
             Error__c err = errsByRecordId.get(acc.Id);
@@ -444,8 +444,8 @@ private class ERR_RecordError_TEST {
 
         ERR_RecordError recordError = new ERR_RecordError('Test');
 
-        Map<String, String> errors= new Map<String, String>();
-        Map<String, SObject> sObjects = new Map<String, SObject>();
+        Map<Id, String> errors= new Map<Id, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
 
         for (Account acc :accs) {
             errors.put (acc.Id, 'Error1 for ' + acc.Name);
@@ -479,7 +479,7 @@ private class ERR_RecordError_TEST {
         errs = getErrors();
         System.assertEquals(7, errs.size(), '# of Errors should be 7');
 
-        Map<String, Error__c> errsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
 
         for (Account acc : accs) {
             Error__c err = errsByRecordId.get(acc.Id);
@@ -503,8 +503,8 @@ private class ERR_RecordError_TEST {
 
         ERR_RecordError recordError = new ERR_RecordError('Test');
 
-        Map<String, String> errors= new Map<String, String>();
-        Map<String, SObject> sObjects = new Map<String, SObject>();
+        Map<Id, String> errors= new Map<Id, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
 
         for (Account acc :accs) {
             errors.put (acc.Id, 'Error1 for ' + acc.Name);
@@ -538,7 +538,7 @@ private class ERR_RecordError_TEST {
         errs = getErrors();
         System.assertEquals(7, errs.size(), '# of Errors should be 7');
 
-        Map<String, Error__c> errsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
 
         for (Account acc : accs) {
             Error__c err = errsByRecordId.get(acc.Id);
@@ -560,8 +560,8 @@ private class ERR_RecordError_TEST {
 
         ERR_RecordError recordError = new ERR_RecordError('Test');
 
-        Map<String, String> errors= new Map<String, String>();
-        Map<String, SObject> sObjects = new Map<String, SObject>();
+        Map<Id, String> errors= new Map<Id, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
 
         for (Account acc :accs) {
             errors.put (acc.Id, 'Error1 for ' + acc.Name);
@@ -598,7 +598,7 @@ private class ERR_RecordError_TEST {
         errs = getErrors();
         System.assertEquals(7, errs.size(), '# of Errors should be 7');
 
-        Map<String, Error__c> errsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
 
         for (Account acc : accs) {
             Error__c err = errsByRecordId.get(acc.Id);
@@ -620,8 +620,8 @@ private class ERR_RecordError_TEST {
 
         ERR_RecordError recordError = new ERR_RecordError('Test');
 
-        Map<String, String> errors= new Map<String, String>();
-        Map<String, SObject> sObjects = new Map<String, SObject>();
+        Map<Id, String> errors= new Map<Id, String>();
+        Map<Id, SObject> sObjects = new Map<Id, SObject>();
 
         for (Account acc :accs) {
             errors.put (acc.Id, 'Error1 for ' + acc.Name);
@@ -658,7 +658,7 @@ private class ERR_RecordError_TEST {
         errs = getErrors();
         System.assertEquals(7, errs.size(), '# of Errors should be 7');
 
-        Map<String, Error__c> errsByRecordId = getErrorsByRecordId();
+        Map<Id, Error__c> errsByRecordId = getErrorsByRecordId();
 
         for (Account acc : accs) {
             Error__c err = errsByRecordId.get(acc.Id);
@@ -740,7 +740,7 @@ private class ERR_RecordError_TEST {
     /**
      * @description Helper method to retrieve all error records into a Map by Salesforce Id
      */
-    private static Map<String, Error__c> getErrorsByRecordId() {
+    private static Map<Id, Error__c> getErrorsByRecordId() {
         List<Error__c> errs =  [SELECT  Id,
                                         Context_Type__c,
                                         Datetime__c,
@@ -752,7 +752,7 @@ private class ERR_RecordError_TEST {
                                         Retry_Pending__c
                                 FROM Error__c];
 
-        Map<String, Error__c> errsByRecordId = new Map<String, Error__c>();
+        Map<Id, Error__c> errsByRecordId = new Map<Id, Error__c>();
 
         for (Error__c err : errs) {
             errsByRecordId.put (err.Related_Record_ID__c, err);

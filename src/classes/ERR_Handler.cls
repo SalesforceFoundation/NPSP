@@ -269,6 +269,19 @@ public class ERR_Handler {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Creates an error record from a String, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+    * @param msg
+    * @param context The context the exception was raised on.
+    */
+    public static void processError(String msg, String context) {
+        if (msg != null) {
+            Error__c error = createError(msg, context);
+            processErrors(new Error__c[]{error}, context);
+        }
+    }
+
 
     /*******************************************************************************************************
     * @description Creates error records from passed in exceptions.
@@ -308,6 +321,23 @@ public class ERR_Handler {
             //ERR_Notifier takes care of checking the settings itself.
             ERR_Notifier.sendErrorNotifications(context);
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an error record from an exception.
+    * @param msg The message to record.
+    * @param context The context the exception was raised on.
+    * @return Error__c Error record.
+    */
+    private static Error__c createError(String msg, String context) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Error_Type__c = System.Label.errErrorTypeOther;
+        error.Full_Message__c = msg;
+        error.Context_Type__c = context;
+
+
+        return error;
     }
 
     /*******************************************************************************************************
@@ -359,24 +389,22 @@ public class ERR_Handler {
         if (result instanceof Database.SaveResult) {
             Database.SaveResult saveResult = (Database.SaveResult) result;
             recordId = (saveResult.getId() != null) ? saveResult.getId() : objId;
-            error.Record_URL__c = getRecordURL(recordId);
             error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = saveResult.getErrors()[0].getMessage();
         } else if (result instanceof Database.DeleteResult) {
             Database.DeleteResult deleteResult = (Database.DeleteResult) result;
             recordId = (deleteResult.getId() != null) ? deleteResult.getId() : objId;
-            error.Record_URL__c = getRecordURL(recordId);
             error.Error_Type__c = getStatusCode(deleteResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = deleteResult.getErrors()[0].getMessage();
         } else if (result instanceof Database.UndeleteResult) {
             Database.UndeleteResult undeleteResult = (Database.UndeleteResult) result;
             recordId = (undeleteResult.getId() != null) ? undeleteResult.getId() : objId;
-            error.Record_URL__c = getRecordURL(recordId);
             error.Error_Type__c = getStatusCode(undeleteResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = undeleteResult.getErrors()[0].getMessage();
         }
 
         error.Related_Record_ID__c = recordId;
+        error.Record_URL__c = getRecordURL(recordId);
 
         UTIL_Debug.debug('**** createError() returns error: ' + error);
         return error;
@@ -436,11 +464,9 @@ public class ERR_Handler {
     * @return The URL of the record. Warning: it may not necessarily be valid.
     */
     public static String getRecordURL(String recordId) {
-        String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/' + recordId;
 
-        recordURL = recordURL.replaceFirst('http:', 'https:');
+        return (recordId != null) ? URL.getSalesforceBaseUrl().toExternalForm().replaceFirst('http:', 'https:') + '/' + recordId : null;
 
-        return recordURL;
     }
 
 
