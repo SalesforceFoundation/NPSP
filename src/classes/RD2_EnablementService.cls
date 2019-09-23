@@ -36,6 +36,31 @@
 */
 public with sharing class RD2_EnablementService {
 
+    /**
+     * @description Enhanced Recurring Donation enablement service instance
+     */
+    private static RD2_EnablementService enablementService;
+
+    /**
+     * @description Returns enhanced Recurring Donation enablement service instance
+     */
+    public static RD2_EnablementService getInstance() {
+        if (enablementService == null) {
+            enablementService = new RD2_EnablementService();
+        }
+        return enablementService;
+    }
+
+    /**
+     * @description Returns true if enhanced Recurring Donations are enabled
+     */
+    public static Boolean isRecurringDonations2Enabled {
+        get {
+            return RD2_EnablementService.getInstance().isRecurringDonations2Enabled();
+        }
+        private set;
+    }
+
     /***
     * @description Contains attribute confirming if LEX is enabled
     */
@@ -52,34 +77,22 @@ public with sharing class RD2_EnablementService {
     
     /***
     * @description Returns true if enhanced Recurring Donations can be enabled
+    * @return Boolean
     */
-    public static Boolean isRecurringDonations2Ready {
-        get {
-            if (isRecurringDonations2Ready == null) {
-                isRecurringDonations2Ready = 
-                    CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
-                    && isUserRunningLightning
-                    && UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
-            }
-            return isRecurringDonations2Ready;
-        }
-        private set;
+    public Boolean isRecurringDonations2Ready() {
+        return 
+            CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
+            && isUserRunningLightning
+            && UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
     }
     
     /***
     * @description Returns true if enhanced Recurring Donations are enabled
+    * @return Boolean
     */
-    @TestVisible
-    public static Boolean isRecurringDonations2Enabled {
-        get {
-            if (isRecurringDonations2Enabled == null) {
-                isRecurringDonations2Enabled = 
-                    UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true
-                    && UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
-            }
-            return isRecurringDonations2Enabled;
-        }
-        private set;
+    public Boolean isRecurringDonations2Enabled() {
+        return 
+            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true
+            && UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
     }
-
 }

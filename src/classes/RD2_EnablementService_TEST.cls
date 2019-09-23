@@ -187,12 +187,13 @@ public with sharing class RD2_EnablementService_TEST {
     * when Customizable Rollups are not enabled
     */
     @isTest
-    private static void shouldNotActivateEnhancementWhenCustomizableRollupsAreNotEnabled() {
+    private static void shouldNotActivateEnhancementWhenCustomizableRollupsAreNotEnabled() {  
+        RD2_EnablementService service = new RD2_EnablementService();
         setCustomizableRollups(false);
         RD2_EnablementService.isUserRunningLightning = true;
         setPilotEnabledFeatureParameter(true);
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Ready, 'Enhancement should not be ready');
+        System.assertEquals(false, service.isRecurringDonations2Ready(), 'Enhancement should not be ready');
     }
 
     /****
@@ -200,12 +201,14 @@ public with sharing class RD2_EnablementService_TEST {
     * when LEX is not enabled
     */
     @isTest
-    private static void shouldNotActivateEnhancementWhenLEXIsNotEnabled() {
+    private static void shouldNotActivateEnhancementWhenLEXIsNotEnabled() {  
+        RD2_EnablementService service = new RD2_EnablementService();
+
         setCustomizableRollups(true);
         RD2_EnablementService.isUserRunningLightning = false;
         setPilotEnabledFeatureParameter(true);
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Ready, 'Enhancement should not be ready');
+        System.assertEquals(false, service.isRecurringDonations2Ready(), 'Enhancement should not be ready');
     }
 
     /****
@@ -213,12 +216,14 @@ public with sharing class RD2_EnablementService_TEST {
     * when PilotEnabled feature paramenter is false
     */
     @isTest
-    private static void shouldNotActivateEnhancementWhenPilotEnabledIsFalse() {        
+    private static void shouldNotActivateEnhancementWhenPilotEnabledIsFalse() {   
+        RD2_EnablementService service = new RD2_EnablementService();
+
         setCustomizableRollups(true);
         RD2_EnablementService.isUserRunningLightning = true;
         setPilotEnabledFeatureParameter(false);
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Ready, 'Enhancement should not be ready');
+        System.assertEquals(false, service.isRecurringDonations2Ready(), 'Enhancement should not be ready');
     }
 
     /****
@@ -228,12 +233,14 @@ public with sharing class RD2_EnablementService_TEST {
     * and PilotEnabled feature parameter is set to true
     */
     @isTest
-    private static void shouldActivateEnhancementWhenAllDependenciesAreCompleted() {             
+    private static void shouldActivateEnhancementWhenAllDependenciesAreCompleted() {    
+        RD2_EnablementService service = new RD2_EnablementService();
+
         setCustomizableRollups(true);
         RD2_EnablementService.isUserRunningLightning = true;
         setPilotEnabledFeatureParameter(true);
 
-        System.assertEquals(true, RD2_EnablementService.isRecurringDonations2Ready, 'Enhancement should be ready');
+        System.assertEquals(true, service.isRecurringDonations2Ready(), 'Enhancement should be ready');
     }
 
     /****
