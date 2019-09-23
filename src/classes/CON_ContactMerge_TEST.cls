@@ -357,24 +357,110 @@ public class CON_ContactMerge_TEST {
         insert new Contact[]{con, con2};
 
         // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile
-        Id roProfileId = [SELECT Id FROM Profile WHERE Name = 'Read Only' LIMIT 1].Id;
-        User roUser = new User(
-                FirstName = 'UNITTEST', LastName = 'UNITTEST', Alias = 'UNITTEST',
-                Email = 'UNITTEST@NOWHERE.NET', UserName = 'UNITTEST@NOWHERE.NET',
-                ProfileId = roProfileId,  TimeZoneSidKey = 'America/Los_Angeles',
-                LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
-                EmailEncodingKey = 'ISO-8859-1'
-        );
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
 
-        // Verify that controller detects the User doesn't have update permissions on the Contact object
+        // Verify that controller detects the User doesn't have delete permissions on the Contact object
         Test.startTest();
-        System.runAs(roUser) {
+        System.runAs(readOnlyUser) {
             Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
             Con_ContactMerge_CTRL ctlr = new Con_ContactMerge_CTRL(new ApexPages.StandardSetController(new list<Contact>()));
             System.debug('Here is the error msg:'+ ctlr.errorMsg);
             System.assertEquals(System.Label.conMergeErrorNoDeleteObjPermission, ctlr.errorMsg);
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteObjPermission);
         }
         Test.stopTest();
+    }
+
+    /**
+     * @description Validate that a User with delete permissions to the Contact object, but no record level acesss
+       gets a pageErrorMessage doing the contact merge.
+     */
+     @isTest
+     private static void shouldDisplayErrorWithNoDeleteRecAccess() {
+        //Create contacts for going through the contact merge page
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+
+		Contact con2 = UTIL_UnitTestData_TEST.getContact();
+		con2.LastName = '2Contact_forTests_Merge';
+
+        insert new Contact[]{con, con2};
+
+        // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        // Run as admin user to set the permission set with object level delete permission for the readonlyuser
+        System.runas(adminUser) {
+            assignDeletePermissionSet(readOnlyUser.Id);
+        }
+
+        Test.startTest();
+        // Verify that when logged in as readonlyuser, it returns error when merging contacts because of record level permissions
+        System.runAs(readOnlyUser) {
+            Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+            Con_ContactMerge_CTRL ctlr = new Con_ContactMerge_CTRL(new ApexPages.StandardSetController(new list<Contact>()));
+            System.assertEquals(null, ctlr.errorMsg);
+
+            ctlr.searchText = 'test';
+            //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+            Id[] fixedSearchResults=new Id[2];
+            fixedSearchResults[0]=con.Id;
+            fixedSearchResults[1]=con2.Id;
+
+            Test.setFixedSearchResults(fixedSearchResults);
+            //search for contacts
+            ctlr.search();
+            //select the two contacts and grab them
+            ctlr.searchResults[0].selected = true;
+            ctlr.searchResults[1].selected = true;
+            ctlr.nextStep();
+
+            System.assertEquals(System.Label.conMergeErrorNoDeleteRecAccess, ctlr.errorMsg);
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteRecAccess);
+        }
+
+        Test.stopTest();
+    }
+
+    /*******************************************************************************************************
+    * @description Creates and assigns the permission set with delete permission on contact object
+    */
+    private static void assignDeletePermissionSet(Id userId) {
+        final String translationPerm = 'PermissionsToDelete';
+
+        // Create a permission set with CustomizeApplication set ensuring other flags
+        // on which CustomizeApplication settings depends are set as well
+        PermissionSet permission = new PermissionSet(
+            Name = 'PermissionTest',
+            Label = 'PermissionTest'
+
+        );
+
+        insert permission;
+        List<ObjectPermissions> objPermissions;
+
+
+        insert
+        new ObjectPermissions (
+
+        SObjectType = 'Contact',
+        ParentId = permission.id,
+        PermissionsRead = true,
+        PermissionsViewAllRecords = true,
+        PermissionsCreate = true,
+        PermissionsDelete = true,
+        PermissionsEdit = true
+
+        );
+
+
+
+
+        insert new PermissionSetAssignment(
+            AssigneeId = userId,
+            PermissionSetId = permission.Id
+        );
+
     }
 
     static testMethod void merge2OneToOneOne2One(){

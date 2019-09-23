@@ -623,13 +623,13 @@ public with sharing class CON_ContactMerge_CTRL {
     private boolean isUserHasDeleteAccess(set<Id> ContactIds) {
         //This is the logic which checks if delete permission for the selected records exists or not
         List <UserRecordAccess> userAccess = [
-             SELECT RecordId, HasEditAccess, HasDeleteAccess
+             SELECT RecordId, HasEditAccess, HasDeleteAccess, MaxAccessLevel
              FROM UserRecordAccess
              WHERE UserId = :UserInfo.getUserId()
              And RecordId IN :ContactIds
         ];
         for (UserRecordAccess user: userAccess) {
-            if (!user.HasDeleteAccess) {
+            if (!user.HasDeleteAccess && user.MaxAccessLevel != 'None') {
                 return false;
             }
         }
