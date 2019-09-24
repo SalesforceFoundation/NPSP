@@ -218,7 +218,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                 // Edit field mapping
                 this.modalMode = 'edit';
                 this.fieldMapping = this.parse(event.row);
-                this.fieldMapping.Required = this.handleIsRequiredField(this.fieldMapping.Required);
+                this.fieldMapping.Required = this.fieldMapping.Required === 'Yes' ? true : false;
             } else {
                 // New field mapping
                 this.modalMode = 'new';
@@ -356,7 +356,7 @@ export default class bdiFieldMappingModal extends LightningElement {
             if (missingField.length === 0) {
                 let inputFieldRequired =
                     this.template.querySelector(`lightning-input[data-field-name="${lblRequired}"]`);
-                let isRequired = this.handleIsRequiredField(inputFieldRequired.checked);
+                let isRequired = inputFieldRequired.checked === true ? 'Yes' : 'No';
                 let rowDetails;
 
                 if (this.modalMode === 'edit') {
@@ -370,7 +370,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                         MasterLabel: this.fieldMapping.Source_Field_Label,
                         Data_Import_Field_Mapping_Set: this.fieldMappingSetName,
                         Is_Deleted: false,
-                        Required: isRequired || 'No',
+                        Required: isRequired,
                         Source_Field_API_Name: this.fieldMapping.Source_Field_API_Name,
                         Target_Field_API_Name: this.fieldMapping.Target_Field_API_Name,
                         Target_Object_Mapping: this.objectMapping.DeveloperName
@@ -395,37 +395,6 @@ export default class bdiFieldMappingModal extends LightningElement {
             }
         } catch(error) {
             this.handleError(error);
-        }
-    }
-
-    /*******************************************************************************
-    * @description Converts the "Required__c" field in Data_Import_Field_Mapping__mdt
-    * to a boolean usable in the UI (lightning-input checkbox) or from the UI to a
-    * valid picklist value for use in the metadata record.
-    *
-    * @return {string OR boolean}: Value for the checkbox in the UI or picklist value
-    * for the metadata record
-    */
-    handleIsRequiredField(isChecked) {
-        switch (isChecked) {
-            case true:
-                return 'Yes';
-                break;
-
-            case false:
-                return 'No';
-                break;
-
-            case 'Yes':
-                return true;
-                break;
-
-            case 'No':
-                return false;
-                break;
-
-            default:
-                return 'No';
         }
     }
 
