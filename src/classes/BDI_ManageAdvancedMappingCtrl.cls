@@ -317,7 +317,8 @@ public class BDI_ManageAdvancedMappingCtrl {
     *
     * @return List: List of Data Import Field Mappings with "Is_Deleted" set to true
     */
-    public static Data_Import_Field_Mapping__mdt[] flagFieldMappingsAsDeleted(String objectMappingDeveloperName) {
+    @TestVisible
+    private static Data_Import_Field_Mapping__mdt[] flagFieldMappingsAsDeleted(String objectMappingDeveloperName) {
         DataImportFieldMappingWrapper[] fieldMappingWrappers = getFieldMappingsByObjectAndFieldSetNames(
             objectMappingDeveloperName, getFieldMappingSetName());
         Data_Import_Field_Mapping__mdt[] updatedFieldMappings = new Data_Import_Field_Mapping__mdt[]{};
