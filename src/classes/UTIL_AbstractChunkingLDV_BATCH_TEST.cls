@@ -30,10 +30,10 @@
 * @author Salesforce.org
 * @date 2019
 * @group Utilities
-* @description Tests for UTIL_AbstractCommon_BATCH class
+* @description Tests for UTIL_AbstractChunkingLDV_BATCH class
 */
 @isTest(isParallel=true)
-public class UTIL_AbstractCommon_BATCH_TEST {
+public class UTIL_AbstractChunkingLDV_BATCH_TEST {
 
     /*******************************************************************************************************************
      * @description The number of Accounts to create for test conditions
@@ -41,22 +41,45 @@ public class UTIL_AbstractCommon_BATCH_TEST {
     private static final Integer TEST_ACCOUNT_CNT = 7;
 
     /*******************************************************************************************************************
+     * @description Test Batch Setters
+     */
+    @isTest
+    public static void shouldSetRuntimeParametersOnBatch() {
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+
+        System.assertEquals(UTIL_AbstractChunkingLDV_BATCH.DEFAULT_BATCH_SIZE, mockAbstractChunkingLDV.batchSize, 'Batch Size, Initial');
+        mockAbstractChunkingLDV.setBatchSize(10);
+        System.assertEquals(10, mockAbstractChunkingLDV.batchSize, 'Batch Size, Updated');
+
+        System.assertEquals(null, mockAbstractChunkingLDV.ldvMode, 'LDV Mode, Initial');
+        mockAbstractChunkingLDV.setLdvMode(true);
+        System.assertEquals(true, mockAbstractChunkingLDV.ldvMode, 'LDV Mode, Updated');
+
+        System.assertEquals('', mockAbstractChunkingLDV.additionalWhereClause, 'Additional Where Clause, Initial');
+        mockAbstractChunkingLDV.setAdditionalWhereClause('AWC');
+        System.assertEquals('AWC', mockAbstractChunkingLDV.additionalWhereClause, 'Additional Where Clause, Updated');
+
+    }
+
+
+    /*******************************************************************************************************************
      * @description Test Batch Execution with inner test batch class to test non chunking conditions
      */
     @isTest
-    public static void executeTestBatch() {
+    public static void shouldExecuteBatchToCountAccounts() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
 
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10);
-        mockAbstractCommon.setTestChunkSize(10);
-        mockAbstractCommon.setTestMaxNonLDVSize(10);
-        System.assertEquals (10, mockAbstractCommon.getBatchSize(), 'Batch Size');
-        mockAbstractCommon.setExpectedResult(TEST_ACCOUNT_CNT);
-        mockAbstractCommon.setExpectedLdvMode(false);
-        Database.executeBatch(mockAbstractCommon, 10);
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(10);
+        mockAbstractChunkingLDV.setTestChunkSize(10);
+        mockAbstractChunkingLDV.setTestMaxNonLDVSize(10);
+        System.assertEquals (10, mockAbstractChunkingLDV.getBatchSize(), 'Batch Size');
+        mockAbstractChunkingLDV.setExpectedResult(TEST_ACCOUNT_CNT);
+        mockAbstractChunkingLDV.setExpectedLdvMode(false);
+        Database.executeBatch(mockAbstractChunkingLDV, 10);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -68,17 +91,20 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * chunking conditions
      */
     @isTest
-    public static void executeTestBatchLDV() {
+    public static void shouldExecuteChunkingBatchToCountAccounts() {
 
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
 
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(1, true, '');
-        mockAbstractCommon.setExpectedResult(TEST_ACCOUNT_CNT);
-        mockAbstractCommon.setExpectedLdvMode(true);
-        Database.executeBatch(mockAbstractCommon, 1);
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(1);
+        mockAbstractChunkingLDV.setLdvMode(true);
+
+        mockAbstractChunkingLDV.setExpectedResult(TEST_ACCOUNT_CNT);
+        mockAbstractChunkingLDV.setExpectedLdvMode(true);
+        Database.executeBatch(mockAbstractChunkingLDV, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -86,48 +112,22 @@ public class UTIL_AbstractCommon_BATCH_TEST {
     }
 
     /*******************************************************************************************************************
-     * @description Test Additional Constructors for Abstract Batch
-     */
-    @isTest
-    public static void addtlBatchConstructors() {
-        assertConstructor('No Params', new UTIL_AbstractCommon_MOCK(), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, null);
-        assertConstructor('LDVMode Only', new UTIL_AbstractCommon_MOCK(false), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, null);
-        assertConstructor('LDVMode, Additional Where', new UTIL_AbstractCommon_MOCK(false, 'Name = \'test\''), UTIL_AbstractCommon_BATCH.DEFAULT_BATCH_SIZE, false, 'Name = \'test\'');
-        assertConstructor('BatchSize', new UTIL_AbstractCommon_MOCK(5), 5, false, null);
-        assertConstructor('LDVMode, Additional Where, BatchSize', new UTIL_AbstractCommon_MOCK(5, true, 'Name = \'test\''), 5, true, 'Name = \'test\'');
-    }
-
-    /*******************************************************************************************************************
-     * @description asserts the member variables that are set during construction of the batch class
-     * @param conDesc Constructor Description
-     * @param batch the constructed batch class
-     * @param expectedBatchSize expected value for batchSize
-     * @param expectedLDVMode expected value for ldvMode
-     * @param expectedAdditionalWhere expected value for additionalWhereClause
-     */
-    private static void assertConstructor(String conDesc, UTIL_AbstractCommon_MOCK batch, Integer expectedBatchSize, Boolean expectedLDVMode, String expectedAdditionalWhere) {
-        System.assertNotEquals(null, batch, conDesc + ': Null Check');
-        System.assertEquals (0, batch.chunkIteration, conDesc + ': Chunk Iteration');
-        System.assertEquals (false, batch.endReached, conDesc + ': End Reached');
-        System.assertEquals (expectedBatchSize, batch.batchSize, conDesc + ': Batch Size');
-        System.assertEquals (expectedLDVMode, batch.ldvMode, conDesc + ': LDV Mode');
-        System.assertEquals (expectedAdditionalWhere, batch.additionalWhereClause, conDesc + ': Additional Where Clause');
-    }
-
-    /*******************************************************************************************************************
      * @description Test Batch Execution when additional where clause is present (LDV)
      */
     @isTest
-    public static void executeAddtlWhereClauseLDV() {
+    public static void shouldExecuteChunkingBatchWithAddtlWhereClauseToCountAccounts() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(1, 'Id= \'' + accs[0].Id + '\'');
-        mockAbstractCommon.setExpectedResult(1);
-        mockAbstractCommon.setExpectedLdvMode(true);
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(1);
+        mockAbstractChunkingLDV.setAdditionalWhereClause('Id= \'' + accs[0].Id + '\'');
 
-        Database.executeBatch(mockAbstractCommon, 1);
+        mockAbstractChunkingLDV.setExpectedResult(1);
+        mockAbstractChunkingLDV.setExpectedLdvMode(true);
+
+        Database.executeBatch(mockAbstractChunkingLDV, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -139,16 +139,19 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * @description Test Batch Execution when additional where clause is present (non LDV)
      */
     @isTest
-    public static void shouldExecuteBatchJobInNonLdvModeWithAddtlWhereClause() {
+    public static void shouldExecuteBatchWithAddtlWhereClauseToCountAccounts() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[0].Id + '\'');
-        mockAbstractCommon.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
-        mockAbstractCommon.setExpectedResult(1);
-        mockAbstractCommon.setExpectedLdvMode(false);
-        Database.executeBatch(mockAbstractCommon, 1);
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(10);
+        mockAbstractChunkingLDV.setAdditionalWhereClause('Id= \'' + accs[0].Id + '\'');
+
+        mockAbstractChunkingLDV.setTestMaxNonLDVSize(UTIL_AbstractChunkingLDV_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
+        mockAbstractChunkingLDV.setExpectedResult(1);
+        mockAbstractChunkingLDV.setExpectedLdvMode(false);
+        Database.executeBatch(mockAbstractChunkingLDV, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -160,17 +163,19 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * @description Test Batch Execution when where clause is present (LDV)
      */
     @isTest
-    public static void executeWhereClauseLDV() {
+    public static void shouldExecuteChunkingBatchWithWhereClauseToCountAccounts() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(1);
-        mockAbstractCommon.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
-        mockAbstractCommon.setExpectedResult(1);
-        mockAbstractCommon.setExpectedLdvMode(true);
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(1);
 
-        Database.executeBatch(mockAbstractCommon, 1);
+        mockAbstractChunkingLDV.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
+        mockAbstractChunkingLDV.setExpectedResult(1);
+        mockAbstractChunkingLDV.setExpectedLdvMode(true);
+
+        Database.executeBatch(mockAbstractChunkingLDV, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -182,18 +187,20 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * @description Test Batch Execution when where clause is present (non LDV)
      */
     @isTest
-    public static void executeWhereClause() {
+    public static void shouldExecuteBatchWithWhereClauseToCountAccounts() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10);
-        mockAbstractCommon.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
-        mockAbstractCommon.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
-        mockAbstractCommon.setExpectedResult(1);
-        mockAbstractCommon.setExpectedLdvMode(false);
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(10);
 
-        Database.executeBatch(mockAbstractCommon, 1);
+        mockAbstractChunkingLDV.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
+        mockAbstractChunkingLDV.setTestMaxNonLDVSize(UTIL_AbstractChunkingLDV_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
+        mockAbstractChunkingLDV.setExpectedResult(1);
+        mockAbstractChunkingLDV.setExpectedLdvMode(false);
+
+        Database.executeBatch(mockAbstractChunkingLDV, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -205,17 +212,20 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * @description Test Batch Execution when where and additional clause is present (LDV)
      */
     @isTest
-    public static void executeWhereAndAdditionalClauseLDV() {
+    public static void shouldExecuteChunkingBatchWithWhereAndAddtlWhereClauseToCountAccounts() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[1].Id + '\' or Id=\'' + accs[2].Id + '\' or Id=\'' + accs[3].Id + '\'');
-        mockAbstractCommon.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id=\'' + accs[1].Id + '\' or Id=\'' + accs[2].Id + '\'');
-        mockAbstractCommon.setExpectedResult(2);
-        mockAbstractCommon.setExpectedLdvMode(true);
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(10);
+        mockAbstractChunkingLDV.setAdditionalWhereClause('Id = \'' + accs[1].Id + '\' or Id=\'' + accs[2].Id + '\' or Id=\'' + accs[3].Id + '\'');
 
-        Database.executeBatch(mockAbstractCommon, 1);
+        mockAbstractChunkingLDV.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id=\'' + accs[1].Id + '\' or Id=\'' + accs[2].Id + '\'');
+        mockAbstractChunkingLDV.setExpectedResult(2);
+        mockAbstractChunkingLDV.setExpectedLdvMode(true);
+
+        Database.executeBatch(mockAbstractChunkingLDV, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -227,18 +237,21 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * @description Test Batch Execution when where  and additional clause is present (non LDV)
      */
     @isTest
-    public static void executeWhereAndAdditionalClause() {
+    public static void shouldExecuteBatchWithWhereAndAddtlWhereClauseToCountAccounts() {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(TEST_ACCOUNT_CNT, null);
         insert accs;
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\' or Id = \'' + accs[3].Id + '\'');
-        mockAbstractCommon.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\'');
-        mockAbstractCommon.setTestMaxNonLDVSize(UTIL_AbstractCommon_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
-        mockAbstractCommon.setExpectedResult(2);
-        mockAbstractCommon.setExpectedLdvMode(false);
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(10);
+        mockAbstractChunkingLDV.setAdditionalWhereClause('Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\' or Id = \'' + accs[3].Id + '\'');
 
-        Database.executeBatch(mockAbstractCommon, 10);
+        mockAbstractChunkingLDV.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\'');
+        mockAbstractChunkingLDV.setTestMaxNonLDVSize(UTIL_AbstractChunkingLDV_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
+        mockAbstractChunkingLDV.setExpectedResult(2);
+        mockAbstractChunkingLDV.setExpectedLdvMode(false);
+
+        Database.executeBatch(mockAbstractChunkingLDV, 10);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -249,14 +262,16 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * @description Test Batch Execution when no records are returned
      */
     @isTest
-    public static void shouldProperlyExecuteWithnoRecordsReturned() {
+    public static void shouldProperlyExecuteBatchWithnoRecordsReturned() {
 
         Test.startTest();
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10);
-        mockAbstractCommon.setExpectedResult(0);
-        mockAbstractCommon.setExpectedLdvMode(false);
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(10);
 
-        Database.executeBatch(mockAbstractCommon, 1);
+        mockAbstractChunkingLDV.setExpectedResult(0);
+        mockAbstractChunkingLDV.setExpectedLdvMode(false);
+
+        Database.executeBatch(mockAbstractChunkingLDV, 1);
         Test.stopTest();
 
         List<AsyncApexJob> aaJobs = queryBatchJobs();
@@ -267,24 +282,30 @@ public class UTIL_AbstractCommon_BATCH_TEST {
      * @description Test Validate Method valid Query
      */
     @isTest
-    public static void validateValidQuery() {
+    public static void shouldReturnNullForValidatingValidQuery() {
         // UserInfo.getUserId is not valid for Account, but doesn't matter for this test because we are only validating syntactical correctness.
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
-        mockAbstractCommon.setTestWhereClause('OwnerId= \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(10);
+        mockAbstractChunkingLDV.setAdditionalWhereClause('Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
 
-        System.assertEquals(null, mockAbstractCommon.validateQuery(), 'No Exception expected');
+        mockAbstractChunkingLDV.setTestWhereClause('OwnerId= \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
+
+        System.assertEquals(null, mockAbstractChunkingLDV.validateQuery(), 'No Exception expected');
     }
 
     /*******************************************************************************************************************
      * @description Test Validate Method invalid Query
      */
     @isTest
-    public static void validateInvalidQuery() {
-        UTIL_AbstractCommon_MOCK mockAbstractCommon = new UTIL_AbstractCommon_MOCK(10, 'Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
-        //Invalid Where Clause
-        mockAbstractCommon.setTestWhereClause('OwnerId equals \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
+    public static void shouldReturnExceptionForValidatingInvalidQuery() {
+        UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
+        mockAbstractChunkingLDV.setBatchSize(10);
+        mockAbstractChunkingLDV.setAdditionalWhereClause('Id= \'' + UTIL_UnitTestData_TEST.mockId(Account.SObjectType) + '\'');
 
-        System.assertNotEquals(null, mockAbstractCommon.validateQuery(), 'Exception expected');
+        //Invalid Where Clause
+        mockAbstractChunkingLDV.setTestWhereClause('OwnerId equals \'' + UTIL_UnitTestData_TEST.mockId(User.SObjectType) + '\'');
+
+        System.assertNotEquals(null, mockAbstractChunkingLDV.validateQuery(), 'Exception expected');
     }
 
     // **************************** HELPER METHODS ****************************
@@ -297,7 +318,7 @@ public class UTIL_AbstractCommon_BATCH_TEST {
         return [
             SELECT Id FROM AsyncApexJob
             WHERE JobType = 'BatchApex'
-            AND ApexClass.Name = 'UTIL_AbstractCommon_MOCK'
+            AND ApexClass.Name = 'UTIL_AbstractChunkingLDV_MOCK'
         ];
     }
 

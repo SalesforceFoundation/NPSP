@@ -66,15 +66,6 @@ private with sharing class OPP_OpportunityNaming_BATCH_TEST {
     }
 
     /**
-     * @description Constructs Batch with a different Batch Size
-     */
-    @isTest
-    private static void constructBatchWithDifferentBatchSize() {
-        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH(10);
-        System.assertEquals (10, batch.getBatchSize(), 'Batch Size');
-    }
-
-    /**
      * @description Coverage of Schedulable Method
      */
     @isTest

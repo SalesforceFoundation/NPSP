@@ -30,16 +30,19 @@
 * @author Salesforce.org
 * @date 2019
 * @group Utilities
-* @description Mock Batch Class for tests of UTIL_AbstractCommon_BATCH class
+* @description Mock Batch Class for tests of UTIL_AbstractChunkingLDV_BATCH class
 */
 @isTest
-public class UTIL_AbstractCommon_MOCK extends UTIL_AbstractCommon_BATCH {
+public class UTIL_AbstractChunkingLDV_MOCK extends UTIL_AbstractChunkingLDV_BATCH {
 
     private Integer expectedResult;
     private Boolean expectedLdvMode;
     private Integer testChunkSize = 1;
     private Integer testMaxNonLDVSize = 1;
     private String testWhereClause = '';
+
+    // Initialize private variable for record count to 0
+    private Integer recCnt = 0;
 
     /**
      * @description sets the Number of Records we expect to find at the end of execution during tests.
@@ -55,60 +58,6 @@ public class UTIL_AbstractCommon_MOCK extends UTIL_AbstractCommon_BATCH {
      */
     public void setExpectedLdvMode(Boolean anExpectedLdvMode) {
         this.expectedLdvMode = anExpectedLdvMode;
-    }
-
-    // Initialize private variable for record count to 0
-    private Integer recCnt = 0;
-
-    /**
-     * @description No parameter constructor
-     */
-    public UTIL_AbstractCommon_MOCK() {
-        super();
-    }
-
-    /**
-     * @description Constructor
-     * @param batchSize How many records should be in each batch
-     */
-    public UTIL_AbstractCommon_MOCK(Integer batchSize) {
-        super(batchSize);
-    }
-
-    /**
-     * @description Constructor
-     * @param batchSize How many records should be in each batch
-     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
-     */
-    public UTIL_AbstractCommon_MOCK(Integer batchSize, String additionalWhereClause) {
-        super(batchSize, additionalWhereClause);
-    }
-
-    /**
-     * @description Constructor
-     * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
-     */
-    public UTIL_AbstractCommon_MOCK(Boolean ldvMode) {
-        super(ldvMode);
-    }
-
-    /**
-     * @description Constructor
-     * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
-     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
-     */
-    public UTIL_AbstractCommon_MOCK(Boolean ldvMode, String additionalWhereClause) {
-        super(ldvMode, additionalWhereClause);
-    }
-
-    /**
-     * @description Constructor
-     * @param batchSize How many records should be in each batch
-     * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
-     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
-     */
-    public UTIL_AbstractCommon_MOCK(Integer batchSize, Boolean ldvMode, String additionalWhereClause) {
-        super(batchSize, ldvMode, additionalWhereClause);
     }
 
     /**

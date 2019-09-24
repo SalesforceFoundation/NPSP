@@ -33,7 +33,7 @@
 * @description Batch class creates names all Opportunities per the naming spec. Batch job chunks Opportunities
 * in groups of 10,000,000 records ordered by Id and chains itself to process additional records to avoid query limits
  */
-public class OPP_OpportunityNaming_BATCH extends UTIL_AbstractCommon_BATCH implements Schedulable {
+public class OPP_OpportunityNaming_BATCH extends UTIL_AbstractChunkingLDV_BATCH implements Schedulable {
     /**
      * @description # of records in each batch
      */
@@ -46,17 +46,13 @@ public class OPP_OpportunityNaming_BATCH extends UTIL_AbstractCommon_BATCH imple
 
     /** @description Default No argument constructor */
     public OPP_OpportunityNaming_BATCH() {
-        super();
-    }
-
-    /** @description Constructor to allow specifying batch size.*/
-    public OPP_OpportunityNaming_BATCH(Integer batchSize) {
-        super(batchSize);
+        // Overriding default batch size
+        this.setBatchSize(BATCH_SIZE);
     }
 
     /** @description Schedulable execute method.*/
     public void execute(SchedulableContext context) {
-        Database.executeBatch(new OPP_OpportunityNaming_BATCH(BATCH_SIZE), BATCH_SIZE);
+        Database.executeBatch(new OPP_OpportunityNaming_BATCH(), BATCH_SIZE);
     }
 
     /*********************************************************************************************************
