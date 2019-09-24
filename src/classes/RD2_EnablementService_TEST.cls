@@ -1,0 +1,253 @@
+/*
+    Copyright (c) 2019 Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Recurring Donations
+* @description Enhanced Recurring Donations Enablement Service class
+*
+*/
+@isTest
+public with sharing class RD2_EnablementService_TEST {
+
+
+    /****
+    * @description Verifies enhanced Recurring Donations are not ready for enablement 
+    * when Customizable Rollups are not enabled
+    */
+    @isTest
+    private static void shouldNotActivateEnhancementWhenCustomizableRollupsAreNotEnabled() {  
+        RD2_EnablementService service = new RD2_EnablementService();
+        setCustomizableRollups(false);
+        RD2_EnablementService.isUserRunningLightning = true;
+        setPilotEnabledFeatureParameter(true);
+
+        System.assertEquals(false, service.isRecurringDonations2Ready(), 'Enhancement should not be ready');
+    }
+
+    /****
+    * @description Verifies enhanced Recurring Donations are not ready for enablement 
+    * when LEX is not enabled
+    */
+    @isTest
+    private static void shouldNotActivateEnhancementWhenLEXIsNotEnabled() {  
+        RD2_EnablementService service = new RD2_EnablementService();
+
+        setCustomizableRollups(true);
+        RD2_EnablementService.isUserRunningLightning = false;
+        setPilotEnabledFeatureParameter(true);
+
+        System.assertEquals(false, service.isRecurringDonations2Ready(), 'Enhancement should not be ready');
+    }
+
+    /****
+    * @description Verifies enhanced Recurring Donations are not ready for enablement 
+    * when PilotEnabled feature paramenter is false
+    */
+    @isTest
+    private static void shouldNotActivateEnhancementWhenPilotEnabledIsFalse() {   
+        RD2_EnablementService service = new RD2_EnablementService();
+
+        setCustomizableRollups(true);
+        RD2_EnablementService.isUserRunningLightning = true;
+        setPilotEnabledFeatureParameter(false);
+
+        System.assertEquals(false, service.isRecurringDonations2Ready(), 'Enhancement should not be ready');
+    }
+
+    /****
+    * @description Verifies enhanced Recurring Donations can be enabled
+    * when Customizable Rollups are enabled
+    * and LEX is enabled
+    * and PilotEnabled feature parameter is set to true
+    */
+    @isTest
+    private static void shouldActivateEnhancementWhenAllDependenciesAreCompleted() {    
+        RD2_EnablementService service = new RD2_EnablementService();
+
+        setCustomizableRollups(true);
+        RD2_EnablementService.isUserRunningLightning = true;
+        setPilotEnabledFeatureParameter(true);
+
+        System.assertEquals(true, service.isRecurringDonations2Ready(), 'Enhancement should be ready');
+    }
+
+    /****
+    * @description Verifies enhanced Recurring Donations are not enabled 
+    * when PilotEnabled feature paramenter is false
+    */
+    @isTest
+    private static void shouldNotEnableEnhancementWhenPilotEnabledIsFalse() {  
+        setPilotEnabledFeatureParameter(false);
+        configureRecurringDonations2Enabled();
+
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 'Enhancement should not be enabled');
+    }
+
+    /****
+    * @description Verifies enhanced Recurring Donations are not enabled 
+    * when enhanced Recurring Donations are not configured
+    */
+    @isTest
+    private static void shouldNotEnableEnhancementWhenNotConfigured() {  
+        setPilotEnabledFeatureParameter(true);
+
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 'Enhancement should not be enabled');
+    }
+
+    /****
+    * @description Verifies enhanced Recurring Donations are enabled 
+    * when PilotEnabled feature parameter is set to true
+    * and enhanced Recurring Donations are configured
+    */
+    @isTest
+    private static void shouldEnableEnhancementWhenDependenciesAreCompleted() {  
+        setPilotEnabledFeatureParameter(true);
+        configureRecurringDonations2Enabled();
+
+        System.assertEquals(true, RD2_EnablementService.isRecurringDonations2Enabled, 'Enhancement should be enabled');
+    }
+
+
+    // Helpers
+    ///////////////
+
+
+    /***
+    * @description Enables or disables customizable rollups for testing
+    * @param isEnabled Indicates if the CRLP should be enabled in the custom settings
+    * @param none
+    */
+    private static void setCustomizableRollups(Boolean isEnabled) {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
+            Customizable_Rollups_Enabled__c = isEnabled
+        ));
+    }
+
+    /***
+    * @description Stubs PilotEnabled feature parameter enablement
+    * @param isEnabled Indicates if the PilotEnabled should be enabled using a Mock feature management
+    * @return none
+    */
+    private static void setPilotEnabledFeatureParameter(Boolean isEnabled) {
+        UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
+
+        featureEnablement.featureManagement = (UTIL_FeatureManagement) Test.createStub(
+            UTIL_FeatureManagement.class, new UTIL_FeatureManagement_TEST.Mock()
+        );
+
+        featureEnablement.featureManagement.setPackageBooleanValue(
+            UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), isEnabled
+        );
+    }
+
+    /***
+    * @description Stubs custom settings configuration to enable enhanced Recurring Donations
+    * @return none
+    */
+    private static void configureRecurringDonations2Enabled() {        
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                IsRecurringDonations2Enabled__c = true,
+                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Opportunity_Forecast_Months__c = 12
+            )
+        );
+    }
+
+    /***
+    * @description Stubs enhanced Recurring Donations as not enabled
+    * @return none
+    */
+    public static void setRecurringDonations2Disabled() {
+        RD2_EnablementService.enablementService = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, new Stub()
+        );
+    }
+
+    /***
+    * @description Stubs enhanced Recurring Donations as enabled 
+    * @return none
+    */
+    public static void setRecurringDonations2Enabled() {
+        RD2_EnablementService.enablementService = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, new Stub().withRecurringDonations2Enabled()
+        );
+    }
+
+    /***
+    * @description Stub for the enablement service instance
+    */
+    public class Stub implements System.StubProvider {
+        private Boolean isRecurringDonations2Ready = false;
+        private Boolean isRecurringDonations2Enabled = false;
+
+        /***
+        * @description Sets enhanced Recurring Donation ready to be enabled
+        */
+        public Stub withRecurringDonations2Ready() {
+            isRecurringDonations2Ready = true;
+            return this;
+        }
+        /***
+        * @description Sets enhanced Recurring Donation as enabled
+        */
+
+        public Stub withRecurringDonations2Enabled() {
+            isRecurringDonations2Enabled = true;
+            return this;
+        }
+
+        /***
+        * @description Stubs class methods
+        */
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String methodName,
+            Type returnType,
+            List<Type> paramTypes,
+            List<String> paramNames,
+            List<Object> args
+        ) {
+            switch on methodName {
+                when 'isRecurringDonations2Ready' {
+                    return isRecurringDonations2Ready;
+
+                } when 'isRecurringDonations2Enabled' {
+                    return isRecurringDonations2Enabled;
+
+                } when else {
+                    return null;
+                }
+            }
+        }
+    }
+
+}
