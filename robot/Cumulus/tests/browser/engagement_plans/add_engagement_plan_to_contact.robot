@@ -21,6 +21,7 @@ Create a Contact and Add Engagement Plan
 Delete Engagement Plan
     [tags]  unstable
     ${plan_num}    Verify Eng Plan Exists    Engagement Plans    True
+    Click Element With Locator    toast-close
     Click Related Item Popup Link    Engagement Plans    ${plan_num}    Delete
     Click Modal Button        Delete
     Verify Occurrence    Engagement Plans    0    
@@ -28,5 +29,5 @@ Delete Engagement Plan
 Verify Tasks Exist Under Activity
     [tags]  unstable
     Scroll Page To Location    0    0
-    Click Span Button    More Steps
+    Click Element With Locator    engagement_plan.activity-button    showMoreButton
     Check Activity Tasks    ${task1}    ${sub_task}    ${task2}

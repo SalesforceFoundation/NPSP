@@ -52,7 +52,7 @@ Opportunity is Autoclosed when Overpaid
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
-    Select Window    ${value} | Salesforce    7
+    Select Window    ${value} | Salesforce    10
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}

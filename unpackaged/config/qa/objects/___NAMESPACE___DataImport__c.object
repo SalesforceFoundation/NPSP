@@ -390,43 +390,29 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>WO_MinimumCrewSize__c</fullName>
+        <fullName>CO2_currency__c</fullName>
         <externalId>false</externalId>
-        <label>WO MinimumCrewSize</label>
+        <label>CO2 Currency</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
+        <type>Currency</type>
     </fields>
     <fields>
-        <fullName>WO_RecommendedCrewSize__c</fullName>
+        <fullName>CO2_currency_2__c</fullName>
         <externalId>false</externalId>
-        <label>WO RecommendedCrewSize</label>
+        <label>CO2 Currency 2</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
+        <type>Currency</type>
     </fields>
     <fields>
-        <fullName>WO_MaintenancePlan__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <fullName>CustomObject2ImportStatus__c</fullName>
         <externalId>false</externalId>
-        <label>WO MaintenancePlan</label>
-        <referenceTo>MaintenancePlan</referenceTo>
-        <relationshipLabel>Maintenance Plans</relationshipLabel>
-        <relationshipName>MaintenancePlans</relationshipName>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
-        <fullName>WO_Subject__c</fullName>
-        <externalId>false</externalId>
-        <label>WO Subject</label>
+        <label>CustomObject2ImportStatus</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -434,29 +420,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>WO_SuggestedMaintenanceDate__c</fullName>
-        <externalId>false</externalId>
-        <label>WO SuggestedMaintenanceDate</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>WorkOrderImportStatus__c</fullName>
-        <externalId>false</externalId>
-        <label>WorkOrderImportStatus</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>WorkOrderImported__c</fullName>
+        <fullName>CustomObject2Imported__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
-        <label>WorkOrderImported</label>
-        <referenceTo>WorkOrder</referenceTo>
+        <label>CustomObject2Imported</label>
+        <referenceTo>CustomObject2__c</referenceTo>
         <relationshipLabel>NPSP Data Imports</relationshipLabel>
         <relationshipName>NPSP_Data_Imports</relationshipName>
         <required>false</required>

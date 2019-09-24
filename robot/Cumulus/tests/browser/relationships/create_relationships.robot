@@ -3,10 +3,12 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
+Test Teardown   Capture Screenshot on Failure
 
 *** Test Cases ***
 
 Create Relationships for contacts
+    [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com
     Store Session Record    Account    &{contact1}[AccountId]
     Go To Record Home  &{contact1}[AccountId]
@@ -40,3 +42,9 @@ Create Relationships for contacts
     Click Related Item Link      Relationships    &{contact2}[FirstName] &{contact2}[LastName]
     ${id}    Get Current Record Id
     Store Session Record    npe4__Relationship__c    ${id}
+
+
+*** Keywords ***
+
+Capture Screenshot on Failure
+    Run Keyword If Test Failed  Capture Page Screenshot

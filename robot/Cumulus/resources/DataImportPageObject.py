@@ -1,6 +1,6 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import pageobject
-from locators_46 import npsp_lex_locators
+from NPSP import npsp_lex_locators
 
 @pageobject("Listing", "DataImport__c")
 class DataImportPage(ListingPage):

@@ -348,9 +348,10 @@
                                     <div class="slds-form__row">
                                         <div class="slds-form__item" role="listitem">
                                             <div class="slds-m-vertical_medium">
-                                                <apex:commandButton action="{!writeoff}" 
-                                                    value="{!$Label.pmtWizardSectionWriteoffPayments}"  
-                                                    styleClass="slds-button slds-button_brand" 
+                                                <apex:commandButton action="{!writeoff}"
+                                                    value="{!$Label.pmtWizardSectionWriteoffPayments}"
+                                                    onclick="this.disabled = 'true'"
+                                                    styleClass="slds-button slds-button_brand"
                                                     reRender="vfForm"/>
                                             </div>
                                         </div>

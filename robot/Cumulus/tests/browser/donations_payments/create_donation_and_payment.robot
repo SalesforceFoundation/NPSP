@@ -38,6 +38,7 @@ Create Donation from a Contact
     ${xpath}    Get NPSP Locator    button    Create Payments
     Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)    
     Click Button with Value    Create Payments
+    Wait Until Page Does Not Contain Element    ${xpath}    error=Clicking Button Create Payments was not successful
     Select Window
     Page Scroll To Locator    record.related.check_occurrence    Payments
     Wait For Locator    record.related.viewall    Payments
@@ -63,6 +64,7 @@ Verify values in Create one or more Payments for this Opportunity page
     ...    Payment Writeoff Amount=$250.00
     ...    Remaining Balance=$750.00
     Click Button    Cancel
+    Wait Until Loading Is Complete
     Select Tab    Related
     Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
     Wait Until Modal Is Open
@@ -95,6 +97,7 @@ Verify values in Writeoff Remaining Balance Page
     Page Should Contain    You are preparing to write off 2 Payment(s) totaling $550.00
     Choose Frame    Write Off Remaining Balance
     Click Button    Cancel
+    Wait Until Loading Is Complete
     Select Tab    Related
     Load Related List    Payments
     Click ViewAll Related List    Payments
