@@ -6,6 +6,7 @@
         <members>Office Staff</members>
         <members>Program Staff</members>
         <members>Volunteer</members>
+        <members>Admin</members>
         <name>Profile</name>
     </types>
     <version>43.0</version>
