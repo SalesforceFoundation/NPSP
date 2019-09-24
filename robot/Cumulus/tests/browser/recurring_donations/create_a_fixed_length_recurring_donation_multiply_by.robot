@@ -14,12 +14,12 @@ Setup Variables
 
 Setup Test Data
     #Create two Contacts in the Same Household
-    &{primarycontact} =          API Create Contact           Email=jjoseph@robot.com
+    &{primarycontact} =          API Create Contact             Email=jjoseph@robot.com
     Set Suite Variable           &{primarycontact}
-    ${account_id} =              Set Variable                 &{primarycontact}[AccountId]
+    ${account_id} =              Set Variable                   &{primarycontact}[AccountId]
     Set Suite Variable           ${account_id}
-    Store Session Record         Account                      ${account_id}
-    &{householdcontact} =        API Create Contact           AccountId=${account_id}
+    Store Session Record         Account                        ${account_id}
+    &{householdcontact} =        API Create Contact             AccountId=${account_id}
     Set Suite Variable           ${householdcontact}
 
     #Create a Fixed Length Recurring Donation
@@ -39,11 +39,8 @@ Create Fixed Length Recurring Donation Multiply By
     ...                          and Soft Credit Contact rollups are udpated.
 
     #Find 1st Opportunity for Recurring Donation and Close It
-    @{opportunity1} =            Salesforce Query             Opportunity
-    ...                          select=Id
-    ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
-    ...                          ${ns}Recurring_Donation_Installment_Name__c=(1 of 50)
-    Store Session Record         Opportunity                  ${opportunity1}[0][Id]
+    @{opportunity1} =            API Query Installment         &{recurringdonation}[Id]    (1 of 50)
+    Store Session Record         Opportunity                   ${opportunity1}[0][Id]
     Go To Record Home            ${opportunity1}[0][Id]
     Click Link                   link=Edit
     Click Dropdown               Stage
@@ -51,11 +48,8 @@ Create Fixed Length Recurring Donation Multiply By
     Click Modal Button           Save
 
     #Find 2nd Opportunity for Recurring Donation and Close It
-    @{opportunity2} =            Salesforce Query             Opportunity
-    ...                          select=Id
-    ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
-    ...                          ${ns}Recurring_Donation_Installment_Name__c=(2 of 50)
-    Store Session Record         Opportunity                  ${opportunity2}[0][Id]
+    @{opportunity2} =            API Query Installment         &{recurringdonation}[Id]    (2 of 50)
+    Store Session Record         Opportunity                   ${opportunity2}[0][Id]
     Go To Record Home            ${opportunity2}[0][Id]
     Click Link                   link=Edit
     Click Dropdown               Stage
@@ -67,27 +61,24 @@ Create Fixed Length Recurring Donation Multiply By
     Run Donations Batch Process
 
     #Check if 50th Opportunity for Recurring Donation Exists
-    @{opportunity50} =           Salesforce Query             Opportunity
-    ...                          select=Id
-    ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
-    ...                          ${ns}Recurring_Donation_Installment_Name__c=(50 of 50)
+    @{opportunity50} =           API Query Installment          &{recurringdonation}[Id]    (50 of 50)
     Go To Record Home            ${opportunity50}[0][Id]
 
     #Check Rollups on Recurring Donation
     Go To Record Home            &{recurringdonation}[Id]
-    Confirm Value                Total Paid Installments      2         Y
-    Confirm Value                Paid Amount                  $20.00    Y
+    Confirm Value                Total Paid Installments        2         Y
+    Confirm Value                Paid Amount                    $20.00    Y
 
     #Check Soft Credit Rollups on Household Contact
     Go To Record Home            &{householdcontact}[Id]
     Select Tab                   Details
     Scroll Element Into View     text:Household Donation Info
-    Confirm Value                Soft Credit Total            $20.00    Y
-    Confirm Value                Number of Soft Credits       2         Y
+    Confirm Value                Soft Credit Total              $20.00    Y
+    Confirm Value                Number of Soft Credits         2         Y
 
     #Check Rollups on Recurring Account
     Go To Record Home            ${account_id}
     Select Tab                   Details
     Scroll Element Into View     text:Membership Information
-    Confirm Value                Total Gifts                  $20.00    Y
-    Confirm Value                Total Number of Gifts        2         Y
+    Confirm Value                Total Gifts                    $20.00    Y
+    Confirm Value                Total Number of Gifts          2         Y

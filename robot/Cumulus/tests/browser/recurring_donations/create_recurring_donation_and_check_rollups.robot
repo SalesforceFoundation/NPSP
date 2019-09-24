@@ -14,9 +14,9 @@ Setup Variables
 
 Setup Test Data
     #Create a Recurring Donation
-    &{contact} =                 API Create Contact           Email=jjoseph@robot.com
+    &{contact} =                 API Create Contact             Email=jjoseph@robot.com
     Set Suite Variable           ${contact}
-    Store Session Record         Account                      &{contact}[AccountId]
+    Store Session Record         Account                        &{contact}[AccountId]
     &{recurringdonation} =       API Create Recurring Donation  npe03__Contact__c=&{contact}[Id]
     ...                          Name=Julian Recurring Donation
     ...                          npe03__Amount__c=100
@@ -31,11 +31,8 @@ Create Recurring Donation And Check Rollups
     ...                          when a Recurring Donation's Opportunities are Closed Won.
 
     #Find 1st Opportunity for Recurring Donation and Close It
-    @{opportunity1} =            Salesforce Query             Opportunity
-    ...                          select=Id
-    ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
-    ...                          ${ns}Recurring_Donation_Installment_Name__c=(1 of 12)
-    Store Session Record         Opportunity                  ${opportunity1}[0][Id]
+    @{opportunity1} =            API Query Installment          &{recurringdonation}[Id]    (1 of 12)
+    Store Session Record         Opportunity                    ${opportunity1}[0][Id]
     Go To Record Home            ${opportunity1}[0][Id]
     Click Link                   link=Edit
     Click Dropdown               Stage
@@ -43,11 +40,8 @@ Create Recurring Donation And Check Rollups
     Click Modal Button           Save
 
     #Find 2nd Opportunity for Recurring Donation and Close It
-    @{opportunity2} =            Salesforce Query             Opportunity
-    ...                          select=Id
-    ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
-    ...                          ${ns}Recurring_Donation_Installment_Name__c=(2 of 12)
-    Store Session Record         Opportunity                  ${opportunity2}[0][Id]
+    @{opportunity2} =            API Query Installment          &{recurringdonation}[Id]    (2 of 12)
+    Store Session Record         Opportunity                    ${opportunity2}[0][Id]
     Go To Record Home            ${opportunity2}[0][Id]
     Click Link                   link=Edit
     Click Dropdown               Stage
@@ -59,25 +53,25 @@ Create Recurring Donation And Check Rollups
 
     #Check Rollups on Recurring Donation
     Go To Record Home            &{recurringdonation}[Id]
-    Confirm Value                Total Paid Installments  2         Y
-    Confirm Value                Paid Amount              $16.66    Y
+    Confirm Value                Total Paid Installments        2         Y
+    Confirm Value                Paid Amount                    $16.66    Y
 
     #Check Rollups on Recurring Contact
     Go To Record Home            &{contact}[Id]
     Select Tab                   Details
     Scroll Element Into View     text:Soft Credit Total
-    Confirm Value                Total Gifts This Year    $16.66    Y
-    Confirm Value                Total Gifts              $16.66    Y
+    Confirm Value                Total Gifts This Year          $16.66    Y
+    Confirm Value                Total Gifts                    $16.66    Y
 
     #Check Rollups on Recurring Account
-    @{account} =                 Salesforce Query         Account
+    @{account} =                 Salesforce Query               Account
     ...                          select=Id
     ...                          npe01__One2OneContact__c=&{contact}[Id]
     Go To Record Home            ${account}[0][Id]
     Select Tab                   Details
     Scroll Element Into View     text:Membership Information
-    Confirm Value                Total Gifts              $16.66    Y
-    Confirm Value                Total Number of Gifts    2         Y
+    Confirm Value                Total Gifts                    $16.66    Y
+    Confirm Value                Total Number of Gifts          2         Y
 
     #Open NPSP Settings and run Recurring Donations Batch job
     Open NPSP Settings           Bulk Data Processes           Recurring Donations Batch
@@ -86,19 +80,19 @@ Create Recurring Donation And Check Rollups
 
     #Check Rollups on Recurring Donation
     Go To Record Home            &{recurringdonation}[Id]
-    Confirm Value                Total Paid Installments  2         Y
-    Confirm Value                Paid Amount              $16.66    Y
+    Confirm Value                Total Paid Installments        2         Y
+    Confirm Value                Paid Amount                    $16.66    Y
 
     #Check Rollups on Recurring Contact
     Go To Record Home            &{contact}[Id]
     Select Tab                   Details
     Scroll Element Into View     text:Soft Credit Total
-    Confirm Value                Total Gifts This Year    $16.66    Y
-    Confirm Value                Total Gifts              $16.66    Y
+    Confirm Value                Total Gifts This Year          $16.66    Y
+    Confirm Value                Total Gifts                    $16.66    Y
 
     #Check Rollups on Recurring Account
     Go To Record Home            ${account}[0][Id]
     Select Tab                   Details
     Scroll Element Into View     text:Membership Information
-    Confirm Value                Total Gifts              $16.66    Y
-    Confirm Value                Total Number of Gifts    2         Y
+    Confirm Value                Total Gifts                    $16.66    Y
+    Confirm Value                Total Number of Gifts          2         Y

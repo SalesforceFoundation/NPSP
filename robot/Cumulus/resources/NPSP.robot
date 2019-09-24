@@ -117,6 +117,15 @@ API Create Recurring Donation
     &{recurringdonation} =           Salesforce Get     npe03__Recurring_Donation__c  ${recurring_id}
     [return]           &{recurringdonation}
 
+API Query Installment
+    [Arguments]        ${id}                      ${installment}    &{fields}
+    @{object} =        Salesforce Query           Opportunity
+    ...                select=Id
+    ...                npe03__Recurring_Donation__c=${id}
+    ...                ${ns}Recurring_Donation_Installment_Name__c=${installment}
+    ...                &{fields}
+    [return]           @{object}
+
 API Create GAU
     [Arguments]      &{fields}
     ${name} =   Generate Random String
