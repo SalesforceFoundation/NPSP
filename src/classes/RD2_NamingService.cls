@@ -91,8 +91,7 @@ public with sharing class RD2_NamingService {
             return userDefaultCurrencySymbol;
         }
         set;
-    }
-    
+    }    
 
     /***
     * @description Autogenerates recurring donation names if Name construct fields have changed
@@ -203,103 +202,5 @@ public with sharing class RD2_NamingService {
         }
 
         return formattedAmount;
-    }
-
-    /***
-    * @description Updates Recurring Donation names associated with Account/Contact records
-    * that have their name updated. 
-    */
-    public class NamingQueueable implements Queueable {
-        Set<Id> recordIds;
-        SObjectType sObjType;
-
-        /***
-        * @description Returns Recurring Donation records
-        */
-        @TestVisible
-        private RD2_RecurringDonationsGateway rdGateway {
-            get {
-                if (rdGateway == null) {
-                    rdGateway = new RD2_RecurringDonationsGateway();
-                }
-                return rdGateway;
-            }
-            set;
-        }
-
-        /***
-        * @description Constructor
-        * @param recordIds Account/Contact record Ids
-        * @param sObjType SObjectType of records for which Ids have been provided
-        */
-        public NamingQueueable(Set<Id> recordIds, SObjectType sObjType) {
-            this.recordIds = recordIds;
-            this.sObjType = sObjType;
-        }
-
-        /***
-        * @description Executes the logic in the Queuable class instance
-        * @param context QueueableContext
-        * @return none
-        */
-        public void execute(QueueableContext context) {
-            if (recordIds == null || recordIds.isEmpty() || !RD2_NamingService.isAutomaticNamingEnabled) {
-                return;
-            }
-
-            updateNameOnChange();
-        }
-
-        /***
-        * @description Updates Recurring Donation names on Account and/or Contact Name change
-        * @return none
-        */
-        private void updateNameOnChange() {
-            List<npe03__Recurring_Donation__c> rds = getAccountRecurringDonations();
-            rds.addAll(getContactRecurringDonations());
-
-            if (!rds.isEmpty()) {
-                UTIL_DMLService.updateRecords(rds);
-            }
-        } 
-
-        /***
-        * @description Returns Recurring Donation records associated with specified Account record Ids
-        * @return List<npe03__Recurring_Donation__c> Recurring Donation records
-        */
-        private List<npe03__Recurring_Donation__c> getAccountRecurringDonations() {
-            List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
-
-            if (sObjType != Account.SObjectType) {
-                return rds; 
-            }
-
-            for (npe03__Recurring_Donation__c rd : rdGateway.getRecordsReferencingAccounts(recordIds)) {
-                rd.Name = System.Label.npo02.NameReplacementText;
-                rds.add(rd);
-            }
-
-            return rds;
-        }
-
-        /***
-        * @description Returns Recurring Donation records associated with specified Contact record Ids
-        * @return List<npe03__Recurring_Donation__c> Recurring Donation records
-        */
-        private List<npe03__Recurring_Donation__c> getContactRecurringDonations() {
-            List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
-
-            if (sObjType != Contact.SObjectType) {
-                return rds; 
-            }
-
-            for (npe03__Recurring_Donation__c rd : rdGateway.getRecordsReferencingContacts(recordIds)) {
-                rd.Name = System.Label.npo02.NameReplacementText;
-                rds.add(rd);
-            }
-
-            return rds;            
-        }
-
     }
 }
