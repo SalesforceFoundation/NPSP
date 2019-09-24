@@ -44,7 +44,7 @@ public class UTIL_AbstractChunkingLDV_BATCH_TEST {
      * @description A value larger than the largest possible distance between two ids, so that it will never fall back
      *              to LDV execution unexpectedly in a test when it is not supposed to.
      */
-    private static final Long TEST_NOLDV_DISTANCE_CHECK_VALUE = 99999999999L;
+    private static final Integer TEST_NOLDV_DISTANCE_CHECK_VALUE = 2147483647;
 
     /*******************************************************************************************************************
      * @description Test Batch Setters
