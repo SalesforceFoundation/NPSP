@@ -2423,6 +2423,9 @@
         <recordType>Account.Organization</recordType>
     </layoutAssignments>
     <layoutAssignments>
+        <layout>Account-Organization Lightning Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
         <layout>Contact-Contact Lightning Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
