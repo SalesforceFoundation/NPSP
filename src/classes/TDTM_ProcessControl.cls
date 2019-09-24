@@ -71,8 +71,7 @@ public class TDTM_ProcessControl {
         OPP_CampaignMember,
         RD,
         REL,
-        CascadeDeletes,
-        IsMerge
+        CascadeDeletes
     }
 
     /*******************************************************************************************************
