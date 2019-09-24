@@ -41,6 +41,12 @@ public class UTIL_AbstractChunkingLDV_BATCH_TEST {
     private static final Integer TEST_ACCOUNT_CNT = 7;
 
     /*******************************************************************************************************************
+     * @description A value larger than the largest possible distance between two ids, so that it will never fall back
+     *              to LDV execution unexpectedly in a test when it is not supposed to.
+     */
+    private static final Long TEST_NOLDV_DISTANCE_CHECK_VALUE = 99999999999L;
+
+    /*******************************************************************************************************************
      * @description Test Batch Setters
      */
     @isTest
@@ -75,7 +81,8 @@ public class UTIL_AbstractChunkingLDV_BATCH_TEST {
         UTIL_AbstractChunkingLDV_MOCK mockAbstractChunkingLDV = new UTIL_AbstractChunkingLDV_MOCK();
         mockAbstractChunkingLDV.setBatchSize(10);
         mockAbstractChunkingLDV.setTestChunkSize(10);
-        mockAbstractChunkingLDV.setTestMaxNonLDVSize(10);
+        mockAbstractChunkingLDV.setTestMaxNonLDVSize(TEST_NOLDV_DISTANCE_CHECK_VALUE);
+
         System.assertEquals (10, mockAbstractChunkingLDV.getBatchSize(), 'Batch Size');
         mockAbstractChunkingLDV.setExpectedResult(TEST_ACCOUNT_CNT);
         mockAbstractChunkingLDV.setExpectedLdvMode(false);
@@ -148,7 +155,7 @@ public class UTIL_AbstractChunkingLDV_BATCH_TEST {
         mockAbstractChunkingLDV.setBatchSize(10);
         mockAbstractChunkingLDV.setAdditionalWhereClause('Id= \'' + accs[0].Id + '\'');
 
-        mockAbstractChunkingLDV.setTestMaxNonLDVSize(UTIL_AbstractChunkingLDV_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
+        mockAbstractChunkingLDV.setTestMaxNonLDVSize(TEST_NOLDV_DISTANCE_CHECK_VALUE);
         mockAbstractChunkingLDV.setExpectedResult(1);
         mockAbstractChunkingLDV.setExpectedLdvMode(false);
         Database.executeBatch(mockAbstractChunkingLDV, 1);
@@ -196,7 +203,7 @@ public class UTIL_AbstractChunkingLDV_BATCH_TEST {
         mockAbstractChunkingLDV.setBatchSize(10);
 
         mockAbstractChunkingLDV.setTestWhereClause('Id = \'' + accs[0].Id + '\'');
-        mockAbstractChunkingLDV.setTestMaxNonLDVSize(UTIL_AbstractChunkingLDV_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
+        mockAbstractChunkingLDV.setTestMaxNonLDVSize(TEST_NOLDV_DISTANCE_CHECK_VALUE);
         mockAbstractChunkingLDV.setExpectedResult(1);
         mockAbstractChunkingLDV.setExpectedLdvMode(false);
 
@@ -247,7 +254,7 @@ public class UTIL_AbstractChunkingLDV_BATCH_TEST {
         mockAbstractChunkingLDV.setAdditionalWhereClause('Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\' or Id = \'' + accs[3].Id + '\'');
 
         mockAbstractChunkingLDV.setTestWhereClause('Id = \'' + accs[0].Id + '\' or Id = \'' + accs[1].Id + '\' or Id = \'' + accs[2].Id + '\'');
-        mockAbstractChunkingLDV.setTestMaxNonLDVSize(UTIL_AbstractChunkingLDV_BATCH.DEFAULT_MAX_NON_LDV_SIZE);
+        mockAbstractChunkingLDV.setTestMaxNonLDVSize(TEST_NOLDV_DISTANCE_CHECK_VALUE);
         mockAbstractChunkingLDV.setExpectedResult(2);
         mockAbstractChunkingLDV.setExpectedLdvMode(false);
 

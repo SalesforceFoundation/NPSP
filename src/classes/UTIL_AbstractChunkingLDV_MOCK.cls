@@ -110,7 +110,7 @@ public class UTIL_AbstractChunkingLDV_MOCK extends UTIL_AbstractChunkingLDV_BATC
 
     /**
      * @description Called on completion of the batch job.  If this is running LDV Mode it may be called more than once.  All but the last invocation will
-     * have an isComplete value of false.  This method isd similar in nature/roughly equivalent to the finish method of a standard Apex Batch job
+     * have an isComplete value of false.  This method is similar in nature/roughly equivalent to the finish method of a standard Apex Batch job
      * @param bc BatchableContext
      * @param isComplete boolean value that indicates whether or not this is the final invocation, or will be executing against additional chunks
      */
