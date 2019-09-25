@@ -643,7 +643,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     // At this point, only the amounts on each allocation is correct, not the percentage.
                     // Go through the allocation and adjust the percentage so it is correct.
                     for (Allocation__c consolidatedAllocation : consolidatedAllocationList) {
-                        consolidatedAllocation.Percent__c = consolidatedAllocation.Amount__c / amount * 100;
+                        if(consolidatedAllocation.Percent__c == null){
+                            consolidatedAllocation.Percent__c = consolidatedAllocation.Amount__c / amount * 100;
+                        }
                     }
 
                     // Set the consolidated list as the list to insert

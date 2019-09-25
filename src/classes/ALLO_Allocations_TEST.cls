@@ -117,6 +117,72 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(8, queryOpps[0].Amount, 'The opportunity amount should remain unchanged after the exception is caught.');
     }
 
+    /*******************************************************************************************************
+    * @description When Payments are created after the Opportunity and Opportunity Allocations exist,
+    * ensure that the payment allocation percentages match those from the Opportunity Allocations, and
+    * are not overwritten by additional logic in the trigger.
+    * Also check that allocation rounding works correctly and no amounts are allocated to the Default GAU
+    ********************************************************************************************************/
+    static testMethod void pmtAllocationPercentCheck() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Account acc = new Account(Name='Account-pmtAlloPercentCheck');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='Opp-pmtAlloPercentCheck', Amount = 100, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        List<General_Accounting_Unit__c> gauForInsert = new List<General_Accounting_Unit__c>();
+        
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name='GAU-1');
+        gauForInsert.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name='GAU-2');
+        gauForInsert.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name='GAU-3');
+        gauForInsert.add(gau3);
+        insert gauForInsert;
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        Allocation__c percentAllo1 = new Allocation__c(Opportunity__c=opp.id, Percent__c = 34, General_Accounting_Unit__c = gau1.id);
+        alloForInsert.add(percentAllo1);
+        Allocation__c percentAllo2 = new Allocation__c(Opportunity__c=opp.id, Percent__c = 33, General_Accounting_Unit__c = gau2.id);
+        alloForInsert.add(percentAllo2);
+        Allocation__c percentAllo3 = new Allocation__c(Opportunity__c=opp.id, Percent__c = 33, General_Accounting_Unit__c = gau3.id);
+        alloForInsert.add(percentAllo3);
+        insert alloForInsert;
+
+        // This Payment amount will allow us to test rounding of allocation percentages and amounts
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 7.69, npe01__Opportunity__c = opp.Id);
+        insert pmt;
+
+        // Check that each allocation has the correct amount and percent
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.id, gau1.Id);
+
+        // Make sure the percent value carried through to the Payment Allocation
+        System.assertEquals(34, queryAllo[0].Percent__c, 'The percentage allocation should be 34%.');
+        System.assertEquals(2.61, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+    
+        queryAllo = getAllocationsOrderByPercent(pmt.id, gau2.Id);
+
+        System.assertEquals(33, queryAllo[0].Percent__c, 'The percentage allocation should be 33%.');
+        System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+    
+        queryAllo = getAllocationsOrderByPercent(pmt.id, gau3.Id);
+
+        System.assertEquals(33, queryAllo[0].Percent__c, 'The percentage allocation should be 33%.');
+        System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+    
+        queryAllo = getAllocationsOrderByPercent(pmt.id, defaultGau.Id);
+        System.assertEquals(queryAllo.size(), 0, 'This payment should be fully allocated without the Default GAU');
+
+    }
+
 
     /*******************************************************************************************************
     * @description When changing the amount of a Payment with Allocations:
