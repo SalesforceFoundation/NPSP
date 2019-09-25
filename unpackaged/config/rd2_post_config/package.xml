@@ -31,7 +31,7 @@
         <name>CustomObjectTranslation</name>
     </types>
     <types>
-        <members>npe03__Recurring_Donation__c-Recurring Donations V2 Layout</members>
+        <members>npe03__Recurring_Donation__c-Enhanced Recurring Donations Layout</members>
         <name>Layout</name>
     </types>
     <version>46.0</version>
