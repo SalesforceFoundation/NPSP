@@ -35,19 +35,6 @@
 */
 public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
 
-
-    @TestVisible
-    private RD2_NamingService namingService {
-        get {
-            if (namingService == null) {
-                namingService = new RD2_NamingService();
-            }
-            return namingService;
-        }
-        set;
-    }
-
-
     /*******************************************************************************************************
     * @description Trigger Handler on Recurring Donations.  Deals with creating/updating/deleting the opps
     * related to the Recurring Donations.

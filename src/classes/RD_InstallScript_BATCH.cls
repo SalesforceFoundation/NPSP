@@ -39,7 +39,7 @@ public without sharing class RD_InstallScript_BATCH implements Database.Batchabl
     
     public RD_InstallScript_BATCH() {}
     
-    public Database.QueryLocator start(Database.BatchableContext BC) {        
+    public Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
     }
 
