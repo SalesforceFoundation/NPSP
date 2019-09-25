@@ -351,7 +351,7 @@ public class CON_ContactMerge_TEST {
         // Create contacts for going through the contact merge page
         Contact con = UTIL_UnitTestData_TEST.getContact();
 
-		Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
 
         insert new Contact[]{con, con2};
@@ -378,8 +378,8 @@ public class CON_ContactMerge_TEST {
         //Create contacts for going through the contact merge page
         Contact con = UTIL_UnitTestData_TEST.getContact();
 
-		Contact con2 = UTIL_UnitTestData_TEST.getContact();
-		con2.LastName = '2Contact_forTests_Merge';
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
 
         insert new Contact[]{con, con2};
 
