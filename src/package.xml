@@ -329,6 +329,7 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>RD2_EnablementDelegate_CTRL</members>
         <members>RD2_EnablementService</members>
         <members>RD2_EnablementService_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
@@ -604,6 +605,7 @@
         <members>STG_PanelPaymentMapping</members>
         <members>STG_PanelPrimaryContactRoleMerge</members>
         <members>STG_PanelRD</members>
+        <members>STG_PanelRD2Enablement</members>
         <members>STG_PanelRDBatch</members>
         <members>STG_PanelRDCustomFieldMapping</members>
         <members>STG_PanelRDCustomInstallment</members>
@@ -671,6 +673,8 @@
         <members>HH_ContainerLoadedEvent</members>
         <members>HH_HouseholdSavedEvent</members>
         <members>ManageHHApp</members>
+        <members>RD2_EnablementApp</members>
+        <members>RD2_EnablementDelegate</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
         <members>autocompleteSelectListOption</members>
@@ -1383,6 +1387,17 @@
         <members>PageMessagesInfo</members>
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
+        <members>RD2_EnablementDisabledHeader</members>
+        <members>RD2_EnablementDisabledMessage</members>
+        <members>RD2_EnablementIntro</members>
+        <members>RD2_EnablementPrepTasks</members>
+        <members>RD2_EnablementStep1Action</members>
+        <members>RD2_EnablementStep1Complete</members>
+        <members>RD2_EnablementStep1Content</members>
+        <members>RD2_EnablementStep2Action</members>
+        <members>RD2_EnablementStep2Complete</members>
+        <members>RD2_EnablementStep3Action</members>
+        <members>RD2_EnablementStep3Complete</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
@@ -2319,6 +2334,7 @@
         <members>stgNavPaymentMappings</members>
         <members>stgNavPayments</members>
         <members>stgNavPeople</members>
+        <members>stgNavRD2Enablement</members>
         <members>stgNavRDBatch</members>
         <members>stgNavRDFieldMap</members>
         <members>stgNavRDInstallmentPeriods</members>

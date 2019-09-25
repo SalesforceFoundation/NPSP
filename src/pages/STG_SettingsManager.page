@@ -172,6 +172,9 @@
                                 <a id="tree3-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRecurringDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree3-node0-link">
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRD2EnablementNav">
+                                    <a href="#" onclick="ShowPanel('idPanelRD2Enablement');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRD2Enablement}</a>
+                                </li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDNav"><a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRecurringDonations}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDInstPdNav"><a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDInstallmentPeriods}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"><a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDFieldMap}</a></li>
@@ -316,6 +319,10 @@
                 </div>
 
                 <!-- Recurring Donations -->
+                <div class="panel noborder" id="idPanelRD2Enablement" style="display:none">
+                    <apex:include pageName="STG_PanelRD2Enablement" />
+                </div>
+
                 <div class="panel noborder" id="idPanelRD" style="display:none" >
                     <apex:include pageName="STG_PanelRD" />
                 </div>

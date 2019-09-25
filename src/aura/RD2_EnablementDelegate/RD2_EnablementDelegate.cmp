@@ -1,0 +1,51 @@
+<aura:component controller="RD2_EnablementDelegate_CTRL"
+    implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressable" access="global">
+
+
+    <aura:attribute name="isEnabled" type="Boolean"
+        description="Indicates if enhanced Recurring Donations have been enabled" />
+    <aura:attribute name="isMetaDeployCompleted" type="Boolean"
+        description="Indicates if MetaDeploy has been completed" />
+    <aura:attribute name="isMigrationCompleted" type="Boolean"
+        description="Indicates if data migration has been completed" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <div class="slds-illustration slds-illustration_large slds-hide" aura:id="enablement-disabled">
+        <br /><br />
+        <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
+        <div class="slds-text-longform">
+            <h3 class="slds-text-heading_medium">{!$Label.c.RD2_EnablementDisabledHeader}</h3>
+            <p class="slds-text-body_regular">{!$Label.c.RD2_EnablementDisabledMessage}</p>
+        </div>
+    </div>
+
+
+    <lightning:layout horizontalAlign="spread" multipleRows="true" class="slds-hide" aura:id="enabler">
+
+        <lightning:layoutItem padding="around-medium" size="12">
+            <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementIntro}" />
+        </lightning:layoutItem>
+
+        <lightning:layoutItem padding="around-medium" size="12">
+            <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementPrepTasks}" />
+        </lightning:layoutItem>
+
+        <lightning:layoutItem padding="around-medium" size="12">
+            <lightning:progressIndicator
+                currentStep="{! v.isEnabled == false ? 'step1' : (v.isMetaDeployCompleted == false ? 'step2' : 'step3')}"
+                type="path" variant="base">
+                <lightning:progressStep
+                    label="{! v.isEnabled == false ? $Label.c.RD2_EnablementStep1Action : $Label.c.RD2_EnablementStep1Complete }"
+                    value="step1" />
+                <lightning:progressStep
+                    label="{! v.isMetaDeployCompleted == false ? $Label.c.RD2_EnablementStep2Action : $Label.c.RD2_EnablementStep2Complete }"
+                    value="step2" />
+                <lightning:progressStep aura:id="step3"
+                    label="{! v.isMigrationCompleted == false ? $Label.c.RD2_EnablementStep3Action : $Label.c.RD2_EnablementStep3Complete }"
+                    value="step3" />
+            </lightning:progressIndicator>
+        </lightning:layoutItem>
+    </lightning:layout>
+
+</aura:component>

@@ -1279,6 +1279,99 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Processing</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementDisabledHeader</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDisabledHeader</shortDescription>
+        <value>Enhanced Recurring Donations cannot be enabled</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDisabledMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDisabledMessage</shortDescription>
+        <value>You must enable Customizable Rollups in order to enable Enhanced Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementIntro</shortDescription>
+        <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage.&lt;br/&gt;&lt;br/&gt;To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementPrepTasks</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementPrepTasks</shortDescription>
+        <value>Before you enable Enhanced Recurring Donations, you should complete the following tasks:&lt;br/&gt;
+● Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;br/&gt;
+● Understand the impact that enabling Enhanced Recurring Donations will have on your existing integrations.&lt;br/&gt;
+● Read the Enhanced Recurring Donations documentation.&lt;br/&gt;
+● Perform a database backup for at least Recurring Donations and all their related records.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep1Action</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep1Action</shortDescription>
+        <value>Enable Enhanced Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep1Complete</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep1Complete</shortDescription>
+        <value>Enhanced Recurring Donations Enabled</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep1Content</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep1Content</shortDescription>
+        <value>This step changes your Recurring Donations processing logic to use Enhanced Recurring Donations instead. Recurring Donations will not function the same way as before.&lt;br/&gt;
+&lt;br/&gt;WARNING: This is an irreversible process!</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep2Action</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep2Action</shortDescription>
+        <value>Install Enhanced Recurring Donations Metadata</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep2Complete</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep2Complete</shortDescription>
+        <value>Enhanced Recurring Donations Metadata Installed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep3Action</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep3Action</shortDescription>
+        <value>Run Data Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep3Complete</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep3Complete</shortDescription>
+        <value>Data Migration Complete</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorAddDonationHeaderText</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -8833,6 +8926,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgNavPeople</shortDescription>
         <value>People</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRD2Enablement</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRD2Enablement</shortDescription>
+        <value>Enable Enhanced Recurring Donations</value>
     </labels>
     <labels>
         <fullName>stgNavRDBatch</fullName>
