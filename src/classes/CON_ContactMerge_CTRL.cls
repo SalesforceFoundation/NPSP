@@ -68,10 +68,10 @@ public with sharing class CON_ContactMerge_CTRL {
     */
     public Integer step {get; private set;}
 
-    public String errorMsg {get; set;}
+    public Boolean canContinueWithMerge { get;set; }
 
-    public Boolean isDeletable() {
-        return UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrTokenNSPrefix('Contact')).isDeletable();
+    public Boolean hasContactObjectDeletePermission() {
+        return UTIL_Describe.getObjectDescribe('Contact').isDeletable();
     }
 
     /*******************************************************************************************************
@@ -189,12 +189,13 @@ public with sharing class CON_ContactMerge_CTRL {
         selectedRecords = new Map<String, Contact>();
         step = 1;
         fieldRows = new List<FieldRow>();
+        canContinueWithMerge = true;
 
         set<Id> mergeIds = new set<Id>();
 
-        if (!isDeletable()) {
-            errorMsg = System.Label.conMergeErrorNoDeleteObjPermission;
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorMsg));
+        if (!hasContactObjectDeletePermission()) {
+            canContinueWithMerge = false;
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.conMergeErrorNoDeleteObjPermission));
             return;
         }
 
@@ -274,9 +275,9 @@ public with sharing class CON_ContactMerge_CTRL {
             return;
         }
 
-        if (!isUserHasDeleteAccess(mergeCandidates)) {
-            errorMsg = System.Label.conMergeErrorNoDeleteRecAccess;
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, errorMsg));
+        if (!canUserDeleteSelectedContacts(mergeCandidates)) {
+            canContinueWithMerge = false;
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, System.Label.conMergeErrorNoDeleteRecAccess));
             return;
         }
 
@@ -620,13 +621,12 @@ public with sharing class CON_ContactMerge_CTRL {
     * @param ContactIds list of contacts
     * @return boolean.  true if delete access is allowed.
     ********************************************************************************************************/
-    private boolean isUserHasDeleteAccess(set<Id> ContactIds) {
-        //This is the logic which checks if delete permission for the selected records exists or not
+    private boolean canUserDeleteSelectedContacts(Set<Id> contactIds) {
         List <UserRecordAccess> userAccess = [
              SELECT RecordId, HasEditAccess, HasDeleteAccess, MaxAccessLevel
              FROM UserRecordAccess
              WHERE UserId = :UserInfo.getUserId()
-             And RecordId IN :ContactIds
+             And RecordId IN :contactIds
         ];
         for (UserRecordAccess user: userAccess) {
             if (!user.HasDeleteAccess && user.MaxAccessLevel != 'None') {

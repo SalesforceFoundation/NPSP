@@ -346,13 +346,13 @@ public class CON_ContactMerge_TEST {
      * @description Validate that a User with no delete permissions to the Contact object gets a pageMessage
      * error when navigating to Contact Merge page.
      */
-     @isTest
-     private static void shouldDisplayErrorWithNoDeletePermission() {
-        //Create contacts for going through the contact merge page
+    @isTest
+    private static void shouldDisplayErrorWithNoDeletePermission() {
+        // Create contacts for going through the contact merge page
         Contact con = UTIL_UnitTestData_TEST.getContact();
 
 		Contact con2 = UTIL_UnitTestData_TEST.getContact();
-		con2.LastName = '2Contact_forTests_Merge';
+        con2.LastName = '2Contact_forTests_Merge';
 
         insert new Contact[]{con, con2};
 
@@ -362,10 +362,8 @@ public class CON_ContactMerge_TEST {
         // Verify that controller detects the User doesn't have delete permissions on the Contact object
         Test.startTest();
         System.runAs(readOnlyUser) {
-            Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-            Con_ContactMerge_CTRL ctlr = new Con_ContactMerge_CTRL(new ApexPages.StandardSetController(new list<Contact>()));
-            System.debug('Here is the error msg:'+ ctlr.errorMsg);
-            System.assertEquals(System.Label.conMergeErrorNoDeleteObjPermission, ctlr.errorMsg);
+            Test.setCurrentPage(Page.CON_ContactMerge);
+            Con_ContactMerge_CTRL ctlr = new Con_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteObjPermission);
         }
         Test.stopTest();
@@ -375,8 +373,8 @@ public class CON_ContactMerge_TEST {
      * @description Validate that a User with delete permissions to the Contact object, but no record level acesss
        gets a pageErrorMessage doing the contact merge.
      */
-     @isTest
-     private static void shouldDisplayErrorWithNoDeleteRecAccess() {
+    @isTest
+    private static void shouldDisplayErrorWithNoDeleteRecAccess() {
         //Create contacts for going through the contact merge page
         Contact con = UTIL_UnitTestData_TEST.getContact();
 
@@ -397,15 +395,12 @@ public class CON_ContactMerge_TEST {
         Test.startTest();
         // Verify that when logged in as readonlyuser, it returns error when merging contacts because of record level permissions
         System.runAs(readOnlyUser) {
-            Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-            Con_ContactMerge_CTRL ctlr = new Con_ContactMerge_CTRL(new ApexPages.StandardSetController(new list<Contact>()));
-            System.assertEquals(null, ctlr.errorMsg);
+            Test.setCurrentPage(Page.CON_ContactMerge);
+            Con_ContactMerge_CTRL ctlr = new Con_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
 
             ctlr.searchText = 'test';
             //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-            Id[] fixedSearchResults=new Id[2];
-            fixedSearchResults[0]=con.Id;
-            fixedSearchResults[1]=con2.Id;
+            List<Id> fixedSearchResults = new List<Id>{ con.Id, con2.Id };
 
             Test.setFixedSearchResults(fixedSearchResults);
             //search for contacts
@@ -415,7 +410,6 @@ public class CON_ContactMerge_TEST {
             ctlr.searchResults[1].selected = true;
             ctlr.nextStep();
 
-            System.assertEquals(System.Label.conMergeErrorNoDeleteRecAccess, ctlr.errorMsg);
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteRecAccess);
         }
 
@@ -426,35 +420,24 @@ public class CON_ContactMerge_TEST {
     * @description Creates and assigns the permission set with delete permission on contact object
     */
     private static void assignDeletePermissionSet(Id userId) {
-        final String translationPerm = 'PermissionsToDelete';
-
         // Create a permission set with CustomizeApplication set ensuring other flags
         // on which CustomizeApplication settings depends are set as well
         PermissionSet permission = new PermissionSet(
             Name = 'PermissionTest',
             Label = 'PermissionTest'
-
         );
 
         insert permission;
-        List<ObjectPermissions> objPermissions;
 
-
-        insert
-        new ObjectPermissions (
-
-        SObjectType = 'Contact',
-        ParentId = permission.id,
-        PermissionsRead = true,
-        PermissionsViewAllRecords = true,
-        PermissionsCreate = true,
-        PermissionsDelete = true,
-        PermissionsEdit = true
-
+        insert new ObjectPermissions (
+            SObjectType = 'Contact',
+            ParentId = permission.id,
+            PermissionsRead = true,
+            PermissionsViewAllRecords = true,
+            PermissionsCreate = true,
+            PermissionsDelete = true,
+            PermissionsEdit = true
         );
-
-
-
 
         insert new PermissionSetAssignment(
             AssigneeId = userId,
