@@ -590,6 +590,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
             settings.IsRecurringDonations2Enabled__c = false;
             settings.EnableAutomaticNaming__c = false;
+            settings.IsRecurringDonations2Enabled__c = false;
 
             List<RecordType> oppRecordTypes = [select id from RecordType where sobjecttype = 'Opportunity' and IsActive = true];
             if (oppRecordTypes.size() > 0) {
@@ -841,6 +842,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
         recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
         recurringDonationsSettings.EnableAutomaticNaming__c = settings.EnableAutomaticNaming__c;
+        recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 
