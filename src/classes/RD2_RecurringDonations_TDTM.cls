@@ -67,11 +67,27 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return null;
         }
 
-        namingService.autogenerateNames(rds, oldRds, triggerAction);
+        autogenerateNames(rds, oldRds, triggerAction);
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
         return null;
+    }
+
+    /***
+    * @description Autogenerates recurring donation names 
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    public void autogenerateNames(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            namingService.autogenerateNames(rds);
+            
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            namingService.autogenerateNamesOnChange(rds, oldRds);
+        }
     }
 
     /***
