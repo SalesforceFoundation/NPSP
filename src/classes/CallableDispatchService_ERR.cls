@@ -43,7 +43,7 @@ public with sharing class CallableDispatchService_ERR {
 
     public static final String PARAM_CONTEXT_NAME = 'Context';
     public static final String PARAM_ERR_MSGS_BY_RECORDID = 'ErrorMsgsByRecordId';
-    public static final String PARAM_DML_RESULTS = 'DmlResultsByRecordId';
+    public static final String PARAM_DML_RESULTS = 'DmlResults';
     public static final String PARAM_MESSAGE = 'Message';
     public static final String PARAM_EXCEPTION = 'Exception';
 
