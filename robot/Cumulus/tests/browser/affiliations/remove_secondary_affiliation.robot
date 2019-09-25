@@ -19,4 +19,5 @@ Remove Secondary Affiliation for Contact
     Go To Object Home    Account
     #Sleep    5
     Click Link    link=&{account}[Name]
+    Select Tab    Related
     Verify Affiliated Contact    Affiliated Contacts    &{contact}[FirstName]    &{contact}[LastName]    N

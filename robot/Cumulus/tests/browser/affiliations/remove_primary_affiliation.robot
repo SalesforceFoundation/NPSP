@@ -20,6 +20,7 @@ Remove Primary Affiliation for Contact
     Go To Object Home    Account
     #Sleep    5
     Click Link    link=&{account}[Name]
+    Select Tab    Related
     Page Should not Contain Link     &{contact}[FirstName]
     
 Remove Primary Affiliation for Contact2
@@ -30,6 +31,7 @@ Remove Primary Affiliation for Contact2
     API Create Primary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
+    Select Tab    Details
     # To make sure the field we want to edit has rendered,
     # scroll to the one below it
     Scroll Element Into View  text:Do Not Contact
@@ -45,6 +47,7 @@ Remove Primary Affiliation for Contact2
     Should Be Equal As Strings    ${status}    Former
     Go To Object Home          Account
     Click Link        link=&{account}[Name]
+    Select Tab    Related
     Load Related List    Affiliated Contacts
     Get Id
     Confirm Value    Status    Former    Y

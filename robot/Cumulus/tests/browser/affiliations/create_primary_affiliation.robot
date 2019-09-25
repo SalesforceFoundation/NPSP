@@ -13,6 +13,7 @@ Create Primary Affiliation for Contact
     Create Primary Affiliation    &{account}[Name]    &{contact}[Id]    
     Go To Object Home          Account
     Click Link    link=&{account}[Name]
+    Select Tab    Related
     Verify Affiliated Contact    Affiliated Contacts    &{contact}[FirstName]    &{contact}[LastName]    Y  
     Click Related Item Link      Affiliated Contacts    &{contact}[FirstName] &{contact}[LastName]
     ${id}    Get Current Record Id

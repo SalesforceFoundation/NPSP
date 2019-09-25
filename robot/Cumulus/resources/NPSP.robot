@@ -237,6 +237,7 @@ Create HouseHold
 Create Primary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
     Go To Record Home  ${con_id}
+    Select Tab    Details
     # To make sure the field we want to edit has rendered
     # and is not obscured by the footer, scroll to one further down
     Scroll Element Into View  text:Description
