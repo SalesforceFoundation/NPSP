@@ -90,7 +90,9 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
             newlist = oldlist;
         }
 
-        namingService.autogenerateNames(newlist, oldlist, triggerAction);
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            new RD2_NamingService().autogenerateNames(newlist);            
+        } 
 
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
