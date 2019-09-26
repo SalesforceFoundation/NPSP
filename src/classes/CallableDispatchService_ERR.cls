@@ -64,32 +64,32 @@ public with sharing class CallableDispatchService_ERR {
 
         switch on (cleanDispatchAction) {
             when 'adderror' { // Add Error
-                return  addError(   context,
-                                    paramService.getString(PARAM_MESSAGE)
-                        );
+                addError(   context,
+                            paramService.getString(PARAM_MESSAGE)
+                );
 
             } when 'addexception' { // Add Exception
-                return  addException(   context,
-                                        paramService.getException(PARAM_EXCEPTION)
-                        );
+                addException(   context,
+                                paramService.getException(PARAM_EXCEPTION)
+                );
 
             } when 'addrecorderrors' { // Add Record Errors
-                return  addRecordErrors(    context,
-                                            paramService.getSObjects(PARAM_SOBJECTS),
-                                            paramService.getStringsById(PARAM_ERR_MSGS_BY_RECORDID)
-                        );
+                addRecordErrors(    context,
+                                    paramService.getSObjects(PARAM_SOBJECTS),
+                                    paramService.getStringsById(PARAM_ERR_MSGS_BY_RECORDID)
+                );
 
             } when 'addrecorddmlerrors' { // Add Record Dml Errors
-                return  addRecordDmlErrors( context,
-                                            paramService.getSObjects(PARAM_SOBJECTS),
-                                            paramService.getObjects(PARAM_DML_RESULTS)
-                        );
+                addRecordDmlErrors( context,
+                                    paramService.getSObjects(PARAM_SOBJECTS),
+                                    paramService.getObjects(PARAM_DML_RESULTS)
+                );
 
             } when 'clearrecorderrors' { // Clear Record Errors
-                return  clearRecordErrors(  context,
-                                            paramService.getSObjects(PARAM_SOBJECTS),
-                                            paramService.getString(PARAM_MESSAGE)
-                        );
+                clearRecordErrors(  context,
+                                    paramService.getSObjects(PARAM_SOBJECTS),
+                                    paramService.getString(PARAM_MESSAGE)
+                );
 
             } when else { // Invalid Action Type / Action Type Not implemented
                 throw new MalformedErrorDispatchMethodApiException(
@@ -97,6 +97,9 @@ public with sharing class CallableDispatchService_ERR {
                 );
             }
         }
+
+        // if the action does not return a value then return success
+        return true;
     }
 
     /**
@@ -104,9 +107,8 @@ public with sharing class CallableDispatchService_ERR {
      *              @see ERR_Handler.processError
      * @param context The context the exception should be logged under
      * @param errorMessage The Error to Log
-     * @return Boolean true
      */
-    private static Boolean addError(String context, String errorMessage) {
+    private static void addError(String context, String errorMessage) {
         ERR_Handler.processError(errorMessage, context);
 
         return true;
@@ -117,12 +119,9 @@ public with sharing class CallableDispatchService_ERR {
      *              @see ERR_Handler.processError
      * @param context The context the exception should be logged under
      * @param anException The exception to log
-     * @return Boolean true
      */
-    private static Boolean addException(String context, Exception anException) {
+    private static void addException(String context, Exception anException) {
         ERR_Handler.processError(anException, context);
-
-        return true;
     }
 
     /**
@@ -133,7 +132,7 @@ public with sharing class CallableDispatchService_ERR {
      * @param errorMessagesByRecordId Map of Errors Messages to add, keyed by Record Id
      * @return Boolean true
      */
-    private static Boolean addRecordErrors(String context, List<SObject> sObjects, Map<Id, String> errorMessagesByRecordId) {
+    private static void addRecordErrors(String context, List<SObject> sObjects, Map<Id, String> errorMessagesByRecordId) {
         Map<Id, SObject> sObjectsById = (sObjects != null) ? new Map<Id, SObject>(sObjects) : new Map<Id, SObject>();
 
         ERR_RecordError recordError = new ERR_RecordError(context);
@@ -141,8 +140,6 @@ public with sharing class CallableDispatchService_ERR {
 
         recordError.addErrors(errorMessagesByRecordId, sObjectsById);
         recordError.processErrors();
-
-        return true;
     }
 
     /**
@@ -151,7 +148,6 @@ public with sharing class CallableDispatchService_ERR {
      * @param context The context the errors should be logged under
      * @param sObjects The list of SObjects to process
      * @param dmlResults List of dmlResults associated with the SObjects to process
-     * @return Boolean true
      */
     private static Boolean addRecordDmlErrors(String context, List<SObject> sObjects, List<Object> dmlResults) {
         // Need to be in same order as SObjects List, so cannot construct map and use keyset()
@@ -162,8 +158,6 @@ public with sharing class CallableDispatchService_ERR {
 
         recordError.addErrors(dmlResults, idsForSObjects, sObjects);
         recordError.processErrors();
-
-        return true;
     }
 
     /**
@@ -173,7 +167,6 @@ public with sharing class CallableDispatchService_ERR {
      * @param sObjects The list of SObjects to process
      * @param message The message to update the Record Error with When clearing
      *                them
-     * @return Boolean true
      */
     private static Boolean clearRecordErrors(String context, List<SObject> sObjects, String message) {
         Map<Id, SObject> sObjectsById = (sObjects != null) ? new Map<Id, SObject>(sObjects) : new Map<Id, SObject>();
@@ -183,8 +176,6 @@ public with sharing class CallableDispatchService_ERR {
 
         recordError.clearErrors(sObjectsById.keySet(), message);
         recordError.processErrors();
-
-        return true;
     }
 
     /**

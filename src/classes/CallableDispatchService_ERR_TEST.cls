@@ -129,7 +129,6 @@ private class CallableDispatchService_ERR_TEST {
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
 
         Object result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action');
 
         Map<Id, Error__c> errs = getErrorsByRecordId();
 
@@ -148,7 +147,6 @@ private class CallableDispatchService_ERR_TEST {
         params.put(CallableDispatchService_ERR.PARAM_ERR_MSGS_BY_RECORDID, errors);
 
         result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action Call 2');
 
         Test.stopTest();
 
@@ -187,7 +185,6 @@ private class CallableDispatchService_ERR_TEST {
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
 
         Object result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action');
 
         Map<Id, Error__c> errs = getErrorsByRecordId();
 
@@ -221,7 +218,6 @@ private class CallableDispatchService_ERR_TEST {
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
 
         Object result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action');
 
         Map<Id, Error__c> errs = getErrorsByRecordId();
 
@@ -240,7 +236,6 @@ private class CallableDispatchService_ERR_TEST {
         params.put(CallableDispatchService_ERR.PARAM_MESSAGE, 'All set!');
 
         result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action');
 
         errs = getErrorsByRecordId();
 
