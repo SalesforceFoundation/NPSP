@@ -57,7 +57,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a String value
-     * @param paramName paramName to look in the parameter map under
+     * @param paramName Map key for the params collection
      */
     public String getString(String paramName) {
         try {
