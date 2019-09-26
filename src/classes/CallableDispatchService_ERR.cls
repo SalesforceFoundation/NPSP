@@ -147,7 +147,7 @@ public with sharing class CallableDispatchService_ERR {
      * @param sObjects The list of SObjects to process
      * @param dmlResults List of dmlResults associated with the SObjects to process
      */
-    private static Boolean addRecordDmlErrors(String context, List<SObject> sObjects, List<Object> dmlResults) {
+    private static void addRecordDmlErrors(String context, List<SObject> sObjects, List<Object> dmlResults) {
         // Need to be in same order as SObjects List, so cannot construct map and use keyset()
         List<Id> idsForSObjects = buildListOfIdsForSObjects(sObjects);
 
@@ -166,7 +166,7 @@ public with sharing class CallableDispatchService_ERR {
      * @param message The message to update the Record Error with When clearing
      *                them
      */
-    private static Boolean clearRecordErrors(String context, List<SObject> sObjects, String message) {
+    private static void clearRecordErrors(String context, List<SObject> sObjects, String message) {
         Map<Id, SObject> sObjectsById = (sObjects != null) ? new Map<Id, SObject>(sObjects) : new Map<Id, SObject>();
 
         ERR_RecordError recordError = new ERR_RecordError(context);
