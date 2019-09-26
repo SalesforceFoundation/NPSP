@@ -30,6 +30,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%StartDate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
