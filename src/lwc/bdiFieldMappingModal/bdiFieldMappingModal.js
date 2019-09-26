@@ -142,6 +142,30 @@ export default class bdiFieldMappingModal extends LightningElement {
         'Url': 'URL'
     }
 
+    /*******************************************************************************
+    * @description List of core objects using legacy bdi processing logic. Used to
+    * disable the 'Required__c' checkbox as a stop gap because legacy code doesn't
+    * use this field.
+    */
+    coreObjects = [
+        'account',
+        'npsp__address__c',
+        'address__c',
+        'contact',
+        'npsp__allocation__c',
+        'allocation__c',
+        'opportunity',
+        'opportunitycontactrole',
+        'npe01__opppayment__c'
+    ]
+
+    get isRequiredFieldDisabled() {
+        if (this.coreObjects.includes(this.objectMapping.Object_API_Name.toLowerCase())) {
+            return true;
+        }
+         return false;
+    }
+
     get isTargetFieldDisabled() {
         if ((this.fieldMapping.Source_Field_API_Name || this.fieldMapping.Source_Field_Label) &&
             (this.targetFieldLabelOptions && this.targetFieldLabelOptions.length > 0)) {
