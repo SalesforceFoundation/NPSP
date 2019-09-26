@@ -45,6 +45,59 @@
         <label><!-- Always use last day of month --></label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
     </fields>
+    <fields>
+        <help><!-- Defines the installment schedule of this Recurring Donation along with Installment Period. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
+        <label><!-- Installment Frequency --></label>
+        <name>InstallmentFrequency__c</name>
+    </fields>
+    <fields>
+        <help><!-- The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record. --></help>
+        <label><!-- Payment Method --></label>
+        <name>PaymentMethod__c</name>
+        <picklistValues>
+            <masterLabel>ACH/EFT</masterLabel>
+            <translation><!-- ACH/EFT --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Check</masterLabel>
+            <translation><!-- Check --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Credit Card</masterLabel>
+            <translation><!-- Credit Card --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Default value is Open, meaning a recurring donation with no end date. --></help>
+        <label><!-- Recurring Type --></label>
+        <name>RecurringType__c</name>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation><!-- Open --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The date of the first installment Opportunity for this Recurring Donation. Changes made to this field after the schedule has started will not impact future installment Opportunities or the schedule. The default is the current date. --></help>
+        <label><!-- Start Date --></label>
+        <name>StartDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed. --></help>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation><!-- Active --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Closed</masterLabel>
+            <translation><!-- Closed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lapsed</masterLabel>
+            <translation><!-- Lapsed --></translation>
+        </picklistValues>
+    </fields>
     <gender><!-- Neuter --></gender>
     <nameFieldLabel><!-- Recurring Donation Name --></nameFieldLabel>
     <quickActions>
