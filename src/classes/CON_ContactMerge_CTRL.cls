@@ -275,12 +275,6 @@ public with sharing class CON_ContactMerge_CTRL {
             return;
         }
 
-        if (!canUserDeleteSelectedContacts(mergeCandidates)) {
-            canContinueWithMerge = false;
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, System.Label.conMergeErrorNoDeleteRecAccess));
-            return;
-        }
-
         selectedRecordsCount = mergeCandidates.size();
 
         Map<String, Schema.SObjectField> contactFields = Schema.SObjectType.Contact.fields.getMap();
@@ -342,6 +336,11 @@ public with sharing class CON_ContactMerge_CTRL {
             }
         } catch (Exception e) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.npe01.Contact_Merge_Error_Contact_not_found + ' Error: ' + e));
+            return;
+        }
+
+        if (!canUserDeleteSelectedContacts(mergeCandidates)) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, System.Label.conMergeErrorNoDeleteRecAccess));
             return;
         }
 
@@ -629,7 +628,7 @@ public with sharing class CON_ContactMerge_CTRL {
              And RecordId IN :contactIds
         ];
         for (UserRecordAccess user: userAccess) {
-            if (!user.HasDeleteAccess && user.MaxAccessLevel != 'None') {
+            if (!user.HasDeleteAccess ) {
                 return false;
             }
         }
