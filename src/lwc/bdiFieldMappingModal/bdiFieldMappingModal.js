@@ -151,6 +151,8 @@ export default class bdiFieldMappingModal extends LightningElement {
         'account',
         'npsp__address__c',
         'address__c',
+        'campaign',
+        'campaignmember',
         'contact',
         'npsp__allocation__c',
         'allocation__c',
