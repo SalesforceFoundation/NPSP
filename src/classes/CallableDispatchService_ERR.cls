@@ -110,8 +110,6 @@ public with sharing class CallableDispatchService_ERR {
      */
     private static void addError(String context, String errorMessage) {
         ERR_Handler.processError(errorMessage, context);
-
-        return true;
     }
 
     /**
