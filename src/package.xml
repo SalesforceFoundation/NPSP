@@ -1390,14 +1390,17 @@
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementIntro</members>
-        <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementStep1Action</members>
-        <members>RD2_EnablementStep1Complete</members>
-        <members>RD2_EnablementStep1Content</members>
+        <members>RD2_EnablementStep1Intro</members>
         <members>RD2_EnablementStep2Action</members>
         <members>RD2_EnablementStep2Complete</members>
+        <members>RD2_EnablementStep2CompleteWarning</members>
+        <members>RD2_EnablementStep2Confirm</members>
+        <members>RD2_EnablementStep2Intro</members>
         <members>RD2_EnablementStep3Action</members>
-        <members>RD2_EnablementStep3Complete</members>
+        <members>RD2_EnablementStep3Intro</members>
+        <members>RD2_EnablementStep4Action</members>
+        <members>RD2_EnablementStep4Intro</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>

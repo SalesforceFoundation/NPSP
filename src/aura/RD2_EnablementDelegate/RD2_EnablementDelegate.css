@@ -1,2 +1,11 @@
-.THIS {
+.THIS .page-section {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+.THIS .warning {
+    color: #FF0000;
+}
+.THIS .toggleEnabled {
+    pointer-events: none;
 }

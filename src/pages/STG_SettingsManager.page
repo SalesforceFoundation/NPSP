@@ -173,7 +173,7 @@
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree3-node0-link">
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRD2EnablementNav">
-                                    <a href="#" onclick="ShowPanel('idPanelRD2Enablement');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRD2Enablement}</a>
+                                    <a href="#" onclick="ShowPanel('idPanelRD2Enablement');fireRefreshViewEvent();return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRD2Enablement}</a>
                                 </li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDNav"><a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRecurringDonations}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDInstPdNav"><a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDInstallmentPeriods}</a></li>
@@ -403,4 +403,11 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">        
+        function fireRefreshViewEvent() {
+            var refresheEvent = $A.get("e.force:refreshView");
+            refresheEvent.fire();
+        }
+    </script>
 </apex:page>

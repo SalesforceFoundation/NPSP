@@ -10,42 +10,93 @@
         description="Indicates if data migration has been completed" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.refreshView}"/>
 
-    <div class="slds-illustration slds-illustration_large slds-hide" aura:id="enablement-disabled">
-        <br /><br />
-        <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
-        <div class="slds-text-longform">
-            <h3 class="slds-text-heading_medium">{!$Label.c.RD2_EnablementDisabledHeader}</h3>
-            <p class="slds-text-body_regular">{!$Label.c.RD2_EnablementDisabledMessage}</p>
-        </div>
-    </div>
+
+    <lightning:layout horizontalAlign="spread" multipleRows="true" class="slds-hide" aura:id="enablement-disabled">
+        <lightning:layoutItem padding="horizontal-large" size="8">
+            <div class="slds-illustration slds-illustration_large">
+                <br /><br />
+                <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
+                <div class="slds-text-longform">
+                    <h3 class="slds-text-heading_medium">{!$Label.c.RD2_EnablementDisabledHeader}</h3>
+                    <p class="slds-text-body_regular">{!$Label.c.RD2_EnablementDisabledMessage}</p>
+                </div>
+            </div>
+        </lightning:layoutItem>
+    </lightning:layout>
 
 
     <lightning:layout horizontalAlign="spread" multipleRows="true" class="slds-hide" aura:id="enabler">
 
-        <lightning:layoutItem padding="around-medium" size="12">
+        <lightning:layoutItem padding="horizontal-large" size="12">
             <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementIntro}" />
         </lightning:layoutItem>
 
-        <lightning:layoutItem padding="around-medium" size="12">
-            <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementPrepTasks}" />
+        <lightning:layoutItem padding="around-small" size="12">
+            <lightning:card title="{!$Label.c.RD2_EnablementStep1Action}" class="page-section" aura:id="enablement-step-1">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem padding="horizontal-large" size="12">
+                        <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementStep1Intro}" />
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
         </lightning:layoutItem>
 
-        <lightning:layoutItem padding="around-medium" size="12">
-            <lightning:progressIndicator
-                currentStep="{! v.isEnabled == false ? 'step1' : (v.isMetaDeployCompleted == false ? 'step2' : 'step3')}"
-                type="path" variant="base">
-                <lightning:progressStep
-                    label="{! v.isEnabled == false ? $Label.c.RD2_EnablementStep1Action : $Label.c.RD2_EnablementStep1Complete }"
-                    value="step1" />
-                <lightning:progressStep
-                    label="{! v.isMetaDeployCompleted == false ? $Label.c.RD2_EnablementStep2Action : $Label.c.RD2_EnablementStep2Complete }"
-                    value="step2" />
-                <lightning:progressStep aura:id="step3"
-                    label="{! v.isMigrationCompleted == false ? $Label.c.RD2_EnablementStep3Action : $Label.c.RD2_EnablementStep3Complete }"
-                    value="step3" />
-            </lightning:progressIndicator>
+        <lightning:layoutItem padding="around-small" size="12">
+            <lightning:card title="{!$Label.c.RD2_EnablementStep2Action}" class="page-section" aura:id="enablement-step-2">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem padding="horizontal-large" size="12">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_2-of-3">
+                                <label for="step2-confirm"><lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementStep2Confirm}" /></label>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <lightning:input type="checkbox-button" label="{!$Label.c.RD2_EnablementStep2Confirm}" name="step2-confirm" checked="false" />
+                            </div>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="12"/>
+                    <lightning:layoutItem padding="horizontal-large" size="12">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_2-of-3">
+                                <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementStep2Complete}" />&nbsp;
+                                <lightning:formattedRichText class="slds-text-longform warning" value="{!$Label.c.RD2_EnablementStep2CompleteWarning}" />
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <lightning:input type="toggle" 
+                                    label="{!$Label.c.RD2_EnablementStep2Complete}" variant="label-hidden" 
+                                    aura:id="step2-complete" name="step2-complete" 
+                                    checked="{!v.isEnabled}" onchange="{!c.onStep2Complete}"
+                                    messageToggleActive="Enabled" messageToggleInactive="Disabled">
+                                </lightning:input>
+                            </div>
+                        </div>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
         </lightning:layoutItem>
+
+        <lightning:layoutItem padding="around-small" size="12">
+            <lightning:card title="{!$Label.c.RD2_EnablementStep3Action}" class="page-section" aura:id="enablement-step-3">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem padding="horizontal-large" size="12">
+                        <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementStep3Intro}" />
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem padding="around-small" size="12">
+            <lightning:card title="{!$Label.c.RD2_EnablementStep4Action}" class="page-section" aura:id="enablement-step-4">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem padding="horizontal-large" size="12">
+                        <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementStep4Intro}" />
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </lightning:layoutItem>
+
     </lightning:layout>
 
 </aura:component>

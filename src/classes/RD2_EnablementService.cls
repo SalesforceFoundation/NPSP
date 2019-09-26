@@ -76,6 +76,19 @@ public with sharing class RD2_EnablementService {
         }
         set;
     }
+
+    /***
+    * @description Contains attribute confirming if PilotEnabled feature parameter is enabled
+    */
+    public Boolean isPilotEnabled {
+        get {
+            if (isPilotEnabled == null) {
+                isPilotEnabled = true;//UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
+            }
+            return isPilotEnabled;
+        }
+        set;
+    }
     
     /***
     * @description Returns true if enhanced Recurring Donations can be enabled
@@ -83,9 +96,9 @@ public with sharing class RD2_EnablementService {
     */
     public Boolean isRecurringDonations2Ready() {
         return 
-            CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
+            STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c == true
             && isUserRunningLightning
-            && UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
+            && isPilotEnabled;
     }
     
     /***
@@ -94,7 +107,15 @@ public with sharing class RD2_EnablementService {
     */
     public Boolean isRecurringDonations2Enabled() {
         return 
-            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true
-            && UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
+            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true//STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c == true
+            && isPilotEnabled;
+    }
+
+    /***
+    * @description 
+    */
+    public void setRecurringDonations2Enabled() {
+        STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c = true;
+        upsert STG_Panel.stgService.stgRD;
     }
 }

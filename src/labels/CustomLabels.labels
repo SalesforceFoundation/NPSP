@@ -1292,7 +1292,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementDisabledMessage</shortDescription>
-        <value>You must enable Customizable Rollups in order to enable Enhanced Recurring Donations.</value>
+        <value>You must enable Customizable Rollups and Lightning Experience in order to enable Enhanced Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementIntro</fullName>
@@ -1300,19 +1300,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementIntro</shortDescription>
-        <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage.&lt;br/&gt;&lt;br/&gt;To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementPrepTasks</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementPrepTasks</shortDescription>
-        <value>Before you enable Enhanced Recurring Donations, you should complete the following tasks:&lt;br/&gt;
-● Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;br/&gt;
-● Understand the impact that enabling Enhanced Recurring Donations will have on your existing integrations.&lt;br/&gt;
-● Read the Enhanced Recurring Donations documentation.&lt;br/&gt;
-● Perform a database backup for at least Recurring Donations and all their related records.</value>
+        <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementStep1Action</fullName>
@@ -1320,24 +1308,19 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementStep1Action</shortDescription>
-        <value>Enable Enhanced Recurring Donations</value>
+        <value>Preparation Tasks</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementStep1Complete</fullName>
+        <fullName>RD2_EnablementStep1Intro</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementStep1Complete</shortDescription>
-        <value>Enhanced Recurring Donations Enabled</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementStep1Content</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementStep1Content</shortDescription>
-        <value>This step changes your Recurring Donations processing logic to use Enhanced Recurring Donations instead. Recurring Donations will not function the same way as before.&lt;br/&gt;
-&lt;br/&gt;WARNING: This is an irreversible process!</value>
+        <shortDescription>RD2_EnablementStep1Intro</shortDescription>
+        <value>Before you enable Enhanced Recurring Donations, you should complete the following tasks:&lt;br/&gt;
+● Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;br/&gt;
+● Understand the impact that enabling Enhanced Recurring Donations will have on your existing integrations.&lt;br/&gt;
+● Read the Enhanced Recurring Donations documentation.&lt;br/&gt;
+● Perform a database backup for at least Recurring Donations and all their related records.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementStep2Action</fullName>
@@ -1345,7 +1328,23 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementStep2Action</shortDescription>
-        <value>Install Enhanced Recurring Donations Metadata</value>
+        <value>Enable Enhanced Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep2Intro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep2Intro</shortDescription>
+        <value>This step changes your Recurring Donations processing logic to use Enhanced Recurring Donations instead. Recurring Donations will not function the same way as before.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep2Confirm</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep2Confirm</shortDescription>
+        <value>I confirm that I have completed the Preparation Tasks above and I understand that enabling Enchanced Recurring Donations is irreversible.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementStep2Complete</fullName>
@@ -1353,7 +1352,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementStep2Complete</shortDescription>
-        <value>Enhanced Recurring Donations Metadata Installed</value>
+        <value>Enable the Enchanced Recurring Donations functionality.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep2CompleteWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep2Complete</shortDescription>
+        <value>WARNING: This is an irreversible process!</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementStep3Action</fullName>
@@ -1361,15 +1368,31 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementStep3Action</shortDescription>
-        <value>Run Data Migration</value>
+        <value>Install Enhanced Recurring Donations Metadata</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementStep3Complete</fullName>
+        <fullName>RD2_EnablementStep3Intro</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementStep3Complete</shortDescription>
-        <value>Data Migration Complete</value>
+        <shortDescription>RD2_EnablementStep3Intro</shortDescription>
+        <value>Use our MetaDeploy service to install the Enhanced Recurring Donations metadata. The metadata includes: new picklist values, updated help text, and a new page layout. MetaDeploy is a service that exists outside of your Salesforce org.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep4Action</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep4Action</shortDescription>
+        <value>Run Data Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementStep4Intro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementStep4Intro</shortDescription>
+        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
     </labels>
     <labels>
         <fullName>RD_ErrorAddDonationHeaderText</fullName>

@@ -13,7 +13,7 @@
             if (component.isValid() && state === "SUCCESS") {
                 var enablementState = JSON.parse(response.getReturnValue());
 
-                if (!enablementState.isEnablementReady) {
+                if (!enablementState.isEnablementReady && !enablementState.isEnabled) {
                     let enablementDisabled = component.find("enablement-disabled");
                     $A.util.removeClass(enablementDisabled, "slds-hide");
                     return;
@@ -26,11 +26,9 @@
                 component.set("v.isMetaDeployCompleted", enablementState.isMetaDeployCompleted);
                 component.set("v.isMigrationCompleted", enablementState.isMigrationCompleted);
 
-                if (enablementState.isMigrationCompleted) {
-                    let step3 = component.find("step3");
-                    $A.util.removeClass(step3, "slds-is-active");
-                    $A.util.removeClass(step3, "slds-is-current");
-                    $A.util.addClass(step3, "slds-is-complete");
+                if (enablementState.isEnabled) {
+                    let toggleInput = component.find("step2-complete");
+                    $A.util.addClass(toggleInput, "toggleEnabled");
                 }
 
             } else if (state === "ERROR") {
@@ -39,6 +37,47 @@
                     ? errors[0].message
                     : $A.get("Unexpected Error");
                 console.log(errMessage);
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
+    * @description 
+    */
+    refreshView: function (component) {
+        let enablementDisabled = component.find("enablement-disabled");
+        $A.util.addClass(enablementDisabled, "slds-hide");
+
+        let enabler = component.find("enabler");
+        $A.util.addClass(enabler, "slds-hide");
+
+        this.loadState(component);
+    },
+    /****
+   * @description 
+   */
+    completeStep2: function (component) {
+        let isEnabled = component.get("v.isEnabled");
+
+        var action = component.get('c.enableEnancement');
+
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+
+            if (!component.isValid()) {
+                return;
+            }
+
+            if (state === 'SUCCESS') {
+                component.set('v.isEnabled', true);
+
+                let toggleInput = component.find("step2-complete");
+                $A.util.addClass(toggleInput, "toggleEnabled");
+
+                //showToast()? //todo
+            } else if (state === 'ERROR') {
+                console.log(response.getError());//todo
             }
         });
 

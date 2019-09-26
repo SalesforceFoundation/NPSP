@@ -50,7 +50,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     /***
     * @description 
     */
-    @AuraEnabled
+    @AuraEnabled(cacheable=false)
     public static String loadState() {
 		RD2_EnablementService service = new RD2_EnablementService();
         EnablementState state = new EnablementState();
@@ -63,11 +63,22 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         return JSON.serialize(state);
     }
 
+    /***
+    * @description 
+    */
+    @AuraEnabled
+    public static void enableEnancement() {
+        //STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+		new RD2_EnablementService().setRecurringDonations2Enabled();
+		//super.saveSettings();
+	}
+
 
     /***
     * @description 
     */
-    @TestVisible private class EnablementState {
+    @TestVisible 
+	private class EnablementState {
 		public Boolean isEnablementReady;
 		public Boolean isEnabled;
 		public Boolean isMetaDeployCompleted;

@@ -1,11 +1,13 @@
-<apex:page controller="RD2_EnablementDelegate_CTRL" id="RD2_Enablement" 
-    applyBodyTag="false" showHeader="true" sideBar="false" standardStylesheets="false" >
+<apex:page controller="RD2_EnablementDelegate_CTRL" id="RD2_Enablement" applyBodyTag="false" showHeader="true" sideBar="false"
+    standardStylesheets="false">
 
     <apex:slds/>
     <apex:includeLightning/>
 
     <div class="slds-scope">
-        <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2Enablement}" />
+        <div class="slds-m-around_large">
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2Enablement}" />
+        </div>
 
         <div id="enablementDelegateDiv">
         </div>
