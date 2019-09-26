@@ -98,7 +98,7 @@ public class CallableApiParameters {
     }
 
     /**
-     * @description Retrieve the specified Parameter as a Boolean value, and use the default if not found in the map
+     * @description Retrieve the specified Parameter as an Exception
      * @param paramName Map key for the params collection
      * @param defaultValue Default if null
      */
