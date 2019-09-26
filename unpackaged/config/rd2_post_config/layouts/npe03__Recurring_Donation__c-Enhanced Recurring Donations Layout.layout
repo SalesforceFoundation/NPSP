@@ -21,10 +21,6 @@
                 <field>npe03__Contact__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>npe03__Donor_Name__c</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Required</behavior>
                 <field>npe03__Amount__c</field>
             </layoutItems>
@@ -35,16 +31,16 @@
                 <field>npe03__Date_Established__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>npe03__Recurring_Donation_Campaign__c</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Required</behavior>
                 <field>%%%NAMESPACE%%%RecurringType__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%Status__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>npe03__Recurring_Donation_Campaign__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -56,7 +52,7 @@
         <label>Schedule Details</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Required</behavior>
+                <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%PaymentMethod__c</field>
             </layoutItems>
             <layoutItems>
@@ -68,12 +64,12 @@
                 <field>npe03__Installment_Period__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%Day_of_Month__c</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Required</behavior>
                 <field>%%%NAMESPACE%%%StartDate__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%Day_of_Month__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -143,14 +139,14 @@
         <relatedList>Opportunity.npe03__Recurring_Donation__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <customButtons>%%%NAMESPACE%%%Manage_Allocations</customButtons>
+        <customButtons>Manage_Allocations</customButtons>
         <excludeButtons>MassChangeOwner</excludeButtons>
         <excludeButtons>New</excludeButtons>
         <fields>NAME</fields>
         <fields>%%%NAMESPACE%%%General_Accounting_Unit__c</fields>
         <fields>%%%NAMESPACE%%%Amount__c</fields>
         <fields>%%%NAMESPACE%%%Percent__c</fields>
-        <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Recurring_Donation__c</relatedList>
+        <relatedList>%%%NAMESPACE%%%Allocation__c.>%%%NAMESPACE%%%Recurring_Donation__c</relatedList>
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedNoteList</relatedList>
@@ -164,7 +160,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h17000003gkRd</masterLabel>
+        <masterLabel>00h0R000001M5bw</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

@@ -309,4 +309,15 @@
     </nameField>
     <pluralLabel>Recurring Donations</pluralLabel>
     <sharingModel>ReadWrite</sharingModel>
+    <compactLayoutAssignment>Enhanced_Recurring_Donations</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>Enhanced_Recurring_Donations</fullName>
+        <fields>Name</fields>
+        <fields>npe03__Amount__c</fields>
+        <fields>npe03__Installment_Period__c</fields>
+        <fields>%%%NAMESPACE%%%InstallmentFrequency__c</fields>
+        <fields>npe03__Last_Payment_Date__c</fields>
+        <fields>%%%NAMESPACE%%%Status__c</fields>
+        <label>Enhanced Recurring Donations</label>
+    </compactLayouts>
 </CustomObject>
