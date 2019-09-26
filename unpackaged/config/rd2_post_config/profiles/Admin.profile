@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
     <layoutAssignments>
-        <layout>npe03__Recurring_Donation__c-Recurring Donations V2 Layout</layout>
+        <layout>npe03__Recurring_Donation__c-Enhanced Recurring Donations Layout</layout>
     </layoutAssignments>
     <fieldPermissions>
         <editable>false</editable>
