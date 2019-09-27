@@ -291,10 +291,11 @@ export default class bdiFieldMappingModal extends LightningElement {
 
             for (let i = 0; i < fieldInfos.length; i++) {
 
-                // Include the data import field if it hasn't already been mapped
+                // Include the data import field if it isn't a formula and hasn't already been mapped
                 // or if it's the currently selected field (i.e. editing)
-                if (!this.mappedTargetFieldApiNames.includes(fieldInfos[i].value) ||
-                    this.fieldMapping.Target_Field_Label === fieldInfos[i].label) {
+                if (!fieldInfos[i].isFormula && 
+                    (!this.mappedTargetFieldApiNames.includes(fieldInfos[i].value) ||
+                    this.fieldMapping.Target_Field_Label === fieldInfos[i].label)) {
                     let labelOption = {
                         label: `${fieldInfos[i].label} (${fieldInfos[i].value})`,
                         value: fieldInfos[i].value
