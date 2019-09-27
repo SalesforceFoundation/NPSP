@@ -47,7 +47,7 @@ public with sharing class CallableDispatchService_ERR {
     public static final String PARAM_MESSAGE = 'Message';
     public static final String PARAM_EXCEPTION = 'Exception';
 
-    private CallableApiParameters` paramService;
+    private CallableApiParameters paramService;
 
     /**
      * @description private no argument constructor
