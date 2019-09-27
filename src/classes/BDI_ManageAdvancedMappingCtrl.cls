@@ -202,9 +202,9 @@ public class BDI_ManageAdvancedMappingCtrl {
 
         for (String key : fieldDescribes.keySet()) {
 
-            //Only include fields that are createable by the current user
-            //This will filter out System / formula fields
-            if (fieldDescribes.get(key).isCreateable()) {
+            //Only include fields that are createable by the current user or formula fields.
+            //Formula fields can be selectively excluded later by the calling component.
+            if (fieldDescribes.get(key).isCreateable() || fieldDescribes.get(key).isCalculated()) {
                 fieldInfos.add(new FieldInfo(fieldDescribes.get(key),includeReferenceToObjectList));
             }
         }
@@ -545,6 +545,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String displayType;
         @AuraEnabled public String[] referenceToObjectList;
         @AuraEnabled public Boolean isBooleanMappable;
+        @AuraEnabled public Boolean isFormula;
         private String[] picklistOptions = new String[]{};
 
         // Restricting Picklist=>Bool mappings to only picklists with options 'true' and 'false'.
@@ -556,12 +557,14 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.value = dfr.getName();
             this.label = dfr.getLabel();
             this.displayType = dfr.getType().name();
+            this.isFormula = dfr.isCalculated();
         }
 
         public FieldInfo(DescribeFieldResult dfr, Boolean includeReferenceToObjectList) {
             this.value = dfr.getName();
             this.label = dfr.getLabel();
             this.displayType = dfr.getType().name();
+            this.isFormula = dfr.isCalculated();
 
             if (includeReferenceToObjectList) {
                 this.referenceToObjectList = new String[]{};
