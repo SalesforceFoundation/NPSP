@@ -289,6 +289,16 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
+    /**
+     * @description Instance method used to determine whether the running user has
+     * update permissions on the given field.  Facilitates dependency injection in tests.
+     * @param field the SObjectField token of the field to check
+     * @return true if the field is updateable by the running User, otherwise false
+     */
+    public Boolean isUpdateable(SObjectField field) {
+        return field.getDescribe().isUpdateable();
+    }
+
     /*******************************************************************************************************************
     * @description Determines whether the running user has read permissions on the sObject and fields provided
     *
