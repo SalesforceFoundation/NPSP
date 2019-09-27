@@ -1292,7 +1292,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementDisabledMessage</shortDescription>
-        <value>You must enable Customizable Rollups and Lightning Experience in order to enable Enhanced Recurring Donations.</value>
+        <value>You must enable both Customizable Rollups and Lightning Experience in order to enable Enhanced Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementIntro</fullName>
