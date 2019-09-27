@@ -534,7 +534,8 @@ export default class bdiObjectMappingModal extends LightningElement {
             for (let i = 0; i < this.dataImportFieldData.length; i++) {
                 let fieldData = this.dataImportFieldData[i];
 
-                if (!fieldsToExclude.has(fieldData.value.toLowerCase())) {
+                //Exclude formula fields and any field which is explicitly excluded.
+                if (!fieldsToExclude.has(fieldData.value.toLowerCase()) && !fieldData.isFormula) {
                     let labelOption = {
                         label: fieldData.label + ' (' + fieldData.value + ')',
                         value: fieldData.value
