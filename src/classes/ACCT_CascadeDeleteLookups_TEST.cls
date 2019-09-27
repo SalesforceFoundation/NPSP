@@ -54,13 +54,8 @@ private class ACCT_CascadeDeleteLookups_TEST {
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id IN :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
-          .withDefaults()
-          .build(contacts);
-        recurringDonations.addAll(new TEST_RecurringDonationBuilder()
-          .withDefaults()
-          .build(accounts)
-        );
+        List<npe03__Recurring_Donation__c> recurringDonations = getLegacyRecurringDonationBuilder().build(contacts);
+        recurringDonations.addAll(getLegacyRecurringDonationBuilder().build(accounts));
         insert recurringDonations;
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
@@ -122,13 +117,8 @@ private class ACCT_CascadeDeleteLookups_TEST {
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
-          .withDefaults()
-          .build(contacts);
-        recurringDonations.addAll(new TEST_RecurringDonationBuilder()
-          .withDefaults()
-          .build(accounts)
-        );
+        List<npe03__Recurring_Donation__c> recurringDonations = getLegacyRecurringDonationBuilder().build(contacts);
+        recurringDonations.addAll(getLegacyRecurringDonationBuilder().build(accounts));
         insert recurringDonations;
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
@@ -159,5 +149,20 @@ private class ACCT_CascadeDeleteLookups_TEST {
 
         List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
         System.assertEquals(0, deletedRelationships.size(), 'Relationships should not be deleted as the result of losing a merge.');
+    }
+
+    // Helpers
+    /////////////////
+    /***
+    * @description Recurring Donation record builder having default values applied
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder() {
+        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withAmount(2)
+            .withInstallments(2)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished()
+            .withScheduleTypeMultiplyValue();
     }
 }

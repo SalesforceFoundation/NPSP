@@ -60,11 +60,12 @@ public class RD_BulkTests_TEST {
         }
         insert contacts;        
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
-          .withDefaults()
-          .withAmount(100)
+        List<npe03__Recurring_Donation__c> recurringDonations = TEST_RecurringDonationBuilder.constructLegacyBuilder()
           .withInstallments(opportunityCount)
+          .withAmount(100)
+          .withInstallmentPeriodYearly()
           .withDateEstablished(System.today())
+          .withScheduleTypeMultiplyValue()
           .build(contacts);
 
         test.startTest();

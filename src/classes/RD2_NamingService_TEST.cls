@@ -52,7 +52,7 @@ public with sharing class RD2_NamingService_TEST {
     @isTest
     private static void shouldNotAutogenerateNameWhenAutomaticNamingIsNotEnabled() {
         String name = 'foo';
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName(name)
             .withAmount(100)
             .build();
@@ -70,7 +70,7 @@ public with sharing class RD2_NamingService_TEST {
     @isTest
     private static void shouldAutogenerateNameWhenAutomaticNamingIsEnabled() {
         String name = 'foo';
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName(name)
             .withAmount(100)
             .build();
@@ -87,7 +87,7 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameUsingProvidedAccountAndAmount() {
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName('foo')
             .withAccount(acc.Id)
             .withAmount(100.25)
@@ -107,7 +107,7 @@ public with sharing class RD2_NamingService_TEST {
     @isTest
     private static void shouldAutogenerateNameUsingProvidedContactAndAmount() {
         Contact contact = getContactMock();
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName('foo')
             .withAccount(acc.Id)
             .withContact(contact.Id)
@@ -134,7 +134,7 @@ public with sharing class RD2_NamingService_TEST {
             return;
         }
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100.25)
             .withCurrencyIsoCode('CAD')
@@ -152,7 +152,7 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldReturnAmountWithoutTrailingZeros() {
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
             .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
@@ -176,7 +176,7 @@ public with sharing class RD2_NamingService_TEST {
         acc.Name = String.valueOf(acc.Name).rightPad(accountNameLength, padding).left(accountNameLength);
         System.assertEquals(accountNameLength, acc.Name.length(), 'Account Name should be of max length');
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
             .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
@@ -203,11 +203,11 @@ public with sharing class RD2_NamingService_TEST {
         };
         UTIL_UnitTestData_TEST.setMockIds(accounts);
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(accounts[0].Id)
             .withAmount(100.00)
             .build();
-        npe03__Recurring_Donation__c oldRd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c oldRd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(accounts[1].Id)
             .withAmount(100.00)
             .build();
@@ -227,11 +227,11 @@ public with sharing class RD2_NamingService_TEST {
         };
         UTIL_UnitTestData_TEST.setMockIds(contacts);
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withContact(contacts[0].Id)
             .withAmount(100.00)
             .build();
-        npe03__Recurring_Donation__c oldRd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c oldRd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withContact(contacts[1].Id)
             .withAmount(100.00)
             .build();
@@ -245,11 +245,11 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldReturnTrueWhenAmountHasChanged() {
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
             .build();
-        npe03__Recurring_Donation__c oldRd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c oldRd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100.25)
             .build();
@@ -267,12 +267,12 @@ public with sharing class RD2_NamingService_TEST {
             return;
         }
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
             .withCurrencyIsoCode('USD')
             .build();
-        npe03__Recurring_Donation__c oldRd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c oldRd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
             .withCurrencyIsoCode('CAD')
@@ -287,12 +287,12 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldReturnTrueWhenNameIsTheReplaceKeyword() {
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName(System.Label.npo02.NameReplacementText)
             .withAccount(acc.Id)
             .withAmount(100.00)
             .build();
-        npe03__Recurring_Donation__c oldRd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c oldRd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
             .build();
@@ -307,12 +307,12 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldReturnFalseWhenNameConstructKeyFieldsAreUnchanged() {
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName('foo')
             .withAccount(acc.Id)
             .withAmount(100.00)
             .build();
-        npe03__Recurring_Donation__c oldRd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c oldRd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName('bar')
             .withAccount(acc.Id)
             .withAmount(100.00)
@@ -329,13 +329,13 @@ public with sharing class RD2_NamingService_TEST {
     @isTest
     private static void shouldAutogenerateNameWhenNameConstructKeyFieldsAreChanged() {
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            new TEST_RecurringDonationBuilder()
+            TEST_RecurringDonationBuilder.constructLegacyBuilder()
                 .withName('foo')
                 .withAccount(acc.Id)
                 .withAmount(100)
                 .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
                 .build(),
-            new TEST_RecurringDonationBuilder()
+            TEST_RecurringDonationBuilder.constructLegacyBuilder()
                 .withName('bar')
                 .withAccount(acc.Id)
                 .withAmount(200)
@@ -371,13 +371,13 @@ public with sharing class RD2_NamingService_TEST {
         insert contact;
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            new TEST_RecurringDonationBuilder()
+            TEST_RecurringDonationBuilder.constructLegacyBuilder()
                 .withName('foo')
                 .withAccount(acc.Id)
                 .withAmount(100)
                 .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
                 .build(),
-            new TEST_RecurringDonationBuilder()
+            TEST_RecurringDonationBuilder.constructLegacyBuilder()
                 .withName('bar')
                 .withContact(contact.Id)
                 .withAmount(200)

@@ -66,7 +66,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         Account donorAccount = new Account(Name = 'foo');
         insert donorAccount;
 
-        insert new TEST_RecurringDonationBuilder()
+        insert TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withInstallmentPeriodYearly()
             .withDateEstablished(System.today())
             .withAccount(donorAccount.Id)
