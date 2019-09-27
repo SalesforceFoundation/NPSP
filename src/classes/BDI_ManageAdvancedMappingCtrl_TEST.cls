@@ -358,7 +358,7 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
         if (fieldMap != null) {
             for (Schema.SObjectField ft : fieldMap.values()) {
                 Schema.DescribeFieldResult fieldDescribe = ft.getDescribe();
-                if (fieldDescribe.isCreateable()) {
+                if (fieldDescribe.isCreateable() || fieldDescribe.isCalculated()) {
                     creatableFields.add(fieldDescribe.getName());
                 }
             }
