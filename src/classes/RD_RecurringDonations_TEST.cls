@@ -38,7 +38,7 @@ public class RD_RecurringDonations_TEST {
 
     public static final Date DEFAULT_ESTABLISHED_DATE = TEST_RecurringDonationBuilder.DEFAULT_ESTABLISHED_DATE;
     private static final Date TODAY = System.today();
-    private static final TEST_SObjectGateway.LegacyRecurringDonationGateway rdGateway = new TEST_SObjectGateway.LegacyRecurringDonationGateway();
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
     /*******************************************************************************************************
     * @description test method for insertOpportunities function 
