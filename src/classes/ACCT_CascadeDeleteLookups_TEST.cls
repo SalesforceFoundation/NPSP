@@ -54,8 +54,8 @@ private class ACCT_CascadeDeleteLookups_TEST {
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id IN :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> recurringDonations = getLegacyRecurringDonationBuilder().build(contacts);
-        recurringDonations.addAll(getLegacyRecurringDonationBuilder().build(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = getRecurringDonationBuilder().build(contacts);
+        recurringDonations.addAll(getRecurringDonationBuilder().build(accounts));
         insert recurringDonations;
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
@@ -117,8 +117,8 @@ private class ACCT_CascadeDeleteLookups_TEST {
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> recurringDonations = getLegacyRecurringDonationBuilder().build(contacts);
-        recurringDonations.addAll(getLegacyRecurringDonationBuilder().build(accounts));
+        List<npe03__Recurring_Donation__c> recurringDonations = getRecurringDonationBuilder().build(contacts);
+        recurringDonations.addAll(getRecurringDonationBuilder().build(accounts));
         insert recurringDonations;
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
@@ -157,8 +157,8 @@ private class ACCT_CascadeDeleteLookups_TEST {
     * @description Recurring Donation record builder having default values applied
     * @return TEST_RecurringDonationBuilder Builder instance
     */
-    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder() {
-        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
+        return new TEST_RecurringDonationBuilder()
             .withAmount(2)
             .withInstallments(2)
             .withInstallmentPeriodYearly()

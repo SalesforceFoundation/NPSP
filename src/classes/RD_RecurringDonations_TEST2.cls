@@ -192,7 +192,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
@@ -407,7 +407,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account a = buildAccount();
         insert a;
 
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(a.Id)
             .withAmount(100)
             .withInstallmentPeriodWeekly()
@@ -449,7 +449,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account a = buildAccount();
         insert a;
         
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(a.Id)
             .withAmount(100)
             .withInstallmentPeriodWeekly()
@@ -492,7 +492,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         
         Account a = buildAccount();
         insert a;
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(a.Id)
             .withAmount(100)
             .withInstallmentPeriodWeekly()
@@ -688,7 +688,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         insert cfm;
 
 
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(c.Id)
             .withAmount(100)
             .withInstallmentPeriodMonthly()
@@ -780,7 +780,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
         // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withName('test28th')
             .withContact(c.Id)
             .withAmount(100)
@@ -827,7 +827,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         }
 
         // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withName('test30th')
             .withContact(c.Id)
             .withAmount(100)
@@ -870,7 +870,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
         // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withName('testEndOfMonth')
             .withContact(c.Id)
             .withAmount(100)
@@ -902,7 +902,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
             .withNextPaymentDate(nextDonationDate)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -925,7 +925,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Date expectedDate = installmentDate;
         Date actualDate;
 
-        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
             .withNextPaymentDate(nextDonationDate)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -943,7 +943,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
             .withNextPaymentDate(null)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -964,7 +964,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Date expectedDate;
         Date actualDate;
 
-        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
             .withNextPaymentDate(dateEstablished)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -987,7 +987,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
             .withNextPaymentDate(nextDonationDate)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -1008,7 +1008,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
             .withNextPaymentDate(nextDonationDate)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -1032,7 +1032,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void nextDonationDateIsGreaterOrEqualToDateEstablished() {
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withDateEstablished(Date.newInstance(2000, 11, 19)) //day is greater than Day of Month
             .withInstallmentPeriodMonthly()
             .withAlwaysUseLastDayOfMonth(false)
@@ -1054,7 +1054,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void nextDonationDateIsCalculatedBasedOnDayOfMonthAndCurrentNextDonationDate() {
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withDateEstablished(Date.newInstance(2000, 11, 19)) 
             .withNextPaymentDate(Date.newInstance(2000, 11, 21))
             .withInstallmentPeriodMonthly()
@@ -1091,7 +1091,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void closeDateIsCalculatedBasedOnDayOfMonthStartDateEndOfMonth() {
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withDateEstablished(Date.newInstance(2000, 9, 19)) 
             .withNextPaymentDate(Date.newInstance(2000, 9, 21))
             .withInstallmentPeriodMonthly()
@@ -1119,7 +1119,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void closeDateIsCalculatedBasedOnDayOfMonth() {
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withDateEstablished(Date.newInstance(2000, 7, 19)) 
             .withNextPaymentDate(Date.newInstance(2000, 7, 21))
             .withInstallmentPeriodMonthly()
@@ -1155,7 +1155,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             Name='Orphan2',
             npe03__Open_Ended_Status__c= Label.npe03.RecurringDonationOpenStatus
         ));
-        rdList.add(TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        rdList.add(new TEST_RecurringDonationBuilder()
             .withContact(con.Id)
             .withAmount(100)
             .withInstallments(2)
@@ -1199,7 +1199,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Setup the Recurring Donation
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
@@ -1271,7 +1271,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Setup the First Recurring Donation
-        TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
             .withInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
@@ -1343,7 +1343,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Setup the First Recurring Donation
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withInstallments(0)
             .withContact(c.Id)
             .withAmount(100)

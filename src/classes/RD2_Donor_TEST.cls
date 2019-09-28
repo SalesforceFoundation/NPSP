@@ -84,12 +84,12 @@ public with sharing class RD2_Donor_TEST {
         insert contacts;
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            new TEST_RecurringDonationBuilder()
                 .withAccount(accounts[0].Id)
                 .withContact(contacts[0].Id)
                 .withAmount(100)
                 .build(),
-            TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            new TEST_RecurringDonationBuilder()
                 .withContact(contacts[1].Id)
                 .withAmount(100)
                 .build()

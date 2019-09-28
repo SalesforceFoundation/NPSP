@@ -49,7 +49,7 @@ private class CRLP_RecalculateBTN_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
         insert gau;
 
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withInstallments(2)
             .withContact(c.Id)
             .withAmount(1)

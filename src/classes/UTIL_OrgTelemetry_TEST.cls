@@ -72,7 +72,7 @@ private class UTIL_OrgTelemetry_TEST {
         );
         insert opp;
 
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(c.Id)
             .withInstallments(3)
             .withAmount(100)
@@ -206,7 +206,7 @@ private class UTIL_OrgTelemetry_TEST {
         Account donorAccount = new Account(Name = 'foo');
         insert donorAccount;
 
-        insert TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        insert new TEST_RecurringDonationBuilder()
             .withInstallmentPeriod(CUSTOM_INSTALLMENT_PERIOD)
             .withDateEstablished(System.today())
             .withAccount(donorAccount.Id)

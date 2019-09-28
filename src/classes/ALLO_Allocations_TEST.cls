@@ -519,7 +519,7 @@ private with sharing class ALLO_Allocations_TEST {
         insert acc;
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withInstallmentPeriodYearly()
             .withDateEstablished(System.today())
             .withAccount(acc.id)

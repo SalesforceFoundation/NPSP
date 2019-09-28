@@ -309,7 +309,7 @@ private class CON_DeleteContactOverride_TEST {
         Contact contact = new Contact(LastName = 'TEST_CONTACT', AccountId = account.Id);
         insert contact;
 
-        npe03__Recurring_Donation__c recurringDonation = getLegacyRecurringDonationBuilder()
+        npe03__Recurring_Donation__c recurringDonation = getRecurringDonationBuilder()
           .withContact(contact.Id)
           .build();
         insert recurringDonation;
@@ -389,7 +389,7 @@ private class CON_DeleteContactOverride_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        npe03__Recurring_Donation__c recurringDonation = getLegacyRecurringDonationBuilder()
+        npe03__Recurring_Donation__c recurringDonation = getRecurringDonationBuilder()
           .withContact(contact.Id)
           .build();
         insert recurringDonation;
@@ -462,10 +462,10 @@ private class CON_DeleteContactOverride_TEST {
         insert accountCase;
 
         List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>{
-            getLegacyRecurringDonationBuilder()
+            getRecurringDonationBuilder()
                 .withContact(contact1.Id)
                 .build(),
-            getLegacyRecurringDonationBuilder()
+            getRecurringDonationBuilder()
                 .withAccount(account.Id)
                 .build()
         };
@@ -559,8 +559,8 @@ private class CON_DeleteContactOverride_TEST {
     * @description Builds Recurring Donation record with default values
     * @return npe03__Recurring_Donation__c
     */
-    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder() {
-        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
+        return new TEST_RecurringDonationBuilder()
             .withAmount(2)
             .withInstallments(2)
             .withInstallmentPeriodYearly()

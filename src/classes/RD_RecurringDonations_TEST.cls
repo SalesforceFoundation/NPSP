@@ -359,7 +359,7 @@ public class RD_RecurringDonations_TEST {
         insert contacts;
         contacts = new List<Contact>([SELECT LastName, AccountId FROM Contact]);
 
-        List<npe03__Recurring_Donation__c> rds = TEST_RecurringDonationBuilder.constructLegacyBuilder()            
+        List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()            
             .withAmount(100)
             .withInstallmentPeriodYearly()
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
@@ -427,7 +427,7 @@ public class RD_RecurringDonations_TEST {
         Campaign camp = new Campaign(Name = 'Campaign', isActive = true);
         insert camp;
 
-        TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
             .withAmount(100)
             .withDateEstablished(TODAY.toStartOfMonth())
             .withOpenEndedStatusOpen();
@@ -957,7 +957,7 @@ public class RD_RecurringDonations_TEST {
     * @return npe03__Recurring_Donation__c
     */
     public static npe03__Recurring_Donation__c buildRecurringDonation(Id contactId, String installmentPeriod) {
-        return TEST_RecurringDonationBuilder.constructLegacyBuilder()  
+        return new TEST_RecurringDonationBuilder()  
             .withContact(contactId)          
             .withAmount(100)
             .withInstallments(2)

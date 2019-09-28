@@ -57,29 +57,15 @@ public without sharing class TEST_RecurringDonationBuilder {
     /***
     * @description Recurring Donation builder mode 
     */
-    private Mode recordMode;
+    private Mode recordMode;    
 
     /***
-    * @description Constructor that can be initialized internally only
+    * @description Constructor 
     */
-    private TEST_RecurringDonationBuilder(Mode recordMode) {
-        this.recordMode = recordMode;
+    public TEST_RecurringDonationBuilder() {
+        this.recordMode = Mode.Legacy;// Concept of Enhanced Recurring Donations is not applicable yet
         
         this.withName();
-    }
-
-    /***
-    * @description Constructs Legacy Recurring Donation Builder
-    */
-    public static TEST_RecurringDonationBuilder constructLegacyBuilder() {
-        return new TEST_RecurringDonationBuilder(Mode.Legacy);
-    }
-
-    /***
-    * @description Constructs Enhanced Recurring Donation Builder
-    */
-    public static TEST_RecurringDonationBuilder constructEnhancedBuilder() {
-        return new TEST_RecurringDonationBuilder(Mode.Enhanced);
     }
 
     /***
