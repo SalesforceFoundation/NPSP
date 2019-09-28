@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group Recurring Donations
+* @group Test API
 * @description Recurring Donations Builder
 *
 */
@@ -42,9 +42,9 @@ public without sharing class TEST_RecurringDonationBuilder {
     public static final Date DEFAULT_ESTABLISHED_DATE = Date.newInstance(1970,6,12);
 
     /***
-    * @description Indicates Recurring Donation context
+    * @description Indicates Recurring Donation mode
     */
-    public Enum Context {
+    public Enum Mode {
         Legacy,
         Enhanced
     }
@@ -55,15 +55,15 @@ public without sharing class TEST_RecurringDonationBuilder {
     private Map<String, Object> valuesByFieldName = new Map<String, Object>();
 
     /***
-    * @description Recurring Donation context
+    * @description Recurring Donation builder mode 
     */
-    private Context recordContext;
+    private Mode recordMode;
 
     /***
     * @description Constructor that can be initialized internally only
     */
-    private TEST_RecurringDonationBuilder(Context recordContext) {
-        this.recordContext = recordContext;
+    private TEST_RecurringDonationBuilder(Mode recordMode) {
+        this.recordMode = recordMode;
         
         this.withName();
     }
@@ -72,22 +72,22 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @description Constructs Legacy Recurring Donation Builder
     */
     public static TEST_RecurringDonationBuilder constructLegacyBuilder() {
-        return new TEST_RecurringDonationBuilder(Context.Legacy);
+        return new TEST_RecurringDonationBuilder(Mode.Legacy);
     }
 
     /***
     * @description Constructs Enhanced Recurring Donation Builder
     */
     public static TEST_RecurringDonationBuilder constructEnhancedBuilder() {
-        return new TEST_RecurringDonationBuilder(Context.Enhanced);
+        return new TEST_RecurringDonationBuilder(Mode.Enhanced);
     }
 
     /***
-    * @description Validates field is set on the correct Recurring Donation type that depends on the context
+    * @description Validates field is set on the correct Recurring Donation type that depends on the Mode
     */
-    private void validateContext(Context validContext) {
-        if (recordContext != validContext) {
-            throw new BuilderException('This settings is not applicable to ' + validContext.name() + ' Recurring Donations');
+    private void validateMode(Mode validMode) {
+        if (recordMode != validMode) {
+            throw new BuilderException('This settings is not applicable to ' + validMode.name() + ' Recurring Donations');
         }
     }
 
@@ -214,7 +214,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance    
     */
     public TEST_RecurringDonationBuilder withNextPaymentDate(Date dt) {
-        validateContext(Context.Legacy);
+        validateMode(Mode.Legacy);
 
         valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
         return this;
@@ -226,7 +226,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withAlwaysUseLastDayOfMonth(Boolean shouldUse) {
-        validateContext(Context.Legacy);
+        validateMode(Mode.Legacy);
 
         valuesByFieldName.put('Always_Use_Last_Day_Of_Month__c', shouldUse);
         return this;
@@ -248,7 +248,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallments(Integer numberOfInstallments) {
-        validateContext(Context.Legacy);
+        validateMode(Mode.Legacy);
 
         valuesByFieldName.put('npe03__Installments__c', numberOfInstallments);
         return this;
@@ -267,7 +267,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodQuarterly() {
-        validateContext(Context.Legacy);
+        validateMode(Mode.Legacy);
 
         return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly);
     }
@@ -303,7 +303,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withScheduleTypeMultiplyValue() {
-        validateContext(Context.Legacy);
+        validateMode(Mode.Legacy);
 
         valuesByFieldName.put('npe03__Schedule_Type__c', System.Label.npe03.RecurringDonationMultiplyValue);
         return this;
@@ -339,7 +339,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatus(String status) {
-        validateContext(Context.Legacy);
+        validateMode(Mode.Legacy);
 
         valuesByFieldName.put('npe03__Open_Ended_Status__c', status);
         return this;

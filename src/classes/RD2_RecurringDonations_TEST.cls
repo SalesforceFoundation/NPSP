@@ -36,7 +36,7 @@
 */
 @isTest
 private with sharing class RD2_RecurringDonations_TEST {
-    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
     /****
     * @description Creates data required for unit tests
