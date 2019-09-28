@@ -133,10 +133,9 @@ public class RD_RecurringDonations_TEST {
         Account a = buildAccount();
         insert a;
 
-        String name = 'foo';
         npe03__Recurring_Donation__c rd = buildRecurringDonationMonthlyInstallment(null);
-        rd.name = name;
-        rd.npe03__Organization__c = a.id;            
+        rd.npe03__Organization__c = a.id; 
+        String name = rd.Name;        
         insert rd;
 
         rd = rdGateway.getRecord(rd.Id);

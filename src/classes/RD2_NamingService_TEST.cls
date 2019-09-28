@@ -34,10 +34,8 @@
 * @description Recurring Donations Naming Service tests
 *
 */
-@isTest
+@isTest(IsParallel=true)
 public with sharing class RD2_NamingService_TEST {
-    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
-
     private static final Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
 
     private static final String currencyCodeOrSymbol = isMultiCurrencyEnabled
@@ -51,11 +49,11 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldNotAutogenerateNameWhenAutomaticNamingIsNotEnabled() {
-        String name = 'foo';
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withName(name)
             .withAmount(100)
             .build();
+
+        String name = rd.Name;
         
         RD2_NamingService service = new RD2_NamingService();
 
@@ -69,11 +67,11 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameWhenAutomaticNamingIsEnabled() {
-        String name = 'foo';
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withName(name)
             .withAmount(100)
             .build();
+
+        String name = rd.Name;
         
         RD2_NamingService service = buildAutomaticNamingService();
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
@@ -88,7 +86,6 @@ public with sharing class RD2_NamingService_TEST {
     @isTest
     private static void shouldAutogenerateNameUsingProvidedAccountAndAmount() {
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withName('foo')
             .withAccount(acc.Id)
             .withAmount(100.25)
             .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
@@ -108,7 +105,6 @@ public with sharing class RD2_NamingService_TEST {
     private static void shouldAutogenerateNameUsingProvidedContactAndAmount() {
         Contact contact = getContactMock();
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withName('foo')
             .withAccount(acc.Id)
             .withContact(contact.Id)
             .withAmount(100.25)
@@ -197,10 +193,7 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldReturnTrueWhenAccountHasChanged() {
-        List<Account> accounts = new List<Account>{
-            new Account(Name = 'foo'),
-            new Account(Name = 'bar')
-        };
+        List<Account> accounts = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
         UTIL_UnitTestData_TEST.setMockIds(accounts);
 
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
@@ -222,8 +215,8 @@ public with sharing class RD2_NamingService_TEST {
     @isTest
     private static void shouldReturnTrueWhenContactHasChanged() {
         List<Contact> contacts = new List<Contact>{
-            new Contact(LastName = 'foo'),
-            new Contact(LastName = 'bar')
+            UTIL_UnitTestData_TEST.getContact(),
+            UTIL_UnitTestData_TEST.getContact()
         };
         UTIL_UnitTestData_TEST.setMockIds(contacts);
 
@@ -308,12 +301,10 @@ public with sharing class RD2_NamingService_TEST {
     @isTest
     private static void shouldReturnFalseWhenNameConstructKeyFieldsAreUnchanged() {
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withName('foo')
             .withAccount(acc.Id)
             .withAmount(100.00)
             .build();
         npe03__Recurring_Donation__c oldRd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withName('bar')
             .withAccount(acc.Id)
             .withAmount(100.00)
             .build();
@@ -330,19 +321,19 @@ public with sharing class RD2_NamingService_TEST {
     private static void shouldAutogenerateNameWhenNameConstructKeyFieldsAreChanged() {
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
             TEST_RecurringDonationBuilder.constructLegacyBuilder()
-                .withName('foo')
                 .withAccount(acc.Id)
                 .withAmount(100)
                 .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
                 .build(),
             TEST_RecurringDonationBuilder.constructLegacyBuilder()
-                .withName('bar')
                 .withAccount(acc.Id)
                 .withAmount(200)
                 .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
                 .build()
         };
         UTIL_UnitTestData_TEST.setMockIds(rds);
+
+        String unchangedName = rds[0].Name;
 
         List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>{
             rds[0].clone(),
@@ -355,7 +346,7 @@ public with sharing class RD2_NamingService_TEST {
         RD2_NamingService service = buildAutomaticNamingService(acc);
         service.autogenerateNamesOnChange(rds, oldRds);
 
-        System.assertEquals('foo', rds[0].Name, 'RD Name should not change when construct key fields are unchanged');
+        System.assertEquals(unchangedName, rds[0].Name, 'RD Name should not change when construct key fields are unchanged');
 
         System.assertEquals(getExpectedName(acc, '200'), rds[1].Name, 'RD Name should change when construct key fields are changed');
     }
@@ -372,13 +363,11 @@ public with sharing class RD2_NamingService_TEST {
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
             TEST_RecurringDonationBuilder.constructLegacyBuilder()
-                .withName('foo')
                 .withAccount(acc.Id)
                 .withAmount(100)
                 .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
                 .build(),
             TEST_RecurringDonationBuilder.constructLegacyBuilder()
-                .withName('bar')
                 .withContact(contact.Id)
                 .withAmount(200)
                 .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
@@ -437,10 +426,9 @@ public with sharing class RD2_NamingService_TEST {
     private static RD2_NamingService buildAutomaticNamingService(List<Account> accounts, List<Contact> contacts) {
         RD2_NamingService service = buildAutomaticNamingService();
 
-        RD2_Donor_TEST.GatewayMock donorGateway = new RD2_Donor_TEST.GatewayMock()
+        service.donorGateway = new RD2_Donor_TEST.GatewayMock()
             .withDonors(accounts)
             .withDonors(contacts);
-        service.donorGateway = donorGateway;
 
         return service;
     }

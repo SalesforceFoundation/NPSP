@@ -52,24 +52,12 @@ public with sharing class RD2_Donor {
 
         /***
         * @description Constructor
-        * @param recordId Account record Id
-        * @param name Account record name
+        * @param recordId Account/Contact SObject Id
+        * @param name Account/Contact name
         */
         public Record(Id recordId, String name) {
             this.recordId = recordId;
             this.name = name;
-        }
-
-        /***
-        * @description Constructor
-        * @param recordId Contact record Id
-        * @param firstName Contact record FirstName
-        * @param lastName Contact record LastName
-        */
-        public Record(Id recordId, String firstName, String lastName) {
-            this.recordId = recordId;
-            this.name = (String.isBlank(firstName) ? '' : firstName + ' ') + lastName;
-            this.name.trim();
         }
     }
 
@@ -104,11 +92,11 @@ public with sharing class RD2_Donor {
             }
 
             for (Contact c : [
-                SELECT FirstName, LastName
+                SELECT Name
                 FROM Contact
                 WHERE Id IN :contactIds
             ]) {
-                donorById.put(c.Id, new Record(c.Id, c.FirstName, c.LastName));
+                donorById.put(c.Id, new Record(c.Id, c.Name));
             }
 
             return donorById;
