@@ -634,7 +634,7 @@ public with sharing class STG_InstallScript_TEST {
         Account acc = new Account(Name = 'foo');
         insert acc;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withInstallmentPeriodYearly()
             .withDateEstablished(Date.newInstance(1984,01,29))

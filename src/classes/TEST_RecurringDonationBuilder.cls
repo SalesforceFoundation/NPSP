@@ -36,30 +36,59 @@
 */
 @isTest
 public without sharing class TEST_RecurringDonationBuilder {
+
+    private class BuilderException extends Exception {}
+
     public static final Date DEFAULT_ESTABLISHED_DATE = Date.newInstance(1970,6,12);
 
-    private Map<String, Object> valuesByFieldName;
-
     /***
-    * @description Constructor 
+    * @description Indicates Recurring Donation context
     */
-    public TEST_RecurringDonationBuilder() {
-        valuesByFieldName = new Map<String, Object>();
-        
-        this.withName('RD' + UTIL_UnitTestData_TEST.getUniqueString());
+    public Enum Context {
+        Legacy,
+        Enhanced
     }
 
     /***
-    * @description Sets default values
-    * @return TEST_RecurringDonationBuilder Builder instance
+    * @description Contains record field values 
     */
-    public TEST_RecurringDonationBuilder withDefaults() {
-        return this
-            .withAmount(2)
-            .withInstallments(2)
-            .withInstallmentPeriodYearly()
-            .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
-            .withScheduleTypeMultiplyValue();
+    private Map<String, Object> valuesByFieldName = new Map<String, Object>();
+
+    /***
+    * @description Recurring Donation context
+    */
+    private Context recordContext;
+
+    /***
+    * @description Constructor that can be initialized internally only
+    */
+    private TEST_RecurringDonationBuilder(Context recordContext) {
+        this.recordContext = recordContext;
+        
+        this.withName();
+    }
+
+    /***
+    * @description Constructs Legacy Recurring Donation Builder
+    */
+    public static TEST_RecurringDonationBuilder constructLegacyBuilder() {
+        return new TEST_RecurringDonationBuilder(Context.Legacy);
+    }
+
+    /***
+    * @description Constructs Enhanced Recurring Donation Builder
+    */
+    public static TEST_RecurringDonationBuilder constructEnhancedBuilder() {
+        return new TEST_RecurringDonationBuilder(Context.Enhanced);
+    }
+
+    /***
+    * @description Validates field is set on the correct Recurring Donation type that depends on the context
+    */
+    private void validateContext(Context validContext) {
+        if (recordContext != validContext) {
+            throw new BuilderException('This settings is not applicable to ' + validContext.name() + ' Recurring Donations');
+        }
     }
 
     /***
@@ -90,6 +119,13 @@ public without sharing class TEST_RecurringDonationBuilder {
         return this;
     }
 
+    /***
+    * @description Sets Name
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withName() {
+        return withName('RD' + UTIL_UnitTestData_TEST.getUniqueString());
+    }
 
     /***
     * @description Sets Name
@@ -122,6 +158,16 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Recurring Donation Campaign
+    * @param campaignId Campaign Id
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCampaign(Id campaignId) {
+        valuesByFieldName.put('npe03__Recurring_Donation_Campaign__c', campaignId);
+        return this;
+    }
+
+    /***
     * @description Sets Amount
     * @param amount Amount
     * @return TEST_RecurringDonationBuilder Builder instance
@@ -146,6 +192,14 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Date Established
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withDateEstablished() {
+        return withDateEstablished(DEFAULT_ESTABLISHED_DATE);
+    }
+
+    /***
+    * @description Sets Date Established
     * @param dt Date
     * @return TEST_RecurringDonationBuilder Builder instance
     */
@@ -160,6 +214,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance    
     */
     public TEST_RecurringDonationBuilder withNextPaymentDate(Date dt) {
+        validateContext(Context.Legacy);
+
         valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
         return this;
     }    
@@ -170,6 +226,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withAlwaysUseLastDayOfMonth(Boolean shouldUse) {
+        validateContext(Context.Legacy);
+
         valuesByFieldName.put('Always_Use_Last_Day_Of_Month__c', shouldUse);
         return this;
     }    
@@ -190,6 +248,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallments(Integer numberOfInstallments) {
+        validateContext(Context.Legacy);
+
         valuesByFieldName.put('npe03__Installments__c', numberOfInstallments);
         return this;
     }
@@ -207,6 +267,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodQuarterly() {
+        validateContext(Context.Legacy);
+
         return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly);
     }
 
@@ -241,6 +303,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withScheduleTypeMultiplyValue() {
+        validateContext(Context.Legacy);
+
         valuesByFieldName.put('npe03__Schedule_Type__c', System.Label.npe03.RecurringDonationMultiplyValue);
         return this;
     }
@@ -275,17 +339,9 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatus(String status) {
-        valuesByFieldName.put('npe03__Open_Ended_Status__c', status);
-        return this;
-    }
+        validateContext(Context.Legacy);
 
-    /***
-    * @description Sets Recurring Donation Campaign
-    * @param campaignId Campaign Id
-    * @return TEST_RecurringDonationBuilder Builder instance
-    */
-    public TEST_RecurringDonationBuilder withCampaign(Id campaignId) {
-        valuesByFieldName.put('npe03__Recurring_Donation_Campaign__c', campaignId);
+        valuesByFieldName.put('npe03__Open_Ended_Status__c', status);
         return this;
     }
     
@@ -314,7 +370,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         for (Integer i = 0; i < size; i++) {
             rds.add(this
-                .withName(UTIL_UnitTestData_TEST.getUniqueString())
+                .withName()
                 .build()
             );
         }
@@ -332,7 +388,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         for (Contact c : contacts) {
             rds.add(this
-                .withName(UTIL_UnitTestData_TEST.getUniqueString())
+                .withName()
                 .withContact(c.Id)
                 .build()
             );
@@ -351,7 +407,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         for (Account acc : accounts) {
             rds.add(this
-                .withName(UTIL_UnitTestData_TEST.getUniqueString())
+                .withName()
                 .withAccount(acc.Id)
                 .build()
             );

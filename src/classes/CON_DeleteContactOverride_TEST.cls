@@ -309,8 +309,7 @@ private class CON_DeleteContactOverride_TEST {
         Contact contact = new Contact(LastName = 'TEST_CONTACT', AccountId = account.Id);
         insert contact;
 
-        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
-          .withDefaults()
+        npe03__Recurring_Donation__c recurringDonation = getLegacyRecurringDonationBuilder()
           .withContact(contact.Id)
           .build();
         insert recurringDonation;
@@ -390,8 +389,7 @@ private class CON_DeleteContactOverride_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        npe03__Recurring_Donation__c recurringDonation =  new TEST_RecurringDonationBuilder()
-          .withDefaults()
+        npe03__Recurring_Donation__c recurringDonation = getLegacyRecurringDonationBuilder()
           .withContact(contact.Id)
           .build();
         insert recurringDonation;
@@ -464,12 +462,10 @@ private class CON_DeleteContactOverride_TEST {
         insert accountCase;
 
         List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>{
-            new TEST_RecurringDonationBuilder()
-                .withDefaults()
+            getLegacyRecurringDonationBuilder()
                 .withContact(contact1.Id)
                 .build(),
-            new TEST_RecurringDonationBuilder()
-                .withDefaults()
+            getLegacyRecurringDonationBuilder()
                 .withAccount(account.Id)
                 .build()
         };
@@ -557,5 +553,18 @@ private class CON_DeleteContactOverride_TEST {
             WHERE Id = :accountId 
             ALL ROWS
         ];
+    }
+
+    /***
+    * @description Builds Recurring Donation record with default values
+    * @return npe03__Recurring_Donation__c
+    */
+    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder() {
+        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withAmount(2)
+            .withInstallments(2)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished()
+            .withScheduleTypeMultiplyValue();
     }
 }

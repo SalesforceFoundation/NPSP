@@ -300,7 +300,7 @@ private class TDTM_DMLgt200_TEST {
         Test.startTest();
 
         // Insert the RecurringDonation records
-        List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
+        List<npe03__Recurring_Donation__c> rds = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withInstallments(2)
             .withContact(c.Id)
             .withAmount(100)
@@ -484,7 +484,7 @@ private class TDTM_DMLgt200_TEST {
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
             Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
-        List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
+        List<npe03__Recurring_Donation__c> rds = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withContact(c.Id)
             .withAmount(100.0)
             .withInstallmentPeriodMonthly()

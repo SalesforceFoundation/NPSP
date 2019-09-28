@@ -34,58 +34,7 @@
 * @description Recurring Donations Gateway to return data
 *
 */
-public with sharing class RD2_RecurringDonationsGateway {
-
-    /***
-    * @description Retrieves Recurring Donation records for specified Account Ids
-    * @param accountIds Account Ids
-    * @return List<npe03__Recurring_Donation__c>
-    */
-    public List<npe03__Recurring_Donation__c> getRecordsReferencingAccounts(Set<Id> accountIds) {
-        if (accountIds == null) {
-            return new List<npe03__Recurring_Donation__c>();
-        }
-
-        accountIds.remove(null);
-        if (accountIds.isEmpty()) {
-            return new List<npe03__Recurring_Donation__c>();
-        }
-
-        return [
-            SELECT 
-                Name, 
-                npe03__Organization__c,
-                npe03__Contact__c
-            FROM npe03__Recurring_Donation__c 
-            WHERE npe03__Organization__c IN :accountIds
-            AND npe03__Contact__c = null
-        ];
-    }
-    
-    /***
-    * @description Retrieves Recurring Donation records for specified Contact Ids
-    * @param contactIds Contact Ids
-    * @return List<npe03__Recurring_Donation__c>
-    */
-    public List<npe03__Recurring_Donation__c> getRecordsReferencingContacts(Set<Id> contactIds) {
-        if (contactIds == null) {
-            return new List<npe03__Recurring_Donation__c>();
-        }
-
-        contactIds.remove(null);
-        if (contactIds.isEmpty()) {
-            return new List<npe03__Recurring_Donation__c>();
-        }
-        
-        return [
-            SELECT 
-                Name, 
-                npe03__Organization__c,
-                npe03__Contact__c
-            FROM npe03__Recurring_Donation__c 
-            WHERE npe03__Contact__c IN :contactIds
-        ];
-    }
+public inherited sharing class RD2_RecurringDonationsGateway {
 
     /***
     * @description Retrieves Recurring Donation record for the specified Id

@@ -34,7 +34,7 @@
 * @description Recurring Donations Donor record and gateway tests
 *
 */
-@isTest
+@isTest(IsParallel=true)
 public with sharing class RD2_Donor_TEST {
 
     /***
@@ -62,25 +62,10 @@ public with sharing class RD2_Donor_TEST {
             FirstName = 'Jane',
             LastName = 'Smith'
         );
-        RD2_Donor.Record donor = new RD2_Donor.Record(contact.Id, contact.FirstName, contact.LastName);
+        RD2_Donor.Record donor = new RD2_Donor.Record(contact.Id, contact.FirstName + ' ' + contact.LastName);
 
         System.assertEquals(contact.Id, donor.recordId, 'Donor Id should match');
         System.assertEquals(contact.FirstName + ' ' + contact.LastName, donor.Name, 'Donor Name should match');
-    }
-
-    /***
-    * @description Verifies Donor Name includes Contact LastName when FirstName is not provided
-    */
-    @isTest
-    private static void shouldSetDonorWhenContactFirstNameIsNotProvided() {
-        Contact contact = new Contact(
-            Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType),
-            LastName = 'Smith'
-        );
-        RD2_Donor.Record donor = new RD2_Donor.Record(contact.Id, contact.FirstName, contact.LastName);
-
-        System.assertEquals(contact.Id, donor.recordId, 'Donor Id should match');
-        System.assertEquals(contact.LastName, donor.Name, 'Donor Name should match');
     }
 
     /***
@@ -89,25 +74,22 @@ public with sharing class RD2_Donor_TEST {
     */
     @isTest
     private static void shouldReturnReferencedAccountsAndContactsAsDonors() {
-        List<Account> accounts = new List<Account>{
-            new Account(Name = 'RD2 DonorA'),
-            new Account(Name = 'RD2 DonorB')
-        };
+        List<Account> accounts = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
         insert accounts;
 
         List<Contact> contacts = new List<Contact>{
-            new Contact(LastName = 'RD2 Donor ContactA'),
-            new Contact(LastName = 'RD2 Donor ContactB')
+            UTIL_UnitTestData_TEST.getContact(),
+            UTIL_UnitTestData_TEST.getContact()
         };
         insert contacts;
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            new TEST_RecurringDonationBuilder()
+            TEST_RecurringDonationBuilder.constructLegacyBuilder()
                 .withAccount(accounts[0].Id)
                 .withContact(contacts[0].Id)
                 .withAmount(100)
                 .build(),
-            new TEST_RecurringDonationBuilder()
+            TEST_RecurringDonationBuilder.constructLegacyBuilder()
                 .withContact(contacts[1].Id)
                 .withAmount(100)
                 .build()
@@ -147,7 +129,9 @@ public with sharing class RD2_Donor_TEST {
         */
         public GatewayMock withDonors(List<Contact> contacts) {
             for (Contact c : contacts) {
-                donorById.put(c.Id, new RD2_Donor.Record(c.Id, c.FirstName, c.LastName));
+                String contactName = (String.isBlank(c.FirstName) ? '' : c.FirstName + ' ') + c.LastName;
+
+                donorById.put(c.Id, new RD2_Donor.Record(c.Id, contactName));
             }
             return this;
         }

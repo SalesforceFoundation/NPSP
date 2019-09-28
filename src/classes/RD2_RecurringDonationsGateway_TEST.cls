@@ -34,7 +34,7 @@
 * @description Recurring Donations Gateway tests
 *
 */
-@isTest
+@isTest(IsParallel=true)
 private with sharing class RD2_RecurringDonationsGateway_TEST {
     private static final String TEST_NAME = 'Recurring Donation Gateway';
 
@@ -53,14 +53,12 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
         insert contact;
 
         insert new List<npe03__Recurring_Donation__c>{
-            new TEST_RecurringDonationBuilder()
-                .withName('foo')
+            TEST_RecurringDonationBuilder.constructLegacyBuilder()
                 .withAccount(acc.Id)
                 .withAmount(100)
                 .withCurrencyIsoCode('USD')
                 .build(),
-            new TEST_RecurringDonationBuilder()
-                .withName('bar')
+            TEST_RecurringDonationBuilder.constructLegacyBuilder()
                 .withContact(contact.Id)
                 .withAmount(200)
                 .withCurrencyIsoCode('USD')
@@ -68,32 +66,6 @@ private with sharing class RD2_RecurringDonationsGateway_TEST {
         };
     }
 
-    /***
-    * @description Verifies Recurring Donations are returned for the specified Account
-    */
-    @isTest
-    private static void shouldReturnRecordsForSpecifiedAccount() {
-        Account acc = getAccount();
-        List<npe03__Recurring_Donation__c> rds = rdGateway.getRecordsReferencingAccounts(
-            new Set<Id>{ acc.Id, getContact().Id, null, acc.Id }
-        );
-
-        System.assertEquals(1, rds.size(), 'Number of returned records should match');
-        System.assertNotEquals(null, rds[0].npe03__Organization__c, 'Recurring Donation associated with the Account should be returned');
-    }
-
-    /***
-    * @description Verifies Recurring Donations are returned for the specified Contact
-    */
-    @isTest
-    private static void shouldReturnRecordsForSpecifiedContact() {
-        List<npe03__Recurring_Donation__c> rds = rdGateway.getRecordsReferencingContacts(
-            new Set<Id>{ getContact().Id, null }
-        );
-
-        System.assertEquals(1, rds.size(), 'Number of returned records should match');
-        System.assertNotEquals(null, rds[0].npe03__Contact__c, 'Recurring Donation associated with the Contact should be returned');
-    }
 
     /***
     * @description Verifies Recurring Donations are returned for specified Recurring Donation Ids
