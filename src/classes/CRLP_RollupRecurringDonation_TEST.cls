@@ -174,7 +174,7 @@ private class CRLP_RollupRecurringDonation_TEST {
         Date lastPaymentDate = startDate.addMonths(numClosedOpps-1);
         Date nextPaymentDate = lastPaymentDate.addMonths(1);
 
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
                 .withInstallments(numOpps)
                 .withContact(con.Id)
                 .withAmount(instAmt)

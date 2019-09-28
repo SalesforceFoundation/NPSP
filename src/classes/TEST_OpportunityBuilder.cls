@@ -44,9 +44,7 @@ public without sharing class TEST_OpportunityBuilder {
     public TEST_OpportunityBuilder() {
         valuesByFieldName = new Map<String, Object>();
         
-        //defaults
-        valuesByFieldName.put('Name', 'Test' + UTIL_UnitTestData_TEST.getUniqueString());
-        valuesByFieldName.put('CloseDate', Date.today());
+        this.withName();
     }
 
     /***
@@ -67,6 +65,14 @@ public without sharing class TEST_OpportunityBuilder {
         valuesByFieldName.put('Id', UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType));
         return this;
     }    
+
+    /***
+    * @description Sets Name
+    * @return TEST_OpportunityBuilder Builder instance
+    */
+    public TEST_OpportunityBuilder withName() {
+        return withName('Opp' + UTIL_UnitTestData_TEST.getUniqueString());
+    }
 
     /***
     * @description Sets Name

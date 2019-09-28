@@ -196,7 +196,7 @@ private class ALLO_ManageAllocations_TEST {
         insert acc;
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withInstallmentPeriodYearly()
             .withDateEstablished(Date.newInstance(1984,01,29))
             .withAccount(acc.Id)

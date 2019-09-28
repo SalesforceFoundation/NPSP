@@ -60,26 +60,23 @@ public without sharing class TEST_RecurringDonationBuilder {
     private Mode recordMode;
 
     /***
+    * @description Constructor 
+    */
+    public TEST_RecurringDonationBuilder() {
+        this.recordMode = RD2_EnablementService.isRecurringDonations2Enabled
+            ? Mode.Enhanced
+            : Mode.Legacy;
+        
+        this.withName();
+    }
+
+    /***
     * @description Constructor that can be initialized internally only
     */
     private TEST_RecurringDonationBuilder(Mode recordMode) {
         this.recordMode = recordMode;
         
         this.withName();
-    }
-
-    /***
-    * @description Constructs Legacy Recurring Donation Builder
-    */
-    public static TEST_RecurringDonationBuilder constructLegacyBuilder() {
-        return new TEST_RecurringDonationBuilder(Mode.Legacy);
-    }
-
-    /***
-    * @description Constructs Enhanced Recurring Donation Builder
-    */
-    public static TEST_RecurringDonationBuilder constructEnhancedBuilder() {
-        return new TEST_RecurringDonationBuilder(Mode.Enhanced);
     }
 
     /***

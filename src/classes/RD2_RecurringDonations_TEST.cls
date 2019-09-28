@@ -34,7 +34,7 @@
 * @description Enhanced Recurring Donations trigger handler tests
 *
 */
-@isTest
+@isTest(IsParallel=true)
 private with sharing class RD2_RecurringDonations_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
@@ -102,14 +102,14 @@ private with sharing class RD2_RecurringDonations_TEST {
         Contact contact = getContact();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withName('foo')
             .withAccount(contact.AccountId)
             .withAmount(100)
-            .build();    
+            .build();  
+        String name = rd.Name;  
         insert rd;
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals('foo', rd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
+        System.assertEquals(name, rd.Name, 'The name should be unchanged since Enable Automatic Naming is unchecked');
 
         Test.startTest();      
         RD2_NamingService_TEST.enableAutomaticNaming();

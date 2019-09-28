@@ -46,7 +46,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = getLegacyRecurringDonationBuilder().build(accounts);
+        List<npe03__Recurring_Donation__c> recurringDonations = getRecurringDonationBuilder().build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
@@ -99,7 +99,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = getLegacyRecurringDonationBuilder().build(accounts);
+        List<npe03__Recurring_Donation__c> recurringDonations = getRecurringDonationBuilder().build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
@@ -136,7 +136,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = getLegacyRecurringDonationBuilder().build(accounts);
+        List<npe03__Recurring_Donation__c> recurringDonations = getRecurringDonationBuilder().build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
@@ -225,7 +225,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = getLegacyRecurringDonationBuilder().build(accounts);
+        List<npe03__Recurring_Donation__c> recurringDonations = getRecurringDonationBuilder().build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
@@ -264,7 +264,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = getLegacyRecurringDonationBuilder().build(accounts);
+        List<npe03__Recurring_Donation__c> recurringDonations = getRecurringDonationBuilder().build(accounts);
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
@@ -299,8 +299,8 @@ private class RD_CascadeDeleteLookups_TEST {
     * @description Recurring Donation record builder having default values applied
     * @return TEST_RecurringDonationBuilder Builder instance
     */
-    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder() {
-        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
+        return new TEST_RecurringDonationBuilder()
             .withAmount(2)
             .withInstallments(2)
             .withInstallmentPeriodYearly()

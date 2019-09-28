@@ -34,7 +34,7 @@
 * @description Enhanced Recurring Donations Enablement Service class
 *
 */
-@isTest
+@isTest(IsParallel=true)
 public with sharing class RD2_EnablementService_TEST {
 
     /****
@@ -147,10 +147,7 @@ public with sharing class RD2_EnablementService_TEST {
     private static void shouldAutogenerateNameWhenEnhancementIsNotEnabled() {
         setRecurringDonations2Disabled();
         
-        createRecurringDonationWhenAutomaticNamingIsEnabled();
-
-        npe03__Recurring_Donation__c rd = new TEST_SObjectGateway.RecurringDonationGateway().getRecord(rd.Id);
-        System.assertEquals(RD2_NamingService_TEST.getExpectedName(contact, '100'), rd.Name, 'Name should match');
+        verifyAutomatedNaming();
     }
 
     /****
@@ -160,22 +157,18 @@ public with sharing class RD2_EnablementService_TEST {
     private static void shouldAutogenerateNameWhenEnhancementIsEnabled() {
         setRecurringDonations2Enabled();
 
-        createRecurringDonationWhenAutomaticNamingIsEnabled();
-
-        npe03__Recurring_Donation__c rd = new TEST_SObjectGateway.RecurringDonationGateway().getRecord(rd.Id);
-        System.assertEquals(RD2_NamingService_TEST.getExpectedName(contact, '100'), rd.Name, 'Name should match');
+        verifyAutomatedNaming();
     }
 
     /****
     * @description Creates Recurring Donation record when automatic naming is enabled
     */
-    private static void createRecurringDonationWhenAutomaticNamingIsEnabled() {
+    private static void verifyAutomatedNaming() {
         RD2_NamingService_TEST.enableAutomaticNaming();
 
         Contact contact = getContact();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withName('foo')
             .withContact(contact.Id)
             .withAmount(100)
             .build();
@@ -183,6 +176,9 @@ public with sharing class RD2_EnablementService_TEST {
         Test.startTest();
         insert rd;
         Test.stopTest();
+
+        rd = new TEST_SObjectGateway.RecurringDonationGateway().getRecord(rd.Id);
+        System.assertEquals(RD2_NamingService_TEST.getExpectedName(contact, '100'), rd.Name, 'Name should match');
     }
 
     /****
@@ -307,10 +303,10 @@ public with sharing class RD2_EnablementService_TEST {
     */
     private static Opportunity buildOpportunity(Id rdId, Id accountId) {
         return new TEST_OpportunityBuilder()
-            .withName('foo')
             .withAmount(100)
             .withAccount(accountId)
             .withClosedWonStage()
+            .withCloseDate(Date.today())
             .withRecurringDonation(rdId)
             .build();
     }
