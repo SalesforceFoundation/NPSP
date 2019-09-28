@@ -333,8 +333,6 @@
         <members>RD2_Donor_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
-        <members>RD2_RecurringDonationsGateway</members>
-        <members>RD2_RecurringDonationsGateway_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -444,6 +442,7 @@
         <members>TDTM_TriggerScaffolds_TEST</members>
         <members>TDTM_iTableDataGateway</members>
         <members>TEST_RecurringDonationBuilder</members>
+        <members>TEST_SObjectGateway</members>
         <members>USER_InActiveUser_TDTM</members>
         <members>USER_InActiveUser_TDTM_TEST</members>
         <members>USER_MixedDML_TEST</members>

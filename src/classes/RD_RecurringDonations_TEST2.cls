@@ -37,7 +37,7 @@
 private with sharing class RD_RecurringDonations_TEST2 {
     private static final Date DEFAULT_ESTABLISHED_DATE = RD_RecurringDonations_TEST.DEFAULT_ESTABLISHED_DATE;
     private static final Date TODAY = System.today();
-    private static final RD2_RecurringDonationsGateway rdGateway = new RD2_RecurringDonationsGateway();
+    private static final TEST_SObjectGateway.LegacyRecurringDonationGateway rdGateway = new TEST_SObjectGateway.LegacyRecurringDonationGateway();
 
     //test closing an opportunity for an open recurring donation
     @isTest
