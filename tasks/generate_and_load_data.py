@@ -20,8 +20,11 @@ class GenerateAndLoadData(BaseSalesforceApiTask):
 
     task_options = {
         "num_records": {
-            "description": "How many records to generate: total number of opportunities.",
+            "description": "How many records to generate. Precise calcuation depends on the generator.",
             "required": True},
+        "batch_size": {
+            "description": "How many records to create and load at a time..",
+            "required": False},
         "mapping": {"description": "A mapping YAML file to use",
                          "required": True},
         "data_generation_task": {"description": "Fully qualified class path of a task to generate the data. Use cumulusci.tasks.bulkdata.factory_generator if you would like to use a Factory Module.",
@@ -36,28 +39,38 @@ class GenerateAndLoadData(BaseSalesforceApiTask):
         mapping_file = os.path.abspath(self.options["mapping"])
         assert os.path.exists(mapping_file), f"{mapping_file} cannot be found."
         database_url = self.options.get("database_url")
+        num_records = int(self.options["num_records"])
+        batch_size = int(self.options.get("batch_size", num_records))
         with temporary_dir() as tempdir:
-            if not database_url:
-                sqlite_path = os.path.join(tempdir, "generated_data.db")
-                database_url = f"sqlite:///" + sqlite_path
+            num_batches = (num_records // batch_size) + 1
+            for i in range(0, num_batches):
+                if i == num_batches - 1:  # last batch
+                    batch_size = num_records - (batch_size * i)  # leftovers
+                self._generate_batch(database_url, tempdir,
+                                     mapping_file, batch_size, i)
 
-            subtask_options = {**self.options, "mapping": mapping_file, "database_url": database_url}
-            class_path = self.options.get("data_generation_task", None)
-            if not class_path:
-                class_path = "cumulusci.tasks."
+    def _generate_batch(self, database_url, tempdir, mapping_file, batch_size, index):
+        if not database_url:
+            sqlite_path = os.path.join(tempdir, f"generated_data_{index}.db")
+            database_url = f"sqlite:///" + sqlite_path
 
-            task_class = import_global(class_path)
-            task_config = TaskConfig({"options": subtask_options})
-            data_gen_task = task_class(self.project_config, task_config, org_config=self.org_config)
-            data_gen_task()
+        subtask_options = {**self.options, "mapping": mapping_file,
+                                           "database_url": database_url,
+                                           "num_records": batch_size}
+        class_path = self.options.get("data_generation_task", None)
+        task_class = import_global(class_path)
+        task_config = TaskConfig({"options": subtask_options})
+        data_gen_task = task_class(self.project_config, task_config, org_config=self.org_config)
+        data_gen_task()
 
-            subtask_config = TaskConfig({"options": subtask_options})
-            subtask = LoadData(
-                project_config=self.project_config,
-                task_config=subtask_config,
-                org_config=self.org_config,
-                flow=self.flow,
-                name=self.name,
-                stepnum=self.stepnum,
-            )
-            subtask()
+        subtask_config = TaskConfig({"options": subtask_options,
+                                     "num_records": batch_size})
+        subtask = LoadData(
+            project_config=self.project_config,
+            task_config=subtask_config,
+            org_config=self.org_config,
+            flow=self.flow,
+            name=self.name,
+            stepnum=self.stepnum,
+        )
+        subtask()
