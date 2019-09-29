@@ -34,7 +34,7 @@
 * @description Enhanced Recurring Donations Enablement Service class
 *
 */
-@isTest(IsParallel=true)
+@isTest//(IsParallel=true) Cannot execute in parallel due to Account/Contact insert and exclusive lock error
 public with sharing class RD2_EnablementService_TEST {
 
     /****

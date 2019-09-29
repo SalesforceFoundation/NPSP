@@ -71,6 +71,29 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Constructor 
+    */
+    private TEST_RecurringDonationBuilder(Mode recordMode) {
+        this.recordMode = recordMode;
+        
+        this.withName();
+    }
+
+    /***
+    * @description Returns legacy Recurring Donation builder
+    */
+    public static TEST_RecurringDonationBuilder constructLegacyBuilder() {
+        return new TEST_RecurringDonationBuilder(Mode.Legacy);
+    }
+
+    /***
+    * @description Returns enhanced Recurring Donation builder
+    */
+    public static TEST_RecurringDonationBuilder constructEnhancedBuilder() {
+        return new TEST_RecurringDonationBuilder(Mode.Enhanced);
+    }
+
+    /***
     * @description Validates field is set on the correct Recurring Donation type that depends on the Mode
     */
     private void validateMode(Mode validMode) {

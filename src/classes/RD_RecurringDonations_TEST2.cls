@@ -586,7 +586,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     }  
         
     /***
-     * @description Executes Recurring Donations start() and returns Recurring Donations
+     * @description Executes RD_RecurringDonations_BATCH "start()" method and returns Recurring Donations for verification 
      */
     private static List<npe03__Recurring_Donation__c> executeBatchStart() {  
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();   
@@ -594,10 +594,16 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account acc = buildAccount();
         insert acc;  
 
-        npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationYearlyInstallment(null);
-        rd.npe03__Organization__c = acc.Id;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
-        rd.npe03__Next_Payment_Date__c = TODAY;
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withAccount(acc.Id)
+            .withAmount(100)
+            .withInstallments(2)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
+            .withNextPaymentDate(TODAY)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen() //The batch filters on Open "Open Ended Status"
+            .build();
         insert rd;
 
         RD_RecurringDonations_BATCH batch = new RD_RecurringDonations_BATCH();
