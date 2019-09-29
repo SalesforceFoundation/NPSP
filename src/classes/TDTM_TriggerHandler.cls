@@ -85,7 +85,14 @@ public class TDTM_TriggerHandler {
                 return;
             }
             List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
-            insert defaultConfig;
+            // Rather than insert the records in unit tests, just populate the static list
+            // However to prevent any conflicts with our customers unit tests, always insert the records
+            // if this is a test running in the full managed package code in a customer org.
+            if (!Test.isRunningTest() || (Test.isRunningTest() && UTIL_Namespace.isCustomerOrg())) {
+                insert defaultConfig;
+            } else {
+                TDTM_ObjectDataGateway.setDefaultHandlers(defaultConfig);
+            }
             defaultRecordsInserted = true;
         }
 

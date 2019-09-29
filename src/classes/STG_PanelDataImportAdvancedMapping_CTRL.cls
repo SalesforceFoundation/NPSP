@@ -208,7 +208,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             dataImportSettings =
                 BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
                     String.valueOf(Metadata.DeployStatus.Succeeded));
-            addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled);
+            addPageMessage(ApexPages.Severity.INFO, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
             addPageMessage(ApexPages.Severity.ERROR,
                 Label.bdiErrorDataImportCustomSettings + ' ' + e.getMessage());
@@ -316,7 +316,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * inspects the deployment status, and sets the hasDeploymentInProgress boolean
     */
     private void refreshCustomSettings() {
-        dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings = Data_Import_Settings__c.getInstance();
     }
 
     /*******************************************************************************************************

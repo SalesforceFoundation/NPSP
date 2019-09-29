@@ -59,9 +59,15 @@ global class TDTM_Config_API {
         // need to handle scenario where this is called before any DML has occurred that would set the
         // initial defaults records (ie, in tests).
         if (Test.isRunningTest() && TDTM_ObjectDataGateway.listTH.isEmpty()) {
-            insert getDefaultRecords();
-            // reset listTH to null so it will get refilled in the correct sort order
-            TDTM_ObjectDataGateway.listTH = null;
+            if (UTIL_Namespace.isCustomerOrg()) {
+                // only insert the records if running unit tests in a customer org
+                insert getDefaultRecords();
+                // reset listTH to null so it will get refilled in the correct sort order
+                TDTM_ObjectDataGateway.listTH = null;
+            } else {
+                // otherwise use the cached version of the default handlers
+                TDTM_ObjectDataGateway.setDefaultHandlers(getDefaultRecords());
+            }
         }
         return TDTM_ObjectDataGateway.listTH;
     }

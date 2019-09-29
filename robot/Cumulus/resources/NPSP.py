@@ -1,9 +1,8 @@
 import logging
-import re
-import time
 import warnings
+import time
 
-from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
+from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
@@ -14,24 +13,25 @@ from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
-import sys
 from email.mime import text
 
 from cumulusci.tasks.apex.anon import AnonymousApexTask
 from cumulusci.core.config import TaskConfig
-from cumulusci.tasks.apex.batch import BatchApexWait
 
-from locators_45 import npsp_lex_locators as locators_45
+from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
+
+
 from locators_46 import npsp_lex_locators as locators_46
+from locators_47 import npsp_lex_locators as locators_47
 locators_by_api_version = {
+    47.0: locators_47,   # winter '20
     46.0: locators_46,  # Summer '19
-    45.0: locators_45,  # Spring '19
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
 
 @selenium_retry
-class NPSP(object):
+class NPSP(SalesforceRobotLibraryBase):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = 1.0
@@ -51,29 +51,17 @@ class NPSP(object):
             client = self.cumulusci.tooling
             response = client._call_salesforce(
                 'GET', 'https://{}/services/data'.format(client.sf_instance))
-            latest_api_version = float(response.json()[-1]['version'])
-            if not latest_api_version in locators_by_api_version:
-                warnings.warn("Could not find locator library for API %d" % latest_api_version)
-                latest_api_version = max(locators_by_api_version.keys())
+            self.latest_api_version = float(response.json()[-1]['version'])
+            if not self.latest_api_version in locators_by_api_version:
+                warnings.warn("Could not find locator library for API %d" % self.latest_api_version)
+                self.latest_api_version = max(locators_by_api_version.keys())
         except RobotNotRunningError:
             # We aren't part of a running test, likely because we are
             # generating keyword documentation. If that's the case, assume
             # the latest supported version
-            latest_api_version = max(locators_by_api_version.keys())
-        locators = locators_by_api_version[latest_api_version]
+            self.latest_api_version = max(locators_by_api_version.keys())
+        locators = locators_by_api_version[self.latest_api_version]
         npsp_lex_locators.update(locators)
-
-    @property
-    def builtin(self):
-        return BuiltIn()
-
-    @property
-    def cumulusci(self):
-        return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
-
-    @property
-    def salesforce(self):
-        return self.builtin.get_library_instance('cumulusci.robotframework.Salesforce')
 
     def get_namespace_prefix(self, name):
         parts = name.split('__')
@@ -105,6 +93,14 @@ class NPSP(object):
 #         field.send_keys(Keys.ENTER)
 # #             field.send_keys(Keys.ARROW_DOWN)
         field.send_keys(Keys.ENTER)
+    
+    def populate_campaign(self,loc,value):
+        """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
+        self.populate_field_by_placeholder(loc, value)
+        print(self.latest_api_version)       
+        if self.latest_api_version == 47.0:
+            self.selenium.click_link(value)
+            
 
     def click_record_button(self, title):
         """ Pass title of the button to click the buttons on the records edit page. Usually save and cancel are the buttons seen.
@@ -513,9 +509,17 @@ class NPSP(object):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
-            self.selenium.wait_until_page_contains_element(locator)
-            self.selenium.page_should_contain_element(locator)
+            self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
             
+    def verify_related_object_field_values(self, rel_object,**kwargs):
+        """verifies the specified field,value pairs in the related object page (table format)""" 
+        self.salesforce.load_related_list(rel_object)
+        self.select_relatedlist(rel_object)
+        for name, value in kwargs.items():
+            locator= npsp_lex_locators['object']['field-value'].format(name,value)
+            self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
+    
+    
     def page_contains_record(self,title):   
         """Validates if the specified record is present on the page"""   
         locator= npsp_lex_locators['object']['record'].format(title)
@@ -524,7 +528,9 @@ class NPSP(object):
                          
                
     def click_special_object_button(self, title):
+        """Clicks a button in an object's actions but doesn't wait for a model to open"""
         locator = npsp_lex_locators['object']['button'].format(title)
+        self.selenium.wait_until_element_is_visible(locator,error="Button "+ title +" not found on the page")
         self.selenium.get_webelement(locator).click()
         
     def click_eng_plan_dropdown(self, title):
@@ -741,21 +747,14 @@ class NPSP(object):
            p_count=len(list_ele)
            assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)  
            
-    def verify_allocations(self,header, **kwargs):
-       """To verify allocations, header is related list
-          key is value in td element, value is value in th element     
-       """
-       for key, value in kwargs.items():
-           locator = npsp_lex_locators['record']['related']['allocations'].format(header,key)
-           ele = self.selenium.get_webelement(locator).text
-           assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)     
            
-    def verify_gau_allocations(self,header, **kwargs):
+    def verify_allocations(self,header, **kwargs):
        """To verify allocations, header is related list
           key is value in 1st td element, value is value in 2nd element     
        """
+       self.salesforce.load_related_list(header)
        for key, value in kwargs.items():
-           locator = npsp_lex_locators['gaus']['allocations'].format(header,key,value)
+           locator = npsp_lex_locators['record']['related']['allocations'].format(header,key,value)
            self.selenium.wait_until_page_contains_element(locator,error="Expected {} allocation of {} was not found".format(key,value))
 #            ele = self.selenium.get_webelement(locator).text
 #            assert ele == value, "Expected {} allocation to be {} but found {}".format(key,value,ele)                      
@@ -1007,7 +1006,8 @@ class NPSP(object):
 
     def click_link_with_text(self, text):
         self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
-        element = self.selenium.driver.find_element_by_link_text(text)
+        locator = npsp_lex_locators['link-text'].format(text)
+        element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)  
     
     def verify_expected_batch_values(self, batch_id,**kwargs):
@@ -1091,7 +1091,7 @@ class NPSP(object):
        object api name, record_id and the data u want to verify"""    
        if(ns_ind=='ns'):
            ns=self.get_npsp_namespace_prefix()
-           table=ns + "DataImportBatch__c"
+           table=ns + obj_api
        else:
             table=obj_api
        rec=self.salesforce.salesforce_get(table,rec_id)
@@ -1134,31 +1134,31 @@ class NPSP(object):
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
 
-    def batch_data_import(self, batchsize):
-        """"Do a BDI import using the API and wait for it to complete"""
-
-        code = """Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-                diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
-                update diSettings;
-                BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-                ID ApexJobId = Database.executeBatch(bdi, %d);
-                """ % int(batchsize)
-        subtask_config = TaskConfig(
-                {"options": {"apex" : code}}
-        )
-
-        self.cumulusci._run_task(AnonymousApexTask, subtask_config)
-
-        subtask_config = TaskConfig(
-                {"options": {"class_name" : "BDI_DataImport_BATCH"}}
-        )
-
-        self.cumulusci._run_task(BatchApexWait, subtask_config)
-        
     def click_wrapper_related_list_button(self,heading,button_title):  
         """Clicks a button in the heading of a related list when the related list is enclosed in wrapper.
            Waits for a modal to open after clicking the button.
         """  
         locator = npsp_lex_locators["record"]["related"]["button"].format(heading, button_title)
         element = self.selenium.driver.find_element_by_xpath(locator)
-        self.selenium.driver.execute_script('arguments[0].click()', element)    
+        self.selenium.driver.execute_script('arguments[0].click()', element)   
+        
+    def change_view_to(self,view_name):
+        """Changes the view on the object page to the selected view"""
+        self.select_object_dropdown()
+        locator=npsp_lex_locators['link'].format(view_name)
+        self.selenium.click_element(locator)     
+        
+    def wait_until_url_contains(self,exp_text):
+        """Waits for maximum of 90sec for current url to contain the exp_text"""
+        self.builtin.log("This keyword can be removed once we support SeleniumLibrary 4.0.")
+        url=self.selenium.get_location()
+        i=0
+        for i in range(10):
+            if i == 9:
+                raise AssertionError("Failed to find an url containing {} in 90 seconds".format(exp_text))
+            if exp_text in url:
+                break
+            else:
+                time.sleep(10)
+                url=self.selenium.get_location()
+                i += 1

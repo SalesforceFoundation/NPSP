@@ -177,7 +177,7 @@ private with sharing class STG_PanelHealthCheck_TEST {
         List<Trigger_Handler__c> listHandlersDefault = TDTM_DefaultConfig.getDefaultRecords();
         for (Trigger_Handler__c th : listHandlersDefault) {
             if (th.Trigger_Action__c == 'BeforeUpdate;AfterUpdate') {
-                // Change the order of these in the list to verify that the logic ignores sequence & caes
+                // Change the order of these in the list to verify that the logic ignores sequence and case
                 th.Trigger_Action__c = 'AfterUpdate;Beforeupdate';
                 break;
             }
@@ -212,6 +212,34 @@ private with sharing class STG_PanelHealthCheck_TEST {
                 'The result status should be Warning\n' + hc.listDR[0]);
         System.assertEquals(2, hc.listDR[0].strDetails.countMatches('<li>'),
                 'There should be two warning messages generated for this\n' + hc.listDR[0]);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies same class and order triggers can be compared where one handler has undefined action
+    */
+    @isTest
+    private static void shouldDisplayWarningWhenSameClassAndOrderHandlerHasUndefinedAction() {
+        List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();
+        insert defaultHandlers;
+
+        Trigger_Handler__c clonedHandler = defaultHandlers[0].clone(false);
+        clonedHandler.Trigger_Action__c = null;
+        insert clonedHandler;
+
+        STG_PanelHealthCheck_CTRL healthCheck = new STG_PanelHealthCheck_CTRL();
+        healthCheck.verifyTriggerHandlers();
+
+        String expectedMessage = String.format(
+            System.Label.healthDetailsTriggerHandlerMismatch, 
+            new String[]{ clonedHandler.Class__c, clonedHandler.Object__c }
+        );
+
+        System.assertEquals(STG_PanelHealthCheck_CTRL.statusWarning, healthCheck.listDR[0].strStatus,
+                'The result status should be Warning\n' + healthCheck.listDR[0]);
+        System.assertEquals(1, healthCheck.listDR[0].strDetails.countMatches('<li>'),
+                'Number of warning messages should match\n' + healthCheck.listDR[0]);
+        System.assert(healthCheck.listDR[0].strDetails.contains(expectedMessage),
+                'Warning message should be included\n' + healthCheck.listDR[0]);
     }
 
     /*******************************************************************************************************

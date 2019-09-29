@@ -134,9 +134,9 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'REL_Relationships_Cm_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember',
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
 
-        // Relationships on Contact
+        // Relationships on Contact -- Moving to after the CON_CascadeDeleteLookups_TDTM trigger (loadorder of 1)
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
-              Class__c = 'REL_Relationships_Con_TDTM', Load_Order__c = 1, Object__c = 'Contact',
+              Class__c = 'REL_Relationships_Con_TDTM', Load_Order__c = 2, Object__c = 'Contact',
               Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
 
         // Relationships on npe4__Relationship__c
@@ -264,9 +264,9 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'CON_DoNotContact_TDTM', Load_Order__c = 2, Object__c = 'Contact',
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
 
-        // Contact Merge on Contact object
+        // Contact Merge on Contact object (moving to 3 so it's always after REL_Relationships_Con_TDTM)
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
-              Class__c = 'CON_ContactMerge_TDTM', Load_Order__c = 2, Object__c = 'Contact',
+              Class__c = 'CON_ContactMerge_TDTM', Load_Order__c = 3, Object__c = 'Contact',
               Trigger_Action__c = 'AfterDelete'));
 
         // Opportunity Matching Gifts support

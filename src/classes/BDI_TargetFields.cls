@@ -49,7 +49,7 @@ public class BDI_TargetFields {
         SObjectField fieldToken;
 
         objectToken = UTIL_Describe.getObjectDescribe(objName).getSObjectType();
-        fieldToken = UTIL_Describe.getFieldDescribe(objName, fieldName).getSobjectField();
+        fieldToken = UTIL_Describe.getFieldDescribe(objName, fieldName.toLowerCase()).getSobjectField();
 
         if (targetFieldsByTargetObject.get(objectToken) == null) {
             targetFieldsByTargetObject.put(objectToken, new Set<SObjectField>{fieldToken});

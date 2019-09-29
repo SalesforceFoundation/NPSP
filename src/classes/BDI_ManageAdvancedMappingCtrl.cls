@@ -202,9 +202,9 @@ public class BDI_ManageAdvancedMappingCtrl {
 
         for (String key : fieldDescribes.keySet()) {
 
-            //Only include fields that are createable by the current user
-            //This will filter out System / formula fields
-            if (fieldDescribes.get(key).isCreateable()) {
+            //Only include fields that are createable by the current user or formula fields.
+            //Formula fields can be selectively excluded later by the calling component.
+            if (fieldDescribes.get(key).isCreateable() || fieldDescribes.get(key).isCalculated()) {
                 fieldInfos.add(new FieldInfo(fieldDescribes.get(key),includeReferenceToObjectList));
             }
         }
@@ -544,17 +544,27 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled public String value;
         @AuraEnabled public String displayType;
         @AuraEnabled public String[] referenceToObjectList;
+        @AuraEnabled public Boolean isBooleanMappable;
+        @AuraEnabled public Boolean isFormula;
+        private String[] picklistOptions = new String[]{};
+
+        // Restricting Picklist=>Bool mappings to only picklists with options 'true' and 'false'.
+        // Update BDI_DataImportService.copyDIFieldToDestinationRecord to handle more Picklist=>Bool mappings
+        private List<List<String>> allowedPicklistOptions =
+            new List<List<String>>{new List<String>{'true', 'false'}};
 
         public FieldInfo(DescribeFieldResult dfr) {
             this.value = dfr.getName();
             this.label = dfr.getLabel();
             this.displayType = dfr.getType().name();
+            this.isFormula = dfr.isCalculated();
         }
 
         public FieldInfo(DescribeFieldResult dfr, Boolean includeReferenceToObjectList) {
             this.value = dfr.getName();
             this.label = dfr.getLabel();
             this.displayType = dfr.getType().name();
+            this.isFormula = dfr.isCalculated();
 
             if (includeReferenceToObjectList) {
                 this.referenceToObjectList = new String[]{};
@@ -566,6 +576,28 @@ public class BDI_ManageAdvancedMappingCtrl {
                         for (Schema.sObjectType objType : objTypes) {
                             this.referenceToObjectList.add(objType.getDescribe().getName().toLowerCase());
                         }
+                    }
+                }
+            }
+
+            if (dfr.getType() == Schema.DisplayType.PICKLIST) {
+                Set<String> picklistOptionsSet = new Set<String>();
+                Schema.PicklistEntry[] picklistEntry = dfr.getPicklistValues();
+
+                if (picklistEntry != null && picklistEntry.size() > 0) {
+                    for (Schema.PicklistEntry picklistValue : picklistEntry) {
+                        picklistOptionsSet.add(picklistValue.getLabel().toLowerCase());
+                    }
+                    picklistOptions.addAll(picklistOptionsSet);
+                }
+
+                picklistOptions.sort();
+
+                for (String[] allowedOptions : allowedPicklistOptions) {
+                    allowedOptions.sort();
+
+                    if (picklistOptions.equals(allowedOptions)) {
+                        this.isBooleanMappable = true;
                     }
                 }
             }

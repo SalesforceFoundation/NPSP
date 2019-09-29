@@ -242,4 +242,14 @@ public class UTIL_Namespace {
             return shouldAlignNamespace;
         } set;
     }
+
+    /*******************************************************************************************************
+    * @description Returns true if the package is currently installed in an org as a managed package
+    ********************************************************************************************************/
+    public static boolean isCustomerOrg() {
+        try {
+            return UserInfo.isCurrentUserLicensed(HARDCODED_NPSP_NAMESPACE);
+        } catch (Exception ex) {}
+        return false;
+    }
 }

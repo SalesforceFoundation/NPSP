@@ -152,7 +152,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //INSERT case: Verify associated Campaign and Recurring Donations to auto create allocations
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 //don't do anything on insert if we don't have an amount
-                if (opp.Amount == null || opp.Amount == 0) {
+                if (opp.Amount == null) {
                     continue;
                 //if this new opportunity has a Campaign or RD, add to list for processing
                 } else if (opp.CampaignId != null || opp.npe03__Recurring_Donation__c != null)
@@ -167,9 +167,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 Decimal oldAmount = (Decimal) oldlist[i].get('Amount');
 
-                if (oldAmount == null && opp.Amount == 0) {
-                    continue;
-                } else if (oldAmount == null && opp.Amount != null) {
+                if (oldAmount == null && opp.Amount != null) {
                     oppsWithNullOldAmount.add(opp);
 
                 } else if (opp.Amount != oldAmount) {
@@ -552,7 +550,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     wrap = mapWrapper.get((Id)sObj.get('npe01__Opportunity__c'));
                     isPaymentAllocation = true;
                 }
-                    
+
                 //get wrapper for parent object, preferring recurring donation over campaign allocations if they exist
                 else if (sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c')))
                     wrap = mapWrapper.get((Id)sObj.get('npe03__Recurring_Donation__c'));
@@ -564,7 +562,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 //add only allocations to active GAUs
                 for (Allocation__c allo : wrap.listAllo.deepclone()) {
 
-                    // If it's a payment, don't filter out the active allocations. 
+                    // If it's a payment, don't filter out the active allocations.
                     if (sObj instanceof npe01__OppPayment__c) {
                         listAlloForInsert.add(allo);
                     } else {
@@ -579,7 +577,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                 //reparent the cloned allocation to the opportunity
                 for (Allocation__c allo : listAlloForInsert) {
-                    Allocation__c alloInMap; 
+                    Allocation__c alloInMap;
 
                     if (isPaymentAllocation == true && GAUtoAlloMapping.containsKey(allo.General_Accounting_Unit__c)) {
                         alloInMap = GAUtoAlloMapping.get(allo.General_Accounting_Unit__c);
@@ -596,7 +594,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                     if (allo.Percent__c != null) {
                         allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
-                        
+
                     }
 
                     //Calculate proportional amount for non-percentage based Payment allocations
@@ -636,13 +634,13 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 }
 
                 // Only set the percentages and update the list to insert to the consolidated list
-                // when it's a payment. 
+                // when it's a payment.
                 if (isPaymentAllocation == true) {
                     List<Allocation__c> consolidatedAllocationList = GAUtoAlloMapping.values();
 
 
                     // Only set the percentage if it is a payment or an opportunity that isn't tied to a campaign or a recurring donation.
-                    // At this point, only the amounts on each allocation is correct, not the percentage. 
+                    // At this point, only the amounts on each allocation is correct, not the percentage.
                     // Go through the allocation and adjust the percentage so it is correct.
                     for (Allocation__c consolidatedAllocation : consolidatedAllocationList) {
                         consolidatedAllocation.Percent__c = consolidatedAllocation.Amount__c / amount * 100;
@@ -651,7 +649,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     // Set the consolidated list as the list to insert
                     listAlloForInsert = consolidatedAllocationList;
                 }
-                
+
 
                 //if our remainder is negative, only create percentage based allocations
                 if ((amount >= 0 && remainder < 0)||(amount < 0 && remainder > 0)) {

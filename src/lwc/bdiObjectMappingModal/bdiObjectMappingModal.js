@@ -140,7 +140,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     * @description Dynamically determines style classes for the section.
     */
     get sectionClasses() {
-        return this.isModalOpen ? 'slds-modal slds-fade-in-open' : 'slds-modal slds-hidden';
+        return this.isModalOpen ? 'slds-modal slds-fade-in-open' : 'slds-modal slds-hide';
     }
     /*******************************************************************************
     * @description Dynamically determines style classes for the backdrop.
@@ -528,12 +528,14 @@ export default class bdiObjectMappingModal extends LightningElement {
         this.diImportRecordStatusFieldOptions = [];
 
         let fieldsToExclude = this.getAlreadyMappedDIFields(); 
-        if (fieldsToExclude && this.dataImportFieldData) {
+
+        if (fieldsToExclude && this.dataImportFieldData && this.namespaceWrapper) {
             
             for (let i = 0; i < this.dataImportFieldData.length; i++) {
                 let fieldData = this.dataImportFieldData[i];
 
-                if (!fieldsToExclude.has(fieldData.value.toLowerCase())) {
+                //Exclude formula fields and any field which is explicitly excluded.
+                if (!fieldsToExclude.has(fieldData.value.toLowerCase()) && !fieldData.isFormula) {
                     let labelOption = {
                         label: fieldData.label + ' (' + fieldData.value + ')',
                         value: fieldData.value
@@ -594,9 +596,9 @@ export default class bdiObjectMappingModal extends LightningElement {
     * fields that should always be excluded.             
     */
     getAlreadyMappedDIFields() {
-        if (this.objectMappings && this.dataImportFieldMappingSourceNames) {
-
-            this.alreadyMappedDIFieldsMap = new Map();
+        this.alreadyMappedDIFieldsMap = new Map();
+        
+        if (this.objectMappings && this.dataImportFieldMappingSourceNames && this.namespaceWrapper) {
 
             // Making some baseline exclusions for DI system fields.
             for (let i = 0; i < this.excludedDIFields.length; i++) {
