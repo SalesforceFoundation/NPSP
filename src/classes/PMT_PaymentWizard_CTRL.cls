@@ -320,7 +320,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         for (String s : PMT_PaymentCreator.paymentMappings.keyset()) {
             npe01__Payment_Field_Mapping_Settings__c pfms = PMT_PaymentCreator.paymentMappings.get(s);
 
-            if (!query.contains(pfms.npe01__Opportunity_Field__c.toLowerCase())) {
+            if (!query.toLowerCase().contains(pfms.npe01__Opportunity_Field__c.toLowerCase())) {
                 query += ', ' + pfms.npe01__Opportunity_Field__c;
             }   
         }
