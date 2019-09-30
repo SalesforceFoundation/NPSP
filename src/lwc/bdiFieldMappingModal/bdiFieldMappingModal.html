@@ -92,7 +92,7 @@
 
                                 <h3 class="slds-section__title">
                                     <span class="slds-truncate"
-                                            title="Source (NPSP Data Import Object)">
+                                          title="Source (NPSP Data Import Object)">
                                         {customLabels.bdiFMUITarget}
                                         ({objectMapping.MasterLabel} {customLabels.stgLabelObject})
                                     </span>
@@ -123,6 +123,17 @@
                                 </template>
 
                             </div>
+                        </div>
+
+                        <div class="slds-size_1-of-1 slds-m-bottom_medium">
+                            <lightning-input
+                                type="checkbox"
+                                label={customLabels.lblRequired}
+                                name={customLabels.lblRequired}
+                                data-field-name={customLabels.lblRequired}
+                                checked={fieldMapping.Required}
+                                disabled={isRequiredFieldDisabled}>
+                            </lightning-input>
                         </div>
                     </div>
                 </template>
