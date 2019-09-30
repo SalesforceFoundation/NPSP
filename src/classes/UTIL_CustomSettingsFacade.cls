@@ -577,9 +577,11 @@ public without sharing class UTIL_CustomSettingsFacade {
             rds.npe03__Opportunity_Forecast_Months__c = 12;
             rds.npe03__Update_Check_Interval__c = 90;
             rds.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
+            rds.IsRecurringDonations2Enabled__c = false;
             List<RecordType> oppRecordTypes = [select id from RecordType where sobjecttype = 'Opportunity' and IsActive = true];
-            if(oppRecordTypes.size() > 0)
+            if(oppRecordTypes.size() > 0) {
                 rds.npe03__Record_Type__c = oppRecordTypes[0].id;
+            }
         }
     }
 
@@ -822,6 +824,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.npe03__Add_Campaign_to_All_Opportunites__c = mySettings.npe03__Add_Campaign_to_All_Opportunites__c;
         recurringDonationsSettings.npe03__Error_Email_Notifications__c = mySettings.npe03__Error_Email_Notifications__c;
         recurringDonationsSettings.Recurring_Donation_Batch_Size__c = mySettings.Recurring_Donation_Batch_Size__c;
+        recurringDonationsSettings.IsRecurringDonations2Enabled__c = mySettings.IsRecurringDonations2Enabled__c;
         orgRecurringDonationsSettings = recurringDonationsSettings;
         return recurringDonationsSettings;
     }
