@@ -620,6 +620,14 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                     if (isPaymentAllocation == true && alloInMap != null) {
                         alloInMap.Amount__c += allo.Amount__c;
+                        if(alloInMap.Percent__c != null && allo.Percent__c != null) {
+                            // If both Allocations have a percent set, maintain the total
+                            alloInMap.Percent__c += allo.Percent__c;
+                        } else {
+                            // If one of the Allocations for this GAU does not have a percent set,
+                            // clear out the percent value so we can recalculate it later
+                            alloInMap.Percent__c = null;
+                        }
                     }
 
                     remainder -= allo.Amount__c;
@@ -643,6 +651,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     // At this point, only the amounts on each allocation is correct, not the percentage.
                     // Go through the allocation and adjust the percentage so it is correct.
                     for (Allocation__c consolidatedAllocation : consolidatedAllocationList) {
+                        // Only recalculate if percent values were not set on the Allocations
                         if(consolidatedAllocation.Percent__c == null){
                             consolidatedAllocation.Percent__c = consolidatedAllocation.Amount__c / amount * 100;
                         }

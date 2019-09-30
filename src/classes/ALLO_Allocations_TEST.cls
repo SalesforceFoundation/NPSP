@@ -149,33 +149,38 @@ private with sharing class ALLO_Allocations_TEST {
 
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
 
-        Allocation__c percentAllo1 = new Allocation__c(Opportunity__c=opp.id, Percent__c = 34, General_Accounting_Unit__c = gau1.id);
+        Allocation__c percentAllo1 = new Allocation__c(Opportunity__c=opp.id, Percent__c = 10, General_Accounting_Unit__c = gau1.id);
         alloForInsert.add(percentAllo1);
-        Allocation__c percentAllo2 = new Allocation__c(Opportunity__c=opp.id, Percent__c = 33, General_Accounting_Unit__c = gau2.id);
+        Allocation__c percentAllo2 = new Allocation__c(Opportunity__c=opp.id, Percent__c = 24, General_Accounting_Unit__c = gau1.id);
         alloForInsert.add(percentAllo2);
-        Allocation__c percentAllo3 = new Allocation__c(Opportunity__c=opp.id, Percent__c = 33, General_Accounting_Unit__c = gau3.id);
+        Allocation__c percentAllo3 = new Allocation__c(Opportunity__c=opp.id, Percent__c = 33, General_Accounting_Unit__c = gau2.id);
         alloForInsert.add(percentAllo3);
+        Allocation__c percentAllo4 = new Allocation__c(Opportunity__c=opp.id, Amount__c = 33, General_Accounting_Unit__c = gau3.id);
+        alloForInsert.add(percentAllo4);
         insert alloForInsert;
 
         // This Payment amount will allow us to test rounding of allocation percentages and amounts
-        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 7.69, npe01__Opportunity__c = opp.Id);
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 7.70, npe01__Opportunity__c = opp.Id);
+        Test.startTest();
         insert pmt;
+        Test.stopTest();
 
         // Check that each allocation has the correct amount and percent
         List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.id, gau1.Id);
 
         // Make sure the percent value carried through to the Payment Allocation
         System.assertEquals(34, queryAllo[0].Percent__c, 'The percentage allocation should be 34%.');
-        System.assertEquals(2.61, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+        System.assertEquals(2.62, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
     
         queryAllo = getAllocationsOrderByPercent(pmt.id, gau2.Id);
 
         System.assertEquals(33, queryAllo[0].Percent__c, 'The percentage allocation should be 33%.');
         System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
-    
+
+        // This Allocation did not have a Percent set, but it should now    
         queryAllo = getAllocationsOrderByPercent(pmt.id, gau3.Id);
 
-        System.assertEquals(33, queryAllo[0].Percent__c, 'The percentage allocation should be 33%.');
+        System.assertEquals(33, queryAllo[0].Percent__c.setScale(0), 'The percentage allocation should round to 33%.');
         System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
     
         queryAllo = getAllocationsOrderByPercent(pmt.id, defaultGau.Id);
