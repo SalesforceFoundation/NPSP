@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
+        <fullName>InstallmentOppStageName__c</fullName>
+        <description>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</inlineHelpText>
+        <label>Stage Name for Installment Opportunities</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>IsRecurringDonations2Enabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This option enables Enhanced Recurring Donations. IMPORTANT: You must enable Enhanced Recurring Donations in NPSP Settings. Enabling in Custom Settings may cause data inconsistencies.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This option enables Enhanced Recurring Donations. IMPORTANT: You must enable Enhanced Recurring Donations in NPSP Settings. Enabling in Custom Settings may cause data inconsistencies.</inlineHelpText>
+        <label>Enhanced Recurring Donations</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Recurring_Donation_Batch_Size__c</fullName>
         <defaultValue>50</defaultValue>
         <description>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits.</description>
