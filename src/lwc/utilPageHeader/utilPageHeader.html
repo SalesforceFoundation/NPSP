@@ -1,0 +1,45 @@
+<template>
+    <template if:true={_isBatchGiftEntryHeader}>
+        <header class="header slds-p-bottom_medium npspBGE_BatchGiftEntryTab" role="banner">
+            <div class="slds-page-header">
+                <div class="slds-grid">
+                    <div class="slds-col slds-has-flexi-truncate slds-align-middle">
+                        <h1>
+                            <span class="slds-page-header__title" title="Batch Gift Entry">Batch Gift Entry</span>
+                        </h1>
+                    </div>
+                    <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small">
+                        <div class="slds-button-group" role="group">
+                            <button class="slds-button slds-button_neutral" type="button">
+                                New Batch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </template>
+
+    <template if:true={_isBGETemplateBuilderHeader}>
+        <header class="slds-p-bottom_large" role="banner">
+            <div class="slds-page-header">
+                <div class="slds-grid slds-p-around_xx-small">
+                    <div class="slds-col slds-has-flexi-truncate slds-align-middle">
+                        <h1>
+                            <span class="slds-page-header__title" title="Batch Gift Entry">New Template</span>
+                        </h1>
+                    </div>
+                    <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small">
+                        <div class="slds-button-group" role="group">
+                            <lightning-button label="Cancel" title="Cancel" variant="neutral"
+                                class="slds-float_right slds-m-right_small">
+                            </lightning-button>
+                            <lightning-button label="Save" title="Save" variant="brand" class="slds-float_right">
+                            </lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </template>
+</template>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -251,6 +251,7 @@
         <members>ERR_RecordError_TEST</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
+        <members>GE_TemplateBuilderCtrl</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -2952,10 +2953,18 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>geTemplateBuilder</members>
+        <members>geTemplateBuilderBatchHeader</members>
+        <members>geTemplateBuilderFormField</members>
+        <members>geTemplateBuilderFormLayout</members>
+        <members>geTemplateBuilderGiftFields</members>
+        <members>geTemplateBuilderTemplateInfo</members>
         <members>pubsubNoPageRef</members>
+        <members>utilPageHeader</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
+        <members>utilTemplateBuilder</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>

@@ -105,6 +105,18 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     }
 
     /*******************************************************************************************************
+    * @description return singleton instance of the class
+    */
+    public static BDI_FieldMappingCustomMetadata getInstance(String fieldMappingSetName) {
+        if (fieldMappingInstance == null) {
+            fieldMappingInstance = new BDI_FieldMappingCustomMetadata();
+            fieldMappingInstance.fieldMappingSetName = fieldMappingSetName;
+            fieldMappingInstance.retrieveCustMetadata();
+        }
+        return fieldMappingInstance;
+    }
+
+    /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
     * return a map of DI field (key) to mapped field name on the destination record (value). 
     *
@@ -138,6 +150,12 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
             fieldMappingSetName = UTIL_Namespace.alignSchemaNSWithEnvironment(dis.Default_Data_Import_Field_Mapping_Set__c);
         }
 
+        return fieldMappingSetName;
+    }
+
+    public String setFieldMappingSetName(String name) {
+        System.debug('setFieldMappingSetName: ' + name);
+        fieldMappingSetName = name;
         return fieldMappingSetName;
     }
 

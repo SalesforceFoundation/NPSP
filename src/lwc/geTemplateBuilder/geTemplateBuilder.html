@@ -1,0 +1,51 @@
+<template>
+    <div role="container" class="main-container">
+        <c-util-page-header page-header-for="bgeTemplateBuilder"></c-util-page-header>
+
+        <div role="card" class="slds-card">
+            <lightning-tabset active-tab-value={activeTab} class="extension_test">
+
+                <lightning-tab value="geTemplateBuilderTemplateInfo" label="Template Info" class="slds-p-around_none">
+                    <c-ge-template-builder-template-info ongototab={handleGoToTab}></c-ge-template-builder-template-info>
+                </lightning-tab>
+
+                <lightning-tab value="geTemplateBuilderBatchHeader" label="Batch Header" class="slds-p-around_none">
+                    <c-ge-template-builder-batch-header ongototab={handleGoToTab}></c-ge-template-builder-batch-header>
+                </lightning-tab>
+
+                <lightning-tab value="geTemplateBuilderGiftFields" label="Gift Fields" class="slds-p-around_none">
+                    <c-ge-template-builder-gift-fields ongototab={handleGoToTab}></c-ge-template-builder-gift-fields>
+                </lightning-tab>
+
+                <lightning-tab value="geTemplateBuilderMatchingLogic"
+                    label="Matching Logic"
+                    class="slds-p-around_none">
+
+                    <div role="grid" class="slds-grid slds-wrap">
+                        <div role="panel" class="slds-size_3-of-12 slds-p-around_large">
+                        </div>
+
+                        <div role="panel" class="slds-size_9-of-12 slds-p-around_large slds-border_left">
+                            <div role="grid" class="slds-grid slds-wrap slds-grid_vertical-align-end">
+                                <div role="row" class="slds-size_1-of-1">
+                                    <h2 class="slds-text-heading_small">Select Donation Matching Options</h2>
+                                </div>
+                                <div role="row" class="slds-size_1-of-1 slds-p-top_large slds-m-top_large">
+                                    <div role="navigation" class="slds-float_right">
+                                        <lightning-button label="Back: Gift Fields" title="Previous"
+                                            onclick={handleToggleClick} variant="outline-brand" data-tab-value="geTemplateBuilderGiftFields"
+                                            class="slds-m-right_small">
+                                        </lightning-button>
+                                        <lightning-button label="Save &amp; Publish Template" variant="brand">
+                                        </lightning-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </lightning-tab>
+
+            </lightning-tabset>
+        </div>
+    </div>
+</template>

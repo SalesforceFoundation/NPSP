@@ -1,0 +1,34 @@
+<template>
+    <div role="grid" class="slds-grid slds-wrap">
+        <div role="panel" class="slds-size_3-of-12 slds-p-around_large">
+            <h2 class="slds-text-heading_small slds-p-bottom_small">New Batch Gift Entry Template</h2>
+            <p class="slds-text-body_small">
+                Create a template for your gift entry user to quickly get started with all the right
+                objects,
+                fields and settings available when adding donations through Batch Gift Entry. Start with
+                the
+                basic
+                template information and then select the fields you want at the batch and gift entry
+                level.
+                You can also adjust matching and other batch options using the tabs.
+            </p>
+        </div>
+        <div role="panel" class="slds-size_9-of-12 slds-p-around_large slds-border_left">
+            <div role="grid" class="slds-grid slds-wrap slds-grid_vertical-align-end">
+                <div class="slds-size_1-of-1">
+                    <h2>Enter Basic Information</h2>
+                </div>
+                <div class="slds-size_1-of-1">
+                    <lightning-input data-name="templateName" type="text" name="Template Name" label="Template Name" required>
+                    </lightning-input>
+                    <lightning-textarea data-name="description" name="Description" label="Description"></lightning-textarea>
+                </div>
+                <div role="navigation" class="slds-size_1-of-1 slds-p-top_large slds-m-top_large">
+                    <lightning-button label="Next: Batch Fields" title="Next" onclick={handleGoToTab}
+                        variant="brand" class="slds-float_right" data-tab-value="geTemplateBuilderBatchHeader">
+                    </lightning-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
