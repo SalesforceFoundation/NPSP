@@ -344,9 +344,26 @@ public with sharing class UTIL_Permissions {
     * @param sObjFields the list of SObjectFields to check read permissions
     * @return Boolean true when the user has permissions for the SObjFields provided
     */
-    private Boolean canRead(Set<SObjectField> sObjFields) {
+    public Boolean canRead(Set<SObjectField> sObjFields) {
         for (SObjectField field : sObjFields) {
             if (!canRead(field.getDescribe(), false)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*******************************************************************************************************************
+    * @description Determines whether the running user has create permissions for the fields
+    * provided
+    *
+    * @param sObjFields the list of SObjectFields to check create permissions
+    * @return Boolean true when the user has permissions for the SObjFields provided
+    */
+    public Boolean canCreate(Set<SObjectField> sObjFields) {
+        for (SObjectField field : sObjFields) {
+            if (!canCreate(field.getDescribe(), false)) {
                 return false;
             }
         }

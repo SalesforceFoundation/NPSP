@@ -137,15 +137,18 @@ public class BDI_DataImportFLSService {
     }
 
     private Boolean isValid(SObjectField field) {
+        Set<SObjectField> fieldSet = new Set<SObjectField>{
+                field
+        };
         if ((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
-                && !field.getDescribe().isCreateable())
+                && !permissionsService.canCreate(fieldSet))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-                        && !permissionsService.canUpdate(new Set<SObjectField>{field})
+                        && !permissionsService.canUpdate(fieldSet)
                         && !describeService.isMasterDetailField(field))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_READ)
-                        && !field.getDescribe().isAccessible())) {
+                        && !permissionsService.canRead(fieldSet))) {
             return false;
         } else {
             return true;
