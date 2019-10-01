@@ -30,36 +30,76 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group Recurring Donations
+* @group Test API
 * @description Recurring Donations Builder
 *
 */
 @isTest
 public without sharing class TEST_RecurringDonationBuilder {
+
+    private class BuilderException extends Exception {}
+
     public static final Date DEFAULT_ESTABLISHED_DATE = Date.newInstance(1970,6,12);
 
-    private Map<String, Object> valuesByFieldName;
+    /***
+    * @description Indicates Recurring Donation mode
+    */
+    public Enum Mode {
+        Legacy,
+        Enhanced
+    }
+
+    /***
+    * @description Contains record field values 
+    */
+    private Map<String, Object> valuesByFieldName = new Map<String, Object>();
+
+    /***
+    * @description Recurring Donation builder mode 
+    */
+    private Mode recordMode;    
 
     /***
     * @description Constructor 
     */
     public TEST_RecurringDonationBuilder() {
-        valuesByFieldName = new Map<String, Object>();
+        this.recordMode = RD2_EnablementService.isRecurringDonations2Enabled
+            ? Mode.Enhanced
+            : Mode.Legacy;
         
-        this.withName('RD' + UTIL_UnitTestData_TEST.getUniqueString());
+        this.withName();
     }
 
     /***
-    * @description Sets default values
-    * @return TEST_RecurringDonationBuilder Builder instance
+    * @description Constructor 
     */
-    public TEST_RecurringDonationBuilder withDefaults() {
-        return this
-            .withAmount(2)
-            .withInstallments(2)
-            .withInstallmentPeriodYearly()
-            .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
-            .withScheduleTypeMultiplyValue();
+    private TEST_RecurringDonationBuilder(Mode recordMode) {
+        this.recordMode = recordMode;
+        
+        this.withName();
+    }
+
+    /***
+    * @description Returns legacy Recurring Donation builder
+    */
+    public static TEST_RecurringDonationBuilder constructLegacyBuilder() {
+        return new TEST_RecurringDonationBuilder(Mode.Legacy);
+    }
+
+    /***
+    * @description Returns enhanced Recurring Donation builder
+    */
+    public static TEST_RecurringDonationBuilder constructEnhancedBuilder() {
+        return new TEST_RecurringDonationBuilder(Mode.Enhanced);
+    }
+
+    /***
+    * @description Validates field is set on the correct Recurring Donation type that depends on the Mode
+    */
+    private void validateMode(Mode validMode) {
+        if (recordMode != validMode) {
+            throw new BuilderException('This settings is not applicable to ' + validMode.name() + ' Recurring Donations');
+        }
     }
 
     /***
@@ -90,6 +130,13 @@ public without sharing class TEST_RecurringDonationBuilder {
         return this;
     }
 
+    /***
+    * @description Sets Name
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withName() {
+        return withName('RD' + UTIL_UnitTestData_TEST.getUniqueString());
+    }
 
     /***
     * @description Sets Name
@@ -122,6 +169,16 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Recurring Donation Campaign
+    * @param campaignId Campaign Id
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCampaign(Id campaignId) {
+        valuesByFieldName.put('npe03__Recurring_Donation_Campaign__c', campaignId);
+        return this;
+    }
+
+    /***
     * @description Sets Amount
     * @param amount Amount
     * @return TEST_RecurringDonationBuilder Builder instance
@@ -146,6 +203,14 @@ public without sharing class TEST_RecurringDonationBuilder {
 
     /***
     * @description Sets Date Established
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withDateEstablished() {
+        return withDateEstablished(DEFAULT_ESTABLISHED_DATE);
+    }
+
+    /***
+    * @description Sets Date Established
     * @param dt Date
     * @return TEST_RecurringDonationBuilder Builder instance
     */
@@ -160,6 +225,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance    
     */
     public TEST_RecurringDonationBuilder withNextPaymentDate(Date dt) {
+        validateMode(Mode.Legacy);
+
         valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
         return this;
     }    
@@ -170,6 +237,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withAlwaysUseLastDayOfMonth(Boolean shouldUse) {
+        validateMode(Mode.Legacy);
+
         valuesByFieldName.put('Always_Use_Last_Day_Of_Month__c', shouldUse);
         return this;
     }    
@@ -190,6 +259,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallments(Integer numberOfInstallments) {
+        validateMode(Mode.Legacy);
+
         valuesByFieldName.put('npe03__Installments__c', numberOfInstallments);
         return this;
     }
@@ -207,6 +278,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodQuarterly() {
+        validateMode(Mode.Legacy);
+
         return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly);
     }
 
@@ -241,6 +314,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withScheduleTypeMultiplyValue() {
+        validateMode(Mode.Legacy);
+
         valuesByFieldName.put('npe03__Schedule_Type__c', System.Label.npe03.RecurringDonationMultiplyValue);
         return this;
     }
@@ -275,17 +350,9 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatus(String status) {
-        valuesByFieldName.put('npe03__Open_Ended_Status__c', status);
-        return this;
-    }
+        validateMode(Mode.Legacy);
 
-    /***
-    * @description Sets Recurring Donation Campaign
-    * @param campaignId Campaign Id
-    * @return TEST_RecurringDonationBuilder Builder instance
-    */
-    public TEST_RecurringDonationBuilder withCampaign(Id campaignId) {
-        valuesByFieldName.put('npe03__Recurring_Donation_Campaign__c', campaignId);
+        valuesByFieldName.put('npe03__Open_Ended_Status__c', status);
         return this;
     }
     
@@ -314,7 +381,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         for (Integer i = 0; i < size; i++) {
             rds.add(this
-                .withName(UTIL_UnitTestData_TEST.getUniqueString())
+                .withName()
                 .build()
             );
         }
@@ -332,7 +399,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         for (Contact c : contacts) {
             rds.add(this
-                .withName(UTIL_UnitTestData_TEST.getUniqueString())
+                .withName()
                 .withContact(c.Id)
                 .build()
             );
@@ -351,7 +418,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         for (Account acc : accounts) {
             rds.add(this
-                .withName(UTIL_UnitTestData_TEST.getUniqueString())
+                .withName()
                 .withAccount(acc.Id)
                 .build()
             );

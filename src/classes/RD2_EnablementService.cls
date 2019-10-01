@@ -83,7 +83,7 @@ public with sharing class RD2_EnablementService {
     public Boolean isPilotEnabled {
         get {
             if (isPilotEnabled == null) {
-                isPilotEnabled = true;//UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
+                isPilotEnabled = UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
             }
             return isPilotEnabled;
         }
