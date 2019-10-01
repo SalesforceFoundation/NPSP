@@ -216,16 +216,17 @@ private class BDI_DataImportFLSService_TEST {
                 Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
                 List<Object> listOfArgs) {
 
-            if (stubbedMethodName == 'isUpdateable') {
-                SObjectField field = (SObjectField) listOfArgs[0];
-                DescribeFieldResult dfr = field.getDescribe();
-                if (dfr.getName() == 'LastName') {
+            if (stubbedMethodName == 'canUpdate') {
+                Set<SObjectField> fieldSet = (Set<SObjectField>) listOfArgs[0];
+                SObjectField field = new List<SObjectField>(fieldSet)[0];
+                if (field.getDescribe().getName() == 'LastName') {
                     return false;
                 } else {
                     return true;
                 }
+            } else {
+                return true;
             }
-            return null;
         }
     }
 }
