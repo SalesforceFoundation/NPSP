@@ -621,12 +621,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     if (isPaymentAllocation == true && alloInMap != null) {
                         alloInMap.Amount__c += allo.Amount__c;
                         if(alloInMap.Percent__c != null && allo.Percent__c != null) {
-                            // If both Allocations have a percent set, maintain the total
+                            // If both Payment Allocations have a percent set (which they should), maintain the total
                             alloInMap.Percent__c += allo.Percent__c;
-                        } else {
-                            // If one of the Allocations for this GAU does not have a percent set,
-                            // clear out the percent value so we can recalculate it later
-                            alloInMap.Percent__c = null;
                         }
                     }
 

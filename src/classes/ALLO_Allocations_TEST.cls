@@ -169,18 +169,18 @@ private with sharing class ALLO_Allocations_TEST {
         List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.id, gau1.Id);
 
         // Make sure the percent value carried through to the Payment Allocation
-        System.assertEquals(34, queryAllo[0].Percent__c, 'The percentage allocation should be 34%.');
+        System.assertEquals(34, queryAllo[0].Percent__c, 'The allocation percentage should be 34%.');
         System.assertEquals(2.62, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
     
         queryAllo = getAllocationsOrderByPercent(pmt.id, gau2.Id);
 
-        System.assertEquals(33, queryAllo[0].Percent__c, 'The percentage allocation should be 33%.');
+        System.assertEquals(33, queryAllo[0].Percent__c, 'The allocation percentage should be 33%.');
         System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
 
         // This Allocation did not have a Percent set, but it should now    
         queryAllo = getAllocationsOrderByPercent(pmt.id, gau3.Id);
 
-        System.assertEquals(33, queryAllo[0].Percent__c.setScale(0), 'The percentage allocation should round to 33%.');
+        System.assertEquals(33, queryAllo[0].Percent__c, 'The allocation percentage should be 33%.');
         System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
     
         queryAllo = getAllocationsOrderByPercent(pmt.id, defaultGau.Id);
