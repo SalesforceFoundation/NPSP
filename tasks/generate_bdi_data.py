@@ -77,9 +77,12 @@ class GenerateBDIData(ModuleDataFactory):
         )
 
 
+# Households for matching
 class AccountFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = Models.accounts
+        model = Models.households
+
+    record_type = "HH_Account"
 
 
 class ContactFactory(factory.alchemy.SQLAlchemyModelFactory):
