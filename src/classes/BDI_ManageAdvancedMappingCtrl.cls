@@ -432,7 +432,6 @@ public class BDI_ManageAdvancedMappingCtrl {
             for(String fieldName : sObjectCastedCustomMetadata.getPopulatedFieldsAsMap().keySet()) {
 
                 Boolean invalidField =
-                    fieldName.contains('__r') ||
                     IGNORE_FIELDS.contains(fieldName.toLowerCase()) ||
                     sObjectCastedCustomMetadata.get(fieldName) == null;
 
