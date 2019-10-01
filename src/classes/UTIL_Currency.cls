@@ -183,6 +183,7 @@ public without sharing class UTIL_Currency implements UTIL_Currency.Interface_x 
         'CNY' => '¥',
         'COP' => '$',
         'CRC' => '₡',
+        'CSD' => 'CSD',
         'CUC' => '$',
         'CUP' => '₱',
         'CVE' => '$',
@@ -321,7 +322,6 @@ public without sharing class UTIL_Currency implements UTIL_Currency.Interface_x 
         'XPF' => '₣',
         'YER' => '﷼',
         'ZAR' => 'R',
-        'ZWD' => 'Z$',
-        'CSD' => 'CSD'
+        'ZWD' => 'Z$'
     };
 }
