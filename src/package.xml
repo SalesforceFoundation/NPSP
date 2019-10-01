@@ -249,6 +249,13 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
+        <members>FormElement</members>
+        <members>FormLayout</members>
+        <members>FormSection</members>
+        <members>FormService</members>
+        <members>FormServiceGiftEntry</members>
+        <members>FormServiceGiftEntryTest</members>
+        <members>FormTemplate</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_TemplateBuilderCtrl</members>
