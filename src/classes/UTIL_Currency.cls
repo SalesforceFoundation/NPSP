@@ -181,7 +181,7 @@ public without sharing class UTIL_Currency implements UTIL_Currency.Interface_x 
         'CNY' => '¥',
         'COP' => '$',
         'CRC' => '₡',
-        'CSD' => 'CSD'
+        'CSD' => 'CSD',
         'CUP' => '₱',
         'CVE' => '$',
         'CZK' => 'Kč',
