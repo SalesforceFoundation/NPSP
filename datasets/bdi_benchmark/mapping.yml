@@ -1,12 +1,12 @@
-Accounts:
+Households:
     sf_object: Account
-    table: accounts
+    table: households
     fields:
         Name: name
         BillingStreet: BillingStreet
         BillingCountry: BillingCountry
         description: description
-    record_type: Organization
+    record_type: HH_Account
 Contacts:
     sf_object: Contact
     table: contacts
