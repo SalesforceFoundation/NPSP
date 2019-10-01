@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2015 Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -35,9 +35,9 @@
 */
 
 public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
-    
+
     /*********************************************************************************************************
-    * @description The controller's constructor 
+    * @description The controller's constructor
     */
     public STG_SettingsManager_CTRL() {
         String landingPage = System.currentPageReference().getParameters().get('panel');
@@ -49,25 +49,30 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description Returns the string Id of the current panel. 
+    * @description Returns the string Id of the current panel.
     */
     public static string idPanelCurrent { get; set; }
-   
+
+    /*******************************************************************************************************
+    * @description This string sets an error message during NPSP Settings load.
+    */
+    public string errorMsg { get; set; }
+
     /*********************************************************************************************************
     * @description Action Method called by javascript when idPanelCurrent has been changed.
-    * @return null 
+    * @return null
     */
     public PageReference setPanelCurrent() {
         // javascript caller auto-assigns to idPanelCurrent,
-        // so nothing to do in this method. 
+        // so nothing to do in this method.
         return null;
     }
 
     /*********************************************************************************************************
-    * @description Action Method that runs the install script to setup TDTM, initializes the 
-    * Schedulables configuration and fixes invalid Record Types. 
+    * @description Action Method that runs the install script to setup TDTM, initializes the
+    * Schedulables configuration and fixes invalid Record Types.
     * Called by the Settings page's action property when it first loads.
-    * @return void 
+    * @return void
     */
     public void onNpspSettingsLoad() {
 
@@ -85,10 +90,10 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
             UTIL_MasterSchedulableHelper.setScheduledJobs();
         }
     }
-    
+
     /*********************************************************************************************************
     * @description Clean up invalid Record Type Settings
-    * @return void 
+    * @return void
     */
     private void cleanupRecordTypeSettings() {
         try {
@@ -99,17 +104,22 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
 
         } finally {
-            //Not only refresh the custom settings  
-            STG_Panel.stgService = null; 
-            //but also refresh affected custom settings explicitly since all properties are static. 
+            //Not only refresh the custom settings
+            STG_Panel.stgService = null;
+            //but also refresh affected custom settings explicitly since all properties are static.
             UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
         }
     }
 
+    /*******************************************************************************************************
+    * @description Custom exception used when logging validation exceptions during NPSP Settings load.
+    */
+    private class HealthCheckException extends Exception {}
+
     /*********************************************************************************************************
-    * @description Clears Default GAU settings if the specified GAU does not exist or 
+    * @description Clears Default GAU settings if the specified GAU does not exist or
       has been deleted.
-    * @return void 
+    * @return void
     */
     private void validateAllocationSettings() {
         if (String.isBlank(STG_Panel.stgService.stgAllo.Default__c)) {
@@ -117,18 +127,26 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         }
 
         List<General_Accounting_Unit__c> gaus = [
-            SELECT Id, Name 
-            FROM General_Accounting_Unit__c 
+            SELECT Id, Name
+            FROM General_Accounting_Unit__c
             WHERE Id = :STG_Panel.stgService.stgAllo.Default__c
         ];
         if (gaus.isEmpty()) {
             //Uncheck the checkbox and clear the default GAU value
             STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
             STG_Panel.stgService.stgAllo.Default__c = null;
-            
+
             if (!Test.isRunningTest()) {
                 upsert STG_Panel.stgService.stgAllo;
             }
+
+            if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c) {
+                errorMsg = System.Label.stgErrorMissingDefaultGauRecordWithPmtAllocEnabled;
+            } else {
+                errorMsg = System.Label.stgErrorMissingDefaultGauRecord;
+            }
+
+            ERR_Handler.sendErrorNotification(new HealthCheckException(errorMsg), ERR_Handler_API.Context.STTG.name());
         }
     }
 }
