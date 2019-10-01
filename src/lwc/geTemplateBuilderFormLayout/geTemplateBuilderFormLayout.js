@@ -1,7 +1,13 @@
 import { LightningElement, api, track } from 'lwc';
 
 export default class GeTemplateBuilderFormLayout extends LightningElement {
-    @api formSections = [];
+    @track formSections = [];
+
+    @api
+    set formSections(formSections) {
+        this.formSections = formSections;
+    }
+
     @track activeFormSectionId;
 
     @api
@@ -32,13 +38,17 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
             { detail: sectionId }));
     }
 
-    handleSectionSettings(event) {
-        console.log('***handleSectionSettings');
-        console.log('***************************');
-        const sectionId = event.target.getAttribute('data-section-id');
-        let sectionElement = this.template.querySelector('lightning');
-        let section = this.formSections.find(fs => fs.id == sectionId);
-        console.log('Section: ', section);
+    handleDeleteFormSection(event) {
+        const formSection = event.detail;
+        for (let i = 0; i < this.formSections.length; i++) {
+            if (this.formSections[i].id === formSection.id) {
+                this.formSections.splice(i, 1);
+            }
+        }
+
+        this.dispatchEvent(new CustomEvent(
+            'deleteformsection',
+            { detail: formSection }));
     }
 
     /*******************************************************************************

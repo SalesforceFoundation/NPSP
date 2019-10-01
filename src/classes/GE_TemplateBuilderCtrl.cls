@@ -42,6 +42,19 @@ public with sharing class GE_TemplateBuilderCtrl {
     */
     private static BDI_FieldMappingCustomMetadata bdiCMT;
 
+    @AuraEnabled
+    public static string processFormTemplate(String templateJSON){
+        System.debug('processFormTemplate');
+        System.debug(templateJSON);
+        FormServiceGiftEntry.storeFormTemplate(null, 'Test Template', '1.0', templateJSON);
+        return 'success';
+    }
+
+    @AuraEnabled
+    public static FormTemplate retrieveDefaultFormTemplate(){
+        return FormServiceGiftEntry.retrieveDefaultFormTemplate();
+    }
+
     @AuraEnabled(cacheable=true)
     public static Data_Import_Field_Mapping_Set__mdt[] getFieldMappingSetNames() {
         return [SELECT Id, DeveloperName, MasterLabel FROM Data_Import_Field_Mapping_Set__mdt];

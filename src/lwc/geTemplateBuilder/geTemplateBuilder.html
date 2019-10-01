@@ -14,6 +14,12 @@
                     <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small">
                         <div class="slds-button-group"
                              role="group">
+                            <lightning-button label="Test Retrieve Form Template"
+                                              title="Cancel"
+                                              variant="neutral"
+                                              class="slds-float_right slds-m-right_small"
+                                              onclick={getFormTemplate}>
+                            </lightning-button>
                             <lightning-button label="Cancel"
                                               title="Cancel"
                                               variant="neutral"
@@ -39,7 +45,8 @@
                 <lightning-tab value="geTemplateBuilderTemplateInfo"
                                label="Template Info"
                                class="slds-p-around_none">
-                    <c-ge-template-builder-template-info ongototab={handleGoToTab}>
+                    <c-ge-template-builder-template-info ongototab={handleGoToTab}
+                                                         template-info={templateInfo}>
                     </c-ge-template-builder-template-info>
                 </lightning-tab>
 
@@ -53,7 +60,8 @@
                 <lightning-tab value="geTemplateBuilderGiftFields"
                                label="Gift Fields"
                                class="slds-p-around_none">
-                    <c-ge-template-builder-gift-fields ongototab={handleGoToTab}>
+                    <c-ge-template-builder-gift-fields ongototab={handleGoToTab}
+                                                       form-sections={layoutSections}>
                     </c-ge-template-builder-gift-fields>
                 </lightning-tab>
 

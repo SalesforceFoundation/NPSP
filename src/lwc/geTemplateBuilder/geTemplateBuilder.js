@@ -1,8 +1,10 @@
 import { LightningElement, track } from 'lwc';
+import processFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.processFormTemplate';
+import retrieveDefaultFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultFormTemplate';
 import { FormTemplate, mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilder extends LightningElement {
-    @track activeTab;
+    @track activeTab = 'geTemplateBuilderGiftFields';
     _previousTab;
 
     @track formTemplate = new FormTemplate();
@@ -22,6 +24,16 @@ export default class geTemplateBuilder extends LightningElement {
     */
     renderedCallback() {
         this.activeTab = undefined;
+    }
+
+    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    get templateInfo() {
+        return { name: this.formTemplate.name, description: this.formTemplate.description };
+    }
+
+    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    get layoutSections() {
+        return this.formTemplate.layout ? this.formTemplate.layout.sections : undefined;
     }
 
     handleFormTemplateSave() {
@@ -45,6 +57,27 @@ export default class geTemplateBuilder extends LightningElement {
         console.log('*************');
 
         console.log(mutable(this.formTemplate));
+
+        processFormTemplate({templateJSON: JSON.stringify(this.formTemplate)})
+            .then(result => {
+                console.log('Result: ', result);
+            })
+            .catch(error => {
+                console.log('Error: ', error);
+            })
+        console.log('Attempted to send to apex');
+    }
+
+    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    getFormTemplate() {
+        retrieveDefaultFormTemplate()
+            .then(data => {
+                console.log('Data: ', data);
+                this.formTemplate = data;
+            })
+            .catch(error => {
+                console.log('Error: ', error);
+            })
     }
 
     /*******************************************************************************

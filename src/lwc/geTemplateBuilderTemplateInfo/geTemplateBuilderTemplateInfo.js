@@ -1,7 +1,14 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { TabData } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
+    @track templateInfo;
+
+    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    @api
+    set templateInfo(templateInfo) {
+        this.templateInfo = templateInfo;
+    }
     
     @api
     getTabData() {

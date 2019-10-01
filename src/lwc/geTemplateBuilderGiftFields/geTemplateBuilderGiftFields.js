@@ -12,8 +12,14 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     _fieldMappingsForSelectedSet = [];
 
     @track formSections = [];
-    @track _activeFormSectionId;
 
+    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    @api
+    set formSections(formSections) {
+        this.formSections = formSections;
+    }
+
+    @track _activeFormSectionId;
     _selectedFieldMappings = {};
 
     @api
@@ -123,6 +129,25 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
             })
         //console.log(JSON.parse(JSON.stringify(test)));
     }
+
+    handleDeleteFormSection(event) {
+        console.log('handleDeleteFormSection');
+        console.log(event.detail);
+        const formSection = event.detail;
+
+        if (formSection.id == this._activeFormSectionId) {
+            this._activeFormSectionId = undefined;
+        }
+
+        if (formSection.elements && formSection.elements.length > 0) {
+            const formFields = formSection.elements;
+            for (let i = 0; i < formFields.length; i++) {
+                let checkbox = this.template.querySelector(`lightning-input[data-field-mapping="${formFields[i].value}"]`);
+                console.log('Checkbox: ', checkbox);
+                checkbox.checked = false;
+            }
+        }
+    }
     
     /*******************************************************************************
     * @description Handles the active section event from the child component
@@ -189,8 +214,8 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
                 /* Add selected field mapping to map of section ids by selected field mappings */
                 this._selectedFieldMappings[formField.value] = 0;
             } else if (this.formSections.length === 1) {
-                this._selectedFieldMappings[formField.value] = 0;
-                this.formSections = this.handleAddFieldToSection(0, formField);
+                this._selectedFieldMappings[formField.value] = this.formSections[0].id;
+                this.formSections = this.handleAddFieldToSection(this.formSections[0].id, formField);
             } else if (this._activeFormSectionId === undefined && this.formSections.length > 1) {
                 event.target.checked = false;
                 showToast(this, '', 'Please select a section', 'warning');

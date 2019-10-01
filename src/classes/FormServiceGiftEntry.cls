@@ -77,12 +77,15 @@ public with sharing class FormServiceGiftEntry {
     * @param templateJSON - The JSON for the FormTemplate class that is being stored.
     */
     public static void storeFormTemplate(String id, String name, String formatVersion, String templateJSON) {
+        System.debug('storeFormTemplate');
         if (templateJSON != null) {
             FormTemplate template = (FormTemplate)JSON.deserialize(templateJSON, FormTemplate.class);
+            System.debug('FormTemplate: ' + template);
             Form_Template__c templateObj = new Form_Template__c(Id = id, 
                                                             Name = name,
                                                             Template_JSON__c = templateJSON,
                                                             Format_Version__c = formatVersion);
+            System.debug('Form_Template__c: ' + templateObj);
             upsert templateObj;
         }
     }

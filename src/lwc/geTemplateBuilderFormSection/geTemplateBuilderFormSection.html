@@ -51,6 +51,12 @@
                                            data-section-id={formSection.id}
                                            class="slds-m-left_x-small">
                     </lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:delete"
+                                           alternative-text="Delete section"
+                                           onclick={handleDeleteSection}
+                                           data-section-id={formSection.id}
+                                           class="slds-m-left_x-small">
+                    </lightning-button-icon>
                     <lightning-button-icon icon-name={isActiveFormSectionIcon}
                                            alternative-text="Select active section"
                                            onclick={handleSelectActiveSection}
