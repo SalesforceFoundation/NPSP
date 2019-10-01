@@ -23,7 +23,7 @@
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.bdiAdvancedMapping}" />
 
             <c:UTIL_PageMessages escMsg="false" allowClose="false" id="messages" />
-            <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
+            <c:UTIL_SingleToastMessage isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
 
             <!-- BEGIN INTRO TEXT AND TOGGLE -->
             <div class="{!IF(isPolling, 'slds-hide', '')}">
