@@ -2,12 +2,13 @@
     <article key={formSection.id}
              class="slds-card slds-card_extension slds-m-vertical_small slds-p-around_small">
         <header class="slds-media slds-media_center slds-has-flexi-truncate">
-            <div class="slds-media__body">
+            <div role="body" class="slds-media__body">
                 <template if:true={isEditMode}>
                     <lightning-input type="text"
                                      variant="label-hidden"
                                      value={formSection.label}
-                                     data-name="formSectionLabelInputElement">
+                                     data-name="formSectionLabelInputElement"
+                                     class="slds-m-right_x-small">
                     </lightning-input>
                 </template>
                 <template if:false={isEditMode}>

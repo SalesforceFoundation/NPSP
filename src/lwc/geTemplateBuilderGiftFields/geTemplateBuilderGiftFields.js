@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import getFieldMappingSets from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingSetNames';
 import getFieldAndObjectMappingsByFieldMappingSetName
     from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldAndObjectMappingsByFieldMappingSetName';
@@ -15,6 +15,13 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     @track _activeFormSectionId;
 
     _selectedFieldMappings = {};
+
+    @api
+    getTabData() {
+        const formLayout = this.template.querySelector('c-ge-template-builder-form-layout');
+        const formSections = formLayout.getFormSections();
+        return formSections;
+    }
 
     /* placeholder function that handles the accordion component section toggle */
     handleSectionToggle(event) {

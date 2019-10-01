@@ -1,8 +1,19 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import { TabData } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
     
+    @api
+    getTabData() {
+        let tabData = new TabData(
+            'geTemplateBuilderTemplateInfo',
+            this.template.querySelector('lightning-input[data-name="templateName"]').value,
+            this.template.querySelector('lightning-textarea[data-name="description"]').value
+        );
+
+        return tabData;
+    }
+
     /*******************************************************************************
     * @description Sends an event up to geTemplateBuilder for tab navigation
     * Currently also collecting data from the page to send up with event.
@@ -12,10 +23,7 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleGoToTab(event) {
-        let tabData = new TabData(
-            'geTemplateBuilderTemplateInfo',
-            this.template.querySelector('lightning-input[data-name="templateName"]').value,
-            this.template.querySelector('lightning-textarea[data-name="description"]').value);
+        let tabData = this.getTabData();
 
         let detail = {
             tabData: tabData,

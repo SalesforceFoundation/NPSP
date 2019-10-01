@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
 import { findByProperty, shiftSelectedField, makeListLightningIterable } from 'c/utilTemplateBuilder';
 
@@ -16,16 +16,12 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         this.isLoading = false;
     }
 
-    /*******************************************************************************
-    * @description Sends an event up to geTemplateBuilder for tab navigation
-    *
-    * @param {object} event: Onclick event object from lightning-button
-    */
-    handleGoToTab(event) {
+    @api
+    getTabData() {
         let selectedBatchFieldValues = this.template.querySelectorAll('c-ge-template-builder-form-field');
 
         let batchHeader = {
-            sourceTab: 'geTemplateBuilderBatchHeader',
+            //sourceTab: 'geTemplateBuilderBatchHeader',
             batchFields: []
         };
 
@@ -34,8 +30,17 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             batchHeader.batchFields.push(batchField);
         }
 
+        return batchHeader;
+    }
+
+    /*******************************************************************************
+    * @description Sends an event up to geTemplateBuilder for tab navigation
+    *
+    * @param {object} event: Onclick event object from lightning-button
+    */
+    handleGoToTab(event) {
         let detail = {
-            tabData: batchHeader,
+            tabData: this.getTabData(),
             tabValue: event.target.getAttribute('data-tab-value')
         }
 

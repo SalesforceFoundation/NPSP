@@ -1,8 +1,8 @@
 import { LightningElement, track } from 'lwc';
-import { FormTemplate } from 'c/utilTemplateBuilder';
+import { FormTemplate, mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilder extends LightningElement {
-    @track activeTab = 'geTemplateBuilderGiftFields';
+    @track activeTab;
     _previousTab;
 
     @track formTemplate = new FormTemplate();
@@ -24,6 +24,29 @@ export default class geTemplateBuilder extends LightningElement {
         this.activeTab = undefined;
     }
 
+    handleFormTemplateSave() {
+        console.log('handleFormTemplateSave');
+        const templateInfo = this.template.querySelector('c-ge-template-builder-template-info').getTabData();
+        console.log('Template Info Tab: ', mutable(templateInfo));
+        const batchHeader = this.template.querySelector('c-ge-template-builder-batch-header').getTabData();
+        console.log('Batch Header Tab: ', mutable(batchHeader));
+        const giftFields = this.template.querySelector('c-ge-template-builder-gift-fields').getTabData();
+        console.log('Gift Fields Tab: ', mutable(giftFields));
+
+        this.formTemplate.name = templateInfo.name;
+        this.formTemplate.description = templateInfo.description;
+        this.formTemplate.batchHeader = batchHeader;
+        this.formTemplate.layout = {};
+        this.formTemplate.layout.version = '1.0';
+        this.formTemplate.layout.sections = giftFields;
+
+        console.log('*************');
+        console.log('FORM TEMPLATE');
+        console.log('*************');
+
+        console.log(mutable(this.formTemplate));
+    }
+
     /*******************************************************************************
     * @description Handles previous and next tab navigation
     *
@@ -32,15 +55,15 @@ export default class geTemplateBuilder extends LightningElement {
     handleGoToTab(event) {
         this.activeTab = event.detail.tabValue;
 
-        if (event.detail.tabData) {
+        /*if (event.detail.tabData) {
             this.stashTabDetails(event.detail.tabData);
-        }
+        }*/
     }
 
     /* Placeholder function to stash tab details (template info, selected batch header fields, etc)
     * into an object.
     */
-    stashTabDetails(tabData) {
+    /*stashTabDetails(tabData) {
         //console.log(this.mutable(tabData));
         if (tabData.sourceTab === 'geTemplateBuilderTemplateInfo') {
             console.log('Stashing Template Info | geTemplateBuilderTemplateInfo');
@@ -53,5 +76,5 @@ export default class geTemplateBuilder extends LightningElement {
         }
 
         console.log('Form Template: ', JSON.parse(JSON.stringify(this.formTemplate)));
-    }
+    }*/
 }

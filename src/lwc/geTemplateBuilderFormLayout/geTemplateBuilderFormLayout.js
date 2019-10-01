@@ -14,6 +14,7 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
         }
         return formSections;
     }
+
     /*******************************************************************************
     * @description Handles setting the active section and updating the slds icon
     * across all sections.

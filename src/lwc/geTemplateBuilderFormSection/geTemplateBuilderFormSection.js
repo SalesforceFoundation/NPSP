@@ -25,7 +25,6 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     @api
     getFormSectionValues() {
         this.formSection.elements = mutable(this.getSectionFormFields());
-        console.log('Form Section: ', this.formSection);
         return this.formSection;
     }
 
@@ -63,8 +62,6 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleSelectActiveSection() {
-        console.log('***handleSelectActiveSection | FormSection');
-        console.log('***************************');
         this.dispatchEvent(new CustomEvent(
             'changeactivesection',
             { detail: this.formSection.id }));
