@@ -141,7 +141,7 @@ public class BDI_DataImportFLSService {
                 && !field.getDescribe().isCreateable())
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-                        && !permissionsService.isUpdateable(field)
+                        && !permissionsService.canUpdate(new Set<SObjectField>{field})
                         && !describeService.isMasterDetailField(field))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_READ)

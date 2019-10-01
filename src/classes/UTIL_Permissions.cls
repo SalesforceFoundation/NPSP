@@ -385,7 +385,7 @@ public with sharing class UTIL_Permissions {
     * @param sObjFields the list of SObjectFields to check update permissions
     * @return Boolean true when the user has permissions for the SObjFields provided
     */
-    private Boolean canUpdate(Set<SObjectField> sObjFields) {
+    public Boolean canUpdate(Set<SObjectField> sObjFields) {
         for (SObjectField field : sObjFields) {
             if (!canUpdate(field.getDescribe(), false)) {
                 return false;
