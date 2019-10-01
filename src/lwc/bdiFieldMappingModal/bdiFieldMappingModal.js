@@ -26,6 +26,7 @@ import stgBtnNew from '@salesforce/label/c.stgBtnNew';
 import stgBtnSave from '@salesforce/label/c.stgBtnSave';
 import stgLabelObject from '@salesforce/label/c.stgLabelObject';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
+import lblRequired from '@salesforce/label/c.lblRequired';
 
 export default class bdiFieldMappingModal extends LightningElement {
 
@@ -50,6 +51,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         stgBtnNew,
         stgBtnSave,
         stgLabelObject,
+        lblRequired
     };
 
     @api objectMapping;
@@ -70,6 +72,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         Target_Field_API_Name: undefined,
         Target_Field_Label: undefined,
         Target_Field_Display_Type_Label: undefined,
+        Required: undefined
     };
 
     @track sourceFieldLabelOptions;
@@ -137,6 +140,32 @@ export default class bdiFieldMappingModal extends LightningElement {
         'Textarea': 'Text Area',
         'Time': 'Time',
         'Url': 'URL'
+    }
+
+    /*******************************************************************************
+    * @description List of core objects using legacy bdi processing logic. Used to
+    * disable the 'Required__c' checkbox as a stop gap because legacy code doesn't
+    * use this field.
+    */
+    coreObjects = [
+        'account',
+        'npsp__address__c',
+        'address__c',
+        'campaign',
+        'campaignmember',
+        'contact',
+        'npsp__allocation__c',
+        'allocation__c',
+        'opportunity',
+        'opportunitycontactrole',
+        'npe01__opppayment__c'
+    ]
+
+    get isRequiredFieldDisabled() {
+        if (this.coreObjects.includes(this.objectMapping.Object_API_Name.toLowerCase())) {
+            return true;
+        }
+         return false;
     }
 
     get isTargetFieldDisabled() {
@@ -215,6 +244,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                 // Edit field mapping
                 this.modalMode = 'edit';
                 this.fieldMapping = this.parse(event.row);
+                this.fieldMapping.Required = this.fieldMapping.Required === 'Yes' ? true : false;
             } else {
                 // New field mapping
                 this.modalMode = 'new';
@@ -351,10 +381,14 @@ export default class bdiFieldMappingModal extends LightningElement {
         try {
             let missingField = this.handleFieldValidations();
             if (missingField.length === 0) {
+                let inputFieldRequired =
+                    this.template.querySelector(`lightning-input[data-field-name="${lblRequired}"]`);
+                let isRequired = inputFieldRequired.checked === true ? 'Yes' : 'No';
                 let rowDetails;
 
                 if (this.modalMode === 'edit') {
                     // Set source and target fields
+                    this.fieldMapping.Required = isRequired;
                     rowDetails = JSON.stringify(this.fieldMapping);
                 } else if (this.modalMode === 'new') {
                     // New Field Mapping
@@ -363,7 +397,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                         MasterLabel: this.fieldMapping.Source_Field_Label,
                         Data_Import_Field_Mapping_Set: this.fieldMappingSetName,
                         Is_Deleted: false,
-                        Required: 'No',
+                        Required: isRequired,
                         Source_Field_API_Name: this.fieldMapping.Source_Field_API_Name,
                         Target_Field_API_Name: this.fieldMapping.Target_Field_API_Name,
                         Target_Object_Mapping: this.objectMapping.DeveloperName
