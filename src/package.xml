@@ -531,8 +531,8 @@
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
-        <members>UTIL_PageMessageInfo</members>
         <members>UTIL_PageMessages</members>
+        <members>UTIL_SingleToastMessage</members>
         <members>UTIL_SLDS_Icon</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Tooltip</members>
@@ -2063,6 +2063,8 @@
         <members>stgErrorINaming</members>
         <members>stgErrorInvalidClass</members>
         <members>stgErrorInvalidNameFormat</members>
+        <members>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</members>
+        <members>stgErrorMissingDefaultGauRecord</members>
         <members>stgHHNameRefreshTitle</members>
         <members>stgHelpAccountModel</members>
         <members>stgHelpAdvancedMapping1</members>
