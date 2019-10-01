@@ -37,29 +37,26 @@
 @isTest
 private with sharing class FormServiceGiftEntryTest {
 
+
+    /*******************************************************************************************************
+    * @description Confirming that the lifecycle of storing and retrieving the template does not corrupt
+    * the data.
+    */
     @IsTest
     static void shouldCommitAndRetrieveTemplate() {
         FormService fs = new FormService();
 
         FormTemplate template = createSampleTemplate();
         String templateJSON = JSON.serialize(template);
-        //System.debug('TemplateJSON is: ' + templateJSON);
-        fs.storeFormTemplate(null,templateJSON,template.layout.version);
+        fs.storeFormTemplate(null,template.name,template.layout.version, templateJSON);
 
         FormTemplate templateResult = fs.retrieveDefaultFormTemplate();
         String templateResultJSON = JSON.serialize(templateResult);
-        //System.debug('Expected: ' + template.layout.sections[0].elements );
-        //System.debug('Actual: ' + template.layout.sections[0].elements );
-        System.debug('Expected: ' + templateJSON );
-        System.debug('Actual: ' + templateResultJSON );
-        System.assertEquals(templateJSON, templateResultJSON);
 
-        //System.assertEquals(template.layout.sections[0].elements,templateResult.layout.sections[0].elements);
-        //System.assertEquals(template, templateResult);
+        System.assertEquals(templateJSON, templateResultJSON);
     }
 
-    //Creates a sample template for testing. To be removed before release.
-    
+    //Utility method for creating a sample template.
     private static FormTemplate createSampleTemplate () {
         
         FormElement field = new FormElement('FormField',
