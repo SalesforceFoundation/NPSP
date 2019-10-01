@@ -37,6 +37,30 @@ public with sharing class UTIL_Permissions {
 
     private final static String INSUFFICIENT_PERMISSION_MESSAGE = System.Label.flsError;
 
+    private static UTIL_Permissions utilPermissionsInstance;
+
+    /**
+    * @description Returns static instance of this class.  Primarily used to facilitate
+    * dependency injection in tests.
+    * @return Instance of UTIL_Permission class.
+    */
+    public static UTIL_Permissions getInstance(){
+        if (utilPermissionsInstance == null) {
+            utilPermissionsInstance = new UTIL_Permissions();
+        }
+        return utilPermissionsInstance;
+    }
+
+    /**
+    * @description Sets instance member variable holding instance of this class.  Primarily
+    * used to facilitate dependency injection in tests.
+    * @param utilPermissions An instance of the UTIL_Permissions class.
+    */
+    @TestVisible
+    private static void setInstance(UTIL_Permissions utilPermissions){
+        utilPermissionsInstance = utilPermissions;
+    }
+
     /*** Object Level Security ***/
 
     /**
@@ -287,16 +311,6 @@ public with sharing class UTIL_Permissions {
             }
         }
         return true;
-    }
-
-    /**
-     * @description Instance method used to determine whether the running user has
-     * update permissions on the given field.  Facilitates dependency injection in tests.
-     * @param field the SObjectField token of the field to check
-     * @return true if the field is updateable by the running User, otherwise false
-     */
-    public Boolean isUpdateable(SObjectField field) {
-        return field.getDescribe().isUpdateable();
     }
 
     /*******************************************************************************************************************

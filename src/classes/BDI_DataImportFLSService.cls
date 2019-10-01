@@ -56,8 +56,8 @@ public class BDI_DataImportFLSService {
         this.dataImportsValidated = new List<DataImport__c>();
         this.dataImportsInvalidated = new List<DataImport__c>();
         this.invalidFieldsByDataImportId = new Map<Id, List<SObjectFieldWrapper>>();
-        describeService = UTIL_DescribeProvider.getInstance();
-        permissionsService = UTIL_PermissionsProvider.getInstance();
+        describeService = UTIL_Describe.getInstance();
+        permissionsService = UTIL_Permissions.getInstance();
         validateTargetMappingFieldLevelSecurity(dataImports);
     }
 

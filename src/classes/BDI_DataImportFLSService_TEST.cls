@@ -120,7 +120,7 @@ private class BDI_DataImportFLSService_TEST {
         UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
                 UTIL_Permissions.class,
                 utilPermissionsMockInstance);
-        UTIL_PermissionsProvider.setInstance(utilPermissionsMock);
+        UTIL_Permissions.setInstance(utilPermissionsMock);
 
         //Process the Data Import record
         BDI_DataImportService dataImportService = new BDI_DataImportService(
@@ -155,7 +155,7 @@ private class BDI_DataImportFLSService_TEST {
         UTIL_Describe describeServiceMock = (UTIL_Describe) Test.createStub(
                 UTIL_Describe.class,
                 mockInstance);
-        UTIL_DescribeProvider.setInstance(describeServiceMock);
+        UTIL_Describe.setInstance(describeServiceMock);
 
         //Re-process the Data Import record
         dataImportService.process(
