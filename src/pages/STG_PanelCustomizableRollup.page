@@ -8,8 +8,8 @@
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.CRLP_RollupSummary}" />
 
             <c:UTIL_PageMessages allowClose="false" id="messages" />
-            <c:UTIL_PageMessageInfo isRendered="{!NOT(showCRLPSettings)}" message="{!$Label.stgCRLPHouseholdAccountError}" />
-            <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgCRLPNonAdminError}" />
+            <c:UTIL_SingleToastMessage isRendered="{!NOT(showCRLPSettings)}" message="{!$Label.stgCRLPHouseholdAccountError}" />
+            <c:UTIL_SingleToastMessage isRendered="{!NOT(isAdmin)}" message="{!$Label.stgCRLPNonAdminError}" />
 
             <!-- BEGIN INTRO TEXT AND TOGGLE -->
             <div class="slds-grid {!IF(showCRLPSettings, '', 'slds-hide')}">
