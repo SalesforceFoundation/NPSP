@@ -12,7 +12,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     _fieldMappingsForSelectedSet = [];
 
     @track formSections = [];
-    _activeFormSectionId;
+    @track _activeFormSectionId;
 
     _selectedFieldMappings = {};
 
@@ -125,9 +125,11 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     * geTemplateBuilderFormLayout component.
     */
     handleChangeActiveSection(event) {
-        console.log('***handleChangeActiveSection');
+        console.log('***handleChangeActiveSection | GiftFields');
         console.log('***************************');
+        console.log('Section Id: ', event.detail);
         this._activeFormSectionId = event.detail;
+        console.log('Active Section Id: ', this._activeFormSectionId);
     }
 
     /*******************************************************************************
@@ -182,7 +184,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
             } else if (this.formSections.length === 1) {
                 this._selectedFieldMappings[formField.value] = 0;
                 this.formSections = this.handleAddFieldToSection(0, formField);
-            } else if (!this._activeFormSectionId && this.formSections.length > 1) {
+            } else if (this._activeFormSectionId === undefined && this.formSections.length > 1) {
                 event.target.checked = false;
                 showToast(this, '', 'Please select a section', 'warning');
             } else {
@@ -302,6 +304,8 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     logFormSections() {
         console.log('***logFormSections');
         console.log('***************************');
-        console.log('FormSections', mutable(this.formSections));
+        let formLayout = this.template.querySelector('c-ge-template-builder-form-layout');
+        let formSections = formLayout.getFormSections();
+        console.log('FormSections', mutable(formSections));
     }
 }

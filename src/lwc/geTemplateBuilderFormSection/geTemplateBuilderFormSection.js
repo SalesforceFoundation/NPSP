@@ -1,43 +1,73 @@
 import { LightningElement, api, track } from 'lwc';
+import { mutable } from 'c/utilTemplateBuilder';
 
-export default class GeTemplateBuilderFormLayout extends LightningElement {
-    @api formSections = [];
-    @track activeFormSectionId;
+export default class GeTemplateBuilderFormSection extends LightningElement {
+    @api activeFormSectionId;
+    @track isEditMode;
+
+    @track formSection;
 
     @api
-    getFormSections() {
-        let formSectionComponents = this.template.querySelectorAll('c-ge-template-builder-form-section');
-        let formSections = [];
-        for (let i = 0; i < formSectionComponents.length; i++) {
-            let formSection = formSectionComponents[i].getFormSectionValues();
-            formSections.push(formSection);
-        }
-        return formSections;
+    set formSection(formSection) {
+        this.formSection = formSection;
     }
+
+    get isActiveFormSectionIcon() {
+        return this.activeFormSectionId == this.formSection.id ? 'utility:record' : 'utility:routing_offline';
+    }
+
+    /*******************************************************************************
+    * @description Public method that collects the current values of all the relevant
+    * input fields for this FormSection and return an instance of FormSection. 
+    * 
+    * @return {object} formSection: Instance of the FormSection class
+    */
+    @api
+    getFormSectionValues() {
+        this.formSection.elements = mutable(this.getSectionFormFields());
+        console.log('Form Section: ', this.formSection);
+        return this.formSection;
+    }
+
+    getSectionFormFields() {
+        let sectionFormFieldComponents = this.template.querySelectorAll('c-ge-template-builder-form-field');
+        let sectionFormFields = [];
+        for (let i = 0; i < sectionFormFieldComponents.length; i++) {
+            let formField = sectionFormFieldComponents[i].getFormFieldValues();
+            sectionFormFields.push(formField);
+        }
+
+        return sectionFormFields;
+    }
+
+
+    handleSaveFormSection() {
+        const formSectionLabelInputElement =
+            this.template.querySelector('lightning-input[data-name="formSectionLabelInputElement"]');
+        this.formSection.label = formSectionLabelInputElement.value;
+        this.handleExitEditMode();
+    }
+
+    handleEditFormSection() {
+        this.isEditMode = true;
+    }
+
+    handleExitEditMode() {
+        this.isEditMode = false;
+    }
+
     /*******************************************************************************
     * @description Handles setting the active section and updating the slds icon
     * across all sections.
     *
     * @param {object} event: Onclick event object from lightning-button
     */
-    handleSelectActiveSection(event) {
-        console.log('***handleSelectActiveSection | FormLayout');
+    handleSelectActiveSection() {
+        console.log('***handleSelectActiveSection | FormSection');
         console.log('***************************');
-        const sectionId = event.detail;
-        this.activeFormSectionId = sectionId;
-
         this.dispatchEvent(new CustomEvent(
             'changeactivesection',
-            { detail: sectionId }));
-    }
-
-    handleSectionSettings(event) {
-        console.log('***handleSectionSettings');
-        console.log('***************************');
-        const sectionId = event.target.getAttribute('data-section-id');
-        let sectionElement = this.template.querySelector('lightning');
-        let section = this.formSections.find(fs => fs.id == sectionId);
-        console.log('Section: ', section);
+            { detail: this.formSection.id }));
     }
 
     /*******************************************************************************
@@ -46,11 +76,10 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     *
     * @param {object} event: Onclick event object from lightning-button
     */
-    handleFormSectionUp(event) {
-        const sectionId = event.detail;
+    handleFormSectionUp() {
         this.dispatchEvent(new CustomEvent(
             'formsectionup',
-            { detail: sectionId }));
+            { detail: this.formSection.id }));
     }
 
     /*******************************************************************************
@@ -59,11 +88,10 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     *
     * @param {object} event: Onclick event object from lightning-button
     */
-    handleFormSectionDown(event) {
-        const sectionId = event.detail;
+    handleFormSectionDown() {
         this.dispatchEvent(new CustomEvent(
             'formsectiondown',
-            { detail: sectionId }));
+            { detail: this.formSection.id }));
     }
 
     /*******************************************************************************

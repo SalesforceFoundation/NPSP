@@ -70,14 +70,13 @@
                     <!-- Another web component for handling form template layout-->
                     BODY
                     <button onclick={logFormSections}>Log Sections</button>
-                    
-                    <c-ge-template-builder-form-layout
-                        form-sections={formSections}
-                        onchangeactivesection={handleChangeActiveSection}
-                        onformsectionup={handleFormSectionUp}
-                        onformsectiondown={handleFormSectionDown}
-                        onformfieldup={handleFormFieldUp}
-                        onformfielddown={handleFormFieldDown}>
+
+                    <c-ge-template-builder-form-layout form-sections={formSections}
+                                                       onchangeactivesection={handleChangeActiveSection}
+                                                       onformsectionup={handleFormSectionUp}
+                                                       onformsectiondown={handleFormSectionDown}
+                                                       onformfieldup={handleFormFieldUp}
+                                                       onformfielddown={handleFormFieldDown}>
                     </c-ge-template-builder-form-layout>
                 </div>
                 <div role="row"

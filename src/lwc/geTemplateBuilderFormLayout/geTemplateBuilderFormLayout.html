@@ -1,69 +1,14 @@
 <template>
     <template for:each={formSections}
               for:item="formSection">
-        <article key={formSection.id}
-                 class="slds-card slds-card_extension slds-m-vertical_small slds-p-around_small">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        {formSection.label}
-                    </h2>
-                </div>
-                <div class="slds-no-flex">
-                    <lightning-button-icon icon-name="utility:settings"
-                                           alternative-text="Section settings"
-                                           data-section-id={formSection.id}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:chevronup"
-                                           alternative-text="Move section up"
-                                           onclick={handleFormSectionUp}
-                                           data-section-id={formSection.id}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:chevrondown"
-                                           alternative-text="Move section down"
-                                           onclick={handleFormSectionDown}
-                                           data-section-id={formSection.id}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:routing_offline"
-                                           alternative-text="Select active section"
-                                           onclick={handleSelectActiveSection}
-                                           data-section-id={formSection.id}
-                                           data-name="activeSectionButton"
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                </div>
-            </header>
-            <div role="card body"
-                 class="slds-card__body slds-card__body_inner">
-                <div role="grid"
-                     class="slds-grid slds-grid_vertical-align-center">
-                    <div class="slds-size_3-of-12">
-                    </div>
-                    <div class="slds-size_1-of-12">
-                        Required
-                    </div>
-                    <div class="slds-size_2-of-12">
-                        Allow Default Value
-                    </div>
-                    <div class="slds-size_5-of-12">
-                        Default Value
-                    </div>
-                    <div class="slds-size_1-of-12">
-                    </div>
-                </div>
-                <template for:each={formSection.elements}
-                          for:item="element">
-                    <c-ge-template-builder-form-field key={element.value}
-                                                      field={element}
-                                                      data-value={element.value}
-                                                      onformfieldup={handleFormFieldUp}
-                                                      onformfielddown={handleFormFieldDown}>
-                    </c-ge-template-builder-form-field>
-                </template>
-            </div>
-        </article>
+        <c-ge-template-builder-form-section key={formSection.id}
+                                            form-section={formSection}
+                                            active-form-section-id={activeFormSectionId}
+                                            onchangeactivesection={handleSelectActiveSection}
+                                            onformsectionup={handleFormSectionUp}
+                                            onformsectiondown={handleFormSectionDown}
+                                            onformfieldup={handleFormFieldUp}
+                                            onformfielddown={handleFormFieldDown}>
+        </c-ge-template-builder-form-section>
     </template>
 </template>

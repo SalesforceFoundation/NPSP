@@ -49,6 +49,9 @@
             ],
             "c/utilTemplateBuilder": [
                 "utilTemplateBuilder/utilTemplateBuilder.js"
+            ],
+            "c/geTemplateBuilderFormSection": [
+                "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
             ]
         },
         "experimentalDecorators": true
