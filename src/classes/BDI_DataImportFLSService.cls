@@ -99,7 +99,7 @@ public class BDI_DataImportFLSService {
                                 dataImportFieldName;
 
                 SObjectField sourceSObjectField =
-                        UTIL_Describe.getFieldDescribe(
+                        describeService.getFieldDescribe(
                                 sourceObjectName,
                                 fieldName).getSobjectField();
 
