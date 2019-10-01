@@ -181,6 +181,17 @@ public without sharing class TEST_OpportunityBuilder {
     }
 
     /***
+    * @description Sets the specified custom or standard field to the specified value
+    * @param fieldName Any field name on the Opportunity
+    * @param value The field value
+    * @return TEST_OpportunityBuilder Builder instance
+    */
+    public TEST_OpportunityBuilder withField(String fieldName, Object value) {
+        valuesByFieldName.put(fieldName, value);
+        return this;
+    }
+
+    /***
     * @description Attaches child records to the Opportunity
     * @param childRecords Child record on the Opportunity
     * @return Map<String, Object> Related list map values

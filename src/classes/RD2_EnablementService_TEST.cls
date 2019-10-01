@@ -369,8 +369,7 @@ public with sharing class RD2_EnablementService_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = true,
-                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
-                npe03__Opportunity_Forecast_Months__c = 12
+                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
             )
         );
     }
