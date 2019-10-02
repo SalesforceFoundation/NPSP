@@ -1,13 +1,23 @@
 /* eslint-disable no-console */
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderFormField extends LightningElement {
-    @api field;
+    @track field;
+
+    @api
+    set field(field) {
+        this.field = field;
+    }
 
     get isDefaultValueAllowed() {
         return this.field.allowDefaultValue ? false : true;
     }
+
+    get isRequired() {
+        return (this.field.required === 'Yes' || this.field.required === true) ? true : false;
+    }
+
     /*******************************************************************************
     * @description Sends an event up to geTemplateBuilder to shift the FormField
     * up in the array and UI.

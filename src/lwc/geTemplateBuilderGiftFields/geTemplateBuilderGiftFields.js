@@ -67,7 +67,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
             this.getComboboxOptionsForFieldMappingSets(this._fieldMappingSets);
 
         /* for dev only, remove later. load the migrated custom field mapping set on init */
-        getFieldAndObjectMappingsByFieldMappingSetName({ fieldMappingSetName: 'Migrated_Custom_Field_Mapping_Set' })
+        /*getFieldAndObjectMappingsByFieldMappingSetName({ fieldMappingSetName: 'Migrated_Custom_Field_Mapping_Set' })
             .then(data => {
                 console.log(data);
                 this.objectMappings = mutable(data);

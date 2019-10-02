@@ -5,7 +5,7 @@ import retrieveDefaultFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl
 import { FormTemplate, mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
-    @track activeTab = 'geTemplateBuilderGiftFields';
+    @track activeTab;
     _previousTab;
 
     @track formTemplate = new FormTemplate();
