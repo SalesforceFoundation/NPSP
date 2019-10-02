@@ -37,10 +37,14 @@
 public with sharing class FORM_Template {
 
     @AuraEnabled public String name;
+    @AuraEnabled public String description;
+    @AuraEnabled public String version;
     @AuraEnabled public FORM_Layout layout;
 
-    public FORM_Template(String name, FORM_Layout layout) {
+    public FORM_Template(String name, String description, String version, FORM_Layout layout) {
         this.name = name;
+        this.description = description;
+        this.version = version;
         this.layout = layout;
     }
 }

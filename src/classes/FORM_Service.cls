@@ -55,10 +55,16 @@ public virtual with sharing class FORM_Service {
     * @description Stores the template JSON.
     * @param id - the Id of an existing form template record if this is an update of an existing template
     * @param name - The name that should be applied to template storage record.
+    * @param description - the description of the template.
     * @param formatVersion - the version id/number of the template format
     * @param templateJSON - The JSON for the FormTemplate class that is being stored.
     */
-    public virtual void storeFormTemplate(String id, String name, String formatVersion, String templateJSON) {
-        FORM_ServiceGiftEntry.storeFormTemplate(id,name,formatVersion,templateJSON);
+    public virtual void storeFormTemplate(String id, 
+                                            String name, 
+                                            String description, 
+                                            String formatVersion, 
+                                            String templateJSON) {
+
+        FORM_ServiceGiftEntry.storeFormTemplate(id,name,description,formatVersion,templateJSON);
     }
 }

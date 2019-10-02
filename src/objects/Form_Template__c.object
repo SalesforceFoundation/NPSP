@@ -153,13 +153,23 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
+        <fullName>Description__c</fullName>
+        <description>Short description of what the template is intended to be used for.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Short description of what the template is intended to be used for.</inlineHelpText>
+        <label>Description</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Format_Version__c</fullName>
         <description>If there are changes made to the format/structure of the FormTemplate class or child classes this number indicates the version of the instance stored on this record.</description>
         <externalId>false</externalId>
         <inlineHelpText>If there are changes made to the format/structure of the FormTemplate class or child classes this number indicates the version of the instance stored on this record.</inlineHelpText>
         <label>Format Version</label>
         <length>40</length>
-        <required>false</required>
+        <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>

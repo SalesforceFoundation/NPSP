@@ -73,14 +73,20 @@ public with sharing class FORM_ServiceGiftEntry {
     * @description Stores the template JSON.
     * @param id - the Id of an existing form template record if this is an update of an existing template
     * @param name - The name that should be applied to template storage record.
+    * @param description - the description of the template.
     * @param formatVersion - the version id/number of the template format
     * @param templateJSON - The JSON for the FormTemplate class that is being stored.
     */
-    public static void storeFormTemplate(String id, String name, String formatVersion, String templateJSON) {
+    public static void storeFormTemplate(String id, 
+                                            String name, 
+                                            String description,
+                                            String formatVersion,
+                                            String templateJSON) {
         if (templateJSON != null) {
             FORM_Template template = (FORM_Template)JSON.deserialize(templateJSON, FORM_Template.class);
             Form_Template__c templateObj = new Form_Template__c(Id = id, 
                                                             Name = name,
+                                                            Description__c = description,
                                                             Template_JSON__c = templateJSON,
                                                             Format_Version__c = formatVersion);
             upsert templateObj;

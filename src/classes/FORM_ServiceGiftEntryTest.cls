@@ -48,7 +48,7 @@ private with sharing class FORM_ServiceGiftEntryTest {
 
         FORM_Template template = createSampleTemplate();
         String templateJSON = JSON.serialize(template);
-        fs.storeFormTemplate(null,template.name,template.layout.version, templateJSON);
+        fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
 
         FORM_Template templateResult = fs.retrieveDefaultFormTemplate();
         String templateResultJSON = JSON.serialize(templateResult);
@@ -79,11 +79,12 @@ private with sharing class FORM_ServiceGiftEntryTest {
                                                 elements);
         
         FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
-                                            '1.0',
                                             new FORM_Section[]{section});
 
 
         FORM_Template template = new FORM_Template('Sample Template',
+                                                'This is the description.',
+                                                '1.0',
                                                 layout);
         return template;
     }

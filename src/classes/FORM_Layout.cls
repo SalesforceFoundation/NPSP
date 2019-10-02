@@ -37,12 +37,10 @@
 public with sharing class FORM_Layout {
 
     @AuraEnabled public String fieldMappingSetDevName;
-    @AuraEnabled public String version;
     @AuraEnabled public FORM_Section[] sections;
 
-    public FORM_Layout(String fieldMappingSetDevName, String version, FORM_Section[] sections) {
+    public FORM_Layout(String fieldMappingSetDevName, FORM_Section[] sections) {
         this.fieldMappingSetDevName = fieldMappingSetDevName;
-        this.version = version;
         this.sections = sections;
     }
 }
