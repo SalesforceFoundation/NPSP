@@ -255,8 +255,6 @@ public class ERR_Handler {
         processError(e, context.name());
     }
 
-
-
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
@@ -282,7 +280,6 @@ public class ERR_Handler {
             processErrors(new Error__c[]{error}, context);
         }
     }
-
 
     /*******************************************************************************************************
     * @description Creates error records from passed in exceptions.

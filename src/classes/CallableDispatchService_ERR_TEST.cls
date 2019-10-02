@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2019, Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -132,7 +129,6 @@ private class CallableDispatchService_ERR_TEST {
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
 
         Object result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action');
 
         Map<Id, Error__c> errs = getErrorsByRecordId();
 
@@ -151,7 +147,6 @@ private class CallableDispatchService_ERR_TEST {
         params.put(CallableDispatchService_ERR.PARAM_ERR_MSGS_BY_RECORDID, errors);
 
         result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action Call 2');
 
         Test.stopTest();
 
@@ -190,7 +185,6 @@ private class CallableDispatchService_ERR_TEST {
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
 
         Object result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action');
 
         Map<Id, Error__c> errs = getErrorsByRecordId();
 
@@ -224,7 +218,6 @@ private class CallableDispatchService_ERR_TEST {
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
 
         Object result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action');
 
         Map<Id, Error__c> errs = getErrorsByRecordId();
 
@@ -243,7 +236,6 @@ private class CallableDispatchService_ERR_TEST {
         params.put(CallableDispatchService_ERR.PARAM_MESSAGE, 'All set!');
 
         result = npspApi.call('ERR.DispatchAction', params);
-        System.assertEquals (true, (Boolean) result, 'Result of Dispatch Action');
 
         errs = getErrorsByRecordId();
 
