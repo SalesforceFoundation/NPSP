@@ -33,6 +33,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    get batchHeaderFields() {
+        return this.formTemplate.batchHeaderFields ? this.formTemplate.batchHeaderFields : undefined;
+    }
+
+    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     get layoutSections() {
         return this.formTemplate.layout ? this.formTemplate.layout.sections : undefined;
     }
@@ -48,7 +53,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         this.formTemplate.name = templateInfo.name;
         this.formTemplate.description = templateInfo.description;
-        this.formTemplate.batchHeader = batchHeader;
+        this.formTemplate.batchHeaderFields = batchHeader;
         this.formTemplate.layout = {};
         this.formTemplate.layout.version = '1.0';
         this.formTemplate.layout.sections = giftFields;

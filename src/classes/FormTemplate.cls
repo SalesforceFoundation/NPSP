@@ -39,6 +39,11 @@ public with sharing class FormTemplate {
     @AuraEnabled public String name;
     @AuraEnabled public FormLayout layout;
 
+    /* Added PS */
+    @AuraEnabled public String description;
+    @AuraEnabled public FormElement[] batchHeaderFields;
+    /* END */
+
     public FormTemplate(String name, FormLayout layout) {
         this.name = name;
         this.layout = layout;

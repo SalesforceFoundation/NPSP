@@ -3,9 +3,14 @@ import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFiel
 import { findByProperty, shiftSelectedField, makeListLightningIterable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
-    @track batchFields;
-    @track _selectedBatchFields;
     @track isLoading = true;
+    @track batchFields;
+    @track selectedBatchFields;
+
+    @api
+    set selectedBatchFields(selectedBatchFields) {
+        this.selectedBatchFields = selectedBatchFields;
+    }
 
     connectedCallback() {
         this.init();
@@ -20,17 +25,14 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     getTabData() {
         let selectedBatchFieldValues = this.template.querySelectorAll('c-ge-template-builder-form-field');
 
-        let batchHeader = {
-            //sourceTab: 'geTemplateBuilderBatchHeader',
-            batchFields: []
-        };
+        let batchHeaderFields = [];
 
         for (let i = 0; i < selectedBatchFieldValues.length; i++) {
             let batchField = selectedBatchFieldValues[i].getFormFieldValues();
-            batchHeader.batchFields.push(batchField);
+            batchHeaderFields.push(batchField);
         }
 
-        return batchHeader;
+        return batchHeaderFields;
     }
 
     /*******************************************************************************
@@ -48,22 +50,22 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Handles adding FormField objects to the _selectedBatchFields
-    * array. _selectedBatchFields is used in the UI to render geTemplateBuilderFormField
+    * @description Handles adding FormField objects to the selectedBatchFields
+    * array. selectedBatchFields is used in the UI to render geTemplateBuilderFormField
     * components.
     *
     * @param {object} event: Onchange event object from lightning-input checkbox
     */
     handleSelectBatchField(event) {
-        if (!this._selectedBatchFields) { this._selectedBatchFields = [] }
+        if (!this.selectedBatchFields) { this.selectedBatchFields = [] }
 
         let fieldName = event.target.value;
-        let alreadySelected = this._selectedBatchFields.find(selectedField => selectedField.value === fieldName);
+        let alreadySelected = this.selectedBatchFields.find(selectedField => selectedField.value === fieldName);
 
         if (alreadySelected) {
-            for( let i = 0; i < this._selectedBatchFields.length; i++){ 
-                if ( this._selectedBatchFields[i].value === fieldName) {
-                    this._selectedBatchFields.splice(i, 1); 
+            for( let i = 0; i < this.selectedBatchFields.length; i++) {
+                if ( this.selectedBatchFields[i].value === fieldName) {
+                    this.selectedBatchFields.splice(i, 1);
                 }
              }
         } else {
@@ -77,7 +79,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
                 defaultValue: undefined
             };
 
-            this._selectedBatchFields.push(field);
+            this.selectedBatchFields.push(field);
         }
     }
 
@@ -87,9 +89,9 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormFieldUp(event) {
-        let oldIndex = findByProperty(this._selectedBatchFields, 'value', event.detail.value);
+        let oldIndex = findByProperty(this.selectedBatchFields, 'value', event.detail.value);
         if (oldIndex > 0) {
-            shiftSelectedField(this._selectedBatchFields, oldIndex, oldIndex - 1);
+            shiftSelectedField(this.selectedBatchFields, oldIndex, oldIndex - 1);
         }
     }
 
@@ -99,9 +101,9 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormFieldDown(event) {
-        let oldIndex = findByProperty(this._selectedBatchFields, 'value', event.detail.value);
-        if (oldIndex < this._selectedBatchFields.length - 1) {
-            shiftSelectedField(this._selectedBatchFields, oldIndex, oldIndex + 1);
+        let oldIndex = findByProperty(this.selectedBatchFields, 'value', event.detail.value);
+        if (oldIndex < this.selectedBatchFields.length - 1) {
+            shiftSelectedField(this.selectedBatchFields, oldIndex, oldIndex + 1);
         }
     }
 }
