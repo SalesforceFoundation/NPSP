@@ -2940,6 +2940,7 @@
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
         <members>Error__c-Error Layout</members>
+        <members>Form_Template__c-Form Template Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
