@@ -440,7 +440,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
                     currCode = (String) obj.get('CurrencyIsoCode');
                 }
                 String currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(currCode);
-                if (!String.isBlank(currencySymbol) && currencySymbol.length() == 3) {
+                if (!String.isBlank(currencySymbol) && currencySymbol.length() > 1) {
                     currencySymbol += ' ';
                 }
                 result = String.isBlank(currencySymbol) ? String.valueOf(obj.get(fieldName.trim())) : currencySymbol + String.valueOf(obj.get(fieldName.trim()));
