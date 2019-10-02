@@ -243,6 +243,24 @@ private class ERR_Handler_TEST {
         }
     }
 
+    /**
+     * @description Trigger error notification processing by calling
+     * ERR_Handler.sendErrorNotification() and verify that the error was created.
+     */
+    @IsTest
+    private static void shouldCreateErrorBySendErrorNotification() {
+
+        Test.startTest();
+        StringException testException = new StringException('Test Exception');
+        ERR_Handler.sendErrorNotification(testException, ERR_Handler_API.Context.STTG.name());
+        Test.stopTest();
+
+        List<Error__c> errors = getErrors();
+
+        System.assertEquals(1, errors.size());
+
+    }
+
     // Helpers
     ////////////
 
