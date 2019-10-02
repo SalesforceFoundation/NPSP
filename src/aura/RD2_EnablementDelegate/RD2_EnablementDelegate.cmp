@@ -50,35 +50,53 @@
             <lightning:card title="{!$Label.c.RD2_EnablementTitle}" class="page-section" aura:id="enablement">
                 <lightning:layout multipleRows="true">
                     <lightning:layoutItem padding="horizontal-large" size="12">
-                        <div class="slds-grid slds-gutters">
-                            <div class="slds-col slds-size_2-of-3">
-                                <label for="enable-confirm">
-                                    <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementConfirm}" />
-                                </label>
-                            </div>
-                            <div class="slds-col slds-size_1-of-3">
-                                <lightning:input type="checkbox-button" label="{!$Label.c.RD2_EnablementConfirm}"
-                                    aura:id="enable-confirm" name="enable-confirm" 
-                                    checked="{!v.isEnableConfirmed}"
-                                    onchange="{!c.onEnableConfirm}" />
-                            </div>
-                        </div>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem padding="around-small" size="12" />
-                    <lightning:layoutItem padding="horizontal-large" size="12">
-                        <div class="slds-grid slds-gutters">
-                            <div class="slds-col slds-size_2-of-3">
-                                <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementMessage}" />&nbsp;
-                                <lightning:formattedRichText class="slds-text-longform warning" value="{!$Label.c.RD2_EnablementWarning}" />
-                            </div>
-                            <div class="slds-col slds-size_1-of-3">
-                                <lightning:input type="toggle" 
-                                    label="{!$Label.c.RD2_EnablementMessage}" variant="label-hidden" 
-                                    aura:id="enable-toggle" name="enable-toggle"
-                                    checked="{!v.isEnabled}" onchange="{!c.onEnabled}" 
-                                    messageToggleActive="Enabled" messageToggleInactive="Disabled">
-                                </lightning:input>
-                            </div>
+                        <div class="slds-progress slds-progress_vertical">
+                            <ol class="slds-progress__list">
+                                <li class="{!'slds-progress__item ' + if(v.isEnableConfirmed, 'slds-is-completed', 'slds-is-active')}" id="enable-confirm-item">
+                                    <div class="{!'slds-progress__marker ' + if(v.isEnableConfirmed, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
+                                        <aura:if isTrue="{!v.isEnableConfirmed}">
+                                            <lightning:icon iconName="utility:success" class="slds-icon-text-default" size="xx-small" />
+                                        </aura:if>
+                                        <span class="slds-assistive-text">{!$Label.c.RD2_EnablementConfirm}</span>
+                                    </div>
+
+                                    <div class="slds-progress__item_content slds-grid slds-gutters">
+                                        <div class="slds-col slds-size_2-of-3">
+                                            <label for="enable-confirm">
+                                                <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementConfirm}" />
+                                            </label>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-3">
+                                            <lightning:input type="checkbox-button" label="{!$Label.c.RD2_EnablementConfirm}" aura:id="enable-confirm"
+                                                name="enable-confirm" checked="{!v.isEnableConfirmed}" onchange="{!c.onEnableConfirm}" />
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="{!'slds-progress__item ' + if(v.isEnabled, 'slds-is-completed', 'slds-is-active')}" id="enable-confirm-item">
+                                    <div class="{!'slds-progress__marker ' + if(v.isEnabled, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
+                                        <aura:if isTrue="{!v.isEnabled}">
+                                            <lightning:icon iconName="utility:success" class="slds-icon-text-default" size="xx-small" />
+                                        </aura:if>
+                                        <span class="slds-assistive-text">{!$Label.c.RD2_EnablementMessage}</span>
+                                    </div>
+                                
+                                    <div class="slds-progress__item_content slds-grid slds-gutters">
+                                        <div class="slds-col slds-size_2-of-3">
+                                            <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementMessage}" />&nbsp;
+                                            <lightning:icon iconName="utility:warning" alternativeText="warning" size="x-small" class="slds-icon-text-default" variant="warning" />&nbsp;
+                                            <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementWarning}" />
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-3">
+                                            <lightning:input type="toggle" label="{!$Label.c.RD2_EnablementMessage}" variant="label-hidden"
+                                                aura:id="enable-toggle" name="enable-toggle" checked="{!v.isEnabled}" onchange="{!c.onEnabled}"
+                                                messageToggleActive="Enabled" messageToggleInactive="Disabled">
+                                            </lightning:input>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ol>
                         </div>
                     </lightning:layoutItem>
                 </lightning:layout>
