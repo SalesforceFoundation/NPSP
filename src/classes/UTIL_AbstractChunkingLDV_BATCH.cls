@@ -228,7 +228,6 @@ public abstract inherited sharing class UTIL_AbstractChunkingLDV_BATCH implement
      * @return String Where clause fragment
      */
     @testVisible private String getQueryNonLDVWhereClause() {
-        String fullWhereClause = '';
 
         String whereClause = this.getWhereClause();
 
