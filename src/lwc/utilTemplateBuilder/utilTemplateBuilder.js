@@ -49,9 +49,17 @@ const FormField = class FormField {
     }
 }
 
+const removeByProperty = (array, property, value) => {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i][property] == value) {
+            array.splice(i, 1);
+        }
+    }
+}
+
 const findByProperty = (array, property, value) => {
     for (let i = 0; i < array.length; i += 1) {
-        if(array[i][property] == value) {
+        if (array[i][property] == value) {
             return i;
         }
     }
@@ -123,16 +131,34 @@ const handleError = (context, error) => {
     }
 }
 
+const generateId = () => {
+    // NOTE: This format of 8 chars, followed by 3 groups of 4 chars, followed by 12 chars
+    //       is known as a UUID and is defined in RFC4122 and is a standard for generating unique IDs.
+    //       This function DOES NOT implement this standard. It simply outputs a string
+    //       that looks similar.
+    const random4 = () => {
+        return Math.random().toString(16).slice(-4);
+    }
+    return random4() +
+        random4() +
+        '-' + random4() +
+        '-' + random4() +
+        '-' + random4() +
+        '-' + random4() + random4() + random4();
+};
+
 export {
     TabData,
     FormTemplate,
     FormLayout,
     FormSection,
     FormField,
+    removeByProperty,
     findByProperty,
     shiftSelectedField,
     makeListLightningIterable,
     mutable,
     showToast,
-    handleError
+    handleError,
+    generateId
 }

@@ -2,7 +2,7 @@ import { LightningElement, track, api } from 'lwc';
 import getFieldMappingSets from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingSetNames';
 import getFieldAndObjectMappingsByFieldMappingSetName
     from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldAndObjectMappingsByFieldMappingSetName';
-import { FormSection, FormField, showToast, findByProperty, shiftSelectedField, mutable } from 'c/utilTemplateBuilder';
+import { FormSection, FormField, showToast, removeByProperty, findByProperty, shiftSelectedField, mutable, generateId } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderGiftFields extends LightningElement {
     @track selectedFieldMappingSet;
@@ -21,7 +21,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     }
 
     @track _activeFormSectionId;
-    _selectedFieldMappings = {};
+    _sectionIdsByFieldMappingDeveloperNames = {};
 
     @api
     getTabData() {
@@ -172,60 +172,49 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     *
     * @param {object} event: Onchange event object from lightning-input checkbox
     */
-    handleAddFieldMapping(event) {
-        console.log('***handleAddFieldMapping');
+    handleToggleFieldMapping(event) {
+        console.log('***handleToggleFieldMapping');
         console.log('***************************');
-        let removeField = !event.target.checked;
-        let fieldMappingDeveloperName = event.target.getAttribute('data-field-mapping');
+        const removeField = !event.target.checked;
+        const fieldMappingDeveloperName = event.target.getAttribute('data-field-mapping');
+        let sectionId = this._activeFormSectionId;
 
         if (removeField) {
-            console.log('NEED TO REMOVE FIELD');
-            let sectionId = this._selectedFieldMappings[fieldMappingDeveloperName];
-            console.log('section id: ', sectionId);
+            console.log('attempting to remove field');
+            const sectionId = this._sectionIdsByFieldMappingDeveloperNames[fieldMappingDeveloperName];
+            console.log('Section Id: ', sectionId);
             let section = this.formSections.find(fs => fs.id == sectionId);
-            for (let i = 0; i < section.elements.length; i++) {
-                if (section.elements[i].value === fieldMappingDeveloperName) {
-                    section.elements.splice(i, 1);
-                }
-            }
+            console.log('Section: ', section);
+            removeByProperty(section.elements, 'value', fieldMappingDeveloperName);
         } else {
-            //let objectMappingDeveloperName = event.target.getAttribute('data-object-mapping');
-
-            console.log(fieldMappingDeveloperName);
-            //console.log(objectMappingDeveloperName);
-
-            let fieldMapping =
-                this._fieldMappingsForSelectedSet
-                    .find(fm => fm.DeveloperName === fieldMappingDeveloperName);
+            const fieldMapping =
+                this._fieldMappingsForSelectedSet.find(fm => fm.DeveloperName === fieldMappingDeveloperName);
 
             let formField = new FormField(
                 fieldMapping.MasterLabel,
                 fieldMapping.npsp__Required__c,
                 fieldMapping.DeveloperName,
                 false,
-                this._activeFormSectionId || 0
+                sectionId
             );
 
-            console.log('formField: ', formField);
-
             if (!this.formSections || this.formSections.length === 0) {
-                console.log('new section');
-                this.handleAddSection([formField]);
-
-                /* Add selected field mapping to map of section ids by selected field mappings */
-                this._selectedFieldMappings[formField.value] = 0;
+                sectionId = this.handleAddSection();
             } else if (this.formSections.length === 1) {
-                this._selectedFieldMappings[formField.value] = this.formSections[0].id;
-                this.formSections = this.handleAddFieldToSection(this.formSections[0].id, formField);
+                sectionId = this.formSections[0].id;
             } else if (this._activeFormSectionId === undefined && this.formSections.length > 1) {
                 event.target.checked = false;
                 showToast(this, '', 'Please select a section', 'warning');
-            } else {
-                console.log('adding to existing section');
-                this._selectedFieldMappings[formField.value] = this._activeFormSectionId;
-                this.formSections = this.handleAddFieldToSection(this._activeFormSectionId, formField);
+                return;
             }
+
+            this.addSelectedFieldToMap(fieldMappingDeveloperName, sectionId);
+            this.formSections = this.handleAddFieldToSection(sectionId, formField);
         }
+    }
+
+    addSelectedFieldToMap(fieldMappingDeveloperName, sectionId) {
+        this._sectionIdsByFieldMappingDeveloperNames[fieldMappingDeveloperName] = sectionId;
     }
 
     /*******************************************************************************
@@ -233,25 +222,27 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     *
     * @param {list} fieldMappings: List of FormFields to be added with the section
     */
-    handleAddSection(fieldMappings) {
+    handleAddSection() {
         console.log('***handleAddSection');
         console.log('***************************');
 
         if (!this.formSections) { this.formSections = [] }
-        let formSections = JSON.parse(JSON.stringify(this.formSections));
+
+        let formSections = mutable(this.formSections);
 
         let newSection = new FormSection(
-            formSections.length,
+            generateId(),
             'accordion',
             'expanded',
             'displayRule',
             'Test Label ' + formSections.length,
-            Array.isArray(fieldMappings) ? [...fieldMappings] : []
+            []
         )
 
         formSections.push(newSection);
         this.formSections = formSections;
         console.log(this.formSections);
+        return newSection.id;
     }
 
     /*******************************************************************************
@@ -264,7 +255,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
         console.log('***handleAddFieldToSection');
         console.log('***************************');
         console.log(arguments);
-        let formSections = JSON.parse(JSON.stringify(this.formSections));
+        let formSections = mutable(this.formSections);
         let formSection = formSections.find(fs => fs.id == sectionId);
         console.log('Form Section: ', formSection);
         formSection.elements.push(field);
