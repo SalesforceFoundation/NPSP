@@ -83,7 +83,7 @@ public with sharing class RD2_EnablementService {
     public Boolean isPilotEnabled {
         get {
             if (isPilotEnabled == null) {
-                isPilotEnabled = UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
+                isPilotEnabled = true;//UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
             }
             return isPilotEnabled;
         }
@@ -107,15 +107,8 @@ public with sharing class RD2_EnablementService {
     */
     public Boolean isRecurringDonations2Enabled() {
         return 
-            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true//STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c == true
+            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true
             && isPilotEnabled;
     }
 
-    /***
-    * @description 
-    */
-    public void setRecurringDonations2Enabled() {
-        STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c = true;
-        upsert STG_Panel.stgService.stgRD;
-    }
 }

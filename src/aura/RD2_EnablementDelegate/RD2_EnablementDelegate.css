@@ -6,6 +6,6 @@
 .THIS .warning {
     color: #FF0000;
 }
-.THIS .toggleEnabled {
+.THIS .editDisabled {
     pointer-events: none;
 }

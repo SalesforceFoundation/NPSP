@@ -13,22 +13,24 @@
             if (component.isValid() && state === "SUCCESS") {
                 var enablementState = JSON.parse(response.getReturnValue());
 
-                if (!enablementState.isEnablementReady && !enablementState.isEnabled) {
-                    let enablementDisabled = component.find("enablement-disabled");
-                    $A.util.removeClass(enablementDisabled, "slds-hide");
+                if (!enablementState.isReady && !enablementState.isEnabled) {
+                    this.displayElement(component, "enablement-disabled");
                     return;
                 }
 
-                let enabler = component.find("enabler");
-                $A.util.removeClass(enabler, "slds-hide");
+                this.displayElement(component, "enabler");
 
+                component.set('v.isEnableConfirmed', enablementState.isConfirmed);
                 component.set('v.isEnabled', enablementState.isEnabled);
-                component.set("v.isMetaDeployCompleted", enablementState.isMetaDeployCompleted);
-                component.set("v.isMigrationCompleted", enablementState.isMigrationCompleted);
+                component.set("v.isMetaDeployConfirmed", enablementState.isMetaDeployConfirmed);
+                component.set("v.isMigrationRun", enablementState.isMigrationRun);
 
-                if (enablementState.isEnabled) {
-                    let toggleInput = component.find("step2-complete");
-                    $A.util.addClass(toggleInput, "toggleEnabled");
+                if (enablementState.isConfirmed) {
+                    this.disableEdit(component, "enable-confirm");
+                }
+
+                if (!enablementState.isConfirmed || enablementState.isEnabled) {
+                    this.disableEdit(component, "enable-toggle");
                 }
 
             } else if (state === "ERROR") {
@@ -46,21 +48,46 @@
     * @description 
     */
     refreshView: function (component) {
-        let enablementDisabled = component.find("enablement-disabled");
-        $A.util.addClass(enablementDisabled, "slds-hide");
-
-        let enabler = component.find("enabler");
-        $A.util.addClass(enabler, "slds-hide");
+        this.hideElement(component, "enablement-disabled");
+        this.hideElement(component, "enabler");
 
         this.loadState(component);
     },
     /****
-   * @description 
-   */
-    completeStep2: function (component) {
-        let isEnabled = component.get("v.isEnabled");
+    * @description 
+    */
+    confirmEnablement: function (component) {
+        this.disableEdit(component, "enable-confirm");
 
-        var action = component.get('c.enableEnancement');
+        var action = component.get('c.confirmEnablement');
+
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+
+            if (!component.isValid()) {
+                return;
+            }
+
+            if (state === 'SUCCESS') {
+                component.set('v.isEnableConfirmed', true);
+                this.enableEdit(component, "enable-toggle");
+
+            } else if (state === 'ERROR') {
+                this.enableEdit(component, "enable-confirm");
+
+                console.log(response.getError());//todo
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
+    * @description 
+    */
+    enable: function (component) {
+        this.disableEdit(component, "enable-toggle");
+
+        var action = component.get('c.enableEnhancement');
 
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -72,15 +99,28 @@
             if (state === 'SUCCESS') {
                 component.set('v.isEnabled', true);
 
-                let toggleInput = component.find("step2-complete");
-                $A.util.addClass(toggleInput, "toggleEnabled");
-
-                //showToast()? //todo
             } else if (state === 'ERROR') {
+                this.enableEdit(component, "enable-toggle");
                 console.log(response.getError());//todo
             }
         });
 
         $A.enqueueAction(action);
+    },
+    hideElement: function (component, elementName) {
+        let element = component.find(elementName);
+        $A.util.addClass(element, "slds-hide");
+    },
+    displayElement: function (component, elementName) {
+        let element = component.find(elementName);
+        $A.util.removeClass(element, "slds-hide");
+    },
+    disableEdit: function (component, inputName) {
+        let inputComp = component.find(inputName);
+        $A.util.addClass(inputComp, "editDisabled");
+    },
+    enableEdit: function (component, inputName) {
+        let inputComp = component.find(inputName);
+        $A.util.removeClass(inputComp, "editDisabled");
     }
 })

@@ -2,8 +2,11 @@
     doInit: function (component, event, helper) {
         helper.loadState(component);
     },
-    onStep2Complete: function (component, event, helper) {
-        helper.completeStep2(component);
+    onEnableConfirm: function (component, event, helper) {
+        helper.confirmEnablement(component);
+    },
+    onEnabled: function (component, event, helper) {
+        helper.enable(component);
     },
     refreshView: function (component, event, helper) {
         helper.refreshView(component);

@@ -1209,6 +1209,7 @@
         <members>npe03__Recurring_Donation__c.Status__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
@@ -1388,20 +1389,20 @@
         <members>PageMessagesInfo</members>
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
+        <members>RD2_EnablementConfirm</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementIntro</members>
-        <members>RD2_EnablementStep1Action</members>
-        <members>RD2_EnablementStep1Intro</members>
-        <members>RD2_EnablementStep2Action</members>
-        <members>RD2_EnablementStep2Complete</members>
-        <members>RD2_EnablementStep2CompleteWarning</members>
-        <members>RD2_EnablementStep2Confirm</members>
-        <members>RD2_EnablementStep2Intro</members>
-        <members>RD2_EnablementStep3Action</members>
-        <members>RD2_EnablementStep3Intro</members>
-        <members>RD2_EnablementStep4Action</members>
-        <members>RD2_EnablementStep4Intro</members>
+        <members>RD2_EnablementMessage</members>
+        <members>RD2_EnablementMetaDeployIntro</members>
+        <members>RD2_EnablementMetaDeployTitle</members>
+        <members>RD2_EnablementMigrationIntro</members>
+        <members>RD2_EnablementMigrationTitle</members>
+        <members>RD2_EnablementPageIntro</members>
+        <members>RD2_EnablementPreparationTasks</members>
+        <members>RD2_EnablementPreparationTitle</members>
+        <members>RD2_EnablementTitle</members>
+        <members>RD2_EnablementWarning</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
