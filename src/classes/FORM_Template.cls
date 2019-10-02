@@ -32,17 +32,15 @@
 * @date 2019
 * @group Gift Entry
 * @group-content ../../ApexDocContent/GiftEntry.htm
-* @description Form Layout definition for use in entering gifts.
+* @description Form template definition for use in entering gifts
 */
-public with sharing class FormLayout {
+public with sharing class FORM_Template {
 
-    @AuraEnabled public String fieldMappingSetDevName;
-    @AuraEnabled public String version;
-    @AuraEnabled public FormSection[] sections;
+    @AuraEnabled public String name;
+    @AuraEnabled public FORM_Layout layout;
 
-    public FormLayout(String fieldMappingSetDevName, String version, FormSection[] sections) {
-        this.fieldMappingSetDevName = fieldMappingSetDevName;
-        this.version = version;
-        this.sections = sections;
+    public FORM_Template(String name, FORM_Layout layout) {
+        this.name = name;
+        this.layout = layout;
     }
 }

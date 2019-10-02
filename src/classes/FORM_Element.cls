@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/GiftEntry.htm
 * @description Form Element definition for use in entering gifts.
 */
-public with sharing class FormElement {
+public with sharing class FORM_Element {
 
     @AuraEnabled public String elementType;
     @AuraEnabled public String displayRule;
@@ -44,7 +44,7 @@ public with sharing class FormElement {
     @AuraEnabled public String[] dataImportFieldMappingDevNames;
 
     //Constructor for form field
-    public FormElement(String elementType,
+    public FORM_Element(String elementType,
                         String displayRule, 
                         String validationRule,
                         String customLabel,
@@ -57,7 +57,7 @@ public with sharing class FormElement {
     }
 
     //Constructor for widget
-    public FormElement(String elementType,
+    public FORM_Element(String elementType,
                         String displayRule,
                         String componentName,
                         String[] dataImportFieldMappingDevNames) {

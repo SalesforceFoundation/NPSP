@@ -32,33 +32,26 @@
 * @date 2019
 * @group Gift Entry
 * @group-content ../../ApexDocContent/GiftEntry.htm
-* @description Form Services for use in entering gifts or with other form types.
+* @description Form Section definition for use in entering gifts.
 */
-public virtual with sharing class FormService {
-    /*******************************************************************************************************
-    * @description Method for retrieving an existing template that you already have the Id for.
-    * @param templateId - the Id of an existing form template record for retrieval.
-    */
-    public virtual FormTemplate retrieveFormTemplate(Id templateId) {
-        return FormServiceGiftEntry.retrieveFormTemplate(templateId);
-    }
+public with sharing class FORM_Section {
 
-    /*******************************************************************************************************
-    * @description Method for retrieving the current default template.
-    * @param templateId - the Id of an existing form template record for retrieval.
-    */
-    public virtual FormTemplate retrieveDefaultFormTemplate() {
-        return FormServiceGiftEntry.retrieveDefaultFormTemplate();
-    }
+    @AuraEnabled public String label;
+    @AuraEnabled public String displayType;
+    @AuraEnabled public String defaultDisplayMode;
+    @AuraEnabled public String displayRule;
+    @AuraEnabled public FORM_Element[] elements;
 
-    /*******************************************************************************************************
-    * @description Stores the template JSON.
-    * @param id - the Id of an existing form template record if this is an update of an existing template
-    * @param name - The name that should be applied to template storage record.
-    * @param formatVersion - the version id/number of the template format
-    * @param templateJSON - The JSON for the FormTemplate class that is being stored.
-    */
-    public virtual void storeFormTemplate(String id, String name, String formatVersion, String templateJSON) {
-        FormServiceGiftEntry.storeFormTemplate(id,name,formatVersion,templateJSON);
+    public FORM_Section(String label, 
+                        String displayType, 
+                        String defaultDisplayMode, 
+                        String displayRule, 
+                        FORM_Element[] elements) {
+
+        this.label = label;
+        this.displayType = displayType;
+        this.defaultDisplayMode = defaultDisplayMode;
+        this.displayRule = displayRule;
+        this.elements = elements;
     }
 }

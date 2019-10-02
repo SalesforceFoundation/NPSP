@@ -32,15 +32,33 @@
 * @date 2019
 * @group Gift Entry
 * @group-content ../../ApexDocContent/GiftEntry.htm
-* @description Form template definition for use in entering gifts
+* @description Form Services for use in entering gifts or with other form types.
 */
-public with sharing class FormTemplate {
+public virtual with sharing class FORM_Service {
+    /*******************************************************************************************************
+    * @description Method for retrieving an existing template that you already have the Id for.
+    * @param templateId - the Id of an existing form template record for retrieval.
+    */
+    public virtual FORM_Template retrieveFormTemplate(Id templateId) {
+        return FORM_ServiceGiftEntry.retrieveFormTemplate(templateId);
+    }
 
-    @AuraEnabled public String name;
-    @AuraEnabled public FormLayout layout;
+    /*******************************************************************************************************
+    * @description Method for retrieving the current default template.
+    * @param templateId - the Id of an existing form template record for retrieval.
+    */
+    public virtual FORM_Template retrieveDefaultFormTemplate() {
+        return FORM_ServiceGiftEntry.retrieveDefaultFormTemplate();
+    }
 
-    public FormTemplate(String name, FormLayout layout) {
-        this.name = name;
-        this.layout = layout;
+    /*******************************************************************************************************
+    * @description Stores the template JSON.
+    * @param id - the Id of an existing form template record if this is an update of an existing template
+    * @param name - The name that should be applied to template storage record.
+    * @param formatVersion - the version id/number of the template format
+    * @param templateJSON - The JSON for the FormTemplate class that is being stored.
+    */
+    public virtual void storeFormTemplate(String id, String name, String formatVersion, String templateJSON) {
+        FORM_ServiceGiftEntry.storeFormTemplate(id,name,formatVersion,templateJSON);
     }
 }

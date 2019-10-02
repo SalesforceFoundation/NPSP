@@ -34,14 +34,14 @@
 * @group-content ../../ApexDocContent/GiftEntry.htm
 * @description Form Service implementations specifically used for gift entry use cases.
 */
-public with sharing class FormServiceGiftEntry {
+public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
     * @description Method for retrieving an existing template that you already have the Id for.
     * @param templateId - the Id of an existing form template record for retrieval.
     */
-    public static FormTemplate retrieveFormTemplate(Id templateId) {
-        FormTemplate template;
+    public static FORM_Template retrieveFormTemplate(Id templateId) {
+        FORM_Template template;
 
         Form_Template__c templateObj = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
                                 FROM Form_Template__c 
@@ -57,8 +57,8 @@ public with sharing class FormServiceGiftEntry {
     * @description Method for retrieving the current default template.
     * @param templateId - the Id of an existing form template record for retrieval.
     */
-    public static FormTemplate retrieveDefaultFormTemplate() {
-        FormTemplate template;
+    public static FORM_Template retrieveDefaultFormTemplate() {
+        FORM_Template template;
         // TBD: determine how default templates will be tracked for SGE.
         Form_Template__c templateObj = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
                                 FROM Form_Template__c 
@@ -78,7 +78,7 @@ public with sharing class FormServiceGiftEntry {
     */
     public static void storeFormTemplate(String id, String name, String formatVersion, String templateJSON) {
         if (templateJSON != null) {
-            FormTemplate template = (FormTemplate)JSON.deserialize(templateJSON, FormTemplate.class);
+            FORM_Template template = (FORM_Template)JSON.deserialize(templateJSON, FORM_Template.class);
             Form_Template__c templateObj = new Form_Template__c(Id = id, 
                                                             Name = name,
                                                             Template_JSON__c = templateJSON,
@@ -91,10 +91,10 @@ public with sharing class FormServiceGiftEntry {
     * @description Private helper method for deserializing the JSON stored in a form template record.
     * @param templateObj - The Form_Template__c object with the Template JSON.
     */
-    private static FormTemplate deserializeFormTemplateFromObj(Form_Template__c templateObj) {
-        FormTemplate template;
+    private static FORM_Template deserializeFormTemplateFromObj(Form_Template__c templateObj) {
+        FORM_Template template;
         if (templateObj != null && templateObj.Template_JSON__c != null) {
-            template = (FormTemplate)JSON.deserialize(templateObj.Template_JSON__c, FormTemplate.class);
+            template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
         }
         return template;
     }
