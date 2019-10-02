@@ -18,9 +18,9 @@
                                  label={field.label}
                                  value={field.value}
                                  onchange={handleSelectBatchField}
-                                 data-id={field.id}
                                  data-label={field.label}
                                  title={field.label}
+                                 checked={field.checked}
                                  class="slds-truncate">
                 </lightning-input>
             </template>
@@ -58,7 +58,7 @@
                     </div>
                     <template for:each={selectedBatchFields}
                               for:item="field">
-                        <c-ge-template-builder-form-field key={field.id}
+                        <c-ge-template-builder-form-field key={field.value}
                                                           field={field}
                                                           onformfieldup={handleFormFieldUp}
                                                           onformfielddown={handleFormFieldDown}>

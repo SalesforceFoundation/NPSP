@@ -83,11 +83,13 @@ public with sharing class GE_TemplateBuilderCtrl {
     public class DescribeFieldWrapper {
         @AuraEnabled public String label;
         @AuraEnabled public String value;
+        @AuraEnabled public Boolean checked;
        // @AuraEnabled public String type;
 
         public DescribeFieldWrapper(Schema.DescribeFieldResult describe) {
             this.label = describe.getLabel();
             this.value = describe.getName();
+            this.checked = false;
             //this.type = String.valueOf(describe.getType());
         }
     }

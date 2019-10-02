@@ -5,6 +5,7 @@ import getFieldAndObjectMappingsByFieldMappingSetName
 import { FormSection, FormField, showToast, findByProperty, shiftSelectedField, mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderGiftFields extends LightningElement {
+    @track selectedFieldMappingSet;
     @track fieldMappingSetComboboxOptions;
     _fieldMappingSets;
 
@@ -113,9 +114,9 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleChangeFieldMappingSet = async (event) => {
         //console.log('handleChangeFieldMappingSet');
-        let selectedFieldMappingSet = event.target.value;
+        this.selectedFieldMappingSet = event.target.value;
         //console.log(selectedFieldMappingSet);
-        getFieldAndObjectMappingsByFieldMappingSetName({ fieldMappingSetName: selectedFieldMappingSet })
+        getFieldAndObjectMappingsByFieldMappingSetName({ fieldMappingSetName: this.selectedFieldMappingSet })
             .then(data => {
                 console.log(data);
                 this.objectMappings = mutable(data);

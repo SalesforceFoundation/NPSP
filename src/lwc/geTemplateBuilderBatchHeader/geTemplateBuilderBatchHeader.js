@@ -1,6 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
-import { findByProperty, shiftSelectedField, makeListLightningIterable } from 'c/utilTemplateBuilder';
+import { FormField, findByProperty, shiftSelectedField, mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track isLoading = true;
@@ -17,7 +17,9 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     }
 
     init = async () => {
-        this.batchFields = makeListLightningIterable(await getBatchFields());
+        this.batchFields = await getBatchFields();
+        console.log('Batch Fields: ', this.batchFields);
+        this.toggleCheckboxForSelectedBatchFields();
         this.isLoading = false;
     }
 
@@ -49,6 +51,27 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         this.dispatchEvent(new CustomEvent('gototab', { detail: detail }));
     }
 
+    toggleCheckboxForSelectedBatchFields() {
+        console.log('toggleCheckboxForSelectedBatchFields');
+        let _batchFields = mutable(this.batchFields);
+        if (this.selectedBatchFields && this.selectedBatchFields.length > 0) {
+            for (let i = 0; i < this.selectedBatchFields.length; i++) {
+                const selectedBatchField = this.selectedBatchFields[i];
+                const batchFieldIndex = findByProperty(
+                    _batchFields,
+                    'value',
+                    selectedBatchField.dataImportFieldMappingDevNames[0]);
+
+                console.log('Preselected Index: ', batchFieldIndex);
+                console.log('Batch Field: ', _batchFields[batchFieldIndex]);
+                _batchFields[batchFieldIndex].checked = true;
+            }
+
+            console.log('Batch Fields: ', _batchFields);
+            this.batchFields = _batchFields;
+        }
+    }
+
     /*******************************************************************************
     * @description Handles adding FormField objects to the selectedBatchFields
     * array. selectedBatchFields is used in the UI to render geTemplateBuilderFormField
@@ -57,11 +80,15 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Onchange event object from lightning-input checkbox
     */
     handleSelectBatchField(event) {
+        console.log('handleSelectBatchField');
         if (!this.selectedBatchFields) { this.selectedBatchFields = [] }
-
+        console.log('Selected Batch Fields: ', mutable(this.selectedBatchFields));
+        console.log('Field Name: ', event.target.value);
         let fieldName = event.target.value;
+        // selectedField.value doesn't exist when retrieving from Form_Template__c
+        // Align front end data and back end data structure
         let alreadySelected = this.selectedBatchFields.find(selectedField => selectedField.value === fieldName);
-
+        console.log('alreadySelected? ', alreadySelected);
         if (alreadySelected) {
             for( let i = 0; i < this.selectedBatchFields.length; i++) {
                 if ( this.selectedBatchFields[i].value === fieldName) {
@@ -70,14 +97,15 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
              }
         } else {
             /* Maye create a class for the batch header fields as well? */
-            let field = {
-                id: event.target.getAttribute('data-id'),
-                label: event.target.getAttribute('data-label'),
-                value: fieldName,
-                required: false,
-                allowDefaultValue: false,
-                defaultValue: undefined
-            };
+            let field = new FormField(
+                event.target.getAttribute('data-label'),
+                false,
+                event.target.value,
+                false,
+                undefined,
+                undefined
+            );
+            console.log(field);
 
             this.selectedBatchFields.push(field);
         }

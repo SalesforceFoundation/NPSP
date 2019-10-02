@@ -48,15 +48,13 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         console.log('Template Info Tab: ', mutable(templateInfo));
         const batchHeader = this.template.querySelector('c-ge-template-builder-batch-header').getTabData();
         console.log('Batch Header Tab: ', mutable(batchHeader));
-        const giftFields = this.template.querySelector('c-ge-template-builder-gift-fields').getTabData();
-        console.log('Gift Fields Tab: ', mutable(giftFields));
+        const formLayout = this.template.querySelector('c-ge-template-builder-gift-fields').getTabData();
+        console.log('Gift Fields Tab: ', mutable(formLayout));
 
         this.formTemplate.name = templateInfo.name;
         this.formTemplate.description = templateInfo.description;
         this.formTemplate.batchHeaderFields = batchHeader;
-        this.formTemplate.layout = {};
-        this.formTemplate.layout.version = '1.0';
-        this.formTemplate.layout.sections = giftFields;
+        this.formTemplate.layout = formLayout;
 
         console.log('*************');
         console.log('FORM TEMPLATE');

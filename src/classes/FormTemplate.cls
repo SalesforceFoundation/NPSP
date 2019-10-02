@@ -39,7 +39,7 @@ public with sharing class FormTemplate {
     @AuraEnabled public String name;
     @AuraEnabled public FormLayout layout;
 
-    /* Added PS */
+    /* Additional props PS */
     @AuraEnabled public String description;
     @AuraEnabled public FormElement[] batchHeaderFields;
     /* END */

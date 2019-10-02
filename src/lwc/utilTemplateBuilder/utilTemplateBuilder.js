@@ -12,9 +12,18 @@ const TabData = class TabData {
 }
 
 const FormTemplate = class FormTemplate {
-    constructor(name, layout) {
+    constructor(name, description, layout) {
         this.name = name;
+        this.description = description;
         this.layout = layout;
+    }
+}
+
+const FormLayout = class FormLayout {
+    constructor(fieldMappingSet, version, sections) {
+        this.fieldMappingSet = fieldMappingSet;
+        this.version = version;
+        this.sections = sections;
     }
 }
 
@@ -26,7 +35,6 @@ const FormSection = class FormSection {
         this.displayRule = displayRule;
         this.label = label;
         this.elements = elements || [];
-        this.rerender = false;
     }
 }
 
@@ -118,6 +126,7 @@ const handleError = (context, error) => {
 export {
     TabData,
     FormTemplate,
+    FormLayout,
     FormSection,
     FormField,
     findByProperty,

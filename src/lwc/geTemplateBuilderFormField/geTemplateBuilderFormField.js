@@ -68,7 +68,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         field.displayRule = 'placeholder';
         field.validationRule = 'placeholder';
         field.customLabel = field.label;
-        field.dataImportFieldMappingDevNames = [defaultValue];
+        field.dataImportFieldMappingDevNames = [this.field.value];
 
         return field;
     }
