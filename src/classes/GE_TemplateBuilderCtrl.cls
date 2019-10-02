@@ -43,11 +43,11 @@ public with sharing class GE_TemplateBuilderCtrl {
     private static BDI_FieldMappingCustomMetadata bdiCMT;
 
     @AuraEnabled
-    public static string processFormTemplate(String templateJSON){
+    public static String processFormTemplate(String templateJSON, String templateName){
         System.debug('processFormTemplate');
         System.debug(templateJSON);
-        FormServiceGiftEntry.storeFormTemplate(null, 'Test Template', '1.0', templateJSON);
-        return 'success';
+        String id = FormServiceGiftEntry.storeFormTemplate(null, templateName, '1.0', templateJSON);
+        return id;
     }
 
     @AuraEnabled

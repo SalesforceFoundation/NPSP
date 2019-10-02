@@ -5,6 +5,9 @@ import { mutable } from 'c/utilTemplateBuilder';
 export default class geTemplateBuilderFormField extends LightningElement {
     @api field;
 
+    get isDefaultValueAllowed() {
+        return this.field.allowDefaultValue ? false : true;
+    }
     /*******************************************************************************
     * @description Sends an event up to geTemplateBuilder to shift the FormField
     * up in the array and UI.
@@ -50,6 +53,12 @@ export default class geTemplateBuilderFormField extends LightningElement {
         field.required = required;
         field.allowDefaultValue = allowDefaultValue;
         field.defaultValue = defaultValue;
+
+        field.elementType = 'placeholder';
+        field.displayRule = 'placeholder';
+        field.validationRule = 'placeholder';
+        field.customLabel = field.label;
+        field.dataImportFieldMappingDevNames = [defaultValue];
 
         return field;
     }

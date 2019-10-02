@@ -63,12 +63,12 @@ private with sharing class FormServiceGiftEntryTest {
                                         'True',
                                         null,
                                         'CustomLabel',
-                                        new DataImportFieldMapping[]{});
+                                        new String[]{});
         
         FormElement widget = new FormElement('FormWidget',
                                             'DisplayRule',
                                             'ComponentName',
-                                            new DataImportFieldMapping[]{});
+                                            new String[]{});
         
         FormElement[] elements = new FormElement[]{field,widget};
 

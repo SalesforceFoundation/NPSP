@@ -76,7 +76,7 @@ public with sharing class FormServiceGiftEntry {
     * @param formatVersion - the version id/number of the template format
     * @param templateJSON - The JSON for the FormTemplate class that is being stored.
     */
-    public static void storeFormTemplate(String id, String name, String formatVersion, String templateJSON) {
+    public static String storeFormTemplate(String id, String name, String formatVersion, String templateJSON) {
         System.debug('storeFormTemplate');
         if (templateJSON != null) {
             FormTemplate template = (FormTemplate)JSON.deserialize(templateJSON, FormTemplate.class);
@@ -87,7 +87,9 @@ public with sharing class FormServiceGiftEntry {
                                                             Format_Version__c = formatVersion);
             System.debug('Form_Template__c: ' + templateObj);
             upsert templateObj;
+            return templateObj.id;
         }
+        return null;
     }
 
     /*******************************************************************************************************
@@ -98,6 +100,10 @@ public with sharing class FormServiceGiftEntry {
         FormTemplate template;
         if (templateObj != null && templateObj.Template_JSON__c != null) {
             template = (FormTemplate)JSON.deserialize(templateObj.Template_JSON__c, FormTemplate.class);
+            System.debug(template);
+            System.debug(template.layout);
+            System.debug(template.layout.sections[0]);
+            System.debug(template.layout.sections[0].elements);
         }
         return template;
     }

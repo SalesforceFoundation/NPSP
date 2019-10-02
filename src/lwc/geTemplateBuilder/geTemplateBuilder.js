@@ -1,9 +1,10 @@
 import { LightningElement, track } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
 import processFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.processFormTemplate';
 import retrieveDefaultFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultFormTemplate';
 import { FormTemplate, mutable } from 'c/utilTemplateBuilder';
 
-export default class geTemplateBuilder extends LightningElement {
+export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
     @track activeTab = 'geTemplateBuilderGiftFields';
     _previousTab;
 
@@ -58,14 +59,26 @@ export default class geTemplateBuilder extends LightningElement {
 
         console.log(mutable(this.formTemplate));
 
-        processFormTemplate({templateJSON: JSON.stringify(this.formTemplate)})
+        processFormTemplate({templateJSON: JSON.stringify(this.formTemplate), templateName: this.formTemplate.name})
             .then(result => {
                 console.log('Result: ', result);
+                this.navigateToRecordViewPage(result);
             })
             .catch(error => {
                 console.log('Error: ', error);
             })
         console.log('Attempted to send to apex');
+    }
+
+    navigateToRecordViewPage(recordId) {
+        // View a custom object record.
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: recordId,
+                actionName: 'view'
+            }
+        });
     }
 
     /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */

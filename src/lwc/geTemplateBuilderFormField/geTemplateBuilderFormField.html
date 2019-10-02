@@ -4,16 +4,20 @@
             <div class="slds-grid slds-grid_vertical-align-center">
                 <div class="slds-size_3-of-12 slds-p-right_small">
                     <h2 class="slds-text-body_small slds-truncate"
-                        title={field.label}>{field.label}</h2>
+                        title={field.label}>
+                        {field.label}
+                    </h2>
                 </div>
                 <div class="slds-size_1-of-12">
                     <lightning-input data-name="required"
-                                     type="checkbox">
+                                     type="checkbox"
+                                     checked={field.required}>
                     </lightning-input>
                 </div>
                 <div class="slds-size_2-of-12">
                     <lightning-input data-name="allowDefaultValue"
                                      type="checkbox"
+                                     checked={field.allowDefaultValue}
                                      class="slds-m-left_x-large"
                                      onchange={handleAllowDefaultValue}>
                     </lightning-input>
@@ -21,8 +25,9 @@
                 <div class="slds-size_5-of-12">
                     <lightning-input data-name="defaultValue"
                                      type="text"
+                                     value={field.defaultValue}
                                      variant="label-hidden"
-                                     disabled>
+                                     disabled={isDefaultValueAllowed}>
                     </lightning-input>
                 </div>
                 <div class="slds-size_1-of-12">

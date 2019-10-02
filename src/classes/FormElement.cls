@@ -35,7 +35,12 @@
 * @description Form Element definition for use in entering gifts.
 */
 public with sharing class FormElement {
-
+    /* Added PS */
+    @AuraEnabled public String label;
+    @AuraEnabled public Boolean required;
+    @AuraEnabled public Boolean allowDefaultValue;
+    @AuraEnabled public String defaultValue;
+    /* END */
     @AuraEnabled public String elementType;
     @AuraEnabled public String displayRule;
     @AuraEnabled public String validationRule;
