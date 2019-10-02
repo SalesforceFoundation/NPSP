@@ -57,10 +57,14 @@ public without sharing class UTIL_FeatureEnablement {
     /**
      * @description public implementation to determine if the RecurringDonations 2.0 (RD2) Pilot
      * has been enabled in the License Management Org (Wilma) for the current org (by OrgId)
-     * @return Is PilotEnable set to true
+     * @return Is PilotEnabled FeatureParameter set to true or has been overridden for Scratch Org testing
      */
     public static Boolean isRecurringDonations2PilotEnabled() {
-        return UTIL_FeatureEnablement.getInstance().isEnabled( FeatureName.PilotEnabled.name() );
+        Boolean isPilotEnabled = UTIL_FeatureEnablement.getInstance().isEnabled( FeatureName.PilotEnabled.name() );
+        if (!isPilotEnabled && UTIL_FeatureEnablement.getInstance().isOverridePilotEnabled()) {
+            isPilotEnabled = true;
+        }
+        return isPilotEnabled;
     }
 
     /**
@@ -73,4 +77,44 @@ public without sharing class UTIL_FeatureEnablement {
         return featureManagement.checkPackageBooleanValue(apiName);
     }
 
+    /**
+     * @description If the code is currently executing in a Scratch Org, it's possible to override
+     * the PilotEnabled feature parameter using the Package_Settings protected custom settings object.
+     * @return True if the PilotEnabled feature parameter is overridden
+     */
+    private Boolean isOverridePilotEnabled() {
+        Boolean isPilotOverride = false;
+        if (UTIL_Namespace.isScratchOrg()) {
+            Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
+            isPilotOverride = (pkgSettings.OverrideFeature_PilotEnabled__c == true);
+        }
+        return isPilotOverride;
+    }
+
+    /**
+     * @description Exposes a method to allow a special api call into this method through the
+     * Callable Api to allow the value of a field on the the protected Package_Settings__c
+     * custom settings object to be forced to a specific value of true or false. This is explicitly
+     * used with the OverrideFeature_PilotEnabled__c field to allow the Pilot to be considered as
+     * enabled/visible in a beta package context when running on a scratch org.
+     * @param key The string value to hash using MD5
+     * @param value The boolean value to set the OverrideFeature_PilotEnabled__c field to
+     */
+    public void forcePilotOverride(String key, Boolean value) {
+        String expectedHash = 'nnz80KenP8nTzjhrcn3CsA==';
+        Blob md5Hash = Crypto.generateDigest('MD5', Blob.valueOf(key));
+        String encodedKey = EncodingUtil.base64Encode(md5Hash);
+
+        if (!UTIL_Namespace.isScratchOrg()) {
+            throw new SecurityException('This Api is only available in Scratch Orgs');
+
+        } else if (expectedHash.equals(encodedKey)) {
+            Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
+            pkgSettings.OverrideFeature_PilotEnabled__c = value;
+            upsert pkgSettings;
+
+        } else {
+            throw new SecurityException('Invalid Encryption Key for Api');
+        }
+    }
 }

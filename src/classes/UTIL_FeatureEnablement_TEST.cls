@@ -57,6 +57,66 @@ private class UTIL_FeatureEnablement_TEST {
     }
 
     /**
+     * @description Validates that the isRecurringDonations2PilotEnabled() method can be forced
+     * to return True by using the OverrideFeature_PilotEnabled__c field on the Package_Settings
+     * object.
+     */
+    @isTest
+    private static void shouldReturnTrueWhenPilotIsEnabledWithOverride() {
+        Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
+        pkgSettings.OverrideFeature_PilotEnabled__c = true;
+        upsert pkgSettings;
+
+        if (UTIL_Namespace.isScratchOrg()) {
+            System.assertEquals(true,
+                UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
+                'The Pilot should be enabled if this test is running in a scratch org');
+        }
+    }
+
+    /**
+     * @description Validates that the isRecurringDonations2PilotEnabled() method can be forced
+     * to return True by using the OverrideFeature_PilotEnabled__c field on the Package_Settings
+     * object.
+     */
+    @isTest
+    private static void shouldReturnFalseWhenPilotIsEnabledWithOverride() {
+        Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
+        pkgSettings.OverrideFeature_PilotEnabled__c = false;
+        upsert pkgSettings;
+
+        if (UTIL_Namespace.isScratchOrg()) {
+            System.assertEquals(false,
+                UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
+                'The Pilot should be disabled if this test is running in a scratch org');
+        }
+    }
+    /**
+     * @description Validates that the isRecurringDonations2PilotEnabled() method can be forced
+     * to return True by using the OverrideFeature_PilotEnabled__c field on the Package_Settings
+     * object.
+     */
+    @isTest
+    private static void shouldRequireValidApiKeyForPilotOverride() {
+        Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> params = new Map<String, Object>{
+            'Key' => 'This is an invalid key',
+            'Value' => False
+        };
+
+        try {
+            npspApi.call('Util.ForceOverridePilot', params);
+            System.assert(false, 'A exception should have been thrown for this call');
+        } catch (Exception ex) {
+            if (UTIL_Namespace.isScratchOrg()) {
+                System.assert(ex.getMessage().contains('Key'), 'An invalid api key exception should have been thrown');
+            } else {
+                System.assert(ex.getMessage().contains('Scratch'), 'A not a scratch org exception should have been thrown');
+            }
+        }
+    }
+
+    /**
      * @description Validates that the default for the isRecurringDonations2PilotEnabled() static method is false
      */
     @isTest
