@@ -50,7 +50,7 @@ public with sharing class GE_TemplateBuilderCtrl {
     */
     @AuraEnabled
     public static String processFormTemplate(String templateJSON, String templateName, String templateDescription){
-        String id = FormServiceGiftEntry.storeFormTemplate(null, templateName, templateDescription, '1.0', templateJSON);
+        String id = FORM_ServiceGiftEntry.storeFormTemplate(null, templateName, templateDescription, '1.0', templateJSON);
         return id;
     }
 
@@ -58,8 +58,8 @@ public with sharing class GE_TemplateBuilderCtrl {
     * @description Just an intermediary method. Can just import this method directly in the lwc.
     */
     @AuraEnabled
-    public static FormTemplate retrieveDefaultFormTemplate(){
-        return FormServiceGiftEntry.retrieveDefaultFormTemplate();
+    public static FORM_Template retrieveDefaultFormTemplate(){
+        return FORM_ServiceGiftEntry.retrieveDefaultFormTemplate();
     }
 
     /*******************************************************************************************************
