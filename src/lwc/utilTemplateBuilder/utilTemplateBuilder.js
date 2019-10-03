@@ -1,16 +1,6 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
-/* Probably delete this class later, currently being used to hold
-data from the Template Info tab */
-const TabData = class TabData {
-    constructor(sourceTab, name, description) {
-        this.sourceTab = sourceTab;
-        this.name = name;
-        this.description = description;
-    }
-}
-
 const FormTemplate = class FormTemplate {
     constructor(name, description, layout) {
         this.name = name;
@@ -79,15 +69,6 @@ const shiftSelectedField = (array, oldIndex, newIndex) => {
     return array; // for dev
 }
 
-/* LWC list render directives (for:each or iterator) require an id of some kind */
-const makeListLightningIterable = (list) => {
-    let items = JSON.parse(JSON.stringify(list));
-    let i = 0;
-    items.map(item => { item.id = i; i++; return item });
-
-    return items;
-}
-
 const mutable = (obj) => {
     return JSON.parse(JSON.stringify(obj));
 }
@@ -148,7 +129,6 @@ const generateId = () => {
 };
 
 export {
-    TabData,
     FormTemplate,
     FormLayout,
     FormSection,
@@ -156,7 +136,6 @@ export {
     removeByProperty,
     findByProperty,
     shiftSelectedField,
-    makeListLightningIterable,
     mutable,
     showToast,
     handleError,
