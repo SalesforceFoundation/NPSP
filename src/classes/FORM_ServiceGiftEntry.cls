@@ -103,15 +103,11 @@ public with sharing class FORM_ServiceGiftEntry {
     private static FORM_Template deserializeFormTemplateFromObj(Form_Template__c templateObj) {
         FORM_Template template;
         if (templateObj != null && templateObj.Template_JSON__c != null) {
-<<<<<<< HEAD:src/classes/FormServiceGiftEntry.cls
-            template = (FormTemplate)JSON.deserialize(templateObj.Template_JSON__c, FormTemplate.class);
+            template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
             System.debug(template);
             System.debug(template.layout);
             System.debug(template.layout.sections[0]);
             System.debug(template.layout.sections[0].elements);
-=======
-            template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
->>>>>>> feature/gift-entry:src/classes/FORM_ServiceGiftEntry.cls
         }
         return template;
     }
