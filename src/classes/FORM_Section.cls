@@ -32,20 +32,30 @@
 * @date 2019
 * @group Gift Entry
 * @group-content ../../ApexDocContent/GiftEntry.htm
-* @description Form template definition for use in entering gifts
+* @description Form Section definition for use in entering gifts.
 */
-public with sharing class FormTemplate {
+public with sharing class FORM_Section {
 
-    @AuraEnabled public String name;
-    @AuraEnabled public FormLayout layout;
+    @AuraEnabled public String label;
+    @AuraEnabled public String displayType;
+    @AuraEnabled public String defaultDisplayMode;
+    @AuraEnabled public String displayRule;
+    @AuraEnabled public FORM_Element[] elements;
 
     /* Additional props PS */
-    @AuraEnabled public String description;
-    @AuraEnabled public FormElement[] batchHeaderFields;
+    @AuraEnabled public String id;
     /* END */
 
-    public FormTemplate(String name, FormLayout layout) {
-        this.name = name;
-        this.layout = layout;
+    public FORM_Section(String label, 
+                        String displayType, 
+                        String defaultDisplayMode, 
+                        String displayRule, 
+                        FORM_Element[] elements) {
+
+        this.label = label;
+        this.displayType = displayType;
+        this.defaultDisplayMode = defaultDisplayMode;
+        this.displayRule = displayRule;
+        this.elements = elements;
     }
 }

@@ -32,17 +32,47 @@
 * @date 2019
 * @group Gift Entry
 * @group-content ../../ApexDocContent/GiftEntry.htm
-* @description Form Layout definition for use in entering gifts.
+* @description Form Element definition for use in entering gifts.
 */
-public with sharing class FormLayout {
+public with sharing class FORM_Element {
 
-    @AuraEnabled public String fieldMappingSetDevName;
-    @AuraEnabled public String version;
-    @AuraEnabled public FormSection[] sections;
+    @AuraEnabled public String elementType;
+    @AuraEnabled public String displayRule;
+    @AuraEnabled public String validationRule;
+    @AuraEnabled public String customLabel;
+    @AuraEnabled public String componentName;
+    @AuraEnabled public String[] dataImportFieldMappingDevNames;
 
-    public FormLayout(String fieldMappingSetDevName, String version, FormSection[] sections) {
-        this.fieldMappingSetDevName = fieldMappingSetDevName;
-        this.version = version;
-        this.sections = sections;
+    /* PS Additional props for FormFields */
+    @AuraEnabled public String label;
+    @AuraEnabled public Boolean required;
+    @AuraEnabled public String value;
+    @AuraEnabled public Boolean allowDefaultValue;
+    @AuraEnabled public String sectionId;
+    @AuraEnabled public String defaultValue;
+    /* END */
+
+    //Constructor for form field
+    public FORM_Element(String elementType,
+                        String displayRule, 
+                        String validationRule,
+                        String customLabel,
+                        String[] dataImportFieldMappingDevNames) {
+        this.elementType = elementType;                    
+        this.displayRule = displayRule;
+        this.validationRule = validationRule;
+        this.customLabel = customLabel;
+        this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
+    }
+
+    //Constructor for widget
+    public FORM_Element(String elementType,
+                        String displayRule,
+                        String componentName,
+                        String[] dataImportFieldMappingDevNames) {
+        this.elementType = elementType;                    
+        this.displayRule = displayRule;
+        this.componentName = componentName;
+        this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
     }
 }

@@ -32,10 +32,10 @@
 * @date 2019
 * @group Gift Entry
 * @group-content ../../ApexDocContent/GiftEntry.htm
-* @description Unit tests to cover methods in FormServiceGiftEntryTest.
+* @description Unit tests to cover methods in FORM_ServiceGiftEntryTest.
 */
 @isTest
-private with sharing class FormServiceGiftEntryTest {
+private with sharing class FORM_ServiceGiftEntryTest {
 
 
     /*******************************************************************************************************
@@ -44,48 +44,48 @@ private with sharing class FormServiceGiftEntryTest {
     */
     @IsTest
     static void shouldCommitAndRetrieveTemplate() {
-        FormService fs = new FormService();
+        FORM_Service fs = new FORM_Service();
 
-        FormTemplate template = createSampleTemplate();
+        FORM_Template template = createSampleTemplate();
         String templateJSON = JSON.serialize(template);
-        fs.storeFormTemplate(null,template.name,template.layout.version, templateJSON);
+        fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
 
-        FormTemplate templateResult = fs.retrieveDefaultFormTemplate();
+        FORM_Template templateResult = fs.retrieveDefaultFormTemplate();
         String templateResultJSON = JSON.serialize(templateResult);
 
         System.assertEquals(templateJSON, templateResultJSON);
     }
 
     //Utility method for creating a sample template.
-    private static FormTemplate createSampleTemplate () {
+    private static FORM_Template createSampleTemplate () {
         
-        FormElement field = new FormElement('FormField',
+        FORM_Element field = new FORM_Element('FormField',
                                         'True',
                                         null,
                                         'CustomLabel',
                                         new String[]{});
         
-        FormElement widget = new FormElement('FormWidget',
+        FORM_Element widget = new FORM_Element('FormWidget',
                                             'DisplayRule',
                                             'ComponentName',
                                             new String[]{});
         
-        FormElement[] elements = new FormElement[]{field,widget};
+        FORM_Element[] elements = new FORM_Element[]{field,widget};
 
-        FormSection section = new FormSection('SectionLabel',
+        FORM_Section section = new FORM_Section('SectionLabel',
                                                 'Accordion',
                                                 'Expanded',
                                                 'True',
                                                 elements);
         
-        FormLayout layout = new FormLayout('DefaultMappingSet',
-                                            '1.0',
-                                            new FormSection[]{section});
+        FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
+                                            new FORM_Section[]{section});
 
 
-        FormTemplate template = new FormTemplate('Sample Template',
+        FORM_Template template = new FORM_Template('Sample Template',
+                                                'This is the description.',
+                                                '1.0',
                                                 layout);
         return template;
-
     }
 }

@@ -71,7 +71,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         const preppedFormTemplate = {
             templateJSON: JSON.stringify(this.formTemplate),
-            templateName: this.formTemplate.name
+            templateName: this.formTemplate.name,
+            templateDescription: this.formTemplate.description
         };
         const formTemplateRecordId = await processFormTemplate(preppedFormTemplate);
 

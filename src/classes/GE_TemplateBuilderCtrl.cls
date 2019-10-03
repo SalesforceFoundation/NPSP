@@ -49,8 +49,8 @@ public with sharing class GE_TemplateBuilderCtrl {
     * to handle what happens after save of a new template.
     */
     @AuraEnabled
-    public static String processFormTemplate(String templateJSON, String templateName){
-        String id = FormServiceGiftEntry.storeFormTemplate(null, templateName, '1.0', templateJSON);
+    public static String processFormTemplate(String templateJSON, String templateName, String templateDescription){
+        String id = FormServiceGiftEntry.storeFormTemplate(null, templateName, templateDescription, '1.0', templateJSON);
         return id;
     }
 
