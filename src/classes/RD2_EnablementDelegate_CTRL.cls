@@ -84,7 +84,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 		
         state.isReady = service.isRecurringDonations2Ready();
         state.isEnabled = service.isRecurringDonations2Enabled();
-        state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isEnabled;
+        state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
+        state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched;
         state.isMigrationRun = state.isMigrationRun && state.isMetaDeployConfirmed;
 
         return state;
@@ -115,7 +116,12 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     /***
     * @description 
     */
-	private static void saveEnablementState(EnablementState state) {
+	private static void saveEnablementState(EnablementState state) {  
+        //do not save variables not being used from the saved enablement state   
+        state.isReady = null;
+        state.isEnabled = null;   
+
+        //save the state
 		STG_Panel.stgService.stgRD.RecurringDonations2EnablementState__c = JSON.serialize(state);
         upsert STG_Panel.stgService.stgRD;
 	}

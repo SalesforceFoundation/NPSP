@@ -8,6 +8,9 @@
     onEnabled: function (component, event, helper) {
         helper.enable(component);
     },
+    onMetaDeployConfirm: function (component, event, helper) {
+        helper.confirmMetaDeploy(component);
+    },
     refreshView: function (component, event, helper) {
         helper.refreshView(component);
     }

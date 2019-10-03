@@ -1295,39 +1295,44 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>You must enable both Customizable Rollups and Lightning Experience in order to enable Enhanced Recurring Donations.</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementPageIntro</fullName>
+        <fullName>RD2_EnablementEnableTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementPageIntro</shortDescription>
-        <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementPreparationTitle</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementPreparationTitle</shortDescription>
-        <value>Preparation Tasks</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementPreparationTasks</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementPreparationTasks</shortDescription>
-        <value>Before you enable Enhanced Recurring Donations, you should complete the following tasks:&lt;br/&gt;&lt;br/&gt;
-● Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;br/&gt;
-● Read the Enhanced Recurring Donations documentation.&lt;br/&gt;
-● Backup your database, including all Recurring Donations and their related records.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementTitle</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementTitle</shortDescription>
+        <shortDescription>RD2_EnablementEnableTitle</shortDescription>
         <value>Enable Enhanced Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableConfirm</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementEnableConfirm</shortDescription>
+        <value>I confirm that I have completed the Preparation Tasks above and I understand that enabling Enchanced Recurring Donations is irreversible.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementEnableIntro</shortDescription>
+        <value>This step changes your Recurring Donations processing logic to use Enhanced Recurring Donations instead. Recurring Donations will not function the same way as before.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementEnableMessage</shortDescription>
+        <value>Enable the Enchanced Recurring Donations functionality.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementEnableWarning</shortDescription>
+        <value>&lt;b&gt;WARNING: This is an irreversible process!&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementIntro</fullName>
@@ -1335,39 +1340,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementIntro</shortDescription>
-        <value>This step changes your Recurring Donations processing logic to use Enhanced Recurring Donations instead. Recurring Donations will not function the same way as before.</value>
+        <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementConfirm</fullName>
+        <fullName>RD2_EnablementMetaDeployConfirm</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementConfirm</shortDescription>
-        <value>I confirm that I have completed the Preparation Tasks above and I understand that enabling Enchanced Recurring Donations is irreversible.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementMessage</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementMessage</shortDescription>
-        <value>Enable the Enchanced Recurring Donations functionality.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementWarning</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementWarning</shortDescription>
-        <value>&lt;b&gt;WARNING: This is an irreversible process!&lt;/b&gt;</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementMetaDeployTitle</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementMetaDeployTitle</shortDescription>
-        <value>Install Enhanced Recurring Donations Metadata</value>
+        <shortDescription>RD2_EnablementMetaDeployConfirm</shortDescription>
+        <value>Confirm that you have installed the Enhanced Recurring Donations Metadata.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployIntro</fullName>
@@ -1378,6 +1359,46 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Use our MetaDeploy service to install the Enhanced Recurring Donations metadata. The metadata includes: new picklist values, updated help text, and a new page layout. MetaDeploy is a service that exists outside of your Salesforce org.</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementMetaDeployLaunch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMetaDeployLaunch</shortDescription>
+        <value>Install the Enhanced Recurring Donations metadata using the MetaDeploy service.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeployLaunchLinkLabel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMetaDeployLaunchLinkLabel</shortDescription>
+        <value>Launch MetaDeploy</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeployTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMetaDeployTitle</shortDescription>
+        <value>Install Enhanced Recurring Donations Metadata</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationRun</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMigrationRun</shortDescription>
+        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationRunButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMigrationRunButton</shortDescription>
+        <value>Run Migration</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementMigrationTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1386,12 +1407,31 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Run Data Migration</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementMigrationIntro</fullName>
+        <fullName>RD2_EnablementMigrationWarning</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationIntro</shortDescription>
-        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
+        <shortDescription>RD2_EnablementMigrationWarning</shortDescription>
+        <value>WARNING: This process will rearrange existing data, insert new records, and delete records that don't match the Enhanced Recurring Donations model. This process may take some time. You can leave this page during migration and return later to check the progress.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementPrepTasks</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementPrepTasks</shortDescription>
+        <value>Before you enable Enhanced Recurring Donations, you should complete the following tasks:&lt;br/&gt;&lt;br/&gt;
+&lt;ul&gt;&lt;li&gt;Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;/li&gt;
+&lt;li&gt;Read the Enhanced Recurring Donations documentation.&lt;/li&gt;
+&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;&lt;/ul&gt;</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementPrepTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementPrepTitle</shortDescription>
+        <value>Preparation Tasks</value>
     </labels>
     <labels>
         <fullName>RD_ErrorAddDonationHeaderText</fullName>
@@ -9132,5 +9172,37 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgValidationHHAccountHHRules</shortDescription>
         <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
+    </labels>
+    <labels>
+        <fullName>ToggleEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ToggleEnabled</shortDescription>
+        <value>Enabled</value>
+    </labels>
+    <labels>
+        <fullName>ToggleDisabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ToggleDisabled</shortDescription>
+        <value>Disabled</value>
+    </labels>
+    <labels>
+        <fullName>ToggleInstalled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ToggleInstalled</shortDescription>
+        <value>Installed</value>
+    </labels>
+    <labels>
+        <fullName>ToggleNotInstalled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ToggleNotInstalled</shortDescription>
+        <value>Not Installed</value>
     </labels>
 </CustomLabels>

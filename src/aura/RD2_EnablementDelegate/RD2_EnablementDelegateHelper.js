@@ -1,11 +1,9 @@
 ({
     /****
-    * @description 
+    * @description Loads the enablement state and enables/disables page elements based on it
     */
     loadState: function (component) {
         var action = component.get("c.loadState");
-
-        console.log('*****loadState');
 
         action.setCallback(this, function (response) {
             let state = response.getState();
@@ -22,6 +20,7 @@
 
                 component.set('v.isEnableConfirmed', enablementState.isConfirmed);
                 component.set('v.isEnabled', enablementState.isEnabled);
+                component.set("v.isMetaDeployLaunched", enablementState.isMetaDeployLaunched);
                 component.set("v.isMetaDeployConfirmed", enablementState.isMetaDeployConfirmed);
                 component.set("v.isMigrationRun", enablementState.isMigrationRun);
 
@@ -31,6 +30,10 @@
 
                 if (!enablementState.isConfirmed || enablementState.isEnabled) {
                     this.disableEdit(component, "enable-toggle");
+                }
+
+                if (!enablementState.isMetaDeployLaunched || enablementState.isMetaDeployConfirmed) {
+                    this.disableEdit(component, "metadeploy-toggle");
                 }
 
             } else if (state === "ERROR") {
@@ -45,7 +48,7 @@
         $A.enqueueAction(action);
     },
     /****
-    * @description 
+    * @description Disables page elements and reloads the enablement state
     */
     refreshView: function (component) {
         this.hideElement(component, "enablement-disabled");
@@ -54,7 +57,7 @@
         this.loadState(component);
     },
     /****
-    * @description 
+    * @description Accepts enhanced Recurring Donations enablement
     */
     confirmEnablement: function (component) {
         this.disableEdit(component, "enable-confirm");
@@ -75,14 +78,14 @@
             } else if (state === 'ERROR') {
                 this.enableEdit(component, "enable-confirm");
 
-                console.log(response.getError());//todo
+                this.handleError(component, response.getError());
             }
         });
 
         $A.enqueueAction(action);
     },
     /****
-    * @description 
+    * @description Enables enhanced Recurring Donations 
     */
     enable: function (component) {
         this.disableEdit(component, "enable-toggle");
@@ -101,26 +104,57 @@
 
             } else if (state === 'ERROR') {
                 this.enableEdit(component, "enable-toggle");
-                console.log(response.getError());//todo
+                this.handleError(component, response.getError());
             }
         });
 
         $A.enqueueAction(action);
     },
+    /****
+    * @description Confirms MetaDeploy has been installed
+    */
+    confirmMetaDeploy: function (component) {
+        this.disableEdit(component, "metadeploy-toggle");
+    },
+    /****
+    * @description Hides component's element
+    */
     hideElement: function (component, elementName) {
         let element = component.find(elementName);
         $A.util.addClass(element, "slds-hide");
     },
+    /****
+    * @description Displays component's element
+    */
     displayElement: function (component, elementName) {
         let element = component.find(elementName);
         $A.util.removeClass(element, "slds-hide");
     },
+    /****
+    * @description Disables input field edit
+    */
     disableEdit: function (component, inputName) {
         let inputComp = component.find(inputName);
         $A.util.addClass(inputComp, "editDisabled");
     },
+    /****
+    * @description Enables input field edit
+    */
     enableEdit: function (component, inputName) {
         let inputComp = component.find(inputName);
         $A.util.removeClass(inputComp, "editDisabled");
+    },
+    /**
+     * @description: Displays errors thrown by Apex method invocations
+     * @param errors: Error list
+     */
+    handleError: function (component, errors) {
+        let message;
+        if (errors && errors[0] && errors[0].message) {
+            message = errors[0].message;
+        } else {
+            message = 'Unknown error';
+        }
+        console.log('Unexpected Error: ' + message);//TODO 
     }
 })

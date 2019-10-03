@@ -3,9 +3,6 @@
     border-left: none;
     border-right: none;
 }
-.THIS .warning {
-    color: #FF0000;
-}
 .THIS .editDisabled {
     pointer-events: none;
 }

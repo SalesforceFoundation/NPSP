@@ -1389,20 +1389,25 @@
         <members>PageMessagesInfo</members>
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
-        <members>RD2_EnablementConfirm</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
+        <members>RD2_EnablementEnableConfirm</members>
+        <members>RD2_EnablementEnableIntro</members>
+        <members>RD2_EnablementEnableMessage</members>
+        <members>RD2_EnablementEnableTitle</members>
+        <members>RD2_EnablementEnableWarning</members>
         <members>RD2_EnablementIntro</members>
-        <members>RD2_EnablementMessage</members>
+        <members>RD2_EnablementMetaDeployConfirm</members>
         <members>RD2_EnablementMetaDeployIntro</members>
+        <members>RD2_EnablementMetaDeployLaunch</members>
+        <members>RD2_EnablementMetaDeployLaunchLinkLabel</members>
         <members>RD2_EnablementMetaDeployTitle</members>
-        <members>RD2_EnablementMigrationIntro</members>
+        <members>RD2_EnablementMigrationRun</members>
+        <members>RD2_EnablementMigrationRunButton</members>
         <members>RD2_EnablementMigrationTitle</members>
-        <members>RD2_EnablementPageIntro</members>
-        <members>RD2_EnablementPreparationTasks</members>
-        <members>RD2_EnablementPreparationTitle</members>
-        <members>RD2_EnablementTitle</members>
-        <members>RD2_EnablementWarning</members>
+        <members>RD2_EnablementMigrationWarning</members>
+        <members>RD2_EnablementPrepTasks</members>
+        <members>RD2_EnablementPrepTitle</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
@@ -1441,6 +1446,10 @@
         <members>Saved</members>
         <members>Settings_not_Saved</members>
         <members>SmartyStreets_Help_Text</members>
+        <members>ToggleDisabled</members>
+        <members>ToggleEnabled</members>
+        <members>ToggleInstalled</members>
+        <members>ToggleNotInstalled</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>
