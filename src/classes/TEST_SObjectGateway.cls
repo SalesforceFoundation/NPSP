@@ -38,7 +38,7 @@
 public class TEST_SObjectGateway {
 
     /***
-    * @description Retrieves Legacy Recurring Donation record(s)
+    * @description Retrieves Recurring Donation record(s)
     */
     public class RecurringDonationGateway {
 

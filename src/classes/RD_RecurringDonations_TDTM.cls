@@ -34,6 +34,7 @@
 * @description Trigger Handler on Recurring Donations 
 */
 public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
+
     /*******************************************************************************************************
     * @description Trigger Handler on Recurring Donations.  Deals with creating/updating/deleting the opps
     * related to the Recurring Donations.
@@ -45,6 +46,10 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        if (RD2_EnablementService.isRecurringDonations2Enabled) {
+            return null;
+        }
 
         map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>();
         list<npe03__Recurring_Donation__c> listRDUpdates = new list<npe03__Recurring_Donation__c>();

@@ -563,6 +563,55 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Test.stopTest();
     }  
     
+    /***
+     * @description Verifies Recurring Donations are returned when enhanced Recurring Donations are not enabled
+     */
+    @isTest 
+    private static void shouldReturnRDsWhenEnhancementIsNotEnabled() {  
+        List<npe03__Recurring_Donation__c> records = executeBatchStart();
+
+        System.assertEquals(1, records.size(), 'Recurring Donation record should be returned from the start() method');       
+    } 
+    
+    /***
+     * @description Verifies Recurring Donations are not returned when enhanced Recurring Donations are enabled
+     */
+    @isTest 
+    private static void shouldNotReturnRDsWhenEnhancementIsEnabled() {  
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        List<npe03__Recurring_Donation__c> records = executeBatchStart();
+
+        System.assertEquals(true, records.isEmpty(), 'No record should be returned from the start() method: ' + records);       
+    }  
+        
+    /***
+     * @description Executes RD_RecurringDonations_BATCH "start()" method and returns Recurring Donations for verification 
+     */
+    private static List<npe03__Recurring_Donation__c> executeBatchStart() {  
+        RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();   
+
+        Account acc = buildAccount();
+        insert acc;  
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withAccount(acc.Id)
+            .withAmount(100)
+            .withInstallments(2)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
+            .withNextPaymentDate(TODAY)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen() //The batch filters on Open "Open Ended Status"
+            .build();
+        insert rd;
+
+        RD_RecurringDonations_BATCH batch = new RD_RecurringDonations_BATCH();
+        String query = batch.start(null).getQuery();
+        
+        return Database.query(query);
+    }    
+
     @isTest
     private static void testBTN() {
         Account a = new Account(Name = 'TestA');

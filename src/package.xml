@@ -331,8 +331,12 @@
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
+        <members>RD2_EnablementService</members>
+        <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
+        <members>RD2_RecurringDonations_TDTM</members>
+        <members>RD2_RecurringDonations_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -441,6 +445,7 @@
         <members>TDTM_TriggerHandler</members>
         <members>TDTM_TriggerScaffolds_TEST</members>
         <members>TDTM_iTableDataGateway</members>
+        <members>TEST_OpportunityBuilder</members>
         <members>TEST_RecurringDonationBuilder</members>
         <members>TEST_SObjectGateway</members>
         <members>USER_InActiveUser_TDTM</members>
