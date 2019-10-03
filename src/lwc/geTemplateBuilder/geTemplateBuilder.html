@@ -8,7 +8,9 @@
                     <div class="slds-col slds-has-flexi-truncate slds-align-middle">
                         <h1>
                             <span class="slds-page-header__title"
-                                  title="Batch Gift Entry">New Template</span>
+                                  title="Batch Gift Entry">
+                                New Template
+                            </span>
                         </h1>
                     </div>
                     <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small">
@@ -20,7 +22,7 @@
                                               class="slds-float_right slds-m-right_small"
                                               onclick={getFormTemplate}>
                             </lightning-button>
-                            <lightning-button label="Cancel"
+                            <!--<lightning-button label="Cancel"
                                               title="Cancel"
                                               variant="neutral"
                                               class="slds-float_right slds-m-right_small">
@@ -30,7 +32,7 @@
                                               variant="brand"
                                               class="slds-float_right"
                                               onclick={handleFormTemplateSave}>
-                            </lightning-button>
+                            </lightning-button>-->
                         </div>
                     </div>
                 </div>
@@ -91,13 +93,14 @@
                                          class="slds-float_right">
                                         <lightning-button label="Back: Gift Fields"
                                                           title="Previous"
-                                                          onclick={handleToggleClick}
                                                           variant="outline-brand"
-                                                          data-tab-value="geTemplateBuilderGiftFields"
-                                                          class="slds-m-right_small">
+                                                          class="slds-m-right_small"
+                                                          onclick={handleToggleClick}
+                                                          data-tab-value="geTemplateBuilderGiftFields">
                                         </lightning-button>
                                         <lightning-button label="Save &amp; Publish Template"
-                                                          variant="brand">
+                                                          variant="brand"
+                                                          onclick={handleFormTemplateSave}>
                                         </lightning-button>
                                     </div>
                                 </div>
