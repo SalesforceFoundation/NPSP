@@ -5,6 +5,7 @@ import getFieldAndObjectMappingsByFieldMappingSetName
 import { FormSection, FormField, showToast, removeByProperty, findByProperty, shiftSelectedField, mutable, generateId } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderGiftFields extends LightningElement {
+    @track isLoading = true;
     @track selectedFieldMappingSet;
     @track fieldMappingSetComboboxOptions;
     _fieldMappingSets;
@@ -81,6 +82,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
                 console.log('error:', error.body);
             })
         /* END */
+        this.isLoading = false;
     }
 
     /*******************************************************************************
