@@ -216,6 +216,9 @@ npsp_lex_locators={
         'link':"//table[@class='list']/tbody/tr[./th/a[text()='{}']]/td/a[text()='{}']",
         'cbx_status':'//table[@class="detailList"]/tbody/tr/th[./span[text()="{}"]]/following-sibling::td//img[@title="{}"]',
         },
+    'adv_mappings':{
+        'dropdown':"//tr[.//*[text()='{}']]/td[.//span[text()='Show actions']]//button",
+        },
     
 }
     

@@ -17,6 +17,10 @@ class NPSPSettingsPage(BasePage):
     def cumulusci(self):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
     
+    @property
+    def pageobjects(self):
+        return self.builtin.get_library_instance("cumulusci.robotframework.PageObjects")
+    
     def _go_to_page(self, filter_name=None):
         """To go to NPSP Settings page"""
         url_template = "{root}/lightning/n/{object}"
@@ -55,3 +59,11 @@ class NPSPSettingsPage(BasePage):
                 raise AssertionError(
                     "Timed out waiting for Advanced Mapping is enabled to display"
                 )
+                
+    def click_configure_advanced_mapping(self):
+        """clicks on Configure Advanced Mapping and waits for page to load mappings"""
+        locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
+        self.selenium.click_element(locator)
+        self.npsp.wait_until_url_contains("c__BDI_ManageAdvancedMapping")   
+        self.pageobjects.load_page_object("Custom", "ManageAdvancedMapping") 
+                
