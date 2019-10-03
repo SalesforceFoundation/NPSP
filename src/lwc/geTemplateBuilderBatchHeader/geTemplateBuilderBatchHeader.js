@@ -7,6 +7,8 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track batchFields;
     @track selectedBatchFields;
 
+    /* Public setter for the tracked property selectedBatchFields
+    Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     @api
     set selectedBatchFields(selectedBatchFields) {
         this.selectedBatchFields = selectedBatchFields;
@@ -18,14 +20,20 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
 
     init = async () => {
         this.batchFields = await getBatchFields();
-        console.log('Batch Fields: ', this.batchFields);
         this.toggleCheckboxForSelectedBatchFields();
         this.isLoading = false;
     }
 
+    /*******************************************************************************
+    * @description Public method that returns a list of batch header field instances
+    * of the FormField class. Called when saving a form template.
+    *
+    * @return {list} batchHeaderFields: List of batch header field instances of the
+    * FormField class.
+    */
     @api
     getTabData() {
-        let selectedBatchFieldValues = this.template.querySelectorAll('c-ge-template-builder-form-field');
+        const selectedBatchFieldValues = this.template.querySelectorAll('c-ge-template-builder-form-field');
 
         let batchHeaderFields = [];
 
@@ -51,64 +59,54 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         this.dispatchEvent(new CustomEvent('gototab', { detail: detail }));
     }
 
-    toggleCheckboxForSelectedBatchFields() {
-        console.log('toggleCheckboxForSelectedBatchFields');
-        let _batchFields = mutable(this.batchFields);
-        if (this.selectedBatchFields && this.selectedBatchFields.length > 0) {
-            for (let i = 0; i < this.selectedBatchFields.length; i++) {
-                const selectedBatchField = this.selectedBatchFields[i];
-                const batchFieldIndex = findByProperty(
-                    _batchFields,
-                    'value',
-                    selectedBatchField.dataImportFieldMappingDevNames[0]);
-
-                console.log('Preselected Index: ', batchFieldIndex);
-                console.log('Batch Field: ', _batchFields[batchFieldIndex]);
-                _batchFields[batchFieldIndex].checked = true;
-            }
-
-            console.log('Batch Fields: ', _batchFields);
-            this.batchFields = _batchFields;
-        }
-    }
-
     /*******************************************************************************
-    * @description Handles adding FormField objects to the selectedBatchFields
-    * array. selectedBatchFields is used in the UI to render geTemplateBuilderFormField
-    * components.
+    * @description Onchange event handler for the batch header field checkboxes.
+    * Adds FormField objects to the selectedBatchFields array.
+    * selectedBatchFields is used in the UI to render instances of the
+    * geTemplateBuilderFormField component.
     *
     * @param {object} event: Onchange event object from lightning-input checkbox
     */
     handleSelectBatchField(event) {
-        console.log('handleSelectBatchField');
         if (!this.selectedBatchFields) { this.selectedBatchFields = [] }
-        console.log('Selected Batch Fields: ', mutable(this.selectedBatchFields));
-        console.log('Field Name: ', event.target.value);
-        let fieldName = event.target.value;
-        // selectedField.value doesn't exist when retrieving from Form_Template__c
-        // Align front end data and back end data structure
-        let alreadySelected = this.selectedBatchFields.find(selectedField => selectedField.value === fieldName);
-        console.log('alreadySelected? ', alreadySelected);
-        if (alreadySelected) {
-            for( let i = 0; i < this.selectedBatchFields.length; i++) {
-                if ( this.selectedBatchFields[i].value === fieldName) {
-                    this.selectedBatchFields.splice(i, 1);
-                }
-             }
-        } else {
-            /* Maye create a class for the batch header fields as well? */
-            let field = new FormField(
-                event.target.getAttribute('data-label'),
-                false,
-                event.target.value,
-                false,
-                undefined,
-                undefined
-            );
-            console.log(field);
 
-            this.selectedBatchFields.push(field);
+        const fieldName = event.target.value;
+        const index = findByProperty(this.selectedBatchFields, 'value', fieldName);
+        const addSelectedField = index === -1 ? true : false;
+
+        if (addSelectedField) {
+            this.addField(event.target);
+        } else {
+            this.removeField(index);
         }
+    }
+
+    /*******************************************************************************
+    * @description Adds a field to the selected fields
+    *
+    * @param {object} target: Object containing the label and value of the field
+    * to be added
+    */
+    addField(target) {
+        let field = new FormField(
+            target.label,
+            false,
+            target.value,
+            false,
+            undefined,
+            undefined
+        );
+
+        this.selectedBatchFields.push(field);
+    }
+
+    /*******************************************************************************
+    * @description Removes a field from the selected fields by index
+    *
+    * @param {integer} index: Index of the field to be removed
+    */
+    removeField(index) {
+        this.selectedBatchFields.splice(index, 1);
     }
 
     /*******************************************************************************
@@ -132,6 +130,31 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         let oldIndex = findByProperty(this.selectedBatchFields, 'value', event.detail.value);
         if (oldIndex < this.selectedBatchFields.length - 1) {
             shiftSelectedField(this.selectedBatchFields, oldIndex, oldIndex + 1);
+        }
+    }
+
+    /*******************************************************************************
+    * @description WIP. Function toggles the checkboxes for any existing/selected batch
+    * header fields. Used when retrieving an existing form template.
+    */
+    toggleCheckboxForSelectedBatchFields() {
+        console.log('toggleCheckboxForSelectedBatchFields');
+        let _batchFields = mutable(this.batchFields);
+        if (this.selectedBatchFields && this.selectedBatchFields.length > 0) {
+            for (let i = 0; i < this.selectedBatchFields.length; i++) {
+                const selectedBatchField = this.selectedBatchFields[i];
+                const batchFieldIndex = findByProperty(
+                    _batchFields,
+                    'value',
+                    selectedBatchField.dataImportFieldMappingDevNames[0]);
+
+                console.log('Preselected Index: ', batchFieldIndex);
+                console.log('Batch Field: ', _batchFields[batchFieldIndex]);
+                _batchFields[batchFieldIndex].checked = true;
+            }
+
+            console.log('Batch Fields: ', _batchFields);
+            this.batchFields = _batchFields;
         }
     }
 }
