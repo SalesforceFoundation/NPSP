@@ -13,7 +13,7 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     @track activeFormSectionId;
 
     @api
-    getFormSections() {
+    getFormLayout() {
         let formSectionComponents = this.template.querySelectorAll('c-ge-template-builder-form-section');
         let formSections = [];
         for (let i = 0; i < formSectionComponents.length; i++) {

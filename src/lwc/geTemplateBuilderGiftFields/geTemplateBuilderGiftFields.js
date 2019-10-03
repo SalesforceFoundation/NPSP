@@ -26,7 +26,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     @api
     getTabData() {
         const formLayout = this.template.querySelector('c-ge-template-builder-form-layout');
-        const formSections = formLayout.getFormSections();
+        const formSections = formLayout.getFormLayout();
         return formSections;
     }
 
@@ -329,7 +329,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
         console.log('***logFormSections');
         console.log('***************************');
         let formLayout = this.template.querySelector('c-ge-template-builder-form-layout');
-        let formSections = formLayout.getFormSections();
+        let formSections = formLayout.getFormLayout();
         console.log('FormSections', mutable(formSections));
     }
 }
