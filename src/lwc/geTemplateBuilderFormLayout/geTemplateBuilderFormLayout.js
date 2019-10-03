@@ -2,16 +2,23 @@ import { LightningElement, api, track } from 'lwc';
 import { FormLayout } from 'c/utilTemplateBuilder';
 
 export default class GeTemplateBuilderFormLayout extends LightningElement {
-    @track formSections = [];
     @api fieldMappingSet;
+    @track activeFormSectionId;
 
+    @track formSections = [];
+    /* Public setter for the tracked property selectedFieldMappingSet
+    Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     @api
     set formSections(formSections) {
         this.formSections = formSections;
     }
 
-    @track activeFormSectionId;
-
+    /*******************************************************************************
+    * @description Public method that returns an instance of FormLayout.
+    *
+    * @return {object} formLayout: Instance of FormLayout containing FormSections
+    * and FormFields
+    */
     @api
     getFormLayout() {
         let formSectionComponents = this.template.querySelectorAll('c-ge-template-builder-form-section');
@@ -34,8 +41,6 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleSelectActiveSection(event) {
-        console.log('***handleSelectActiveSection | FormLayout');
-        console.log('***************************');
         const sectionId = event.detail;
         this.activeFormSectionId = sectionId;
 
@@ -44,6 +49,12 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
             { detail: sectionId }));
     }
 
+    /*******************************************************************************
+    * @description Removes a section and dispatches a 'deleteformsection' custom event
+    * to parent component geTemplateBuilderGiftFields.
+    *
+    * @param {object} event: Onclick event object from lightning-button
+    */
     handleDeleteFormSection(event) {
         const formSection = event.detail;
         for (let i = 0; i < this.formSections.length; i++) {

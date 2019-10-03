@@ -254,6 +254,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     * @param {object} field: Instance of FormField to be added
     */
     handleAddFieldToSection(sectionId, field) {
+        field.sectionId = sectionId;
         let formSections = mutable(this.formSections);
         let formSection = formSections.find(fs => fs.id == sectionId);
 
