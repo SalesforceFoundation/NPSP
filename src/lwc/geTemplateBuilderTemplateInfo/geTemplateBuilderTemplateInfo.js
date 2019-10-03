@@ -4,21 +4,25 @@ import { TabData } from 'c/utilTemplateBuilder';
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
     @track templateInfo;
 
-    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    /* Public setter for the tracked property templateInfo
+    Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     @api
     set templateInfo(templateInfo) {
         this.templateInfo = templateInfo;
     }
-    
+
+    /*******************************************************************************
+    * @description Public method that returns the templateInfo object. Called when
+    * saving a form template.
+    *
+    * @return {object} templateInfo: Object containing the template name and description
+    */
     @api
     getTabData() {
-        let tabData = new TabData(
-            'geTemplateBuilderTemplateInfo',
-            this.template.querySelector('lightning-input[data-name="templateName"]').value,
-            this.template.querySelector('lightning-textarea[data-name="description"]').value
-        );
+        this.templateInfo.name = this.template.querySelector('lightning-input[data-name="templateName"]').value;
+        this.templateInfo.description = this.template.querySelector('lightning-textarea[data-name="description"]').value;
 
-        return tabData;
+        return this.templateInfo;
     }
 
     /*******************************************************************************

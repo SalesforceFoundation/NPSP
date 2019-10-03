@@ -23,26 +23,26 @@
                     <h2>Enter Basic Information</h2>
                 </div>
                 <div class="slds-size_1-of-1">
-                    <lightning-input data-name="templateName"
-                                     type="text"
+                    <lightning-input type="text"
                                      name="Template Name"
                                      label="Template Name"
                                      value={templateInfo.name}
-                                     required>
+                                     required
+                                     data-name="templateName">
                     </lightning-input>
-                    <lightning-textarea data-name="description"
-                                        name="Description"
+                    <lightning-textarea name="Description"
                                         label="Description"
-                                        value={templateInfo.description}>
+                                        value={templateInfo.description}
+                                        data-name="description">
                     </lightning-textarea>
                 </div>
                 <div role="navigation"
                      class="slds-size_1-of-1 slds-p-top_large slds-m-top_large">
                     <lightning-button label="Next: Batch Fields"
                                       title="Next"
-                                      onclick={handleGoToTab}
                                       variant="brand"
                                       class="slds-float_right"
+                                      onclick={handleGoToTab}
                                       data-tab-value="geTemplateBuilderBatchHeader">
                     </lightning-button>
                 </div>
