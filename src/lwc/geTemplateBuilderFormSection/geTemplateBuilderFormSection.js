@@ -6,7 +6,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     @track isEditMode;
 
     @track formSection;
-
+    /* Public setter for the tracked property selectedBatchFields
+    Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     @api
     set formSection(formSection) {
         this.formSection = formSection;
@@ -18,8 +19,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
 
     /*******************************************************************************
     * @description Public method that collects the current values of all the relevant
-    * input fields for this FormSection and return an instance of FormSection. 
-    * 
+    * input fields for this FormSection and return an instance of FormSection.
+    *
     * @return {object} formSection: Instance of the FormSection class
     */
     @api
@@ -28,6 +29,12 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         return mutable(this.formSection);
     }
 
+    /*******************************************************************************
+    * @description Public method that collects the current values of all the relevant
+    * input fields for this FormSection and return an instance of FormSection.
+    *
+    * @return {object} formSection: Instance of the FormSection class
+    */
     getSectionFormFields() {
         let sectionFormFieldComponents = this.template.querySelectorAll('c-ge-template-builder-form-field');
         let sectionFormFields = [];
@@ -39,7 +46,9 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         return sectionFormFields;
     }
 
-
+    /*******************************************************************************
+    * @description Updates the formSection label in memory
+    */
     handleSaveFormSection() {
         const formSectionLabelInputElement =
             this.template.querySelector('lightning-input[data-name="formSectionLabelInputElement"]');
@@ -47,16 +56,26 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         this.handleExitEditMode();
     }
 
+    /*******************************************************************************
+    * @description Sends out a 'deleteformsection' custom event to parent component
+    * geTemplateBuilderFormLayout
+    */
     handleDeleteSection() {
         this.dispatchEvent(new CustomEvent(
             'deleteformsection',
             { detail: this.formSection }));
     }
 
+    /*******************************************************************************
+    * @description Sets formSection into edit mode
+    */
     handleEditFormSection() {
         this.isEditMode = true;
     }
 
+    /*******************************************************************************
+    * @description Sets formSection into not edit mode
+    */
     handleExitEditMode() {
         this.isEditMode = false;
     }
