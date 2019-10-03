@@ -42,33 +42,48 @@ public with sharing class GE_TemplateBuilderCtrl {
     */
     private static BDI_FieldMappingCustomMetadata bdiCMT;
 
+    /*******************************************************************************************************
+    * @description Just an intermediary method for calling the storeFormTemplate method in the FormServiceGiftEntry
+    * class. I've modified the FormServiceGiftEntry to return the newly inserted Form_Template__c id so I can
+    * navigate to the record page in the UI. Should probably revert this back later depending on how we want
+    * to handle what happens after save of a new template.
+    */
     @AuraEnabled
     public static String processFormTemplate(String templateJSON, String templateName){
-        System.debug('processFormTemplate');
-        System.debug(templateJSON);
         String id = FormServiceGiftEntry.storeFormTemplate(null, templateName, '1.0', templateJSON);
         return id;
     }
 
+    /*******************************************************************************************************
+    * @description Just an intermediary method. Can just import this method directly in the lwc.
+    */
     @AuraEnabled
     public static FormTemplate retrieveDefaultFormTemplate(){
         return FormServiceGiftEntry.retrieveDefaultFormTemplate();
     }
 
+    /*******************************************************************************************************
+    * @description Method that retrieves all Field Mapping Sets in an org. Used in the Gift Fields tab's
+    * Field Mapping Sets combobox in the Form Template Builder. Field Mapping Set selection determines
+    * which Object Groups and Field Mappings are available to the Form Builder.
+    */
     @AuraEnabled(cacheable=true)
     public static Data_Import_Field_Mapping_Set__mdt[] getFieldMappingSetNames() {
         return [SELECT Id, DeveloperName, MasterLabel FROM Data_Import_Field_Mapping_Set__mdt];
     }
 
+    /*******************************************************************************************************
+    * @description Method collects object mappings and field mappings using BDI_FieldMappingCustomMetadata
+    * based on a field mapping set developer name. Creates ObjectMappingWrappers and CheckboxWrappers out
+    * of the object mapping and field mappings respectively. These wrappers are easier to use in the UI. No
+    * need to worry about namespaces in the fields.
+    */
     @AuraEnabled
     public static ObjectMappingWrapper[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
-        System.debug('getFieldAndObjectMappingsByFieldMappingSetName');
         bdiCMT = BDI_FieldMappingCustomMetadata.getInstance(fieldMappingSetName);
-        System.debug(bdiCMT.objMappingsByDevName.values());
         ObjectMappingWrapper[] objectWrappers = new ObjectMappingWrapper[]{};
 
         for (Data_Import_Object_Mapping__mdt objectMapping : bdiCMT.objMappingsByDevName.values()) {
-            System.debug(objectMapping);
             ObjectMappingWrapper omw = new ObjectMappingWrapper(objectMapping);
 
             if (objectMapping.Data_Import_Field_Mappings__r != null) {
@@ -85,18 +100,20 @@ public with sharing class GE_TemplateBuilderCtrl {
             objectWrappers.add(omw);
         }
 
-        //return bdiCMT.objMappingsByDevName.values();
         return objectWrappers;
     }
 
+    /*******************************************************************************************************
+    * @description Method checks the Data Import Batch object's field describes and returns a list of
+    * CheckboxWrappers for use in the UI's Batch Header tab.
+    */
     @AuraEnabled(cacheable=true)
     public static CheckboxWrapper[] getBatchFields() {
         CheckboxWrapper[] wrappers = new CheckboxWrapper[]{};
+
         Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImportBatch__c.Name);
         for (String key : fields.keySet()) {
-            System.debug(key);
             wrappers.add(new CheckboxWrapper(fields.get(key)));
-            System.debug(wrappers);
         }
         return wrappers;
     }
@@ -125,6 +142,7 @@ public with sharing class GE_TemplateBuilderCtrl {
             this.label = describe.getLabel();
             this.value = describe.getName();
             this.checked = false;
+            /* Remember, got a grandchild branch that uses this to determine what type of lightning-input to render in the UI */
             //this.type = String.valueOf(describe.getType());
         }
 
@@ -132,18 +150,6 @@ public with sharing class GE_TemplateBuilderCtrl {
             this.label = label;
             this.value = value;
             this.checked = checked;
-        }
-    }
-
-    public class MappingWrapper {
-        @AuraEnabled public Data_Import_Object_Mapping__mdt objectMapping;
-        @AuraEnabled public Data_Import_Field_Mapping__mdt[] fieldMappings;
-
-        public MappingWrapper(
-            Data_Import_Object_Mapping__mdt objectMapping, Data_Import_Field_Mapping__mdt[] fieldMappings) {
-            
-            this.objectMapping = objectMapping;
-            this.fieldMappings = fieldMappings;
         }
     }
 }
