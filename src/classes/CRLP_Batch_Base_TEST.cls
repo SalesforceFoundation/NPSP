@@ -544,10 +544,10 @@ private class CRLP_Batch_Base_TEST {
         CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
                 CRLP_RollupProcessingOptions.RollupTypeFilter.All;
 
-        CRLP_Batch_Base_NonSkew contactBatchJob = new CRLP_RD_BATCH(typeFilter);
+        CRLP_Batch_Base_NonSkew rdBatchJob = new CRLP_RD_BATCH(typeFilter);
 
         CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
-                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+                new CRLP_Batch_Base.BatchQueryBuilder(rdBatchJob, null, null, null);
         String query = queryBuilder.buildQuery().toUpperCase();
 
         System.assertEquals(1, query.countMatches('SELECT'),
