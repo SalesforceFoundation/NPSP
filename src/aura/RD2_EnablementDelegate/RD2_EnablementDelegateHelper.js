@@ -37,11 +37,7 @@
                 }
 
             } else if (state === "ERROR") {
-                let errors = response.getError();
-                let errMessage = errors && errors[0] && errors[0].message
-                    ? errors[0].message
-                    : $A.get("Unexpected Error");
-                console.log(errMessage);
+                this.handleError(component, response.getError());
             }
         });
 
