@@ -58,7 +58,7 @@
                                 class="{!'slds-progress__marker ' + if(v.isEnableConfirmed, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
                                 <aura:if isTrue="{!v.isEnableConfirmed}">
                                     <lightning:icon iconName="utility:success" class="slds-icon-text-default"
-                                        size="xx-small" />
+                                        size="x-small" />
                                 </aura:if>
                             </div>
 
@@ -82,7 +82,7 @@
                                 class="{!'slds-progress__marker ' + if(v.isEnabled, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
                                 <aura:if isTrue="{!v.isEnabled}">
                                     <lightning:icon iconName="utility:success" class="slds-icon-text-default"
-                                        size="xx-small" />
+                                        size="x-small" />
                                 </aura:if>
                             </div>
 
@@ -121,7 +121,7 @@
                                 class="{!'slds-progress__marker ' + if(v.isMetaDeployLaunched, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
                                 <aura:if isTrue="{!v.isMetaDeployLaunched}">
                                     <lightning:icon iconName="utility:success" class="slds-icon-text-default"
-                                        size="xx-small" />
+                                        size="x-small" />
                                 </aura:if>
                             </div>
 
@@ -130,7 +130,8 @@
                                     <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMetaDeployLaunch}" />
                                 </div>
                                 <div class="slds-col slds-size_2-of-12 slds-p-left_small">
-                                    <lightning:formattedUrl value="https://login.salesforce.com"
+                                    <lightning:formattedUrl aura:id="metadeploy-link" name="metadeploy-link"
+                                        value="https://install.salesforce.org/products/npsp-rd2-pilot"
                                         tooltip="{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}"
                                         label="{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}" target="_blank" />
                                 </div>
@@ -143,7 +144,7 @@
                                 class="{!'slds-progress__marker ' + if(v.isMetaDeployConfirmed, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
                                 <aura:if isTrue="{!v.isMetaDeployConfirmed}">
                                     <lightning:icon iconName="utility:success" class="slds-icon-text-default"
-                                        size="xx-small" />
+                                        size="x-small" />
                                 </aura:if>
                             </div>
 
@@ -152,12 +153,10 @@
                                     <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMetaDeployConfirm}" />
                                 </div>
                                 <div class="slds-col slds-size_2-of-12 slds-p-left_small">
-                                    <lightning:input type="toggle" label="{!$Label.c.RD2_EnablementMetaDeployConfirm}"
-                                        variant="label-hidden" aura:id="metadeploy-toggle" name="metadeploy-toggle"
-                                        checked="{!v.isMetaDeployConfirmed}" onchange="{!c.onMetaDeployConfirm}"
-                                        messageToggleActive="{!$Label.c.ToggleInstalled}"
-                                        messageToggleInactive="{!$Label.c.ToggleNotInstalled}">
-                                    </lightning:input>
+                                    <lightning:input type="checkbox-button"
+                                        label="{!$Label.c.RD2_EnablementMetaDeployConfirm}" aura:id="metadeploy-confirm"
+                                        name="metadeploy-confirm" checked="{!v.isMetaDeployConfirmed}"
+                                        onchange="{!c.onMetaDeployConfirm}" />
                                 </div>
                             </div>
                         </li>

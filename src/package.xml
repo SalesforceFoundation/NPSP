@@ -1448,8 +1448,6 @@
         <members>SmartyStreets_Help_Text</members>
         <members>ToggleDisabled</members>
         <members>ToggleEnabled</members>
-        <members>ToggleInstalled</members>
-        <members>ToggleNotInstalled</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>

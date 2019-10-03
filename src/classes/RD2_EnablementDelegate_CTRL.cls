@@ -35,32 +35,32 @@
 */
 public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
-	/***
+    /***
     * @description 
     */
     public override String idPanel() { 
-		return 'idPanelRD2Enablement'; 
+        return 'idPanelRD2Enablement'; 
     }
 
     /***
-	* @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed)
-	*/
+    * @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed)
+    */
     public string getNamespace() {
         return UTIL_Namespace.getNamespace();
     }
 
     /***
-	* @description 
-	*/
-	private static RD2_EnablementService service {
-		get {
-			if (service == null) {
-				service = new RD2_EnablementService();
-			}
-			return service;
-		}
-		set;
-	}
+    * @description 
+    */
+    private static RD2_EnablementService service {
+        get {
+            if (service == null) {
+                service = new RD2_EnablementService();
+            }
+            return service;
+        }
+        set;
+    }
 
     /***
     * @description 
@@ -73,15 +73,15 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     /***
     * @description 
     */
-	public static EnablementState getEnablementState() {
+    public static EnablementState getEnablementState() {
         EnablementState state = new EnablementState();
 
-		String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
-		
-		if (String.isNotBlank(jsonState)) {
-			state = (EnablementState) JSON.deserialize(jsonState, EnablementState.class);
-		}
-		
+        String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
+        
+        if (String.isNotBlank(jsonState)) {
+            state = (EnablementState) JSON.deserialize(jsonState, EnablementState.class);
+        }
+        
         state.isReady = service.isRecurringDonations2Ready();
         state.isEnabled = service.isRecurringDonations2Enabled();
         state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
@@ -96,55 +96,55 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void confirmEnablement() {
-		EnablementState state = getEnablementState();
-		state.isConfirmed = true;
+        EnablementState state = getEnablementState();
+        state.isConfirmed = true;
 
-		saveEnablementState(state);
-	}
+        saveEnablementState(state);
+    }
 
     /***
     * @description 
     */
     @AuraEnabled
     public static void confirmMetaDeploy() {
-		EnablementState state = getEnablementState();
-		state.isMetaDeployConfirmed = true;
+        EnablementState state = getEnablementState();
+        state.isMetaDeployConfirmed = true;
 
-		saveEnablementState(state);
-	}
+        saveEnablementState(state);
+    }
 
     /***
     * @description 
     */
-	private static void saveEnablementState(EnablementState state) {  
+    private static void saveEnablementState(EnablementState state) {  
         //do not save variables not being used from the saved enablement state   
         state.isReady = null;
         state.isEnabled = null;   
 
         //save the state
-		STG_Panel.stgService.stgRD.RecurringDonations2EnablementState__c = JSON.serialize(state);
+        STG_Panel.stgService.stgRD.RecurringDonations2EnablementState__c = JSON.serialize(state);
         upsert STG_Panel.stgService.stgRD;
-	}
+    }
 
     /***
     * @description 
     */
     @AuraEnabled
     public static void enableEnhancement() {
-		STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c = true;
+        STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c = true;
         upsert STG_Panel.stgService.stgRD;
-	}
+    }
 
     /***
     * @description 
     */
     public class EnablementState {
-		public Boolean isReady = false;
-		public Boolean isConfirmed = false;
-		public Boolean isEnabled = false;
-		public Boolean isMetaDeployLaunched = false;
-		public Boolean isMetaDeployConfirmed = false;
-		public Boolean isMigrationRun = false;
+        public Boolean isReady = false;
+        public Boolean isConfirmed = false;
+        public Boolean isEnabled = false;
+        public Boolean isMetaDeployLaunched = false;
+        public Boolean isMetaDeployConfirmed = false;
+        public Boolean isMigrationRun = false;
     }
 
 }

@@ -32,8 +32,12 @@
                     this.disableEdit(component, "enable-toggle");
                 }
 
+                if (!enablementState.isEnabled) {
+                    this.disableEdit(component, "metadeploy-link");
+                }
+
                 if (!enablementState.isMetaDeployLaunched || enablementState.isMetaDeployConfirmed) {
-                    this.disableEdit(component, "metadeploy-toggle");
+                    this.disableEdit(component, "metadeploy-confirm");
                 }
 
             } else if (state === "ERROR") {
@@ -97,6 +101,7 @@
 
             if (state === 'SUCCESS') {
                 component.set('v.isEnabled', true);
+                this.enableEdit(component, "metadeploy-link");
 
             } else if (state === 'ERROR') {
                 this.enableEdit(component, "enable-toggle");
@@ -110,7 +115,7 @@
     * @description Confirms MetaDeploy has been installed
     */
     confirmMetaDeploy: function (component) {
-        this.disableEdit(component, "metadeploy-toggle");
+        this.disableEdit(component, "metadeploy-confirm");
     },
     /****
     * @description Hides component's element

@@ -9205,20 +9205,4 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>ToggleDisabled</shortDescription>
         <value>Disabled</value>
     </labels>
-    <labels>
-        <fullName>ToggleInstalled</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ToggleInstalled</shortDescription>
-        <value>Installed</value>
-    </labels>
-    <labels>
-        <fullName>ToggleNotInstalled</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ToggleNotInstalled</shortDescription>
-        <value>Not Installed</value>
-    </labels>
 </CustomLabels>
