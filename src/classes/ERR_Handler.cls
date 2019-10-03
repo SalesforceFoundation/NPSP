@@ -322,6 +322,27 @@ public class ERR_Handler {
     }
 
     /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), do not generate apex page messages and sends error notifications (if enabled).
+    * @param errorRecords The errors to store.
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void sendErrorNotification(Exception e, String context) {
+
+        if (e == null) {
+            return;
+        }
+
+        Error__c error = createError(e, context);
+        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+            Database.insert(error, false);
+        }
+
+        //ERR_Notifier takes care of checking the settings itself.
+        ERR_Notifier.sendErrorNotifications(context);
+    }
+
+    /*******************************************************************************************************
     * @description Creates an error record from a String message
     * @param msg The message to record.
     * @param context The context the exception was raised on.
