@@ -42,6 +42,10 @@ public with sharing class FormSection {
     @AuraEnabled public String displayRule;
     @AuraEnabled public FormElement[] elements;
 
+    /* Additional props PS */
+    @AuraEnabled public String id;
+    /* END */
+
     public FormSection(String label, 
                         String displayType, 
                         String defaultDisplayMode, 

@@ -20,8 +20,8 @@ const FormTemplate = class FormTemplate {
 }
 
 const FormLayout = class FormLayout {
-    constructor(fieldMappingSet, version, sections) {
-        this.fieldMappingSet = fieldMappingSet;
+    constructor(fieldMappingSetDevName, version, sections) {
+        this.fieldMappingSetDevName = fieldMappingSetDevName;
         this.version = version;
         this.sections = sections;
     }

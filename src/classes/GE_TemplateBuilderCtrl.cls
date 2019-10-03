@@ -61,36 +61,77 @@ public with sharing class GE_TemplateBuilderCtrl {
     }
 
     @AuraEnabled
-    public static Data_Import_Object_Mapping__mdt[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
+    public static ObjectMappingWrapper[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
         System.debug('getFieldAndObjectMappingsByFieldMappingSetName');
         bdiCMT = BDI_FieldMappingCustomMetadata.getInstance(fieldMappingSetName);
+        System.debug(bdiCMT.objMappingsByDevName.values());
+        ObjectMappingWrapper[] objectWrappers = new ObjectMappingWrapper[]{};
 
-        return bdiCMT.objMappingsByDevName.values();
+        for (Data_Import_Object_Mapping__mdt objectMapping : bdiCMT.objMappingsByDevName.values()) {
+            System.debug(objectMapping);
+            ObjectMappingWrapper omw = new ObjectMappingWrapper(objectMapping);
+
+            if (objectMapping.Data_Import_Field_Mappings__r != null) {
+                for (Data_Import_Field_Mapping__mdt fieldMapping : objectMapping.Data_Import_Field_Mappings__r) {
+                    CheckboxWrapper fieldMappingWrapper = new CheckboxWrapper(
+                        fieldMapping.MasterLabel,
+                        fieldMapping.DeveloperName,
+                        false
+                    );
+                    omw.fieldMappingCheckboxes.add(fieldMappingWrapper);
+                }
+            }
+
+            objectWrappers.add(omw);
+        }
+
+        //return bdiCMT.objMappingsByDevName.values();
+        return objectWrappers;
     }
 
     @AuraEnabled(cacheable=true)
-    public static DescribeFieldWrapper[] getBatchFields() {
-        DescribeFieldWrapper[] wrappers = new DescribeFieldWrapper[]{};
+    public static CheckboxWrapper[] getBatchFields() {
+        CheckboxWrapper[] wrappers = new CheckboxWrapper[]{};
         Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImportBatch__c.Name);
         for (String key : fields.keySet()) {
             System.debug(key);
-            wrappers.add(new DescribeFieldWrapper(fields.get(key)));
+            wrappers.add(new CheckboxWrapper(fields.get(key)));
             System.debug(wrappers);
         }
         return wrappers;
     }
 
-    public class DescribeFieldWrapper {
+    public class ObjectMappingWrapper {
+        @AuraEnabled public String DeveloperName;
+        @AuraEnabled public String MasterLabel;
+        @AuraEnabled public String Object_API_Name;
+        @AuraEnabled public CheckboxWrapper[] fieldMappingCheckboxes;
+
+        ObjectMappingWrapper(Data_Import_Object_Mapping__mdt objectMapping) {
+            this.DeveloperName = objectMapping.DeveloperName;
+            this.MasterLabel = objectMapping.MasterLabel;
+            this.Object_API_Name = objectMapping.Object_API_Name__c;
+            this.fieldMappingCheckboxes = new CheckboxWrapper[]{};
+        }
+    }
+
+    public class CheckboxWrapper {
         @AuraEnabled public String label;
         @AuraEnabled public String value;
         @AuraEnabled public Boolean checked;
        // @AuraEnabled public String type;
 
-        public DescribeFieldWrapper(Schema.DescribeFieldResult describe) {
+        public CheckboxWrapper(Schema.DescribeFieldResult describe) {
             this.label = describe.getLabel();
             this.value = describe.getName();
             this.checked = false;
             //this.type = String.valueOf(describe.getType());
+        }
+
+        public CheckboxWrapper(String label, String value, Boolean checked) {
+            this.label = label;
+            this.value = value;
+            this.checked = checked;
         }
     }
 

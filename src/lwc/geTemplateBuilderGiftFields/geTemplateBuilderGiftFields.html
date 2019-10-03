@@ -16,6 +16,7 @@
             <lightning-combobox name="Field Mapping Set"
                                 label="Select Field Mapping Set"
                                 options={fieldMappingSetComboboxOptions}
+                                value={selectedFieldMappingSet}
                                 onchange={handleChangeFieldMappingSet}
                                 class="slds-p-bottom_small">
             </lightning-combobox>
@@ -30,20 +31,21 @@
 
                     <lightning-accordion-section key={objectMapping.DeveloperName}
                                                  name={objectMapping.DeveloperName}
-                                                 label={objectMapping.DeveloperName}
+                                                 label={objectMapping.MasterLabel}
                                                  class="slds-truncate slds-accordion__section_extension">
 
-                        <template for:each={objectMapping.npsp__Data_Import_Field_Mappings__r}
+                        <template for:each={objectMapping.fieldMappingCheckboxes}
                                   for:item="fieldMapping">
 
                             <lightning-input type="checkbox"
-                                             key={fieldMapping.DeveloperName}
-                                             label={fieldMapping.DeveloperName}
-                                             value={fieldMapping.DeveloperName}
+                                             key={fieldMapping.value}
+                                             label={fieldMapping.label}
+                                             value={fieldMapping.value}
+                                             checked={fieldMapping.checked}
                                              onchange={handleToggleFieldMapping}
                                              class="slds-truncate slds-p-vertical_xxx-small"
                                              title={fieldMapping.DeveloperName}
-                                             data-field-mapping={fieldMapping.DeveloperName}
+                                             data-field-mapping={fieldMapping.value}
                                              data-object-mapping={objectMapping.DeveloperName}>
                             </lightning-input>
                         </template>

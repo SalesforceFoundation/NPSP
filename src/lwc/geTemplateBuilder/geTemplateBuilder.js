@@ -2,13 +2,17 @@ import { LightningElement, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import processFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.processFormTemplate';
 import retrieveDefaultFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultFormTemplate';
-import { FormTemplate, mutable } from 'c/utilTemplateBuilder';
+import { FormTemplate, FormLayout, mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
     @track activeTab;
     _previousTab;
 
-    @track formTemplate = new FormTemplate();
+    @track formTemplate = new FormTemplate(
+        undefined,
+        undefined,
+        new FormLayout()
+    );
 
     /* delete once all sections are their own components, currently only used by
     * matching logic tab */
@@ -40,6 +44,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     get layoutSections() {
         return this.formTemplate.layout ? this.formTemplate.layout.sections : undefined;
+    }
+
+    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    get selectedFieldMappingSet() {
+        return this.formTemplate.layout.fieldMappingSetDevName ? this.formTemplate.layout.fieldMappingSetDevName : undefined;
     }
 
     handleFormTemplateSave() {
