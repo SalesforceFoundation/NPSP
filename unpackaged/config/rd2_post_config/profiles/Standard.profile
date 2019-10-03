@@ -6,7 +6,7 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</field>
-        <readable>false</readable>
+        <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
