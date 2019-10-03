@@ -81,6 +81,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
             this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
                 fieldMappingSetName: this.selectedFieldMappingSet
             });
+            this.setObjectAndFieldMappings(this.objectMappings);
 
             console.log('data: ', mutable(this.objectMappings));
             console.log('object and fields set');
@@ -152,9 +153,14 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     *
     * @param {object} event: Onchange event from the lightning-combobox component.
     */
-    handleChangeFieldMappingSet(event) {
+    handleChangeFieldMappingSet = async (event) => {
+        this.isLoading = true;
         this.selectedFieldMappingSet = event.target.value;
-        this.setObjectAndFieldMappings(this.selectedFieldMappingSet);
+        this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
+            fieldMappingSetName: this.selectedFieldMappingSet
+        });
+        this.setObjectAndFieldMappings(this.objectMappings);
+        this.isLoading = false;
     }
 
     /*******************************************************************************
@@ -169,7 +175,6 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
         for (const objectMapping of this.objectMappings) {
             this._fieldMappingsForSelectedSet.push(...objectMapping.fieldMappingCheckboxes);
         }
-        console.log('Field Mappings Set For Selected Set');
     }
 
     handleDeleteFormSection(event) {
