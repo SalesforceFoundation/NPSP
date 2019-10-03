@@ -85,7 +85,7 @@ tasks:
             namespace_inject: $project_config.project__package__namespace
 
     deploy_rd2_config:
-        description: Deploys updates to fully enable RD2
+        description: Deploys updates to fully enable Enhanced Recurring Donations
         class_path: deploy
         options:
             path: unpackaged/config/rd2_post_config
