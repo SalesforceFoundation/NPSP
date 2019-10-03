@@ -146,7 +146,7 @@
         <fields>%%%NAMESPACE%%%General_Accounting_Unit__c</fields>
         <fields>%%%NAMESPACE%%%Amount__c</fields>
         <fields>%%%NAMESPACE%%%Percent__c</fields>
-        <relatedList>%%%NAMESPACE%%%Allocation__c.>%%%NAMESPACE%%%Recurring_Donation__c</relatedList>
+        <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Recurring_Donation__c</relatedList>
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedNoteList</relatedList>
