@@ -23,7 +23,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
     * up in the array and UI.
     */
     handleFormFieldUp() {
-        console.log('geTemplateBuilderFormField | handleFormFieldUp');
         const field = this.getFormFieldValues();
         this.dispatchEvent(new CustomEvent('formfieldup', { detail: field }));
     }
