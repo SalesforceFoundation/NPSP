@@ -18,5 +18,6 @@ class is_rd2_enabled(BaseSalesforceApiTask):
         if settings.get("records"):
             if settings["records"][0]["IsRecurringDonations2Enabled__c"]:
                 self.return_values = True
+                return
 
         self.return_values = False
