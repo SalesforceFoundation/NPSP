@@ -107,7 +107,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     /*******************************************************************************************************
     * @description return singleton instance of the class
     */
-    public static BDI_FieldMappingCustomMetadata getInstance(String fieldMappingSetName) {
+    public static BDI_FieldMappingCustomMetadata retrieveInstance(String fieldMappingSetName) {
         if (fieldMappingInstance == null) {
             fieldMappingInstance = new BDI_FieldMappingCustomMetadata();
             fieldMappingInstance.fieldMappingSetName = fieldMappingSetName;
@@ -154,7 +154,6 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     }
 
     public String setFieldMappingSetName(String name) {
-        System.debug('setFieldMappingSetName: ' + name);
         fieldMappingSetName = name;
         return fieldMappingSetName;
     }
