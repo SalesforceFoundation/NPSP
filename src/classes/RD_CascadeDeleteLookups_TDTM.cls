@@ -211,7 +211,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
 
                     if (isPaidPayment(child)) {
                         npe01__OppPayment__c paidPayment = (npe01__OppPayment__c)child;
-                        error.addChildError(Label.PaidPayment, paidPayment.Id, paidPayment.Name);
+                        error.addChildError(System.Label.CascadeDeletionError_PaidPayment, paidPayment.Id, paidPayment.Name);
                     }
                 }
 

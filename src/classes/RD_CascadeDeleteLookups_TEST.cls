@@ -161,7 +161,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
         Exception caughtException;
         CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(rdOpportunities[0].Name);
-        expectedError.addChildError(Label.PaidPayment, queriedPayments[0].Id, queriedPayments[0].Name);
+        expectedError.addChildError(System.Label.CascadeDeletionError_PaidPayment, queriedPayments[0].Id, queriedPayments[0].Name);
 
         TDTM_TriggerHandler.disableTDTM = false;
 
@@ -176,7 +176,7 @@ private class RD_CascadeDeleteLookups_TEST {
         System.assertNotEquals(null, caughtException, 'An exception should be caught.');
         System.assert(caughtException.getMessage().containsIgnoreCase(queriedPayments[0].Id), 'Exception message is not the one expected');
         System.assert(caughtException.getMessage().containsIgnoreCase(queriedPayments[0].Name), 'Exception message is not the one expected');
-        System.assert(caughtException.getMessage().contains(Label.PaidPayment), 'Exception message should mention Paid Payments.');
+        System.assert(caughtException.getMessage().contains(System.Label.CascadeDeletionError_PaidPayment), 'Exception message should mention Paid Payments.');
     }
 
     /*********************************************************************************************************
