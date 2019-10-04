@@ -351,6 +351,41 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Test that child field mappings for a given deleted object mapping are flagged as deleted
+    */
+    @IsTest
+    static void shouldFlagFieldMappingsAsDeleted() {
+        Data_Import_Field_Mapping_Set__mdt fieldMappingSet = [SELECT Id,
+                DeveloperName
+            FROM Data_Import_Field_Mapping_Set__mdt
+            WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_NAME
+            LIMIT 1];
+
+        Data_Import_Object_Mapping__mdt account1 = [SELECT Id,
+                DeveloperName
+            FROM Data_Import_Object_Mapping__mdt
+            WHERE DeveloperName = :ACCOUNT1
+            LIMIT 1];
+
+        Data_Import_Field_Mapping__mdt[] account1FieldMappings = [SELECT Id, Is_Deleted__c
+            FROM Data_Import_Field_Mapping__mdt
+            WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSet.Id
+                AND Target_Object_Mapping__c = :account1.Id];
+
+        BDI_ManageAdvancedMappingCtrl.DataImportFieldMappingWrapper[] account1FieldMappingWrappers =
+            BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames(
+                account1.DeveloperName,
+                fieldMappingSet.DeveloperName);
+
+        Data_Import_Field_Mapping__mdt[] deletedFieldMappings =
+            BDI_ManageAdvancedMappingCtrl.flagFieldMappingsAsDeleted(account1.DeveloperName);
+
+        for (Data_Import_Field_Mapping__mdt fieldMapping : deletedFieldMappings) {
+            System.assertEquals(fieldMapping.Is_Deleted__c, true);
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Helper method to collect isCreatable fields
     */
     static Set<String> getCreatableFields(Map<String, Schema.SObjectField> fieldMap) {
