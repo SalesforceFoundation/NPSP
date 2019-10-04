@@ -186,14 +186,14 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             fillMapWrapper(listOppsForProcessing);
 
-            copyRecurringDonationCampaignAllocations(listOppsForProcessing);
+            copyRecurringDonationCampaignAndPaymentAllocations(listOppsForProcessing);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             List<Opportunity> opps = new List<Opportunity>(listOppsForProcessing);
             opps.addAll(oppsWithNullOldAmount);
             fillMapWrapper(opps);
 
-            copyRecurringDonationCampaignAllocations(oppsWithNullOldAmount);
+            copyRecurringDonationCampaignAndPaymentAllocations(oppsWithNullOldAmount);
             opportunityAmountCurrencyChange(listOppsForProcessing);
         }
     }
@@ -257,7 +257,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         if (pmtsNeedingAllocations.size() > 0) {
             fillMapWrapper(pmtsNeedingAllocations);
-            copyRecurringDonationCampaignAllocations(pmtsNeedingAllocations);
+            copyRecurringDonationCampaignAndPaymentAllocations(pmtsNeedingAllocations);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
@@ -522,7 +522,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 }
 
                 //then, recreate them based on the recurring donation
-                copyRecurringDonationCampaignAllocations(listRecDonOpps);
+                copyRecurringDonationCampaignAndPaymentAllocations(listRecDonOpps);
             }
         }
     }
@@ -533,7 +533,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     * @param listSObjs A list of Opportunities or Payments.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
-    private void copyRecurringDonationCampaignAllocations(List<SObject> listSObjs) {
+    private void copyRecurringDonationCampaignAndPaymentAllocations(List<SObject> listSObjs) {
 
         for (SObject sObj : listSObjs) {
 
@@ -620,7 +620,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                     if (isPaymentAllocation == true && alloInMap != null) {
                         alloInMap.Amount__c += allo.Amount__c;
-                        if(alloInMap.Percent__c != null && allo.Percent__c != null) {
+                        if (alloInMap.Percent__c != null && allo.Percent__c != null) {
                             // If both Payment Allocations have a percent set (which they should), maintain the total
                             alloInMap.Percent__c += allo.Percent__c;
                         }
@@ -648,7 +648,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     // Go through the allocation and adjust the percentage so it is correct.
                     for (Allocation__c consolidatedAllocation : consolidatedAllocationList) {
                         // Only recalculate if percent values were not set on the Allocations
-                        if(consolidatedAllocation.Percent__c == null){
+                        if (consolidatedAllocation.Percent__c == null) {
                             consolidatedAllocation.Percent__c = consolidatedAllocation.Amount__c / amount * 100;
                         }
                     }
