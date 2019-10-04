@@ -198,7 +198,12 @@ public with sharing class RD2_NamingService {
                 formattedAmount = code + ' ' + formattedAmount;
             }
         } else {
-            formattedAmount = userDefaultCurrencySymbol + formattedAmount;
+            if (String.isNotBlank(userDefaultCurrencySymbol) && userDefaultCurrencySymbol.length() > 1) {
+                formattedAmount = userDefaultCurrencySymbol + ' ' + formattedAmount;
+                
+            } else {
+                formattedAmount = userDefaultCurrencySymbol + formattedAmount;
+            }
         }
 
         return formattedAmount;

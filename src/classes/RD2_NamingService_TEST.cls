@@ -38,10 +38,6 @@
 public with sharing class RD2_NamingService_TEST {
     private static final Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
 
-    private static final String currencyCodeOrSymbol = isMultiCurrencyEnabled
-        ? UserInfo.getDefaultCurrency() + ' '
-        : UTIL_Currency.getInstance().getCurrencySymbol(UserInfo.getDefaultCurrency());
-
     private static Account acc = getAccountMock();
 
     /***
@@ -181,7 +177,7 @@ public with sharing class RD2_NamingService_TEST {
         RD2_NamingService service = buildAutomaticNamingService(acc);        
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedSuffix = '... ' + currencyCodeOrSymbol + '100 - ' + System.Label.RecurringDonationNameSuffix;
+        String expectedSuffix = '... ' + getCurrencyCodeOrSymbol() + '100 - ' + System.Label.RecurringDonationNameSuffix;
         String expectedName = acc.Name.left(RD2_NamingService.MAX_NAME_LENGTH - expectedSuffix.length()) + expectedSuffix;
 
         System.assertEquals(expectedName, rd.Name, 'Recurring Donations Name should match.');
@@ -393,7 +389,7 @@ public with sharing class RD2_NamingService_TEST {
     * @return String Expected Recurring Donation name
     */
     public static String getExpectedName(Account acc, String amount) {
-        return acc.Name + ' ' + currencyCodeOrSymbol + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
+        return acc.Name + ' ' + getCurrencyCodeOrSymbol() + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
     }
 
     /***
@@ -405,7 +401,23 @@ public with sharing class RD2_NamingService_TEST {
     public static String getExpectedName(Contact contact, String amount) {
         String contactName = (String.isBlank(contact.FirstName) ? '' : (contact.FirstName + ' ')) + contact.LastName;
 
-        return contactName + ' ' + currencyCodeOrSymbol + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
+        return contactName + ' ' + getCurrencyCodeOrSymbol() + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
+    }
+
+    /***
+    * @description Returns currency code or symbol followed by a space if it is longer than one character
+    * @return String 
+    */
+    public static String getCurrencyCodeOrSymbol() {
+        String currencyCodeOrSymbol = isMultiCurrencyEnabled
+            ? UserInfo.getDefaultCurrency()
+            : UTIL_Currency.getInstance().getCurrencySymbol(UserInfo.getDefaultCurrency());
+
+        if (currencyCodeOrSymbol.length() > 1) {
+            currencyCodeOrSymbol += ' ';
+        }
+
+        return currencyCodeOrSymbol;
     }
 
     /***
