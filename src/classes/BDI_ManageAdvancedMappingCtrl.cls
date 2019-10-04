@@ -246,8 +246,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
-    * @description Converts a JSON string of a DataImportFieldMappingWrapper to an instance of
-    * Data_Import_Field_Mapping__mdt.
+    * @description Aura enabled method for creating Data Import Field Mappings
     *
     * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
     *
@@ -256,42 +255,84 @@ public class BDI_ManageAdvancedMappingCtrl {
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
         try {
-            DataImportFieldMappingWrapper fieldMappingWrapper =
-                (DataImportFieldMappingWrapper)JSON.deserialize(fieldMappingString, DataImportFieldMappingWrapper.class);
-
-            String diFieldMappingSetFieldName = SObjectType.Data_Import_Field_Mapping__mdt.fields.Data_Import_Field_Mapping_Set__c.Name;
-            String targetObjectMappingFieldName = SObjectType.Data_Import_Field_Mapping__mdt.fields.Target_Object_Mapping__c.Name;
-
-            //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field since
-            //that is what is required for the custom metadata creation.  This can't be done with the normal constructor
-            //since it requires that the field be an Id
-            String tempFieldMappingString =
-                '{ "' + diFieldMappingSetFieldName + '" : "' +
-                UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Data_Import_Field_Mapping_Set) + '",' +
-                '"' + targetObjectMappingFieldName + '": "' +
-                UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Target_Object_Mapping)  + '"}';
-
-            Data_Import_Field_Mapping__mdt fieldMapping =
-                (Data_Import_Field_Mapping__mdt)JSON.deserialize(tempFieldMappingString, Data_Import_Field_Mapping__mdt.class);
-
-            fieldMapping.MasterLabel = fieldMappingWrapper.MasterLabel;
-            fieldMapping.DeveloperName = fieldMappingWrapper.DeveloperName;
-            fieldMapping.Is_Deleted__c = fieldMappingWrapper.Is_Deleted;
-            fieldMapping.Required__c = fieldMappingWrapper.Required;
-            fieldMapping.Source_Field_API_Name__c = fieldMappingWrapper.Source_Field_API_Name;
-            fieldMapping.Target_Field_API_Name__c = fieldMappingWrapper.Target_Field_API_Name;
+            Data_Import_Field_Mapping__mdt fieldMapping = constructDataImportFieldMapping(fieldMappingString);
 
             if (Test.isRunningTest()) {
                 return JSON.serialize(fieldMapping);
             }
 
-            String deploymentId = enqueueMetadataRecords(fieldMapping);
-            return deploymentId;
+            return enqueueMetadataRecords(fieldMapping);
         } catch(Exception e) {
             throw e;
         }
     }
 
+    /*******************************************************************************************************
+    * @description Converts a JSON string of a DataImportFieldMappingWrapper to an instance of
+    * Data_Import_Field_Mapping__mdt.
+    *
+    * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
+    *
+    * @return String: Deployment Id or Data_Import_Field_Mapping__mdt instance JSON when in tests
+    */
+    private static Data_Import_Field_Mapping__mdt constructDataImportFieldMapping(String fieldMappingString) {
+        DataImportFieldMappingWrapper fieldMappingWrapper =
+            (DataImportFieldMappingWrapper)JSON.deserialize(
+                fieldMappingString,
+                DataImportFieldMappingWrapper.class);
+
+        String diFieldMappingSetFieldName =
+            SObjectType.Data_Import_Field_Mapping__mdt.fields.Data_Import_Field_Mapping_Set__c.Name;
+        String targetObjectMappingFieldName =
+            SObjectType.Data_Import_Field_Mapping__mdt.fields.Target_Object_Mapping__c.Name;
+
+        //This is a workaround to get the developer name of the Data Import Object Mapping Set into the field
+        //since that is what is required for the custom metadata creation. This can't be done with the normal
+        //constructor since it requires that the field be an Id
+        String tempFieldMappingString =
+            '{ "' + diFieldMappingSetFieldName + '" : "' +
+            UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Data_Import_Field_Mapping_Set) + '",' +
+            '"' + targetObjectMappingFieldName + '": "' +
+            UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Target_Object_Mapping)  + '"}';
+
+        Data_Import_Field_Mapping__mdt fieldMapping =
+            (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                tempFieldMappingString,
+                Data_Import_Field_Mapping__mdt.class);
+
+        fieldMapping.MasterLabel = fieldMappingWrapper.MasterLabel;
+        fieldMapping.DeveloperName = fieldMappingWrapper.DeveloperName;
+        fieldMapping.Is_Deleted__c = fieldMappingWrapper.Is_Deleted;
+        fieldMapping.Required__c = fieldMappingWrapper.Required;
+        fieldMapping.Source_Field_API_Name__c = fieldMappingWrapper.Source_Field_API_Name;
+        fieldMapping.Target_Field_API_Name__c = fieldMappingWrapper.Target_Field_API_Name;
+
+        return fieldMapping;
+    }
+
+    /*******************************************************************************************************
+    * @description Flag all child field mappings of object mapping as deleted
+    *
+    * @param objectMappingDeveloperName: Developer name of the Object Mapping
+    *
+    * @return List: List of Data Import Field Mappings with "Is_Deleted" set to true
+    */
+    @TestVisible
+    private static Data_Import_Field_Mapping__mdt[] flagFieldMappingsAsDeleted(String objectMappingDeveloperName) {
+        DataImportFieldMappingWrapper[] fieldMappingWrappers = getFieldMappingsByObjectAndFieldSetNames(
+            objectMappingDeveloperName, getFieldMappingSetName());
+        Data_Import_Field_Mapping__mdt[] updatedFieldMappings = new Data_Import_Field_Mapping__mdt[]{};
+
+        for (DataImportFieldMappingWrapper fieldMappingWrapper : fieldMappingWrappers) {
+            fieldMappingWrapper.Is_Deleted = true;
+            Data_Import_Field_Mapping__mdt updatedFieldMapping =
+                constructDataImportFieldMapping(JSON.serialize(fieldMappingWrapper));
+
+            updatedFieldMappings.add(updatedFieldMapping);
+        }
+
+        return updatedFieldMappings;
+    }
 
     /*******************************************************************************************************
     * @description Converts a JSON string of a DataImportObjectMappingWrapper to an instance of
@@ -333,7 +374,18 @@ public class BDI_ManageAdvancedMappingCtrl {
                 return JSON.serialize(objMapping);
             }
 
-            String deploymentId = enqueueMetadataRecords(objMapping);
+            String deploymentId;
+
+            if (objMapping.Is_Deleted__c == true) {
+                sObject[] mappingsToDelete = new sObject[]{};
+                mappingsToDelete.addAll(flagFieldMappingsAsDeleted(objMappingWrapper.DeveloperName));
+                mappingsToDelete.add(objMapping);
+
+                deploymentId = enqueueMetadataRecords(mappingsToDelete);
+            } else {
+                deploymentId = enqueueMetadataRecords(objMapping);
+            }
+
             return deploymentId;
 
         } catch (Exception e) {
