@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -1161,6 +1161,7 @@
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
         <members>RecurringDonationSchedule__c.Campaign__c</members>
+        <members>RecurringDonationSchedule__c.DayOfMonth__c</members>
         <members>RecurringDonationSchedule__c.EndDate__c</members>
         <members>RecurringDonationSchedule__c.ExternalId__c</members>
         <members>RecurringDonationSchedule__c.InstallmentAmount__c</members>
@@ -2968,6 +2969,7 @@
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
+        <members>RecurringDonationSchedule__c-Recurring Schedule Layout</members>
         <name>Layout</name>
     </types>
     <types>
