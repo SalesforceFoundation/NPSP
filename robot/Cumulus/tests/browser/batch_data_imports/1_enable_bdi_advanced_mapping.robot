@@ -10,7 +10,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Enable Advanced Mapping
     [Documentation]    This test case enables Advanced Mapping for Data Imports 
-    [tags]  Unstable
+    [tags]  stable
     Go To Page                                Custom          NPSP_Settings
     Load Page Object                          Custom          NPSP_Settings
     Open Main Menu                            System Tools

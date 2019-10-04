@@ -50,7 +50,7 @@ Setup Test Data
 
 Create Data Import with Additional Objects via API and Verify Values 
     [Documentation]    Create and a DI record with Contact, Account, Opportunity, Payment, Account Soft Credit and GAU details and verify that everything is saved as expected
-    [tags]  Unstable
+    [tags]  stable
     Go To Page                              Listing        DataImport__c
     Current page should be                  Listing        DataImport__c
     Change View To                          To Be Imported
