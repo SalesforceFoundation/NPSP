@@ -259,7 +259,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
                         ((Allocation__c) child).Recurring_Donation__c == deletedRecurringDonationId ||
                         ((Allocation__c) child).Opportunity__r.npe03__Recurring_Donation__c == deletedRecurringDonationId
                     ) ||
-                    (child instanceof  npe01__OppPayment__c && ((npe01__OppPayment__c) child).npe01__Paid__c))
+                    isPaidPayment(child))
                 ) {
                     result.add(child);
                 }
