@@ -610,6 +610,7 @@ plans:
     rd2:
         slug: npsp-rd2-pilot
         title: Enhanced Recurring Donations Metadata Updates
+        tier: additional
         is_listed: False
         checks:
             - when: "not tasks.is_rd2_enabled()"
