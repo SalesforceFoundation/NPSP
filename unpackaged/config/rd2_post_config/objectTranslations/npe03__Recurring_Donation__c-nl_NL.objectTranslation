@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>Aantal termijnen. Dit is alleen voor terugkerende donaties met een bekende einddatum.</help>
+        <label>Deprecated-Termijnen</label>
+        <name>npe03__Installments__c</name>
+    </fields>
+    <fields>
+        <help>Kies Open voor een doolopende Terugkerende Donatie. Kies Geen voor een Terugkerende Donatie met een vaststaande Einddatum. Kies Gesloten om de Terugkerende Donatie te sluiten.</help>
+        <label>Deprecated-Open-Einde-Status</label>
+        <name>npe03__Open_Ended_Status__c</name>
+    </fields>
+    <fields>
+        <help>Het Planning Type &apos;Vermenigvuldig met&apos; berekent het Termijnbedrag door het Bedrag en het aantal Termijnen te vermenigvuldigen. Bepaal het bedrag per termijn, gebaseerd op het ingevulde bedrag. Alleen gebruikt bij een terugkerende donatie met einddatum.</help>
+        <label>Deprecated-Planning Type</label>
+        <name>npe03__Schedule_Type__c</name>
+    </fields>
+    <fields>
+        <help>Het totaalbedrag van alle Opportunities, voor Terugkerende Donaties met een Einddatum.</help>
+        <label>Deprecated-Totaal</label>
+        <name>npe03__Total__c</name>
+    </fields>
+</CustomObjectTranslation>
