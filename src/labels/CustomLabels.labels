@@ -1432,6 +1432,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>RD2_EnablementPrepTitle</shortDescription>
         <value>Preparation Tasks</value>
+    </labels>
+    <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
