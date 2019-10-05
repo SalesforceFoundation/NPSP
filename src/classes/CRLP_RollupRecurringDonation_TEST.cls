@@ -174,17 +174,15 @@ private class CRLP_RollupRecurringDonation_TEST {
         Date lastPaymentDate = startDate.addMonths(numClosedOpps-1);
         Date nextPaymentDate = lastPaymentDate.addMonths(1);
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                Name = 'testRollupsServices',
-                npe03__Installments__c = numOpps,
-                npe03__Contact__c = con.Id,
-                npe03__Amount__c = instAmt,
-                npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly,
-                npe03__Date_Established__c = startDate,
-                npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-                npe03__Open_Ended_Status__c = null
-        );
-
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+                .withInstallments(numOpps)
+                .withContact(con.Id)
+                .withAmount(instAmt)
+                .withInstallmentPeriodMonthly()
+                .withDateEstablished(startDate)
+                .withScheduleTypeMultiplyValue()
+                .withOpenEndedStatus(null)
+                .build();
         insert rd;
 
         rd = [SELECT npe03__Total_Paid_Installments__c

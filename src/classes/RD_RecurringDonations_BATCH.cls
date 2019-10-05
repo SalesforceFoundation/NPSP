@@ -85,6 +85,11 @@ Schedulable {
     * @return database.Querylocator  
     */
     public database.Querylocator start(Database.BatchableContext bc) {
+        // do not return records for processing when enhanced Recurring Donations are enabled
+        if (RD2_EnablementService.isRecurringDonations2Enabled) {
+            query += ' LIMIT 0';
+        }
+
         // this must return a QueryLocator, or else uncaught exceptions in the
         // execute() method will not properly update the processed/failure
         // counts (see W-2443023).

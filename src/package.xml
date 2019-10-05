@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -329,6 +329,14 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>RD2_Donor</members>
+        <members>RD2_Donor_TEST</members>
+        <members>RD2_EnablementService</members>
+        <members>RD2_EnablementService_TEST</members>
+        <members>RD2_NamingService</members>
+        <members>RD2_NamingService_TEST</members>
+        <members>RD2_RecurringDonations_TDTM</members>
+        <members>RD2_RecurringDonations_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -437,6 +445,9 @@
         <members>TDTM_TriggerHandler</members>
         <members>TDTM_TriggerScaffolds_TEST</members>
         <members>TDTM_iTableDataGateway</members>
+        <members>TEST_OpportunityBuilder</members>
+        <members>TEST_RecurringDonationBuilder</members>
+        <members>TEST_SObjectGateway</members>
         <members>USER_InActiveUser_TDTM</members>
         <members>USER_InActiveUser_TDTM_TEST</members>
         <members>USER_MixedDML_TEST</members>
@@ -532,8 +543,8 @@
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
         <members>UTIL_PageMessages</members>
-        <members>UTIL_SingleToastMessage</members>
         <members>UTIL_SLDS_Icon</members>
+        <members>UTIL_SingleToastMessage</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Tooltip</members>
         <members>UTIL_Typeahead</members>
@@ -1195,14 +1206,15 @@
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
-        <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>        
+        <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
         <members>npe03__Recurring_Donation__c.StartDate__c</members>
         <members>npe03__Recurring_Donation__c.Status__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.EnableAutomaticNaming__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>        
+        <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
         <members>npe5__Affiliation__c.Related_Opportunity_Contact_Role__c</members>
@@ -1416,6 +1428,7 @@
         <members>RP_WebinarLinkLabel</members>
         <members>RP_YoutubeChannel</members>
         <members>RecurringDonationAccountAndContactError</members>
+        <members>RecurringDonationNameSuffix</members>
         <members>Saved</members>
         <members>Settings_not_Saved</members>
         <members>SmartyStreets_Help_Text</members>
@@ -2063,8 +2076,8 @@
         <members>stgErrorINaming</members>
         <members>stgErrorInvalidClass</members>
         <members>stgErrorInvalidNameFormat</members>
-        <members>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</members>
         <members>stgErrorMissingDefaultGauRecord</members>
+        <members>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</members>
         <members>stgHHNameRefreshTitle</members>
         <members>stgHelpAccountModel</members>
         <members>stgHelpAdvancedMapping1</members>
