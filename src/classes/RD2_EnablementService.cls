@@ -76,7 +76,6 @@ public with sharing class RD2_EnablementService {
         }
         set;
     }
-
     /***
     * @description Contains attribute confirming if PilotEnabled feature parameter is enabled
     */
@@ -110,5 +109,4 @@ public with sharing class RD2_EnablementService {
             UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true
             && isPilotEnabled;
     }
-
 }

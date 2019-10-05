@@ -34,9 +34,152 @@
 * @description Enhanced Recurring Donations Enablement Service class
 *
 */
-@isTest
+@isTest//(IsParallel=true) Cannot execute in parallel due to Account/Contact insert and exclusive lock error
 public with sharing class RD2_EnablementService_TEST {
 
+    /****
+    * @description Creates data required for unit tests
+    */
+    @TestSetup
+    private static void setUp() {
+        insert UTIL_UnitTestData_TEST.getContact();
+    }
+
+
+    /****
+    * @description Verifies a new Opportunity is created on Recurring Donations insert
+    * when enhanced Recurring Donations are not enabled
+    */
+    @isTest
+    private static void shouldCreateNewOppOnInsertWhenEnhancementIsNotEnabled() {
+        setRecurringDonations2Disabled();
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = getOpportunities(rd.Id);
+        System.assertEquals(1, opps.size(), 'An Opp should be created on RD insert: ' + opps);
+    }
+
+    /****
+    * @description Verifies a new Opportunity is not created on Recurring Donations insert
+    * when enhanced Recurring Donations are enabled
+    */
+    @isTest
+    private static void shouldNotCreateNewOppOnInsertWhenEnhancementIsEnabled() {
+        setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = getOpportunities(rd.Id);
+        System.assertEquals(true, opps.isEmpty(), 'No Opp should be created on RD insert: ' + opps);
+    }
+
+    /****
+    * @description Verifies a new Opportunity is created or existing updated on Recurring Donation update
+    * when enhanced Recurring Donations are not enabled
+    */
+    @isTest
+    private static void shouldCreateOrUpdateOppOnUpdateWhenEnhancementIsNotEnabled() {
+        setRecurringDonations2Disabled();
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .build();
+        insert rd;
+
+        Test.startTest();
+        rd.npe03__Amount__c += 100;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = getOpportunities(rd.Id);
+        System.assertEquals(1, opps.size(), 'An Opp should be created on RD update: ' + opps);
+        System.assertEquals(200, opps[0].Amount, 'Opportunity Amount should be updated');
+    }
+
+    /****
+    * @description Verifies no new Opportunity is created or existing updated on Recurring Donation update
+    * when enhanced Recurring Donations are enabled
+    */
+    @isTest
+    private static void shouldNotCreateOrUpdateOppOnUpdateWhenEnhancementIsEnabled() {
+        setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(contact.Id)
+            .withAmount(100)
+            .build();
+        insert rd;
+
+        insert buildOpportunity(rd.Id, contact.AccountId);
+
+        Test.startTest();
+        rd.npe03__Amount__c += 100;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = getOpportunities(rd.Id);
+        System.assertEquals(1, opps.size(), 'No Opp should be created on RD update: ' + opps);
+        System.assertEquals(100, opps[0].Amount, 'Existing Opp Amount should be unchanged');
+    }
+
+    /****
+    * @description Verifies name is auto-generated when enhanced Recurring Donations are not enabled
+    */
+    @isTest
+    private static void shouldAutogenerateNameWhenEnhancementIsNotEnabled() {
+        setRecurringDonations2Disabled();
+        
+        verifyAutomatedNaming();
+    }
+
+    /****
+    * @description Verifies name is auto-generated when enhanced Recurring Donations are enabled
+    */
+    @isTest
+    private static void shouldAutogenerateNameWhenEnhancementIsEnabled() {
+        setRecurringDonations2Enabled();
+
+        verifyAutomatedNaming();
+    }
+
+    /****
+    * @description Creates Recurring Donation record when automatic naming is enabled
+    */
+    private static void verifyAutomatedNaming() {
+        RD2_NamingService_TEST.enableAutomaticNaming();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(contact.Id)
+            .withAmount(100)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = new TEST_SObjectGateway.RecurringDonationGateway().getRecord(rd.Id);
+        System.assertEquals(RD2_NamingService_TEST.getExpectedName(contact, '100'), rd.Name, 'Name should match');
+    }
 
     /****
     * @description Verifies enhanced Recurring Donations are not ready for enablement 
@@ -140,6 +283,56 @@ public with sharing class RD2_EnablementService_TEST {
     ///////////////
 
 
+    /****
+    * @description Returns contact record
+    * @return Contact
+    */
+    private static Contact getContact() {
+        return [
+            SELECT FirstName, LastName, AccountId
+            FROM Contact
+            LIMIT 1
+        ];
+    }
+
+    /****
+    * @description Builds an Opportunity for the Recurring Donation record
+    * @param rdId Recurring Donation Id
+    * @param accountId Account Id
+    * @return Opportunity 
+    */
+    private static Opportunity buildOpportunity(Id rdId, Id accountId) {
+        return new TEST_OpportunityBuilder()
+            .withAmount(100)
+            .withAccount(accountId)
+            .withClosedWonStage()
+            .withCloseDate(Date.today())
+            .withRecurringDonation(rdId)
+            .build();
+    }
+
+    /****
+    * @description Returns Opportunities associated with the specified Recurring Donation
+    * @param rdId Recurring Donation Id
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> getOpportunities(Id rdId) {
+        return getOpportunities(new Set<Id>{ rdId });
+    }
+
+    /****
+    * @description Returns Opportunities associated with specified Recurring Donations
+    * @param rdIds Recurring Donation Ids
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> getOpportunities(Set<Id> rdIds) {
+        return [
+            SELECT Amount, npe03__Recurring_Donation__c
+            FROM Opportunity
+            WHERE npe03__Recurring_Donation__c IN :rdIds
+        ];
+    }
+
     /***
     * @description Enables or disables customizable rollups for testing
     * @param isEnabled Indicates if the CRLP should be enabled in the custom settings
@@ -176,8 +369,7 @@ public with sharing class RD2_EnablementService_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = true,
-                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
-                npe03__Opportunity_Forecast_Months__c = 12
+                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
             )
         );
     }

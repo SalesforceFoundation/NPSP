@@ -1432,6 +1432,12 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>RD2_EnablementPrepTitle</shortDescription>
         <value>Preparation Tasks</value>
+        <fullName>RecurringDonationNameSuffix</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Name Suffix</shortDescription>
+        <value>Recurring</value>
     </labels>
     <labels>
         <fullName>RD_ErrorAddDonationHeaderText</fullName>
@@ -1441,7 +1447,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Refresh Opportunities</shortDescription>
         <value>Refresh Opportunities</value>
     </labels>
-        <labels>
+    <labels>
         <fullName>RD_ErrorAddDonationMissingId</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
