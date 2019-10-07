@@ -173,6 +173,22 @@ private class ERR_Handler_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Confirms that a simple error is created when invoking processError with a String message
+    */
+    @IsTest
+    private static void shouldStoreSimpleErrorMessage() {
+        setupWithChatterNotifications();
+
+        ERR_Handler.processError('Test Message', 'Test Context');
+
+        List<Error__c> errs = getErrors();
+
+        System.assertEquals(1, errs.size(), '1 error should be present');
+        System.assertEquals(true, errs[0].Full_Message__c.contains('Test Message'), 'Full Message should contain Test Message, Actual: ' + errs[0].Full_Message__c);
+        System.assertEquals('Test Context', errs[0].Context_Type__c, 'Error Context Type');
+    }
+
+    /*******************************************************************************************************
     * @description Testing that DML changes are properly rolled back in a controller that adheres to our
     * error-handling design, and that the error is properly stored.
     */
