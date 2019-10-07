@@ -156,13 +156,13 @@
     <fields>
         <fullName>Campaign__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>The Campaign associated with the Recurring Donation when the Schedule was created</description>
+        <description>The Campaign associated with the Recurring Donation when this schedule record was created.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Campaign associated with the Recurring Donation when the Schedule was created</inlineHelpText>
+        <inlineHelpText>The Campaign associated with the Recurring Donation when this schedule record was created.</inlineHelpText>
         <label>Related Campaign</label>
         <referenceTo>Campaign</referenceTo>
-        <relationshipLabel>Recurring Schedules</relationshipLabel>
-        <relationshipName>Recurring_Schedules</relationshipName>
+        <relationshipLabel>Recurring Donation Schedules</relationshipLabel>
+        <relationshipName>RecurringDonationSchedules</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
@@ -454,8 +454,8 @@
         <inlineHelpText>The Recurring Donation this schedule record is associated with.</inlineHelpText>
         <label>Recurring Donation</label>
         <referenceTo>npe03__Recurring_Donation__c</referenceTo>
-        <relationshipLabel>Recurring Schedules</relationshipLabel>
-        <relationshipName>Recurring_Schedules</relationshipName>
+        <relationshipLabel>Recurring Donation Schedules</relationshipLabel>
+        <relationshipName>RecurringDonationSchedules</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
         <trackTrending>false</trackTrending>
@@ -472,13 +472,13 @@
         <trackTrending>false</trackTrending>
         <type>Date</type>
     </fields>
-    <label>Recurring Schedule</label>
+    <label>Recurring Donation Schedule</label>
     <nameField>
         <displayFormat>RD-Schedule-{0000000000}</displayFormat>
         <label>Recurring Schedule Num</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Recurring Schedules</pluralLabel>
+    <pluralLabel>Recurring Donation Schedules</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Protected</visibility>

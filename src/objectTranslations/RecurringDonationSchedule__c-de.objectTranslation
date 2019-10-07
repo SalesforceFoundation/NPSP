@@ -3,48 +3,48 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Schedule --></value>
+        <value><!-- Recurring Donation Schedule --></value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Schedule --></value>
+        <value><!-- Recurring Donation Schedule --></value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Schedule --></value>
+        <value><!-- Recurring Donation Schedule --></value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Schedule --></value>
+        <value><!-- Recurring Donation Schedule --></value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Schedule --></value>
+        <value><!-- Recurring Donation Schedule --></value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Schedule --></value>
+        <value><!-- Recurring Donation Schedule --></value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Schedule --></value>
+        <value><!-- Recurring Donation Schedule --></value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Schedule --></value>
+        <value><!-- Recurring Donation Schedule --></value>
     </caseValues>
     <fields>
         <help><!-- The Campaign associated with the Recurring Donation when the Schedule was created --></help>
         <label><!-- Related Campaign --></label>
         <name>Campaign__c</name>
-        <relationshipLabel><!-- Recurring Schedules --></relationshipLabel>
+        <relationshipLabel><!-- Recurring Donation Schedules --></relationshipLabel>
     </fields>
     <fields>
         <help><!-- The ending date, if required, for this schedule record. --></help>
@@ -112,7 +112,7 @@
         <help><!-- The Recurring Donation this schedule record is associated with. --></help>
         <label><!-- Recurring Donation --></label>
         <name>RecurringDonation__c</name>
-        <relationshipLabel><!-- Recurring Schedules --></relationshipLabel>
+        <relationshipLabel><!-- Recurring Donation Schedules --></relationshipLabel>
     </fields>
     <fields>
         <help><!-- The starting date for this schedule record. --></help>
