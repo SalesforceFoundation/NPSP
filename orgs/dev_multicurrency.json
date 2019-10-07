@@ -1,0 +1,18 @@
+{
+  "orgName": "NPSP - Dev Workspace - Multicurrency",
+  "edition": "Developer",
+  "features": [
+    "MultiCurrency"
+  ],
+  "hasSampleData": "true",
+  "settings": {
+    "orgPreferenceSettings": {
+      "chatterEnabled": true,
+      "disableParallelApexTesting": true,
+      "notesReservedPref01": true,
+      "s1DesktopEnabled": true,
+      "translation": true,
+      "s1EncryptedStoragePref2": false
+    }
+  }
+}
