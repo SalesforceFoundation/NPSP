@@ -7086,7 +7086,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpErrorNotifyOn</shortDescription>
-        <value>When selected, NPSP will display notifications for certain types of errrors.</value>
+        <value>When selected, NPSP will display notifications for certain types of errors.</value>
     </labels>
     <labels>
         <fullName>stgHelpErrorNotifyTo</fullName>
