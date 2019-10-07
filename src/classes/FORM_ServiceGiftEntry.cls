@@ -89,7 +89,6 @@ public with sharing class FORM_ServiceGiftEntry {
                                                             Description__c = description,
                                                             Template_JSON__c = templateJSON,
                                                             Format_Version__c = formatVersion);
-            System.debug('Form_Template__c: ' + templateObj);
             upsert templateObj;
             return templateObj.id;
         }
@@ -104,10 +103,6 @@ public with sharing class FORM_ServiceGiftEntry {
         FORM_Template template;
         if (templateObj != null && templateObj.Template_JSON__c != null) {
             template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
-            System.debug(template);
-            System.debug(template.layout);
-            System.debug(template.layout.sections[0]);
-            System.debug(template.layout.sections[0].elements);
         }
         return template;
     }
