@@ -255,8 +255,6 @@ public class ERR_Handler {
         processError(e, context.name());
     }
 
-
-
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
@@ -266,6 +264,19 @@ public class ERR_Handler {
     public static void processError(Exception e, String context) {
         if (e != null) {
             Error__c error = createError(e, context);
+            processErrors(new Error__c[]{error}, context);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an error record from a String, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+    * @param msg
+    * @param context The context the exception was raised on.
+    */
+    public static void processError(String msg, String context) {
+        if (msg != null) {
+            Error__c error = createError(msg, context);
             processErrors(new Error__c[]{error}, context);
         }
     }
@@ -329,6 +340,23 @@ public class ERR_Handler {
 
         //ERR_Notifier takes care of checking the settings itself.
         ERR_Notifier.sendErrorNotifications(context);
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an error record from a String message
+    * @param msg The message to record.
+    * @param context The context the exception was raised on.
+    * @return Error__c Error record.
+    */
+    private static Error__c createError(String msg, String context) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Error_Type__c = System.Label.errErrorTypeOther;
+        error.Full_Message__c = msg;
+        error.Context_Type__c = context;
+
+
+        return error;
     }
 
     /*******************************************************************************************************
