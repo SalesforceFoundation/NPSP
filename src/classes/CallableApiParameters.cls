@@ -57,7 +57,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a String value
-     * @param paramName
+     * @param paramName Map key for the params collection
      */
     public String getString(String paramName) {
         try {
@@ -70,7 +70,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a Boolean value
-     * @param paramName
+     * @param paramName Map key for the params collection
      */
     public Boolean getBoolean(String paramName) {
         try {
@@ -80,6 +80,12 @@ public class CallableApiParameters {
         }
         return null;
     }
+
+    /**
+     * @description Retrieve the specified Parameter as a Boolean value, and use the default if not found in the map
+     * @param paramName Map key for the params collection
+     * @param defaultValue Default if null
+     */
     public Boolean getBoolean(String paramName, Boolean defaultValue) {
         try {
             if (params.get(paramName) != null) {
@@ -92,8 +98,22 @@ public class CallableApiParameters {
     }
 
     /**
+     * @description Retrieve the specified Parameter as an Exception
+     * @param paramName Map key for the params collection
+     * @param defaultValue Default if null
+     */
+    public Exception getException(String paramName) {
+        try {
+            return (Exception) params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Exception', paramName);
+        }
+        return null;
+    }
+
+/**
      * @description Retrieve the specified Parameter as a List<String> collection
-     * @param paramName
+     * @param paramName Map key for the params collection
      */
     public List<String> getListString(String paramName) {
         try {
@@ -106,7 +126,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a Set<String> collection
-     * @param paramName
+     * @param paramName Map key for the params collection
      */
     public Set<String> getSetString(String paramName) {
         try {
@@ -118,12 +138,38 @@ public class CallableApiParameters {
     }
 
     /**
+     * @description Retrieve the specified Parameter as a Set<String> collection
+     * @param paramName Map key for the params collection
+     */
+    public Map<Id, String> getStringsById(String paramName) {
+        try {
+            return (Map<Id, String>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Map<Id, String>', paramName);
+        }
+        return null;
+    }
+
+    /**
      * @description Retrieve the specified Parameter as a List<SObject> collection
-     * @param paramName
+     * @param paramName Map key for the params collection
      */
     public List<SObject> getSObjects(String paramName) {
         try {
             return (List<SObject>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('List<SObject>', paramName);
+        }
+        return null;
+    }
+
+  /**
+     * @description Retrieve the specified Parameter as a List<Object> collection
+     * @param paramName Map key for the params collection
+     */
+    public List<Object> getObjects(String paramName) {
+        try {
+            return (List<Object>)params.get(paramName);
         } catch (Exception ex) {
             throwParameterException('List<Object>', paramName);
         }
@@ -133,7 +179,7 @@ public class CallableApiParameters {
     /**
      * @description Retrieve the specified Parameter as a List<CRLP_Rollup> collection. This expects to the parameter
      * value to be a JSON String. This method will deserialize and return as the appropriate data type.
-     * @param paramName
+     * @param paramName Map key for the params collection
      */
     public List<CRLP_Rollup> getRollupDefinitions(String paramName) {
         try {
@@ -149,7 +195,7 @@ public class CallableApiParameters {
      * @description Retrieve the specified Parameter as a map of data where the outter map key is the parent record
      * id (i.e., Opportunity), and the inner map is each related SObjectName where the first SObject Name is "Opportunity".
      * value to be a JSON String. This method will deserialize and return as the appropriate data type.
-     * @param paramName
+     * @param paramName Map key for the params collection
      * @return Map<Id, Map<SObjectType, List<SObject>>>
      */
     public Map<Id, Map<SObjectType, List<SObject>>> getRollupDataMap(String paramName) {
@@ -163,6 +209,8 @@ public class CallableApiParameters {
 
     /**
      * @description Thrown a custom exception when the parameter cannot be cast as the specified type
+     * @param dataType Data type of the parameter
+     * @param paramName Map key for the params collection
      */
     private void throwParameterException(String dataType, String paramName) {
         throw new ParameterException(String.format( System.Label.CallableApiParameterError,
