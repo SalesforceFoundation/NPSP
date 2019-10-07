@@ -512,6 +512,9 @@ flows:
 
 orgs:
     scratch:
+        dev_multicurrency:
+            config_file: orgs/dev_multicurrency.json
+            days: 7
         dev_namespaced:
             config_file: orgs/dev.json
             namespaced: True
