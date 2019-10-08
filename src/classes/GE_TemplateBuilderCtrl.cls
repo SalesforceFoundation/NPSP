@@ -80,7 +80,7 @@ public with sharing class GE_TemplateBuilderCtrl {
     */
     @AuraEnabled
     public static ObjectMappingWrapper[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
-        bdiCMT = BDI_FieldMappingCustomMetadata.getInstance(fieldMappingSetName);
+        bdiCMT = BDI_FieldMappingCustomMetadata.retrieveInstance(fieldMappingSetName);
         ObjectMappingWrapper[] objectWrappers = new ObjectMappingWrapper[]{};
 
         for (Data_Import_Object_Mapping__mdt objectMapping : bdiCMT.objMappingsByDevName.values()) {
