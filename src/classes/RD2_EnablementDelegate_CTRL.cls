@@ -106,6 +106,17 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @description 
     */
     @AuraEnabled
+    public static void launchMetaDeploy() {
+        EnablementState state = getEnablementState();
+        state.isMetaDeployLaunched = true;
+
+        saveEnablementState(state);
+    }
+
+    /***
+    * @description 
+    */
+    @AuraEnabled
     public static void confirmMetaDeploy() {
         EnablementState state = getEnablementState();
         state.isMetaDeployConfirmed = true;

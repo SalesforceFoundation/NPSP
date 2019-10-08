@@ -8,6 +8,9 @@
     onEnabled: function (component, event, helper) {
         helper.enable(component);
     },
+    onMetaDeployLaunch: function (component, event, helper) {
+        helper.launchMetaDeploy(component);
+    },
     onMetaDeployConfirm: function (component, event, helper) {
         helper.confirmMetaDeploy(component);
     },

@@ -114,8 +114,56 @@
     /****
     * @description Confirms MetaDeploy has been installed
     */
+    launchMetaDeploy: function (component) {
+        this.enableEdit(component, "metadeploy-confirm");
+
+        var action = component.get('c.launchMetaDeploy');
+
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+
+            if (!component.isValid()) {
+                return;
+            }
+
+            if (state === 'SUCCESS') {
+                component.set('v.isMetaDeployLaunched', true);
+
+            } else if (state === 'ERROR') {
+                this.disableEdit(component, "metadeploy-confirm");
+
+                this.handleError(component, response.getError());
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
+    * @description Confirms MetaDeploy has been installed
+    */
     confirmMetaDeploy: function (component) {
         this.disableEdit(component, "metadeploy-confirm");
+
+        var action = component.get('c.confirmMetaDeploy');
+
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+
+            if (!component.isValid()) {
+                return;
+            }
+
+            if (state === 'SUCCESS') {
+                component.set('v.isMetaDeployConfirmed', true);
+
+            } else if (state === 'ERROR') {
+                this.enableEdit(component, "metadeploy-confirm");
+
+                this.handleError(component, response.getError());
+            }
+        });
+
+        $A.enqueueAction(action);
     },
     /****
     * @description Hides component's element
