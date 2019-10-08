@@ -219,9 +219,11 @@ npsp_lex_locators={
     'adv_mappings':{
         'dropdown':"//tr[.//*[text()='{}']]/td[.//span[text()='Show actions']]//button",
         'modal_open':'//div[contains(@class,"slds-backdrop_open")]',
-        'target_field':'//input[@name="targetFieldLabel"]',
+        'field_mapping':'//input[@name="{}"]',
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
-        'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']",
+        'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
+        'button':"//button[text()='Create New Field Mapping']",
+        'field-label':'//lightning-formatted-text[text()="{}"]',
         },
     
 }
