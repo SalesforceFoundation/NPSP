@@ -226,8 +226,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Returns the Data Import DFRs for a set of target objects
-    * @return list of DescribeFieldResults
+    * @description Returns a map of Data Import fields to their mapped target fields
+    * used to determine the list of fields to display as available in the BGE Configuration
+    * Wizard.
+    * @return Map of SObjectFields to target fields in BDI_TargetFields format.
     */
     public static Map<SObjectField, BDI_TargetFields> getRelevantFields() {
 
