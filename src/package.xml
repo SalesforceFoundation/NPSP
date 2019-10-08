@@ -86,6 +86,7 @@
         <members>BDI_FieldMappingCustomMetadata</members>
         <members>BDI_FieldMappingCustomMetadata_TEST</members>
         <members>BDI_FieldMappingHelpText</members>
+        <members>BDI_FieldMappingHelpText_TEST</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
