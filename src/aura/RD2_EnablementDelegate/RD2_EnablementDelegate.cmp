@@ -37,18 +37,21 @@
             <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementIntro}" />
         </lightning:layoutItem>
 
-        <lightning:layoutItem padding="horizontal-small" class="slds-p-top_medium" size="12">
-            <lightning:card title="{!$Label.c.RD2_EnablementPrepTitle}" class="page-section" aura:id="prep-title">
-                <lightning:layout multipleRows="true">
-                    <lightning:layoutItem padding="horizontal-large" size="12">
-                        <lightning:formattedRichText class="slds-text-longform"
-                            value="{!$Label.c.RD2_EnablementPrepTasks}" />
-                    </lightning:layoutItem>
-                </lightning:layout>
-            </lightning:card>
+        <lightning:layoutItem padding="horizontal-large" class="slds-p-top_large" size="12">
+            <lightning:layout multipleRows="true">
+                <h2 class="title slds-text-heading_small">{!$Label.c.RD2_EnablementPrepTitle}</h2>
+                <lightning:layoutItem class="slds-p-top_small" size="12">
+                    <lightning:formattedRichText class="slds-text-longform"
+                        value="{!$Label.c.RD2_EnablementPrepIntro}" />
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small" class="slds-p-top_small" size="12">
+                    <lightning:formattedRichText class="slds-text-longform"
+                        value="{!$Label.c.RD2_EnablementPrepTasks}" />
+                </lightning:layoutItem>
+            </lightning:layout>
         </lightning:layoutItem>
 
-        <lightning:layoutItem padding="horizontal-small" size="12">
+        <lightning:layoutItem padding="horizontal-small" class="slds-p-top_large" size="12">
             <lightning:card title="{!$Label.c.RD2_EnablementEnableTitle}" class="page-section" aura:id="enablement">
                 <div class="slds-p-horizontal_large slds-progress slds-progress_vertical">
                     <ol class="slds-progress__list">
@@ -86,16 +89,29 @@
                                 </aura:if>
                             </div>
 
-                            <div class="slds-progress__item_content slds-grid slds-gutters">
+                            <div class="slds-progress__item_content slds-grid slds-gutters slds-wrap">
                                 <div class="slds-col slds-size_10-of-12">
-                                    <lightning:formattedRichText value="{!$Label.c.RD2_EnablementEnableMessage}" />
-                                    &nbsp;
-                                    <lightning:icon iconName="utility:warning" alternativeText="warning" size="xx-small"
-                                        class="slds-icon-text-default" variant="warning" />
-                                    &nbsp;
-                                    <lightning:formattedRichText value="{!$Label.c.RD2_EnablementEnableWarning}" />
+                                    <div class="slds-grid">
+                                        <div class="slds-media slds-media_center slds-text-align_center">
+                                            <label for="enable-toggle">
+                                                <lightning:formattedRichText
+                                                    value="{!$Label.c.RD2_EnablementEnableMessage}" />
+                                            </label>
+                                        </div>
+                                        <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light"
+                                            role="alert">
+                                            <div class="slds-media__figure slds-text-align_center">
+                                                <lightning:icon iconName="utility:warning" alternativeText="warning"
+                                                    size="xx-small" variant="warning" />
+                                            </div>
+                                            <div class="slds-media__body">
+                                                <lightning:formattedRichText
+                                                    value="{!$Label.c.RD2_EnablementEnableWarning}" />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="slds-col slds-size_2-of-12 slds-p-left_small">
+                                <div class="slds-col slds-size_2-of-12">
                                     <lightning:input type="toggle" label="{!$Label.c.RD2_EnablementEnableMessage}"
                                         variant="label-hidden" aura:id="enable-toggle" name="enable-toggle"
                                         checked="{!v.isEnabled}" onchange="{!c.onEnabled}"
@@ -105,11 +121,11 @@
                                 </div>
                             </div>
                         </li>
-
                     </ol>
                 </div>
             </lightning:card>
         </lightning:layoutItem>
+
 
         <lightning:layoutItem padding="horizontal-small" size="12">
             <lightning:card title="{!$Label.c.RD2_EnablementMetaDeployTitle}" class="page-section" aura:id="metadeploy">
@@ -176,10 +192,17 @@
                         <lightning:button label="{!$Label.c.RD2_EnablementMigrationRunButton}" variant="neutral"
                             disabled="{!or(!v.isMetaDeployConfirmed, v.isMigrationRun)}" />
                     </lightning:layoutItem>
-                    <lightning:layoutItem padding="horizontal-large" class="slds-p-top_small" size="10">
-                        <lightning:icon iconName="utility:warning" alternativeText="warning" size="xx-small"
-                            class="slds-icon-text-default" variant="warning" />&nbsp;
-                        <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationWarning}" />
+                    <lightning:layoutItem padding="horizontal-large" size="10">
+                        <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small"
+                            role="alert">
+                            <div class="slds-media__figure slds-text-align_center">
+                                <lightning:icon iconName="utility:warning" alternativeText="warning" size="xx-small"
+                                    variant="warning" />
+                            </div>
+                            <div class="slds-media__body">
+                                <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationWarning}" />
+                            </div>
+                        </div>
                     </lightning:layoutItem>
                     <lightning:layoutItem size="2" />
                 </lightning:layout>
