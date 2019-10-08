@@ -234,8 +234,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         Map<SObjectField, BDI_TargetFields> filteredTargetFieldsBySourceField = 
             new Map<SObjectField, BDI_TargetFields>();
 
-        BDI_FieldMapping fieldMapping = BDI_DataImportService.getDefaultFieldMapping();
-
         Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
             BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField;
 
