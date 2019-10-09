@@ -66,13 +66,9 @@
                         <ol class="slds-progress__list slds-progress__list-bordered">
                             <li
                                 class="{!'slds-progress__item ' + if(v.isEnableConfirmed, 'slds-is-completed', 'slds-is-active')}">
-                                <div
-                                    class="{!'slds-progress__marker ' + if(v.isEnableConfirmed, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
-                                    <aura:if isTrue="{!v.isEnableConfirmed}">
-                                        <lightning:icon iconName="utility:success" class="slds-icon-text-default"
-                                            size="x-small" />
-                                    </aura:if>
-                                </div>
+
+                                <c:progressIndicatorMarker isComplete="{!v.isEnableConfirmed}" isPreviousComplete="true"
+                                    isNextComplete="{!v.isEnabled}" />
 
                                 <div class="slds-progress__item_content slds-grid slds-gutters">
                                     <div class="slds-col slds-size_10-of-12">
@@ -92,13 +88,10 @@
 
                             <li
                                 class="{!'slds-progress__item ' + if(v.isEnabled, 'slds-is-completed', 'slds-is-active')}">
-                                <div
-                                    class="{!'slds-progress__marker ' + if(v.isEnabled, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
-                                    <aura:if isTrue="{!v.isEnabled}">
-                                        <lightning:icon iconName="utility:success" class="slds-icon-text-default"
-                                            size="x-small" />
-                                    </aura:if>
-                                </div>
+
+                                <c:progressIndicatorMarker isComplete="{!v.isEnabled}"
+                                    isPreviousComplete="{!v.isEnableConfirmed}"
+                                    isNextComplete="{!v.isMetaDeployLaunched}" />
 
                                 <div class="slds-progress__item_content slds-grid slds-gutters slds-wrap">
                                     <div class="slds-col slds-size_10-of-12">
@@ -155,13 +148,9 @@
                         <ol class="slds-progress__list slds-progress__list-bordered">
                             <li
                                 class="{!'slds-progress__item ' + if(v.isMetaDeployLaunched, 'slds-is-completed', 'slds-is-active')}">
-                                <div
-                                    class="{!'slds-progress__marker ' + if(v.isMetaDeployLaunched, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
-                                    <aura:if isTrue="{!v.isMetaDeployLaunched}">
-                                        <lightning:icon iconName="utility:success" class="slds-icon-text-default"
-                                            size="x-small" />
-                                    </aura:if>
-                                </div>
+
+                                <c:progressIndicatorMarker isComplete="{!v.isMetaDeployLaunched}"
+                                    isPreviousComplete="{!v.isEnabled}" isNextComplete="{!v.isMetaDeployConfirmed}" />
 
                                 <div class="slds-progress__item_content slds-grid slds-gutters">
                                     <div class="slds-col slds-size_10-of-12">
@@ -178,13 +167,10 @@
 
                             <li
                                 class="{!'slds-progress__item ' + if(v.isMetaDeployConfirmed, 'slds-is-completed', 'slds-is-active')}">
-                                <div
-                                    class="{!'slds-progress__marker ' + if(v.isMetaDeployConfirmed, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
-                                    <aura:if isTrue="{!v.isMetaDeployConfirmed}">
-                                        <lightning:icon iconName="utility:success" class="slds-icon-text-default"
-                                            size="x-small" />
-                                    </aura:if>
-                                </div>
+
+                                <c:progressIndicatorMarker isComplete="{!v.isMetaDeployConfirmed}"
+                                    isPreviousComplete="{!v.isMetaDeployLaunched}"
+                                    isNextComplete="{!v.isMigrationRun}" />
 
                                 <div class="slds-progress__item_content slds-grid slds-gutters">
                                     <div class="slds-col slds-size_10-of-12">

@@ -1,0 +1,27 @@
+<aura:component>
+
+    <aura:attribute name="isComplete" default="false" type="Boolean"
+        description="Indicates if the step in the progress indicator is complete" />
+
+    <aura:attribute name="isPreviousComplete" default="false" type="Boolean"
+        description="Indicates if the previous step in the progress indicator is complete in order to mark the current as active" />
+
+    <aura:attribute name="isNextComplete" default="false" type="Boolean"
+        description="Indicates if the next step in the progress indicator is complete in order to mark the current as active" />
+
+
+    <div
+        class="{!'slds-progress__marker ' + if(v.isComplete, 'slds-progress__marker_icon slds-progress__marker_icon-success', '')}">
+        <aura:if isTrue="{!v.isComplete}">
+            <lightning:icon iconName="utility:success" class="slds-icon-text-default" size="x-small"
+                alternativeText="{!$Label.c.AlternativeTextComplete}" />
+
+            <aura:set attribute="else">
+                <aura:if isTrue="{!and(v.isPreviousComplete, not(v.isNextComplete))}">
+                    <span class="slds-assistive-text">{!$Label.c.AlternativeTextActive}</span>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </div>
+
+</aura:component>
