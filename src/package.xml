@@ -1682,6 +1682,8 @@
         <members>campaignMemberStatusResponded</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
+        <members>conMergeErrorNoDeleteObjPermission</members>
+        <members>conMergeErrorNoDeleteRecAccess</members>
         <members>conMergeErrNoPersonAccounts</members>
         <members>conMergeFoundContacts</members>
         <members>conMergePageTitle</members>
