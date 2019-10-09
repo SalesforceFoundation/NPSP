@@ -1267,6 +1267,10 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
+        <members>AlternativeTextActive</members>
+        <members>AlternativeTextComplete</members>
+        <members>AlternativeTextExpired</members>
+        <members>AlternativeTextWarning</members>
         <members>CMT_DeleteConfirm</members>
         <members>CMT_FilterGroupActiveRollupsHelpText</members>
         <members>CMT_FilterGroupDeleteError</members>
@@ -3005,6 +3009,7 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>progressRing</members>
         <members>pubsubNoPageRef</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>

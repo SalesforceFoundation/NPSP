@@ -277,6 +277,38 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
+        <fullName>AlternativeTextActive</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AlternativeTextActive</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
+        <fullName>AlternativeTextComplete</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AlternativeTextComplete</shortDescription>
+        <value>Complete</value>
+    </labels>
+    <labels>
+        <fullName>AlternativeTextExpired</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AlternativeTextExpired</shortDescription>
+        <value>Expired</value>
+    </labels>
+    <labels>
+        <fullName>AlternativeTextWarning</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AlternativeTextWarning</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
         <fullName>CONV_Accept_Risk</fullName>
         <language>en_US</language>
         <protected>false</protected>

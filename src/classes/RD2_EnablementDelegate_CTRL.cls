@@ -84,9 +84,17 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         
         state.isReady = service.isRecurringDonations2Ready();
         state.isEnabled = service.isRecurringDonations2Enabled();
-        state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
-        state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched;
-        state.isMigrationRun = state.isMigrationRun && state.isMetaDeployConfirmed;
+
+        if (String.isBlank(jsonState)) {
+            state.isConfirmed = false;
+            state.isMetaDeployLaunched = false;
+            state.isMetaDeployConfirmed = false;
+            state.isMigrationRun = false;
+        } else {
+            state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
+            state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched;
+            state.isMigrationRun = state.isMigrationRun && state.isMetaDeployConfirmed;
+        }
 
         return state;
     }

@@ -2,17 +2,17 @@
     doInit: function (component, event, helper) {
         helper.loadState(component);
     },
-    onEnableConfirm: function (component, event, helper) {
-        helper.confirmEnablement(component);
+    handleEnableConfirm: function (component, event, helper) {
+        helper.confirmEnable(component);
     },
-    onEnabled: function (component, event, helper) {
-        helper.enable(component);
+    handleEnable: function (component, event, helper) {
+        helper.completeEnable(component);
     },
-    onMetaDeployLaunch: function (component, event, helper) {
-        helper.launchMetaDeploy(component);
+    handleMetaDeployLaunch: function (component, event, helper) {
+        helper.launchDeploy(component);
     },
-    onMetaDeployConfirm: function (component, event, helper) {
-        helper.confirmMetaDeploy(component);
+    handleMetaDeployConfirm: function (component, event, helper) {
+        helper.confirmDeploy(component);
     },
     refreshView: function (component, event, helper) {
         helper.refreshView(component);

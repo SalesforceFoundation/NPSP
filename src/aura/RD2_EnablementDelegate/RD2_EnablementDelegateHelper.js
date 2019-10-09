@@ -59,7 +59,7 @@
     /****
     * @description Accepts enhanced Recurring Donations enablement
     */
-    confirmEnablement: function (component) {
+    confirmEnable: function (component) {
         this.disableEdit(component, "enable-confirm");
 
         var action = component.get('c.confirmEnablement');
@@ -87,7 +87,7 @@
     /****
     * @description Enables enhanced Recurring Donations 
     */
-    enable: function (component) {
+    completeEnable: function (component) {
         this.disableEdit(component, "enable-toggle");
 
         var action = component.get('c.enableEnhancement');
@@ -114,7 +114,7 @@
     /****
     * @description Confirms MetaDeploy has been installed
     */
-    launchMetaDeploy: function (component) {
+    launchDeploy: function (component) {
         this.enableEdit(component, "metadeploy-confirm");
 
         var action = component.get('c.launchMetaDeploy');
@@ -141,7 +141,7 @@
     /****
     * @description Confirms MetaDeploy has been installed
     */
-    confirmMetaDeploy: function (component) {
+    confirmDeploy: function (component) {
         this.disableEdit(component, "metadeploy-confirm");
 
         var action = component.get('c.confirmMetaDeploy');

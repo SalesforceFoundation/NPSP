@@ -52,7 +52,15 @@
         </lightning:layoutItem>
 
         <lightning:layoutItem padding="horizontal-small" class="slds-p-top_large" size="12">
-            <lightning:card title="{!$Label.c.RD2_EnablementEnableTitle}" class="page-section" aura:id="enablement">
+            <lightning:card class="page-section" aura:id="enablement">
+
+                <aura:set attribute="title">
+                    <c:progressRing ringContent="1"
+                        valueNow="{!if(v.isEnabled, '100', if(v.isEnableConfirmed, '50', '0'))}"
+                        status="{!if(v.isEnabled, 'complete', '')}" class="slds-m-right_small" />
+                    <lightning:formattedText value="{!$Label.c.RD2_EnablementEnableTitle}" />
+                </aura:set>
+
                 <div class="slds-setup-assistant__step-detail">
                     <div class="slds-progress slds-progress_vertical">
                         <ol class="slds-progress__list slds-progress__list-bordered">
@@ -77,7 +85,7 @@
                                         <lightning:input type="checkbox-button"
                                             label="{!$Label.c.RD2_EnablementEnableConfirm}" aura:id="enable-confirm"
                                             name="enable-confirm" checked="{!v.isEnableConfirmed}"
-                                            onchange="{!c.onEnableConfirm}" />
+                                            onchange="{!c.handleEnableConfirm}" />
                                     </div>
                                 </div>
                             </li>
@@ -104,7 +112,7 @@
                                     <div class="slds-col slds-size_2-of-12">
                                         <lightning:input type="toggle" label="{!$Label.c.RD2_EnablementEnableMessage}"
                                             variant="label-hidden" aura:id="enable-toggle" name="enable-toggle"
-                                            checked="{!v.isEnabled}" onchange="{!c.onEnabled}"
+                                            checked="{!v.isEnabled}" onchange="{!c.handleEnable}"
                                             messageToggleActive="{!$Label.c.ToggleEnabled}"
                                             messageToggleInactive="{!$Label.c.ToggleDisabled}">
                                         </lightning:input>
@@ -133,7 +141,15 @@
 
 
         <lightning:layoutItem padding="horizontal-small" size="12">
-            <lightning:card title="{!$Label.c.RD2_EnablementMetaDeployTitle}" class="page-section" aura:id="metadeploy">
+            <lightning:card class="page-section" aura:id="metadeploy">
+
+                <aura:set attribute="title">
+                    <c:progressRing ringContent="2"
+                        valueNow="{!if(v.isMetaDeployConfirmed, '100', if(v.isMetaDeployLaunched, '50', '0'))}"
+                        status="{!if(v.isMetaDeployConfirmed, 'complete', '')}" class="slds-m-right_small" />
+                    <lightning:formattedText value="{!$Label.c.RD2_EnablementMetaDeployTitle}" />
+                </aura:set>
+
                 <div class="slds-setup-assistant__step-detail">
                     <div class="slds-progress slds-progress_vertical">
                         <ol class="slds-progress__list slds-progress__list-bordered">
@@ -154,7 +170,7 @@
                                     </div>
                                     <div class="slds-col slds-size_2-of-12">
                                         <a href="https://install.salesforce.org/products/npsp-rd2-pilot"
-                                            aura:id="metadeploy-link" onclick="{!c.onMetaDeployLaunch}"
+                                            aura:id="metadeploy-link" onclick="{!c.handleMetaDeployLaunch}"
                                             target=" _blank">{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}</a>
                                     </div>
                                 </div>
@@ -179,7 +195,8 @@
                                         <lightning:input type="checkbox-button"
                                             label="{!$Label.c.RD2_EnablementMetaDeployConfirm}"
                                             aura:id="metadeploy-confirm" name="metadeploy-confirm"
-                                            checked="{!v.isMetaDeployConfirmed}" onchange="{!c.onMetaDeployConfirm}" />
+                                            checked="{!v.isMetaDeployConfirmed}"
+                                            onchange="{!c.handleMetaDeployConfirm}" />
                                     </div>
                                 </div>
                             </li>
@@ -191,7 +208,13 @@
         </lightning:layoutItem>
 
         <lightning:layoutItem padding="horizontal-small" size="12">
-            <lightning:card title="{!$Label.c.RD2_EnablementMigrationTitle}" class="page-section" aura:id="migration">
+            <lightning:card class="page-section" aura:id="migration">
+
+                <aura:set attribute="title">
+                    <c:progressRing ringContent="3" valueNow="{!if(v.isMigrationRun, '100', '0')}"
+                        status="{!if(v.isMigrationRun, 'complete', '')}" class="slds-m-right_small" />
+                    <lightning:formattedText value="{!$Label.c.RD2_EnablementMigrationTitle}" />
+                </aura:set>
 
                 <div class="slds-setup-assistant__step-detail">
                     <lightning:layout multipleRows="true">
