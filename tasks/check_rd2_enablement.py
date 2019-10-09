@@ -13,11 +13,14 @@ class is_rd2_enabled(BaseSalesforceApiTask):
             # The field does not exist in the target org, meaning it's
             # pre-RD2
             self.return_values = False
+            self.logger.info("Identified Enhanced Recurring Donations status: {}".format(self.return_values))
             return
 
         if settings.get("records"):
-            if settings["records"][0]["IsRecurringDonations2Enabled__c"]:
+            if settings["records"][0]["npsp__IsRecurringDonations2Enabled__c"]:
                 self.return_values = True
+                self.logger.info("Identified Enhanced Recurring Donations status: {}".format(self.return_values))
                 return
 
         self.return_values = False
+        self.logger.info("Identified Enhanced Recurring Donations status: {}".format(self.return_values))
