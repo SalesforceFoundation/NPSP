@@ -18,11 +18,7 @@
 
                 this.displayElement(component, "enabler");
 
-                component.set('v.isEnableConfirmed', enablementState.isConfirmed);
-                component.set('v.isEnabled', enablementState.isEnabled);
-                component.set("v.isMetaDeployLaunched", enablementState.isMetaDeployLaunched);
-                component.set("v.isMetaDeployConfirmed", enablementState.isMetaDeployConfirmed);
-                component.set("v.isMigrationRun", enablementState.isMigrationRun);
+                component.set('v.state', enablementState);
 
                 if (enablementState.isConfirmed) {
                     this.disableEdit(component, "enable-confirm");
@@ -32,13 +28,8 @@
                     this.disableEdit(component, "enable-toggle");
                 }
 
-                if (!enablementState.isEnabled) {
-                    this.disableEdit(component, "metadeploy-link");
-                }
+                this.refreshMetaDeploy(component);
 
-                if (!enablementState.isMetaDeployLaunched || enablementState.isMetaDeployConfirmed) {
-                    this.disableEdit(component, "metadeploy-confirm");
-                }
 
             } else if (state === "ERROR") {
                 this.handleError(component, response.getError());
@@ -72,7 +63,7 @@
             }
 
             if (state === 'SUCCESS') {
-                component.set('v.isEnableConfirmed', true);
+                component.set('v.state.isEnableConfirmed', true);
                 this.enableEdit(component, "enable-toggle");
 
             } else if (state === 'ERROR') {
@@ -100,8 +91,8 @@
             }
 
             if (state === 'SUCCESS') {
-                component.set('v.isEnabled', true);
-                this.enableEdit(component, "metadeploy-link");
+                component.set('v.state.isEnabled', true);
+                this.refreshMetaDeploy(component);
 
             } else if (state === 'ERROR') {
                 this.enableEdit(component, "enable-toggle");
@@ -127,7 +118,8 @@
             }
 
             if (state === 'SUCCESS') {
-                component.set('v.isMetaDeployLaunched', true);
+                component.set('v.state.isMetaDeployLaunched', true);
+                this.refreshMetaDeploy(component);
 
             } else if (state === 'ERROR') {
                 this.disableEdit(component, "metadeploy-confirm");
@@ -154,7 +146,8 @@
             }
 
             if (state === 'SUCCESS') {
-                component.set('v.isMetaDeployConfirmed', true);
+                component.set('v.state.isMetaDeployConfirmed', true);
+                this.refreshMetaDeploy(component);
 
             } else if (state === 'ERROR') {
                 this.enableEdit(component, "metadeploy-confirm");
@@ -164,6 +157,33 @@
         });
 
         $A.enqueueAction(action);
+    },
+    /****
+    * @description 
+    */
+    refreshMetaDeploy: function (component) {
+        let enablementState = component.get("v.state");
+
+        if (enablementState.isEnabled) {
+            this.enableEdit(component, "metadeploy-link");
+        } else {
+            this.disableEdit(component, "metadeploy-link");
+        }
+
+        if (!enablementState.isMetaDeployLaunched || enablementState.isMetaDeployConfirmed) {
+            this.disableEdit(component, "metadeploy-confirm");
+        } else {
+            this.enableEdit(component, "metadeploy-confirm");
+        }
+
+        let metaDeployProgress = 0;
+        if (enablementState.isMetaDeployConfirmed) {
+            metaDeployProgress = 100;
+        } else if (enablementState.isMetaDeployLaunched) {
+            metaDeployProgress = 50;
+        }
+
+        component.set('v.state.metaDeployProgress', metaDeployProgress);
     },
     /****
     * @description Hides component's element

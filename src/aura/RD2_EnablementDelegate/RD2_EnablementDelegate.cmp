@@ -1,17 +1,7 @@
 <aura:component controller="RD2_EnablementDelegate_CTRL"
     implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressable" access="global">
 
-
-    <aura:attribute name="isEnableConfirmed" type="Boolean" default="false"
-        description="Indicates if enhanced Recurring Donations enablement is confirmed" />
-    <aura:attribute name="isEnabled" type="Boolean" default="false"
-        description="Indicates if enhanced Recurring Donations have been enabled" />
-    <aura:attribute name="isMetaDeployLaunched" type="Boolean" default="false"
-        description="Indicates if MetaDeploy has been launched" />
-    <aura:attribute name="isMetaDeployConfirmed" type="Boolean" default="false"
-        description="Indicates if MetaDeploy has been completed" />
-    <aura:attribute name="isMigrationRun" type="Boolean" default="false"
-        description="Indicates if data migration has been completed" />
+    <aura:attribute name="state" type="Object" description="Contains enablement state attributes" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler event="force:refreshView" action="{!c.refreshView}" />
@@ -56,8 +46,8 @@
 
                 <aura:set attribute="title">
                     <c:progressRing ringContent="1"
-                        valueNow="{!if(v.isEnabled, '100', if(v.isEnableConfirmed, '50', '0'))}"
-                        status="{!if(v.isEnabled, 'complete', '')}" class="slds-m-right_small" />
+                        valueNow="{!if(v.state.isEnabled, '100', if(v.state.isConfirmed, '50', '0'))}"
+                        status="{!if(v.state.isEnabled, 'complete', '')}" class="slds-m-right_small" />
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementEnableTitle}" />
                 </aura:set>
 
@@ -65,68 +55,74 @@
                     <div class="slds-progress slds-progress_vertical">
                         <ol class="slds-progress__list slds-progress__list-bordered">
                             <li
-                                class="{!'slds-progress__item ' + if(v.isEnableConfirmed, 'slds-is-completed', 'slds-is-active')}">
+                                class="{!'slds-progress__item ' + if(v.state.isConfirmed, 'slds-is-completed', 'slds-is-active')}">
 
-                                <c:progressIndicatorMarker isComplete="{!v.isEnableConfirmed}" isPreviousComplete="true"
-                                    isNextComplete="{!v.isEnabled}" />
+                                <c:progressIndicatorMarker isComplete="{!v.state.isConfirmed}" isPreviousComplete="true"
+                                    isNextComplete="{!v.state.isEnabled}" />
 
-                                <div class="slds-progress__item_content slds-grid slds-gutters">
-                                    <div class="slds-col slds-size_10-of-12">
-                                        <label for="enable-confirm">
-                                            <lightning:formattedRichText
-                                                value="{!$Label.c.RD2_EnablementEnableConfirm}" />
-                                        </label>
-                                    </div>
-                                    <div class="slds-col slds-size_2-of-12">
-                                        <lightning:input type="checkbox-button"
-                                            label="{!$Label.c.RD2_EnablementEnableConfirm}" aura:id="enable-confirm"
-                                            name="enable-confirm" checked="{!v.isEnableConfirmed}"
-                                            onchange="{!c.handleEnableConfirm}" />
-                                    </div>
+                                <div class="slds-progress__item_content">
+                                    <lightning:layout>
+                                        <lightning:layoutItem size="10" class="slds-p-right_medium">
+                                            <label for="enable-confirm">
+                                                <lightning:formattedRichText
+                                                    value="{!$Label.c.RD2_EnablementEnableConfirm}" />
+                                            </label>
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem size="2">
+                                            <lightning:input type="checkbox-button"
+                                                label="{!$Label.c.RD2_EnablementEnableConfirm}" aura:id="enable-confirm"
+                                                name="enable-confirm" checked="{!v.state.isConfirmed}"
+                                                onchange="{!c.handleEnableConfirm}" />
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
                                 </div>
                             </li>
 
                             <li
-                                class="{!'slds-progress__item ' + if(v.isEnabled, 'slds-is-completed', 'slds-is-active')}">
+                                class="{!'slds-progress__item ' + if(v.state.isEnabled, 'slds-is-completed', 'slds-is-active')}">
 
-                                <c:progressIndicatorMarker isComplete="{!v.isEnabled}"
-                                    isPreviousComplete="{!v.isEnableConfirmed}"
-                                    isNextComplete="{!v.isMetaDeployLaunched}" />
+                                <c:progressIndicatorMarker isComplete="{!v.state.isEnabled}"
+                                    isPreviousComplete="{!v.state.isConfirmed}"
+                                    isNextComplete="{!v.state.isMetaDeployLaunched}" />
 
-                                <div class="slds-progress__item_content slds-grid slds-gutters slds-wrap">
-                                    <div class="slds-col slds-size_10-of-12">
-                                        <div class="slds-media slds-media_center slds-text-align_center">
-                                            <label for="enable-toggle">
-                                                <lightning:formattedRichText
-                                                    value="{!$Label.c.RD2_EnablementEnableMessage}" />
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="slds-col slds-size_2-of-12">
-                                        <lightning:input type="toggle" label="{!$Label.c.RD2_EnablementEnableMessage}"
-                                            variant="label-hidden" aura:id="enable-toggle" name="enable-toggle"
-                                            checked="{!v.isEnabled}" onchange="{!c.handleEnable}"
-                                            messageToggleActive="{!$Label.c.ToggleEnabled}"
-                                            messageToggleInactive="{!$Label.c.ToggleDisabled}">
-                                        </lightning:input>
-                                    </div>
+                                <div class="slds-progress__item_content">
+                                    <lightning:layout>
+                                        <lightning:layoutItem size="10" class="slds-p-right_medium">
+                                            <div class="slds-media slds-media_center slds-text-align_center">
+                                                <label for="enable-toggle">
+                                                    <lightning:formattedRichText
+                                                        value="{!$Label.c.RD2_EnablementEnableMessage}" />
+                                                </label>
+                                            </div>
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem size="2">
+                                            <lightning:input type="toggle"
+                                                label="{!$Label.c.RD2_EnablementEnableMessage}" variant="label-hidden"
+                                                aura:id="enable-toggle" name="enable-toggle"
+                                                checked="{!v.state.isEnabled}" onchange="{!c.handleEnable}"
+                                                messageToggleActive="{!$Label.c.ToggleEnabled}"
+                                                messageToggleInactive="{!$Label.c.ToggleDisabled}">
+                                            </lightning:input>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
                                 </div>
                             </li>
                         </ol>
-                        <div class="slds-grid slds-gutters">
-                            <div class="slds-col slds-size_10-of-12">
+                        <lightning:layout>
+                            <lightning:layoutItem size="10" class="slds-p-right_medium">
                                 <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light"
                                     role="alert">
                                     <div class="slds-media__figure slds-text-align_center">
-                                        <lightning:icon iconName="utility:warning" alternativeText="warning"
-                                            size="xx-small" variant="warning" />
+                                        <lightning:icon iconName="utility:warning"
+                                            alternativeText="{!$Label.c.AlternativeTextWarning}" size="xx-small"
+                                            variant="warning" />
                                     </div>
                                     <div class="slds-media__body">
                                         <lightning:formattedRichText value="{!$Label.c.RD2_EnablementEnableWarning}" />
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
                     </div>
                 </div>
             </lightning:card>
@@ -137,9 +133,8 @@
             <lightning:card class="page-section" aura:id="metadeploy">
 
                 <aura:set attribute="title">
-                    <c:progressRing ringContent="2"
-                        valueNow="{!if(v.isMetaDeployConfirmed, '100', if(v.isMetaDeployLaunched, '50', '0'))}"
-                        status="{!if(v.isMetaDeployConfirmed, 'complete', '')}" class="slds-m-right_small" />
+                    <c:progressRing ringContent="2" valueNow="{!v.state.metaDeployProgress}"
+                        status="{!if(v.state.isMetaDeployConfirmed, 'complete', '')}" class="slds-m-right_small" />
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementMetaDeployTitle}" />
                 </aura:set>
 
@@ -147,47 +142,56 @@
                     <div class="slds-progress slds-progress_vertical">
                         <ol class="slds-progress__list slds-progress__list-bordered">
                             <li
-                                class="{!'slds-progress__item ' + if(v.isMetaDeployLaunched, 'slds-is-completed', 'slds-is-active')}">
+                                class="{!'slds-progress__item ' + if(v.state.isMetaDeployLaunched, 'slds-is-completed', 'slds-is-active')}">
 
-                                <c:progressIndicatorMarker isComplete="{!v.isMetaDeployLaunched}"
-                                    isPreviousComplete="{!v.isEnabled}" isNextComplete="{!v.isMetaDeployConfirmed}" />
+                                <c:progressIndicatorMarker isComplete="{!v.state.isMetaDeployLaunched}"
+                                    isPreviousComplete="{!v.state.isEnabled}"
+                                    isNextComplete="{!v.state.isMetaDeployConfirmed}" />
 
-                                <div class="slds-progress__item_content slds-grid slds-gutters">
-                                    <div class="slds-col slds-size_10-of-12">
-                                        <lightning:formattedRichText
-                                            value="{!$Label.c.RD2_EnablementMetaDeployLaunch}" />
-                                    </div>
-                                    <div class="slds-col slds-size_2-of-12">
-                                        <a href="https://install.salesforce.org/products/npsp-rd2-pilot"
-                                            aura:id="metadeploy-link" onclick="{!c.handleMetaDeployLaunch}"
-                                            target=" _blank">{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}</a>
-                                    </div>
+                                <div class="slds-progress__item_content">
+                                    <lightning:layout>
+                                        <lightning:layoutItem size="10" class="slds-p-right_medium">
+                                            <lightning:formattedRichText
+                                                value="{!$Label.c.RD2_EnablementMetaDeployLaunch}" />
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem size="2">
+                                            <a href="https://install.salesforce.org/products/npsp-rd2-pilot"
+                                                aura:id="metadeploy-link" onclick="{!c.handleMetaDeployLaunch}"
+                                                target=" _blank">{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}</a>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
                                 </div>
                             </li>
 
                             <li
-                                class="{!'slds-progress__item ' + if(v.isMetaDeployConfirmed, 'slds-is-completed', 'slds-is-active')}">
+                                class="{!'slds-progress__item ' + if(v.state.isMetaDeployConfirmed, 'slds-is-completed', 'slds-is-active')}">
 
-                                <c:progressIndicatorMarker isComplete="{!v.isMetaDeployConfirmed}"
-                                    isPreviousComplete="{!v.isMetaDeployLaunched}"
-                                    isNextComplete="{!v.isMigrationRun}" />
+                                <c:progressIndicatorMarker isComplete="{!v.state.isMetaDeployConfirmed}"
+                                    isPreviousComplete="{!v.state.isMetaDeployLaunched}"
+                                    isNextComplete="{!v.state.isMigrationRun}" />
 
-                                <div class="slds-progress__item_content slds-grid slds-gutters">
-                                    <div class="slds-col slds-size_10-of-12">
-                                        <lightning:formattedRichText
-                                            value="{!$Label.c.RD2_EnablementMetaDeployConfirm}" />
-                                    </div>
-                                    <div class="slds-col slds-size_2-of-12">
-                                        <lightning:input type="checkbox-button"
-                                            label="{!$Label.c.RD2_EnablementMetaDeployConfirm}"
-                                            aura:id="metadeploy-confirm" name="metadeploy-confirm"
-                                            checked="{!v.isMetaDeployConfirmed}"
-                                            onchange="{!c.handleMetaDeployConfirm}" />
-                                    </div>
+                                <div class="slds-progress__item_content">
+                                    <lightning:layout>
+                                        <lightning:layoutItem size="10" class="slds-p-right_medium">
+                                            <lightning:formattedRichText
+                                                value="{!$Label.c.RD2_EnablementMetaDeployConfirm}" />
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem size="2">
+                                            <lightning:input type="checkbox-button"
+                                                label="{!$Label.c.RD2_EnablementMetaDeployConfirm}"
+                                                aura:id="metadeploy-confirm" name="metadeploy-confirm"
+                                                checked="{!v.state.isMetaDeployConfirmed}"
+                                                onchange="{!c.handleMetaDeployConfirm}" />
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
                                 </div>
                             </li>
 
                         </ol>
+                        <div aria-valuemin="0" aria-valuemax="100" aria-valuenow="{!v.state.metaDeployProgress}"
+                            role="progressbar">
+                            <span class="slds-assistive-text">{!'Progress: ' + v.state.metaDeployProgress + '%'}</span>
+                        </div>
                     </div>
                 </div>
             </lightning:card>
@@ -197,26 +201,27 @@
             <lightning:card class="page-section" aura:id="migration">
 
                 <aura:set attribute="title">
-                    <c:progressRing ringContent="3" valueNow="{!if(v.isMigrationRun, '100', '0')}"
-                        status="{!if(v.isMigrationRun, 'complete', '')}" class="slds-m-right_small" />
+                    <c:progressRing ringContent="3" valueNow="{!if(v.state.isMigrationRun, '100', '0')}"
+                        status="{!if(v.state.isMigrationRun, 'complete', '')}" class="slds-m-right_small" />
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementMigrationTitle}" />
                 </aura:set>
 
                 <div class="slds-setup-assistant__step-detail">
                     <lightning:layout multipleRows="true">
-                        <lightning:layoutItem size="10">
+                        <lightning:layoutItem size="10" class="slds-p-right_medium">
                             <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationRun}" />
                         </lightning:layoutItem>
                         <lightning:layoutItem size="2">
-                            <lightning:button class="slds-m-left_large"
+                            <lightning:button class="slds-m-left_x-small"
                                 label="{!$Label.c.RD2_EnablementMigrationRunButton}" variant="neutral"
-                                disabled="{!or(!v.isMetaDeployConfirmed, v.isMigrationRun)}" />
+                                disabled="{!or(!v.state.isMetaDeployConfirmed, v.state.isMigrationRun)}" />
                         </lightning:layoutItem>
-                        <lightning:layoutItem size="10">
+                        <lightning:layoutItem size="10" class="slds-p-right_medium">
                             <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small"
                                 role="alert">
                                 <div class="slds-media__figure slds-text-align_center">
-                                    <lightning:icon iconName="utility:warning" alternativeText="warning" size="xx-small"
+                                    <lightning:icon iconName="utility:warning"
+                                        alternativeText="{!$Label.c.AlternativeTextWarning}" size="xx-small"
                                         variant="warning" />
                                 </div>
                                 <div class="slds-media__body">
