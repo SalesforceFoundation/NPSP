@@ -3631,6 +3631,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>conMergeBtnLabel</shortDescription>
         <value>Merge</value>
     </labels>
+     <labels>
+        <fullName>conMergeErrorNoDeleteObjPermission</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete permission on the Contact object is required to for merging</shortDescription>
+        <value>You must have Delete permissions on Contacts in order to merge Contacts.</value>
+    </labels>
+     <labels>
+        <fullName>conMergeErrorNoDeleteRecAccess</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Record sharing permission on the Contact object is required to for merging</shortDescription>
+        <value>You don&apos;t have the record sharing permissions to merge these Contacts. Select other Contact records or your system administrator may need to adjust sharing permissions.</value>
+    </labels>
     <labels>
         <fullName>conMergeErrNoPersonAccounts</fullName>
         <categories>Contact Merge</categories>
