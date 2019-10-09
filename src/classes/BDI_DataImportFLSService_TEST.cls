@@ -91,4 +91,142 @@ private class BDI_DataImportFLSService_TEST {
             System.assertEquals(1, invalidatedDataImports.size());
         }
     }
+
+    /**
+     * @description Integration test used to mimic the scenario where a master-detail field
+     * returns false from a call to DescribeFieldResult.isUpdateable().  Since we cannot
+     * currently add a Master-Detail field to the DataImport object within Apex,
+     * implementations of the StubProvider interface are used to 1) make the platform think
+     * that an existing field on DataImport is not updateable, and 2) confirm that the field
+     * will be considered valid by the DescribeFieldResult.isUpdateable() if it is thought to
+     * be a Master-Detail field, preventing the 'You do not have permissions to modify' error
+     * when Master-Detail fields are mapped as targets for additional objects in BDI
+     * Advanced Mapping.
+     */
+    @IsTest
+    static void givenMasterDetailFieldPopulatedThenAssertFieldIsValidatedAsUpdateable
+            () {
+        //Insert a basic Data Import record with minimal Contact information
+        DataImport__c dataImport = new DataImport__c(
+                Contact1_Firstname__c = 'testFirst',
+                Contact1_Lastname__c = 'testLast',
+                Contact1_Work_Email__c = 'test@test99875409948.com'
+        );
+        insert dataImport;
+
+        //Create a stub that will mock the UTIL_Permissions.isUpdateable() method
+        //so that the Contact.LastName field will return false
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock();
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
+                UTIL_Permissions.class,
+                utilPermissionsMockInstance);
+        UTIL_Permissions.setInstance(utilPermissionsMock);
+
+        //Process the Data Import record
+        BDI_DataImportService dataImportService = new BDI_DataImportService(
+                false,
+                BDI_DataImportService.getDefaultFieldMapping());
+        dataImportService.process(
+                null,
+                BDI_DataImportService.loadSettings(null),
+                new List<DataImport__c>{
+                        dataImport
+                });
+
+        //Assert that the Data Import record fails with
+        //a permissions error on the LastName field
+        List<DataImport__c> processedDataImports = [
+                SELECT
+                        Status__c,
+                        FailureInformation__c
+                FROM DataImport__c
+                WHERE Id = :dataImport.Id
+        ];
+        System.assertEquals(dataImportService.statusDIFailed(),
+                processedDataImports[0].Status__c);
+        System.assert(processedDataImports[0].FailureInformation__c.contains(
+                'You do not have permissions to modify Contact.LastName.'
+        ), 'The utilPermissionsMockInstance should have reported ' +
+                'the Contact.LastName field as not updateable.');
+
+        //Now create a stub that will mock the UTIL_Describe.isMasterDetailField() method
+        //so that the Contact.LastName field will return true
+        UTIL_DescribeMock mockInstance = new UTIL_DescribeMock();
+        UTIL_Describe describeServiceMock = (UTIL_Describe) Test.createStub(
+                UTIL_Describe.class,
+                mockInstance);
+        UTIL_Describe.setInstance(describeServiceMock);
+
+        //Re-process the Data Import record
+        dataImportService.process(
+                null,
+                BDI_DataImportService.loadSettings(null),
+                new List<DataImport__c>{
+                        dataImport
+                });
+
+        processedDataImports = [
+                SELECT
+                        Status__c,
+                        FailureInformation__c
+                FROM DataImport__c
+                WHERE Id = :dataImport.Id
+        ];
+
+        //Since the Contact.LastName field is now considered a Master-Detail
+        //field, assert that it is skipped by the BDI_DataImportFLSService.isValid method
+        //and the Data Import record processes successfully
+        System.assertEquals(dataImportService.statusDISuccess(),
+                processedDataImports[0].Status__c);
+        System.assertEquals(null, processedDataImports[0].FailureInformation__c,
+                'The Data Import record should have re-processed successfully, since the ' +
+                        'non-updateable master-detail field should have been ' +
+                        'considered valid by the mocked BDI_DataImportFLSService.');
+    }
+
+    /**
+     * @description StubProvider implementation used to make a field be considered a
+     * master-detail field in tests.
+     */
+    private class UTIL_DescribeMock implements StubProvider {
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            if (stubbedMethodName == 'isMasterDetailField') {
+                SObjectField field = (SObjectField) listOfArgs[0];
+                DescribeFieldResult dfr = field.getDescribe();
+                if (dfr.getName() == 'LastName') {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return null;
+        }
+    }
+
+    /**
+     * @description StubProvider implementation used to make a field non-updateable in tests.
+     */
+    private class UTIL_PermissionsMock implements StubProvider {
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            if (stubbedMethodName == 'canUpdate') {
+                Set<SObjectField> fieldSet = (Set<SObjectField>) listOfArgs[0];
+                SObjectField field = new List<SObjectField>(fieldSet)[0];
+                if (field.getDescribe().getName() == 'LastName') {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+    }
 }
