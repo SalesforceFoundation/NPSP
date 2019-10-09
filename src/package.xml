@@ -1131,6 +1131,16 @@
         <members>Partial_Soft_Credit__c.Contact__c</members>
         <members>Partial_Soft_Credit__c.Opportunity__c</members>
         <members>Partial_Soft_Credit__c.Role_Name__c</members>
+        <members>RecurringDonationSchedule__c.Campaign__c</members>
+        <members>RecurringDonationSchedule__c.DayOfMonth__c</members>
+        <members>RecurringDonationSchedule__c.EndDate__c</members>
+        <members>RecurringDonationSchedule__c.ExternalId__c</members>
+        <members>RecurringDonationSchedule__c.InstallmentAmount__c</members>
+        <members>RecurringDonationSchedule__c.InstallmentFrequency__c</members>
+        <members>RecurringDonationSchedule__c.InstallmentPeriod__c</members>
+        <members>RecurringDonationSchedule__c.PaymentMethod__c</members>
+        <members>RecurringDonationSchedule__c.RecurringDonation__c</members>
+        <members>RecurringDonationSchedule__c.StartDate__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -2484,6 +2494,7 @@
         <members>Opportunity_Naming_Settings__c</members>
         <members>Package_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
+        <members>RecurringDonationSchedule__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
@@ -2711,6 +2722,13 @@
         <members>Partial_Soft_Credit__c-iw</members>
         <members>Partial_Soft_Credit__c-ja</members>
         <members>Partial_Soft_Credit__c-nl_NL</members>
+        <members>RecurringDonationSchedule__c-de</members>
+        <members>RecurringDonationSchedule__c-en_US</members>
+        <members>RecurringDonationSchedule__c-es</members>
+        <members>RecurringDonationSchedule__c-fr</members>
+        <members>RecurringDonationSchedule__c-iw</members>
+        <members>RecurringDonationSchedule__c-ja</members>
+        <members>RecurringDonationSchedule__c-nl_NL</members>
         <members>Relationship_Sync_Excluded_Fields__c-de</members>
         <members>Relationship_Sync_Excluded_Fields__c-en_US</members>
         <members>Relationship_Sync_Excluded_Fields__c-es</members>
@@ -2956,6 +2974,7 @@
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
+        <members>RecurringDonationSchedule__c-Recurring Schedule Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
         <members>Data_Import_Field_Mapping_Set__mdt-Data Import Field Mapping Set Layout</members>
