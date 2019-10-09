@@ -37,8 +37,6 @@
     * @description Confirms enhanced Recurring Donations enablement
     */
     confirmEnable: function (component) {
-        this.disableEdit(component, "enable-confirm");
-
         var action = component.get('c.confirmEnablement');
 
         action.setCallback(this, function (response) {
@@ -64,8 +62,6 @@
     * @description Enables enhanced Recurring Donations 
     */
     completeEnable: function (component) {
-        this.disableEdit(component, "enable-toggle");
-
         var action = component.get('c.enableEnhancement');
 
         action.setCallback(this, function (response) {
@@ -92,8 +88,6 @@
     * @description Confirms MetaDeploy has been launched
     */
     launchDeploy: function (component) {
-        this.enableEdit(component, "metadeploy-confirm");
-
         var action = component.get('c.launchMetaDeploy');
 
         action.setCallback(this, function (response) {
@@ -119,8 +113,6 @@
     * @description Confirms MetaDeploy has been deployed
     */
     confirmDeploy: function (component) {
-        this.disableEdit(component, "metadeploy-confirm");
-
         var action = component.get('c.confirmMetaDeploy');
 
         action.setCallback(this, function (response) {
@@ -164,18 +156,6 @@
             enableProgress = 50;
         }
         component.set('v.state.enableProgress', enableProgress);
-
-        if (enablementState.isConfirmed) {
-            this.disableEdit(component, "enable-confirm");
-        } else {
-            this.enableEdit(component, "enable-confirm");
-        }
-
-        if (!enablementState.isConfirmed || enablementState.isEnabled) {
-            this.disableEdit(component, "enable-toggle");
-        } else {
-            this.enableEdit(component, "enable-toggle");
-        }
     },
     /****
     * @description Refreshes MetaDeploy section
@@ -195,12 +175,6 @@
             this.enableEdit(component, "metadeploy-link");
         } else {
             this.disableEdit(component, "metadeploy-link");
-        }
-
-        if (!enablementState.isMetaDeployLaunched || enablementState.isMetaDeployConfirmed) {
-            this.disableEdit(component, "metadeploy-confirm");
-        } else {
-            this.enableEdit(component, "metadeploy-confirm");
         }
     },
     /****

@@ -61,7 +61,8 @@
 
                                 <div class="slds-progress__item_content">
                                     <lightning:layout>
-                                        <lightning:layoutItem size="10" class="slds-p-right_medium">
+                                        <lightning:layoutItem size="10"
+                                            class="slds-p-right_medium slds-media slds-media_center">
                                             <label for="enable-confirm">
                                                 <lightning:formattedRichText
                                                     value="{!$Label.c.RD2_EnablementEnableConfirm}" />
@@ -71,14 +72,14 @@
                                             <lightning:input type="checkbox-button"
                                                 label="{!$Label.c.RD2_EnablementEnableConfirm}" aura:id="enable-confirm"
                                                 name="enable-confirm" checked="{!v.state.isConfirmed}"
-                                                onchange="{!c.handleEnableConfirm}" />
+                                                onchange="{!c.handleEnableConfirm}" disabled="{!v.state.isConfirmed}" />
                                         </lightning:layoutItem>
                                     </lightning:layout>
                                 </div>
                             </li>
 
                             <li
-                                class="{!'slds-progress__item ' + if(v.state.isEnabled, 'slds-is-completed', 'slds-is-active')}">
+                                class="{!'slds-progress__item ' + if(v.state.isEnabled, 'slds-is-completed', if(v.state.isConfirmed, 'slds-is-active', ''))}">
 
                                 <c:progressIndicatorMarker isComplete="{!v.state.isEnabled}"
                                     isPreviousComplete="{!v.state.isConfirmed}"
@@ -86,13 +87,12 @@
 
                                 <div class="slds-progress__item_content">
                                     <lightning:layout>
-                                        <lightning:layoutItem size="10" class="slds-p-right_medium">
-                                            <div class="slds-media slds-media_center slds-text-align_center">
-                                                <label for="enable-toggle">
-                                                    <lightning:formattedRichText
-                                                        value="{!$Label.c.RD2_EnablementEnableMessage}" />
-                                                </label>
-                                            </div>
+                                        <lightning:layoutItem size="10"
+                                            class="slds-p-right_medium slds-media slds-media_center">
+                                            <label for="enable-toggle">
+                                                <lightning:formattedRichText
+                                                    value="{!$Label.c.RD2_EnablementEnableMessage}" />
+                                            </label>
                                         </lightning:layoutItem>
                                         <lightning:layoutItem size="2">
                                             <lightning:input type="toggle"
@@ -100,7 +100,8 @@
                                                 aura:id="enable-toggle" name="enable-toggle"
                                                 checked="{!v.state.isEnabled}" onchange="{!c.handleEnable}"
                                                 messageToggleActive="{!$Label.c.ToggleEnabled}"
-                                                messageToggleInactive="{!$Label.c.ToggleDisabled}">
+                                                messageToggleInactive="{!$Label.c.ToggleDisabled}"
+                                                disabled="{!or(not(v.state.isConfirmed), v.state.isEnabled)}">
                                             </lightning:input>
                                         </lightning:layoutItem>
                                     </lightning:layout>
@@ -146,7 +147,7 @@
                     <div class="slds-progress slds-progress_vertical">
                         <ol class="slds-progress__list slds-progress__list-bordered">
                             <li
-                                class="{!'slds-progress__item ' + if(v.state.isMetaDeployLaunched, 'slds-is-completed', 'slds-is-active')}">
+                                class="{!'slds-progress__item ' + if(v.state.isMetaDeployLaunched, 'slds-is-completed', if(v.state.isEnabled, 'slds-is-active', ''))}">
 
                                 <c:progressIndicatorMarker isComplete="{!v.state.isMetaDeployLaunched}"
                                     isPreviousComplete="{!v.state.isEnabled}"
@@ -154,7 +155,8 @@
 
                                 <div class="slds-progress__item_content">
                                     <lightning:layout>
-                                        <lightning:layoutItem size="10" class="slds-p-right_medium">
+                                        <lightning:layoutItem size="10"
+                                            class="slds-p-right_medium slds-media slds-media_center">
                                             <lightning:formattedRichText
                                                 value="{!$Label.c.RD2_EnablementMetaDeployLaunch}" />
                                         </lightning:layoutItem>
@@ -168,7 +170,7 @@
                             </li>
 
                             <li
-                                class="{!'slds-progress__item ' + if(v.state.isMetaDeployConfirmed, 'slds-is-completed', 'slds-is-active')}">
+                                class="{!'slds-progress__item ' + if(v.state.isMetaDeployConfirmed, 'slds-is-completed', if(v.state.isMetaDeployLaunched, 'slds-is-active', ''))}">
 
                                 <c:progressIndicatorMarker isComplete="{!v.state.isMetaDeployConfirmed}"
                                     isPreviousComplete="{!v.state.isMetaDeployLaunched}"
@@ -176,7 +178,8 @@
 
                                 <div class="slds-progress__item_content">
                                     <lightning:layout>
-                                        <lightning:layoutItem size="10" class="slds-p-right_medium">
+                                        <lightning:layoutItem size="10"
+                                            class="slds-p-right_medium slds-media slds-media_center">
                                             <label for="metadeploy-confirm">
                                                 <lightning:formattedRichText
                                                     value="{!$Label.c.RD2_EnablementMetaDeployConfirm}" />
@@ -187,7 +190,8 @@
                                                 label="{!$Label.c.RD2_EnablementMetaDeployConfirm}"
                                                 aura:id="metadeploy-confirm" name="metadeploy-confirm"
                                                 checked="{!v.state.isMetaDeployConfirmed}"
-                                                onchange="{!c.handleMetaDeployConfirm}" />
+                                                onchange="{!c.handleMetaDeployConfirm}"
+                                                disabled="{!or(not(v.state.isMetaDeployLaunched), v.state.isMetaDeployConfirmed)}" />
                                         </lightning:layoutItem>
                                     </lightning:layout>
                                 </div>

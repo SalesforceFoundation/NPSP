@@ -7,12 +7,13 @@ import textWarning from '@salesforce/label/c.AlternativeTextWarning';
 
 export default class ProgressRing extends LightningElement {
 
-    @track ringClass = 'slds-progress-ring slds-progress-ring_large ';
-    @track dValue;
     @api ringContent = '';
+
+    @track ringClass = 'slds-progress-ring slds-progress-ring_large ';
+    @track arcValue;
+    @track displayContent = false;
     @track isComplete = false;
     @track iconName = '';
-    @track displayContent = false;
     @track alternativeText = '';
 
     @api
@@ -29,11 +30,11 @@ export default class ProgressRing extends LightningElement {
         let max = 100;
         let quotient = value / max >= 0.5 ? "1" : "0";
 
-        this.dValue = "M 1 0 A 1 1 0 " + quotient + " 1 " +
+        this.arcValue = "M 1 0 A 1 1 0 " + quotient + " 1 " +
             Math.cos(2 * Math.PI * value / max) + " " +
             Math.sin(2 * Math.PI * value / max) + " L 0 0";
 
-        this.setAttribute('d', this.dValue);
+        this.setAttribute('d', this.arcValue);
     }
 
     @api
@@ -43,7 +44,7 @@ export default class ProgressRing extends LightningElement {
 
     /***
     * @description Sets progress status properties
-    * @param value Progress status: active, complete, warning, expired, ''
+    * @param value Progress status: active, complete, warning, error, or any other value
     */
     set status(value) {
         this.ringClass = 'slds-progress-ring slds-progress-ring_large';
