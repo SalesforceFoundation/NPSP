@@ -100,7 +100,7 @@
 
         <c:UTIL_PageMessages html-class="slds-grid slds-grid_align-center slds-m-bottom_small"/>
 
-        <apex:outputText rendered="{!step <= 2}">
+        <apex:outputText rendered="{!AND(step <= 2, canContinueWithMerge)}">
             <div class="slds-text-align_center slds-m-bottom_x-large">
                 <apex:form styleClass="slds-form slds-form_inline">
                     <div class="slds-form-element slds-size_1-of-2">
