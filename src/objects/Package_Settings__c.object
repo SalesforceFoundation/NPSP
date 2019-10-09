@@ -16,14 +16,4 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <fields>
-        <fullName>OverrideFeature_PilotEnabled__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>Allows a limited access override of the PilotEnabled Feature Parameter in orgs where a License record is not available.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Allows a limited access override of the PilotEnabled Feature Parameter in orgs where a License record is not available.</inlineHelpText>
-        <label>Override: Pilot Enabled</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
 </CustomObject>

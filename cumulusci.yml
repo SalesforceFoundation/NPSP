@@ -309,9 +309,9 @@ tasks:
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
             apex: >
-                Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
-                pkgSettings.OverrideFeature_PilotEnabled__c = true;
-                upsert pkgSettings;
+                %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
+                errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
+                upsert errSettings;
 
 flows:
     config_dev:

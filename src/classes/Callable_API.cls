@@ -86,12 +86,6 @@ global with sharing class Callable_API implements System.Callable {
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
                 return crlpApiSvc.isCrlpEnabled();
 
-            } when 'util.forceoverridepilot' {
-                UTIL_FeatureEnablement featureEnablement = new UTIL_FeatureEnablement();
-                String key = paramService.getString('Key');
-                Boolean value = paramService.getBoolean('Value');
-                featureEnablement.forcePilotOverride(key, value);
-
             } when 'err.dispatchaction' {
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
                 // If you do so, your functionality can break without any warning or liability from Salesforce.

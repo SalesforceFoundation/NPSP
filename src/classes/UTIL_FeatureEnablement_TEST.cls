@@ -63,15 +63,17 @@ private class UTIL_FeatureEnablement_TEST {
      */
     @isTest
     private static void shouldReturnTrueWhenPilotIsEnabledWithOverride() {
-        Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
-        pkgSettings.OverrideFeature_PilotEnabled__c = true;
-        upsert pkgSettings;
-
-        if (UTIL_Namespace.isScratchOrg()) {
-            System.assertEquals(true,
-                UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
-                'The Pilot should be enabled if this test is running in a scratch org');
+        if (!UTIL_Namespace.isScratchOrg()) {
+            return;
         }
+
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(
+            new Error_Settings__c(OverrideFeature_PilotEnabled__c = true)
+        );
+
+        System.assertEquals(true,
+            UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
+            'The Pilot should be enabled if this test is running in a scratch org');
     }
 
     /**
@@ -81,15 +83,13 @@ private class UTIL_FeatureEnablement_TEST {
      */
     @isTest
     private static void shouldReturnFalseWhenPilotIsEnabledWithOverride() {
-        Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
-        pkgSettings.OverrideFeature_PilotEnabled__c = false;
-        upsert pkgSettings;
-
-        if (UTIL_Namespace.isScratchOrg()) {
-            System.assertEquals(false,
-                UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
-                'The Pilot should be disabled if this test is running in a scratch org');
+        if (!UTIL_Namespace.isScratchOrg()) {
+            return;
         }
+
+        System.assertEquals(false,
+            UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
+            'The Pilot should be disabled if this test is running in a scratch org');
     }
     /**
      * @description Validates that the isRecurringDonations2PilotEnabled() method can be forced

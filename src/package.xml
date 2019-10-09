@@ -1011,6 +1011,7 @@
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
         <members>Error_Settings__c.Error_Notifications_To__c</members>
+        <members>Error_Settings__c.OverrideFeature_PilotEnabled__c</members>
         <members>Error_Settings__c.Respect_Duplicate_Rule_Settings__c</members>
         <members>Error_Settings__c.Store_Errors_On__c</members>
         <members>Error__c.Context_Type__c</members>
@@ -1114,7 +1115,6 @@
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
         <members>Package_Settings__c.Namespace_Prefix__c</members>
-        <members>Package_Settings__c.OverrideFeature_PilotEnabled__c</members>
         <members>Partial_Soft_Credit__c.Amount__c</members>
         <members>Partial_Soft_Credit__c.Contact_Name__c</members>
         <members>Partial_Soft_Credit__c.Contact_Role_ID__c</members>
