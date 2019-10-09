@@ -384,6 +384,19 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description Determines whether a field is a Master-Detail field.
+    * @param field The field to analyze.
+    * @return True if the field is a Master-Detail field, otherwise false.
+    */
+    public Boolean isMasterDetailField(SObjectField field) {
+        if (field.getDescribe().getRelationshipOrder() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*******************************************************************************************************
     * @description utility to check for compatible datatypes for data copying
     * @param dtSrc the DisplayType of the source object
     * @param dtTgt the DisplayType of the target object
