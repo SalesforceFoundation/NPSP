@@ -41,6 +41,8 @@ public class BDI_DataImportFLSService {
     List<DataImport__c> dataImportsValidated;
     List<DataImport__c> dataImportsInvalidated;
     Map<Id, List<SObjectFieldWrapper>> invalidFieldsByDataImportId;
+    UTIL_Describe describeService;
+    UTIL_Permissions permissionsService;
 
     public enum AccessLevel {
         VALIDATE_READ, VALIDATE_CREATE, VALIDATE_UPDATE
@@ -54,6 +56,8 @@ public class BDI_DataImportFLSService {
         this.dataImportsValidated = new List<DataImport__c>();
         this.dataImportsInvalidated = new List<DataImport__c>();
         this.invalidFieldsByDataImportId = new Map<Id, List<SObjectFieldWrapper>>();
+        describeService = UTIL_Describe.getInstance();
+        permissionsService = UTIL_Permissions.getInstance();
         validateTargetMappingFieldLevelSecurity(dataImports);
     }
 
@@ -133,14 +137,18 @@ public class BDI_DataImportFLSService {
     }
 
     private Boolean isValid(SObjectField field) {
+        Set<SObjectField> fieldSet = new Set<SObjectField>{
+                field
+        };
         if ((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
-                && !field.getDescribe().isCreateable())
+                && !permissionsService.canCreate(fieldSet))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-                        && !field.getDescribe().isUpdateable())
+                        && !permissionsService.canUpdate(fieldSet)
+                        && !describeService.isMasterDetailField(field))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_READ)
-                        && !field.getDescribe().isAccessible())) {
+                        && !permissionsService.canRead(fieldSet))) {
             return false;
         } else {
             return true;
