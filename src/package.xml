@@ -1270,7 +1270,8 @@
         <members>Address_Verification_Limit</members>
         <members>AlternativeTextActive</members>
         <members>AlternativeTextComplete</members>
-        <members>AlternativeTextExpired</members>
+        <members>AlternativeTextError</members>
+        <members>AlternativeTextProgress</members>
         <members>AlternativeTextWarning</members>
         <members>CMT_DeleteConfirm</members>
         <members>CMT_FilterGroupActiveRollupsHelpText</members>

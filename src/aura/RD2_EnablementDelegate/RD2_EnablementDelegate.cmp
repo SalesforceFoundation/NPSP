@@ -45,8 +45,7 @@
             <lightning:card class="page-section" aura:id="enablement">
 
                 <aura:set attribute="title">
-                    <c:progressRing ringContent="1"
-                        valueNow="{!if(v.state.isEnabled, '100', if(v.state.isConfirmed, '50', '0'))}"
+                    <c:progressRing ringContent="1" valueNow="{!v.state.enableProgress}"
                         status="{!if(v.state.isEnabled, 'complete', '')}" class="slds-m-right_small" />
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementEnableTitle}" />
                 </aura:set>
@@ -108,6 +107,11 @@
                                 </div>
                             </li>
                         </ol>
+                        <div aria-valuemin="0" aria-valuemax="100" aria-valuenow="{!v.state.enableProgress}"
+                            role="progressbar">
+                            <span class="slds-assistive-text">{!$Label.c.AlternativeTextProgress + ': ' +
+                                v.state.enableProgress + '%'}</span>
+                        </div>
                         <lightning:layout>
                             <lightning:layoutItem size="10" class="slds-p-right_medium">
                                 <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light"
@@ -173,8 +177,10 @@
                                 <div class="slds-progress__item_content">
                                     <lightning:layout>
                                         <lightning:layoutItem size="10" class="slds-p-right_medium">
-                                            <lightning:formattedRichText
-                                                value="{!$Label.c.RD2_EnablementMetaDeployConfirm}" />
+                                            <label for="metadeploy-confirm">
+                                                <lightning:formattedRichText
+                                                    value="{!$Label.c.RD2_EnablementMetaDeployConfirm}" />
+                                            </label>
                                         </lightning:layoutItem>
                                         <lightning:layoutItem size="2">
                                             <lightning:input type="checkbox-button"
@@ -190,7 +196,8 @@
                         </ol>
                         <div aria-valuemin="0" aria-valuemax="100" aria-valuenow="{!v.state.metaDeployProgress}"
                             role="progressbar">
-                            <span class="slds-assistive-text">{!'Progress: ' + v.state.metaDeployProgress + '%'}</span>
+                            <span class="slds-assistive-text">{!$Label.c.AlternativeTextProgress + ': ' +
+                                v.state.metaDeployProgress + '%'}</span>
                         </div>
                     </div>
                 </div>

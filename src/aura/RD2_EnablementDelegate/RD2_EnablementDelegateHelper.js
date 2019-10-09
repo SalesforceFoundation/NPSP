@@ -8,7 +8,11 @@
         action.setCallback(this, function (response) {
             let state = response.getState();
 
-            if (component.isValid() && state === "SUCCESS") {
+            if (!component.isValid()) {
+                return;
+            }
+
+            if (state === "SUCCESS") {
                 var enablementState = JSON.parse(response.getReturnValue());
 
                 if (!enablementState.isReady && !enablementState.isEnabled) {
@@ -17,19 +21,10 @@
                 }
 
                 this.displayElement(component, "enabler");
-
                 component.set('v.state', enablementState);
 
-                if (enablementState.isConfirmed) {
-                    this.disableEdit(component, "enable-confirm");
-                }
-
-                if (!enablementState.isConfirmed || enablementState.isEnabled) {
-                    this.disableEdit(component, "enable-toggle");
-                }
-
+                this.refreshEnable(component);
                 this.refreshMetaDeploy(component);
-
 
             } else if (state === "ERROR") {
                 this.handleError(component, response.getError());
@@ -39,16 +34,7 @@
         $A.enqueueAction(action);
     },
     /****
-    * @description Disables page elements and reloads the enablement state
-    */
-    refreshView: function (component) {
-        this.hideElement(component, "enablement-disabled");
-        this.hideElement(component, "enabler");
-
-        this.loadState(component);
-    },
-    /****
-    * @description Accepts enhanced Recurring Donations enablement
+    * @description Confirms enhanced Recurring Donations enablement
     */
     confirmEnable: function (component) {
         this.disableEdit(component, "enable-confirm");
@@ -64,13 +50,12 @@
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isEnableConfirmed', true);
-                this.enableEdit(component, "enable-toggle");
 
             } else if (state === 'ERROR') {
-                this.enableEdit(component, "enable-confirm");
-
                 this.handleError(component, response.getError());
             }
+
+            this.refreshEnable(component);
         });
 
         $A.enqueueAction(action);
@@ -92,18 +77,19 @@
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isEnabled', true);
-                this.refreshMetaDeploy(component);
 
             } else if (state === 'ERROR') {
-                this.enableEdit(component, "enable-toggle");
                 this.handleError(component, response.getError());
             }
+
+            this.refreshEnable(component);
+            this.refreshMetaDeploy(component);
         });
 
         $A.enqueueAction(action);
     },
     /****
-    * @description Confirms MetaDeploy has been installed
+    * @description Confirms MetaDeploy has been launched
     */
     launchDeploy: function (component) {
         this.enableEdit(component, "metadeploy-confirm");
@@ -119,19 +105,18 @@
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isMetaDeployLaunched', true);
-                this.refreshMetaDeploy(component);
 
             } else if (state === 'ERROR') {
-                this.disableEdit(component, "metadeploy-confirm");
-
                 this.handleError(component, response.getError());
             }
+
+            this.refreshMetaDeploy(component);
         });
 
         $A.enqueueAction(action);
     },
     /****
-    * @description Confirms MetaDeploy has been installed
+    * @description Confirms MetaDeploy has been deployed
     */
     confirmDeploy: function (component) {
         this.disableEdit(component, "metadeploy-confirm");
@@ -147,22 +132,64 @@
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isMetaDeployConfirmed', true);
-                this.refreshMetaDeploy(component);
 
             } else if (state === 'ERROR') {
-                this.enableEdit(component, "metadeploy-confirm");
-
                 this.handleError(component, response.getError());
             }
+
+            this.refreshMetaDeploy(component);
         });
 
         $A.enqueueAction(action);
     },
     /****
-    * @description 
+    * @description Disables page elements and reloads the enablement state
+    */
+    refreshView: function (component) {
+        this.hideElement(component, "enablement-disabled");
+        this.hideElement(component, "enabler");
+
+        this.loadState(component);
+    },
+    /****
+    * @description Refreshes enable Recurring Donations section
+    */
+    refreshEnable: function (component) {
+        let enablementState = component.get("v.state");
+
+        let enableProgress = 0;
+        if (enablementState.isEnabled) {
+            enableProgress = 100;
+        } else if (enablementState.isConfirmed) {
+            enableProgress = 50;
+        }
+        component.set('v.state.enableProgress', enableProgress);
+
+        if (enablementState.isConfirmed) {
+            this.disableEdit(component, "enable-confirm");
+        } else {
+            this.enableEdit(component, "enable-confirm");
+        }
+
+        if (!enablementState.isConfirmed || enablementState.isEnabled) {
+            this.disableEdit(component, "enable-toggle");
+        } else {
+            this.enableEdit(component, "enable-toggle");
+        }
+    },
+    /****
+    * @description Refreshes MetaDeploy section
     */
     refreshMetaDeploy: function (component) {
         let enablementState = component.get("v.state");
+
+        let metaDeployProgress = 0;
+        if (enablementState.isMetaDeployConfirmed) {
+            metaDeployProgress = 100;
+        } else if (enablementState.isMetaDeployLaunched) {
+            metaDeployProgress = 50;
+        }
+        component.set('v.state.metaDeployProgress', metaDeployProgress);
 
         if (enablementState.isEnabled) {
             this.enableEdit(component, "metadeploy-link");
@@ -175,15 +202,6 @@
         } else {
             this.enableEdit(component, "metadeploy-confirm");
         }
-
-        let metaDeployProgress = 0;
-        if (enablementState.isMetaDeployConfirmed) {
-            metaDeployProgress = 100;
-        } else if (enablementState.isMetaDeployLaunched) {
-            metaDeployProgress = 50;
-        }
-
-        component.set('v.state.metaDeployProgress', metaDeployProgress);
     },
     /****
     * @description Hides component's element

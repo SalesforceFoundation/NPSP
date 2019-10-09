@@ -2,14 +2,17 @@ import { LightningElement, api, track } from 'lwc';
 
 import textActive from '@salesforce/label/c.AlternativeTextActive';
 import textComplete from '@salesforce/label/c.AlternativeTextComplete';
-import textExpired from '@salesforce/label/c.AlternativeTextExpired';
+import textError from '@salesforce/label/c.AlternativeTextError';
 import textWarning from '@salesforce/label/c.AlternativeTextWarning';
 
 export default class ProgressRing extends LightningElement {
+
     @track ringClass = 'slds-progress-ring slds-progress-ring_large ';
     @track dValue;
     @api ringContent = '';
     @track isComplete = false;
+    @track iconName = '';
+    @track displayContent = false;
     @track alternativeText = '';
 
     @api
@@ -43,30 +46,36 @@ export default class ProgressRing extends LightningElement {
     * @param value Progress status: active, complete, warning, expired, ''
     */
     set status(value) {
+        this.ringClass = 'slds-progress-ring slds-progress-ring_large';
         this.isComplete = false;
-        this.ringClass = 'slds-progress-ring slds-progress-ring_large ';
+        this.iconName = '';
         this.alternativeText = value;
 
-        switch (value.toUpperCase()) {
-            case 'WARNING':
-                this.ringClass += 'slds-progress-ring_warning';
+        switch (value) {
+            case 'warning':
+                this.ringClass += ' slds-progress-ring_warning';
+                this.iconName = 'utility:warning';
                 this.alternativeText = `${textWarning}`;
                 break;
-            case 'EXPIRED':
-                this.ringClass += 'slds-progress-ring_expired';
-                this.alternativeText = `${textExpired}`;
+            case 'error':
+                this.ringClass += ' slds-progress-ring_expired';
+                this.iconName = 'utility:error';
+                this.alternativeText = `${textError}`;
                 break;
-            case 'ACTIVE':
-                this.ringClass += 'slds-progress-ring_active-step';
+            case 'active':
+                this.ringClass += ' slds-progress-ring_active-step';
                 this.alternativeText = `${textActive}`;
                 break;
-            case 'COMPLETE':
-                this.ringClass += 'slds-progress-ring_complete';
+            case 'complete':
+                this.ringClass += ' slds-progress-ring_complete';
                 this.isComplete = true;
+                this.iconName = 'utility:check';
                 this.alternativeText = `${textComplete}`;
                 break;
             default:
-                this.ringClass = 'slds-progress-ring slds-progress-ring_large ';
+                this.ringClass = 'slds-progress-ring slds-progress-ring_large';
         }
+
+        this.displayContent = this.iconName === '';
     }
 }

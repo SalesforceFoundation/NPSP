@@ -293,12 +293,20 @@
         <value>Complete</value>
     </labels>
     <labels>
-        <fullName>AlternativeTextExpired</fullName>
+        <fullName>AlternativeTextError</fullName>
         <categories>AlternativeText</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>AlternativeTextExpired</shortDescription>
+        <shortDescription>AlternativeTextError</shortDescription>
         <value>Expired</value>
+    </labels>
+    <labels>
+        <fullName>AlternativeTextProgress</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AlternativeTextProgress</shortDescription>
+        <value>Progress</value>
     </labels>
     <labels>
         <fullName>AlternativeTextWarning</fullName>
