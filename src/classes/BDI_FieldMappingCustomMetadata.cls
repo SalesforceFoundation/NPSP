@@ -105,6 +105,18 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     }
 
     /*******************************************************************************************************
+    * @description return singleton instance of the class
+    */
+    public static BDI_FieldMappingCustomMetadata retrieveInstance(String fieldMappingSetName) {
+        if (fieldMappingInstance == null) {
+            fieldMappingInstance = new BDI_FieldMappingCustomMetadata();
+            fieldMappingInstance.fieldMappingSetName = fieldMappingSetName;
+            fieldMappingInstance.retrieveCustMetadata();
+        }
+        return fieldMappingInstance;
+    }
+
+    /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
     * return a map of DI field (key) to mapped field name on the destination record (value). 
     *

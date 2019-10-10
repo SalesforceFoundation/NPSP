@@ -1,0 +1,57 @@
+<template>
+    <article class="slds-card slds-card_extension slds-m-vertical_small">
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-grid_vertical-align-center">
+                <div class="slds-size_3-of-12 slds-p-right_small">
+                    <h2 class="slds-text-body_small slds-truncate"
+                        title={field.label}>
+                        {field.label}
+                    </h2>
+                </div>
+                <div class="slds-size_1-of-12">
+                    <lightning-input type="checkbox"
+                                     checked={isRequired}
+                                     data-name="required">
+                    </lightning-input>
+                </div>
+                <div class="slds-size_2-of-12">
+                    <lightning-input type="checkbox"
+                                     class="slds-m-left_x-large"
+                                     checked={field.allowDefaultValue}
+                                     onchange={handleAllowDefaultValue}
+                                     data-name="allowDefaultValue">
+                    </lightning-input>
+                </div>
+                <div class="slds-size_5-of-12">
+                    <lightning-input data-name="defaultValue"
+                                     type="text"
+                                     value={field.defaultValue}
+                                     variant="label-hidden"
+                                     disabled={isDefaultValueAllowed}>
+                    </lightning-input>
+                </div>
+                <div class="slds-size_1-of-12">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-1">
+                            <lightning-button-icon class="slds-float_right slds-m-bottom_x-small"
+                                                   icon-name="utility:chevronup"
+                                                   alternative-text="Settings"
+                                                   size="x-small"
+                                                   onclick={handleFormFieldUp}>
+                            </lightning-button-icon>
+                        </div>
+                        <div class="slds-size_1-of-1">
+                            <lightning-button-icon class="slds-float_right"
+                                                   icon-name="utility:chevrondown"
+                                                   alternative-text="Settings"
+                                                   size="x-small"
+                                                   onclick={handleFormFieldDown}>
+                            </lightning-button-icon>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </article>
+</template>

@@ -77,7 +77,7 @@ public with sharing class FORM_ServiceGiftEntry {
     * @param formatVersion - the version id/number of the template format
     * @param templateJSON - The JSON for the FormTemplate class that is being stored.
     */
-    public static void storeFormTemplate(String id, 
+    public static String storeFormTemplate(String id, 
                                             String name, 
                                             String description,
                                             String formatVersion,
@@ -90,7 +90,9 @@ public with sharing class FORM_ServiceGiftEntry {
                                                             Template_JSON__c = templateJSON,
                                                             Format_Version__c = formatVersion);
             upsert templateObj;
+            return templateObj.id;
         }
+        return null;
     }
 
     /*******************************************************************************************************

@@ -41,6 +41,10 @@ public with sharing class FORM_Template {
     @AuraEnabled public String version;
     @AuraEnabled public FORM_Layout layout;
 
+    /* Additional props PS */
+    @AuraEnabled public FORM_BatchHeaderField[] batchHeaderFields;
+    /* END */
+
     public FORM_Template(String name, String description, String version, FORM_Layout layout) {
         this.name = name;
         this.description = description;
