@@ -77,7 +77,6 @@ public with sharing class RD2_ValidationService_TEST {
             insert rd;
         } catch (Exception e) {
             errMessage = e.getMessage();
-            System.debug('Error message is:'+ errMessage);
         }
 
         System.assert(errMessage.contains(System.Label.RD_ValidateContactMissingForAccount));
@@ -93,10 +92,9 @@ public with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
-        System.debug('what is contact account id:' + con.accountid);
+
         insert conRecord;
 
         Account acc = [select id, npe01__SYSTEMIsIndividual__c, recordtypeid from Account limit 1 ];
@@ -109,10 +107,8 @@ public with sharing class RD2_ValidationService_TEST {
             insert rd;
         } catch (Exception e) {
             errMessage = e.getMessage();
-            System.debug('Error message is:'+ errMessage);
         }
         System.assert(errMessage.contains(System.Label.RD_ValidateIfContactNotRelatedWithAccount));
-
 
     }
 
