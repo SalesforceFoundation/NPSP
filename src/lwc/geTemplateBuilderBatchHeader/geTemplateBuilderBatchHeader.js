@@ -1,6 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
-import { FormField, findIndexByProperty, shiftToIndex, mutable } from 'c/utilTemplateBuilder';
+import { BatchHeaderField, findIndexByProperty, shiftToIndex, mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track isLoading = true;
@@ -26,10 +26,10 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
 
     /*******************************************************************************
     * @description Public method that returns a list of batch header field instances
-    * of the FormField class. Called when saving a form template.
+    * of the BatchHeaderField class. Called when saving a form template.
     *
     * @return {list} batchHeaderFields: List of batch header field instances of the
-    * FormField class.
+    * BatchHeaderField class.
     */
     @api
     getTabData() {
@@ -61,7 +61,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
 
     /*******************************************************************************
     * @description Onchange event handler for the batch header field checkboxes.
-    * Adds FormField objects to the selectedBatchFields array.
+    * Adds BatchHeaderField objects to the selectedBatchFields array.
     * selectedBatchFields is used in the UI to render instances of the
     * geTemplateBuilderFormField component.
     *
@@ -88,7 +88,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * to be added
     */
     addField(target) {
-        let field = new FormField(
+        let field = new BatchHeaderField(
             target.label,
             false,
             target.value,
@@ -110,7 +110,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Handles shifting the FormField element up in the list and UI
+    * @description Handles shifting the BatchHeaderField element up in the list and UI
     *
     * @param {object} event: Onclick event object from lightning-button
     */
@@ -122,7 +122,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Handles shifting the FormField element down in the list and UI
+    * @description Handles shifting the BatchHeaderField element down in the list and UI
     *
     * @param {object} event: Onclick event object from lightning-button
     */
@@ -146,7 +146,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
                 const batchFieldIndex = findIndexByProperty(
                     _batchFields,
                     'value',
-                    selectedBatchField.dataImportFieldMappingDevNames[0]);
+                    selectedBatchField.value);
 
                 _batchFields[batchFieldIndex].checked = true;
             }

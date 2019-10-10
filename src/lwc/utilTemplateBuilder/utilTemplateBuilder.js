@@ -39,6 +39,17 @@ const FormField = class FormField {
     }
 }
 
+const BatchHeaderField = class BatchHeaderField {
+    constructor(label, required, value, allowDefaultValue, sectionId, defaultValue) {
+        this.label = label;
+        this.required = required;
+        this.value = value;
+        this.allowDefaultValue = allowDefaultValue;
+        this.sectionId = sectionId;
+        this.defaultValue = defaultValue;
+    }
+}
+
 const removeByProperty = (array, property, value) => {
     const index = array.findIndex(element => element[property] === value);
     array.splice(index, 1);
@@ -116,6 +127,7 @@ export {
     FormLayout,
     FormSection,
     FormField,
+    BatchHeaderField,
     removeByProperty,
     findIndexByProperty,
     shiftToIndex,

@@ -32,23 +32,31 @@
 * @date 2019
 * @group Gift Entry
 * @group-content ../../ApexDocContent/GiftEntry.htm
-* @description Form template definition for use in entering gifts
+* @description Form Batch Header Field definition for use in entering gifts.
 */
-public with sharing class FORM_Template {
+public with sharing class FORM_BatchHeaderField {
 
-    @AuraEnabled public String name;
-    @AuraEnabled public String description;
-    @AuraEnabled public String version;
-    @AuraEnabled public FORM_Layout layout;
+    @AuraEnabled public String elementType;
+    @AuraEnabled public String displayRule;
+    @AuraEnabled public String validationRule;
+    @AuraEnabled public String customLabel;
 
-    /* Additional props PS */
-    @AuraEnabled public FORM_BatchHeaderField[] batchHeaderFields;
+    /* PS Additional props for FormFields */
+    @AuraEnabled public String label;
+    @AuraEnabled public Boolean required;
+    @AuraEnabled public String value;
+    @AuraEnabled public Boolean allowDefaultValue;
+    @AuraEnabled public String sectionId;
+    @AuraEnabled public String defaultValue;
     /* END */
 
-    public FORM_Template(String name, String description, String version, FORM_Layout layout) {
-        this.name = name;
-        this.description = description;
-        this.version = version;
-        this.layout = layout;
+    public FORM_BatchHeaderField(String elementType,
+                        String displayRule,
+                        String validationRule,
+                        String customLabel) {
+        this.elementType = elementType;
+        this.displayRule = displayRule;
+        this.validationRule = validationRule;
+        this.customLabel = customLabel;
     }
 }
