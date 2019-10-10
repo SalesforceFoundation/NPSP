@@ -339,6 +339,8 @@
         <members>RD2_NamingService_TEST</members>
         <members>RD2_RecurringDonations_TDTM</members>
         <members>RD2_RecurringDonations_TEST</members>
+        <members>RD2_ValidationService</members>
+        <members>RD2_ValidationService_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -1400,6 +1402,9 @@
         <members>RD_ErrorAddDonationPermissionDenied</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
         <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
+        <members>RD_ValidateAccountAndContactMissing</members>
+        <members>RD_ValidateContactMissingForAccount</members>
+        <members>RD_ValidateIfContactNotRelatedWithAccount</members>
         <members>REL_Create_New_Relationship</members>
         <members>REL_Former</members>
         <members>REL_No_Relationships</members>
