@@ -152,7 +152,7 @@
                         </div>
                         <lightning:layout>
                             <lightning:layoutItem size="10" class="slds-p-right_medium">
-                                <c:alertNotification severity="warning" size="xx-small"
+                                <c:pageNotification severity="warning" size="small"
                                     message="{!$Label.c.RD2_EnablementEnableWarning}" />
                             </lightning:layoutItem>
                         </lightning:layout>
@@ -161,7 +161,7 @@
                     <aura:if isTrue="{!equals(v.errorSection, '1')}">
                         <lightning:layout>
                             <lightning:layoutItem size="10" class="slds-m-top_medium slds-p-right_medium">
-                                <c:alertNotification severity="error" size="small" message="{!v.errorMessage}" />
+                                <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </lightning:layoutItem>
                         </lightning:layout>
                     </aura:if>
@@ -198,7 +198,7 @@
                                                 value="{!$Label.c.RD2_EnablementMetaDeployLaunch}" />
                                         </lightning:layoutItem>
                                         <lightning:layoutItem size="2">
-                                            <a href="https://install.salesforce.org/products/npsp-rd2-pilot"
+                                            <a href="https://metadeploy.herokuapp.com/products/npsp/RD2-enablement/npsp-rd2-pilot"
                                                 aura:id="metadeploy-link" onclick="{!c.handleMetaDeployLaunch}"
                                                 target=" _blank">{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}</a>
                                         </lightning:layoutItem>
@@ -245,7 +245,7 @@
                     <aura:if isTrue="{!equals(v.errorSection, '2')}">
                         <lightning:layout>
                             <lightning:layoutItem size="10" class="slds-m-top_medium slds-p-right_medium">
-                                <c:alertNotification severity="error" size="small" message="{!v.errorMessage}" />
+                                <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </lightning:layoutItem>
                         </lightning:layout>
                     </aura:if>
@@ -274,7 +274,7 @@
                                 disabled="{!or(!v.state.isMetaDeployConfirmed, v.state.isMigrationRun)}" />
                         </lightning:layoutItem>
                         <lightning:layoutItem size="10" class="slds-p-right_medium">
-                            <c:alertNotification severity="warning" size="xx-small"
+                            <c:pageNotification severity="warning" size="xx-small"
                                 message="{!$Label.c.RD2_EnablementMigrationWarning}" />
                         </lightning:layoutItem>
                         <lightning:layoutItem size="2" />
@@ -283,7 +283,7 @@
                     <aura:if isTrue="{!equals(v.errorSection, '3')}">
                         <lightning:layout>
                             <lightning:layoutItem size="10" class="slds-m-top_medium slds-p-right_medium">
-                                <c:alertNotification severity="error" size="small" message="{!v.errorMessage}" />
+                                <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </lightning:layoutItem>
                         </lightning:layout>
                     </aura:if>

@@ -11,7 +11,7 @@ export default class ProgressRing extends LightningElement {
 
     @track ringClass = 'slds-progress-ring slds-progress-ring_large ';
     @track arcValue;
-    @track displayContent = false;
+    @track isContentVisible = false;
     @track isComplete = false;
     @track iconName = '';
     @track alternativeText = '';
@@ -77,6 +77,6 @@ export default class ProgressRing extends LightningElement {
                 this.ringClass = 'slds-progress-ring slds-progress-ring_large';
         }
 
-        this.displayContent = this.iconName === '';
+        this.isContentVisible = this.iconName === '';
     }
 }
