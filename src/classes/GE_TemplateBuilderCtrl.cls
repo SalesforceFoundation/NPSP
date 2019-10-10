@@ -43,6 +43,11 @@ public with sharing class GE_TemplateBuilderCtrl {
     private static BDI_FieldMappingCustomMetadata bdiCMT;
 
     /*******************************************************************************************************
+    * @description Template version
+    */
+    private static final String TEMPLATE_VERSION = '1.0';
+
+    /*******************************************************************************************************
     * @description Just an intermediary method for calling the storeFormTemplate method in the FormServiceGiftEntry
     * class. I've modified the FormServiceGiftEntry to return the newly inserted Form_Template__c id so I can
     * navigate to the record page in the UI. Should probably revert this back later depending on how we want
@@ -50,7 +55,11 @@ public with sharing class GE_TemplateBuilderCtrl {
     */
     @AuraEnabled
     public static String processFormTemplate(String templateJSON, String templateName, String templateDescription){
-        String id = FORM_ServiceGiftEntry.storeFormTemplate(null, templateName, templateDescription, '1.0', templateJSON);
+        String id = FORM_ServiceGiftEntry.storeFormTemplate(null,
+            templateName,
+            templateDescription,
+            TEMPLATE_VERSION,
+            templateJSON);
         return id;
     }
 
