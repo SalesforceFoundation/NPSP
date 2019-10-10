@@ -37,6 +37,8 @@
     * @description Confirms enhanced Recurring Donations enablement
     */
     confirmEnable: function (component) {
+        this.clearError(component);
+
         var action = component.get('c.confirmEnablement');
 
         action.setCallback(this, function (response) {
@@ -46,11 +48,9 @@
                 return;
             }
 
-            if (state === 'SUCCESS') {
-                component.set('v.state.isEnableConfirmed', true);
-
-            } else if (state === 'ERROR') {
-                this.handleError(component, response.getError());
+            if (state === 'ERROR') {
+                component.set('v.state.isConfirmed', false);
+                this.handleError(component, response.getError(), '1');
             }
 
             this.refreshEnable(component);
@@ -62,6 +62,8 @@
     * @description Enables enhanced Recurring Donations 
     */
     completeEnable: function (component) {
+        this.clearError(component);
+
         var action = component.get('c.enableEnhancement');
 
         action.setCallback(this, function (response) {
@@ -71,11 +73,9 @@
                 return;
             }
 
-            if (state === 'SUCCESS') {
-                component.set('v.state.isEnabled', true);
-
-            } else if (state === 'ERROR') {
-                this.handleError(component, response.getError());
+            if (state === 'ERROR') {
+                component.set('v.state.isEnabled', false);
+                this.handleError(component, response.getError(), '1');
             }
 
             this.refreshEnable(component);
@@ -88,6 +88,8 @@
     * @description Confirms MetaDeploy has been launched
     */
     launchDeploy: function (component) {
+        this.clearError(component);
+
         var action = component.get('c.launchMetaDeploy');
 
         action.setCallback(this, function (response) {
@@ -101,7 +103,7 @@
                 component.set('v.state.isMetaDeployLaunched', true);
 
             } else if (state === 'ERROR') {
-                this.handleError(component, response.getError());
+                this.handleError(component, response.getError(), '2');
             }
 
             this.refreshMetaDeploy(component);
@@ -113,6 +115,8 @@
     * @description Confirms MetaDeploy has been deployed
     */
     confirmDeploy: function (component) {
+        this.clearError(component);
+
         var action = component.get('c.confirmMetaDeploy');
 
         action.setCallback(this, function (response) {
@@ -122,11 +126,9 @@
                 return;
             }
 
-            if (state === 'SUCCESS') {
-                component.set('v.state.isMetaDeployConfirmed', true);
-
-            } else if (state === 'ERROR') {
-                this.handleError(component, response.getError());
+            if (state === 'ERROR') {
+                component.set('v.state.isMetaDeployConfirmed', false);
+                this.handleError(component, response.getError(), '2');
             }
 
             this.refreshMetaDeploy(component);
@@ -140,6 +142,8 @@
     refreshView: function (component) {
         this.hideElement(component, "enablement-disabled");
         this.hideElement(component, "enabler");
+
+        this.clearError(component);
 
         this.loadState(component);
     },
@@ -205,17 +209,27 @@
         let inputComp = component.find(inputName);
         $A.util.removeClass(inputComp, "editDisabled");
     },
+    /****
+    * @description Clears the errors on the page
+    */
+    clearError: function (component) {
+        component.set('v.errorSection', '');
+        component.set('v.errorMessage', '');
+    },
     /**
      * @description: Displays errors thrown by Apex method invocations
      * @param errors: Error list
      */
-    handleError: function (component, errors) {
+    handleError: function (component, errors, section) {
         let message;
         if (errors && errors[0] && errors[0].message) {
             message = errors[0].message;
         } else {
-            message = 'Unknown error';
+            message = $A.get('$Label.c.stgUnknownError');
         }
-        console.log('Unexpected Error: ' + message);//TODO 
+
+        component.set('v.errorSection', section);
+        component.set('v.errorMessage', message);
+        console.log('Unexpected Error: ' + component.get('v.errorMessage'));
     }
 })

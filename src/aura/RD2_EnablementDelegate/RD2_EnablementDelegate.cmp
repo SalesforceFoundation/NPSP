@@ -1,7 +1,44 @@
+<!--
+    Copyright (c) 2019, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+-->
+<!--
+  @author Salesforce.org
+  @date 2019
+  @group Recurring Donations
+  @description Guides an admin through steps to enable enhanced Recurring Donations
+-->
 <aura:component controller="RD2_EnablementDelegate_CTRL"
     implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressable" access="global">
 
     <aura:attribute name="state" type="Object" description="Contains enablement state attributes" />
+    <aura:attribute name="errorSection" type="String" description="Contains section number where error has occurred" />
+    <aura:attribute name="errorMessage" type="String" description="Contains latest error message" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler event="force:refreshView" action="{!c.refreshView}" />
@@ -115,20 +152,20 @@
                         </div>
                         <lightning:layout>
                             <lightning:layoutItem size="10" class="slds-p-right_medium">
-                                <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light"
-                                    role="alert">
-                                    <div class="slds-media__figure slds-text-align_center">
-                                        <lightning:icon iconName="utility:warning"
-                                            alternativeText="{!$Label.c.AlternativeTextWarning}" size="xx-small"
-                                            variant="warning" />
-                                    </div>
-                                    <div class="slds-media__body">
-                                        <lightning:formattedRichText value="{!$Label.c.RD2_EnablementEnableWarning}" />
-                                    </div>
-                                </div>
+                                <c:alertNotification severity="warning" size="xx-small"
+                                    message="{!$Label.c.RD2_EnablementEnableWarning}" />
                             </lightning:layoutItem>
                         </lightning:layout>
                     </div>
+
+                    <aura:if isTrue="{!equals(v.errorSection, '1')}">
+                        <lightning:layout>
+                            <lightning:layoutItem size="10" class="slds-m-top_medium slds-p-right_medium">
+                                <c:alertNotification severity="error" size="small" message="{!v.errorMessage}" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+
                 </div>
             </lightning:card>
         </lightning:layoutItem>
@@ -204,6 +241,15 @@
                                 v.state.metaDeployProgress + '%'}</span>
                         </div>
                     </div>
+
+                    <aura:if isTrue="{!equals(v.errorSection, '2')}">
+                        <lightning:layout>
+                            <lightning:layoutItem size="10" class="slds-m-top_medium slds-p-right_medium">
+                                <c:alertNotification severity="error" size="small" message="{!v.errorMessage}" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+
                 </div>
             </lightning:card>
         </lightning:layoutItem>
@@ -228,20 +274,20 @@
                                 disabled="{!or(!v.state.isMetaDeployConfirmed, v.state.isMigrationRun)}" />
                         </lightning:layoutItem>
                         <lightning:layoutItem size="10" class="slds-p-right_medium">
-                            <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small"
-                                role="alert">
-                                <div class="slds-media__figure slds-text-align_center">
-                                    <lightning:icon iconName="utility:warning"
-                                        alternativeText="{!$Label.c.AlternativeTextWarning}" size="xx-small"
-                                        variant="warning" />
-                                </div>
-                                <div class="slds-media__body">
-                                    <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationWarning}" />
-                                </div>
-                            </div>
+                            <c:alertNotification severity="warning" size="xx-small"
+                                message="{!$Label.c.RD2_EnablementMigrationWarning}" />
                         </lightning:layoutItem>
                         <lightning:layoutItem size="2" />
                     </lightning:layout>
+
+                    <aura:if isTrue="{!equals(v.errorSection, '3')}">
+                        <lightning:layout>
+                            <lightning:layoutItem size="10" class="slds-m-top_medium slds-p-right_medium">
+                                <c:alertNotification severity="error" size="small" message="{!v.errorMessage}" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+
                 </div>
             </lightning:card>
         </lightning:layoutItem>

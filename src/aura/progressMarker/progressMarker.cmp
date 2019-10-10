@@ -34,16 +34,16 @@
   @description Progress indicator marker displaying an active or complete node.
 -->
 <aura:component>
-    <aura:attribute name="isComplete" default="false" type="Boolean"
+    <aura:attribute name="isComplete" type="Boolean" default="false"
         description="Indicates if the step in the progress indicator is complete" />
 
-    <aura:attribute name="isPreviousComplete" default="false" type="Boolean"
+    <aura:attribute name="isPreviousComplete" type="Boolean" default="false"
         description="Indicates if the previous step is complete" />
 
-    <aura:attribute name="isNextComplete" default="false" type="Boolean"
+    <aura:attribute name="isNextComplete" type="Boolean" default="false"
         description="Indicates if the next step is complete" />
 
-    <aura:attribute name="isError" default="false" type="Boolean"
+    <aura:attribute name="isError" type="Boolean" default="false"
         description="Indicates if the step in the progress indicator has an error" />
 
     <div
