@@ -317,7 +317,7 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.targetFieldsByAPIName = targetFieldsByAPIName;
             this.targetFieldsByLabelByDisplayType = targetFieldsByLabelByDisplayType;
 
-            if (this.fieldMapping && this.fieldMapping.Source_Field_Display_Type) {
+            if (this.fieldMapping && this.fieldMapping.Source_Field_Data_Type) {
                 this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.fieldMapping);
             }
         } catch(error) {
@@ -461,13 +461,13 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.fieldMapping = {
                 Source_Field_Label: fieldInfo.label,
                 Source_Field_API_Name: fieldAPIName,
-                Source_Field_Display_Type: displayType,
+                Source_Field_Data_Type: displayType,
                 Source_Field_Display_Type_Label: this.labelsByDisplayType[displayType],
                 Target_Field_API_Name: undefined,
             }
 
             this.hasSourceFieldErrors = false;
-            this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo);
+            this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.fieldMapping);
         }
     }
 
@@ -476,11 +476,12 @@ export default class bdiFieldMappingModal extends LightningElement {
     *
     * @param {string} displayType: Display Type of the currently selected source field
     */
-    handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo) {
+    handleAvailableTargetFieldsBySourceFieldDisplayType(fieldMapping) {
+        const sourceFieldDataType = this.toTitleCase(fieldMapping.Source_Field_Data_Type);
         this.targetFieldLabelOptions = [];
-        let validTargetTypes = this.validTargetTypesBySourceType[this.toTitleCase(fieldInfo.displayType)];
+        let validTargetTypes = this.validTargetTypesBySourceType[sourceFieldDataType];
 
-        if (fieldInfo.displayType === 'PICKLIST' && !fieldInfo.isBooleanMappable) {
+        if (sourceFieldDataType === 'Picklist' && !fieldMapping.isBooleanMappable) {
             let index = validTargetTypes.indexOf('Boolean');
             validTargetTypes.splice(index, 1);
         }
