@@ -50,13 +50,13 @@
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementEnableTitle}" />
                 </aura:set>
 
-                <div class="slds-setup-assistant__step-detail">
+                <div class="slds-setup-assistant__step-detail slds-m-left_medium">
                     <div class="slds-progress slds-progress_vertical">
                         <ol class="slds-progress__list slds-progress__list-bordered">
                             <li
                                 class="{!'slds-progress__item ' + if(v.state.isConfirmed, 'slds-is-completed', 'slds-is-active')}">
 
-                                <c:progressIndicatorMarker isComplete="{!v.state.isConfirmed}" isPreviousComplete="true"
+                                <c:progressMarker isComplete="{!v.state.isConfirmed}" isPreviousComplete="true"
                                     isNextComplete="{!v.state.isEnabled}" />
 
                                 <div class="slds-progress__item_content">
@@ -81,7 +81,7 @@
                             <li
                                 class="{!'slds-progress__item ' + if(v.state.isEnabled, 'slds-is-completed', if(v.state.isConfirmed, 'slds-is-active', ''))}">
 
-                                <c:progressIndicatorMarker isComplete="{!v.state.isEnabled}"
+                                <c:progressMarker isComplete="{!v.state.isEnabled}"
                                     isPreviousComplete="{!v.state.isConfirmed}"
                                     isNextComplete="{!v.state.isMetaDeployLaunched}" />
 
@@ -143,13 +143,13 @@
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementMetaDeployTitle}" />
                 </aura:set>
 
-                <div class="slds-setup-assistant__step-detail">
+                <div class="slds-setup-assistant__step-detail slds-m-left_medium">
                     <div class="slds-progress slds-progress_vertical">
                         <ol class="slds-progress__list slds-progress__list-bordered">
                             <li
                                 class="{!'slds-progress__item ' + if(v.state.isMetaDeployLaunched, 'slds-is-completed', if(v.state.isEnabled, 'slds-is-active', ''))}">
 
-                                <c:progressIndicatorMarker isComplete="{!v.state.isMetaDeployLaunched}"
+                                <c:progressMarker isComplete="{!v.state.isMetaDeployLaunched}"
                                     isPreviousComplete="{!v.state.isEnabled}"
                                     isNextComplete="{!v.state.isMetaDeployConfirmed}" />
 
@@ -172,7 +172,7 @@
                             <li
                                 class="{!'slds-progress__item ' + if(v.state.isMetaDeployConfirmed, 'slds-is-completed', if(v.state.isMetaDeployLaunched, 'slds-is-active', ''))}">
 
-                                <c:progressIndicatorMarker isComplete="{!v.state.isMetaDeployConfirmed}"
+                                <c:progressMarker isComplete="{!v.state.isMetaDeployConfirmed}"
                                     isPreviousComplete="{!v.state.isMetaDeployLaunched}"
                                     isNextComplete="{!v.state.isMigrationRun}" />
 
@@ -217,7 +217,7 @@
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementMigrationTitle}" />
                 </aura:set>
 
-                <div class="slds-setup-assistant__step-detail">
+                <div class="slds-setup-assistant__step-detail slds-m-left_medium">
                     <lightning:layout multipleRows="true">
                         <lightning:layoutItem size="10" class="slds-p-right_medium">
                             <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationRun}" />

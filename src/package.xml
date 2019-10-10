@@ -692,7 +692,7 @@
         <members>defaultTokens</members>
         <members>modalFooter</members>
         <members>modalHeader</members>
-        <members>progressIndicatorMarker</members>
+        <members>progressMarker</members>
         <members>svg</members>
         <name>AuraDefinitionBundle</name>
     </types>
