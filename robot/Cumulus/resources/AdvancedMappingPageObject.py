@@ -31,7 +31,8 @@ class AdvancedMappingPage(BasePage):
         self.selenium.wait_until_page_does_not_contain_element(npsp_lex_locators['adv_mappings']["modal_open"], timeout=15, error="New Field Mapping Modal did not close in 15 seconds")
         self.selenium.wait_until_page_contains("Success", timeout=180)
     
-    def view_field_mappings(self,obj):
+    def view_field_mappings_of_the_object(self,obj):
+        """Click the dropdwon for obj and select View Field Mappings and verify that field mappings page is open"""
         self.selenium.wait_until_page_contains("Object Groups", timeout=60)
         locator=npsp_lex_locators['adv_mappings']['dropdown'].format(obj)
         self.selenium.scroll_element_into_view(locator)
@@ -41,6 +42,8 @@ class AdvancedMappingPage(BasePage):
         self.selenium.wait_until_page_contains("Field Mappings", timeout=60)
         
     def edit_field_mappings(self,field_name,target_field):
+        """Click the dropdown for fieldname and select edit and wait for model is open. 
+           Once modal is open click on Target field to open a dropdown and select 'target_field' from available options"""
         locator=npsp_lex_locators['adv_mappings']['dropdown'].format(field_name)
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
@@ -55,19 +58,21 @@ class AdvancedMappingPage(BasePage):
         self.selenium.wait_until_page_does_not_contain_element(npsp_lex_locators['adv_mappings']["modal_open"], timeout=15, error="Edit Field Mapping Modal did not close in 15 seconds")
         self.selenium.wait_until_page_contains("Success", timeout=180)
         
-    def delete_mapping(self,obj_name):
-        locator=npsp_lex_locators['adv_mappings']['dropdown'].format(obj_name)    
+    def delete_field_mapping(self,fld_name):
+        """Click the dropdown for fld_name and select Delete and wait for field mapping to not present on the page."""
+        locator=npsp_lex_locators['adv_mappings']['dropdown'].format(fld_name)    
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
         self.selenium.wait_until_page_contains("Delete", timeout=60)
         self.selenium.click_link("Delete")
-        self.selenium.wait_until_page_does_not_contain(obj_name, timeout=60)
+        self.selenium.wait_until_page_does_not_contain(fld_name, timeout=60)
         
-    def delete_mapping_if_mapping_exists(self,obj_label):
+    def delete_mapping_if_mapping_exists(self,fld_label):
+        """Checks if mapping with fld_label exists and if exists deletes the mapping. If not then does nothing"""
         try:
-            locator=npsp_lex_locators['adv_mappings']['field-label'].format(obj_label)
+            locator=npsp_lex_locators['adv_mappings']['field-label'].format(fld_label)
             self.selenium.page_should_contain_element(locator, message=obj_label+' was not found on the page')
-            self.delete_mapping(obj_label)
+            self.delete_mapping(fld_label)
             return
         except Exception:
             return    

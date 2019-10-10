@@ -61,7 +61,7 @@ class NPSPSettingsPage(BasePage):
                 )
                 
     def click_configure_advanced_mapping(self):
-        """clicks on Configure Advanced Mapping and waits for page to load mappings"""
+        """clicks on Configure Advanced Mapping and waits for Manage Advanced Mapping page to load and loads the page object for that page"""
         locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
         self.selenium.click_element(locator)
         self.npsp.wait_until_url_contains("c__BDI_ManageAdvancedMapping")   

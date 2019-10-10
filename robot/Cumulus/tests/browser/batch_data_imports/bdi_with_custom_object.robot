@@ -8,8 +8,6 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Variables
-# ...             Create Data Import Record
-
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
@@ -46,21 +44,19 @@ Create Data Import Record
     ...        ${org_ns}CO1_url__c=robot.#23@xyz.com 
     [return]   &{data_import}
 
-Process Data Import Batch
-    Go To Page                              Listing        DataImport__c
-    Change View To                          To Be Imported
-    Click                                   Start Data Import
-    Click Begin Data Import Process
-    Click Close Button
     
 *** Test Cases ***
 Delete Mappings And Process Batch
+    [Documentation]        Delete the Currency1 field mapping on object 'CustomObject1' and create and process a DI record with a value in Currency1 field.
+    ...                    Verify that Currency1 value is not mapped over to currency1 field on object 'CustomObject1' and verify that all other records
+    ...                    (Account, contact, Opportunity and payment) are created correctly 
+    [tags]                 W-035915    feature:BDI
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
     Click Link With Text                      Data Import Advanced Mapping  
     Click Configure Advanced Mapping
-    View Field Mappings                       CustomObject1
-    Delete Mapping                            CO1 currency
+    View Field Mappings Of The Object         CustomObject1
+    Delete Field Mapping                            CO1 currency
     Reload Page
     &{data_import2} =                          Create Data Import Record
     Process Data Import Batch
@@ -95,12 +91,15 @@ Delete Mappings And Process Batch
     ...    Payment_Status__c=Paid
 
 Create Data Import with Custom Object via API and Verify Values 
-    [Documentation]    Create a DI record with Contact, Account, Opportunity, Payment and CustomObject1 details and verify that everything is saved as expected via API
+    [Documentation]        Create the Currency1 field mapping on object 'CustomObject1' and Create and process DI record with 
+    ...                    Contact, Account, Opportunity, Payment and CustomObject1 details and verify that all records are created
+    ...                    as expected along with currency1 on DI mapped to currency1 on object 'CustomObject1'
+    [tags]                 W-035915    feature:BDI
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
     Click Link With Text                      Data Import Advanced Mapping  
     Click Configure Advanced Mapping
-    View Field Mappings                       CustomObject1
+    View Field Mappings Of The Object         CustomObject1
     Create New Field Mapping                  CO1 currency (CO1_currency__c)    C1_currency (C1_currency__c)
     &{data_import} =                          Create Data Import Record
     Process Data Import Batch
@@ -133,12 +132,16 @@ Create Data Import with Custom Object via API and Verify Values
     ...    npe01__Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     ...    Payment_Status__c=Paid
        
-Update Mappings and Process Batch    
+Update Mappings and Process Batch 
+    [Documentation]        Delete the Currency2 field mapping on object 'CustomObject1' if it exists and map currency1 on DI to currency2 on object 'CustomObject1'
+    ...                    Create and process DI record with Contact, Account, Opportunity, Payment and CustomObject1 details and verify that all records are created
+    ...                    as expected along with currency1 on DI mapped to currency2 on object 'CustomObject1'   
+    [tags]                 W-035915    feature:BDI
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
     Click Link With Text                      Data Import Advanced Mapping  
     Click Configure Advanced Mapping
-    View Field Mappings                       CustomObject1  
+    View Field Mappings Of The Object         CustomObject1  
     Delete Mapping If Mapping Exists          CO1 Currency2
     Edit Field Mappings                       CO1 currency    C1_currency2 (C1_currency2__c)
     Reload Page
