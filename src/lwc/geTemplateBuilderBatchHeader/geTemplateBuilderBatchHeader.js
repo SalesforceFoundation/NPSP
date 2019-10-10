@@ -1,14 +1,14 @@
 import { LightningElement, track, api } from 'lwc';
 import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
-import { FormField, findByProperty, shiftSelectedField, mutable } from 'c/utilTemplateBuilder';
+import { FormField, findIndexByProperty, shiftToIndex, mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track isLoading = true;
     @track batchFields;
     @track selectedBatchFields;
 
-    /* Public setter for the tracked property selectedBatchFields
-    Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    /* Public setter for the tracked property selectedBatchFields */
+    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template
     @api
     set selectedBatchFields(selectedBatchFields) {
         this.selectedBatchFields = selectedBatchFields;
@@ -71,7 +71,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         if (!this.selectedBatchFields) { this.selectedBatchFields = [] }
 
         const fieldName = event.target.value;
-        const index = findByProperty(this.selectedBatchFields, 'value', fieldName);
+        const index = findIndexByProperty(this.selectedBatchFields, 'value', fieldName);
         const addSelectedField = index === -1 ? true : false;
 
         if (addSelectedField) {
@@ -115,9 +115,9 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormFieldUp(event) {
-        let oldIndex = findByProperty(this.selectedBatchFields, 'value', event.detail.value);
+        let oldIndex = findIndexByProperty(this.selectedBatchFields, 'value', event.detail.value);
         if (oldIndex > 0) {
-            shiftSelectedField(this.selectedBatchFields, oldIndex, oldIndex - 1);
+            shiftToIndex(this.selectedBatchFields, oldIndex, oldIndex - 1);
         }
     }
 
@@ -127,33 +127,30 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormFieldDown(event) {
-        let oldIndex = findByProperty(this.selectedBatchFields, 'value', event.detail.value);
+        let oldIndex = findIndexByProperty(this.selectedBatchFields, 'value', event.detail.value);
         if (oldIndex < this.selectedBatchFields.length - 1) {
-            shiftSelectedField(this.selectedBatchFields, oldIndex, oldIndex + 1);
+            shiftToIndex(this.selectedBatchFields, oldIndex, oldIndex + 1);
         }
     }
 
+    // TODO: Need to finish or scrap the incomplete function below
     /*******************************************************************************
     * @description WIP. Function toggles the checkboxes for any existing/selected batch
     * header fields. Used when retrieving an existing form template.
     */
     toggleCheckboxForSelectedBatchFields() {
-        console.log('toggleCheckboxForSelectedBatchFields');
         let _batchFields = mutable(this.batchFields);
         if (this.selectedBatchFields && this.selectedBatchFields.length > 0) {
             for (let i = 0; i < this.selectedBatchFields.length; i++) {
                 const selectedBatchField = this.selectedBatchFields[i];
-                const batchFieldIndex = findByProperty(
+                const batchFieldIndex = findIndexByProperty(
                     _batchFields,
                     'value',
                     selectedBatchField.dataImportFieldMappingDevNames[0]);
 
-                console.log('Preselected Index: ', batchFieldIndex);
-                console.log('Batch Field: ', _batchFields[batchFieldIndex]);
                 _batchFields[batchFieldIndex].checked = true;
             }
 
-            console.log('Batch Fields: ', _batchFields);
             this.batchFields = _batchFields;
         }
     }

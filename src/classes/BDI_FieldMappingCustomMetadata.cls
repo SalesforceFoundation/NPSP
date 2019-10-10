@@ -153,11 +153,6 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
         return fieldMappingSetName;
     }
 
-    public String setFieldMappingSetName(String name) {
-        fieldMappingSetName = name;
-        return fieldMappingSetName;
-    }
-
     private void retrieveCustMetadata(){
         //If the code is not in the npsp namespace, then the npsp field prefixes will need to be systematically removed.
         Boolean removeNPSPNamespace = (UTIL_Namespace.shouldAlignNamespace);

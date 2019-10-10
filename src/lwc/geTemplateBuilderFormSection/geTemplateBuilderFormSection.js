@@ -6,8 +6,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     @track isEditMode;
 
     @track formSection;
-    /* Public setter for the tracked property selectedBatchFields
-    Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    /* Public setter for the tracked property selectedBatchFields */
+    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template
     @api
     set formSection(formSection) {
         this.formSection = formSection;

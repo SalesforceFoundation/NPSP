@@ -40,33 +40,16 @@ const FormField = class FormField {
 }
 
 const removeByProperty = (array, property, value) => {
-    for (let i = 0; i < array.length; i++) {
-        if (array[i][property] == value) {
-            array.splice(i, 1);
-        }
-    }
+    const index = array.findIndex(element => element[property] === value);
+    array.splice(index, 1);
 }
 
-const findByProperty = (array, property, value) => {
-    for (let i = 0; i < array.length; i += 1) {
-        if (array[i][property] == value) {
-            return i;
-        }
-    }
-    return -1;
+const findIndexByProperty = (array, property, value) => {
+    return array.findIndex(element => element[property] === value);
 }
 
-/* Probably need to rename this to shiftItem, swapItemByIndex or something as it's used
-for shifting both fields and sections right now */
-const shiftSelectedField = (array, oldIndex, newIndex) => {
-    if (newIndex >= array.length) {
-        let k = newIndex - array.length + 1;
-        while (k--) {
-            array.push(undefined);
-        }
-    }
-    array.splice(newIndex, 0, array.splice(oldIndex, 1)[0]);
-    return array; // for dev
+const shiftToIndex = (array, oldIndex, newIndex) => {
+    [array[oldIndex], array[newIndex]] = [array[newIndex], array[oldIndex]];
 }
 
 const mutable = (obj) => {
@@ -134,8 +117,8 @@ export {
     FormSection,
     FormField,
     removeByProperty,
-    findByProperty,
-    shiftSelectedField,
+    findIndexByProperty,
+    shiftToIndex,
     mutable,
     showToast,
     handleError,

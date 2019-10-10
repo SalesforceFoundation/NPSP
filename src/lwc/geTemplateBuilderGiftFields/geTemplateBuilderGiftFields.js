@@ -2,13 +2,14 @@ import { LightningElement, track, api } from 'lwc';
 import getFieldMappingSets from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingSetNames';
 import getFieldAndObjectMappingsByFieldMappingSetName
     from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldAndObjectMappingsByFieldMappingSetName';
-import { FormSection, FormField, showToast, removeByProperty, findByProperty, shiftSelectedField, mutable, generateId } from 'c/utilTemplateBuilder';
+import { FormSection, FormField, showToast, removeByProperty, findIndexByProperty, shiftToIndex, mutable, generateId } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderGiftFields extends LightningElement {
     @track isLoading = true;
     @track selectedFieldMappingSet;
+
     /* Public setter for the tracked property selectedFieldMappingSet
-    Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     @api
     set selectedFieldMappingSet(selectedFieldMappingSet) {
         this.selectedFieldMappingSet = selectedFieldMappingSet;
@@ -16,7 +17,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
 
     @track formSections = [];
     /* Public setter for the tracked property formSections
-    Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     @api
     set formSections(formSections) {
         this.formSections = formSections;
@@ -47,6 +48,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
         this._fieldMappingSets = await getFieldMappingSets();
         this.fieldMappingSetComboboxOptions = await this.getComboboxOptionsForFieldMappingSets(this._fieldMappingSets);
 
+        // TODO: Need to finish or scrap lines between START and END comments
         /* START */
         /* tbd on this retrieve stuff :) */
         // This section between START and END are directly tied to the button "Test Retrieve Form Template"
@@ -243,7 +245,6 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
 
         formSections.push(newSection);
         this.formSections = formSections;
-        console.log(this.formSections);
         return newSection.id;
     }
 
@@ -270,9 +271,9 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleFormFieldUp(event) {
         const section = this.formSections.find(fs => fs.id == event.detail.sectionId);
-        const oldIndex = findByProperty(section.elements, 'value', event.detail.value);
+        const oldIndex = findIndexByProperty(section.elements, 'value', event.detail.value);
         if (oldIndex > 0) {
-            shiftSelectedField(section.elements, oldIndex, oldIndex - 1);
+            shiftToIndex(section.elements, oldIndex, oldIndex - 1);
         }
     }
 
@@ -283,9 +284,9 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleFormFieldDown(event) {
         const section = this.formSections.find(fs => fs.id == event.detail.sectionId);
-        const oldIndex = findByProperty(section.elements, 'value', event.detail.value);
+        const oldIndex = findIndexByProperty(section.elements, 'value', event.detail.value);
         if (oldIndex < section.elements.length - 1) {
-            shiftSelectedField(section.elements, oldIndex, oldIndex + 1);
+            shiftToIndex(section.elements, oldIndex, oldIndex + 1);
         }
     }
 
@@ -296,9 +297,9 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleFormSectionUp(event) {
         let sectionId = event.detail;
-        const oldIndex = findByProperty(this.formSections, 'id', sectionId);
+        const oldIndex = findIndexByProperty(this.formSections, 'id', sectionId);
         if (oldIndex > 0) {
-            shiftSelectedField(this.formSections, oldIndex, oldIndex - 1);
+            shiftToIndex(this.formSections, oldIndex, oldIndex - 1);
         }
     }
 
@@ -309,56 +310,51 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleFormSectionDown(event) {
         let sectionId = event.detail;
-        const oldIndex = findByProperty(this.formSections, 'id', sectionId);
+        const oldIndex = findIndexByProperty(this.formSections, 'id', sectionId);
         if (oldIndex < this.formSections.length - 1) {
-            shiftSelectedField(this.formSections, oldIndex, oldIndex + 1);
+            shiftToIndex(this.formSections, oldIndex, oldIndex + 1);
         }
     }
 
+    // TODO: Need to finish or scrap the incomplete function below
     /*******************************************************************************
-    * @description WIP. Function toggles the checkboxes for any existing/selected gift
+    * @description Function toggles the checkboxes for any existing/selected gift
     * fields. Used when retrieving an existing form template.
     */
     toggleCheckboxForSelectedFieldMappings(objectMappings) {
-        console.log('=toggleCheckboxForSelectedFieldMappings');
-        console.log('Object Mappings: ', objectMappings);
         const selectedFieldMappings = Object.keys(this._sectionIdsByFieldMappingDeveloperNames);
-        console.log('Selected Field Mappings: ', selectedFieldMappings);
         if (selectedFieldMappings && selectedFieldMappings.length > 0) {
-            console.log('before loop');
             for (let i = 0; i < objectMappings.length; i++) {
                 let fieldMappingCheckboxes = objectMappings[i].fieldMappingCheckboxes;
                 for (let ii = 0; ii < fieldMappingCheckboxes.length; ii++) {
                     let fieldMappingCheckbox = fieldMappingCheckboxes[ii];
-                    console.log(fieldMappingCheckbox.value);
                     if (selectedFieldMappings.includes(fieldMappingCheckbox.value)) {
-                        console.log('    FOund match!');
                         fieldMappingCheckbox.checked = true;
                     }
                 }
             }
-            console.log('Object Mappings: ', objectMappings);
             this.objectMappings = objectMappings;
         }
     }
 
-    /* placeholder function that handles the accordion component section toggle */
+    // TODO: Need to finish or scrap the incomplete function below.
+    // Potentially not needed.
     handleSectionToggle(event) {
         const openSections = event.detail.openSections;
 
         if (openSections.length === 0) {
-            console.log('All sections are closed');
+            //console.log('All sections are closed');
         } else {
-            console.log('Open sections: ' + openSections.join(', '));
+            //console.log('Open sections: ' + openSections.join(', '));
         }
     }
 
-    /* For dev, remove later */
+    // TODO: Used for dev. Delete later.
     logFormSections() {
-        console.log('***logFormSections');
-        console.log('***************************');
+        //console.log('***logFormSections');
+        //console.log('***************************');
         let formLayout = this.template.querySelector('c-ge-template-builder-form-layout');
         let formSections = formLayout.getFormLayout();
-        console.log('FormSections', mutable(formSections));
+        //console.log('FormSections', mutable(formSections));
     }
 }

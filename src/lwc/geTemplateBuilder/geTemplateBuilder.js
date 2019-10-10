@@ -14,22 +14,22 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         new FormLayout()
     );
 
-    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     get templateInfo() {
         return { name: this.formTemplate.name, description: this.formTemplate.description };
     }
 
-    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     get batchHeaderFields() {
         return this.formTemplate.batchHeaderFields ? this.formTemplate.batchHeaderFields : undefined;
     }
 
-    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     get layoutSections() {
         return this.formTemplate.layout ? this.formTemplate.layout.sections : undefined;
     }
 
-    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     get selectedFieldMappingSet() {
         return this.formTemplate.layout.fieldMappingSetDevName ? this.formTemplate.layout.fieldMappingSetDevName : undefined;
     }
@@ -92,11 +92,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         });
     }
 
-    /* Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     getFormTemplate() {
         retrieveDefaultFormTemplate()
             .then(data => {
-                console.log('Data: ', data);
                 this.formTemplate = data;
             })
             .catch(error => {

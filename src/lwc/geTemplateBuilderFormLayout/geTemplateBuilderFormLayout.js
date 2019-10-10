@@ -6,8 +6,8 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     @track activeFormSectionId;
 
     @track formSections = [];
-    /* Public setter for the tracked property selectedFieldMappingSet
-    Needs to be revisited, WIP tied to retrieving and rendering an existing template */
+    /* Public setter for the tracked property selectedFieldMappingSet */
+    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template
     @api
     set formSections(formSections) {
         this.formSections = formSections;
