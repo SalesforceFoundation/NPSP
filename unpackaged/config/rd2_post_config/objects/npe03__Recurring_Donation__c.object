@@ -207,7 +207,7 @@
         <fullName>npe03__Installment_Period__c</fullName>
         <description>How often you’ll receive the donations. NOTE: Changing the installment period for an existing Fixed-Length Recurring Donation may result in the loss and re-creation of open opportunities. Any data associated with those opportunities may be lost.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Defines the installment schedule of this Recurring Donation along with Installment Frequency. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</inlineHelpText>
+        <inlineHelpText>The Installment Period along with Installment Frequency defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</inlineHelpText>
         <label>Installment Period</label>
         <valueSet>
             <restricted>false</restricted>
