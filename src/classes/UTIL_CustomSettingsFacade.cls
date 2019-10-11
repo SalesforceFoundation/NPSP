@@ -598,6 +598,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         es.Error_Notifications_On__c = true;
         es.Error_Notifications_To__c = ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
         es.Disable_Error_Handling__c = false;
+        es.OverrideFeature_PilotEnabled__c = false;
         es.Enable_Debug__c = false;
         es.Respect_Duplicate_Rule_Settings__c = false;
     }
@@ -781,6 +782,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
         errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;
         errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
+        errorSettings.OverrideFeature_PilotEnabled__c = mySettings.OverrideFeature_PilotEnabled__c;
         errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
         errorSettings.Respect_Duplicate_Rule_Settings__c = mySettings.Respect_Duplicate_Rule_Settings__c;
         orgErrorSettings = errorSettings;

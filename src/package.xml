@@ -1011,6 +1011,7 @@
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
         <members>Error_Settings__c.Error_Notifications_To__c</members>
+        <members>Error_Settings__c.OverrideFeature_PilotEnabled__c</members>
         <members>Error_Settings__c.Respect_Duplicate_Rule_Settings__c</members>
         <members>Error_Settings__c.Store_Errors_On__c</members>
         <members>Error__c.Context_Type__c</members>
