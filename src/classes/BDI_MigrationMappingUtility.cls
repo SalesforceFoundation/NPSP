@@ -831,13 +831,14 @@ public with sharing class BDI_MigrationMappingUtility {
         public String dataImportFieldName { get;set; }
         public String dataImportFieldAPIName { get;set; }
         public String helpText { get;set; }
+        private final UTIL_Describe describeService = UTIL_Describe.getInstance();
 
         public HelpTextFieldMapping() {}
 
         public HelpTextFieldMapping(Schema.DescribeFieldResult dfr) {
             this.dataImportFieldName = dfr.Label;
             this.dataImportFieldAPIName = dfr.Name;
-            this.helpText = dfr.getInlineHelpText();
+            this.helpText = describeService.getHelpText(dfr.getSobjectField());
             this.isRequired = dfr.isNillable() ? 'No' : 'Yes';
 
             if (this.helpText != null) {
