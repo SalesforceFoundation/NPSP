@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2015, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -61,7 +61,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     * @return list<Opportunity> The original Opportunity list with updated names.
     ********************************************************************************************************/
     public static void refreshOppNames(list<Opportunity> oppList) {
-        
+
         set<string> allFields = new set<string>();
 
         fillOppNameSettings();
@@ -74,36 +74,36 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
         //query for opportunities and associated contacts
         map<id,Opportunity> mapOppsQuery = new map<id,Opportunity>((list<Opportunity>) database.query(getOppQuery(allFields)+' WHERE Id IN :oppList'));
-        
+
         //fill opportunity id to contact map
         map<id,Contact> mapOppIdToCon = fillConMap(mapOppsQuery.values());
 
         //name the opportunities
         for (Opportunity opp : oppList) {
-            
+
             //use the naming setting for this opportunity if it exists, otherwise use the default
             Opportunity queryOpp = mapOppsQuery.get(opp.id);
             Contact con = mapOppIdToCon.get(opp.id);
             Opportunity_Naming_Settings__c ons = getONS(queryOpp);
-                
+
             if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c)) {
                 opp.Name = replaceFieldNamesWithValues(queryOpp, con, ons);
-            
+
                 if (opp.Name.length() > 120)
                     opp.Name = opp.Name.substring(0,120);
             }
         }
     }
-    
+
     /*******************************************************************************************************
-    * @description Calculates opportunity names based on Opportunity Naming Settings using the primary 
+    * @description Calculates opportunity names based on Opportunity Naming Settings using the primary
     * Contact Id for Role field for contact fields.
     * @param oppList The list of Opportunities to rename.
     * @return list<Opportunity> A new list of renamed opportunities. The new list comes from an Opportunity
     * query and can be updated in an after opportunity insert trigger context.
     ********************************************************************************************************/
     public static list<Opportunity> getOppNamesAfterInsert(list<Opportunity> oppList) {
-        
+
         set<string> allFields = new set<string>();
         list<Opportunity> oppsForUpdate = new list<Opportunity>();
 
@@ -164,7 +164,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
         Opportunity testOpp = new Opportunity();
         Contact testCon = new Contact();
-        
+
         string s = replaceFieldNamesWithValues(testOpp, testCon, ons);
 
         s = system.now().format(ons.Date_Format__c);
@@ -272,7 +272,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     }
 
     /*******************************************************************************************************
-    * @description Constructs a query for Contacts with all contact fields from all naming specs. Also 
+    * @description Constructs a query for Contacts with all contact fields from all naming specs. Also
     * includes various fields needed for later calculations.
     * @param fields A set of strings of all fields from an opportunity naming spec.
     * @return string A contact query string.
@@ -325,7 +325,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     }
 
     /*******************************************************************************************************
-    * @description Parses out field names from an opportunity naming spec and returns them as a set of 
+    * @description Parses out field names from an opportunity naming spec and returns them as a set of
     * strings.
     * @param fields An opportunity naming spec.
     * @return set<string> The field names from the spec.
@@ -334,11 +334,11 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         set<string> setStrField = new set<string>();
         if (!string.isBlank(spec)) {
             // First, instantiate a new Pattern object looking for {!...}
-            Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');       
-            //Pattern MyPattern = Pattern.compile('\\{!*\\}');       
-            // Then instantiate a new Matcher object 
+            Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');
+            //Pattern MyPattern = Pattern.compile('\\{!*\\}');
+            // Then instantiate a new Matcher object
             Matcher MyMatcher = MyPattern.matcher(spec);
-            
+
             while (MyMatcher.find()) {
                 // get the fieldname without the {}'s
                 string strField = spec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
@@ -357,20 +357,20 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     ********************************************************************************************************/
     public static string replaceFieldNamesWithValues(Opportunity opp, Contact con, Opportunity_Naming_Settings__c ons) {
         string result = ons.Opportunity_Name_Format__c;
-        
+
         //First, instantiate a new Pattern object looking for {!...} without any nested {'s.
-        Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');       
-        //Pattern MyPattern = Pattern.compile('\\{!*\\}');       
-        //Then instantiate a new Matcher object 
+        Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');
+        //Pattern MyPattern = Pattern.compile('\\{!*\\}');
+        //Then instantiate a new Matcher object
         Matcher MyMatcher = MyPattern.matcher(ons.Opportunity_Name_Format__c);
-        
+
         while (MyMatcher.find()) {
             //get the fieldname without the {! }
             string strField = ons.Opportunity_Name_Format__c.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
-            
+
             //separate cross object references, i.e. account.name
             list<string> splitField = (strField.split('\\.',0));
-            
+
             //remove the field name itself to only include parent object references
             string fieldName = splitField[splitField.size()-1];
             splitField.remove(splitField.size()-1);
@@ -396,7 +396,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
-            if (val == null) {   
+            if (val == null) {
                 // eat potential trailing space
                 result = result.replace(strField + ' ', '');
                 // eat potential leading space
@@ -426,7 +426,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         if (dt == Schema.DisplayType.Date || dt == Schema.DisplayType.DateTime) {
             DateTime d = (DateTime) obj.get(fieldName.trim());
             string dateFormat = String.isBlank(ons.Date_Format__c) ? 'yyyy.MM.dd' : ons.Date_Format__c;
-            
+
             //if this was a date, use the GMT time zone so we don't end up on a different date
             if (dt == Schema.DisplayType.Date) {
                 result = d.formatGmt(dateFormat);
@@ -440,12 +440,13 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
                     currCode = (String) obj.get('CurrencyIsoCode');
                 }
                 String currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(currCode);
-                if (currencySymbol.length() == 3) {
+                if (!String.isBlank(currencySymbol) && currencySymbol.length() > 1) {
                     currencySymbol += ' ';
                 }
-                result = currencySymbol + String.valueOf(obj.get(fieldName.trim()));
+                result = String.isBlank(currencySymbol) ? String.valueOf(obj.get(fieldName.trim())) : currencySymbol + String.valueOf(obj.get(fieldName.trim()));
+
                 if (result.endsWith('.00'))
-                    result = result.subString(0,result.length()-3);    
+                    result = result.subString(0,result.length()-3);
             }
         } else {
             result = String.valueOf(obj.get(fieldName.trim()));
