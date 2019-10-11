@@ -57,7 +57,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     private RD2_ValidationService validationService {
         get {
             if (validationService == null) {
-                validationService = new RD2_validationService();
+                validationService = new RD2_ValidationService();
             }
             return validationService;
         }
