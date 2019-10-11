@@ -104,7 +104,6 @@ tasks:
         options:
             path: unpackaged/config/delete
 
-<<<<<<< HEAD
     deploy_trailhead_config:
         description: Deploys the metadata for Trailhead Playground config
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -118,8 +117,6 @@ tasks:
         options:
             path: unpackaged/config/trailhead_delete
 
-=======
->>>>>>> master
     ensure_record_type:
         name: Ensure Opportunity Record Types
         description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
@@ -659,12 +656,10 @@ plans:
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
-<<<<<<< HEAD
                     deploy_trailhead_config:
                         name: Trailhead Playground Configuration
                     deploy_trailhead_delete_config:
                         name: Remove Default Metadata
-=======
     rd2:
         slug: npsp-rd2-pilot
         title: Enhanced Recurring Donations Metadata Updates
@@ -681,7 +676,6 @@ plans:
                     unmanaged: False
                 ui_options:
                     name: "Enhanced Recurring Donations Metadata Updates"
->>>>>>> master
     reports:
         slug: reports
         title: Install Reports & Dashboards
