@@ -41,7 +41,7 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: ldv_tests/src
-        
+
     deploy_dev_config:
         description: Deploys the post-install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -96,7 +96,7 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: unpackaged/config/delete
-    
+
     ensure_record_type:
         name: Ensure Opportunity Record Types
         description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
@@ -116,7 +116,7 @@ tasks:
         options:
             path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot
             output: robot/Cumulus/doc/Keywords.html
-            
+
     update_admin_profile:
         options:
             package_xml: lib/admin_profile.xml
@@ -303,6 +303,15 @@ tasks:
                     - NPSP_Engagement_Plan_Record_Page
                     - NPSP_GAU_Allocation
                     - NPSP_General_Accounting_Unit
+
+    enable_pilot_in_scratch_org:
+        description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
+                errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
+                upsert errSettings;
 
 flows:
     config_dev:
