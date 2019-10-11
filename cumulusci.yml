@@ -112,6 +112,10 @@ tasks:
             record_type_label: NPSP Default
             record_type_developer_name: NPSP_Default
             sobject: Opportunity
+    
+    is_rd2_enabled:
+        description: This preflight check ensures that Enhanced Recurring Donations is enabled
+        class_path: tasks.is_rd2_enabled
 
     robot:
         options:
