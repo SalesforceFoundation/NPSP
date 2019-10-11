@@ -57,6 +57,42 @@ private class UTIL_FeatureEnablement_TEST {
     }
 
     /**
+     * @description Validates that the isRecurringDonations2PilotEnabled() method can be forced
+     * to return True by using the OverrideFeature_PilotEnabled__c field on the Package_Settings
+     * object.
+     */
+    @isTest
+    private static void shouldReturnTrueWhenPilotIsEnabledWithOverride() {
+        if (!UTIL_Namespace.isScratchOrg()) {
+            return;
+        }
+
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(
+            new Error_Settings__c(OverrideFeature_PilotEnabled__c = true)
+        );
+
+        System.assertEquals(true,
+            UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
+            'The Pilot should be enabled if this test is running in a scratch org');
+    }
+
+    /**
+     * @description Validates that the isRecurringDonations2PilotEnabled() method can be forced
+     * to return True by using the OverrideFeature_PilotEnabled__c field on the Package_Settings
+     * object.
+     */
+    @isTest
+    private static void shouldReturnFalseWhenPilotIsEnabledWithOverride() {
+        if (!UTIL_Namespace.isScratchOrg()) {
+            return;
+        }
+
+        System.assertEquals(false,
+            UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
+            'The Pilot should be disabled if this test is running in a scratch org');
+    }
+
+    /**
      * @description Validates that the default for the isRecurringDonations2PilotEnabled() static method is false
      */
     @isTest
