@@ -62,6 +62,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         List<SObject> rds, List<SObject> oldRds, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
+        DmlWrapper dmlActions = new DmlWrapper();
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
@@ -70,6 +71,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         autogenerateNames(rds, oldRds, triggerAction);
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
+
+        List<RecurringDonationSchedule__c> newRDSchedules = createRecurringDonationSchedule(rds, triggerAction);
+        if (newRDSchedules != null && newRDSchedules.size() > 0) {
+            dmlActions.objectsToInsert.addAll(newRDSchedules);
+        }
 
         return null;
     }
@@ -99,6 +105,17 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     private void dispatchToIntegrationGateway(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
             integrationGateway.handleBeforeDelete(oldRds);
+        }
+    }
+
+    /***
+    * @description Creates schedule record after insert of recurring donation
+    * @param rds Trigger.new records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    private void createRecurringDonationSchedule(List<SObject> rds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            RD2_ScheduleService.createRecurringDonationSchedule(rds, false);
         }
     }
 
