@@ -315,6 +315,15 @@ tasks:
                     - NPSP_GAU_Allocation
                     - NPSP_General_Accounting_Unit
 
+    enable_pilot_in_scratch_org:
+        description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
+                errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
+                upsert errSettings;
+
 flows:
     config_dev:
         steps:
