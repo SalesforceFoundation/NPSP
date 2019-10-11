@@ -40,46 +40,53 @@ public with sharing class RD2_ValidationService {
     * @description Validates missing data on Recurring Donation
     * @param rds the Recurring Donation to validate
     */
-    public void validateRecurringDonationsData(List<npe03__Recurring_Donation__c> rds) {
+    public void validate(List<npe03__Recurring_Donation__c> rds) {
 
-        Set<Id> setAccountId = new Set<Id>();
-        Map<Id,Account> mapAccountIdAccount = null;
-        Boolean contactExists = false;
+        Set<Id> accountIds = new Set<Id>();
+        Set<Id> contactIds = new Set<Id>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
             if (rd.npe03__Organization__c != null) {
-                setAccountId.add(rd.npe03__Organization__c);
+                accountIds.add(rd.npe03__Organization__c);
+                contactIds.add(rd.npe03__Contact__c);
             }
         }
-        mapAccountIdAccount = new Map<Id,Account>([
-            SELECT Id, npe01__SYSTEMIsIndividual__c, (select id from Contacts)
+        accountIds.remove(null);
+        contactIds.remove(null);
+
+        Map<Id,Account> accountsById = new Map<Id,Account>([
+            SELECT Id, npe01__SYSTEMIsIndividual__c,
+            (
+                SELECT Id
+                FROM Contacts
+                WHERE Id IN :contactIds
+            )
             FROM Account
-            WHERE Id IN :setAccountId
+            WHERE Id IN :accountIds
             ]);
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            System.debug('Contact account id is' + rd.npe03__Contact__r.Accountid);
-            if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
-                rd.addError(System.Label.RD_ValidateAccountAndContactMissing);
-            }
+            validate(rd, accountsById.get(rd.npe03__Organization__c));
+        }
+    }
 
-            if (mapAccountIdAccount.containsKey(rd.npe03__Organization__c)) {
-                System.debug('value please '+ rd.npe03__Contact__c);
-                if (mapAccountIdAccount.get(rd.npe03__Organization__c).npe01__SYSTEMIsIndividual__c && rd.npe03__Contact__c == null) {
-                    rd.addError(System.Label.RD_ValidateContactMissingForAccount);
-                }
+    /***
+    * @description Validates missing account or contact data on Recurring Donation
+    * @param rd the Recurring Donation to validate
+    * @param accountById is the associated account for the Recurring Donation
+    */
+    public void validate(npe03__Recurring_Donation__c rd, Account accountById) {
 
-                for (Contact con:mapAccountIdAccount.get(rd.npe03__Organization__c).Contacts ) {
-                    if (con.id == rd.npe03__Contact__c ) {
-                        contactExists = true;
-                        break;
-                    }
-                }
-                if  (mapAccountIdAccount.get(rd.npe03__Organization__c).npe01__SYSTEMIsIndividual__c && rd.npe03__Contact__c != null && !contactExists) {
-                    rd.addError(System.Label.RD_ValidateIfContactNotRelatedWithAccount);
+        if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
+            rd.addError(System.Label.RD_DonorIsRequired);
+        }
 
-                }
-            }
+        else if (accountById.npe01__SYSTEMIsIndividual__c && rd.npe03__Contact__c == null) {
+            rd.addError(System.Label.RD_DonorIsRequired);
+        }
+
+        else if (accountById.npe01__SYSTEMIsIndividual__c && accountById.Contacts.size() == 0) {
+            rd.addError(System.Label.RD_ContactMustBelongToAccount);
         }
     }
 

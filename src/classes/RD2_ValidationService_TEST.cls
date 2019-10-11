@@ -35,16 +35,13 @@
 *
 */
 @isTest(IsParallel=true)
-public with sharing class RD2_ValidationService_TEST {
-
-    private static Account acc = getHHAccount();
-    private static Contact conRecord = getContact();
+private with sharing class RD2_ValidationService_TEST {
 
     /***
     * @description Verifies if it displays error message when there is no account and contact
     */
     @isTest
-    private static void shouldDisplayErrorMsgWhenNoAccountAndContact() {
+    private static void shouldFailWhenNoDonorIsSpecified() {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -56,7 +53,7 @@ public with sharing class RD2_ValidationService_TEST {
         } catch (Exception e) {
             errMessage = e.getMessage();
         }
-        System.assert(errMessage.contains(System.Label.RD_ValidateAccountAndContactMissing));
+        System.assert(errMessage.contains(System.Label.RD_DonorIsRequired));
 
     }
 
@@ -64,10 +61,11 @@ public with sharing class RD2_ValidationService_TEST {
     * @description Verifies if it displays error message when there is no contact for Household account
     */
     @isTest
-    private static void shouldDisplayErrorMsgWhenNoContactForHHAccount() {
+    private static void shouldFailWhenNoContactIsSpecifiedForHHAccount() {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        Account acc = getHHAccount();
         insert acc;
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
@@ -79,36 +77,51 @@ public with sharing class RD2_ValidationService_TEST {
             errMessage = e.getMessage();
         }
 
-        System.assert(errMessage.contains(System.Label.RD_ValidateContactMissingForAccount));
+        System.assert(errMessage.contains(System.Label.RD_DonorIsRequired));
 
     }
 
     /***
     * @description Verifies if it displays error message when the contact is not associated with the
-        selected HouseHold account.
+        selected HouseHold account. It also verifies if no error message when the contact is associated
+        with the account in this method.
     */
     @isTest
-    private static void shouldDisplayErrorMsgWhenContactNotFoundInAccount() {
+    private static void shouldFailWhenContactDoesNotBelongToHHAccount() {
         String errMessage = '';
+        String errMessage2 = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Account acc = getHHAccount();
+        insert acc;
+        Contact conRecord = UTIL_UnitTestData_TEST.getContact();
+        conRecord.accountid = acc.id;
+        insert conRecord;
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
 
-        insert conRecord;
-
-        Account acc = [select id, npe01__SYSTEMIsIndividual__c, recordtypeid from Account limit 1 ];
-        System.debug('Here is the value:' + acc.npe01__SYSTEMIsIndividual__c);
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
-            .withContact(conRecord.Id)
+            .withContact(con.Id)
             .build();
         try {
             insert rd;
         } catch (Exception e) {
             errMessage = e.getMessage();
         }
-        System.assert(errMessage.contains(System.Label.RD_ValidateIfContactNotRelatedWithAccount));
+        System.assert(errMessage.contains(System.Label.RD_ContactMustBelongToAccount));
+
+        npe03__Recurring_Donation__c rd2 = new TEST_RecurringDonationBuilder()
+            .withAccount(acc.Id)
+            .withContact(conRecord.Id)
+            .build();
+        try {
+            insert rd2;
+        } catch (Exception e) {
+            errMessage2 = e.getMessage();
+        }
+        System.assert(!errMessage2.contains(System.Label.RD_ContactMustBelongToAccount));
 
     }
 
@@ -122,16 +135,6 @@ public with sharing class RD2_ValidationService_TEST {
             npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE,
             npe01__SYSTEMIsIndividual__c = true
 
-        );
-    }
-
-    /***
-    * @description Builds a Contact without related to an account
-    * @return Contact Record
-    */
-    private static Contact getContact() {
-        return new Contact(
-            LastName = 'Smith'
         );
     }
 

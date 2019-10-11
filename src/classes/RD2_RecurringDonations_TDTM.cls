@@ -82,7 +82,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        validateRecurringDonationsData(rds, triggerAction);
+        validate(rds, triggerAction);
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
@@ -108,12 +108,12 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     /***
     * @description Validates Recurring Donations data
     * @param rds Trigger.new records
-    * @param triggerAction BeforeInsert.
+    * @param triggerAction BeforeInsert, BeforeUpdate, etc.
     */
-    public void validateRecurringDonationsData(List<SObject> rds, TDTM_Runnable.Action triggerAction) {
+    public void validate(List<SObject> rds, TDTM_Runnable.Action triggerAction) {
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            validationService.validateRecurringDonationsData(rds);
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            validationService.validate(rds);
 
         }
     }
