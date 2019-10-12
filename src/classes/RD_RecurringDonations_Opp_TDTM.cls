@@ -46,6 +46,10 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        if (RD2_EnablementService.isRecurringDonations2Enabled) {
+            return null;
+        }
             
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
         DmlWrapper dmlWrapper = new DmlWrapper();
