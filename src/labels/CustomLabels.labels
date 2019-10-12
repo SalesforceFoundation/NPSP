@@ -1348,7 +1348,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementEnableConfirm</shortDescription>
-        <value>I confirm that I have completed the Preparation Tasks above and I understand that enabling Enchanced Recurring Donations is irreversible.</value>
+        <value>I confirm that I have completed the Preparation Tasks above and I understand that enabling Enhanced Recurring Donations is irreversible.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableIntro</fullName>
@@ -1364,7 +1364,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementEnableMessage</shortDescription>
-        <value>Enable the Enchanced Recurring Donations functionality.</value>
+        <value>Enable the Enhanced Recurring Donations functionality.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableWarning</fullName>
@@ -1388,7 +1388,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementMetaDeployConfirm</shortDescription>
-        <value>Confirm that you have installed the Enhanced Recurring Donations Metadata.</value>
+        <value>Confirm that you have installed the Enhanced Recurring Donations metadata.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployIntro</fullName>
@@ -1469,8 +1469,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>RD2_EnablementPrepTasks</shortDescription>
         <value>&lt;ul&gt;&lt;li&gt;Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;/li&gt;
-&lt;li&gt;Read the Enhanced Recurring Donations documentation.&lt;/li&gt;
-&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;&lt;/ul&gt;</value>
+&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;
+&lt;li&gt;Read the Enhanced Recurring Donations &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementPrepTitle</fullName>

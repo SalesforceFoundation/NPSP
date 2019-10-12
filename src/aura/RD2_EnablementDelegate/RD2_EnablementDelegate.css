@@ -3,7 +3,16 @@
     border-right: none;
     border-bottom: none;
 }
-.THIS .editDisabled {
-    pointer-events: none;
-    color: #e1e1e1;
+.THIS .linkButton:active,
+.THIS .linkButton:focus,
+.THIS .linkButton:focus:active {
+	background-image: none;
+	outline: 0;
+	box-shadow: none;
+}
+.THIS .linkButton:hover {
+    text-decoration: underline;
+}
+.THIS .linkButton:disabled, .THIS .styleButton:disabled {
+    color: #706e6b;
 }

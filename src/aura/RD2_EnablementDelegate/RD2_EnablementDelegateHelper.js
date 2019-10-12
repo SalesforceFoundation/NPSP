@@ -102,6 +102,9 @@
             if (state === 'SUCCESS') {
                 component.set('v.state.isMetaDeployLaunched', true);
 
+                let url = 'https://metadeploy.herokuapp.com/products/npsp/RD2-enablement/npsp-rd2-pilot';
+                window.open(url, '_blank');
+
             } else if (state === 'ERROR') {
                 this.handleError(component, response.getError(), '2');
             }
@@ -110,6 +113,7 @@
         });
 
         $A.enqueueAction(action);
+
     },
     /****
     * @description Confirms MetaDeploy has been deployed
@@ -174,12 +178,6 @@
             metaDeployProgress = 50;
         }
         component.set('v.state.metaDeployProgress', metaDeployProgress);
-
-        if (enablementState.isEnabled) {
-            this.enableEdit(component, "metadeploy-link");
-        } else {
-            this.disableEdit(component, "metadeploy-link");
-        }
     },
     /****
     * @description Hides component's element
@@ -194,20 +192,6 @@
     displayElement: function (component, elementName) {
         let element = component.find(elementName);
         $A.util.removeClass(element, "slds-hide");
-    },
-    /****
-    * @description Disables input field edit
-    */
-    disableEdit: function (component, inputName) {
-        let inputComp = component.find(inputName);
-        $A.util.addClass(inputComp, "editDisabled");
-    },
-    /****
-    * @description Enables input field edit
-    */
-    enableEdit: function (component, inputName) {
-        let inputComp = component.find(inputName);
-        $A.util.removeClass(inputComp, "editDisabled");
     },
     /****
     * @description Clears the errors on the page
