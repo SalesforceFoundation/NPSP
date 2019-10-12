@@ -3,7 +3,7 @@ from cumulusci.robotframework.pageobjects import pageobject
 from NPSP import npsp_lex_locators
 from logging import exception
 
-@pageobject("Custom", "ManageAdvancedMapping")
+@pageobject("Custom", "BDI_ManageAdvancedMapping")
 class AdvancedMappingPage(BasePage):
 
     
@@ -11,10 +11,20 @@ class AdvancedMappingPage(BasePage):
     def npsp(self):
         return self.builtin.get_library_instance('NPSP')
     
+    def _is_current_page(self):
+        """
+        Verifies that current page is BDI Manage Advanced Mapping page
+        """
+        self.npsp.wait_until_url_contains("BDI_ManageAdvancedMapping")
+        
+    
     def create_new_field_mapping(self,src_fld,tgt_fld):
+        """Click on Create New Field Mapping button on the page 
+           select 'src_fld' arg in Source Field Label box
+           'tgt_fld' arg in Target Field Label box"""
         self.selenium.wait_until_page_contains("Field Mappings", timeout=60)
-        self.selenium.scroll_element_into_view(npsp_lex_locators['adv_mappings']['button'])
         btns=npsp_lex_locators['adv_mappings']['button']
+        self.selenium.scroll_element_into_view(btns)
         self.selenium.click_button(btns)
         self.selenium.wait_until_page_contains_element(npsp_lex_locators['adv_mappings']["modal_open"], timeout=15, error="New Field Mapping Modal did not open in 15 seconds")
         src_loc=npsp_lex_locators['adv_mappings']['field_mapping'].format("sourceFieldLabel")
@@ -69,10 +79,6 @@ class AdvancedMappingPage(BasePage):
         
     def delete_mapping_if_mapping_exists(self,fld_label):
         """Checks if mapping with fld_label exists and if exists deletes the mapping. If not then does nothing"""
-        try:
-            locator=npsp_lex_locators['adv_mappings']['field-label'].format(fld_label)
-            self.selenium.page_should_contain_element(locator, message=obj_label+' was not found on the page')
-            self.delete_mapping(fld_label)
-            return
-        except Exception:
-            return    
+        locator=npsp_lex_locators['adv_mappings']['field-label'].format(fld_label)
+        if self.npsp.check_if_element_exists(locator):
+            self.delete_field_mapping(fld_label)
