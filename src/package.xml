@@ -332,6 +332,14 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>RD2_Donor</members>
+        <members>RD2_Donor_TEST</members>
+        <members>RD2_EnablementService</members>
+        <members>RD2_EnablementService_TEST</members>
+        <members>RD2_NamingService</members>
+        <members>RD2_NamingService_TEST</members>
+        <members>RD2_RecurringDonations_TDTM</members>
+        <members>RD2_RecurringDonations_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -440,6 +448,9 @@
         <members>TDTM_TriggerHandler</members>
         <members>TDTM_TriggerScaffolds_TEST</members>
         <members>TDTM_iTableDataGateway</members>
+        <members>TEST_OpportunityBuilder</members>
+        <members>TEST_RecurringDonationBuilder</members>
+        <members>TEST_SObjectGateway</members>
         <members>USER_InActiveUser_TDTM</members>
         <members>USER_InActiveUser_TDTM_TEST</members>
         <members>USER_MixedDML_TEST</members>
@@ -535,8 +546,8 @@
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
         <members>UTIL_PageMessages</members>
-        <members>UTIL_SingleToastMessage</members>
         <members>UTIL_SLDS_Icon</members>
+        <members>UTIL_SingleToastMessage</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Tooltip</members>
         <members>UTIL_Typeahead</members>
@@ -1122,6 +1133,16 @@
         <members>Partial_Soft_Credit__c.Contact__c</members>
         <members>Partial_Soft_Credit__c.Opportunity__c</members>
         <members>Partial_Soft_Credit__c.Role_Name__c</members>
+        <members>RecurringDonationSchedule__c.Campaign__c</members>
+        <members>RecurringDonationSchedule__c.DayOfMonth__c</members>
+        <members>RecurringDonationSchedule__c.EndDate__c</members>
+        <members>RecurringDonationSchedule__c.ExternalId__c</members>
+        <members>RecurringDonationSchedule__c.InstallmentAmount__c</members>
+        <members>RecurringDonationSchedule__c.InstallmentFrequency__c</members>
+        <members>RecurringDonationSchedule__c.InstallmentPeriod__c</members>
+        <members>RecurringDonationSchedule__c.PaymentMethod__c</members>
+        <members>RecurringDonationSchedule__c.RecurringDonation__c</members>
+        <members>RecurringDonationSchedule__c.StartDate__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -1204,6 +1225,7 @@
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
         <members>npe03__Recurring_Donation__c.StartDate__c</members>
         <members>npe03__Recurring_Donation__c.Status__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.EnableAutomaticNaming__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
@@ -1420,6 +1442,7 @@
         <members>RP_WebinarLinkLabel</members>
         <members>RP_YoutubeChannel</members>
         <members>RecurringDonationAccountAndContactError</members>
+        <members>RecurringDonationNameSuffix</members>
         <members>Saved</members>
         <members>Settings_not_Saved</members>
         <members>SmartyStreets_Help_Text</members>
@@ -2069,8 +2092,8 @@
         <members>stgErrorINaming</members>
         <members>stgErrorInvalidClass</members>
         <members>stgErrorInvalidNameFormat</members>
-        <members>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</members>
         <members>stgErrorMissingDefaultGauRecord</members>
+        <members>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</members>
         <members>stgHHNameRefreshTitle</members>
         <members>stgHelpAccountModel</members>
         <members>stgHelpAdvancedMapping1</members>
@@ -2477,6 +2500,7 @@
         <members>Opportunity_Naming_Settings__c</members>
         <members>Package_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
+        <members>RecurringDonationSchedule__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
@@ -2704,6 +2728,13 @@
         <members>Partial_Soft_Credit__c-iw</members>
         <members>Partial_Soft_Credit__c-ja</members>
         <members>Partial_Soft_Credit__c-nl_NL</members>
+        <members>RecurringDonationSchedule__c-de</members>
+        <members>RecurringDonationSchedule__c-en_US</members>
+        <members>RecurringDonationSchedule__c-es</members>
+        <members>RecurringDonationSchedule__c-fr</members>
+        <members>RecurringDonationSchedule__c-iw</members>
+        <members>RecurringDonationSchedule__c-ja</members>
+        <members>RecurringDonationSchedule__c-nl_NL</members>
         <members>Relationship_Sync_Excluded_Fields__c-de</members>
         <members>Relationship_Sync_Excluded_Fields__c-en_US</members>
         <members>Relationship_Sync_Excluded_Fields__c-es</members>
@@ -2949,6 +2980,7 @@
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
+        <members>RecurringDonationSchedule__c-Recurring Schedule Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
         <members>Data_Import_Field_Mapping_Set__mdt-Data Import Field Mapping Set Layout</members>
