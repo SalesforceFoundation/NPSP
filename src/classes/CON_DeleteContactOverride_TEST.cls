@@ -309,9 +309,9 @@ private class CON_DeleteContactOverride_TEST {
         Contact contact = new Contact(LastName = 'TEST_CONTACT', AccountId = account.Id);
         insert contact;
 
-        npe03__Recurring_Donation__c recurringDonation = CDL_CascadeDeleteLookups_TEST.buildContactRDs(
-            new List<Contact>{contact}
-        )[0];
+        npe03__Recurring_Donation__c recurringDonation = getRecurringDonationBuilder()
+          .withContact(contact.Id)
+          .build();
         insert recurringDonation;
 
         List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{contact});
@@ -389,9 +389,9 @@ private class CON_DeleteContactOverride_TEST {
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        npe03__Recurring_Donation__c recurringDonation = CDL_CascadeDeleteLookups_TEST.buildContactRDs(
-            new List<Contact>{contact}
-        )[0];
+        npe03__Recurring_Donation__c recurringDonation = getRecurringDonationBuilder()
+          .withContact(contact.Id)
+          .build();
         insert recurringDonation;
 
         Opportunity orgOpportunity = new Opportunity(
@@ -461,9 +461,14 @@ private class CON_DeleteContactOverride_TEST {
         );
         insert accountCase;
 
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildContactRDs(new List<Contact>{contact1}));
-        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(new List<Account>{account}));
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>{
+            getRecurringDonationBuilder()
+                .withContact(contact1.Id)
+                .build(),
+            getRecurringDonationBuilder()
+                .withAccount(account.Id)
+                .build()
+        };
         insert recurringDonations;
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
@@ -548,5 +553,18 @@ private class CON_DeleteContactOverride_TEST {
             WHERE Id = :accountId 
             ALL ROWS
         ];
+    }
+
+    /***
+    * @description Builds Recurring Donation record with default values
+    * @return npe03__Recurring_Donation__c
+    */
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
+        return new TEST_RecurringDonationBuilder()
+            .withAmount(2)
+            .withInstallments(2)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished()
+            .withScheduleTypeMultiplyValue();
     }
 }
