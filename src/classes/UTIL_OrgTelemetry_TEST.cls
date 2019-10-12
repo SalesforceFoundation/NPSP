@@ -72,16 +72,15 @@ private class UTIL_OrgTelemetry_TEST {
         );
         insert opp;
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                Name = 'UTIL_OrgTelemetry_TEST',
-                npe03__Contact__c = c.Id,
-                npe03__Installments__c = 3,
-                npe03__Amount__c = 100,
-                npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                npe03__Date_Established__c = Date.newInstance(2018,6,15),
-                npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(c.Id)
+            .withInstallments(3)
+            .withAmount(100)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(2018,6,15))
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
         insert rd;
 
         DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
@@ -207,15 +206,14 @@ private class UTIL_OrgTelemetry_TEST {
         Account donorAccount = new Account(Name = 'foo');
         insert donorAccount;
 
-        insert new npe03__Recurring_Donation__c(
-            Name = 'foo',
-            npe03__Installment_Period__c = CUSTOM_INSTALLMENT_PERIOD,
-            npe03__Date_Established__c= System.today(),
-            npe03__Organization__c = donorAccount.Id,
-            npe03__Amount__c = 20,
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
-        );
+        insert new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriod(CUSTOM_INSTALLMENT_PERIOD)
+            .withDateEstablished(System.today())
+            .withAccount(donorAccount.Id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
 
         Test.startTest();
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
