@@ -1423,19 +1423,19 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Install Enhanced Recurring Donations Metadata</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementMigrationRun</fullName>
+        <fullName>RD2_EnablementMigrationIntro</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationRun</shortDescription>
+        <shortDescription>RD2_EnablementMigrationIntro</shortDescription>
         <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementMigrationRunButton</fullName>
+        <fullName>RD2_EnablementMigrationButton</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationRunButton</shortDescription>
+        <shortDescription>RD2_EnablementMigrationButton</shortDescription>
         <value>Run Migration</value>
     </labels>
     <labels>

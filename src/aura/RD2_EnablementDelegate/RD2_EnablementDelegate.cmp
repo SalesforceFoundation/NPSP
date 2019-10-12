@@ -88,6 +88,14 @@
                 </aura:set>
 
                 <div class="slds-setup-assistant__step-detail slds-m-left_medium">
+
+                    <lightning:layout>
+                        <lightning:layoutItem size="9" class="slds-p-right_medium">
+                            <lightning:formattedRichText class="slds-text-longform"
+                                value="{!$Label.c.RD2_EnablementEnableIntro}" />
+                        </lightning:layoutItem>
+                    </lightning:layout>
+
                     <div class="slds-progress slds-progress_vertical">
                         <ol class="slds-progress__list slds-progress__list-bordered">
                             <li
@@ -181,6 +189,14 @@
                 </aura:set>
 
                 <div class="slds-setup-assistant__step-detail slds-m-left_medium">
+
+                    <lightning:layout>
+                        <lightning:layoutItem size="9" class="slds-p-right_medium">
+                            <lightning:formattedRichText class="slds-text-longform"
+                                value="{!$Label.c.RD2_EnablementMetaDeployIntro}" />
+                        </lightning:layoutItem>
+                    </lightning:layout>
+
                     <div class="slds-progress slds-progress_vertical">
                         <ol class="slds-progress__list slds-progress__list-bordered">
                             <li
@@ -272,12 +288,12 @@
                     <lightning:layout multipleRows="true">
 
                         <lightning:layoutItem size="9" class="slds-p-right_medium">
-                            <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationRun}" />
+                            <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationIntro}" />
                         </lightning:layoutItem>
 
                         <lightning:layoutItem size="3">
                             <lightning:button class="slds-m-left_x-small styleButton"
-                                label="{!$Label.c.RD2_EnablementMigrationRunButton}" variant="neutral"
+                                label="{!$Label.c.RD2_EnablementMigrationButton}" variant="neutral"
                                 disabled="{!or(!v.state.isMetaDeployConfirmed, v.state.isMigrationRun)}" />
                         </lightning:layoutItem>
 
