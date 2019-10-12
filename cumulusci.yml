@@ -84,6 +84,13 @@ tasks:
             path: unpackaged/config/qa_bdi_custom_metadata
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_rd2_config:
+        description: Deploys updates to fully enable Enhanced Recurring Donations
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/rd2_post_config
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -105,6 +112,10 @@ tasks:
             record_type_label: NPSP Default
             record_type_developer_name: NPSP_Default
             sobject: Opportunity
+    
+    is_rd2_enabled:
+        description: This preflight check ensures that Enhanced Recurring Donations is enabled
+        class_path: tasks.is_rd2_enabled
 
     robot:
         options:
@@ -612,6 +623,22 @@ plans:
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
+    rd2:
+        slug: npsp-rd2-pilot
+        title: Enhanced Recurring Donations Metadata Updates
+        tier: additional
+        is_listed: False
+        checks:
+            - when: "not tasks.is_rd2_enabled()"
+              action: error
+              message: "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation."
+        steps:
+            1:
+                task: deploy_rd2_config
+                options:
+                    unmanaged: False
+                ui_options:
+                    name: "Enhanced Recurring Donations Metadata Updates"
     reports:
         slug: reports
         title: Install Reports & Dashboards
