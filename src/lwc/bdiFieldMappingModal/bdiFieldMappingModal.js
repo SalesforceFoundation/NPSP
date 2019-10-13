@@ -363,6 +363,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                         MasterLabel: this.fieldMapping.Source_Field_Label,
                         Data_Import_Field_Mapping_Set: this.fieldMappingSetName,
                         Is_Deleted: false,
+                        Required: 'No',
                         Source_Field_API_Name: this.fieldMapping.Source_Field_API_Name,
                         Target_Field_API_Name: this.fieldMapping.Target_Field_API_Name,
                         Target_Object_Mapping: this.objectMapping.DeveloperName
