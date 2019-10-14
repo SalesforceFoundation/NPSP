@@ -70,7 +70,7 @@ Delete Mappings And Process Batch
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    Verify Expected Values                     ns       CustomObject1__c      &{data_import_upd}[${org_ns}CustomObject1Imported__c]
+    Verify Expected Values                     nonns       CustomObject1__c      &{data_import_upd}[${org_ns}CustomObject1Imported__c]
     ...    ${org_ns}C1_currency2__c=None
     ...    ${org_ns}C1_currency__c=None
     ...    ${org_ns}C1_date__c=${date}
@@ -80,7 +80,7 @@ Delete Mappings And Process Batch
     ...    ${org_ns}C1_text__c=Robot Automation
     ...    ${org_ns}C1_textarea__c=This is custom object data created via Automation
     ...    ${org_ns}C1_url__c=robot.#23@xyz.com
-    ...    ${ns}Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
+    ...    ${org_ns}Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     Verify Expected Values                     nonns    npe01__OppPayment__c        &{data_import_upd}[${ns}PaymentImported__c]
     ...    npe01__Check_Reference_Number__c=&{data_import2}[${ns}Payment_Check_Reference_Number__c]
     ...    npe01__Paid__c=True
@@ -113,7 +113,7 @@ Create Data Import with Custom Object via API and Verify Values
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    Verify Expected Values                    ns       CustomObject1__c      &{data_import_upd}[${org_ns}CustomObject1Imported__c]
+    Verify Expected Values                    nonns       CustomObject1__c      &{data_import_upd}[${org_ns}CustomObject1Imported__c]
     ...    ${org_ns}C1_currency__c=500.0
     ...    ${org_ns}C1_date__c=${date}
     ...    ${org_ns}C1_number__c=9876543.0
@@ -122,7 +122,7 @@ Create Data Import with Custom Object via API and Verify Values
     ...    ${org_ns}C1_text__c=Robot Automation
     ...    ${org_ns}C1_textarea__c=This is custom object data created via Automation
     ...    ${org_ns}C1_url__c=robot.#23@xyz.com
-    ...    ${ns}Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
+    ...    ${org_ns}Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     Verify Expected Values                    nonns    npe01__OppPayment__c        &{data_import_upd}[${ns}PaymentImported__c]
     ...    npe01__Check_Reference_Number__c=&{data_import}[${ns}Payment_Check_Reference_Number__c]
     ...    npe01__Paid__c=True
@@ -157,7 +157,7 @@ Update Mappings and Process Batch
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    Verify Expected Values                     ns       CustomObject1__c      &{data_import_upd}[${org_ns}CustomObject1Imported__c]
+    Verify Expected Values                     nonns       CustomObject1__c      &{data_import_upd}[${org_ns}CustomObject1Imported__c]
     ...    ${org_ns}C1_currency2__c=500.0
     ...    ${org_ns}C1_currency__c=None
     ...    ${org_ns}C1_date__c=${date}
@@ -167,7 +167,7 @@ Update Mappings and Process Batch
     ...    ${org_ns}C1_text__c=Robot Automation
     ...    ${org_ns}C1_textarea__c=This is custom object data created via Automation
     ...    ${org_ns}C1_url__c=robot.#23@xyz.com
-    ...    ${ns}Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
+    ...    ${org_ns}Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     Verify Expected Values                     nonns    npe01__OppPayment__c        &{data_import_upd}[${ns}PaymentImported__c]
     ...    npe01__Check_Reference_Number__c=&{data_import1}[${ns}Payment_Check_Reference_Number__c]
     ...    npe01__Paid__c=True
