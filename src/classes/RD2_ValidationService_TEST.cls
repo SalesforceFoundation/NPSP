@@ -77,7 +77,7 @@ private with sharing class RD2_ValidationService_TEST {
             errMessage = e.getMessage();
         }
 
-        System.assert(errMessage.contains(System.Label.RD_DonorIsRequired));
+        System.assert(errMessage.contains(System.Label.RD_ContactMustBelongToAccount));
 
     }
 
