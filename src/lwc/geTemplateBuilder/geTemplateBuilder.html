@@ -16,10 +16,16 @@
                     <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small">
                         <div class="slds-button-group"
                              role="group">
+                            <!-- TODO: Remove below input field later. Used for dev. -->
+                            <lightning-input type="text"
+                                             placeholder="Template Id"
+                                             variant="label-hidden"
+                                             data-name="templateId">
+                            </lightning-input>
                             <lightning-button label="Test Retrieve Form Template"
                                               title="Cancel"
                                               variant="neutral"
-                                              class="slds-float_right slds-m-right_small"
+                                              class="slds-float_right slds-m-right_small slds-m-left_small"
                                               onclick={getFormTemplate}>
                             </lightning-button>
                         </div>

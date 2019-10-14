@@ -67,8 +67,8 @@ public with sharing class GE_TemplateBuilderCtrl {
     * @description Just an intermediary method. Can just import this method directly in the lwc.
     */
     @AuraEnabled
-    public static FORM_Template retrieveDefaultFormTemplate(){
-        return FORM_ServiceGiftEntry.retrieveDefaultFormTemplate();
+    public static FORM_Template retrieveFormTemplate(String templateId){
+        return FORM_ServiceGiftEntry.retrieveFormTemplate(Id.valueOf(templateId));
     }
 
     /*******************************************************************************************************
