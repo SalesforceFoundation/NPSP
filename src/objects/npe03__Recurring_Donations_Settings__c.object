@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
+        <fullName>EnableAutomaticNaming__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If enabled, Salesforce automatically populates the Recurring Donation Name.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If enabled, Salesforce automatically populates the Recurring Donation Name.</inlineHelpText>
+        <label>Automatic Recurring Donation Naming</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>InstallmentOppStageName__c</fullName>
         <description>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</description>
         <externalId>false</externalId>
@@ -35,5 +45,5 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
-    </fields>
+    </fields>   
 </CustomObject>
