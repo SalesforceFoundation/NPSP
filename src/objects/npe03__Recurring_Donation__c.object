@@ -190,9 +190,9 @@
     </fields>
     <fields>
         <fullName>InstallmentFrequency__c</fullName>
-        <description>Defines the installment schedule of this Recurring Donation along with Installment Period. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</description>
+        <description>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Defines the installment schedule of this Recurring Donation along with Installment Period. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</inlineHelpText>
+        <inlineHelpText>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</inlineHelpText>
         <label>Installment Frequency</label>
         <precision>3</precision>
         <required>false</required>
