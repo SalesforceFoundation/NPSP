@@ -67,9 +67,9 @@ public with sharing class RD2_ValidationService {
 
         for (npe03__Recurring_Donation__c rd : rds) {
             if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
-            rd.addError(System.Label.RD_DonorIsRequired);
-            return;
-        }
+                rd.addError(System.Label.RD_DonorIsRequired);
+                return;
+            }
             validate(rd, accountsById.get(rd.npe03__Organization__c));
         }
     }
@@ -77,23 +77,27 @@ public with sharing class RD2_ValidationService {
     /***
     * @description Validates missing account or contact data on Recurring Donation
     * @param rd the Recurring Donation to validate
-    * @param accountById is the associated account for the Recurring Donation
+    * @param acct is the associated account for the Recurring Donation
     */
-    public void validate(npe03__Recurring_Donation__c rd, Account accountById) {
+    public void validate(npe03__Recurring_Donation__c rd, Account acct) {
 
-        if (accountbyId != null) {
-            if (accountById.npe01__SYSTEMIsIndividual__c && rd.npe03__Contact__c == null) {
-                rd.addError(System.Label.RD_DonorIsRequired);
+        if (acct == null) {
+            return;
+        }
+
+        if (acct.npe01__SYSTEMIsIndividual__c) {
+            if (rd.npe03__Contact__c == null) {
+                rd.addError(System.Label.RD_ContactMustBelongToAccount);
             }
 
-            else if (accountById.npe01__SYSTEMIsIndividual__c && (!validateContact(rd, accountById.Contacts) || accountById.Contacts.size() == 0)) {
+            else if (!validateContact(rd, acct.Contacts) || acct.Contacts.size() == 0) {
                 rd.addError(System.Label.RD_ContactMustBelongToAccount);
             }
         }
     }
 
     /***
-    * @description Validates if contact in the account matches with Recurring Donations
+    * @description Validates that the Contact on the RD is a member of the Household Account.
     * @param rd the Recurring Donation to validate
     * @param Contacts are the contacts related to the account.
     */
