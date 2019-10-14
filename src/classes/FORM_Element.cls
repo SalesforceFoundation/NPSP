@@ -50,6 +50,9 @@ public with sharing class FORM_Element {
     @AuraEnabled public Boolean allowDefaultValue;
     @AuraEnabled public String sectionId;
     @AuraEnabled public String defaultValue;
+    @AuraEnabled public String dataType;
+    // TODO: Potentially include this in unified wrapper class or another solution
+    @AuraEnabled public GE_TemplateBuilderCtrl.PicklistOptionWrapper[] picklistOptions;
     /* END */
 
     //Constructor for form field

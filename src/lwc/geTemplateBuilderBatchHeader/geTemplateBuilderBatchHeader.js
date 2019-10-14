@@ -88,13 +88,19 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * to be added
     */
     addField(target) {
+        let batchField = this.batchFields.find(bf => {
+            return bf.value === target.value;
+        });
+
         let field = new BatchHeaderField(
             target.label,
             false,
             target.value,
             false,
             undefined,
-            undefined
+            undefined,
+            target.getAttribute("data-type"),
+            batchField.picklistOptions
         );
 
         this.selectedBatchFields.push(field);

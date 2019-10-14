@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { FormLayout } from 'c/utilTemplateBuilder';
+import { FormLayout, mutable } from 'c/utilTemplateBuilder';
 
 export default class GeTemplateBuilderFormLayout extends LightningElement {
     @api fieldMappingSet;
@@ -57,15 +57,19 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     */
     handleDeleteFormSection(event) {
         const formSection = event.detail;
-        for (let i = 0; i < this.formSections.length; i++) {
-            if (this.formSections[i].id === formSection.id) {
-                this.formSections.splice(i, 1);
+
+        let formSections = mutable(this.formSections);
+        for (let i = 0; i < formSections.length; i++) {
+            if (formSections[i].id === formSection.id) {
+                formSections.splice(i, 1);
             }
         }
 
+        this.formSections = formSections;
+
         this.dispatchEvent(new CustomEvent(
             'deleteformsection',
-            { detail: formSection }));
+            { detail: { formSections: formSections, formSection: formSection } }));
     }
 
     /*******************************************************************************

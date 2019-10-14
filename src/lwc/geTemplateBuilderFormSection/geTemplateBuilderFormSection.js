@@ -25,8 +25,9 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     */
     @api
     getFormSectionValues() {
-        this.formSection.elements = this.getSectionFormFields();
-        return mutable(this.formSection);
+        let formSection = mutable(this.formSection);
+        formSection.elements = this.getSectionFormFields();
+        return formSection;
     }
 
     /*******************************************************************************
@@ -50,9 +51,12 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * @description Updates the formSection label in memory
     */
     handleSaveFormSection() {
+        let formSection = mutable(this.formSection);
+
         const formSectionLabelInputElement =
             this.template.querySelector('lightning-input[data-name="formSectionLabelInputElement"]');
-        this.formSection.label = formSectionLabelInputElement.value;
+        formSection.label = formSectionLabelInputElement.value;
+        this.formSection = formSection;
         this.handleExitEditMode();
     }
 

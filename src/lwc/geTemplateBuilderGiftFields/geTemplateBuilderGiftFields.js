@@ -32,9 +32,9 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
 
     @api
     getTabData() {
-        const formLayout = this.template.querySelector('c-ge-template-builder-form-layout');
-        const formSections = formLayout.getFormLayout();
-        return formSections;
+        const formLayoutComponent = this.template.querySelector('c-ge-template-builder-form-layout');
+        const formLayout = formLayoutComponent.getFormLayout();
+        return formLayout;
     }
 
     connectedCallback() {
@@ -144,8 +144,9 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button-icon
     */
     handleDeleteFormSection(event) {
-        const formSection = event.detail;
+        this.formSections = event.detail.formSections;
 
+        const formSection = event.detail.formSection;
         if (formSection.id == this._activeFormSectionId) {
             this._activeFormSectionId = undefined;
         }
@@ -195,8 +196,11 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
                 false,
                 fieldMapping.value,
                 false,
-                sectionId
-            );
+                sectionId,
+                undefined,
+                fieldMapping.dataType,
+                fieldMapping.picklistOptions
+            )
 
             if (!this.formSections || this.formSections.length === 0) {
                 sectionId = this.handleAddSection();
@@ -231,8 +235,8 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleAddSection() {
         if (!this.formSections) { this.formSections = [] }
-
-        let formSections = mutable(this.formSections);
+        let formLayout = this.getTabData();
+        let formSections = formLayout.sections.length > 0 ? mutable(formLayout.sections) : mutable(this.formSections);
 
         let newSection = new FormSection(
             generateId(),
@@ -256,7 +260,8 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleAddFieldToSection(sectionId, field) {
         field.sectionId = sectionId;
-        let formSections = mutable(this.formSections);
+        let formLayout = this.getTabData();
+        let formSections = formLayout.sections.length > 0 ? mutable(formLayout.sections) : mutable(this.formSections);
         let formSection = formSections.find(fs => fs.id == sectionId);
 
         formSection.elements.push(field);

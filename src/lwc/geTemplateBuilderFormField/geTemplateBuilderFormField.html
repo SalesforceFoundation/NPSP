@@ -18,17 +18,51 @@
                     <lightning-input type="checkbox"
                                      class="slds-m-left_x-large"
                                      checked={field.allowDefaultValue}
-                                     onchange={handleAllowDefaultValue}
+                                     onchange={handleToggleDefaultValue}
                                      data-name="allowDefaultValue">
                     </lightning-input>
                 </div>
                 <div class="slds-size_5-of-12">
-                    <lightning-input data-name="defaultValue"
-                                     type="text"
-                                     value={field.defaultValue}
-                                     variant="label-hidden"
-                                     disabled={isDefaultValueAllowed}>
-                    </lightning-input>
+                    <template if:true={isLightningRichText}>
+                        <lightning-input-rich-text data-name="defaultValue"
+                                                   value={field.defaultValue}
+                                                   variant="label-hidden"
+                                                   disabled={isDefaultValueAllowed}>
+                        </lightning-input-rich-text>
+                    </template>
+                    <template if:true={isLightningTextarea}>
+                        <lightning-textarea data-name="defaultValue"
+                                            value={field.defaultValue}
+                                            variant="label-hidden"
+                                            disabled={isDefaultValueAllowed}>
+                        </lightning-textarea>
+                    </template>
+                    <template if:true={isLightningCombobox}>
+                        <lightning-combobox data-name="defaultValue"
+                                            options={field.picklistOptions}
+                                            value={field.defaultValue}
+                                            variant="label-hidden"
+                                            disabled={isDefaultValueAllowed}>
+                        </lightning-combobox>
+                    </template>
+                    <template if:true={isLightningSearch}>
+                        <lightning-input data-name="defaultValue"
+                                         type="search"
+                                         value={field.defaultValue}
+                                         variant="label-hidden"
+                                         disabled={isDefaultValueAllowed}
+                                         onkeyup={handleSearch}>
+                        </lightning-input>
+                    </template>
+                    <template if:true={isLightningInput}>
+                        <lightning-input data-name="defaultValue"
+                                         type={lightningInputType}
+                                         value={field.defaultValue}
+                                         variant="label-hidden"
+                                         checked={field.defaultValue}
+                                         disabled={isDefaultValueAllowed}>
+                        </lightning-input>
+                    </template>
                 </div>
                 <div class="slds-size_1-of-12">
                     <div class="slds-grid slds-wrap">
