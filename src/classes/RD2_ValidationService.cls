@@ -54,7 +54,7 @@ public with sharing class RD2_ValidationService {
         accountIds.remove(null);
         contactIds.remove(null);
 
-        Map<Id,Account> accountsById = new Map<Id,Account>([
+        Map<id,Account> accountsById = new Map<Id,Account>([
             SELECT Id, npe01__SYSTEMIsIndividual__c,
             (
                 SELECT Id
@@ -66,6 +66,10 @@ public with sharing class RD2_ValidationService {
             ]);
 
         for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
+            rd.addError(System.Label.RD_DonorIsRequired);
+            return;
+        }
             validate(rd, accountsById.get(rd.npe03__Organization__c));
         }
     }
@@ -77,17 +81,30 @@ public with sharing class RD2_ValidationService {
     */
     public void validate(npe03__Recurring_Donation__c rd, Account accountById) {
 
-        if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
-            rd.addError(System.Label.RD_DonorIsRequired);
-        }
+        if (accountbyId != null) {
+            if (accountById.npe01__SYSTEMIsIndividual__c && rd.npe03__Contact__c == null) {
+                rd.addError(System.Label.RD_DonorIsRequired);
+            }
 
-        else if (accountById.npe01__SYSTEMIsIndividual__c && rd.npe03__Contact__c == null) {
-            rd.addError(System.Label.RD_DonorIsRequired);
+            else if (accountById.npe01__SYSTEMIsIndividual__c && (!validateContact(rd, accountById.Contacts) || accountById.Contacts.size() == 0)) {
+                rd.addError(System.Label.RD_ContactMustBelongToAccount);
+            }
         }
+    }
 
-        else if (accountById.npe01__SYSTEMIsIndividual__c && accountById.Contacts.size() == 0) {
-            rd.addError(System.Label.RD_ContactMustBelongToAccount);
+    /***
+    * @description Validates if contact in the account matches with Recurring Donations
+    * @param rd the Recurring Donation to validate
+    * @param Contacts are the contacts related to the account.
+    */
+    @TestVisible
+    private Boolean validateContact(npe03__Recurring_Donation__c rd, List<Contact> Contacts) {
+        for (Contact con:Contacts) {
+            if (rd.npe03__Contact__c == con.id) {
+                return true;
+            }
         }
+        return false;
     }
 
 }
