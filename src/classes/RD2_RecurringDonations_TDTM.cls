@@ -62,7 +62,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         List<SObject> rds, List<SObject> oldRds, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
-        DmlWrapper dmlActions = new DmlWrapper();
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
@@ -72,10 +71,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
-        List<RecurringDonationSchedule__c> newRDSchedules = createRecurringDonationSchedule(rds, triggerAction);
-        if (newRDSchedules != null && newRDSchedules.size() > 0) {
-            dmlActions.objectsToInsert.addAll(newRDSchedules);
-        }
+        createRecurringDonationSchedule(rds, triggerAction);
 
         return null;
     }
@@ -114,9 +110,15 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     private void createRecurringDonationSchedule(List<SObject> rds, TDTM_Runnable.Action triggerAction) {
+
+        DmlWrapper dmlActions = new DmlWrapper();
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            RD2_ScheduleService.createRecurringDonationSchedule(rds, false);
+            for (SObject rd: rds) {
+                RD2_ScheduleService rdSchedule = new RD2_ScheduleService((npe03__Recurring_Donation__c) rd);
+                dmlActions.objectsToInsert.addAll(rdSchedule.initializeSchedule());
+            }
         }
+        TDTM_TriggerHandler.processDML(dmlActions);
     }
 
 }
