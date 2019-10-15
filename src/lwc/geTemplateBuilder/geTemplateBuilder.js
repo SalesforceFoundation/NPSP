@@ -98,7 +98,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         retrieveFormTemplate({ templateId: templateId })
             .then(data => {
                 this.formTemplate = data;
-                this.template.querySelector('c-ge-template-builder-batch-header').init();
+                const batchHeaderComponent = this.template.querySelector('c-ge-template-builder-batch-header');
+                if (batchHeaderComponent) {
+                    batchHeaderComponent.init();
+                }
             })
             .catch(error => {
                 console.log('Error: ', error);

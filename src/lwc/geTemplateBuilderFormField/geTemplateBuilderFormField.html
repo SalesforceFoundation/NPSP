@@ -3,14 +3,18 @@
         <div class="slds-card__body slds-card__body_inner">
             <div class="slds-grid slds-grid_vertical-align-center">
                 <div class="slds-size_3-of-12 slds-p-right_small">
-                    <h2 class="slds-text-body_small slds-truncate"
-                        title={field.label}>
-                        {field.label}
-                    </h2>
+                    <lightning-input type="text"
+                                     class="slds-truncate"
+                                     label={field.label}
+                                     field-level-help={field.value}
+                                     value={field.customLabel}
+                                     data-name="customLabel">
+                    </lightning-input>
                 </div>
                 <div class="slds-size_1-of-12">
                     <lightning-input type="checkbox"
                                      checked={isRequired}
+                                     variant="label-stacked"
                                      disabled={field.isRequiredFieldDisabled}
                                      data-name="required">
                     </lightning-input>
@@ -19,6 +23,7 @@
                     <lightning-input type="checkbox"
                                      class="slds-m-left_x-large"
                                      checked={field.allowDefaultValue}
+                                     variant="label-stacked"
                                      onchange={handleToggleDefaultValue}
                                      data-name="allowDefaultValue">
                     </lightning-input>
@@ -27,14 +32,14 @@
                     <template if:true={isLightningRichText}>
                         <lightning-input-rich-text data-name="defaultValue"
                                                    value={field.defaultValue}
-                                                   variant="label-hidden"
+                                                   variant="label-stacked"
                                                    disabled={isDefaultValueAllowed}>
                         </lightning-input-rich-text>
                     </template>
                     <template if:true={isLightningTextarea}>
                         <lightning-textarea data-name="defaultValue"
                                             value={field.defaultValue}
-                                            variant="label-hidden"
+                                            variant="label-stacked"
                                             disabled={isDefaultValueAllowed}>
                         </lightning-textarea>
                     </template>
@@ -42,7 +47,7 @@
                         <lightning-combobox data-name="defaultValue"
                                             options={field.picklistOptions}
                                             value={field.defaultValue}
-                                            variant="label-hidden"
+                                            variant="label-stacked"
                                             disabled={isDefaultValueAllowed}>
                         </lightning-combobox>
                     </template>
@@ -50,7 +55,7 @@
                         <lightning-input data-name="defaultValue"
                                          type="search"
                                          value={field.defaultValue}
-                                         variant="label-hidden"
+                                         variant="label-stacked"
                                          disabled={isDefaultValueAllowed}
                                          onkeyup={handleSearch}>
                         </lightning-input>
@@ -59,7 +64,7 @@
                         <lightning-input data-name="defaultValue"
                                          type={lightningInputType}
                                          value={field.defaultValue}
-                                         variant="label-hidden"
+                                         variant="label-stacked"
                                          checked={field.defaultValue}
                                          disabled={isDefaultValueAllowed}>
                         </lightning-input>

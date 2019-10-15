@@ -167,6 +167,7 @@ public with sharing class GE_TemplateBuilderCtrl {
         @AuraEnabled public String label;
         @AuraEnabled public String value;
         @AuraEnabled public Boolean checked;
+        // TODO: Change to displayType and add new attribute for dataType
         @AuraEnabled public String dataType;
         @AuraEnabled public PicklistOptionWrapper[] picklistOptions;
         @AuraEnabled public Boolean isRequired = false;
@@ -191,6 +192,7 @@ public with sharing class GE_TemplateBuilderCtrl {
             String fieldMappingDeveloperName,
             Schema.DescribeFieldResult targetFieldDescribe,
             Boolean checked) {
+
             this.label = fieldMappingLabel;
             this.value = fieldMappingDeveloperName;
             this.checked = checked;
