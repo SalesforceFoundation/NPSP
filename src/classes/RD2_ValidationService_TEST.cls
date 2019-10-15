@@ -140,6 +140,27 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
+    * @description Verifies if it creates Recurring donations for a single household contact
+        without an account.
+    */
+    @isTest
+    private static void shouldCreateRDSForHouseholdContact() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .build();
+
+        insert rd;
+
+        System.assert([select id from npe03__Recurring_Donation__c].size()>0 );
+
+    }
+
+    /***
     * @description Should create Recurring donations for organization accounts without validaiton errors
     */
     @isTest
@@ -155,6 +176,7 @@ private with sharing class RD2_ValidationService_TEST {
             .build();
 
         insert rd;
+
         System.assert([select id from npe03__Recurring_Donation__c].size()>0 );
     }
 

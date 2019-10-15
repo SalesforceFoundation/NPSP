@@ -88,9 +88,7 @@ public with sharing class RD2_ValidationService {
         if (acct.npe01__SYSTEMIsIndividual__c) {
             if (rd.npe03__Contact__c == null) {
                 rd.addError(System.Label.RD_ContactMustBelongToAccount);
-            }
-
-            else if (!validateContact(rd, acct.Contacts) || acct.Contacts.size() == 0) {
+            } else if (!validateContact(rd, acct.Contacts) || acct.Contacts.size() == 0) {
                 rd.addError(System.Label.RD_ContactMustBelongToAccount);
             }
         }
