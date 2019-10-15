@@ -43,8 +43,9 @@ public with sharing class FORM_BatchHeaderField {
 
     /* PS Additional props for FormFields */
     @AuraEnabled public String label;
-    @AuraEnabled public Boolean required;
     @AuraEnabled public String value;
+    @AuraEnabled public Boolean required;
+    @AuraEnabled public Boolean isRequiredFieldDisabled;
     @AuraEnabled public Boolean allowDefaultValue;
     @AuraEnabled public String defaultValue;
     @AuraEnabled public String dataType;

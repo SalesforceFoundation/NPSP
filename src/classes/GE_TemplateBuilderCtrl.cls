@@ -48,6 +48,13 @@ public with sharing class GE_TemplateBuilderCtrl {
     private static final String TEMPLATE_VERSION = '1.0';
 
     /*******************************************************************************************************
+    * @description List of required DataImportBatch__c fields
+    */
+    private static final String[] REQUIRED_BATCH_HEADER_FIELDS = new String[]{
+        'name'
+    };
+
+    /*******************************************************************************************************
     * @description Just an intermediary method for calling the storeFormTemplate method in the FormServiceGiftEntry
     * class. I've modified the FormServiceGiftEntry to return the newly inserted Form_Template__c id so I can
     * navigate to the record page in the UI. Should probably revert this back later depending on how we want
@@ -125,8 +132,20 @@ public with sharing class GE_TemplateBuilderCtrl {
 
         Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImportBatch__c.Name);
         for (String key : fields.keySet()) {
-            wrappers.add(new CheckboxWrapper(fields.get(key)));
+            DescribeFieldResult dfr = fields.get(key);
+            if (dfr.isAccessible() && dfr.isCreateable()) {
+                CheckboxWrapper checkboxWrapper = new CheckboxWrapper(fields.get(key));
+                System.debug('key: ' + key);
+                if (REQUIRED_BATCH_HEADER_FIELDS.contains(key)) {
+                    System.debug('IS REQUIRED');
+                    checkboxWrapper.isRequired = true;
+                    checkboxWrapper.isRequiredFieldDisabled = true;
+                }
+
+                wrappers.add(checkboxWrapper);
+            }
         }
+
         return wrappers;
     }
 
@@ -150,6 +169,8 @@ public with sharing class GE_TemplateBuilderCtrl {
         @AuraEnabled public Boolean checked;
         @AuraEnabled public String dataType;
         @AuraEnabled public PicklistOptionWrapper[] picklistOptions;
+        @AuraEnabled public Boolean isRequired = false;
+        @AuraEnabled public Boolean isRequiredFieldDisabled = false;
 
         public CheckboxWrapper(Schema.DescribeFieldResult describe) {
             this.label = describe.getLabel();

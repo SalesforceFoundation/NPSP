@@ -52,6 +52,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     */
     handleSaveFormSection() {
         let formSection = mutable(this.formSection);
+        formSection.elements = this.getSectionFormFields();
 
         const formSectionLabelInputElement =
             this.template.querySelector('lightning-input[data-name="formSectionLabelInputElement"]');

@@ -42,10 +42,11 @@ const FormField = class FormField {
 }
 
 const BatchHeaderField = class BatchHeaderField {
-    constructor(label, required, value, allowDefaultValue, sectionId, defaultValue, dataType, picklistOptions) {
+    constructor(label, value, required, isRequiredFieldDisabled, allowDefaultValue, defaultValue, dataType, picklistOptions) {
         this.label = label;
-        this.required = required;
         this.value = value;
+        this.required = required;
+        this.isRequiredFieldDisabled = isRequiredFieldDisabled;
         this.allowDefaultValue = allowDefaultValue;
         this.defaultValue = defaultValue;
         this.dataType = dataType;
@@ -69,6 +70,27 @@ const shiftToIndex = (array, oldIndex, newIndex) => {
 
 const mutable = (obj) => {
     return JSON.parse(JSON.stringify(obj));
+}
+
+/*******************************************************************************
+* @description Sorts the given list by field name and direction
+*
+* @param {array} list: List to be sorted
+* @param {string} property: Property to sort by
+* @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
+*/
+const sort = (list, property, sortDirection) => {
+    const data = mutable(list);
+    const key = (a) => a[property];
+    const reverse = sortDirection === 'asc' ? 1 : -1;
+
+    data.sort((a, b) => {
+        let valueA = key(a) ? key(a).toLowerCase() : '';
+        let valueB = key(b) ? key(b).toLowerCase() : '';
+        return reverse * ((valueA > valueB) - (valueB > valueA));
+    });
+
+    return data;
 }
 
 /*******************************************************************************
@@ -173,5 +195,6 @@ export {
     handleError,
     generateId,
     inputTypeByDescribeType,
-    lightningInputTypeByDataType
+    lightningInputTypeByDataType,
+    sort
 }

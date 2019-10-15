@@ -1,6 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
-import { BatchHeaderField, findIndexByProperty, shiftToIndex, mutable } from 'c/utilTemplateBuilder';
+import { BatchHeaderField, findIndexByProperty, shiftToIndex, mutable, sort } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track isLoading = true;
@@ -18,8 +18,12 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         this.init();
     }
 
+    @api
     init = async () => {
+        this.isLoading = true;
         this.batchFields = await getBatchFields();
+        this.batchFields = sort(this.batchFields, 'label', 'asc');
+        this.handleRequiredFields();
         this.toggleCheckboxForSelectedBatchFields();
         this.isLoading = false;
     }
@@ -68,14 +72,12 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Onchange event object from lightning-input checkbox
     */
     handleSelectBatchField(event) {
-        if (!this.selectedBatchFields) { this.selectedBatchFields = [] }
-
         const fieldName = event.target.value;
         const index = findIndexByProperty(this.selectedBatchFields, 'value', fieldName);
         const addSelectedField = index === -1 ? true : false;
 
         if (addSelectedField) {
-            this.addField(event.target);
+            this.addField(fieldName);
         } else {
             this.removeField(index);
         }
@@ -87,22 +89,23 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} target: Object containing the label and value of the field
     * to be added
     */
-    addField(target) {
+    addField(fieldName) {
         let batchField = this.batchFields.find(bf => {
-            return bf.value === target.value;
+            return bf.value === fieldName;
         });
 
         let field = new BatchHeaderField(
-            target.label,
-            false,
-            target.value,
+            batchField.label,
+            batchField.value,
+            batchField.isRequired,
+            batchField.isRequiredFieldDisabled,
             false,
             undefined,
-            undefined,
-            target.getAttribute("data-type"),
+            batchField.dataType,
             batchField.picklistOptions
         );
 
+        if (!this.selectedBatchFields) { this.selectedBatchFields = [] }
         this.selectedBatchFields.push(field);
     }
 
@@ -141,14 +144,34 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         }
     }
 
+    // TODO: Needs to be cleaned up/reevaluated
+    /*******************************************************************************
+    * @description WIP. Function adds required fields to selectedBatchFields property
+    */
+    handleRequiredFields() {
+        const requiredFields = this.batchFields.filter(batchField => { return batchField.isRequired });
+
+        const selectedFieldsExists = this.selectedBatchFields && this.selectedBatchFields.length > 0;
+
+        requiredFields.forEach((field) => {
+            if (selectedFieldsExists) {
+                const alreadySelected = this.batchFields.find(bf => { return bf.value === field.value; });
+                if (alreadySelected) { return; }
+            }
+
+            this.addField(field.value);
+        });
+    }
+
     // TODO: Need to finish or scrap the incomplete function below
     /*******************************************************************************
     * @description WIP. Function toggles the checkboxes for any existing/selected batch
     * header fields. Used when retrieving an existing form template.
     */
     toggleCheckboxForSelectedBatchFields() {
-        let _batchFields = mutable(this.batchFields);
         if (this.selectedBatchFields && this.selectedBatchFields.length > 0) {
+            let _batchFields = mutable(this.batchFields);
+
             for (let i = 0; i < this.selectedBatchFields.length; i++) {
                 const selectedBatchField = this.selectedBatchFields[i];
                 const batchFieldIndex = findIndexByProperty(
