@@ -29,7 +29,7 @@ Setup Test Data
 Create Recurring Donation And Check Rollups
     [Documentation]              This test verifies that Account, Contact, and Soft Credit Contact rollups are udpated
     ...                          when a Recurring Donation's Opportunities are Closed Won.
-
+    [tags]                       unstable
     #Find 1st Opportunity for Recurring Donation and Close It
     @{opportunity1} =            API Query Installment          &{recurringdonation}[Id]    (1 of 12)
     Store Session Record         Opportunity                    ${opportunity1}[0][Id]
