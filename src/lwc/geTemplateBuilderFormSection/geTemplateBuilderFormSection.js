@@ -61,8 +61,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sends out a 'deleteformsection' custom event to parent component
-    * geTemplateBuilderFormLayout
+    * @description Dispatches an event to parent component geTemplateBuilderFormLayout
     */
     handleDeleteSection() {
         this.dispatchEvent(new CustomEvent(
@@ -85,10 +84,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Handles setting the active section and updating the slds icon
-    * across all sections.
-    *
-    * @param {object} event: Onclick event object from lightning-button
+    * @description Dispatches an event up to parent component geTemplateFormLayout
+    * to set the currently active section
     */
     handleSelectActiveSection() {
         this.dispatchEvent(new CustomEvent(
@@ -97,10 +94,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sends an event up to parent component geTemplateBuilderGiftFields
-    * for shifting the FormSection element up in the list and UI
-    *
-    * @param {object} event: Onclick event object from lightning-button
+    * @description Dispatches an event up to parent component geTemplateFormLayout
+    * to shift the FormSection element up in the data structure
     */
     handleFormSectionUp() {
         this.dispatchEvent(new CustomEvent(
@@ -109,10 +104,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sends an event up to parent component geTemplateBuilderGiftFields
-    * for shifting the FormSection element down in the list and UI
-    *
-    * @param {object} event: Onclick event object from lightning-button
+    * @description Dispatches an event up to parent component geTemplateFormLayout
+    * to shift the FormSection element down in the data structure
     */
     handleFormSectionDown() {
         this.dispatchEvent(new CustomEvent(
@@ -121,28 +114,28 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sends an event up to parent component geTemplateBuilderGiftFields
-    * for shifting the FormField element up in the list and UI
+    * @description Dispatches an event up to parent component geTemplateFormLayout
+    * to shift the FormField element up in the data structure
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Custom Event received from child component
+    * geTemplateBuilderFormField
     */
     handleFormFieldUp(event) {
-        const formFieldId = event.detail;
         this.dispatchEvent(new CustomEvent(
             'formfieldup',
-            { detail: formFieldId }));
+            { detail: event.detail }));
     }
 
     /*******************************************************************************
-    * @description Sends an event up to parent component geTemplateBuilderGiftFields
-    * for shifting the FormField element down in the list and UI
+    * @description Dispatches an event up to parent component geTemplateFormLayout
+    * to shift the FormField element down in the data structure
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Custom Event received from child component
+    * geTemplateBuilderFormField
     */
     handleFormFieldDown(event) {
-        const formFieldId = event.detail;
         this.dispatchEvent(new CustomEvent(
             'formfielddown',
-            { detail: formFieldId }));
+            { detail: event.detail }));
     }
 }

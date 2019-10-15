@@ -59,26 +59,30 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
     /* TODO: Delete later. For debugging only */
     connectedCallback() {
-        console.log('FIELD: ', mutable(this.field));
-        console.log('TYPE: ', this.lightningInputType);
+        //console.log('FIELD: ', mutable(this.field));
+        //console.log('TYPE: ', this.lightningInputType);
     }
 
     /*******************************************************************************
-    * @description Sends an event up to geTemplateBuilder to shift the FormField
-    * up in the array and UI.
+    * @description Dispatches an event up to parent component to shift the FormField
+    * up in the data structure.
     */
     handleFormFieldUp() {
         const field = this.getFormFieldValues();
-        this.dispatchEvent(new CustomEvent('formfieldup', { detail: field }));
+        this.dispatchEvent(new CustomEvent(
+            'formfieldup',
+            { detail: field }));
     }
 
     /*******************************************************************************
-    * @description Sends an event up to geTemplateBuilder to shift the FormField
-    * down in the array and UI.
+    * @description Dispatches an event up to parent component to shift the FormField
+    * down in the data structure.
     */
     handleFormFieldDown() {
         const field = this.getFormFieldValues();
-        this.dispatchEvent(new CustomEvent('formfielddown', { detail: field }));
+        this.dispatchEvent(new CustomEvent(
+            'formfielddown',
+            { detail: field }));
     }
 
     /*******************************************************************************
@@ -86,7 +90,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     * 
     * @param {object} event: Onchange event from lightning-input checkbox
     */
-   handleToggleDefaultValue(event) {
+    handleToggleDefaultValue(event) {
         let field = mutable(this.field);
         field.allowDefaultValue = !field.allowDefaultValue;
         if (!field.allowDefaultValue) {

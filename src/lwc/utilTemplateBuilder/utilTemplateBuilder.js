@@ -64,6 +64,7 @@ const findIndexByProperty = (array, property, value) => {
 
 const shiftToIndex = (array, oldIndex, newIndex) => {
     [array[oldIndex], array[newIndex]] = [array[newIndex], array[oldIndex]];
+    return array;
 }
 
 const mutable = (obj) => {

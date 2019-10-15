@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { FormLayout, mutable } from 'c/utilTemplateBuilder';
+import { FormLayout } from 'c/utilTemplateBuilder';
 
 export default class GeTemplateBuilderFormLayout extends LightningElement {
     @api fieldMappingSet;
@@ -36,9 +36,10 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
 
     /*******************************************************************************
     * @description Handles setting the active section and updating the slds icon
-    * across all sections.
+    * across all sections and dispatches an event to parent component
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Custom Event received from child component
+    * geTemplateBuilderFormSection
     */
     handleSelectActiveSection(event) {
         const sectionId = event.detail;
@@ -50,33 +51,24 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Removes a section and dispatches a 'deleteformsection' custom event
-    * to parent component geTemplateBuilderGiftFields.
+    * @description Dispatches an event to parent component geTemplateBuilderGiftFields.
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Custom Event received from child component
+    * geTemplateBuilderFormSection
     */
     handleDeleteFormSection(event) {
-        const formSection = event.detail;
-
-        let formSections = mutable(this.formSections);
-        for (let i = 0; i < formSections.length; i++) {
-            if (formSections[i].id === formSection.id) {
-                formSections.splice(i, 1);
-            }
-        }
-
-        this.formSections = formSections;
-
+        const formSectionId = event.detail.id;
         this.dispatchEvent(new CustomEvent(
             'deleteformsection',
-            { detail: { formSections: formSections, formSection: formSection } }));
+            { detail: formSectionId }));
     }
 
     /*******************************************************************************
-    * @description Sends an event up to parent component geTemplateBuilderGiftFields
-    * for shifting the FormSection element up in the list and UI
+    * @description Dispatches an event up to parent component geTemplateBuilderGiftFields
+    * for shifting the FormSection element up in the data structure
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Custom Event received from child component
+    * geTemplateBuilderFormSection
     */
     handleFormSectionUp(event) {
         const sectionId = event.detail;
@@ -86,10 +78,11 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sends an event up to parent component geTemplateBuilderGiftFields
-    * for shifting the FormSection element down in the list and UI
+    * @description Dispatches an event up to parent component geTemplateBuilderGiftFields
+    * for shifting the FormSection element up in the data structure
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Custom Event received from child component
+    * geTemplateBuilderFormSection
     */
     handleFormSectionDown(event) {
         const sectionId = event.detail;
@@ -99,10 +92,11 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sends an event up to parent component geTemplateBuilderGiftFields
-    * for shifting the FormField element up in the list and UI
+    * @description Dispatches an event up to parent component geTemplateBuilderGiftFields
+    * for shifting the FormField element up in the data structure
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Custom Event received from child component
+    * geTemplateBuilderFormSection
     */
     handleFormFieldUp(event) {
         const formFieldId = event.detail;
@@ -112,10 +106,11 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sends an event up to parent component geTemplateBuilderGiftFields
-    * for shifting the FormField element down in the list and UI
+    * @description Dispatches an event up to parent component geTemplateBuilderGiftFields
+    * for shifting the FormField element down in the data structure
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Custom Event received from child component
+    * geTemplateBuilderFormSection
     */
     handleFormFieldDown(event) {
         const formFieldId = event.detail;

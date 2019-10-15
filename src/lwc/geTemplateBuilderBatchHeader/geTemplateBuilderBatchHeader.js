@@ -121,9 +121,10 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormFieldUp(event) {
+        this.selectedBatchFields = this.getTabData();
         let oldIndex = findIndexByProperty(this.selectedBatchFields, 'value', event.detail.value);
         if (oldIndex > 0) {
-            shiftToIndex(this.selectedBatchFields, oldIndex, oldIndex - 1);
+            this.selectedBatchFields = shiftToIndex(mutable(this.selectedBatchFields), oldIndex, oldIndex - 1);
         }
     }
 
@@ -133,9 +134,10 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormFieldDown(event) {
+        this.selectedBatchFields = this.getTabData();
         let oldIndex = findIndexByProperty(this.selectedBatchFields, 'value', event.detail.value);
         if (oldIndex < this.selectedBatchFields.length - 1) {
-            shiftToIndex(this.selectedBatchFields, oldIndex, oldIndex + 1);
+            this.selectedBatchFields = shiftToIndex(mutable(this.selectedBatchFields), oldIndex, oldIndex + 1);
         }
     }
 

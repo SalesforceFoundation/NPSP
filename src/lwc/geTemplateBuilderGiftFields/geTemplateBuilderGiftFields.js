@@ -144,9 +144,11 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button-icon
     */
     handleDeleteFormSection(event) {
-        this.formSections = event.detail.formSections;
+        const formSectionId = event.detail;
 
-        const formSection = event.detail.formSection;
+        let formSections = mutable(this.formSections);
+        let formSection = formSections.find(fs => fs.id == formSectionId);
+
         if (formSection.id == this._activeFormSectionId) {
             this._activeFormSectionId = undefined;
         }
@@ -159,6 +161,11 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
                 checkbox.checked = false;
             }
         }
+
+        const formSectionIndex = findIndexByProperty(formSections, 'id', formSection.id);
+        formSections.splice(formSectionIndex, 1);
+
+        this.formSections = formSections;
     }
 
     /*******************************************************************************
@@ -235,8 +242,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleAddSection() {
         if (!this.formSections) { this.formSections = [] }
-        let formLayout = this.getTabData();
-        let formSections = formLayout.sections.length > 0 ? mutable(formLayout.sections) : mutable(this.formSections);
+        let formSections = this.getMutableFormSections()
 
         let newSection = new FormSection(
             generateId(),
@@ -260,8 +266,7 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleAddFieldToSection(sectionId, field) {
         field.sectionId = sectionId;
-        let formLayout = this.getTabData();
-        let formSections = formLayout.sections.length > 0 ? mutable(formLayout.sections) : mutable(this.formSections);
+        let formSections = this.getMutableFormSections()
         let formSection = formSections.find(fs => fs.id == sectionId);
 
         formSection.elements.push(field);
@@ -275,11 +280,15 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormFieldUp(event) {
-        const section = this.formSections.find(fs => fs.id == event.detail.sectionId);
-        const oldIndex = findIndexByProperty(section.elements, 'value', event.detail.value);
+        const formField = event.detail;
+        let formSections = this.getMutableFormSections()
+        let section = formSections.find(fs => fs.id == formField.sectionId);
+        let oldIndex = findIndexByProperty(section.elements, 'value', formField.value);
         if (oldIndex > 0) {
-            shiftToIndex(section.elements, oldIndex, oldIndex - 1);
+            section.elements = shiftToIndex(section.elements, oldIndex, oldIndex - 1);
         }
+
+        this.formSections = formSections;
     }
 
     /*******************************************************************************
@@ -288,11 +297,15 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormFieldDown(event) {
-        const section = this.formSections.find(fs => fs.id == event.detail.sectionId);
-        const oldIndex = findIndexByProperty(section.elements, 'value', event.detail.value);
+        const formField = event.detail;
+        let formSections = this.getMutableFormSections()
+        let section = formSections.find(fs => fs.id == formField.sectionId);
+        let oldIndex = findIndexByProperty(section.elements, 'value', formField.value);
         if (oldIndex < section.elements.length - 1) {
-            shiftToIndex(section.elements, oldIndex, oldIndex + 1);
+            section.elements = shiftToIndex(section.elements, oldIndex, oldIndex + 1);
         }
+
+        this.formSections = formSections;
     }
 
     /*******************************************************************************
@@ -301,11 +314,15 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormSectionUp(event) {
-        let sectionId = event.detail;
-        const oldIndex = findIndexByProperty(this.formSections, 'id', sectionId);
+        const sectionId = event.detail;
+        let formSections = this.getMutableFormSections()
+
+        const oldIndex = findIndexByProperty(formSections, 'id', sectionId);
         if (oldIndex > 0) {
-            shiftToIndex(this.formSections, oldIndex, oldIndex - 1);
+            formSections = shiftToIndex(formSections, oldIndex, oldIndex - 1);
         }
+
+        this.formSections = formSections;
     }
 
     /*******************************************************************************
@@ -314,11 +331,20 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleFormSectionDown(event) {
-        let sectionId = event.detail;
-        const oldIndex = findIndexByProperty(this.formSections, 'id', sectionId);
-        if (oldIndex < this.formSections.length - 1) {
-            shiftToIndex(this.formSections, oldIndex, oldIndex + 1);
+        const sectionId = event.detail;
+        let formSections = this.getMutableFormSections()
+
+        const oldIndex = findIndexByProperty(formSections, 'id', sectionId);
+        if (oldIndex < formSections.length - 1) {
+            formSections = shiftToIndex(formSections, oldIndex, oldIndex + 1);
         }
+
+        this.formSections = formSections;
+    }
+
+    getMutableFormSections() {
+        let formLayout = this.getTabData();
+        return formLayout.sections.length > 0 ? mutable(formLayout.sections) : mutable(this.formSections);
     }
 
     // TODO: Need to finish or scrap the incomplete function below
