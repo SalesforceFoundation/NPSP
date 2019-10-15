@@ -34,7 +34,8 @@ class NPSPSettingsPage(BasePage):
         
     def open_main_menu(self,title): 
         """Waits for the menu item to load and clicks to expand menu""" 
-        self.selenium.wait_until_page_contains("System Tools", error="System Tools link was not found on the page")  
+        self.selenium.wait_until_page_contains("System Tools", 
+                                               error="System Tools link was not found on the page")  
         self.npsp.click_link_with_text("System Tools")
         
    
@@ -61,7 +62,8 @@ class NPSPSettingsPage(BasePage):
                 )
                 
     def click_configure_advanced_mapping(self):
-        """clicks on Configure Advanced Mapping and waits for Manage Advanced Mapping page to load and loads the page object for that page"""
+        """clicks on Configure Advanced Mapping and waits for Manage Advanced Mapping page to load 
+           and loads the page object for that page"""
         locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
         self.selenium.click_element(locator)
         self.pageobjects.current_page_should_be("Custom", "BDI_ManageAdvancedMapping")

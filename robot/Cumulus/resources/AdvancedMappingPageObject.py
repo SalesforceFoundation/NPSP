@@ -27,7 +27,8 @@ class AdvancedMappingPage(BasePage):
         self.selenium.scroll_element_into_view(btns)
         self.selenium.click_button(btns)
         mdl_open=npsp_lex_locators['adv_mappings']["modal_open"]
-        self.selenium.wait_until_page_contains_element(mdl_open, timeout=15, error="New Field Mapping Modal did not open in 15 seconds")
+        self.selenium.wait_until_page_contains_element(mdl_open, timeout=15, 
+                                                       error="New Field Mapping Modal did not open in 15 seconds")
         src_loc=npsp_lex_locators['adv_mappings']['field_mapping'].format("sourceFieldLabel")
         self.selenium.click_element(src_loc)
         dd=npsp_lex_locators['adv_mappings']['combobox']
@@ -40,7 +41,8 @@ class AdvancedMappingPage(BasePage):
         self.selenium.wait_until_page_contains_element(dd, error="Target field dropdown did not open")
         self.selenium.click_element(npsp_lex_locators['span'].format(tgt_fld))
         self.selenium.click_button("Save")
-        self.selenium.wait_until_page_does_not_contain_element(mdl_open, timeout=15, error="New Field Mapping Modal did not close in 15 seconds")
+        self.selenium.wait_until_page_does_not_contain_element(mdl_open, timeout=15, 
+                                                               error="New Field Mapping Modal did not close in 15 seconds")
         self.selenium.wait_until_page_contains("Success", timeout=180)
     
     def view_field_mappings_of_the_object(self,obj):
@@ -62,14 +64,16 @@ class AdvancedMappingPage(BasePage):
         self.selenium.wait_until_page_contains("Edit", timeout=60)
         self.selenium.click_link("Edit")
         mdl_open=npsp_lex_locators['adv_mappings']["modal_open"]
-        self.selenium.wait_until_page_contains_element(mdl_open, timeout=15, error="Edit Field Mapping Modal did not open in 15 seconds")
+        self.selenium.wait_until_page_contains_element(mdl_open, timeout=15, 
+                                                       error="Edit Field Mapping Modal did not open in 15 seconds")
         target=npsp_lex_locators['adv_mappings']['field_mapping'].format("targetFieldLabel")
         self.selenium.click_element(target)
         dd=npsp_lex_locators['adv_mappings']['combobox']
         self.selenium.wait_until_page_contains_element(dd, error="Target field dropdown did not open")
         self.selenium.click_element(npsp_lex_locators['span'].format(tgt_field))
         self.selenium.click_button("Save")
-        self.selenium.wait_until_page_does_not_contain_element(mdl_open, timeout=15, error="Edit Field Mapping Modal did not close in 15 seconds")
+        self.selenium.wait_until_page_does_not_contain_element(mdl_open, timeout=15, 
+                                                               error="Edit Field Mapping Modal did not close in 15 seconds")
         self.selenium.wait_until_page_contains("Success", timeout=180)
         
     def delete_field_mapping(self,fld_name):
