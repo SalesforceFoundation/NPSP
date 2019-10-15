@@ -8,7 +8,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Variables
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Variables
