@@ -13,7 +13,7 @@ ${task2}     Make a Phone Call2
 *** Keywords ***
 
 Capture Screenshot and Delete Records and Close Browser
-    Capture Page Screenshot
+    Run Keyword If Any Tests Failed      Capture Page Screenshot
     Close Browser
     Delete Session Records
     
