@@ -536,6 +536,24 @@ private class CRLP_Batch_Base_TEST {
             'Summary records should not be included if they have no detail records and and rollup state');
     }
 
+    /**
+     * @description Confirms RD NonSkew query does not include an inner join
+     */
+    @isTest
+    private static void shouldNotIncludeInnerJoinForRDNonSkewQuery() {
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
+                CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+
+        CRLP_Batch_Base_NonSkew rdBatchJob = new CRLP_RD_BATCH(typeFilter);
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(rdBatchJob, null, null, null);
+        String query = queryBuilder.buildQuery().toUpperCase();
+
+        System.assertEquals(1, query.countMatches('SELECT'),
+            'Recurring Donation Nonskew query should not include inner join');
+    }
+
     /******************************** Helper Methods *****************************/
 
     /**
