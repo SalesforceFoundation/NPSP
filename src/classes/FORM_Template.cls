@@ -40,6 +40,7 @@ public with sharing class FORM_Template {
     @AuraEnabled public String description;
     @AuraEnabled public String version;
     @AuraEnabled public FORM_Layout layout;
+    @AuraEnabled public Map<String, FORM_MappingWrapper> fieldMappingNameToMappingWrapper;
 
     /* Additional props PS */
     @AuraEnabled public FORM_BatchHeaderField[] batchHeaderFields;
