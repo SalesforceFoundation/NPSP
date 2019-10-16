@@ -49,6 +49,9 @@
             ],
             "c/geTemplateBuilderFormSection": [
                 "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
+            ],
+            "c/utilPageHeader": [
+                "utilPageHeader/utilPageHeader.js"
             ]
         },
         "experimentalDecorators": true

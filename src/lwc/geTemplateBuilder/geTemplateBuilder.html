@@ -1,38 +1,32 @@
 <template>
     <div role="container"
          class="main-container">
-        <header class="slds-p-bottom_large"
-                role="banner">
-            <div class="slds-page-header">
-                <div class="slds-grid slds-p-around_xx-small">
-                    <div class="slds-col slds-has-flexi-truncate slds-align-middle">
-                        <h1>
-                            <span class="slds-page-header__title"
-                                  title="Batch Gift Entry">
-                                New Template
-                            </span>
-                        </h1>
-                    </div>
-                    <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small">
-                        <div class="slds-button-group"
-                             role="group">
-                            <!-- TODO: Remove below input field later. Used for dev. -->
-                            <lightning-input type="text"
-                                             placeholder="Template Id"
-                                             variant="label-hidden"
-                                             data-name="templateId">
-                            </lightning-input>
-                            <lightning-button label="Test Retrieve Form Template"
-                                              title="Cancel"
-                                              variant="neutral"
-                                              class="slds-float_right slds-m-right_small slds-m-left_small"
-                                              onclick={getFormTemplate}>
-                            </lightning-button>
-                        </div>
-                    </div>
-                </div>
+        <c-util-page-header>
+            <div slot="title"
+                 class="slds-col slds-has-flexi-truncate slds-align-middle">
+                <h1>
+                    <span class="slds-page-header__title"
+                          title="Batch Gift Entry">
+                        New Template
+                    </span>
+                </h1>
             </div>
-        </header>
+            <div slot="actions" class="slds-button-group"
+                 role="group">
+                <!-- TODO: Remove below input field later. Used for dev. -->
+                <lightning-input type="text"
+                                 placeholder="Template Id"
+                                 variant="label-hidden"
+                                 data-name="templateId">
+                </lightning-input>
+                <lightning-button label="Test Retrieve Form Template"
+                                  title="Cancel"
+                                  variant="neutral"
+                                  class="slds-float_right slds-m-right_small slds-m-left_small"
+                                  onclick={getFormTemplate}>
+                </lightning-button>
+            </div>
+        </c-util-page-header>
 
         <div role="card"
              class="slds-card">
