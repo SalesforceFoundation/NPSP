@@ -3015,6 +3015,9 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>geFormField</members>
+        <members>geFormRenderer</members>
+        <members>geFormSection</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
