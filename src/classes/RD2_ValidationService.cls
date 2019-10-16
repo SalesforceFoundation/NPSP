@@ -66,10 +66,6 @@ public with sharing class RD2_ValidationService {
             ]);
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
-                rd.addError(System.Label.RD_DonorIsRequired);
-                return;
-            }
             validate(rd, accountsById.get(rd.npe03__Organization__c));
         }
     }
@@ -80,33 +76,34 @@ public with sharing class RD2_ValidationService {
     * @param acct is the associated account for the Recurring Donation
     */
     public void validate(npe03__Recurring_Donation__c rd, Account acct) {
-
-        if (acct == null) {
+        //either Account or Contact must be specified
+        if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
+            rd.addError(System.Label.RD_DonorIsRequired);
+            return;
+        }
+        //no further check is required if the Contact is specified only or the Account is an Organization
+        if (acct == null || acct.npe01__SYSTEMIsIndividual__c != true) {
             return;
         }
 
-        if (acct.npe01__SYSTEMIsIndividual__c) {
-            if (rd.npe03__Contact__c == null) {
-                rd.addError(System.Label.RD_ContactMustBelongToAccount);
-            } else if (!validateContact(rd, acct.Contacts) || acct.Contacts.size() == 0) {
-                rd.addError(System.Label.RD_ContactMustBelongToAccount);
-            }
+        if (rd.npe03__Contact__c == null) {
+            rd.addError(System.Label.RD_ContactMustBelongToAccount);
+        } else if (!extractIds(acct.Contacts).contains(rd.npe03__Contact__c) || acct.Contacts.size() == 0) {
+            rd.addError(System.Label.RD_ContactMustBelongToAccount);
         }
+
     }
 
-    /***
-    * @description Validates that the Contact on the RD is a member of the Household Account.
-    * @param rd the Recurring Donation to validate
-    * @param Contacts are the contacts related to the account.
+     /***
+    * @description Extracts record Ids
+    * @param records
+    * @return Set<Id>
     */
-    @TestVisible
-    private Boolean validateContact(npe03__Recurring_Donation__c rd, List<Contact> Contacts) {
-        for (Contact con:Contacts) {
-            if (rd.npe03__Contact__c == con.id) {
-                return true;
-            }
+    public Set<Id> extractIds(List<SObject> records) {
+        if (records == null || records.isEmpty()) {
+            return new Set<Id>();
         }
-        return false;
+        return new Map<Id, SObject>(records).keySet();
     }
 
 }

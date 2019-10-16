@@ -82,9 +82,8 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies if it displays error message when the contact is not associated with the
-        selected HouseHold account. It also verifies if no error message when the contact is associated
-        with the account in this method.
+    * @description Verifies if it displays error message when the contact do not belong to
+        the selected HouseHold account.
     */
     @isTest
     private static void shouldFailWhenContactDoesNotBelongToHHAccount() {
@@ -136,6 +135,9 @@ private with sharing class RD2_ValidationService_TEST {
         ERR_Handler.Errors errors = ERR_Handler.getErrors(results, rds);
         System.assertEquals(true, errors.errorsExist);
         System.assertEquals(1, errors.errorRecords.size());
+        System.assert([
+            SELECT id
+            FROM npe03__Recurring_Donation__c].size()>0 );
 
     }
 
@@ -156,7 +158,9 @@ private with sharing class RD2_ValidationService_TEST {
 
         insert rd;
 
-        System.assert([select id from npe03__Recurring_Donation__c].size()>0 );
+        System.assert([
+            SELECT id
+            FROM npe03__Recurring_Donation__c].size()>0 );
 
     }
 
@@ -167,17 +171,19 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldCreateRDSForOrganizationAccounts() {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        Account account = new Account(Name = 'TEST_ACCOUNT');
-        insert account;
+        Account acc = new Account(Name = 'TEST_ACCOUNT');
+        insert acc;
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withAccount(account.Id)
+            .withAccount(acc.Id)
             .withAmount(100)
             .build();
 
         insert rd;
 
-        System.assert([select id from npe03__Recurring_Donation__c].size()>0 );
+        System.assert([
+            SELECT id
+            FROM npe03__Recurring_Donation__c].size()>0 );
     }
 
     /***
@@ -185,12 +191,8 @@ private with sharing class RD2_ValidationService_TEST {
     * @return HouseHold Account record
     */
     private static Account getHHAccount() {
-        return new Account(
-            Name = 'HH Account',
-            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE,
-            npe01__SYSTEMIsIndividual__c = true
-
-        );
+        return
+        UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
     }
 
 }
