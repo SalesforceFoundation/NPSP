@@ -3539,6 +3539,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Gift Entry</value>
     </labels>
     <labels>
+        <fullName>bgeUnmappedFieldsNoticeHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header used for the Batch Gift Entry tab unmapped fields notice.</shortDescription>
+        <value>Mapping Change Detected</value>
+    </labels>
+    <labels>
+        <fullName>bgeUnmappedFieldsNoticeTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title used for the Batch Gift Entry tab unmapped fields notice.</shortDescription>
+        <value>Fields Selected For Display Are Unmapped</value>
+    </labels>
+    <labels>
+        <fullName>bgeUnmappedFieldsNoticeMessage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message used for the Batch Gift Entry tab unmapped fields notice.</shortDescription>
+        <value>The following fields are selected for display for this Batch but do not have field mappings configured in the Advanced Mapping settings: {0}.  These fields will be available again for this Batch once re-mapped on the Configure Advanced Mapping page in NPSP Settings.
+        </value>
+    </labels>
+    <labels>
         <fullName>bgeWizardShowAdvancedOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>

@@ -1698,6 +1698,9 @@
         <members>bgeNewGift</members>
         <members>bgeProcessBatch</members>
         <members>bgeTabHeader</members>
+        <members>bgeUnmappedFieldsNoticeHeader</members>
+        <members>bgeUnmappedFieldsNoticeTitle</members>
+        <members>bgeUnmappedFieldsNoticeMessage</members>
         <members>bgeWizardHideAdvancedOptions</members>
         <members>bgeWizardShowAdvancedOptions</members>
         <members>btnContinue</members>

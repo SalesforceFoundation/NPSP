@@ -204,8 +204,8 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         //Assert closed Opp not included
         System.assertEquals(3, oppWrappers.size(),
                 'The three open Opportunities should be returned in the list of Opp Wrappers.');
-        
-        Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappersByOppId = new 
+
+        Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappersByOppId = new
                 Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>();
 
         for (BGE_DataImportBatchEntry_CTRL.OpportunityWrapper opportunityWrapper : oppWrappers) {
@@ -258,7 +258,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
                 createOppWrappers(oppWrappersJSON);
 
-        Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappersByOppId = new 
+        Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappersByOppId = new
                 Map<Id, BGE_DataImportBatchEntry_CTRL.OpportunityWrapper>();
 
         for (BGE_DataImportBatchEntry_CTRL.OpportunityWrapper opportunityWrapper : oppWrappers) {
@@ -328,7 +328,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
         npe01__OppPayment__c pmt = getOppPayments(opp.Id)[0];
 
-       List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
+        List<BGE_DataImportBatchEntry_CTRL.OpportunityWrapper> oppWrappers =
                 createOppWrappers(oppWrappersJSON);
 
         System.assertEquals(false, pmt.npe01__Paid__c);
@@ -440,7 +440,128 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
                 'The getOpportunitiesWithOppPayments method only supports Account and Contact Ids.');
     }
 
+    @isTest
+    static void givenActiveFieldIsUnmappedWhenLoadedThenColumnNotIncluded() {
+        UTIL_CustomSettingsFacade.enableAdvancedMapping();
+
+        //Set Active Fields on a Batch, some with mappings and some without
+        List<SObjectField> activeFieldsUnmapped = new List<SObjectField>{
+                DataImport__c.Donation_Amount__c,
+                DataImport__c.Payment_Check_Reference_Number__c
+        };
+        List<SObjectField> activeFieldsMapped = new List<SObjectField>{
+                DataImport__c.Donation_Description__c,
+                DataImport__c.Payment_Method__c
+        };
+        List<SObjectField> activeFields = new List<SObjectField>();
+        activeFields.addAll(activeFieldsUnmapped);
+        activeFields.addAll(activeFieldsMapped);
+
+        DataImportBatch__c batch = new DataImportBatch__c(
+                Name = 'Test Batch 1',
+                Active_Fields__c = JSON.serialize(getBGEFieldList(activeFields))
+        );
+        insert batch;
+
+        //Create a stub of BDI_FieldMappingCustomMetadata, to mock the scenario where some
+        //active/selected fields on the Batch have no mapping.
+        BDIFieldMappingAdvancedMock mock = new BDIFieldMappingAdvancedMock();
+        mock.mapField(DataImport__c.Donation_Description__c, Opportunity.SObjectType,
+                Opportunity.Description);
+        mock.mapField(DataImport__c.Payment_Method__c, npe01__OppPayment__c.SObjectType,
+                npe01__OppPayment__c.npe01__Payment_Method__c);
+        BDI_FieldMappingCustomMetadata stub = (BDI_FieldMappingCustomMetadata) Test.createStub(
+                BDI_FieldMappingCustomMetadata.class,
+                mock
+        );
+        BDI_FieldMappingCustomMetadata.setInstance(stub);
+
+        //Test by calling setColumns() on a DataImportModel instance.
+        BGE_DataImportBatchEntry_CTRL.DataImportModel dataImportModel = new
+                BGE_DataImportBatchEntry_CTRL.DataImportModel();
+        dataImportModel.id = batch.Id;
+        dataImportModel.setColumns();
+
+        //Assertions
+        Set<String> columnFieldNames = new Set<String>();
+        for (BGE_DataImportBatchEntry_CTRL.Column column : dataImportModel.columns) {
+            columnFieldNames.add(column.fieldName);
+        }
+        for (SObjectField sObjectField : activeFieldsUnmapped) {
+            System.assert(!columnFieldNames.contains(sObjectField.getDescribe().getName()),
+                    'Fields that do not have field mappings configured should not be ' +
+                            'displayed on the Batch Gift Entry form.');
+        }
+        for (SObjectField sObjectField : activeFieldsMapped) {
+            System.assert(columnFieldNames.contains(sObjectField.getDescribe().getName()),
+                    'Fields that have field mappings configured should be ' +
+                            'displayed on the Batch Gift Entry form.');
+        }
+
+        Boolean hasUnmappedFieldNotice = false;
+        for (UTIL_LightningComponentSupport.Notice notice : dataImportModel.notices) {
+            if (notice instanceof BGE_DataImportBatchEntry_CTRL.UnmappedFieldsNotice) {
+                hasUnmappedFieldNotice = true;
+            }
+        }
+        System.assert(hasUnmappedFieldNotice, 'The DataImportModel instance should have an ' +
+                'UnmappedFieldNotice since at least one active field has no mapping.');
+    }
+
+    /**
+     * @description StubProvider implementation used to mock a scenario where no target
+     * fields are mapped.
+     */
+    private class BDIFieldMappingAdvancedMock implements StubProvider {
+
+        private Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = new
+                Map<SObjectField, BDI_TargetFields>();
+        @TestVisible
+        private void mapField(SObjectField sourceField, SObjectType targeObjectType,
+                SObjectField targetField) {
+            BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceField);
+            if (targetFields == null) {
+                targetFields = new BDI_TargetFields();
+            }
+            targetFields.addTargetField(targeObjectType, targetField);
+            targetFieldsBySourceField.put(sourceField, targetFields);
+        }
+
+        public Object handleMethodCall(
+                Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+            switch on stubbedMethodName {
+                when 'getTargetFieldsBySourceField' {
+                    return targetFieldsBySourceField;
+                }
+            }
+            return null;
+        }
+    }
+
     /******************************** Helper Methods *****************************/
+
+    /**
+    * @description Constructs a List of BGEFields from a List of SObjectFields.
+    * @param fields The List of SObjectFields to use to create the List of BGEFields.
+    * @return The new List of BGEFields.
+    */
+    private static List<BGE_ConfigurationWizard_CTRL.BGEField> getBGEFieldList
+            (List<SObjectField>
+                    fields) {
+        List<BGE_ConfigurationWizard_CTRL.BGEField> bgeFields = new List<BGE_ConfigurationWizard_CTRL.BGEField>();
+        for (SObjectField sObjectField : fields) {
+            BGE_ConfigurationWizard_CTRL.BGEField bgeField = new
+                    BGE_ConfigurationWizard_CTRL.BGEField();
+            bgeField.name = sObjectField.getDescribe().getName();
+            bgeFields.add(bgeField);
+        }
+        return bgeFields;
+    }
 
     private static Opportunity createOpportunity(String oppName, Id primaryContactId) {
         Opportunity opp = new Opportunity(
