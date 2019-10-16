@@ -69,7 +69,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     *
     * @param {object} event: Onchange event object from lightning-input checkbox
     */
-    handleSelectBatchField(event) {
+    handleToggleBatchField(event) {
         const fieldName = event.target.value;
         const index = findIndexByProperty(this.selectedBatchFields, 'value', fieldName);
         const addSelectedField = index === -1 ? true : false;
@@ -113,7 +113,9 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {integer} index: Index of the field to be removed
     */
     removeField(index) {
-        this.selectedBatchFields.splice(index, 1);
+        let selectedBatchFields = mutable(this.selectedBatchFields);
+        selectedBatchFields.splice(index, 1);
+        this.selectedBatchFields = selectedBatchFields;
     }
 
     /*******************************************************************************
