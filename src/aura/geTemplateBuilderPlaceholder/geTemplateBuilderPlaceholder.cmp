@@ -1,4 +1,4 @@
-<aura:component implements="lightning:isUrlAddressable">
+<aura:component implements="force:appHostable">
     <!-- TODO: Delete aura component later. Only used during dev for easy viewing -->
     <c:geTemplateBuilder></c:geTemplateBuilder>
 </aura:component>	
