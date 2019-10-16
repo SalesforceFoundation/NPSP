@@ -110,8 +110,8 @@ export default class geTemplateBuilderFormField extends LightningElement {
         const elementType = lightningInputTypeByDataType[this.lightningInputType] ? lightningInputTypeByDataType[this.lightningInputType] : 'lightning-input';
         const required = this.template.querySelector('lightning-input[data-name="required"]').checked;
         const allowDefaultValue = this.template.querySelector('lightning-input[data-name="allowDefaultValue"]').checked;
-        const defaultValue = allowDefaultValue ? this.template.querySelector(`${elementType}[data-name="defaultValue"]`).value : undefined;
         const customLabel = this.template.querySelector('lightning-input[data-name="customLabel"]').value;
+        let defaultValue = allowDefaultValue ? this.template.querySelector(`${elementType}[data-name="defaultValue"]`).value : undefined;
 
         // TODO: Clean up way of getting default value if checkbox
         if (allowDefaultValue && this.field.dataType && this.field.dataType.toLowerCase() === 'boolean') {
@@ -122,11 +122,11 @@ export default class geTemplateBuilderFormField extends LightningElement {
         field.required = required;
         field.allowDefaultValue = allowDefaultValue;
         field.defaultValue = defaultValue;
-
         field.elementType = elementType;
         field.displayRule = undefined;
         field.validationRule = undefined;
         field.customLabel = customLabel;
+
         return field;
     }
 }

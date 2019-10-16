@@ -38,7 +38,6 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
         let detail = {
             tabValue: event.target.getAttribute('data-tab-value')
         }
-
         this.dispatchEvent(new CustomEvent('gototab', { detail: detail }));
     }
 }

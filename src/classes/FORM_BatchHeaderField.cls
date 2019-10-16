@@ -40,8 +40,6 @@ public with sharing class FORM_BatchHeaderField {
     @AuraEnabled public String displayRule;
     @AuraEnabled public String validationRule;
     @AuraEnabled public String customLabel;
-
-    /* PS Additional props for FormFields */
     @AuraEnabled public String label;
     @AuraEnabled public String value;
     @AuraEnabled public Boolean required;

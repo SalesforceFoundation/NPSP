@@ -131,13 +131,15 @@ public with sharing class GE_TemplateBuilderCtrl {
         CheckboxWrapper[] wrappers = new CheckboxWrapper[]{};
 
         Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImportBatch__c.Name);
+
         for (String key : fields.keySet()) {
             DescribeFieldResult dfr = fields.get(key);
+
             if (dfr.isAccessible() && dfr.isCreateable()) {
                 CheckboxWrapper checkboxWrapper = new CheckboxWrapper(fields.get(key));
-                System.debug('key: ' + key);
+
                 if (REQUIRED_BATCH_HEADER_FIELDS.contains(key)) {
-                    System.debug('IS REQUIRED');
+
                     checkboxWrapper.isRequired = true;
                     checkboxWrapper.isRequiredFieldDisabled = true;
                 }
@@ -211,7 +213,11 @@ public with sharing class GE_TemplateBuilderCtrl {
             List<PicklistOptionWrapper> pickListValuesList= new List<PicklistOptionWrapper>();
             List<Schema.PicklistEntry> ple = describe.getPicklistValues();
             for( Schema.PicklistEntry pickListVal : ple) {
-                pickListValuesList.add(new PicklistOptionWrapper(pickListVal.getLabel(), pickListVal.getValue()));
+                if (pickListVal.isActive()) {
+                    pickListValuesList.add(new PicklistOptionWrapper(
+                        pickListVal.getLabel(),
+                        pickListVal.getValue()));
+                }
             }
             return pickListValuesList;
         }

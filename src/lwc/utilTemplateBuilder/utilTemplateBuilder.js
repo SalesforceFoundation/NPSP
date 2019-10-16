@@ -68,6 +68,8 @@ const shiftToIndex = (array, oldIndex, newIndex) => {
     return array;
 }
 
+// TODO: Look into more robust deep cloning methods
+// This method loses any Javascript properties that have no equivalent type in JSON
 const mutable = (obj) => {
     return JSON.parse(JSON.stringify(obj));
 }

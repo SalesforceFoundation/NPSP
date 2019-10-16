@@ -56,10 +56,8 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     */
     handleGoToTab(event) {
         let detail = {
-            tabData: this.getTabData(),
             tabValue: event.target.getAttribute('data-tab-value')
         }
-
         this.dispatchEvent(new CustomEvent('gototab', { detail: detail }));
     }
 
