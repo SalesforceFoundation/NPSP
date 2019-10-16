@@ -113,6 +113,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {integer} index: Index of the field to be removed
     */
     removeField(index) {
+        this.selectedBatchFields = this.getTabData();
         let selectedBatchFields = mutable(this.selectedBatchFields);
         selectedBatchFields.splice(index, 1);
         this.selectedBatchFields = selectedBatchFields;
