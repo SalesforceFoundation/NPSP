@@ -339,6 +339,15 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description Instance method that returns the inline help text for a field.
+    * @param field SObjectField token of the field to analyze.
+    * @return Help text configured within the fields metadata.
+    */
+    public String getHelpText(SObjectField field) {
+        return field.getDescribe().getInlineHelpText();
+    }
+
+    /*******************************************************************************************************
     * @description returns friendly label for standard User lookups when we need to display them in custom UI.
     * This is necessary because these labels do not exist in any schema describe available.
     * @return string, translatable & friendly label without 'Id'
