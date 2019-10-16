@@ -73,6 +73,35 @@ public class UTIL_Describe {
     private static void setInstance(UTIL_Describe utilDescribe){
         utilDescribeInstance = utilDescribe;
     }
+    
+    /*******************************************************************************************************
+    * @description Map display types to a friendly user-readable label.
+    */
+    public static final Map<String, String> LABELS_BY_DISPLAY_TYPE = new Map<String, String> {
+        'ADDRESS' => 'Address',
+        'BASE64' => 'Base64',
+        'BOOLEAN' => 'Checkbox',
+        'COMBOBOX' => 'Picklist',
+        'CURRENCY' => 'Currency',
+        'DATACATEGORYGROUPREFERENCE' => 'DataCategoryGroupReference',
+        'DATE' => 'Date',
+        'DATETIME' => 'Date/Time',
+        'DOUBLE' => 'Number',
+        'EMAIL' => 'Email',
+        'ENCRYPTEDSTRING' => 'Text (Encrypted)',
+        'ID' => 'Id',
+        'INTEGER' => 'Number',
+        'LONG' => 'Text Area (Long)',
+        'MULTIPICKLIST' => 'Picklist (Multi-Select)',
+        'PERCENT' => 'Percent',
+        'PHONE' => 'Phone',
+        'PICKLIST' => 'Picklist',
+        'REFERENCE' => 'Lookup Relationship',
+        'STRING' => 'Text',
+        'TEXTAREA' => 'Text Area',
+        'TIME' => 'Time',
+        'URL' => 'URL'
+    };
 
     /*******************************************
     * Gets describe maps for a new object

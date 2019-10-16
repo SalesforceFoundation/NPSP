@@ -214,7 +214,7 @@ private class BDI_AdditionalObjectService_TEST {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c = 
-            BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
         Test.StartTest();
@@ -379,7 +379,7 @@ private class BDI_AdditionalObjectService_TEST {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c = 
-            BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
         DataImport__c testDataImportA;
@@ -526,12 +526,12 @@ private class BDI_AdditionalObjectService_TEST {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c = 
-                                    BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+                                    BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
         DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
 
-        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultFieldMapping());
+        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultMappingService());
         bdiDIS.process(null, dis, diRecords);
         
         DataImport__c testDataImportAResult;
@@ -766,14 +766,14 @@ private class BDI_AdditionalObjectService_TEST {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c = 
-            BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
         DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
 
-        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultFieldMapping());
+        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultMappingService());
         
-        BDI_FieldMappingCustomMetadata bdiFMCM = BDI_FieldMappingCustomMetadata.getInstance();
+        BDI_MappingServiceAdvanced bdiFMCM = BDI_MappingServiceAdvanced.getInstance();
 
         String[] objMappingNames = new List<String>(bdiFMCM.objMappingsByDevName.keySet());
         Data_Import_Object_Mapping__mdt predecessorObjMapping = bdiFMCM.objMappingsByDevName.get('Opportunity');
@@ -975,7 +975,7 @@ private class BDI_AdditionalObjectService_TEST {
         BDI_DataImportService dataImportService =
                 new BDI_DataImportService(
                         false,
-                        BDI_FieldMappingCustomMetadata.getInstance());
+                        BDI_MappingServiceAdvanced.getInstance());
 
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
 
@@ -1020,7 +1020,7 @@ private class BDI_AdditionalObjectService_TEST {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c =
-                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+                BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         dis.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
@@ -1118,7 +1118,7 @@ private class BDI_AdditionalObjectService_TEST {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c =
-                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+                BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         dis.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
@@ -1217,7 +1217,7 @@ private class BDI_AdditionalObjectService_TEST {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c =
-                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+                BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         dis.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 

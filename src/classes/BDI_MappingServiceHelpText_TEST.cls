@@ -35,7 +35,7 @@
 * @description Unit tests to cover help text mapping for BDI.
 */
 @IsTest
-private class BDI_FieldMappingHelpText_TEST {
+private class BDI_MappingServiceHelpText_TEST {
 
     @TestSetup
     private static void configureHelpTextMapping() {
