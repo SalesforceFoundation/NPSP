@@ -1,11 +1,9 @@
 <template>
-    <lightning-card for:each={sections} for:item='section' key={section.id}>
-        <lightning-record-form object-api-name={section.objectApiName}>
-            <lightning-layout>
-                <lightning-layout-item>
-
-                </lightning-layout-item>
-            </lightning-layout>
-        </lightning-record-form>
-    </lightning-card>
+    <lightning-layout multiple-rows='true'>
+        <lightning-layout-item size='12' class='slds-card'>
+            <template for:each={sections} for:item='section'>
+                <c-ge-form-section key={section.id} section={section}></c-ge-form-section>
+            </template>
+        </lightning-layout-item>
+    </lightning-layout>
 </template>

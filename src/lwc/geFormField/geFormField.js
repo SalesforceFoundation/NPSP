@@ -1,6 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
 
-const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'CURRENCY', 'TELEPHONE', 'TEXT', 'TIME', 'URL'];
+const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
 const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'LOOKUP';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -8,11 +8,7 @@ const DELAY = 300;
 
 export default class GeFormField extends LightningElement {
     @track value;
-    @api field = {
-        type: null,
-        fieldName: null,
-        objectApiName: null
-    };
+    @api element;
     changeTimeout;
 
     connectedCallback() {
@@ -24,24 +20,25 @@ export default class GeFormField extends LightningElement {
         window.clearTimeout(this.changeTimeout);
         this.changeTimeout = setTimeout(() => {
             // parent component (formSection) should bind to onchange event
-            const evt = new CustomEvent('change', {field: this.field, value: this.value});
+            const evt = new CustomEvent('change', {field: this.element, value: this.value});
+            console.log(evt); 
             this.dispatchEvent(evt);
         }, DELAY);
     }
 
     get isLightningInput() {
-        return LIGHTNING_INPUT_TYPES.findIndex(this.field.type) !== -1;
+        return LIGHTNING_INPUT_TYPES.indexOf(this.element.dataType) !== -1;
     }
 
     get isRichText() {
-        return this.field.type === RICH_TEXT_TYPE;
+        return this.element.dataType === RICH_TEXT_TYPE;
     }
 
     get isLookup() {
-        return this.field.type === LOOKUP_TYPE;
+        return this.element.dataType === LOOKUP_TYPE;
     }
 
     get isPicklist() {
-        return this.field.type === PICKLIST_TYPE;
+        return this.element.dataType === PICKLIST_TYPE;
     }
 }
