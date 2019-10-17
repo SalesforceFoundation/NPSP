@@ -1,6 +1,7 @@
 <template>
     <template if:true={isLightningInput}>
         <lightning-input value={value} 
+            type={inputType}
             required={element.required} 
             onchange={handleValueChange} 
             label={element.customLabel}>

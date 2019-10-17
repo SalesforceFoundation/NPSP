@@ -11,5 +11,22 @@ const getFormTemplate = () => {
     });
 };
 
+const inputTypeByDescribeType = {
+    'CHECKBOX': 'checkbox',
+    'CURRENCY': 'number',
+    'DATE': 'date',
+    'DATETIME': 'datetime-local',
+    'EMAIL': 'email',
+    'NUMBER': 'number',
+    'STRING': 'text',
+    'PHONE': 'tel',
+    'TEXT': 'text',
+    'TIME': 'time',
+    'URL': 'url'
+}
 
-export { getFormTemplate }
+const getInputTypeFromDataType = (dataType) => {
+    return inputTypeByDescribeType[dataType];
+}
+
+export { getFormTemplate, getInputTypeFromDataType }

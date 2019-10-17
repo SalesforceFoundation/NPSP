@@ -1,4 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
+import { getInputTypeFromDataType } from 'c/geFormService';
 
 const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
 const RICH_TEXT_TYPE = 'RICHTEXT';
@@ -8,11 +9,12 @@ const DELAY = 300;
 
 export default class GeFormField extends LightningElement {
     @track value;
+    @track inputType;
     @api element;
     changeTimeout;
 
     connectedCallback() {
-
+        this.inputType = getInputTypeFromDataType(this.element.dataType);
     }
 
     handleValueChange(event) {
