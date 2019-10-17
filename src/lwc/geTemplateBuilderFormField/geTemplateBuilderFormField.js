@@ -126,6 +126,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         field.displayRule = undefined;
         field.validationRule = undefined;
         field.customLabel = customLabel;
+        field.dataImportFieldMappingDevNames = [field.value];
 
         return field;
     }
