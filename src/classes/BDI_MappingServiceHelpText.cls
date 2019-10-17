@@ -35,9 +35,10 @@
 * @description Implement field mapping behavior for help text mapping scheme
 */
 
-public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
+public with sharing class BDI_MappingServiceHelpText implements BDI_MappingService {
 
-    private static BDI_FieldMappingHelpText fieldMappingInstance = null;
+
+    private static BDI_MappingServiceHelpText fieldMappingInstance = null;
     private final UTIL_Describe describeService = UTIL_Describe.getInstance();
 
     /*******************************************************************************************************
@@ -48,9 +49,9 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
     /*******************************************************************************************************
     * @description return singleton instance of the class
     */
-    public static BDI_FieldMappingHelpText getInstance() {
+    public static BDI_MappingServiceHelpText getInstance() {
         if(fieldMappingInstance == null) {
-            fieldMappingInstance = new BDI_FieldMappingHelpText();
+            fieldMappingInstance = new BDI_MappingServiceHelpText();
         }
         return fieldMappingInstance;
     }

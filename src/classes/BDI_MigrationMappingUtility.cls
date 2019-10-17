@@ -165,7 +165,7 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-    * @description List of BDI_FieldMappingHelpText.DataImportFieldMappings built from good help text mappings
+    * @description List of BDI_MappingServiceHelpText.DataImportFieldMappings built from good help text mappings
     */
     public List<DataImportFieldMapping> dataImportFieldMappings = new List<DataImportFieldMapping>();
 

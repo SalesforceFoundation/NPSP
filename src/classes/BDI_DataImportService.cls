@@ -41,18 +41,18 @@ global with sharing class BDI_DataImportService {
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
 
-    public BDI_FieldMapping fieldMapper;
+    public BDI_MappingService mappingService;
 
     /*******************************************************************************************************
     * @description constructor
     * @param isDryRun whether to run in Dry Run mode or commit records.
     */
-    public BDI_DataImportService(Boolean isDryRun, BDI_FieldMapping fieldMapper) {
+    public BDI_DataImportService(Boolean isDryRun, BDI_MappingService mappingService) {
         this.isDryRun = isDryRun;
-        this.fieldMapper = fieldMapper;
+        this.mappingService = mappingService;
 
         contactService = new BDI_ContactService(this);
-        if (fieldMapper instanceof BDI_FieldMappingCustomMetadata){
+        if (mappingService instanceof BDI_MappingServiceAdvanced){
             additionalObjectService = new BDI_AdditionalObjectService(this);
         }
     }
@@ -61,15 +61,15 @@ global with sharing class BDI_DataImportService {
     * @description queries the Data Import Settings custom setting to determine what type of field mapping to
     * use.
     */
-    public static BDI_FieldMapping getDefaultFieldMapping() {
-        BDI_FieldMapping bdiFm;
+    public static BDI_MappingService getDefaultMappingService() {
+        BDI_MappingService bdiMS;
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         if (dis.Field_Mapping_Method__c == FM_HELP_TEXT) {
-            bdiFm = BDI_FieldMappingHelpText.getInstance();
+            bdiMS = BDI_MappingServiceHelpText.getInstance();
         }else if (dis.Field_Mapping_Method__c == FM_DATA_IMPORT_FIELD_MAPPING) {
-            bdiFm = BDI_FieldMappingCustomMetadata.getInstance();
+            bdiMS = BDI_MappingServiceAdvanced.getInstance();
         }
-        return bdiFm;
+        return bdiMS;
     }
 
     /*******************************************************************************************************
@@ -531,7 +531,7 @@ global with sharing class BDI_DataImportService {
 
             this.flsService = new BDI_DataImportFLSService(
                     dataImports,
-                    fieldMapper,
+                    mappingService,
                     getFieldAccessLevelsToValidate()
             );
 
@@ -808,7 +808,7 @@ global with sharing class BDI_DataImportService {
                 String targetObjectName, 
                 List<String> dataImportFields) {
         
-        BDI_DataImportService bdi = new BDI_DataImportService(true, BDI_DataImportService.getDefaultFieldMapping());
+        BDI_DataImportService bdi = new BDI_DataImportService(true, BDI_DataImportService.getDefaultMappingService());
         return bdi.mapDataImportFields(dataImportObjectName, targetObjectName, dataImportFields);
     }
 
@@ -825,7 +825,7 @@ global with sharing class BDI_DataImportService {
                 String targetObjectName, 
                 List<String> dataImportFields) {
         
-        Map<String, String> targetFieldByDIField = fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
+        Map<String, String> targetFieldByDIField = mappingService.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
 
         return targetFieldByDIField;
     }    

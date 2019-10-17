@@ -94,7 +94,7 @@ public with sharing class BDI_SettingsUI_CTRL {
 
                 // this UI is specific to help text settings in current state
                 BDI_Donations donationImportHandler = 
-                    new BDI_Donations(new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance()));
+                    new BDI_Donations(new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance()));
 
                 setFields.addAll(donationImportHandler.dataImportFieldToOpportunityField.keySet());
                 setFields.addAll(donationImportHandler.dataImportFieldToPaymentField.keySet());
