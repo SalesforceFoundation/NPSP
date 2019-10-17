@@ -868,7 +868,29 @@ class NPSP(SalesforceRobotLibraryBase):
                     self.selenium.wait_until_element_is_visible(locator)
                     break
                 except Exception:
-                    time.sleep(15)    
+                    time.sleep(15)   
+                    
+    def wait_for_batch_to_process(self, batch,status):
+        """Checks every 15 secs for upto 3.5mins for batch with given status
+        """
+        i = 0
+        expected = npsp_lex_locators['batch_status'].format(batch,status)
+        error = npsp_lex_locators['batch_status'].format(batch,"Errors")
+        while True:
+            i += 1
+            if i > 14:
+                self.selenium.capture_page_screenshot()
+                raise AssertionError("Timed out waiting for batch {} with status {} to load.".format(batch,status))
+            elif self.check_if_element_exists(error):
+                if status != "Errors":
+                    raise AssertionError("Batch {} failed with Error".format(batch))
+                break
+            else:    
+                try:
+                    self.selenium.wait_until_element_is_visible(expected)
+                    break
+                except Exception:
+                    time.sleep(15)                 
 
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
