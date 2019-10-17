@@ -66,8 +66,8 @@ Create Fixed Length Recurring Donation Multiply By
 
     #Check Rollups on Recurring Donation
     Go To Record Home            &{recurringdonation}[Id]
-    Confirm Value                Total Paid Installments        2         Y
-    Confirm Value                Paid Amount                    $20.00    Y
+    Confirm Value                Number Of Paid Installments    2         Y
+    Confirm Value                Total Paid Amount              $20.00    Y
 
     #Check Soft Credit Rollups on Household Contact
     Go To Record Home            &{householdcontact}[Id]
