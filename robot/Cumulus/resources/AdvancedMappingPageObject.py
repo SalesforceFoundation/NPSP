@@ -83,6 +83,7 @@ class AdvancedMappingPage(BasePage):
         self.selenium.click_button(locator)
         self.selenium.wait_until_page_contains("Delete", timeout=60)
         self.selenium.click_link("Delete")
+        self.selenium.wait_until_page_contains("Success", timeout=180)
         self.selenium.wait_until_page_does_not_contain(fld_name, timeout=60)
         
     def delete_mapping_if_mapping_exists(self,fld_label):
