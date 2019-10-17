@@ -88,7 +88,7 @@ public with sharing class RD2_ValidationService {
 
         if (rd.npe03__Contact__c == null) {
             rd.addError(System.Label.RD_ContactMustBelongToAccount);
-        } else if (!extractIds(acct.Contacts).contains(rd.npe03__Contact__c) || acct.Contacts.size() == 0) {
+        } else if (!extractIds(acct.Contacts).contains(rd.npe03__Contact__c)) {
             rd.addError(System.Label.RD_ContactMustBelongToAccount);
         }
 

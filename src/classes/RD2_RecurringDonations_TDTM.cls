@@ -51,20 +51,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Validate Recurring Donations Data.
-    */
-    @TestVisible
-    private RD2_ValidationService validationService {
-        get {
-            if (validationService == null) {
-                validationService = new RD2_ValidationService();
-            }
-            return validationService;
-        }
-        set;
-    }
-
-    /***
     * @description Trigger handler on Recurring Donations when enhancement is enabled
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
@@ -113,7 +99,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     public void validate(List<SObject> rds, TDTM_Runnable.Action triggerAction) {
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            validationService.validate(rds);
+           new RD2_ValidationService().validate(rds);
 
         }
     }

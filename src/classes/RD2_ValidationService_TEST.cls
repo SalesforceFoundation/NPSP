@@ -132,13 +132,16 @@ private with sharing class RD2_ValidationService_TEST {
         .build(contacts);
 
         List<Database.SaveResult> results = Database.insert(rds, false);
-        ERR_Handler.Errors errors = ERR_Handler.getErrors(results, rds);
-        System.assertEquals(true, errors.errorsExist);
-        System.assertEquals(1, errors.errorRecords.size());
-        System.assert([
-            SELECT id
-            FROM npe03__Recurring_Donation__c].size()>0 );
+        npe03__Recurring_Donation__c rd = [select id, npe03__Contact__c from npe03__Recurring_Donation__c];
 
+        for (Integer i = 0; i < results.size(); i++) {
+            Database.SaveResult result = results[i];
+            if (result.isSuccess()) {
+                System.assertEquals(contacts[0].Id, rd.npe03__Contact__c, 'Insert should succeed when Contact belongs to the Household.');
+            } else {
+                System.assert(result.getErrors()[0].getMessage().contains(System.Label.RD_ContactMustBelongToAccount));
+            }
+        }
     }
 
     /***
@@ -147,6 +150,7 @@ private with sharing class RD2_ValidationService_TEST {
     */
     @isTest
     private static void shouldCreateRDSForHouseholdContact() {
+        String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -156,22 +160,24 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(con.Id)
             .build();
 
-        insert rd;
-
-        System.assert([
-            SELECT id
-            FROM npe03__Recurring_Donation__c].size()>0 );
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
 
     }
 
     /***
-    * @description Should create Recurring donations for organization accounts without validaiton errors
+    * @description Should create Recurring donations for organization accounts without validation errors
     */
     @isTest
     private static void shouldCreateRDSForOrganizationAccounts() {
-
+        String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        Account acc = new Account(Name = 'TEST_ACCOUNT');
+
+        Account acc = UTIL_UnitTestData_TEST.getOrgAccount();
         insert acc;
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
@@ -179,11 +185,12 @@ private with sharing class RD2_ValidationService_TEST {
             .withAmount(100)
             .build();
 
+        try {
         insert rd;
-
-        System.assert([
-            SELECT id
-            FROM npe03__Recurring_Donation__c].size()>0 );
+        } catch (Exception e) {
+           errMessage = e.getMessage();
+        }
+        System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
     }
 
     /***
