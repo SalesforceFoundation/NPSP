@@ -53,8 +53,8 @@ Create Recurring Donation And Check Rollups
 
     #Check Rollups on Recurring Donation
     Go To Record Home            &{recurringdonation}[Id]
-    Confirm Value                Total Paid Installments        2         Y
-    Confirm Value                Paid Amount                    $16.66    Y
+    Confirm Value                Number Of Paid Installments    2         Y
+    Confirm Value                Total Paid Amount              $16.66    Y
 
     #Check Rollups on Recurring Contact
     Go To Record Home            &{contact}[Id]
@@ -80,8 +80,8 @@ Create Recurring Donation And Check Rollups
 
     #Check Rollups on Recurring Donation
     Go To Record Home            &{recurringdonation}[Id]
-    Confirm Value                Total Paid Installments        2         Y
-    Confirm Value                Paid Amount                    $16.66    Y
+    Confirm Value                Number Of Paid Installments    2         Y
+    Confirm Value                Total Paid Amount              $16.66    Y
 
     #Check Rollups on Recurring Contact
     Go To Record Home            &{contact}[Id]
