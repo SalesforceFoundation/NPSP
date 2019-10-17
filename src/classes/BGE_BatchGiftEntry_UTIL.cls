@@ -58,7 +58,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @description Provides field mapping configuration used by BGE
     */
     public static Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
-        BDI_DataImportService.getDefaultFieldMapping().getTargetFieldsBySourceField();
+        BDI_DataImportService.getDefaultMappingService().getTargetFieldsBySourceField();
 
     /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL

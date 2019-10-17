@@ -41,7 +41,7 @@ public with sharing class BDI_AdditionalObjectService {
     * @description the data import service we are invoked from
     */
     private BDI_DataImportService dataImportService;
-    private BDI_FieldMappingCustomMetadata fieldMappingCustomMetadata;
+    private BDI_MappingServiceAdvanced fieldMappingCustomMetadata;
 
     private Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>> objMappingsByTier = new Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>>();
     private Map<String,Map<String,Data_Import_Object_Mapping__mdt>> successorObjMappingsByPredecessorName = new Map<String,Map<String,Data_Import_Object_Mapping__mdt>>();
@@ -55,7 +55,7 @@ public with sharing class BDI_AdditionalObjectService {
     */
     public BDI_AdditionalObjectService(BDI_DataImportService dataImportService) {
         this.dataImportService = dataImportService;
-        this.fieldMappingCustomMetadata = BDI_FieldMappingCustomMetadata.getInstance();
+        this.fieldMappingCustomMetadata = BDI_MappingServiceAdvanced.getInstance();
     }
 
 

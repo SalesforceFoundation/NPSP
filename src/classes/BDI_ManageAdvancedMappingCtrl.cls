@@ -46,9 +46,9 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
-    * @description Instance of BDI_FieldMappingCustomMetadata
+    * @description Instance of BDI_MappingServiceAdvanced
     */
-    private static BDI_FieldMappingCustomMetadata bdiCMT = BDI_FieldMappingCustomMetadata.getInstance();
+    private static BDI_MappingServiceAdvanced bdiCMT = BDI_MappingServiceAdvanced.getInstance();
 
     /*******************************************************************************************************
     * @description Current package namespace
@@ -68,35 +68,6 @@ public class BDI_ManageAdvancedMappingCtrl {
         'label',
         'qualifiedapiname',
         'id'};
-
-    /*******************************************************************************************************
-    * @description Map of labels by display types used in the field mapping UI
-    */
-    private static final Map<String, String> LABELS_BY_DISPLAY_TYPE = new Map<String, String> {
-        'ADDRESS' => 'Address',
-        'BASE64' => 'Base64',
-        'BOOLEAN' => 'Checkbox',
-        'COMBOBOX' => 'Picklist',
-        'CURRENCY' => 'Currency',
-        'DATACATEGORYGROUPREFERENCE' => 'DataCategoryGroupReference',
-        'DATE' => 'Date',
-        'DATETIME' => 'Date/Time',
-        'DOUBLE' => 'Number',
-        'EMAIL' => 'Email',
-        'ENCRYPTEDSTRING' => 'Text (Encrypted)',
-        'ID' => 'Id',
-        'INTEGER' => 'Number',
-        'LONG' => 'Text Area (Long)',
-        'MULTIPICKLIST' => 'Picklist (Multi-Select)',
-        'PERCENT' => 'Percent',
-        'PHONE' => 'Phone',
-        'PICKLIST' => 'Picklist',
-        'REFERENCE' => 'Lookup Relationship',
-        'STRING' => 'Text',
-        'TEXTAREA' => 'Text Area',
-        'TIME' => 'Time',
-        'URL' => 'URL'
-    };
 
     /*******************************************************************************************************
     * @description This is a list of the standard objects we will let users choose from (plus custom objects) 
@@ -572,12 +543,12 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.Source_Field_Label = sourceFieldDescribe.label;
             this.Source_Field_API_Name = fieldMapping.Source_Field_API_Name__c;
             this.Source_Field_Data_Type = String.valueOf(sourceFieldDescribe.type);
-            this.Source_Field_Display_Type_Label = LABELS_BY_DISPLAY_TYPE.get(this.Source_Field_Data_Type);
+            this.Source_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Source_Field_Data_Type);
 
             this.Target_Field_Label = targetFieldDescribe.label;
             this.Target_Field_API_Name = fieldMapping.Target_Field_API_Name__c;
             this.Target_Field_Data_Type = String.valueOf(targetFieldDescribe.type);
-            this.Target_Field_Display_Type_Label = LABELS_BY_DISPLAY_TYPE.get(this.Target_Field_Data_Type);
+            this.Target_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Target_Field_Data_Type);
 
             this.Maps_To_Icon = UTILITY_FORWARD_SLDS_ICON;
 
