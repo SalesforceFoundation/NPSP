@@ -1,17 +1,16 @@
 <template>
     <div role="container"
          class="main-container">
+
         <c-util-page-header>
-            <div slot="title"
-                 class="slds-col slds-has-flexi-truncate slds-align-middle">
-                <h1>
-                    <span class="slds-page-header__title"
-                          title="Batch Gift Entry">
-                        New Template
-                    </span>
-                </h1>
-            </div>
-            <div slot="actions" class="slds-button-group"
+            <h1 slot="title">
+                <span class="slds-page-header__title"
+                      title="Batch Gift Entry">
+                    New Template
+                </span>
+            </h1>
+            <div slot="actions"
+                 class="slds-button-group"
                  role="group">
                 <!-- TODO: Remove below input field later. Used for dev. -->
                 <lightning-input type="text"
@@ -100,5 +99,30 @@
 
             </lightning-tabset>
         </div>
+
+        <c-util-docked-form-footer assistive-text="Utility Bar"
+                                   aria-label="Utility Bar">
+
+            <div slot="body"
+                 class="slds-grid slds-nowrap slds-p-around_small">
+                <div class="slds-size_1-of-3">
+
+                </div>
+                <div class="slds-size_1-of-3">
+
+                </div>
+                <div class="slds-size_1-of-3">
+                    <lightning-button label="Next: Batch Fields"
+                                      title="Next"
+                                      variant="brand"
+                                      class="slds-float_right"
+                                      onclick={handleGoToTab}
+                                      data-tab-value="geTemplateBuilderBatchHeader">
+                    </lightning-button>
+                </div>
+
+            </div>
+
+        </c-util-docked-form-footer>
     </div>
 </template>

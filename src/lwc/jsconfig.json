@@ -52,6 +52,9 @@
             ],
             "c/utilPageHeader": [
                 "utilPageHeader/utilPageHeader.js"
+            ],
+            "c/utilDockedFormFooter": [
+                "utilDockedFormFooter/utilDockedFormFooter.js"
             ]
         },
         "experimentalDecorators": true

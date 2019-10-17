@@ -3023,6 +3023,8 @@
         <members>geTemplateBuilderGiftFields</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>pubsubNoPageRef</members>
+        <members>utilDockedFormFooter</members>
+        <members>utilPageHeader</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
