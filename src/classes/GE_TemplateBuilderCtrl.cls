@@ -38,9 +38,9 @@
 public with sharing class GE_TemplateBuilderCtrl {
 
     /*******************************************************************************************************
-    * @description Instance of BDI_FieldMappingCustomMetadata
+    * @description Instance of BDI_MappingServiceAdvanced
     */
-    private static BDI_FieldMappingCustomMetadata bdiCMT;
+    private static BDI_MappingServiceAdvanced bdiMSAdv;
 
     /*******************************************************************************************************
     * @description Template version
@@ -89,17 +89,17 @@ public with sharing class GE_TemplateBuilderCtrl {
     }
 
     /*******************************************************************************************************
-    * @description Method collects object mappings and field mappings using BDI_FieldMappingCustomMetadata
+    * @description Method collects object mappings and field mappings using BDI_MappingServiceAdvanced
     * based on a field mapping set developer name. Creates ObjectMappingWrappers and CheckboxWrappers out
     * of the object mapping and field mappings respectively. These wrappers are easier to use in the UI. No
     * need to worry about namespaces in the fields.
     */
     @AuraEnabled
     public static ObjectMappingWrapper[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
-        bdiCMT = BDI_FieldMappingCustomMetadata.retrieveInstance(fieldMappingSetName);
+        bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(fieldMappingSetName);
         ObjectMappingWrapper[] objectWrappers = new ObjectMappingWrapper[]{};
 
-        for (Data_Import_Object_Mapping__mdt objectMapping : bdiCMT.objMappingsByDevName.values()) {
+        for (Data_Import_Object_Mapping__mdt objectMapping : bdiMSAdv.objMappingsByDevName.values()) {
             ObjectMappingWrapper omw = new ObjectMappingWrapper(objectMapping);
 
             if (objectMapping.Data_Import_Field_Mappings__r != null) {
