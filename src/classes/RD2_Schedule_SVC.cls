@@ -78,7 +78,7 @@ public without sharing class RD2_Schedule_SVC {
         rdsched.RecurringDonation__c = rd.Id;
 
         if (rdsched.InstallmentPeriod__c == 'Monthly') {
-            rdsched.DayOfMonth__c = getDayOfMonth(rd.Day_of_Month__c);
+            rdsched.DayOfMonth__c = getDayOfMonth(rd);
         }
         schedulesToInsert.add(rdsched);
 
@@ -125,70 +125,27 @@ public without sharing class RD2_Schedule_SVC {
     * @return Date
     */
     private Date calculateStartDate(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
+        Date retDate;
 
-        /* Rules:
-                    start date must be >= today()
-                    start date must be >= established date (really? can we do anything about this?)
-                    for monthly, start date must be next occurrence of specified day of month >= today()
-                    for others, start date
-         */
+        Date minSD = rd.StartDate__c > rd.npe03__Date_Established__c ?
+                     rd.StartDate__c :
+                     rd.npe03__Date_Established__c;
 
-        Date minSD =
-            rd.StartDate__c > rd.npe03__Date_Established__c ?
-            rd.StartDate__c :
-            rd.npe03__Date_Established__c;
+        retDate = minSD > Date.today() ?
+                  minSD :
+                  Date.today();
 
-//        if (recurringDonation.npe03__Installment_Period__c == 'Monthly') {
-//            if (recurringDonation.Day_of_Month__c != '1st and 15th') {
-//                rds.DayOfMonth__c = recurringDonation.Day_of_Month__c;
-//            } else if (recordCount == 1) {
-//                rds.DayOfMonth__c = '1';
-//            } else {
-//                rds.DayOfMonth__c = '15';
-//            }
-//            rds.StartDate__c= Date.newInstance(refDate.year(), refDate.month(), Integer.valueOf(rds.DayOfMonth__c));
-//        }
-//        else {
-//            rds.StartDate__c = refDate;
-//        }
-//
-//        // Established date is either not changed or today()
-//        // If monthly, day of month is either incoming day or last day if >= 29
-//
-//        if (rd.npe03__Installment_Period__c == 'Monthly') {
-//
-//        }
+        if (rdSchedule.InstallmentPeriod__c == 'Monthly') {
+            Integer lastDay = Date.daysInMonth(retDate.year(), retDate.month());
+            retDate = Date.newInstance(retDate.year(), retDate.month(), rdSchedule.DayOfMonth__c == 'Last Day' ?
+                                                                        lastDay :
+                                                                        Integer.valueOf(rdSchedule.DayOfMonth__c));
+            retDate = retDate >= Date.today() ?
+                      retDate :
+                      retDate.addMonths(1);
+        }
 
-
-        // Start date must be >= today()
-        Date sd;
-
-//        if (rd.StartDate__c == null) {
-//            rd.StartDate__c = rd.npe03__Date_Established__c;
-//        }
-//
-//        Date refDate =
-//                rd.StartDate__c >= rd.npe03__Date_Established__c ?
-//                        rd.StartDate__c :
-//                        rd.npe03__Date_Established__c;
-//
-//        rd.StartDate__c = Date.newInstance(refDate.year(), refDate.month(), Integer.valueOf(rd.Day_Of_Month__c));
-//
-//        if (rd.npe03__Installment_Period__c == 'Monthly') {
-//            if (rd.Day_of_Month__c != '1st and 15th') {
-//                rds.DayOfMonth__c = rd.Day_of_Month__c;
-//            } else if (recordCount == 1) {
-//                rds.DayOfMonth__c = '1';
-//            } else {
-//                rds.DayOfMonth__c = '15';
-//            }
-//            rds.StartDate__c= Date.newInstance(refDate.year(), refDate.month(), Integer.valueOf(rds.DayOfMonth__c));
-//        }
-//        else {
-//            rds.StartDate__c = refDate;
-//        }
-
-        return sd;
+        return retDate;
     }
 
     /***
@@ -202,13 +159,20 @@ public without sharing class RD2_Schedule_SVC {
 
     /***
     * @description Gets schedule day of month from recurring donation day of month
-    * @param dayOfMonth Recurring Donation Day_of_Month__c picklist value
+    * @param rd Recurring Donation
     * @return String
     */
-    private String getDayOfMonth(String dayOfMonth) {
-        // return 1st for 1st and 15th
-        // return last day for 29+
-        return 'something';
+    private String getDayOfMonth(npe03__Recurring_Donation__c rd) {
+        String retval = rd.Day_of_Month__c;
+
+        if (rd.Day_of_Month__c.isNumeric() && Integer.valueOf(rd.Day_of_Month__c) > 28) {
+            retval = 'Last Day';
+        }
+        else if (isFirstAndFifteenth(rd)) {
+            retval = '1';
+        }
+
+        return retval;
     }
 
 }
