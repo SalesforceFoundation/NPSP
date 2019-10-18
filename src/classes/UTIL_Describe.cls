@@ -423,11 +423,11 @@ public class UTIL_Describe {
     * @return boolean whether the field exists
     */
     public static boolean isValidField(String objectName, String fieldName) {
-        objectName = objectName.toLowerCase();
-        fieldName = fieldName.toLowerCase();
-
         // make sure we have this field's schema mapped
         try {
+            objectName = objectName.toLowerCase();
+            fieldName = fieldName.toLowerCase();
+
             if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
                 fillFieldMapsForObject(objectName, fieldName);
 
