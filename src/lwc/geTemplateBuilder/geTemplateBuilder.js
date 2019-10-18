@@ -5,8 +5,7 @@ import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrie
 import { FormTemplate, FormLayout, mutable, TabEnums } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
-    @track activeTab = TabEnums.INFO_TAB;
-    _previousTab;
+    @track activeTab = TabEnums.SELECT_FIELDS_TAB;
 
     @track formTemplate = new FormTemplate(
         undefined,
@@ -124,12 +123,5 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             .catch(error => {
                 console.log('Error: ', error);
             })
-    }
-
-    /* delete once all sections are their own components, currently only used by
-    * matching logic tab */
-    handleToggleClick(event) {
-        this._previousTab = this.activeTab;
-        this.activeTab = event.target.getAttribute('data-tab-value');
     }
 }
