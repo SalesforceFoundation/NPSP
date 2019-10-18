@@ -23,7 +23,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         this.formSections = formSections;
     }
 
-    @track _activeFormSectionId;
+    @track activeFormSectionId;
     @track _sectionIdsByFieldMappingDeveloperNames = {};
     @track fieldMappingSetComboboxOptions;
     _fieldMappingSets;
@@ -45,7 +45,6 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @description Container function for grouping various async functions.
     */
     init = async () => {
-        console.log('init');
         this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
             fieldMappingSetName: 'Migrated_Custom_Field_Mapping_Set'
         });
@@ -145,8 +144,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         let formSections = mutable(this.formSections);
         let formSection = formSections.find(fs => fs.id == formSectionId);
 
-        if (formSection.id == this._activeFormSectionId) {
-            this._activeFormSectionId = undefined;
+        if (formSection.id == this.activeFormSectionId) {
+            this.activeFormSectionId = undefined;
         }
 
         if (formSection.elements && formSection.elements.length > 0) {
@@ -161,18 +160,22 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         const formSectionIndex = findIndexByProperty(formSections, 'id', formSection.id);
         formSections.splice(formSectionIndex, 1);
 
+        if (formSections.length === 1) {
+            this.activeFormSectionId = formSections[0].id;
+        }
+
         this.formSections = formSections;
     }
 
     /*******************************************************************************
     * @description Handles the active section event from the child component
-    * geTemplateBuilderFormLayout and sets the _activeFormSectionId property.
+    * geTemplateBuilderFormLayout and sets the activeFormSectionId property.
     *
     * @param {object} event: Event object containing the section id from the
     * geTemplateBuilderFormLayout component.
     */
     handleChangeActiveSection(event) {
-        this._activeFormSectionId = event.detail;
+        this.activeFormSectionId = event.detail;
     }
 
     /*******************************************************************************
@@ -184,13 +187,23 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     handleToggleFieldMapping(event) {
         const removeField = !event.target.checked;
         const fieldMappingDeveloperName = event.target.value;
-        let sectionId = this._activeFormSectionId;
+        let sectionId = this.activeFormSectionId;
 
         if (removeField) {
             sectionId = this._sectionIdsByFieldMappingDeveloperNames[fieldMappingDeveloperName];
             let section = this.formSections.find(fs => fs.id == sectionId);
             removeByProperty(section.elements, 'value', fieldMappingDeveloperName);
         } else {
+            if (!this.formSections || this.formSections.length === 0) {
+                sectionId = this.handleAddSection();
+            } else if (this.formSections.length === 1) {
+                sectionId = this.formSections[0].id;
+                this.activeFormSectionId = sectionId;
+            } else if (this.activeFormSectionId === undefined && this.formSections.length > 1) {
+                event.target.checked = false;
+                return;
+            }
+
             const fieldMapping =
                 this._fieldMappingsForSelectedSet.find(fm => fm.value === fieldMappingDeveloperName);
 
@@ -204,16 +217,6 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 fieldMapping.dataType,
                 fieldMapping.picklistOptions
             )
-
-            if (!this.formSections || this.formSections.length === 0) {
-                sectionId = this.handleAddSection();
-            } else if (this.formSections.length === 1) {
-                sectionId = this.formSections[0].id;
-            } else if (this._activeFormSectionId === undefined && this.formSections.length > 1) {
-                event.target.checked = false;
-                showToast(this, '', 'Please select a section', 'warning');
-                return;
-            }
 
             this.catalogSelectedField(fieldMappingDeveloperName, sectionId);
             this.formSections = this.handleAddFieldToSection(sectionId, formField);
@@ -251,6 +254,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
 
         formSections.push(newSection);
         this.formSections = formSections;
+        this.activeFormSectionId = newSection.id;
+
         return newSection.id;
     }
 
@@ -261,11 +266,13 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @param {object} field: Instance of FormField to be added
     */
     handleAddFieldToSection(sectionId, field) {
-        field.sectionId = sectionId;
         let formSections = this.getMutableFormSections()
         let formSection = formSections.find(fs => fs.id == sectionId);
 
-        formSection.elements.push(field);
+        if (formSection) {
+            field.sectionId = sectionId;
+            formSection.elements.push(field);
+        }
 
         return formSections;
     }

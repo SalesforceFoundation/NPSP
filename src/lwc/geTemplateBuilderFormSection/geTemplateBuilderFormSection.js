@@ -1,6 +1,9 @@
 import { LightningElement, api, track } from 'lwc';
 import { mutable } from 'c/utilTemplateBuilder';
 
+const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
+const inActiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
+
 export default class GeTemplateBuilderFormSection extends LightningElement {
     @api activeFormSectionId;
     @track isEditMode;
@@ -13,8 +16,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         this.formSection = formSection;
     }
 
-    get isActiveFormSectionIcon() {
-        return this.activeFormSectionId == this.formSection.id ? 'utility:record' : 'utility:routing_offline';
+    get sectionClass() {
+        return this.activeFormSectionId == this.formSection.id ? activeSectionClass : inActiveSectionClass;
     }
 
     get isEmptySection() {
@@ -51,6 +54,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         return sectionFormFields;
     }
 
+    // TODO: Will likely be moved to modal
     /*******************************************************************************
     * @description Updates the formSection label in memory
     */
@@ -68,7 +72,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     /*******************************************************************************
     * @description Dispatches an event to parent component geTemplateBuilderFormLayout
     */
-    handleDeleteSection() {
+    handleDeleteSection(event) {
+        event.stopPropagation();
         this.dispatchEvent(new CustomEvent(
             'deleteformsection',
             { detail: this.formSection }));
@@ -77,14 +82,16 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     /*******************************************************************************
     * @description Sets formSection into edit mode
     */
-    handleEditFormSection() {
+    handleEditFormSection(event) {
+        event.stopPropagation();
         this.isEditMode = true;
     }
 
     /*******************************************************************************
     * @description Sets formSection into not edit mode
     */
-    handleExitEditMode() {
+    handleExitEditMode(event) {
+        event.stopPropagation();
         this.isEditMode = false;
     }
 
@@ -92,7 +99,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * @description Dispatches an event up to parent component geTemplateFormLayout
     * to set the currently active section
     */
-    handleSelectActiveSection(event) {
+    handleSelectActiveSection() {
         this.dispatchEvent(new CustomEvent(
             'changeactivesection',
             { detail: this.formSection.id }));
@@ -126,6 +133,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * geTemplateBuilderFormField
     */
     handleFormFieldUp(event) {
+        event.stopPropagation();
         this.dispatchEvent(new CustomEvent(
             'formfieldup',
             { detail: event.detail }));
@@ -139,6 +147,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * geTemplateBuilderFormField
     */
     handleFormFieldDown(event) {
+        event.stopPropagation();
         this.dispatchEvent(new CustomEvent(
             'formfielddown',
             { detail: event.detail }));

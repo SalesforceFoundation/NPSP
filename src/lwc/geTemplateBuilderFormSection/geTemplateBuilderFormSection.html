@@ -1,6 +1,6 @@
 <template>
     <article key={formSection.id}
-             class="slds-card slds-card_extension slds-m-vertical_small"
+             class={sectionClass}
              onclick={handleSelectActiveSection}
              data-section-id={formSection.id}>
         <header class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-around_small">
@@ -43,13 +43,6 @@
                                            alternative-text="Delete section"
                                            onclick={handleDeleteSection}
                                            data-section-id={formSection.id}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name={isActiveFormSectionIcon}
-                                           alternative-text="Select active section"
-                                           onclick={handleSelectActiveSection}
-                                           data-section-id={formSection.id}
-                                           data-name="activeSectionButton"
                                            class="slds-m-left_x-small">
                     </lightning-button-icon>
                 </template>
