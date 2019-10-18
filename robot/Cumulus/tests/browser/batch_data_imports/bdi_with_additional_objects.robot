@@ -51,12 +51,7 @@ Setup Test Data
 Create Data Import with Additional Objects via API and Verify Values 
     [Documentation]    Create and a DI record with Contact, Account, Opportunity, Payment, Account Soft Credit and GAU details and verify that everything is saved as expected
     [tags]  Unstable
-    Go To Page                              Listing        DataImport__c
-    Current page should be                  Listing        DataImport__c
-    Change View To                          To Be Imported
-    Click                                   Start Data Import
-    Click Begin Data Import Process
-    Click Close Button
+    Process Data Import Batch
     &{data_import_upd} =     Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Verify Expected Values    nonns    Account            &{data_import_upd}[${ns}Account1Imported__c]
     ...    Name=${account}
