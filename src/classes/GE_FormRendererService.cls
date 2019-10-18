@@ -4,50 +4,22 @@ public with sharing class GE_FormRendererService {
     }
 
     /**
-     * This method queries the template sObject and gets the JSON and passes that to the front end.
+     * This method creates a wrapper which contains the template and a field mapping set. 
      * @param  templateName The name of the template to get
      * @return              The JSON string that is stored on the template. 
      */
-    public static FORM_Template getTemplateForRender(Id templateId) {
+    public static FORM_RenderWrapper getRenderWrapper(Id templateId) {
         FORM_Service formService = new FORM_Service();
 
         // Get the base template
         FORM_Template queriedTemplate = formService.retrieveFormTemplate(templateId);
-        Set<String> dataImportFieldMappingDevNames = new Set<String>();
-        Map<String, FORM_MappingWrapper> fieldMappingNameToMappingWrapper = new Map<String, FORM_MappingWrapper>();
+        
+        // Get the mapping service which will retrieve all the mappings
+        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
+        
+        // Create the wrapper which will hold the template and field mapping set. 
+        FORM_RenderWrapper renderWrapper = new FORM_RenderWrapper(queriedTemplate, mappingService.fieldMappingSet);
 
-        // Traverse through the template to find all the mappings necessary
-        FORM_Layout formLayout = queriedTemplate.layout;
-        List<FORM_Section> formSections = formLayout.sections;
-
-        for (FORM_Section formSection : formSections) {
-            List<FORM_Element> formElements = formSection.elements;
-            
-            for (FORM_Element formElement : formElements) {
-            
-                // dataImportFieldMappingDevNames.addAll(formElement.dataImportFieldMappingDevNames);
-                // Prince is not putting the dev name in the data import field mapping dev names, but rather the value. 
-                dataImportFieldMappingDevNames.add(formElement.value);
-            }
-        }
-
-        // Get the mappings
-        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTRecords = [SELECT Is_Deleted__c, Required__c, Source_Field_API_Name__c, 
-                                                                            Target_Field_API_Name__c, Target_Object_Mapping__c,
-                                                                            Target_Object_Mapping__r.Object_API_Name__c
-                                                                        FROM Data_Import_Field_Mapping__mdt
-                                                                        WHERE QualifiedApiName in: dataImportFieldMappingDevNames];
-
-        // Create the mapping of Mapping Record name to wrapper class
-        for (Data_Import_Field_Mapping__mdt fieldMappingCMTRecord : fieldMappingCMTRecords) {
-            FORM_MappingWrapper mappingWrapper = new FORM_MappingWrapper(fieldMappingCMTRecord);
-
-            fieldMappingNameToMappingWrapper.put(fieldMappingCMTRecord.QualifiedApiName, mappingWrapper);
-        }
-
-        // Add the wrapper class mapping into the form template
-        queriedTemplate.fieldMappingNameToMappingWrapper = fieldMappingNameToMappingWrapper;
-
-        return queriedTemplate;
+        return renderWrapper;
     }
 }

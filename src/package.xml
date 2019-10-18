@@ -258,6 +258,7 @@
         <members>FORM_BatchHeaderField</members>
         <members>FORM_Element</members>
         <members>FORM_Layout</members>
+        <members>FORM_RenderWrapper</members>
         <members>FORM_Section</members>
         <members>FORM_Service</members>
         <members>FORM_ServiceGiftEntry</members>
@@ -265,6 +266,7 @@
         <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
+        <members>GE_FormRendererService</members>
         <members>GE_TemplateBuilderCtrl</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
