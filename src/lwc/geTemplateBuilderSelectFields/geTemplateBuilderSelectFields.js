@@ -45,8 +45,15 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @description Container function for grouping various async functions.
     */
     init = async () => {
-        this._fieldMappingSets = await getFieldMappingSets();
-        this.fieldMappingSetComboboxOptions = await this.getComboboxOptionsForFieldMappingSets(this._fieldMappingSets);
+        console.log('init');
+        this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
+            fieldMappingSetName: 'Migrated_Custom_Field_Mapping_Set'
+        });
+        this.setObjectAndFieldMappings(this.objectMappings);
+
+        // TODO: Enable when end users are able to create custom field mapping sets
+        //this._fieldMappingSets = await getFieldMappingSets();
+        //this.fieldMappingSetComboboxOptions = await this.getComboboxOptionsForFieldMappingSets(this._fieldMappingSets);
 
         // TODO: Need to finish or scrap lines between START and END comments
         /* START */
@@ -93,13 +100,14 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         return options;
     }
 
+    // TODO: Enable when end users are able to create custom field mapping sets
     /*******************************************************************************
     * @description Handles the onchange event for the field mapping set 
     * lightning-combobox.
     *
     * @param {object} event: Onchange event from the lightning-combobox component.
     */
-    handleChangeFieldMappingSet = async (event) => {
+    /*handleChangeFieldMappingSet = async (event) => {
         this.isLoading = true;
         this.selectedFieldMappingSet = event.target.value;
         this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
@@ -107,7 +115,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         });
         this.setObjectAndFieldMappings(this.objectMappings);
         this.isLoading = false;
-    }
+    }*/
 
     /*******************************************************************************
     * @description Takes object mapping wrappers and sets them to a mutable property.
