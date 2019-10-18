@@ -24,7 +24,10 @@ public with sharing class GE_FormRendererService {
             List<FORM_Element> formElements = formSection.elements;
             
             for (FORM_Element formElement : formElements) {
-                dataImportFieldMappingDevNames.addAll(formElement.dataImportFieldMappingDevNames);
+            
+                // dataImportFieldMappingDevNames.addAll(formElement.dataImportFieldMappingDevNames);
+                // Prince is not putting the dev name in the data import field mapping dev names, but rather the value. 
+                dataImportFieldMappingDevNames.add(formElement.value);
             }
         }
 
@@ -42,12 +45,8 @@ public with sharing class GE_FormRendererService {
             fieldMappingNameToMappingWrapper.put(fieldMappingCMTRecord.QualifiedApiName, mappingWrapper);
         }
 
-
-
         // Add the wrapper class mapping into the form template
         queriedTemplate.fieldMappingNameToMappingWrapper = fieldMappingNameToMappingWrapper;
-        
-
 
         return queriedTemplate;
     }
