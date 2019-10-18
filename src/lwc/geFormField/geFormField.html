@@ -1,0 +1,21 @@
+<template>
+    <template if:true={isLightningInput}>
+        <lightning-input value={value} 
+            type={inputType}
+            required={element.required} 
+            onchange={handleValueChange} 
+            label={element.customLabel}>
+        </lightning-input>
+    </template>
+    <template if:true={isLookup}>
+        <lightning-record-edit-form object-api-name='Opportunity'>
+            <!-- <lightning-input-element field-name={element.fieldName}></lightning-input-element> -->
+        </lightning-record-edit-form>
+    </template>
+    <template if:true={isRichText}>
+        <lightning-input-rich-text value={value} onblur={handleValueChange} label={element.customLabel}></lightning-input-rich-text>
+    </template>
+    <template if:true={isPicklist}>
+        <lightning-combobox value={value} onchange={handleValueChange} label={element.customLabel}></lightning-combobox>
+    </template>
+</template>

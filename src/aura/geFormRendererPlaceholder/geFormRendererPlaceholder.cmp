@@ -1,0 +1,4 @@
+<aura:component implements="lightning:isUrlAddressable">
+    <!-- TODO: Delete aura component later. Only used during dev for easy viewing -->
+    <c:geFormRenderer></c:geFormRenderer>
+</aura:component>	
