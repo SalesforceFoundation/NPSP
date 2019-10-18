@@ -17,6 +17,10 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         return this.activeFormSectionId == this.formSection.id ? 'utility:record' : 'utility:routing_offline';
     }
 
+    get isEmptySection() {
+        return this.formSection.elements.length === 0 ? true : false;
+    }
+
     /*******************************************************************************
     * @description Public method that collects the current values of all the relevant
     * input fields for this FormSection and return an instance of FormSection.
@@ -88,7 +92,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * @description Dispatches an event up to parent component geTemplateFormLayout
     * to set the currently active section
     */
-    handleSelectActiveSection() {
+    handleSelectActiveSection(event) {
         this.dispatchEvent(new CustomEvent(
             'changeactivesection',
             { detail: this.formSection.id }));

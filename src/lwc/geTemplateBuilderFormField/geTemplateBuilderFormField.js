@@ -50,6 +50,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
     // TODO: Needs to be completed for lookup fields
     handleSearch(event) {
+        event.stopPropagation();
         console.log('handle search');
         const isEnterKey = event.keyCode === 13;
         if (isEnterKey) {
@@ -63,11 +64,16 @@ export default class geTemplateBuilderFormField extends LightningElement {
         //console.log('TYPE: ', this.lightningInputType);
     }
 
+    stopPropagation(event) {
+        event.stopPropagation();
+    }
+
     /*******************************************************************************
     * @description Dispatches an event up to parent component to shift the FormField
     * up in the data structure.
     */
-    handleFormFieldUp() {
+    handleFormFieldUp(event) {
+        this.stopPropagation(event);
         const field = this.getFormFieldValues();
         this.dispatchEvent(new CustomEvent(
             'formfieldup',
@@ -78,7 +84,8 @@ export default class geTemplateBuilderFormField extends LightningElement {
     * @description Dispatches an event up to parent component to shift the FormField
     * down in the data structure.
     */
-    handleFormFieldDown() {
+    handleFormFieldDown(event) {
+        this.stopPropagation(event);
         const field = this.getFormFieldValues();
         this.dispatchEvent(new CustomEvent(
             'formfielddown',
@@ -91,6 +98,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     * @param {object} event: Onchange event from lightning-input checkbox
     */
     handleToggleDefaultValue(event) {
+        this.stopPropagation(event);
         let field = mutable(this.field);
         field.allowDefaultValue = !field.allowDefaultValue;
         if (!field.allowDefaultValue) {

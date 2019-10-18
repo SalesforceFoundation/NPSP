@@ -8,7 +8,8 @@
                                      label={field.label}
                                      field-level-help={field.value}
                                      value={field.customLabel}
-                                     data-name="customLabel">
+                                     data-name="customLabel"
+                                     onclick={stopPropagation}>
                     </lightning-input>
                 </div>
                 <div class="slds-size_1-of-12">
@@ -16,7 +17,8 @@
                                      checked={isRequired}
                                      variant="label-stacked"
                                      disabled={field.isRequiredFieldDisabled}
-                                     data-name="required">
+                                     data-name="required"
+                                     onclick={stopPropagation}>
                     </lightning-input>
                 </div>
                 <div class="slds-size_2-of-12">
@@ -25,7 +27,8 @@
                                      checked={field.allowDefaultValue}
                                      variant="label-stacked"
                                      onchange={handleToggleDefaultValue}
-                                     data-name="allowDefaultValue">
+                                     data-name="allowDefaultValue"
+                                     onclick={stopPropagation}>
                     </lightning-input>
                 </div>
                 <div class="slds-size_5-of-12">
@@ -33,14 +36,16 @@
                         <lightning-input-rich-text data-name="defaultValue"
                                                    value={field.defaultValue}
                                                    variant="label-stacked"
-                                                   disabled={isDefaultValueAllowed}>
+                                                   disabled={isDefaultValueAllowed}
+                                                   onclick={stopPropagation}>
                         </lightning-input-rich-text>
                     </template>
                     <template if:true={isLightningTextarea}>
                         <lightning-textarea data-name="defaultValue"
                                             value={field.defaultValue}
                                             variant="label-stacked"
-                                            disabled={isDefaultValueAllowed}>
+                                            disabled={isDefaultValueAllowed}
+                                            onclick={stopPropagation}>
                         </lightning-textarea>
                     </template>
                     <template if:true={isLightningCombobox}>
@@ -57,7 +62,8 @@
                                          value={field.defaultValue}
                                          variant="label-stacked"
                                          disabled={isDefaultValueAllowed}
-                                         onkeyup={handleSearch}>
+                                         onkeyup={handleSearch}
+                                         onclick={stopPropagation}>
                         </lightning-input>
                     </template>
                     <template if:true={isLightningInput}>
@@ -66,7 +72,8 @@
                                          value={field.defaultValue}
                                          variant="label-stacked"
                                          checked={field.defaultValue}
-                                         disabled={isDefaultValueAllowed}>
+                                         disabled={isDefaultValueAllowed}
+                                         onclick={stopPropagation}>
                         </lightning-input>
                     </template>
                 </div>

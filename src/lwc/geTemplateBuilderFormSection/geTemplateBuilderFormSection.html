@@ -1,8 +1,11 @@
 <template>
     <article key={formSection.id}
-             class="slds-card slds-card_extension slds-m-vertical_small slds-p-around_small">
-        <header class="slds-media slds-media_center slds-has-flexi-truncate">
-            <div role="body" class="slds-media__body">
+             class="slds-card slds-card_extension slds-m-vertical_small"
+             onclick={handleSelectActiveSection}
+             data-section-id={formSection.id}>
+        <header class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-around_small">
+            <div role="body"
+                 class="slds-media__body">
                 <template if:true={isEditMode}>
                     <lightning-input type="text"
                                      variant="label-hidden"
@@ -18,21 +21,6 @@
                 </template>
             </div>
             <div class="slds-no-flex">
-                <lightning-button-icon icon-name="utility:animal_and_nature"
-                                       onclick={getFormSectionValues}>
-                </lightning-button-icon>
-                <template if:true={isEditMode}>
-                    <lightning-button-icon icon-name="utility:save"
-                                           alternative-text="Save Form Section Button"
-                                           onclick={handleSaveFormSection}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:close"
-                                           alternative-text="Exit Form Section Edit Button"
-                                           onclick={handleExitEditMode}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                </template>
                 <template if:false={isEditMode}>
                     <lightning-button-icon icon-name="utility:settings"
                                            alternative-text="Section Settings Button"
@@ -68,31 +56,41 @@
             </div>
         </header>
         <div role="card body"
-             class="slds-card__body slds-card__body_inner">
-            <div role="grid"
-                 class="slds-grid slds-grid_vertical-align-center">
-                <div class="slds-size_3-of-12">
+             class="slds-card__body slds-card__body_inner slds-p-around_small">
+
+            <template if:true={isEmptySection}>
+                <c-util-illustration title="No fields yet"
+                                     message="Select gift fields to add to this section"
+                                     size="small"
+                                     variant="lake-mountain">
+                </c-util-illustration>
+            </template>
+            <template if:false={isEmptySection}>
+                <div role="grid"
+                     class="slds-grid slds-grid_vertical-align-center">
+                    <div class="slds-size_3-of-12">
+                    </div>
+                    <div class="slds-size_1-of-12">
+                        Required
+                    </div>
+                    <div class="slds-size_2-of-12">
+                        Allow Default Value
+                    </div>
+                    <div class="slds-size_5-of-12">
+                        Default Value
+                    </div>
+                    <div class="slds-size_1-of-12">
+                    </div>
                 </div>
-                <div class="slds-size_1-of-12">
-                    Required
-                </div>
-                <div class="slds-size_2-of-12">
-                    Allow Default Value
-                </div>
-                <div class="slds-size_5-of-12">
-                    Default Value
-                </div>
-                <div class="slds-size_1-of-12">
-                </div>
-            </div>
-            <template for:each={formSection.elements}
-                      for:item="element">
-                <c-ge-template-builder-form-field key={element.value}
-                                                  field={element}
-                                                  data-value={element.value}
-                                                  onformfieldup={handleFormFieldUp}
-                                                  onformfielddown={handleFormFieldDown}>
-                </c-ge-template-builder-form-field>
+                <template for:each={formSection.elements}
+                          for:item="element">
+                    <c-ge-template-builder-form-field key={element.value}
+                                                      field={element}
+                                                      data-value={element.value}
+                                                      onformfieldup={handleFormFieldUp}
+                                                      onformfielddown={handleFormFieldDown}>
+                    </c-ge-template-builder-form-field>
+                </template>
             </template>
         </div>
     </article>
