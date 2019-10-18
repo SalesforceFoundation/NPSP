@@ -55,6 +55,9 @@
             ],
             "c/geTemplateBuilderSelectFields": [
                 "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
+            ],
+            "c/utilIllustration": [
+                "utilIllustration/utilIllustration.js"
             ]
         },
         "experimentalDecorators": true
