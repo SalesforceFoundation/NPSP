@@ -46,7 +46,7 @@ Create Data Import Record
 
     
 *** Test Cases ***
-Delete Mappings And Process Batch
+1 Delete Mappings And Process Batch
     [Documentation]        
     ...                    Delete the Currency1 field mapping on object 'CustomObject1' 
     ...                    and create and process a DI record with a value in Currency1 field.
@@ -103,7 +103,7 @@ Delete Mappings And Process Batch
     ...    npe01__Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     ...    Payment_Status__c=Paid
 
-Create Data Import with Custom Object via API and Verify Values 
+2 Create Data Import with Custom Object via API and Verify Values 
     [Documentation]        
     ...                    Create the Currency1 field mapping on object 'CustomObject1' 
     ...                    and Create and process DI record with Contact, Account, Opportunity, Payment and CustomObject1 details
@@ -158,7 +158,7 @@ Create Data Import with Custom Object via API and Verify Values
     ...    npe01__Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     ...    Payment_Status__c=Paid
        
-Update Mappings and Process Batch 
+3 Update Mappings and Process Batch 
     [Documentation]        
     ...                    Delete the Currency2 field mapping on object 'CustomObject1' if it exists 
     ...                    and map currency1 on DI to currency2 on object 'CustomObject1'
