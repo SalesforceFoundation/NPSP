@@ -425,8 +425,8 @@ public class UTIL_UnitTestData_TEST {
      */
     public static Account getOrgAccount() {
         return new Account(
-        Name = UTIL_UnitTestData_TEST.getUniqueString(),
-        npe01__SYSTEMIsIndividual__c = false
+            Name = UTIL_UnitTestData_TEST.getUniqueString(),
+            npe01__SYSTEMIsIndividual__c = false
         );
     }
 

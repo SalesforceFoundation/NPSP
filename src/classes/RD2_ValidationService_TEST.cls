@@ -124,7 +124,11 @@ private with sharing class RD2_ValidationService_TEST {
         };
         insert contacts;
 
-        contacts = [SELECT AccountId FROM Contact WHERE Id IN :contacts];
+        contacts = [
+            SELECT AccountId
+            FROM Contact
+            WHERE Id IN :contacts
+        ];
 
         List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
         .withAccount(contacts[0].AccountId)//only RD for one Contact will be valid
@@ -132,7 +136,10 @@ private with sharing class RD2_ValidationService_TEST {
         .build(contacts);
 
         List<Database.SaveResult> results = Database.insert(rds, false);
-        npe03__Recurring_Donation__c rd = [select id, npe03__Contact__c from npe03__Recurring_Donation__c];
+        npe03__Recurring_Donation__c rd = [
+            SELECT id, npe03__Contact__c
+            FROM npe03__Recurring_Donation__c
+        ];
 
         for (Integer i = 0; i < results.size(); i++) {
             Database.SaveResult result = results[i];
@@ -186,9 +193,9 @@ private with sharing class RD2_ValidationService_TEST {
             .build();
 
         try {
-        insert rd;
+            insert rd;
         } catch (Exception e) {
-           errMessage = e.getMessage();
+            errMessage = e.getMessage();
         }
         System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
     }
@@ -198,8 +205,7 @@ private with sharing class RD2_ValidationService_TEST {
     * @return HouseHold Account record
     */
     private static Account getHHAccount() {
-        return
-        UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
+        return UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
     }
 
 }
