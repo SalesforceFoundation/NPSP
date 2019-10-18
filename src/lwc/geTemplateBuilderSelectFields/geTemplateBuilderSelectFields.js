@@ -4,7 +4,7 @@ import getFieldAndObjectMappingsByFieldMappingSetName
     from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldAndObjectMappingsByFieldMappingSetName';
 import { FormSection, FormField, showToast, removeByProperty, findIndexByProperty, shiftToIndex, mutable, generateId } from 'c/utilTemplateBuilder';
 
-export default class geTemplateBuilderGiftFields extends LightningElement {
+export default class geTemplateBuilderSelectFields extends LightningElement {
     @track isLoading = true;
     @track selectedFieldMappingSet;
 
@@ -71,18 +71,6 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
         /* END */
 
         this.isLoading = false;
-    }
-
-    /*******************************************************************************
-    * @description Sends an event up to geTemplateBuilder for tab navigation
-    *
-    * @param {object} event: Onclick event object from lightning-button.
-    */
-    handleGoToTab(event) {
-        let detail = {
-            tabValue: event.target.getAttribute('data-tab-value')
-        }
-        this.dispatchEvent(new CustomEvent('gototab', { detail: detail }));
     }
 
     /*******************************************************************************

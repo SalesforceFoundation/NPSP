@@ -51,7 +51,7 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Dispatches an event to parent component geTemplateBuilderGiftFields.
+    * @description Dispatches an event to parent component geTemplateBuilderSelectFields.
     *
     * @param {object} event: Custom Event received from child component
     * geTemplateBuilderFormSection
@@ -64,7 +64,7 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component geTemplateBuilderGiftFields
+    * @description Dispatches an event up to parent component geTemplateBuilderSelectFields
     * for shifting the FormSection element up in the data structure
     *
     * @param {object} event: Custom Event received from child component
@@ -78,7 +78,7 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component geTemplateBuilderGiftFields
+    * @description Dispatches an event up to parent component geTemplateBuilderSelectFields
     * for shifting the FormSection element up in the data structure
     *
     * @param {object} event: Custom Event received from child component
@@ -92,7 +92,7 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component geTemplateBuilderGiftFields
+    * @description Dispatches an event up to parent component geTemplateBuilderSelectFields
     * for shifting the FormField element up in the data structure
     *
     * @param {object} event: Custom Event received from child component
@@ -106,7 +106,7 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component geTemplateBuilderGiftFields
+    * @description Dispatches an event up to parent component geTemplateBuilderSelectFields
     * for shifting the FormField element down in the data structure
     *
     * @param {object} event: Custom Event received from child component

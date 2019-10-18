@@ -2,10 +2,10 @@ import { LightningElement, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import processFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.processFormTemplate';
 import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormTemplate';
-import { FormTemplate, FormLayout, mutable } from 'c/utilTemplateBuilder';
+import { FormTemplate, FormLayout, mutable, TabEnums } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
-    @track activeTab;
+    @track activeTab = TabEnums.INFO_TAB;
     _previousTab;
 
     @track formTemplate = new FormTemplate(
@@ -13,6 +13,34 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         undefined,
         new FormLayout()
     );
+
+    get TabEnums() {
+        return TabEnums;
+    }
+
+    get inTemplateInfoTab() {
+        return this.activeTab === TabEnums.INFO_TAB ? true : false;
+    }
+
+    get inBatchHeaderTab() {
+        return this.activeTab === TabEnums.BATCH_HEADER_TAB ? true : false;
+    }
+
+    get inSelectFieldsTab() {
+        return this.activeTab === TabEnums.SELECT_FIELDS_TAB ? true : false;
+    }
+
+    handleInfoTab() {
+        this.activeTab = TabEnums.INFO_TAB;
+    }
+
+    handleBatchHeaderTab() {
+        this.activeTab = TabEnums.BATCH_HEADER_TAB;
+    }
+
+    handleSelectFieldsTab() {
+        this.activeTab = TabEnums.SELECT_FIELDS_TAB;
+    }
 
     /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     get templateInfo() {
@@ -35,22 +63,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
-    * @description Lifecycle hook that gets called after every render of the component.
-    * Need to reset the activeTab for lightning:tabset to rerender properly because
-    * clicking on the individual lightning:tab components does not auto-update the
-    * lightning:tabset active-tab-value property.
-    */
-    renderedCallback() {
-        this.activeTab = undefined;
-    }
-
-    /*******************************************************************************
     * @description Handles previous and next tab navigation
     *
     * @param {object} event: Event received from child component
     */
     handleGoToTab(event) {
-        this.activeTab = event.detail.tabValue;
+        this.activeTab = event.target.getAttribute('data-tab-value');
     }
 
     /*******************************************************************************
@@ -62,7 +80,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     handleFormTemplateSave = async () => {
         const templateInfo = this.template.querySelector('c-ge-template-builder-template-info').getTabData();
         const batchHeader = this.template.querySelector('c-ge-template-builder-batch-header').getTabData();
-        const formLayout = this.template.querySelector('c-ge-template-builder-gift-fields').getTabData();
+        const formLayout = this.template.querySelector('c-ge-template-builder-select-fields').getTabData();
 
         this.formTemplate.name = templateInfo.name;
         this.formTemplate.description = templateInfo.description;

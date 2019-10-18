@@ -25,19 +25,4 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
 
         return templateInfo;
     }
-
-    /*******************************************************************************
-    * @description Sends an event up to geTemplateBuilder for tab navigation
-    * Currently also collecting data from the page to send up with event.
-    * Likely to change this behavior later when more comprehensively look at
-    * the way to collect/pass tab data around.
-    *
-    * @param {object} event: Onclick event object from lightning-button
-    */
-    handleGoToTab(event) {
-        let detail = {
-            tabValue: event.target.getAttribute('data-tab-value')
-        }
-        this.dispatchEvent(new CustomEvent('gototab', { detail: detail }));
-    }
 }

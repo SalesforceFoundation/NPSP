@@ -50,18 +50,6 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Sends an event up to geTemplateBuilder for tab navigation
-    *
-    * @param {object} event: Onclick event object from lightning-button
-    */
-    handleGoToTab(event) {
-        let detail = {
-            tabValue: event.target.getAttribute('data-tab-value')
-        }
-        this.dispatchEvent(new CustomEvent('gototab', { detail: detail }));
-    }
-
-    /*******************************************************************************
     * @description Onchange event handler for the batch header field checkboxes.
     * Adds BatchHeaderField objects to the selectedBatchFields array.
     * selectedBatchFields is used in the UI to render instances of the

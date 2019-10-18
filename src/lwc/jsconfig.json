@@ -23,9 +23,6 @@
             "c/geTemplateBuilderFormField": [
                 "geTemplateBuilderFormField/geTemplateBuilderFormField.js"
             ],
-            "c/geTemplateBuilderGiftFields": [
-                "geTemplateBuilderGiftFields/geTemplateBuilderGiftFields.js"
-            ],
             "c/geTemplateBuilderTemplateInfo": [
                 "geTemplateBuilderTemplateInfo/geTemplateBuilderTemplateInfo.js"
             ],
@@ -55,6 +52,9 @@
             ],
             "c/utilDockedFormFooter": [
                 "utilDockedFormFooter/utilDockedFormFooter.js"
+            ],
+            "c/geTemplateBuilderSelectFields": [
+                "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
             ]
         },
         "experimentalDecorators": true

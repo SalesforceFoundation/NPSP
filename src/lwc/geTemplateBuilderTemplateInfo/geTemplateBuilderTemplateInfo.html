@@ -2,7 +2,7 @@
     <div role="grid"
          class="slds-grid slds-wrap">
         <div role="panel"
-             class="slds-size_3-of-12 slds-p-around_large">
+             class="slds-size_3-of-12 slds-p-around_large slds-border_right">
             <h2 class="slds-text-heading_small slds-p-bottom_small">New Batch Gift Entry Template</h2>
             <p class="slds-text-body_small">
                 Create a template for your gift entry user to quickly get started with all the right
@@ -16,7 +16,7 @@
             </p>
         </div>
         <div role="panel"
-             class="slds-size_9-of-12 slds-p-around_large slds-border_left">
+             class="slds-size_9-of-12 slds-p-around_large">
             <div role="grid"
                  class="slds-grid slds-wrap slds-grid_vertical-align-end">
                 <div class="slds-size_1-of-1">
@@ -35,16 +35,6 @@
                                         value={templateInfo.description}
                                         data-name="description">
                     </lightning-textarea>
-                </div>
-                <div role="navigation"
-                     class="slds-size_1-of-1 slds-p-top_large slds-m-top_large">
-                    <lightning-button label="Next: Batch Fields"
-                                      title="Next"
-                                      variant="brand"
-                                      class="slds-float_right"
-                                      onclick={handleGoToTab}
-                                      data-tab-value="geTemplateBuilderBatchHeader">
-                    </lightning-button>
                 </div>
             </div>
         </div>

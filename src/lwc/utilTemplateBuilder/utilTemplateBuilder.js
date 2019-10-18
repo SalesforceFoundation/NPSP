@@ -150,6 +150,12 @@ const generateId = () => {
         '-' + random4() + random4() + random4();
 };
 
+const TabEnums = Object.freeze({
+    INFO_TAB: 'geTemplateBuilderTemplateInfo',
+    SELECT_FIELDS_TAB: 'geTemplateBuilderSelectFields',
+    BATCH_HEADER_TAB: 'geTemplateBuilderBatchHeader'
+})
+
 const inputTypeByDescribeType = {
     'address': 'text',
     'base64': 'text',
@@ -198,5 +204,6 @@ export {
     generateId,
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
-    sort
+    sort,
+    TabEnums
 }
