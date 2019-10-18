@@ -116,6 +116,7 @@ Create Data Import Record
     Click Configure Advanced Mapping
     View Field Mappings Of The Object         CustomObject1
     Create New Field Mapping                  CO1 currency (CO1_currency__c)    C1_currency (C1_currency__c)
+    Reload Page
     
     &{data_import} =                          Create Data Import Record
     Process Data Import Batch
