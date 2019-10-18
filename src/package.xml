@@ -235,6 +235,7 @@
         <members>EP_TaskDependency_TEST</members>
         <members>EP_TaskRollup_TDTM</members>
         <members>EP_TaskRollup_TEST</members>
+        <members>EP_Task_InterimFieldHelper_UTIL</members>
         <members>EP_Task_UTIL</members>
         <members>ERR_AddError_TEST</members>
         <members>ERR_AsyncErrors</members>
