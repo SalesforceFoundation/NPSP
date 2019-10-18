@@ -71,7 +71,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
-        createRecurringDonationSchedule(rds, triggerAction);
+        createSchedule(rds, triggerAction);
 
         return null;
     }
@@ -109,16 +109,22 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param rds Trigger.new records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
-    private void createRecurringDonationSchedule(List<SObject> rds, TDTM_Runnable.Action triggerAction) {
+    private void createSchedule(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
 
-        DmlWrapper dmlActions = new DmlWrapper();
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            for (SObject rd: rds) {
-                RD2_ScheduleService rdSchedule = new RD2_ScheduleService((npe03__Recurring_Donation__c) rd);
-                dmlActions.objectsToInsert.addAll(rdSchedule.initializeSchedule());
+
+            DmlWrapper dmlActions = new DmlWrapper();
+
+            for (npe03__Recurring_Donation__c rd: rds) {
+                dmlActions.objectsToInsert.addAll(
+                    new RD2_Schedule_SVC()
+                            .createSchedule(rd)
+                            .getRDSchedulesToInsert()
+                );
             }
+
+            TDTM_TriggerHandler.processDML(dmlActions);
         }
-        TDTM_TriggerHandler.processDML(dmlActions);
     }
 
 }
