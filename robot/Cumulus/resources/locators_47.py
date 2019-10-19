@@ -216,6 +216,15 @@ npsp_lex_locators={
         'link':"//table[@class='list']/tbody/tr[./th/a[text()='{}']]/td/a[text()='{}']",
         'cbx_status':'//table[@class="detailList"]/tbody/tr/th[./span[text()="{}"]]/following-sibling::td//img[@title="{}"]',
         },
+    'adv_mappings':{
+        'dropdown':"//tr[.//*[text()='{}']]/td[.//span[text()='Show actions']]//button",
+        'modal_open':'//div[contains(@class,"slds-backdrop_open")]',
+        'field_mapping':'//input[@name="{}"]',
+        'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
+        'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
+        'button':"//button[text()='Create New Field Mapping']",
+        'field-label':'//lightning-formatted-text[text()="{}"]',
+        },
     
 }
     
