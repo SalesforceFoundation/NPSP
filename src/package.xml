@@ -235,7 +235,6 @@
         <members>EP_TaskDependency_TEST</members>
         <members>EP_TaskRollup_TDTM</members>
         <members>EP_TaskRollup_TEST</members>
-        <members>EP_Task_InterimFieldHelper_UTIL</members>
         <members>EP_Task_UTIL</members>
         <members>ERR_AddError_TEST</members>
         <members>ERR_AsyncErrors</members>
@@ -521,6 +520,7 @@
         <members>UTIL_RecordTypes_TEST</members>
         <members>UTIL_SalesforceID</members>
         <members>UTIL_SalesforceID_TEST</members>
+        <members>UTIL_SimpleFieldMapper</members>
         <members>UTIL_SoqlListView_CTRL</members>
         <members>UTIL_String</members>
         <members>UTIL_String_TEST</members>

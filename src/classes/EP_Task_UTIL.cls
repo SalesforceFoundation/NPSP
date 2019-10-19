@@ -39,6 +39,9 @@
 */
 public class EP_Task_UTIL {
 
+    /** @description Additional Field Mappings found using UTIL_SimpleFieldMapper functionality. */
+    private Set<String> additionalFieldMappings;
+
     /** @description Default status for active tasks. */
     public static String defaultTaskStatus {
         get {
@@ -113,19 +116,16 @@ public class EP_Task_UTIL {
         initializeMaps(templateIds);
     }
 
-
     /*******************************************************************************************************
     * @description Queries and builds maps for templates and template tasks from a set of template Ids.
     * @param templateIds a set of Engagement Plan Template Ids to query and build maps for.
     * @return void This method instantiates class properties.
     ********************************************************************************************************/
     public void initializeMaps(Set<Id> templateIds) {
-        Set<String> addlEPTaskFields = EP_Task_InterimFieldHelper_UTIL.determineAdditionalEPTaskFieldsToMap();
+        Set<String> addlEPTaskFields = this.getAdditionalFieldMappings();
         Set<String> epTaskFields = getPrimaryEPTaskFields();
         // Determine what additional fields need to be added to the task query, if any
         addAdditionalEPTaskFieldsIfNotPresent(epTaskFields, addlEPTaskFields);
-        System.debug('*** addlEPTaskFields: ' + addlEPTaskFields);
-        System.debug('*** epTaskFields: ' + epTaskFields);
 
         //query our custom fields and fieldset fields for when this template is accessed from the UI
         Set<String> templateFields = new Set<String>{'Id', 'Name', 'Skip_Weekends__c', 'Reschedule_To__c', 'Automatically_Update_Child_Task_Due_Date__c', 'Default_Assignee__c', 'Description__c'};
@@ -138,7 +138,6 @@ public class EP_Task_UTIL {
         templateQuery += ' FROM Engagement_Plan_Tasks__r) ';
         templateQuery += 'FROM Engagement_Plan_Template__c WHERE Id IN :templateIds';
 
-        System.debug('*** templateQuery: ' + templateQuery);
         //query for templates and their child tasks
         templateMap = new Map<Id, Engagement_Plan_Template__c>((List<Engagement_Plan_Template__c>)Database.query(templateQuery));
 
@@ -149,7 +148,6 @@ public class EP_Task_UTIL {
         tasksAndChildrenQuery += ', (SELECT Id FROM Engagement_Plan_Tasks__r) ';
         tasksAndChildrenQuery += ' FROM Engagement_Plan_Task__c WHERE Engagement_Plan_Template__c IN :templateIds ORDER BY Days_After__c ASC NULLS FIRST';
 
-        System.debug('*** tasksAndChildrenQuery:' + tasksAndChildrenQuery);
         epTaskMap = new Map<Id, Engagement_Plan_Task__c>((List<Engagement_Plan_Task__c>)Database.query(tasksAndChildrenQuery));
     }
 
@@ -174,7 +172,8 @@ public class EP_Task_UTIL {
         taskEPTaskFieldMap.put('Status', 'Status__c');
 
         // Map Additional Fields, if any
-        Set<String> addlEPTaskFields = EP_Task_InterimFieldHelper_UTIL.determineAdditionalEPTaskFieldsToMap();
+        Set<String> addlEPTaskFields = getAdditionalFieldMappings();
+
         Set<String> primaryEPTaskFields = toLowerCase(getPrimaryEPTaskFields());
 
         for (String addlEPTaskField : addlEPTaskFields) {
@@ -183,11 +182,10 @@ public class EP_Task_UTIL {
             }
         }
 
-        System.debug('*** taskEPTaskFieldMap: ' + taskEPTaskFieldMap.keySet());
-
         //copy fields
         Task taskResult = new Task();
         for (String taskField : taskEPTaskFieldMap.keySet()) {
+
             taskResult.put(taskField, epTask.get(taskEPTaskFieldMap.get(taskField)));
         }
 
@@ -220,7 +218,6 @@ public class EP_Task_UTIL {
 
         return taskResult;
     }
-
 
     /*******************************************************************************************************
     * @description Gets the total delay for an EP Task, including all parent delays.
@@ -424,7 +421,41 @@ public class EP_Task_UTIL {
                                 'Reminder__c',
                                 'Reminder_Time__c',
                                 'Send_Email__c',
-                                'Status__c'};
+                                'Status__c'
+        };
+    }
+
+    /*******************************************************************************************************
+    * @description The primary Task fields to be mapped.  Will be excluded from the "Simple Field Mapping"
+    *              process
+    * @return Set<String> Set of String values consisting of the API names of the
+    *                     primary mapped Task fields
+    ********************************************************************************************************/
+    private Set<String> getPrimaryTaskFields() {
+        return new Set<String> {'Id',
+                                'Subject',
+                                'Priority',
+                                'OwnerId',
+                                'Description',
+                                'Type',
+                                'Status'
+        };
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a Set of Additional Compatible Field Mappings found using
+    *              UTIL_SimpleFieldMapper.  Note: Uses Lazy Caching Approach
+    * @return Set<String> Set of String values consisting of the API names of the
+    *                     additional compatible fields to map
+    ********************************************************************************************************/
+    @testVisible private Set<String> getAdditionalFieldMappings() {
+        if (this.additionalFieldMappings == null) {
+            this.additionalFieldMappings = UTIL_SimpleFieldMapper.getInstanceOf(Engagement_Plan_Task__c.getSObjectType(), Task.getSObjectType())
+                              .withAdditionalFieldsToExclude(getPrimaryEPTaskFields())
+                              .withAdditionalFieldsToExclude(getPrimaryTaskFields())
+                              .determineMappableFields();
+        }
+        return this.additionalFieldMappings;
     }
 
     /*******************************************************************************************************
