@@ -26,7 +26,9 @@ class DataImportPage(ListingPage):
         self.npsp.wait_for_batch_to_process(batch,status)
         
     def click_close_button(self):
-        self.npsp.click_button_with_value("Close")    
+        """Click on close button on DI processing page and waits for DI object homepage to load"""
+        self.npsp.click_button_with_value("Close")
+        self.npsp.wait_until_url_contains("DataImport__c")    
         
     def select_import_record(self,record_name):
         self.selenium.page_should_contain_link(record_name)
