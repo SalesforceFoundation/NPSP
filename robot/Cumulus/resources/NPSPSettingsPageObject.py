@@ -17,6 +17,10 @@ class NPSPSettingsPage(BasePage):
     def cumulusci(self):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
     
+    @property
+    def pageobjects(self):
+        return self.builtin.get_library_instance("cumulusci.robotframework.PageObjects")
+    
     def _go_to_page(self, filter_name=None):
         """To go to NPSP Settings page"""
         url_template = "{root}/lightning/n/{object}"
@@ -30,7 +34,8 @@ class NPSPSettingsPage(BasePage):
         
     def open_main_menu(self,title): 
         """Waits for the menu item to load and clicks to expand menu""" 
-        self.selenium.wait_until_page_contains("System Tools", error="System Tools link was not found on the page")  
+        self.selenium.wait_until_page_contains("System Tools", 
+                                               error="System Tools link was not found on the page")  
         self.npsp.click_link_with_text("System Tools")
         
    
@@ -55,3 +60,11 @@ class NPSPSettingsPage(BasePage):
                 raise AssertionError(
                     "Timed out waiting for Advanced Mapping is enabled to display"
                 )
+                
+    def click_configure_advanced_mapping(self):
+        """clicks on Configure Advanced Mapping and waits for Manage Advanced Mapping page to load 
+           and loads the page object for that page"""
+        locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
+        self.selenium.click_element(locator)
+        self.pageobjects.current_page_should_be("Custom", "BDI_ManageAdvancedMapping")
+                
