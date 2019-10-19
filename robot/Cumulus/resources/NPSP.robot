@@ -13,7 +13,7 @@ ${task2}     Make a Phone Call2
 *** Keywords ***
 
 Capture Screenshot and Delete Records and Close Browser
-    Capture Page Screenshot
+    Run Keyword If Any Tests Failed      Capture Page Screenshot
     Close Browser
     Delete Session Records
     
@@ -394,3 +394,11 @@ Run Accessibility Check
     Log Summary Of Results    ${results}
     Warn On Incomplete Rules    ${results}
     Warn On Violations Rules    ${results}    
+    
+Process Data Import Batch
+    [Documentation]        Go to NPSP Data Import Page and change view to 'To be Imported' and Process Batch
+    Go To Page                              Listing        DataImport__c
+    Change View To                          To Be Imported
+    Click                                   Start Data Import
+    Click Begin Data Import Process
+    Click Close Button    
