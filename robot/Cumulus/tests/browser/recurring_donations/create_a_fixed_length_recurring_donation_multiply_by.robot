@@ -37,7 +37,6 @@ Create Fixed Length Recurring Donation Multiply By
     [Documentation]              This test verifies that Opportunities with the proper mulitplied amount are created for a Recurring Donation.
     ...                          This test case also verified the correct number of opportunities are created and related Account, Contact, 
     ...                          and Soft Credit Contact rollups are udpated.
-
     #Find 1st Opportunity for Recurring Donation and Close It
     @{opportunity1} =            API Query Installment         &{recurringdonation}[Id]    (1 of 50)
     Store Session Record         Opportunity                   ${opportunity1}[0][Id]
