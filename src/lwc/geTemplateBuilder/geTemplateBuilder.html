@@ -19,7 +19,7 @@
                                  data-name="templateId">
                 </lightning-input>
                 <lightning-button label="Test Retrieve Form Template"
-                                  title="Cancel"
+                                  title="Retrieve"
                                   variant="neutral"
                                   class="slds-float_right slds-m-right_small slds-m-left_small"
                                   onclick={getFormTemplate}>
@@ -57,6 +57,7 @@
                                class="slds-p-around_none"
                                onactive={handleSelectFieldsTab}>
                     <c-ge-template-builder-select-fields ongototab={handleGoToTab}
+                                                         ontogglemodal={toggleModal}
                                                          selected-field-mapping-set={selectedFieldMappingSet}
                                                          form-sections={layoutSections}>
                     </c-ge-template-builder-select-fields>

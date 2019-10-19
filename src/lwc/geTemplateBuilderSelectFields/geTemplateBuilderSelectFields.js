@@ -37,6 +37,19 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         return formLayout;
     }
 
+    @api
+    updateSection(section) {
+        console.log('********updateSection');
+        this.template.querySelector('c-ge-template-builder-form-layout').updateSection(section);
+    }
+
+    toggleModal(event) {
+        console.log('handleEdit');
+        this.dispatchEvent(new CustomEvent('togglemodal', {
+            detail: event.detail
+        }));
+    }
+
     connectedCallback() {
         this.init();
     }
@@ -45,10 +58,11 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @description Container function for grouping various async functions.
     */
     init = async () => {
+        console.log('init');
+        this.selectedFieldMappingSet = 'Migrated_Custom_Field_Mapping_Set';
         this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
-            fieldMappingSetName: 'Migrated_Custom_Field_Mapping_Set'
+            fieldMappingSetName: this.selectedFieldMappingSet
         });
-        this.setObjectAndFieldMappings(this.objectMappings);
 
         // TODO: Enable when end users are able to create custom field mapping sets
         //this._fieldMappingSets = await getFieldMappingSets();
@@ -61,6 +75,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         const weAreRetrievingAnExistingTemplate = this.selectedFieldMappingSet;
 
         if (weAreRetrievingAnExistingTemplate) {
+            console.log('retrieving existing template');
             this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
                 fieldMappingSetName: this.selectedFieldMappingSet
             });
@@ -73,6 +88,9 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 }
                 this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
             }
+        } else {
+            console.log('new template');
+            this.setObjectAndFieldMappings(this.objectMappings);
         }
         /* END */
 

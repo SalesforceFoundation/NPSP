@@ -50,6 +50,7 @@
             "c/utilPageHeader": [
                 "utilPageHeader/utilPageHeader.js"
             ],
+<<<<<<< Updated upstream
             "c/utilDockedFormFooter": [
                 "utilDockedFormFooter/utilDockedFormFooter.js"
             ],
@@ -58,6 +59,13 @@
             ],
             "c/utilIllustration": [
                 "utilIllustration/utilIllustration.js"
+=======
+            "c/utilModal": [
+                "utilModal/utilModal.js"
+            ],
+            "c/modal": [
+                "modal/modal.js"
+>>>>>>> Stashed changes
             ]
         },
         "experimentalDecorators": true

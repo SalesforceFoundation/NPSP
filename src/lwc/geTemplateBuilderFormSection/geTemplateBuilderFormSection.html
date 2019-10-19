@@ -3,7 +3,8 @@
              class={sectionClass}
              onclick={handleSelectActiveSection}
              data-section-id={formSection.id}>
-        <header class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-around_small">
+        <header role="header"
+                class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-vertical_small slds-p-left_small slds-p-right_x-large">
             <div role="body"
                  class="slds-media__body">
                 <template if:true={isEditMode}>
@@ -39,14 +40,18 @@
                                            data-section-id={formSection.id}
                                            class="slds-m-left_x-small">
                     </lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:delete"
-                                           alternative-text="Delete section"
-                                           onclick={handleDeleteSection}
-                                           data-section-id={formSection.id}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
                 </template>
             </div>
+            <template if:true={isActive}>
+                <span role="icon"
+                      class="slds-icon_container slds-icon_container_extension slds-visual-picker__text-check slds-p-top_xxx-small">
+                    <lightning-icon alternative-text="Active Section"
+                                    icon-name="utility:check"
+                                    variant="inverse"
+                                    size="x-small">
+                    </lightning-icon>
+                </span>
+            </template>
         </header>
         <div role="card body"
              class="slds-card__body slds-card__body_inner slds-p-around_small">

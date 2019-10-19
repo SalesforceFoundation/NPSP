@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { mutable } from 'c/utilTemplateBuilder';
+import { mutable, increment, decrement, value } from 'c/utilTemplateBuilder';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
 const inActiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
@@ -16,8 +16,12 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         this.formSection = formSection;
     }
 
+    get isActive() {
+        return this.activeFormSectionId == this.formSection.id ? true : false;
+    }
+
     get sectionClass() {
-        return this.activeFormSectionId == this.formSection.id ? activeSectionClass : inActiveSectionClass;
+        return this.isActive ? activeSectionClass : inActiveSectionClass;
     }
 
     get isEmptySection() {
@@ -35,6 +39,21 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         let formSection = mutable(this.formSection);
         formSection.elements = this.getSectionFormFields();
         return formSection;
+    }
+
+    @api
+    updateSection(section) {
+        console.log('****updateSection');
+        console.log('Section: ', mutable(section));
+        if (section.action === 'save') {
+            let formSection = mutable(this.getFormSectionValues());
+            formSection.label = section.section.label;
+            this.formSection = formSection;
+        }
+
+        if (section.action === 'delete') {
+            this.handleDeleteSection();
+        }
     }
 
     /*******************************************************************************
@@ -73,7 +92,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * @description Dispatches an event to parent component geTemplateBuilderFormLayout
     */
     handleDeleteSection(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
         this.dispatchEvent(new CustomEvent(
             'deleteformsection',
             { detail: this.formSection }));
@@ -83,8 +102,12 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * @description Sets formSection into edit mode
     */
     handleEditFormSection(event) {
+        console.log('handleEdit');
         event.stopPropagation();
-        this.isEditMode = true;
+        this.dispatchEvent(new CustomEvent('togglemodal', {
+            detail: { action: 'edit', section: this.formSection },
+        }));
+        //this.isEditMode = true;
     }
 
     /*******************************************************************************

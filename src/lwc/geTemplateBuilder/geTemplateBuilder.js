@@ -1,17 +1,24 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import processFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.processFormTemplate';
 import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormTemplate';
 import { FormTemplate, FormLayout, mutable, TabEnums } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
-    @track activeTab = TabEnums.SELECT_FIELDS_TAB;
+    @track activeTab = TabEnums.INFO_TAB;
 
     @track formTemplate = new FormTemplate(
         undefined,
         undefined,
         new FormLayout()
     );
+
+    @api
+    callable(section) {
+        console.log('template builder public method');
+        console.log('Section: ', mutable(section));
+        this.template.querySelector('c-ge-template-builder-select-fields').updateSection(section);
+    }
 
     get TabEnums() {
         return TabEnums;
@@ -59,6 +66,13 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     get selectedFieldMappingSet() {
         return this.formTemplate.layout.fieldMappingSetDevName ? this.formTemplate.layout.fieldMappingSetDevName : undefined;
+    }
+
+    toggleModal(event) {
+        console.log('toggleModal');
+        this.dispatchEvent(new CustomEvent('togglemodal', {
+            detail: event.detail
+        }));
     }
 
     /*******************************************************************************

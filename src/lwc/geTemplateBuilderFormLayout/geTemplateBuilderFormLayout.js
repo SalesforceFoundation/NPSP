@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { FormLayout } from 'c/utilTemplateBuilder';
+import { FormLayout, mutable } from 'c/utilTemplateBuilder';
 
 export default class GeTemplateBuilderFormLayout extends LightningElement {
     @api fieldMappingSet;
@@ -37,6 +37,33 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
         const version = '1.0';
         let formLayout = new FormLayout(this.fieldMappingSet, version, formSections);
         return formLayout;
+    }
+
+    @api
+    updateSection(section) {
+        console.log('*************************');
+        console.log('*************************');
+        console.log('********updateSection');
+        console.log('*************************');
+        console.log('*************************');
+        console.log('section: ', mutable(section));
+
+        let formSectionComponents = this.template.querySelectorAll('c-ge-template-builder-form-section');
+        console.log('formSectionComponents: ', formSectionComponents.length);
+        for (let i = 0; i < formSectionComponents.length; i++) {
+            let formSection = formSectionComponents[i].getFormSectionValues();
+            if (formSection.id == section.section.id) {
+                console.log('FOUND SECTION');
+                formSectionComponents[i].updateSection(section);
+            }
+        }
+    }
+
+    toggleModal(event) {
+        console.log('handleEdit');
+        this.dispatchEvent(new CustomEvent('togglemodal', {
+            detail: event.detail
+        }));
     }
 
     /*******************************************************************************

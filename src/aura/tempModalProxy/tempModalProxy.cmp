@@ -1,0 +1,10 @@
+<aura:component>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <aura:attribute name="sectionBeingEdited"
+                    type="Object" />
+
+    <c:utilModal modalData="{!v.sectionBeingEdited}"
+                 onhandlesave="{!c.handleSave}"
+                 onhandlecancel="{!c.handleCancel}">
+    </c:utilModal>
+</aura:component>
