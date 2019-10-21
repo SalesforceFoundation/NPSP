@@ -18,7 +18,7 @@ Check Recurring Donation Autoname
 
     #Enable Autonaming Setting
     @{recurringsettings} =       Salesforce Query                           npe03__Recurring_Donations_Settings__c
-    ...                          select=Id,EnableAutomaticNaming__c
+    ...                          select=Id,${ns}EnableAutomaticNaming__c
     Salesforce Update            npe03__Recurring_Donations_Settings__c     ${recurringsettings}[0][Id]
     ...                          ${ns}EnableAutomaticNaming__c=true
 
