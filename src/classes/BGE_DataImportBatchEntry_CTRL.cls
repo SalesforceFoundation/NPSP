@@ -523,7 +523,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Integer totalCountOfRows;
         @AuraEnabled public Decimal totalRowAmount;
-        @AuraEnabled public List<UTIL_LightningComponentSupport.Notice> notices;
+        @AuraEnabled public List<UTIL_LightningComponentSupport.Notice> notices =
+                new List<UTIL_LightningComponentSupport.Notice>();
 
         /*******************************************************************************************************
         * @description Retrieves the related list of columns for the BGE interface
@@ -665,19 +666,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 BGE_BatchGiftEntry_UTIL.handleMissingPermissions(unpermittedFields);
 
                 if (!unmappedFields.isEmpty()) {
-                    addNotice((UTIL_LightningComponentSupport.Notice)
-                            new UnmappedFieldsNotice(unmappedFields));
+                    notices.add(new UnmappedFieldsNotice(unmappedFields));
                 }
             }
 
             return columns;
-        }
-
-        private void addNotice(UTIL_LightningComponentSupport.Notice notice) {
-            if (notices == null) {
-                notices = new List<UTIL_LightningComponentSupport.Notice>();
-            }
-            notices.add(notice);
         }
     }
 
