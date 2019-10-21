@@ -558,7 +558,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         * @description Retrieves the related list of columns defined by users in the Batch record Active_Fields__c
         * @return list of Columns to use in BGE_DataImportBatchEntry table
         */
-        public List<Column> getUserDefinedColumns() {
+        private List<Column> getUserDefinedColumns() {
             List<Column> columns = new List<Column>();
 
             DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c
