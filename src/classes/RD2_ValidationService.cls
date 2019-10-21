@@ -75,7 +75,7 @@ public with sharing class RD2_ValidationService {
     * @param rd the Recurring Donation to validate
     * @param acct is the associated account for the Recurring Donation
     */
-    public void validate(npe03__Recurring_Donation__c rd, Account acct) {
+    private void validate(npe03__Recurring_Donation__c rd, Account acct) {
         //either Account or Contact must be specified
         if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
             rd.addError(System.Label.RD_DonorIsRequired);
@@ -95,11 +95,11 @@ public with sharing class RD2_ValidationService {
     }
 
      /***
-    * @description Extracts record Ids
+    * @description Extracts record Ids from a list of SObject records.
     * @param records
     * @return Set<Id>
     */
-    public Set<Id> extractIds(List<SObject> records) {
+    private Set<Id> extractIds(List<SObject> records) {
         if (records == null || records.isEmpty()) {
             return new Set<Id>();
         }
