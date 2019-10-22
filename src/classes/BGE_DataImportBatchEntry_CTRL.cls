@@ -681,17 +681,32 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     @TestVisible
     private class UnmappedFieldsNotice extends UTIL_LightningComponentSupport.Notice {
+        private Set<String> unmappedFieldNames = new Set<String>();
+
         public UnmappedFieldsNotice(Set<String> unmappedFieldNames) {
+            this.unmappedFieldNames = unmappedFieldNames;
             this.header = Label.bgeUnmappedFieldsNoticeHeader;
             this.title = Label.bgeUnmappedFieldsNoticeTitle;
-            this.message = getMessage(unmappedFieldNames);
+            this.message = getMessage();
             setVariant(UTIL_LightningComponentSupport.Variant.WARNING);
         }
 
-        private String getMessage(Set<String> unmappedFieldNames) {
+        private String getMessage() {
             String fieldNames = String.join(new List<String>(unmappedFieldNames), ', ');
+            String unmappedFieldsTemplate = '';
+            String fieldMappingMethod =
+                    UTIL_CustomSettingsFacade.getDataImportSettings().Field_Mapping_Method__c;
+
+            if (fieldMappingMethod == BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING) {
+                unmappedFieldsTemplate =
+                        Label.bgeUnmappedFieldsNoticeMessageAdvancedMapping;
+            } else if (fieldMappingMethod == BDI_DataImportService.FM_HELP_TEXT) {
+                unmappedFieldsTemplate =
+                        Label.bgeUnmappedFieldsNoticeMessageHelpTextMapping;
+            }
+
             return String.format(
-                    Label.bgeUnmappedFieldsNoticeMessage, new List<String>{
+                    unmappedFieldsTemplate, new List<String>{
                             fieldNames
                     });
         }
