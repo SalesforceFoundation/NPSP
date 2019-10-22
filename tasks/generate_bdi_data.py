@@ -17,7 +17,7 @@ START_DATE = date(2019, 1, 1)  # Per https://salesforce.quip.com/gLfGAPtqVzUS
 
 class GenerateBDIData(ModuleDataFactory):
     """Generate data specific to the Honeybees test cases"""
-    def make_records(self, num_records, factories, batchnum):
+    def make_records(self, num_records, factories, batchnum, **other_options):
         """Make the 4 batches of DIs described here:
         https://salesforce.quip.com/YfOpAwKbhcat
         """
