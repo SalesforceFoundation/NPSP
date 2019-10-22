@@ -35,7 +35,9 @@
 *
 */
 public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
-    
+
+    DmlWrapper dmlActions = new DmlWrapper();
+
     /***
     * @description Recurring Donation naming service instance
     */
@@ -71,9 +73,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
-        createSchedule(rds, triggerAction);
+        synchronizeRDSchedules(rds, oldRds, triggerAction);
 
-        return null;
+        return dmlActions;
     }
 
     /***
@@ -105,26 +107,45 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Creates schedule record after insert of recurring donation
+    * @description Creates/modifies schedule record(s) after insert/update of recurring donation
     * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
-    private void createSchedule(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+    private void synchronizeRDSchedules(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            createNewSchedulesAfterRDInsert(rds);
+        }
 
-            DmlWrapper dmlActions = new DmlWrapper();
+        else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            synchronizeSchedulesAfterRDUpdate(rds, oldRds);
+        }
+    }
 
-            for (npe03__Recurring_Donation__c rd: rds) {
-                dmlActions.objectsToInsert.addAll(
+    /***
+    * @description Handles schedule creation after insert of recurring donation
+    * @param rds Trigger.new records
+    */
+    private void createNewSchedulesAfterRDInsert(List<npe03__Recurring_Donation__c> rds) {
+
+        for (npe03__Recurring_Donation__c rd: rds) {
+            dmlActions.objectsToInsert.addAll(
                     new RD2_ScheduleService()
                             .createSchedule(rd)
                             .getRDSchedulesToInsert()
-                );
-            }
-
-            TDTM_TriggerHandler.processDML(dmlActions);
+            );
         }
+    }
+
+    /***
+    * @description Handles schedule modification/creation after modification of recurring donation
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    */
+    // TODO: Synchronize schedule(s) to reflect modified recurringDonation(s) - W-036113 (Placeholder)
+    private void synchronizeSchedulesAfterRDUpdate(List<SObject> rds, List<SObject> oldRds) {
+
     }
 
 }
