@@ -43,21 +43,21 @@ public with sharing class UTIL_SimpleFieldMapper {
     public class SimpleFieldMapperException extends Exception {}
 
     /** @description SObjectType for the Source Object to determine overlapping fields from */
-    Schema.SObjectType sourceSObjectType;
+    @testVisible private Schema.SObjectType sourceSObjectType;
 
     /** @description Source fields map for the Source Object */
-    private Map<String, Schema.SObjectField> sourceFields;
+    @testVisible private Map<String, Schema.SObjectField> sourceFields;
 
     /** @description SObjectType for the Target Object to determine overlapping fields from */
-    private Schema.SObjectType targetSObjectType;
+    @testVisible private Schema.SObjectType targetSObjectType;
 
     /** @description Target fields map for the Target Object */
-    private Map<String, Schema.SObjectField> targetFields;
+    @testVisible private Map<String, Schema.SObjectField> targetFields;
 
     /** @description Set of API FieldNames to exclude from the resulting Set of overlapping fields.
                      By default, this includes any standard fields that should not be mapped
                      by this process */
-    private Set<String> fieldsToExclude = new Set<String> {
+    @testVisible private Set<String> fieldsToExclude = new Set<String> {
         'Id',
         'Name',
         'RecordType',
@@ -77,7 +77,7 @@ public with sharing class UTIL_SimpleFieldMapper {
     /** @description Boolean indicates whether or not it will return fields of the same name if the target
                      type is String, and the source type is something else.  This requires additional
                      handling, and is not enabled by default. */
-    private Boolean includeAnySoapTypeToString = false;
+    @testVisible private Boolean includeAnySoapTypeToString = false;
 
     /*********************************************************************************************************
     * @description The constructor
@@ -110,6 +110,7 @@ public with sharing class UTIL_SimpleFieldMapper {
 
         return this;
     }
+
     /*********************************************************************************************************
     * @description The set of field API Names to exclude from mapping even if they overlap both objects.
     *              Note: Fields values to exlude are ignored if they are not present in either the Source
@@ -244,6 +245,17 @@ public with sharing class UTIL_SimpleFieldMapper {
         // Check that Source Field not larger than 255 characters
         if (sourceFieldDescribe.getLength() > 255) { // Not Mapping larger fields
             return false;
+        }
+
+        // Lookup fields require additional checks (to make sure the source and destination refer to the same object(s))
+        if (sourceFieldDescribe.getType() == Schema.DisplayType.REFERENCE && targetFieldDescribe.getType() == Schema.DisplayType.REFERENCE) {
+            Set<Schema.SObjectType> srcReferences = new Set<Schema.SObjectType>(sourceFieldDescribe.getReferenceTo());
+            Set<Schema.SObjectType> targetReferences = new Set<Schema.SObjectType>(targetFieldDescribe.getReferenceTo());
+
+            // Probably could have done a single value compare of element 0, but this handles the exception case when the Reference field is overloaded for multiple objects.
+            // To be compatible src and target have all the same object references.  If they are not, it will not automap this field
+            return (srcReferences.containsAll(targetReferences) && targetReferences.containsAll(srcReferences));
+
         }
 
         // Check if the source and target are compatible types
