@@ -35,13 +35,12 @@
 *
 */
 
-public without sharing class RD2_Schedule_SVC {
+public without sharing class RD2_ScheduleService {
 
     public static final String FIFTEENTH = '15';
     public static final String FIRST = '1';
     public static final String FIRST_AND_FIFTEENTH = '1st and 15th';
-    public static final String LAST_DAY_OF_MONTH = 'Last Day';
-    public static final Integer LAST_DAY_THRESHHOLD = 29;
+    public static final String LAST_DAY_OF_MONTH = 'Last_Day';
     public static final String MONTHLY = 'Monthly';
 
 
@@ -69,7 +68,7 @@ public without sharing class RD2_Schedule_SVC {
     * @param rd Recurring donation record
     * @return RD2_Schedule_SVC
     */
-    public RD2_Schedule_SVC createSchedule(npe03__Recurring_Donation__c rd) {
+    public RD2_ScheduleService createSchedule(npe03__Recurring_Donation__c rd) {
 
         RecurringDonationSchedule__c rdsched = new RecurringDonationSchedule__c();
 
@@ -85,16 +84,16 @@ public without sharing class RD2_Schedule_SVC {
         rdsched.PaymentMethod__c = rd.PaymentMethod__c;
         rdsched.RecurringDonation__c = rd.Id;
 
-        if (rdsched.InstallmentPeriod__c == MONTHLY) {
-            rdsched.DayOfMonth__c = getDayOfMonth(rd);
+        if (!isFirstAndFifteenth(rd)) {
+            rdsched.DayOfMonth__c = rd.Day_of_Month__c;
         }
-        schedulesToInsert.add(rdsched);
-
-        if (isFirstAndFifteenth(rd)) {
+        else {
+            rdsched.DayOfMonth__c = FIRST;
+            schedulesToInsert.add(rdsched);
             rdsched = rdsched.clone();
             rdsched.DayOfMonth__c = FIFTEENTH;
-            schedulesToInsert.add(rdsched);
         }
+        schedulesToInsert.add(rdsched);
 
         for (RecurringDonationSchedule__c rds : schedulesToInsert) {
             rds.StartDate__c = calculateStartDate(rds, rd);
@@ -104,7 +103,7 @@ public without sharing class RD2_Schedule_SVC {
     }
 
     // TODO: Update schedule to reflect recurringDonation - W-036113 (Placeholder)
-    public RD2_Schedule_SVC updateSchedule(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdScheds) {
+    public RD2_ScheduleService updateSchedule(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdScheds) {
         return this;
     }
 
@@ -142,7 +141,7 @@ public without sharing class RD2_Schedule_SVC {
                   minSD :
                   Date.today();
 
-        if (rdSchedule.InstallmentPeriod__c == MONTHLY) {
+        if (rdSchedule.InstallmentPeriod__c == MONTHLY || rdSchedule.InstallmentPeriod__c == FIRST_AND_FIFTEENTH) {
             Integer lastDay = Date.daysInMonth(retDate.year(), retDate.month());
             retDate = Date.newInstance(retDate.year(), retDate.month(), rdSchedule.DayOfMonth__c == LAST_DAY_OF_MONTH ?
                                                                         lastDay :
@@ -161,25 +160,7 @@ public without sharing class RD2_Schedule_SVC {
     * @return Boolean
     */
     private Boolean isFirstAndFifteenth(npe03__Recurring_Donation__c rd) {
-        return rd.Day_of_Month__c == FIRST_AND_FIFTEENTH && rd.npe03__Installment_Period__c == MONTHLY;
-    }
-
-    /***
-    * @description Gets schedule day of month from recurring donation day of month
-    * @param rd Recurring Donation
-    * @return String
-    */
-    private String getDayOfMonth(npe03__Recurring_Donation__c rd) {
-        String retval = rd.Day_of_Month__c;
-
-        if (rd.Day_of_Month__c.isNumeric() && Integer.valueOf(rd.Day_of_Month__c) >= LAST_DAY_THRESHHOLD) {
-            retval = LAST_DAY_OF_MONTH;
-        }
-        else if (isFirstAndFifteenth(rd)) {
-            retval = FIRST;
-        }
-
-        return retval;
+        return rd.npe03__Installment_Period__c == FIRST_AND_FIFTEENTH;
     }
 
 }

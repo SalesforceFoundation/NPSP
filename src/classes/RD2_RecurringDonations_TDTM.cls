@@ -117,7 +117,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
             for (npe03__Recurring_Donation__c rd: rds) {
                 dmlActions.objectsToInsert.addAll(
-                    new RD2_Schedule_SVC()
+                    new RD2_ScheduleService()
                             .createSchedule(rd)
                             .getRDSchedulesToInsert()
                 );
