@@ -34,6 +34,22 @@
 * @description Controller extension for enhanced Recurring Donation enablement panel
 */
 public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
+    @TestVisible
+    private static final String DAY_OF_MONTH_LAST_DAY_PICKLIST_VALUE = 'Last_Day';
+
+    /***
+    * @description Returns Day of Month field picklist value
+    */
+    @TestVisible 
+    private static String dayOfMonthPicklistValue {
+        get {
+            if (dayOfMonthPicklistValue == null) {
+                dayOfMonthPicklistValue = DAY_OF_MONTH_LAST_DAY_PICKLIST_VALUE;
+            }
+            return dayOfMonthPicklistValue;
+        }
+        set;
+    }
 
     /***
     * @description A unique enhanced Recurring Donation enablement panel Id
@@ -52,6 +68,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     /***
     * @description Enablement service
     */
+    @TestVisible
     private static RD2_EnablementService service {
         get {
             if (service == null) {
@@ -75,7 +92,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @description Retrieves the current enablement state 
     * @return EnablementState
     */
-    public static EnablementState getEnablementState() {
+    @TestVisible
+    private static EnablementState getEnablementState() {
         EnablementState state = new EnablementState();
 
         try {
@@ -100,7 +118,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             }
 
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            throwAuraHandledException(e.getMessage());
         }
 
         return state;
@@ -116,6 +134,24 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         state.isConfirmed = true;
 
         saveEnablementState(state);
+    }
+
+    /***
+    * @description Tracks the enhanced Recurring Donation enablement user action
+    * @return void
+    */
+    @AuraEnabled
+    public static void enableEnhancement() {
+        try {
+            STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c = true;
+
+            if (!Test.isRunningTest()) {
+                upsert STG_Panel.stgService.stgRD;
+            }
+
+        } catch (Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
     }
 
     /***
@@ -137,7 +173,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     @AuraEnabled
     public static void confirmMetaDeploy() {        
         if (!isMetaDeployInstalled()) {
-            throw new AuraHandledException(System.Label.RD2_EnablementMetaDeployConfirmError);
+            throwAuraHandledException(System.Label.RD2_EnablementMetaDeployConfirmError);
         }
 
         EnablementState state = getEnablementState();
@@ -151,15 +187,13 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @return Boolean
     */
     private static Boolean isMetaDeployInstalled() {
-        final String lastDayPicklistValue = 'Last_Day';
-
         List<SelectOption> lastDayOfMonthOptions = UTIL_Describe.getSelectOptions(
             String.valueOf(npe03__Recurring_Donation__c.SObjectType), 
             SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c.Name
         );
 
-        for (SelectOption option: lastDayOfMonthOptions) {
-            if (option.getValue() == lastDayPicklistValue) {
+        for (SelectOption option : lastDayOfMonthOptions) {
+            if (option.getValue() == dayOfMonthPicklistValue) {
                 return true;
             }
         }
@@ -173,32 +207,31 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     private static void saveEnablementState(EnablementState state) {  
         try {
-            //do not save variables not being used from the saved enablement state   
+            //do not save variables obsolete in the saved enablement state   
             state.isReady = null;
             state.isEnabled = null;   
 
             //save the state
             STG_Panel.stgService.stgRD.RecurringDonations2EnablementState__c = JSON.serialize(state);
-            upsert STG_Panel.stgService.stgRD;
+            
+            if (!Test.isRunningTest()) {
+                upsert STG_Panel.stgService.stgRD;
+            }
 
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            throwAuraHandledException(e.getMessage());
         }
     }
 
     /***
-    * @description Tracks the enhanced Recurring Donation enablement user action
+    * @description Throws AuraHandledException
+    * @param errMessage
     * @return void
     */
-    @AuraEnabled
-    public static void enableEnhancement() {
-        try {
-            STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c = true;
-            upsert STG_Panel.stgService.stgRD;
-
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
+    private static void throwAuraHandledException(String errMessage) {
+        AuraHandledException e = new AuraHandledException(errMessage);
+        e.setMessage(errMessage);
+        throw e;
     }
 
     /***

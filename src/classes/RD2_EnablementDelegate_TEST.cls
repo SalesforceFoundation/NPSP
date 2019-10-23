@@ -37,5 +37,212 @@
 @isTest(IsParallel=true)
 public with sharing class RD2_EnablementDelegate_TEST {
 
+    /****
+    * @description Verifies enablement state values are not set by default 
+    */
+    @isTest
+    private static void shouldReturnDefaultEnablementStateWhenNotSetup() {             
+        setEnablementState(null);
+
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, new RD2_EnablementService_TEST.Stub()
+        );
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies enablement state isReady reflects enablement service 
+    * enhanced Recurring Donations ready status
+    */
+    @isTest
+    private static void shouldSetEnablementStateIsReady() {            
+        setEnablementState(null);
+
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, new RD2_EnablementService_TEST.Stub().withRecurringDonations2Ready()
+        );
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies enablement state isEnabled reflects enablement service 
+    * enhanced Recurring Donations enabled status
+    */
+    @isTest
+    private static void shouldSetEnablementStateIsEnabled() {            
+        setEnablementState(null);
+
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, new RD2_EnablementService_TEST.Stub().withRecurringDonations2Enabled()
+        );
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isEnabled = true;
+
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies user action to confirm enablement is saved
+    */
+    @isTest
+    private static void shouldConfirmEnablement() {    
+        setEnablementState(null);
+
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, new RD2_EnablementService_TEST.Stub().withRecurringDonations2Ready()
+        );
+
+        RD2_EnablementDelegate_CTRL.confirmEnablement();
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+        expectedState.isConfirmed = true;
+
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies user action to enable Recurring Donations
+    */
+    @isTest
+    private static void shouldEnableEnhancedRDs() {  
+        RD2_EnablementDelegate_CTRL.enableEnhancement();
+
+        System.assertEquals(true, STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c, 'Custom Settings field should be set');
+    }
+
+    /****
+    * @description Verifies user action to launch MetaDeploy is saved
+    */
+    @isTest
+    private static void shouldLaunchMetaDeploy() {  
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isConfirmed = true;
+        setEnablementState(JSON.serialize(expectedState));
+
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, 
+            new RD2_EnablementService_TEST.Stub()
+                .withRecurringDonations2Ready()
+                .withRecurringDonations2Enabled()
+        );
+
+        RD2_EnablementDelegate_CTRL.launchMetaDeploy();
+
+        expectedState.isReady = true;
+        expectedState.isEnabled = true;
+        expectedState.isMetaDeployLaunched = true;
+
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies user action to confirm MetaDeploy is saved
+    */
+    @isTest
+    private static void shouldConfirmMetaDeploy() {  
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isConfirmed = true;
+        expectedState.isMetaDeployLaunched = true;
+        setEnablementState(JSON.serialize(expectedState));
+
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, 
+            new RD2_EnablementService_TEST.Stub()
+                .withRecurringDonations2Ready()
+                .withRecurringDonations2Enabled()
+        );
+
+        RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
+
+        RD2_EnablementDelegate_CTRL.confirmMetaDeploy();
+
+        expectedState.isReady = true;
+        expectedState.isEnabled = true;
+        expectedState.isMetaDeployConfirmed = true;
+
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies user action to confirm MetaDeploy throws an exception when metadata is not installed
+    */
+    @isTest
+    private static void shouldThrowExceptionWhenMetaDeployIsConfirmedButNotInstalled() {  
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isConfirmed = true;
+        expectedState.isMetaDeployLaunched = true;
+        setEnablementState(JSON.serialize(expectedState));
+
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, 
+            new RD2_EnablementService_TEST.Stub()
+                .withRecurringDonations2Ready()
+                .withRecurringDonations2Enabled()
+        );
+
+        //mock value that does not exist but it is expected
+        RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '32';
+
+        Exception actualException;
+        try {
+            RD2_EnablementDelegate_CTRL.confirmMetaDeploy();
+        } catch (AuraHandledException e) {
+            actualException = e;
+        }
+
+        System.assertNotEquals(null, actualException, 'The exception should be thrown');
+        System.assertEquals(System.Label.RD2_EnablementMetaDeployConfirmError, actualException.getMessage(), 'The exception message should match');
+
+        expectedState.isReady = true;
+        expectedState.isEnabled = true;
+        expectedState.isMetaDeployConfirmed = false;
+
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+
+
+
+    // Helpers
+    ////////////////
+
+    /****
+    * @description Sets enablement state in the custom settings
+    * @param state
+    * @return void
+    */
+    private static void setEnablementState(String state) {                   
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                RecurringDonations2EnablementState__c = state,
+                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+            )
+        );
+    }
+
+    /****
+    * @description Asserts expected and actual enablement states values match
+    * @param expectedState Expected enablement state
+    * @param state Actual enablement state
+    * @return void
+    */
+    private static void assertEnablementState(RD2_EnablementDelegate_CTRL.EnablementState expectedState, RD2_EnablementDelegate_CTRL.EnablementState state) {             
+        System.assertEquals(expectedState.isReady, state.isReady, 'isReady should match');
+        System.assertEquals(expectedState.isConfirmed, state.isConfirmed, 'isConfirmed should match');
+        System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match');
+        System.assertEquals(expectedState.isMetaDeployLaunched, state.isMetaDeployLaunched, 'isMetaDeployLaunched should match');
+        System.assertEquals(expectedState.isMetaDeployConfirmed, state.isMetaDeployConfirmed, 'isMetaDeployConfirmed should match');
+        System.assertEquals(expectedState.isMigrationRun, state.isMigrationRun, 'isMigrationRun should match');
+    }
+
 
 }

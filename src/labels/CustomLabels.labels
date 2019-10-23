@@ -301,6 +301,14 @@
         <value>Expired</value>
     </labels>
     <labels>
+        <fullName>AlternativeTextNewWindow</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AlternativeTextNewWindow</shortDescription>
+        <value>Link opens in a new window</value>
+    </labels>
+    <labels>
         <fullName>AlternativeTextProgress</fullName>
         <categories>AlternativeText</categories>
         <language>en_US</language>

@@ -223,7 +223,8 @@
                                                     value="{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}" />
                                                 <lightning:icon iconName="utility:new_window"
                                                     aura:id="metadeploy-link-icon" size="xx-small"
-                                                    class="slds-button__icon_right" alternativeText="Utility image" />
+                                                    class="slds-button__icon_right"
+                                                    alternativeText="{!$Label.c.AlternativeTextNewWindow}" />
                                             </a>
                                         </lightning:layoutItem>
                                     </lightning:layout>

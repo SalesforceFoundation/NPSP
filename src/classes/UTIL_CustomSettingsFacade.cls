@@ -843,6 +843,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
         recurringDonationsSettings.EnableAutomaticNaming__c = settings.EnableAutomaticNaming__c;
         recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
+        recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 

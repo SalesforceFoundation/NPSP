@@ -1285,6 +1285,7 @@
         <members>AlternativeTextActive</members>
         <members>AlternativeTextComplete</members>
         <members>AlternativeTextError</members>
+        <members>AlternativeTextNewWindow</members>
         <members>AlternativeTextProgress</members>
         <members>AlternativeTextWarning</members>
         <members>CMT_DeleteConfirm</members>
