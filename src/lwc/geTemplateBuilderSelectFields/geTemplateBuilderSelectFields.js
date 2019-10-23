@@ -20,6 +20,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     @track fieldMappingSetComboboxOptions;
     @track objectMappings;
     _fieldMappingsForSelectedSet = [];
+    objectMappingNames = [];
+    @track isAllSectionsExpanded = false;
 
     @api
     getSections() {
@@ -94,6 +96,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     setObjectAndFieldMappings(objectMappings) {
         this.objectMappings = mutable(objectMappings);
         for (const objectMapping of this.objectMappings) {
+            this.objectMappingNames.push(objectMapping.DeveloperName);
             this._fieldMappingsForSelectedSet.push(...objectMapping.fieldMappingCheckboxes);
         }
     }
@@ -160,7 +163,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             sectionId = this._sectionIdsByFieldMappingDeveloperNames[fieldMappingDeveloperName];
             dispatch(this, 'removefieldfromsection', {
                 sectionId: sectionId,
-                fieldName: fieldMappingDeveloperName});
+                fieldName: fieldMappingDeveloperName
+            });
         } else {
             if (!this.formSections || this.formSections.length === 0) {
                 sectionId = this.handleAddSection();
@@ -335,15 +339,50 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         }
     }
 
-    // TODO: Need to finish or scrap the incomplete function below.
-    // Potentially not needed.
+    /*******************************************************************************
+    * @description Handles onsectiontoggle event handler of lightning-accordion.
+    * Sets the isAllSectionsExpanded property.
+    *
+    * @param {object} event: Event object from lightning-accordion onsectiontoggle
+    * event handler.
+    */
     handleSectionToggle(event) {
         const openSections = event.detail.openSections;
 
         if (openSections.length === 0) {
-            //console.log('All sections are closed');
-        } else {
-            //console.log('Open sections: ' + openSections.join(', '));
+            this.isAllSectionsExpanded = false;
+        } else if (openSections.length === this.objectMappingNames.length) {
+            this.isAllSectionsExpanded = true;
         }
+    }
+
+    /*******************************************************************************
+    * @description Handles onclick event handler of lightning-button.
+    * Toggles all sections open and sets the isAllSectionsExpanded property.
+    *
+    * @param {object} event: Event object from lightning-button onclick
+    * event handler.
+    */
+    handleExpandAllSections() {
+        const lightningAccordion = this.template.querySelector(
+            'lightning-accordion'
+        );
+        lightningAccordion.activeSectionName = [...this.objectMappingNames];
+        this.isAllSectionsExpanded = true;
+    }
+
+    /*******************************************************************************
+    * @description Handles onclick event handler of lightning-button.
+    * Toggles all sections closed and sets the isAllSectionsExpanded property.
+    *
+    * @param {object} event: Event object from lightning-button onclick
+    * event handler.
+    */
+    handleMinimizeAllSections() {
+        const lightningAccordion = this.template.querySelector(
+            'lightning-accordion'
+        );
+        lightningAccordion.activeSectionName = [];
+        this.isAllSectionsExpanded = false;
     }
 }
