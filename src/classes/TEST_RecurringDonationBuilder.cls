@@ -355,7 +355,29 @@ public without sharing class TEST_RecurringDonationBuilder {
         valuesByFieldName.put('npe03__Open_Ended_Status__c', status);
         return this;
     }
-    
+
+    /***
+    * @description Sets Installment Frequency to input integer
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withInstallmentFrequency(Integer frequency) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('InstallmentFrequency__c', frequency);
+        return this;
+    }
+
+    /***
+    * @description Sets Open Ended Status to None
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStartDate(Date sDate) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('StartDate__c', sDate);
+        return this;
+    }
+
 
     /***
     * @description Builds Recurring Donation sObject based on the provided values

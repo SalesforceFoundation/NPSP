@@ -40,11 +40,8 @@ public without sharing class RD2_ScheduleService {
     public static final String FIFTEENTH = '15';
     public static final String FIRST = '1';
     public static final String FIRST_AND_FIFTEENTH = '1st and 15th';
-    public static final String LAST_DAY_OF_MONTH = 'Last_Day';
-    public static final String MONTHLY = 'Monthly';
 
 
-    private List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
     private List<RecurringDonationSchedule__c> schedulesToInsert = new List<RecurringDonationSchedule__c>();
 
     /***
@@ -75,6 +72,7 @@ public without sharing class RD2_ScheduleService {
         rdsched.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
         rdsched.PaymentMethod__c = rd.PaymentMethod__c;
         rdsched.RecurringDonation__c = rd.Id;
+        rdsched.StartDate__c = rd.StartDate__c;
 
         if (!isFirstAndFifteenth(rd)) {
             rdsched.DayOfMonth__c = rd.Day_of_Month__c;
@@ -87,41 +85,7 @@ public without sharing class RD2_ScheduleService {
         }
         schedulesToInsert.add(rdsched);
 
-        for (RecurringDonationSchedule__c rds : schedulesToInsert) {
-            rds.StartDate__c = calculateStartDate(rds, rd);
-        }
-
         return this;
-    }
-
-    /***
-    * @description Calculates start date for a recurring donation schedule
-    * @param rdSchedule Recurring Donation schedule
-    * @param rd Recurring Donation schedule
-    * @return Date
-    */
-    private Date calculateStartDate(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
-        Date retDate;
-
-        Date minSD = rd.StartDate__c > rd.npe03__Date_Established__c ?
-                     rd.StartDate__c :
-                     rd.npe03__Date_Established__c;
-
-        retDate = minSD > Date.today() ?
-                  minSD :
-                  Date.today();
-
-        if (rdSchedule.InstallmentPeriod__c == MONTHLY || rdSchedule.InstallmentPeriod__c == FIRST_AND_FIFTEENTH) {
-            Integer lastDay = Date.daysInMonth(retDate.year(), retDate.month());
-            retDate = Date.newInstance(retDate.year(), retDate.month(), rdSchedule.DayOfMonth__c == LAST_DAY_OF_MONTH ?
-                                                                        lastDay :
-                                                                        Integer.valueOf(rdSchedule.DayOfMonth__c));
-            retDate = retDate >= Date.today() ?
-                      retDate :
-                      retDate.addMonths(1);
-        }
-
-        return retDate;
     }
 
     /***
