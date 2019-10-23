@@ -37,9 +37,9 @@
 
 public with sharing class BDI_ObjectWrapper {
 
-    public Data_Import_Object_Mapping__mdt objMapping;
-    public Data_Import_Object_Mapping__mdt predecessorObjMapping;
-    public Data_Import_Field_Mapping__mdt[] fieldMappings;
+    public BDI_ObjectMapping objMapping;
+    public BDI_ObjectMapping predecessorObjMapping;
+    public BDI_FieldMapping[] fieldMappings;
     public DataImport__c dataImport;
     public SObject sobj;
 
@@ -53,7 +53,7 @@ public with sharing class BDI_ObjectWrapper {
     * @param fieldMappings CMT records for field mappings from config
     * @param predessessorObjMapping CMT record of predessessor
     */
-    public BDI_ObjectWrapper(DataImport__c dataImport, Data_Import_Object_Mapping__mdt objMapping, Data_Import_Field_Mapping__mdt[] fieldMappings, Data_Import_Object_Mapping__mdt predecessorObjMapping) {
+    public BDI_ObjectWrapper(DataImport__c dataImport, BDI_ObjectMapping objMapping, BDI_FieldMapping[] fieldMappings, BDI_ObjectMapping predecessorObjMapping) {
         this.objMapping = objMapping;
         this.predecessorObjMapping = predecessorObjMapping;
         this.fieldMappings = fieldMappings;
@@ -71,7 +71,7 @@ public with sharing class BDI_ObjectWrapper {
     * @description Set error information on the DataImport__c
     */
     public void setImportedRecordStatusError(String errorMessage) {
-        String statusField = objMapping.Imported_Record_Status_Field_Name__c;
+        String statusField = objMapping.Imported_Record_Status_Field_Name;
         if (statusField != null && errorMessage != null) {
             dataImport.put(statusField, errorMessage.left(255));
         }

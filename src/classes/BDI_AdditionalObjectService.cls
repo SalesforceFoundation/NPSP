@@ -41,10 +41,10 @@ public with sharing class BDI_AdditionalObjectService {
     * @description the data import service we are invoked from
     */
     private BDI_DataImportService dataImportService;
-    private BDI_MappingServiceAdvanced fieldMappingCustomMetadata;
+    private BDI_MappingServiceAdvanced mappingServiceAdvanced;
 
-    private Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>> objMappingsByTier = new Map<Integer,Map<String,Data_Import_Object_Mapping__mdt>>();
-    private Map<String,Map<String,Data_Import_Object_Mapping__mdt>> successorObjMappingsByPredecessorName = new Map<String,Map<String,Data_Import_Object_Mapping__mdt>>();
+    private Map<Integer,Map<String,BDI_ObjectMapping>> objMappingsByTier = new Map<Integer,Map<String,BDI_ObjectMapping>>();
+    private Map<String,Map<String,BDI_ObjectMapping>> successorObjMappingsByPredecessorName = new Map<String,Map<String,BDI_ObjectMapping>>();
     private Set<String> importedRecordFieldNames = new Set<String>();
 
     public Set<String> objMappingDevNames = new Set<String>();
@@ -55,7 +55,7 @@ public with sharing class BDI_AdditionalObjectService {
     */
     public BDI_AdditionalObjectService(BDI_DataImportService dataImportService) {
         this.dataImportService = dataImportService;
-        this.fieldMappingCustomMetadata = BDI_MappingServiceAdvanced.getInstance();
+        this.mappingServiceAdvanced = BDI_MappingServiceAdvanced.getInstance();
     }
 
 
@@ -65,13 +65,13 @@ public with sharing class BDI_AdditionalObjectService {
     public void importAdditionalObjects(){
 
         generateTiersOfObjectMappings();
-        createSetOfImportedRecordFieldNames(fieldMappingCustomMetadata.objMappingsByDevName.values());
+        createSetOfImportedRecordFieldNames(mappingServiceAdvanced.objectMappingByDevName.values());
 
         //Iterate through the map of tiers, starting with the first tier that actually has a predecessor 
         //(ie 2nd tier), and validate and create each object as appropriate.
         for (Integer i = 1; i < objMappingsByTier.size(); i++) {
 
-            Map<String,Data_Import_Object_Mapping__mdt> currentTier = objMappingsByTier.get(i);
+            Map<String,BDI_ObjectMapping> currentTier = objMappingsByTier.get(i);
 
             DataImport__c[] disWithoutFailure = new DataImport__c[]{};
 
@@ -102,20 +102,20 @@ public with sharing class BDI_AdditionalObjectService {
     */
 
     private Map<String,BDI_ObjectWrapper[]> prepareObjectWrappers (
-        Map<String,Data_Import_Object_Mapping__mdt> currentTierOfObjMappings, 
+        Map<String,BDI_ObjectMapping> currentTierOfObjMappings, 
         DataImport__c[] dataImportRecords) {
 
         Map<String,BDI_ObjectWrapper[]> objAPINameToObjWraps = new Map<String,BDI_ObjectWrapper[]>();
 
         if (currentTierOfObjMappings != null) {
-            for (Data_Import_Object_Mapping__mdt objMapping : currentTierOfObjMappings.values()) {
+            for (BDI_ObjectMapping objMapping : currentTierOfObjMappings.values()) {
 
                 BDI_ObjectMappingLogic objMappingLogic = getObjectMappingLogicClass(objMapping);
 
-                Data_Import_Object_Mapping__mdt predecessor = 
-                    fieldMappingCustomMetadata.objMappingsByDevName.get(objMapping.Predecessor__c);
-                Data_Import_Field_Mapping__mdt[] fieldMappings = 
-                    fieldMappingCustomMetadata.fieldMappingsByObjMappingDevName.get(objMapping.DeveloperName);
+                BDI_ObjectMapping predecessor = 
+                    mappingServiceAdvanced.objectMappingByDevName.get(objMapping.Predecessor);
+                BDI_FieldMapping[] fieldMappings = 
+                    mappingServiceAdvanced.fieldMappingsByObjMappingDevName.get(objMapping.DeveloperName);
 
                 //Only proceed if at least one field mapping exists
                 if (fieldMappings != null && fieldMappings.size() > 0) {
@@ -127,11 +127,11 @@ public with sharing class BDI_AdditionalObjectService {
                             dataImport,objMapping,fieldMappings,predecessor);
 
                         //null out any existing value in the status field for this object mapping
-                        dataImport.put(objMapping.Imported_Record_Status_Field_Name__c,'');
+                        dataImport.put(objMapping.Imported_Record_Status_Field_Name,'');
 
                         //If the imported record field for the object is not populated then create a new SObject, 
                         //otherwise update existing.
-                        if (dataImport.get(objMapping.Imported_Record_Field_Name__c) == null) {
+                        if (dataImport.get(objMapping.Imported_Record_Field_Name) == null) {
 
                             //If there are no fields populated or required fields are not populated for this object 
                             //mapping then ignore this dataImport and continue.
@@ -149,7 +149,7 @@ public with sharing class BDI_AdditionalObjectService {
 
                             //If there is an existing record then we don't need to perform the normal validation 
                             // and can proceed to populating the record with any non-null values.
-                            objWrap.existingSObjectId = (Id)dataImport.get(objMapping.Imported_Record_Field_Name__c);
+                            objWrap.existingSObjectId = (Id)dataImport.get(objMapping.Imported_Record_Field_Name);
 
                         }
 
@@ -165,10 +165,10 @@ public with sharing class BDI_AdditionalObjectService {
                             // SObject type to upsert. They are grouped by object api name so that we only need to 
                             // do one upsert per object per tier.
                             if (objWrap.sObj != null) {
-                                if (objAPINameToObjWraps.get(objMapping.Object_API_Name__c) != null) {
-                                    objAPINameToObjWraps.get(objMapping.Object_API_Name__c).add(objWrap);
+                                if (objAPINameToObjWraps.get(objMapping.Object_API_Name) != null) {
+                                    objAPINameToObjWraps.get(objMapping.Object_API_Name).add(objWrap);
                                 } else {
-                                    objAPINameToObjWraps.put(objMapping.Object_API_Name__c,
+                                    objAPINameToObjWraps.put(objMapping.Object_API_Name,
                                         new BDI_ObjectWrapper[]{objWrap});
                                 }
                             }
@@ -263,7 +263,7 @@ public with sharing class BDI_AdditionalObjectService {
                         BDI_ObjectWrapper objWrap = objWrapsForUpdate[t];
 
                         if (result.isSuccess()) {
-                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name__c,
+                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name,
                                 System.label.bdiUpdated);
                         } else {
                             logError(objWrap, result.getErrors()[0].getMessage());
@@ -289,14 +289,14 @@ public with sharing class BDI_AdditionalObjectService {
                         BDI_ObjectWrapper objWrap = objWrapsForInsert[t];
 
                         if (result.isSuccess()) {
-                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name__c,
+                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name,
                                 System.Label.bdiCreated);
-                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Field_Name__c,
+                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Field_Name,
                                 objWrap.sObj.Id);
 
                             // If the newly created sobject is a parent to its predecesssor, then
                             // add it to a list for updating child predcessors.
-                            if (objWrap.objMapping.Relationship_To_Predecessor__c == 'Parent') { 
+                            if (objWrap.objMapping.Relationship_To_Predecessor == 'Parent') { 
                                 objWrapsForChildPredecessorUpdate.add(objWrap);
                             }
                         } else {
@@ -318,12 +318,12 @@ public with sharing class BDI_AdditionalObjectService {
     * mapping class.
     * @param objMapping The Data Import Object Mapping to look for a custom mapping logic class on.
     */
-    private BDI_ObjectMappingLogic getObjectMappingLogicClass (Data_Import_Object_Mapping__mdt objMapping) {
+    private BDI_ObjectMappingLogic getObjectMappingLogicClass (BDI_ObjectMapping objMapping) {
         BDI_ObjectMappingLogic objMappingLogicClass;
 
-        if (objMapping.Custom_Mapping_Logic_Class__c != null) {
+        if (objMapping.Custom_Mapping_Logic_Class != null) {
             Type custLogicClassType = Type.forName(
-                UTIL_Namespace.alignClassNSWithEnvironment(objMapping.Custom_Mapping_Logic_Class__c));
+                UTIL_Namespace.alignClassNSWithEnvironment(objMapping.Custom_Mapping_Logic_Class));
             objMappingLogicClass = (BDI_ObjectMappingLogic)custLogicClassType.newInstance();
         } else {
             objMappingLogicClass = new BDI_ObjectMappingLogic();
@@ -345,13 +345,13 @@ public with sharing class BDI_AdditionalObjectService {
 
         for (BDI_ObjectWrapper objWrap : objWrapsForChildPredecessorUpdate) {
 
-            Id predecessorId = (Id)objWrap.dataImport.get(objWrap.predecessorObjMapping.Imported_Record_Field_Name__c);
+            Id predecessorId = (Id)objWrap.dataImport.get(objWrap.predecessorObjMapping.Imported_Record_Field_Name);
             SObject sObjForUpdate;
 
             Map<Id,SObject> sObjectById = new Map<Id,SObject>();
 
-            if (childSObjectMapByObjectAPIName.get(objWrap.predecessorObjMapping.Object_API_Name__c) != null) {
-                sObjectById = childSObjectMapByObjectAPIName.get(objWrap.predecessorObjMapping.Object_API_Name__c);
+            if (childSObjectMapByObjectAPIName.get(objWrap.predecessorObjMapping.Object_API_Name) != null) {
+                sObjectById = childSObjectMapByObjectAPIName.get(objWrap.predecessorObjMapping.Object_API_Name);
             }
 
             // Attempt to find if the predecessor sobject if it is already in the map for update and update 
@@ -359,18 +359,18 @@ public with sharing class BDI_AdditionalObjectService {
             if (sObjectById.size() > 0 && sObjectById.get(predecessorId) != null) {
                 sObjForUpdate = sObjectById.get(predecessorId);
             } else {
-                sObjForUpdate = UTIL_Describe.getPrototypeObject(objWrap.predecessorObjMapping.Object_API_Name__c);
+                sObjForUpdate = UTIL_Describe.getPrototypeObject(objWrap.predecessorObjMapping.Object_API_Name);
             }
 
             // Set the id of the sobject to the predecessors record id
             sObjForUpdate.put('Id',predecessorId);
 
             // Place the Id of the newly created SObject into the appropriate relationship field on the child.
-            sObjForUpdate.put(objWrap.objMapping.Relationship_Field__c,objWrap.sObj.Id);
+            sObjForUpdate.put(objWrap.objMapping.Relationship_Field,objWrap.sObj.Id);
 
             // Put the SObject back into the enclosing maps.
             sObjectById.put(predecessorId, sObjForUpdate);
-            childSObjectMapByObjectAPIName.put(objWrap.predecessorObjMapping.Object_API_Name__c,sObjectById);
+            childSObjectMapByObjectAPIName.put(objWrap.predecessorObjMapping.Object_API_Name,sObjectById);
 
             // Store the successor object wraps by their predecessor id for later use in recording errors.
             if (successorObjWrapsByPredecessorId.get(predecessorId) != null) {
@@ -437,9 +437,9 @@ public with sharing class BDI_AdditionalObjectService {
     * @param predecessor The Data Import Object Mapping for which the imported field can be checked to see 
     *  if it exists.
     */
-    private Boolean predecessorExists(BDI_ObjectWrapper objWrap, Data_Import_Object_Mapping__mdt predecessor){
+    private Boolean predecessorExists(BDI_ObjectWrapper objWrap, BDI_ObjectMapping predecessor){
         Boolean result = true;
-        if (objWrap.dataImport.get(predecessor.Imported_Record_Field_Name__c) == null) {
+        if (objWrap.dataImport.get(predecessor.Imported_Record_Field_Name) == null) {
             result = false;
             String error = String.format(
                 System.Label.bdiAdditionalObjPredNotFound,
@@ -467,10 +467,10 @@ public with sharing class BDI_AdditionalObjectService {
         // First determine if there is at least one field populated that was not automatically populated by 
         // the import of another object. This is done to ensure that the user actually intended to attempt 
         // the creation of this object.
-        for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
+        for (BDI_FieldMapping fieldMapping : objWrap.fieldMappings) {
 
-            if (!importedRecordFieldNames.contains(fieldMapping.Source_Field_API_Name__c.toLowerCase())
-                && objWrap.dataImport.get(fieldMapping.Source_Field_API_Name__c) != null) {        
+            if (!importedRecordFieldNames.contains(fieldMapping.Source_Field_API_Name.toLowerCase())
+                && objWrap.dataImport.get(fieldMapping.Source_Field_API_Name) != null) {        
                 anyNonImportedRecordFieldsPopulated = true;
             }
         }
@@ -479,14 +479,14 @@ public with sharing class BDI_AdditionalObjectService {
         // user is trying to create the object and continue with record validation.
         if (anyNonImportedRecordFieldsPopulated) {
 
-            for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
+            for (BDI_FieldMapping fieldMapping : objWrap.fieldMappings) {
 
-                if (objWrap.dataImport.get(fieldMapping.Source_Field_API_Name__c) == null) {
+                if (objWrap.dataImport.get(fieldMapping.Source_Field_API_Name) == null) {
 
-                    if (fieldMapping.Required__c == 'Yes') {
+                    if (fieldMapping.Required == 'Yes') {
 
                         allRequiredFieldsPopulated = false;
-                        requiredFieldErrorMsg += fieldMapping.Source_Field_API_Name__c + '; ';
+                        requiredFieldErrorMsg += fieldMapping.Source_Field_API_Name + '; ';
                     }
                 }
             }
@@ -514,30 +514,30 @@ public with sharing class BDI_AdditionalObjectService {
     */
     public void generateTiersOfObjectMappings() {
 
-        if (fieldMappingCustomMetadata.objMappingsByDevName != null 
-            && fieldMappingCustomMetadata.objMappingsByDevName.size() > 0) {
+        if (mappingServiceAdvanced.objectMappingByDevName != null 
+            && mappingServiceAdvanced.objectMappingByDevName.size() > 0) {
 
             // Creates a map of predecessor dev name to successor and also identifies 
         // the base level objects with no predecessor defined.
-            for (Data_Import_Object_Mapping__mdt objMapping : fieldMappingCustomMetadata.objMappingsByDevName.values()) {
+            for (BDI_ObjectMapping objMapping : mappingServiceAdvanced.objectMappingByDevName.values()) {
 
-                if (objMapping.Predecessor__c != null && objMapping.Relationship_Field__c != null 
-            && objMapping.Relationship_To_Predecessor__c != null) {
+                if (objMapping.Predecessor != null && objMapping.Relationship_Field != null 
+            && objMapping.Relationship_To_Predecessor != null) {
 
                     objMappingDevNames.add(objMapping.DeveloperName);
 
-                    if (successorObjMappingsByPredecessorName.get(objMapping.Predecessor__c) != null) {
-                        successorObjMappingsByPredecessorName.get(objMapping.Predecessor__c).put(objMapping.DeveloperName,objMapping);
+                    if (successorObjMappingsByPredecessorName.get(objMapping.Predecessor) != null) {
+                        successorObjMappingsByPredecessorName.get(objMapping.Predecessor).put(objMapping.DeveloperName,objMapping);
                     } else {
-                        successorObjMappingsByPredecessorName.put(objMapping.Predecessor__c,
-                            new Map<String,Data_Import_Object_Mapping__mdt>{objMapping.DeveloperName => objMapping});
+                        successorObjMappingsByPredecessorName.put(objMapping.Predecessor,
+                            new Map<String,BDI_ObjectMapping>{objMapping.DeveloperName => objMapping});
                     }
                 } else {
 
                     if (objMappingsByTier.get(0) != null) {
                         objMappingsByTier.get(0).put(objMapping.DeveloperName,objMapping);
                     } else {
-                        objMappingsByTier.put(0,new Map<String,Data_Import_Object_Mapping__mdt>{
+                        objMappingsByTier.put(0,new Map<String,BDI_ObjectMapping>{
                             objMapping.DeveloperName => objMapping
                         });
                     }
@@ -547,10 +547,10 @@ public with sharing class BDI_AdditionalObjectService {
             //Iterates through the tier list and builds out each tier starting with the objects with no predecessor.
             for (Integer i = 0; i < objMappingsByTier.size(); i++) {
 
-                Map<String,Data_Import_Object_Mapping__mdt> currentTier = 
-                    new Map<String,Data_Import_Object_Mapping__mdt>();
-                Map<String,Data_Import_Object_Mapping__mdt> nextTier = 
-                    new Map<String,Data_Import_Object_Mapping__mdt>();
+                Map<String,BDI_ObjectMapping> currentTier = 
+                    new Map<String,BDI_ObjectMapping>();
+                Map<String,BDI_ObjectMapping> nextTier = 
+                    new Map<String,BDI_ObjectMapping>();
 
                 if (objMappingsByTier.get(i) != null) {
                     currentTier = objMappingsByTier.get(i);
@@ -576,13 +576,13 @@ public with sharing class BDI_AdditionalObjectService {
     *  for use in field validation.
     * @param objMappings the Data Import Object Mappings that the set should be built from.
     */
-    private Set<String> createSetOfImportedRecordFieldNames(Data_Import_Object_Mapping__mdt[] objMappings) {
+    private Set<String> createSetOfImportedRecordFieldNames(BDI_ObjectMapping[] objMappings) {
         importedRecordFieldNames = new Set<String>();
 
-        for (Data_Import_Object_Mapping__mdt objMapping : objMappings) {
+        for (BDI_ObjectMapping objMapping : objMappings) {
 
-            if (objMapping.Imported_Record_Field_Name__c != null) {
-                importedRecordFieldNames.add(objMapping.Imported_Record_Field_Name__c.toLowerCase());
+            if (objMapping.Imported_Record_Field_Name != null) {
+                importedRecordFieldNames.add(objMapping.Imported_Record_Field_Name.toLowerCase());
             }
             
         }
@@ -634,9 +634,9 @@ public with sharing class BDI_AdditionalObjectService {
             String errorMessage) {
 
         String errorMessageToAppend;
-        if (objectWrapper.objMapping.Imported_Record_Status_Field_Name__c != null) {
+        if (objectWrapper.objMapping.Imported_Record_Status_Field_Name != null) {
 
-            String importedRecordStatusField = objectWrapper.objMapping.Imported_Record_Status_Field_Name__c;
+            String importedRecordStatusField = objectWrapper.objMapping.Imported_Record_Status_Field_Name;
 
             String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
                     DataImport__c.SObjectType.getDescribe().getName(),

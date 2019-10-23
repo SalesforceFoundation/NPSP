@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Wrapper class to hold data related to the field mapping 
 */
-public with sharing class BDI_FieldMapping {
+public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public String DeveloperName;
     @AuraEnabled public String MasterLabel;
     @AuraEnabled public String Source_Field_Label;
@@ -45,35 +45,49 @@ public with sharing class BDI_FieldMapping {
     @AuraEnabled public String Target_Field_Data_Type;
     @AuraEnabled public String Data_Import_Field_Mapping_Set;
     @AuraEnabled public String Target_Object_Mapping_Dev_Name;
+    @AuraEnabled public String Target_Object_API_Name;
     @AuraEnabled public String Required;
     @AuraEnabled public Boolean Is_Deleted;
     @AuraEnabled public String Source_Field_Display_Type_Label;
     @AuraEnabled public String Target_Field_Display_Type_Label;
 
+    public BDI_FieldMapping() {
+
+    }
+
     public BDI_FieldMapping(Data_Import_Field_Mapping__mdt fieldMapping) {
         String dataImport = SobjectType.DataImport__c.Name;
-        String objectAPIName = fieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
-        String sourceFieldAPIName = fieldMapping.Source_Field_API_Name__c;
-        String targetFieldAPIName = fieldMapping.Target_Field_API_Name__c;
+
+        this.Target_Object_API_Name = fieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
+        this.Source_Field_API_Name = fieldMapping.Source_Field_API_Name__c;
+        this.Target_Field_API_Name = fieldMapping.Target_Field_API_Name__c;
+
+        // Removing the npsp namespace since the code is not currently packaged.
+        if (UTIL_Namespace.shouldAlignNamespace) {
+            this.Target_Object_API_Name = 
+                UTIL_Namespace.alignSchemaNSWithEnvironment(this.Target_Object_API_Name);
+            this.Source_Field_API_Name = 
+                UTIL_Namespace.alignSchemaNSWithEnvironment(this.Source_Field_API_Name);
+            this.Target_Field_API_Name =
+                 UTIL_Namespace.alignSchemaNSWithEnvironment(this.Target_Field_API_Name);
+        }
 
         Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
             dataImport,
-            sourceFieldAPIName);
+            this.Source_Field_API_Name);
 
         Schema.DescribeFieldResult targetFieldDescribe = UTIL_Describe.getFieldDescribe(
-            objectAPIName,
-            targetFieldAPIName);
+            this.Target_Object_API_Name,
+            this.Target_Field_API_Name);
 
         this.DeveloperName = fieldMapping.DeveloperName;
         this.MasterLabel = fieldMapping.MasterLabel;
 
         this.Source_Field_Label = sourceFieldDescribe.label;
-        this.Source_Field_API_Name = fieldMapping.Source_Field_API_Name__c;
         this.Source_Field_Data_Type = String.valueOf(sourceFieldDescribe.type);
         this.Source_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Source_Field_Data_Type);
 
         this.Target_Field_Label = targetFieldDescribe.label;
-        this.Target_Field_API_Name = fieldMapping.Target_Field_API_Name__c;
         this.Target_Field_Data_Type = String.valueOf(targetFieldDescribe.type);
         this.Target_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Target_Field_Data_Type);
 
