@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
             "c/bdiFieldMappingModal": [
@@ -23,11 +24,29 @@
             "c/geTemplateBuilderFormField": [
                 "geTemplateBuilderFormField/geTemplateBuilderFormField.js"
             ],
+            "c/geTemplateBuilderFormLayout": [
+                "geTemplateBuilderFormLayout/geTemplateBuilderFormLayout.js"
+            ],
+            "c/geTemplateBuilderFormSection": [
+                "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
+            ],
+            "c/geTemplateBuilderSelectFields": [
+                "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
+            ],
             "c/geTemplateBuilderTemplateInfo": [
                 "geTemplateBuilderTemplateInfo/geTemplateBuilderTemplateInfo.js"
             ],
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
+            ],
+            "c/utilIllustration": [
+                "utilIllustration/utilIllustration.js"
+            ],
+            "c/utilModal": [
+                "utilModal/utilModal.js"
+            ],
+            "c/utilPageHeader": [
+                "utilPageHeader/utilPageHeader.js"
             ],
             "c/utilPlatformEventListener": [
                 "utilPlatformEventListener/utilPlatformEventListener.js"
@@ -38,37 +57,10 @@
             "c/utilStencil": [
                 "utilStencil/utilStencil.js"
             ],
-            "c/geTemplateBuilderFormLayout": [
-                "geTemplateBuilderFormLayout/geTemplateBuilderFormLayout.js"
-            ],
             "c/utilTemplateBuilder": [
                 "utilTemplateBuilder/utilTemplateBuilder.js"
-            ],
-            "c/geTemplateBuilderFormSection": [
-                "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
-            ],
-            "c/utilPageHeader": [
-                "utilPageHeader/utilPageHeader.js"
-            ],
-<<<<<<< Updated upstream
-            "c/utilDockedFormFooter": [
-                "utilDockedFormFooter/utilDockedFormFooter.js"
-            ],
-            "c/geTemplateBuilderSelectFields": [
-                "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
-            ],
-            "c/utilIllustration": [
-                "utilIllustration/utilIllustration.js"
-=======
-            "c/utilModal": [
-                "utilModal/utilModal.js"
-            ],
-            "c/modal": [
-                "modal/modal.js"
->>>>>>> Stashed changes
             ]
-        },
-        "experimentalDecorators": true
+        }
     },
     "include": [
         "**/*",
