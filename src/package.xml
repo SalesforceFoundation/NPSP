@@ -1283,12 +1283,11 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
-        <members>AlternativeTextActive</members>
-        <members>AlternativeTextComplete</members>
-        <members>AlternativeTextError</members>
-        <members>AlternativeTextNewWindow</members>
-        <members>AlternativeTextProgress</members>
-        <members>AlternativeTextWarning</members>
+        <members>AssistiveTextActive</members>
+        <members>AssistiveTextComplete</members>
+        <members>AssistiveTextError</members>
+        <members>AssistiveTextNewWindow</members>
+        <members>AssistiveTextWarning</members>
         <members>CMT_DeleteConfirm</members>
         <members>CMT_FilterGroupActiveRollupsHelpText</members>
         <members>CMT_FilterGroupDeleteError</members>
@@ -1422,6 +1421,7 @@
         <members>PageMessagesInfo</members>
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
+        <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementEnableConfirm</members>

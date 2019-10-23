@@ -156,7 +156,7 @@
                         </ol>
                         <div aria-valuemin="0" aria-valuemax="100" aria-valuenow="{!v.state.enableProgress}"
                             role="progressbar">
-                            <span class="slds-assistive-text">{!$Label.c.AlternativeTextProgress + ': ' +
+                            <span class="slds-assistive-text">{!$Label.c.ProgressMarkerAssistiveTextProgress + ' ' +
                                 v.state.enableProgress + '%'}</span>
                         </div>
                         <lightning:layout>
@@ -224,7 +224,7 @@
                                                 <lightning:icon iconName="utility:new_window"
                                                     aura:id="metadeploy-link-icon" size="xx-small"
                                                     class="slds-button__icon_right"
-                                                    alternativeText="{!$Label.c.AlternativeTextNewWindow}" />
+                                                    alternativeText="{!$Label.c.AssistiveTextNewWindow}" />
                                             </a>
                                         </lightning:layoutItem>
                                     </lightning:layout>
@@ -262,7 +262,7 @@
                         </ol>
                         <div aria-valuemin="0" aria-valuemax="100" aria-valuenow="{!v.state.metaDeployProgress}"
                             role="progressbar">
-                            <span class="slds-assistive-text">{!$Label.c.AlternativeTextProgress + ': ' +
+                            <span class="slds-assistive-text">{!$Label.c.ProgressMarkerAssistiveTextProgress + ' ' +
                                 v.state.metaDeployProgress + '%'}</span>
                         </div>
                     </div>

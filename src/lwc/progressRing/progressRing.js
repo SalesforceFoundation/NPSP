@@ -1,9 +1,9 @@
 import { LightningElement, api, track } from 'lwc';
 
-import textActive from '@salesforce/label/c.AlternativeTextActive';
-import textComplete from '@salesforce/label/c.AlternativeTextComplete';
-import textError from '@salesforce/label/c.AlternativeTextError';
-import textWarning from '@salesforce/label/c.AlternativeTextWarning';
+import textActive from '@salesforce/label/c.AssistiveTextActive';
+import textComplete from '@salesforce/label/c.AssistiveTextComplete';
+import textError from '@salesforce/label/c.AssistiveTextError';
+import textWarning from '@salesforce/label/c.AssistiveTextWarning';
 
 export default class ProgressRing extends LightningElement {
 
@@ -14,7 +14,7 @@ export default class ProgressRing extends LightningElement {
     @track isContentVisible = false;
     @track isComplete = false;
     @track iconName = '';
-    @track alternativeText = '';
+    @track assistiveText = '';
 
     @api
     get valueNow() {
@@ -50,28 +50,28 @@ export default class ProgressRing extends LightningElement {
         this.ringClass = 'slds-progress-ring slds-progress-ring_large';
         this.isComplete = false;
         this.iconName = '';
-        this.alternativeText = value;
+        this.assistiveText = value;
 
         switch (value) {
             case 'warning':
                 this.ringClass += ' slds-progress-ring_warning';
                 this.iconName = 'utility:warning';
-                this.alternativeText = `${textWarning}`;
+                this.assistiveText = `${textWarning}`;
                 break;
             case 'error':
                 this.ringClass += ' slds-progress-ring_expired';
                 this.iconName = 'utility:error';
-                this.alternativeText = `${textError}`;
+                this.assistiveText = `${textError}`;
                 break;
             case 'active':
                 this.ringClass += ' slds-progress-ring_active-step';
-                this.alternativeText = `${textActive}`;
+                this.assistiveText = `${textActive}`;
                 break;
             case 'complete':
                 this.ringClass += ' slds-progress-ring_complete';
                 this.isComplete = true;
                 this.iconName = 'utility:check';
-                this.alternativeText = `${textComplete}`;
+                this.assistiveText = `${textComplete}`;
                 break;
             default:
                 this.ringClass = 'slds-progress-ring slds-progress-ring_large';

@@ -51,17 +51,17 @@
 
         <aura:if isTrue="{!v.isError}">
             <lightning:icon iconName="utility:error" class="slds-icon-text-default" size="x-small"
-                alternativeText="{!$Label.c.AlternativeTextError}" variant="error" />
+                alternativeText="{!$Label.c.AssistiveTextError}" variant="error" />
 
             <aura:set attribute="else">
 
                 <aura:if isTrue="{!v.isComplete}">
                     <lightning:icon iconName="utility:success" class="slds-icon-text-default" size="x-small"
-                        alternativeText="{!$Label.c.AlternativeTextComplete}" />
+                        alternativeText="{!$Label.c.AssistiveTextComplete}" />
 
                     <aura:set attribute="else">
                         <aura:if isTrue="{!and(v.isPreviousComplete, not(v.isNextComplete))}">
-                            <span class="slds-assistive-text">{!$Label.c.AlternativeTextActive}</span>
+                            <span class="slds-assistive-text">{!$Label.c.AssistiveTextActive}</span>
                         </aura:if>
                     </aura:set>
                 </aura:if>

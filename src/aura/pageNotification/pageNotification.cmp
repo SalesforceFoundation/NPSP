@@ -49,7 +49,7 @@
         <div class="{!'slds-scoped-notification slds-media slds-media_center ' + if(equals(v.theme, 'light'), 'slds-scoped-notification_light', 'slds-theme_warning')}"
             role="alert">
             <div class="slds-media__figure slds-text-align_center">
-                <lightning:icon iconName="utility:warning" alternativeText="{!$Label.c.AlternativeTextWarning}"
+                <lightning:icon iconName="utility:warning" alternativeText="{!$Label.c.AssistiveTextWarning}"
                     size="{!v.size}" variant="warning" />
             </div>
             <div class="slds-media__body">
@@ -62,7 +62,7 @@
         <div class="{!'slds-scoped-notification slds-media slds-media_center ' + if(equals(v.theme, 'light'), '', 'slds-theme_error')}"
             role="alert">
             <div class="slds-media__figure slds-text-align_center">
-                <lightning:icon iconName="utility:error" alternativeText="{!$Label.c.AlternativeTextError}"
+                <lightning:icon iconName="utility:error" alternativeText="{!$Label.c.AssistiveTextError}"
                     size="{!v.size}" variant="{!if(equals(v.theme, 'light'), 'error', 'inverse')}" />
             </div>
             <div class="{!'slds-media__body ' + if(equals(v.theme, 'light'), ' errorFont', '')}">

@@ -34,17 +34,15 @@
 * @description Controller extension for enhanced Recurring Donation enablement panel
 */
 public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
-    @TestVisible
-    private static final String DAY_OF_MONTH_LAST_DAY_PICKLIST_VALUE = 'Last_Day';
 
     /***
-    * @description Returns Day of Month field picklist value
+    * @description Returns Day of Month field picklist value specific to enhanced Recurring Donations
     */
     @TestVisible 
     private static String dayOfMonthPicklistValue {
         get {
             if (dayOfMonthPicklistValue == null) {
-                dayOfMonthPicklistValue = DAY_OF_MONTH_LAST_DAY_PICKLIST_VALUE;
+                dayOfMonthPicklistValue = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
             }
             return dayOfMonthPicklistValue;
         }
