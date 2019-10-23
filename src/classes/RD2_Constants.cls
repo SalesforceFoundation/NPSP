@@ -37,45 +37,35 @@
 public class RD2_Constants {
 
     /** 
-     * @description Api Values of the npe03_RecurringDonation.Installment_Frequency__c picklist
-     * To support spaces in the api name of the FirstAndFifteenth option, this is configured
-     * as a class with public string properties rather than an Enum.
-     * String still start with a capital letter to be consistent in usage
-     */
-    public class Schedule {
-        public static final String Monthly = 'Monthly';
-        public static final String Weekly = 'Weekly';
-        public static final String Yearly = 'Yearly';
-        public static final String FirstAndFifteenth = '1st and 15th'; 
-    }
+    * @description Api Values of the npe03_RecurringDonation.Installment_Frequency__c picklist
+    */
+    public static final String SCHEDULE_Monthly = 'Monthly';
+    public static final String SCHEDULE_Weekly = 'Weekly';
+    public static final String SCHEDULE_Yearly = 'Yearly';
+    public static final String SCHEDULE_FirstAndFifteenth = '1st and 15th'; 
 
     /** 
-     * @description Api Values of the npe03_RecurringDonation.Day_Of_Month__c picklist
-     * To support a numeric value in the api name of the options, this is configured
-     * as a class with public string properties rather than an Enum.
-     * String still start with a capital letter to be consistent in usage
-     */
-   public class DayOfMonth {
-        public static final String First = '1';
-        public static final String Fifteenth = '15';
-        public static final String LastDay = 'Last_Day';
-    }
+    * @description Api Values of the npe03_RecurringDonation.Day_Of_Month__c picklist
+    */
+    public static final String DAYOFMONTH_First = '1';
+    public static final String DAYOFMONTH_Fifteenth = '15';
+    public static final String DAYOFMONTH_LastDay = 'Last_Day';
 
     /** 
-     * @description Api Values of the npe03_RecurringDonation.Status__c picklist
-     */
-    public enum Status {
-        Active,
-        Lapsed,
-        Closed
-    }
+    * @description Api Values of the npe03_RecurringDonation.Status__c picklist
+    */
+    public static final String STATUS_Active = 'Active';
+    public static final String STATUS_Lapsed = 'Lapsed';
+    public static final String STATUS_Closed = 'Closed';
 
     /** 
-     * @description Api Values of the npe03__RecurringDonation.RecurringType__c picklist
-     */
-    public enum Type {
-        Open
-    }
+    * @description Api Values of the npe03__RecurringDonation.RecurringType__c picklist
+    */
+    public static final String RDTYPE_Open = 'Open';
 
+    /** 
+    * @description The default batch size for the migration job if it's not specified
+    * in custom settings
+    */
     public static final Integer DEFAULT_MIGRATION_JOB_BATCH_SIZE = 200;
 }
