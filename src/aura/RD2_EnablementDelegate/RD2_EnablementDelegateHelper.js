@@ -103,9 +103,6 @@
             if (state === 'SUCCESS') {
                 component.set('v.state.isMetaDeployLaunched', true);
 
-                let url = 'https://metadeploy.herokuapp.com/products/npsp/RD2-enablement/npsp-rd2-pilot';
-                window.open(url, '_blank');
-
             } else if (state === 'ERROR') {
                 this.handleError(component, response.getError(), '2');
             }
@@ -185,6 +182,15 @@
             metaDeployProgress = 50;
         }
         component.set('v.state.metaDeployProgress', metaDeployProgress);
+
+        let linkIcon = component.find('metadeploy-link-icon');
+        if (enablementState.isEnabled) {
+            this.enableEdit(component, "metadeploy-link");
+            $A.util.addClass(linkIcon, "activeIcon");
+        } else {
+            this.disableEdit(component, "metadeploy-link");
+            $A.util.removeClass(linkIcon, "activeIcon");
+        }
     },
     /****
     * @description Hides component's element

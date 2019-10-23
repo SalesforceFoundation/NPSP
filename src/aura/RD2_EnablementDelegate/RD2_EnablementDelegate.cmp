@@ -79,7 +79,7 @@
         </lightning:layoutItem>
 
         <lightning:layoutItem padding="horizontal-small" class="slds-p-top_large" size="12">
-            <lightning:card class="page-section" aura:id="enablement">
+            <lightning:card class="pageSection" aura:id="enablement">
 
                 <aura:set attribute="title">
                     <c:progressRing ringContent="1" valueNow="{!v.state.enableProgress}"
@@ -180,7 +180,7 @@
 
 
         <lightning:layoutItem padding="horizontal-small" size="12">
-            <lightning:card class="page-section" aura:id="metadeploy">
+            <lightning:card class="pageSection" aura:id="metadeploy">
 
                 <aura:set attribute="title">
                     <c:progressRing ringContent="2" valueNow="{!v.state.metaDeployProgress}"
@@ -214,13 +214,15 @@
                                         </lightning:layoutItem>
 
                                         <lightning:layoutItem size="2" class="slds-grid slds-grid_align-end">
-                                            <lightning:button variant="base" aura:id="metadeploy-link"
-                                                class="linkButton"
-                                                label="{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}"
-                                                iconName="utility:new_window" iconPosition="right"
-                                                onclick="{!c.handleMetaDeployLaunch}"
-                                                disabled="{! !v.state.isEnabled }">
-                                            </lightning:button>
+                                            <a href="https://metadeploy.herokuapp.com/products/npsp/RD2-enablement/npsp-rd2-pilot"
+                                                aura:id="metadeploy-link" onclick="{!c.handleMetaDeployLaunch}"
+                                                target=" _blank">
+                                                <lightning:formattedText
+                                                    value="{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}" />
+                                                <lightning:icon iconName="utility:new_window"
+                                                    aura:id="metadeploy-link-icon" size="xx-small"
+                                                    class="slds-button__icon_right" alternativeText="Utility image" />
+                                            </a>
                                         </lightning:layoutItem>
                                     </lightning:layout>
                                 </div>
@@ -274,7 +276,7 @@
         </lightning:layoutItem>
 
         <lightning:layoutItem padding="horizontal-small" size="12">
-            <lightning:card class="page-section" aura:id="migration">
+            <lightning:card class="pageSection" aura:id="migration">
 
                 <aura:set attribute="title">
                     <c:progressRing ringContent="3" valueNow="{!if(v.state.isMigrationRun, '100', '0')}"
