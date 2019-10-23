@@ -1,21 +1,16 @@
 import {LightningElement, api, track} from 'lwc';
-import { getInputTypeFromDataType } from 'c/geFormService';
+import GeFormService from 'c/geFormService';
 
-const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
+const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL', 'PERCENT'];
 const RICH_TEXT_TYPE = 'RICHTEXT';
-const LOOKUP_TYPE = 'LOOKUP';
+const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
 const DELAY = 300;
 
 export default class GeFormField extends LightningElement {
     @track value;
-    @track inputType;
     @api element;
     changeTimeout;
-
-    connectedCallback() {
-        this.inputType = getInputTypeFromDataType(this.element.dataType);
-    }
 
     handleValueChange(event) {
         this.value = event.target.value;
@@ -28,19 +23,31 @@ export default class GeFormField extends LightningElement {
         }, DELAY);
     }
 
+    get inputType() {
+        return GeFormService.getInputTypeFromDataType(this.element.dataType);
+    }
+
+    get fieldInfo() {
+        return GeFormService.getFieldInfo(this.element.value);
+    }
+
+    get fieldType() {
+        return this.fieldInfo.Target_Field_Data_Type;
+    }
+
     get isLightningInput() {
-        return LIGHTNING_INPUT_TYPES.indexOf(this.element.dataType) !== -1;
+        return LIGHTNING_INPUT_TYPES.indexOf(this.fieldType) !== -1;
     }
 
     get isRichText() {
-        return this.element.dataType === RICH_TEXT_TYPE;
+        return this.fieldType === RICH_TEXT_TYPE;
     }
 
     get isLookup() {
-        return this.element.dataType === LOOKUP_TYPE;
+        return this.fieldType === LOOKUP_TYPE;
     }
 
     get isPicklist() {
-        return this.element.dataType === PICKLIST_TYPE;
+        return this.fieldType === PICKLIST_TYPE;
     }
 }
