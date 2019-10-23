@@ -61,13 +61,13 @@ public without sharing class RD2_ScheduleService {
 
         RecurringDonationSchedule__c rdsched = new RecurringDonationSchedule__c();
 
+        rdsched.RecurringDonation__c = rd.Id;
         rdsched.Campaign__c = rd.npe03__Recurring_Donation_Campaign__c;
 
         /* TODO: For fixed length recurring donations we may need to calculate this
         rdsched.EndDate__c = ??
          */
 
-        rdsched.RecurringDonation__c = rd.Id;
         rdsched.InstallmentAmount__c = rd.npe03__Installment_Amount__c;
         rdsched.InstallmentFrequency__c = rd.InstallmentFrequency__c;
         rdsched.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
@@ -76,12 +76,14 @@ public without sharing class RD2_ScheduleService {
 
         if (!isFirstAndFifteenth(rd)) {
             rdsched.DayOfMonth__c = rd.Day_of_Month__c;
+
         } else {
             rdsched.DayOfMonth__c = FIRST;
             schedulesToInsert.add(rdsched);
             rdsched = rdsched.clone();
             rdsched.DayOfMonth__c = FIFTEENTH;
         }
+
         schedulesToInsert.add(rdsched);
 
         return this;
