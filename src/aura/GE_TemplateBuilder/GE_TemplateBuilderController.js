@@ -22,7 +22,7 @@
         );
     },
 
-    handleSectionModalEvent : function(component, event, helper) {
+    handleSectionModalEvent: function (component, event, helper) {
         const sectionBeingEdited = component.get('v.sectionBeingEdited');
 
         if (sectionBeingEdited.action === 'delete' || sectionBeingEdited.action === 'save') {
