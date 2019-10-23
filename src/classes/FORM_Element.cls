@@ -50,6 +50,7 @@ public with sharing class FORM_Element {
     @AuraEnabled public Boolean allowDefaultValue;
     @AuraEnabled public String sectionId;
     @AuraEnabled public String defaultValue;
+    @AuraEnabled public String dataType;
     /* END */
 
     //Constructor for form field
