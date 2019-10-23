@@ -1332,7 +1332,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The job can only be executed when Enhanced RD is enabled in the org</shortDescription>
-        <value>The Enhanced Recurring Donations Data Migration job can only be executed when Enhanced Recurring Donations is enabled in the org.</value>
+        <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations Data Migration job.</value>
     </labels>
     <labels>
         <fullName>REL_Create_New_Relationship</fullName>

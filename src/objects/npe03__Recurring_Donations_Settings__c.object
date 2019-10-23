@@ -3,9 +3,9 @@
     <fields>
         <fullName>DataMigrationBatchSize__c</fullName>
         <defaultValue>200</defaultValue>
-        <description>The number of records to process at a time when migrating existing Recurring Donation records to Enhanced Recurring Donations format.</description>
+        <description>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The number of records to process at a time when migrating existing Recurring Donation records to Enhanced Recurring Donations format.</inlineHelpText>
+        <inlineHelpText>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</inlineHelpText>
         <label>Enhanced RD Data Migration Batch Size</label>
         <precision>4</precision>
         <required>false</required>
