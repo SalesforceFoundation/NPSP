@@ -31,39 +31,39 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Constants related to specific picklist values and other
+* @description Enhanced Recurring Donations constants for specific picklist values and logic
 *
 */
-public class RD2_Constants {
+public inherited sharing class RD2_Constants {
 
-    /** 
+    /**
     * @description Api Values of the npe03_RecurringDonation.Installment_Frequency__c picklist
     */
-    public static final String SCHEDULE_Monthly = 'Monthly';
-    public static final String SCHEDULE_Weekly = 'Weekly';
-    public static final String SCHEDULE_Yearly = 'Yearly';
-    public static final String SCHEDULE_FirstAndFifteenth = '1st and 15th'; 
+    public static final String FREQUENCY_MONTHLY = 'Monthly';
+    public static final String FREQUENCY_WEEKLY = 'Weekly';
+    public static final String FREQUENCY_YEARLY = 'Yearly';
+    public static final String FREQUENCY_FIRST_AND_FIFTEENTH = '1st and 15th';
 
-    /** 
+    /**
     * @description Api Values of the npe03_RecurringDonation.Day_Of_Month__c picklist
     */
-    public static final String DAYOFMONTH_First = '1';
-    public static final String DAYOFMONTH_Fifteenth = '15';
-    public static final String DAYOFMONTH_LastDay = 'Last_Day';
+    public static final String DAY_OF_MONTH_FIRST = '1';
+    public static final String DAY_OF_MONTH_FIFTEENTH = '15';
+    public static final String DAY_OF_MONTH_LAST_DAY = 'Last_Day';
 
-    /** 
+    /**
     * @description Api Values of the npe03_RecurringDonation.Status__c picklist
     */
-    public static final String STATUS_Active = 'Active';
-    public static final String STATUS_Lapsed = 'Lapsed';
-    public static final String STATUS_Closed = 'Closed';
+    public static final String STATUS_ACTIVE = 'Active';
+    public static final String STATUS_LAPSED = 'Lapsed';
+    public static final String STATUS_CLOSED = 'Closed';
 
-    /** 
+    /**
     * @description Api Values of the npe03__RecurringDonation.RecurringType__c picklist
     */
-    public static final String RDTYPE_Open = 'Open';
+    public static final String RECURRING_TYPE_OPEN = 'Open';
 
-    /** 
+    /**
     * @description The default batch size for the migration job if it's not specified
     * in custom settings
     */
