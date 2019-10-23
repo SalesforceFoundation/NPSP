@@ -115,7 +115,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     private void handleRDSchedules(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            createNewSchedulesAfterRDInsert(rds);
+            buildNewSchedules(rds);
         }
     }
 
@@ -123,7 +123,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @description Handles schedule creation after insert of recurring donation
     * @param rds Trigger.new records
     */
-    private void createNewSchedulesAfterRDInsert(List<npe03__Recurring_Donation__c> rds) {
+    private void buildNewSchedules(List<npe03__Recurring_Donation__c> rds) {
 
         for (npe03__Recurring_Donation__c rd: rds) {
             dmlActions.objectsToInsert.addAll(

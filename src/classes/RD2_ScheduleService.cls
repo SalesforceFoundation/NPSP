@@ -67,17 +67,16 @@ public without sharing class RD2_ScheduleService {
         rdsched.EndDate__c = ??
          */
 
+        rdsched.RecurringDonation__c = rd.Id;
         rdsched.InstallmentAmount__c = rd.npe03__Installment_Amount__c;
         rdsched.InstallmentFrequency__c = rd.InstallmentFrequency__c;
         rdsched.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
         rdsched.PaymentMethod__c = rd.PaymentMethod__c;
-        rdsched.RecurringDonation__c = rd.Id;
         rdsched.StartDate__c = rd.StartDate__c;
 
         if (!isFirstAndFifteenth(rd)) {
             rdsched.DayOfMonth__c = rd.Day_of_Month__c;
-        }
-        else {
+        } else {
             rdsched.DayOfMonth__c = FIRST;
             schedulesToInsert.add(rdsched);
             rdsched = rdsched.clone();
