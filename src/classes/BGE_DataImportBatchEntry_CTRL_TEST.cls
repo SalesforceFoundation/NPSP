@@ -449,18 +449,13 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         //Create a stub of BDI_FieldMappingCustomMetadata, to mock the scenario where some
         //active/selected fields on the Batch have no mapping.
         BDIFieldMappingMock mock = new BDIFieldMappingMock();
-        mock.mapField(DataImport__c.Donation_Description__c, Opportunity.SObjectType,
-                Opportunity.Description);
-        mock.mapField(DataImport__c.Payment_Method__c, npe01__OppPayment__c.SObjectType,
-                npe01__OppPayment__c.npe01__Payment_Method__c);
-
         BDI_FieldMappingCustomMetadata stub = (BDI_FieldMappingCustomMetadata) Test.createStub(
                 BDI_FieldMappingCustomMetadata.class,
                 mock
         );
         BDI_FieldMappingCustomMetadata.setInstance(stub);
 
-        givenActiveFieldIsUnmappedWhenLoadedThenColumnNotIncludedOnBGEForm();
+        givenActiveFieldIsUnmappedWhenLoadedThenColumnNotIncludedOnBGEForm(mock);
     }
 
     @isTest
@@ -472,33 +467,29 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         //Create a stub of BDI_FieldMappingHelpText, to mock the scenario where some
         //active/selected fields on the Batch have no mapping.
         BDIFieldMappingMock mock = new BDIFieldMappingMock();
-        mock.mapField(DataImport__c.Donation_Description__c, Opportunity.SObjectType,
-                Opportunity.Description);
-        mock.mapField(DataImport__c.Payment_Method__c, npe01__OppPayment__c.SObjectType,
-                npe01__OppPayment__c.npe01__Payment_Method__c);
-
         BDI_FieldMappingHelpText stub = (BDI_FieldMappingHelpText) Test.createStub(
                 BDI_FieldMappingHelpText.class,
                 mock
         );
         BDI_FieldMappingHelpText.setInstance(stub);
 
-        givenActiveFieldIsUnmappedWhenLoadedThenColumnNotIncludedOnBGEForm();
+        givenActiveFieldIsUnmappedWhenLoadedThenColumnNotIncludedOnBGEForm(mock);
     }
 
-    static void givenActiveFieldIsUnmappedWhenLoadedThenColumnNotIncludedOnBGEForm() {
+    static void givenActiveFieldIsUnmappedWhenLoadedThenColumnNotIncludedOnBGEForm(
+            BDIFieldMappingMock mockInstance
+    ) {
         //Set Active Fields on a Batch, some with mappings and some without
-        List<SObjectField> activeFieldsUnmapped = new List<SObjectField>{
+        List<SObjectField> unmappedFields = new List<SObjectField>{
                 DataImport__c.Donation_Amount__c,
                 DataImport__c.Payment_Check_Reference_Number__c
         };
-        List<SObjectField> activeFieldsMapped = new List<SObjectField>{
-                DataImport__c.Donation_Description__c,
-                DataImport__c.Payment_Method__c
-        };
+        List<SObjectField> mappedFields = new List<SObjectField>(
+                mockInstance.mappedFields
+        );
         List<SObjectField> activeFields = new List<SObjectField>();
-        activeFields.addAll(activeFieldsUnmapped);
-        activeFields.addAll(activeFieldsMapped);
+        activeFields.addAll(unmappedFields);
+        activeFields.addAll(mappedFields);
 
         DataImportBatch__c batch = new DataImportBatch__c(
                 Name = 'Test Batch 1',
@@ -517,12 +508,12 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         for (BGE_DataImportBatchEntry_CTRL.Column column : dataImportModel.columns) {
             columnFieldNames.add(column.fieldName);
         }
-        for (SObjectField sObjectField : activeFieldsUnmapped) {
+        for (SObjectField sObjectField : unmappedFields) {
             System.assert(!columnFieldNames.contains(sObjectField.getDescribe().getName()),
                     'Fields that do not have field mappings configured should not be ' +
                             'displayed on the Batch Gift Entry form.');
         }
-        for (SObjectField sObjectField : activeFieldsMapped) {
+        for (SObjectField sObjectField : mappedFields) {
             System.assert(columnFieldNames.contains(sObjectField.getDescribe().getName()),
                     'Fields that have field mappings configured should be ' +
                             'displayed on the Batch Gift Entry form.');
@@ -543,17 +534,33 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
      * fields are mapped.
      */
     private class BDIFieldMappingMock implements StubProvider {
-
         private Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = new
                 Map<SObjectField, BDI_TargetFields>();
+        public Set<SObjectField> mappedFields {
+            get {
+                return targetFieldsBySourceField.keySet();
+            }
+        }
+
+        public BDIFieldMappingMock() {
+            mapDefaultFields();
+        }
+
+        private void mapDefaultFields() {
+            mapField(DataImport__c.Donation_Description__c, Opportunity.SObjectType,
+                    Opportunity.Description);
+            mapField(DataImport__c.Payment_Method__c, npe01__OppPayment__c.SObjectType,
+                    npe01__OppPayment__c.npe01__Payment_Method__c);
+        }
+
         @TestVisible
-        private void mapField(SObjectField sourceField, SObjectType targeObjectType,
+        private void mapField(SObjectField sourceField, SObjectType targetObjectType,
                 SObjectField targetField) {
             BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceField);
             if (targetFields == null) {
                 targetFields = new BDI_TargetFields();
             }
-            targetFields.addTargetField(targeObjectType, targetField);
+            targetFields.addTargetField(targetObjectType, targetField);
             targetFieldsBySourceField.put(sourceField, targetFields);
         }
 
