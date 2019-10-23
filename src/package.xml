@@ -675,6 +675,7 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
+        <members>GE_ModalProxy</members>
         <members>GE_TemplateBuilder</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
@@ -700,7 +701,6 @@
         <members>modalFooter</members>
         <members>modalHeader</members>
         <members>svg</members>
-        <members>tempModalProxy</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -3025,7 +3025,6 @@
         <members>geTemplateBuilderSelectFields</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>pubsubNoPageRef</members>
-        <members>utilDockedFormFooter</members>
         <members>utilIllustration</members>
         <members>utilModal</members>
         <members>utilPageHeader</members>

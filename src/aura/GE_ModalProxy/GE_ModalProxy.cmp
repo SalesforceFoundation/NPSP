@@ -1,5 +1,5 @@
 <aura:component>
-    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib" />
     <aura:attribute name="sectionBeingEdited"
                     type="Object" />
 
