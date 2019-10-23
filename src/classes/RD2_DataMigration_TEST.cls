@@ -39,14 +39,14 @@ private class RD2_DataMigration_TEST {
 
     /**
      * @description Verifies that the job should run with zero records processed when
-     * RD2 is not enabled
+     * Enhanced Recurringn Donations is not enabled
      */
     @IsTest
     private static void shouldLaunchBatchJobWithNothingProcessed() {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
-        npe03__Recurring_Donation__c rd = getNewRecurringDonationRD1Format(contact.Id);
+        npe03__Recurring_Donation__c rd = getNewRecurringDonationLegacyFormat(contact.Id);
         rd.Id = null;
         insert rd;
 
@@ -60,21 +60,21 @@ private class RD2_DataMigration_TEST {
             jobException = ex;
         }
 
-        System.assert(jobException != null, 'The batch job did not throw an exception');
+        System.assertNotEquals(null, jobException, 'The batch job did not throw an exception');
         System.assert(jobException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorDataMigrationJobCannotBeRun),
-            'The exception message did not contain the expected text');
+            'The exception message should match ' + System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
     }
 
     /**
      * @description Verifies that the batch job ran with one record processed when
-     * RD2 is enabled
+     * Enhanced Recurring Donations is enabled
      */
     @IsTest
     private static void shouldLaunchBatchJobWithOneRecordProcessed() {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
-        npe03__Recurring_Donation__c rd = getNewRecurringDonationRD1Format(contact.Id);
+        npe03__Recurring_Donation__c rd = getNewRecurringDonationLegacyFormat(contact.Id);
         rd.Id = null;
         insert rd;
 
@@ -96,51 +96,49 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies that an RD1 format RD is recognized correctly
+     * @description Verifies that an Legacy format RD is recognized correctly
      */
     @IsTest
-    private static void shouldRecognizeAsRd1Format() {
+    private static void shouldRecognizeAsLegacyFormat() {
         Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         Id acctId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
-        npe03__Recurring_Donation__c rd = getNewRecurringDonationRD1Format(contactId);
+        npe03__Recurring_Donation__c rd = getNewRecurringDonationLegacyFormat(contactId);
         Opportunity opp = getOpportunityForRd(acctId, rd.Id);
         List<Opportunity> mockedRelatedOpps = new List<Opportunity>{ opp };
 
-        RD2_DataMigration migrationService = new RD2_DataMigration()
-            .withRecurringDonation(rd)
+        RD2_DataMigrationMapper migrationService = new RD2_DataMigrationMapper(rd)
             .withRelatedOpportunities(mockedRelatedOpps);
 
-        System.assertEquals(false, migrationService.hasAlreadyBeenConverted(),
-            'This RD should not be in RD2 format');
+        System.assertEquals(false, migrationService.isConverted(),
+            'This RD should not be in Enhanced format');
     }
 
     /**
-     * @description Verifies that an RD2 format RD is recognized correctly
+     * @description Verifies that an Enhanced Recurring Donations format RD is recognized correctly
      */
     @IsTest
-    private static void shouldRecognizeAsRd2Format() {
+    private static void shouldRecognizeAsEnhancedFormat() {
         Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         Id acctId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
-        npe03__Recurring_Donation__c rd = getNewRecurringDonationRD2Format(contactId);
+        npe03__Recurring_Donation__c rd = getNewRecurringDonationEnhancedFormat(contactId);
         Opportunity opp = getOpportunityForRd(acctId, rd.Id);
         List<Opportunity> mockedRelatedOpps = new List<Opportunity>{ opp };
 
-        RD2_DataMigration migrationService = new RD2_DataMigration()
-            .withRecurringDonation(rd)
+        RD2_DataMigrationMapper migrationService = new RD2_DataMigrationMapper(rd)
             .withRelatedOpportunities(mockedRelatedOpps);
 
-        System.assertEquals(true, migrationService.hasAlreadyBeenConverted(),
-            'This RD should be in RD2 format');
+        System.assertEquals(true, migrationService.isConverted(),
+            'This RD should be in Enhanced RD format');
     }
 
     // HELPER METHODS
 
     /**
-     * @description Instantiate an RD1 format recurring donation for a specific ContactId
+     * @description Instantiate an Legacy format recurring donation for a specific ContactId
      * @param contactId
      * @return Instantiated RD
      */
-    private static npe03__Recurring_Donation__c getNewRecurringDonationRD1Format(Id contactId) {
+    private static npe03__Recurring_Donation__c getNewRecurringDonationLegacyFormat(Id contactId) {
         TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withMockId()
             .withDefaultValues()
@@ -154,11 +152,11 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Instantiate an RD2 format recurring donation for a specific ContactId
+     * @description Instantiate an Enhanced RD format recurring donation for a specific ContactId
      * @param contactId
      * @return Instantiated RD
      */
-    private static npe03__Recurring_Donation__c getNewRecurringDonationRD2Format(Id contactId) {
+    private static npe03__Recurring_Donation__c getNewRecurringDonationEnhancedFormat(Id contactId) {
         TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withMockId()
             .withDefaultValues()

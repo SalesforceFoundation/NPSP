@@ -31,15 +31,15 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Data Migration Job to convert RD1 format records to RD2
+* @description Data Migration batch job used to convert Recurring Donation Records from
+* Legacy (RD1) to Enhanced Recurring Donation (RD2) format
 *
 */
 public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
 
     private Boolean dryRunMode = false;
 
-    private List<npe03__Recurring_Donation__c> rdsToUpdate = new List<npe03__Recurring_Donation__c>();
-    private List<Opportunity> oppsToMarksForDeletion = new List<Opportunity>();
+    private List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
     private List<RecurringDonationSchedule__c> rdSchedules = new List<RecurringDonationSchedule__c>();
 
     /**
@@ -72,11 +72,11 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
     /**
     * @description Batch Start Method
     */
-    public Database.QueryLocator start(Database.BatchableContext BC) {
+    public Database.QueryLocator start(Database.BatchableContext context) {
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             return Database.getQueryLocator(getRDMigrationQuery());
         } else {
-            throw new Rd2DataMigrationException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
+            throw new MigrationException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
         }
     }
 
@@ -84,12 +84,12 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
     * @description Batch Execute Method
     */
     public void execute(Database.BatchableContext BC, List<npe03__Recurring_Donation__c> scope) {
-        Map<Id, List<Opportunity>> relatedOppsByRD = getRelatedOpportunities(scope);
+        Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(scope);
 
         Savepoint sp = Database.setSavepoint();
 
         for (npe03__Recurring_Donation__c rd : scope) {
-            handleConversion(rd, relatedOppsByRD.get(rd.Id));
+            handleConversion(rd, oppsByRdId.get(rd.Id));
         }
 
         handleDmlAndLogging(sp);
@@ -98,7 +98,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
     /**
     * @description Batch Finish Method
     */
-    public void finish(Database.BatchableContext BC) {
+    public void finish(Database.BatchableContext context) {
     }
 
     /**
@@ -107,17 +107,17 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
     * @param opps All Related Opportunities for this RD
     */
     private void handleConversion(npe03__Recurring_Donation__c rd, List<Opportunity> opps) {
-        RD2_DataMigration migration = new RD2_DataMigration()
-            .withRecurringDonation(rd)
+        RD2_DataMigrationMapper migration = new RD2_DataMigrationMapper(rd)
             .withRelatedOpportunities(opps);
 
-        npe03__Recurring_Donation__c updatedRd = migration.convertToRD2Format();
+        npe03__Recurring_Donation__c convertedRD = migration.convertToEnhancedRD();
 
-        if (updatedRd != null) {
-            rdsToUpdate.add(updatedRd);
+        if (convertedRD != null) {
+            convertedRDs.add(convertedRD);
 
-            oppsToMarksForDeletion.addAll(migration.updateOpportunities());
             rdSchedules.addAll(migration.getScheduleRecords());
+
+            // TODO Opportunity Updates
         }
         // TODO Retrieve any validation errors that blocked the conversion
     }
@@ -128,11 +128,10 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
     */
     private void handleDmlAndLogging(Savepoint sp) {
         // TODO Rewrite this to capture and log dml exceptions in a new logging service
-        Database.update(rdsToUpdate, false);
+        Database.update(convertedRDs, false);
 
         // TODO If there is an error updating an RD, do not insert the schedule or update Opps for that RD
         Database.insert(rdSchedules, false);
-        Database.update(oppsToMarksForDeletion, false);
 
         if (this.dryRunMode) {
             Database.rollback(sp);
@@ -214,5 +213,5 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
         return oppsByRdId;
     }
 
-    private class Rd2DataMigrationException extends Exception { }
+    private class MigrationException extends Exception { }
 }

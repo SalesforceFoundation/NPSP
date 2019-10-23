@@ -31,26 +31,25 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Data Migration Job to convert RD1 format records to RD2
+* @description Mapper used to convert legacy Recurring Donations to enhanced Recurring Donations.
 *
 */
-public class RD2_DataMigration {
+public class RD2_DataMigrationMapper {
 
     private npe03__Recurring_Donation__c rd;
     private List<Opportunity> opps;
 
     /**
-     * @description Builder method with the Recurring Donation to be converted to RD2 format
+     * @description Constructor
      */
-    public RD2_DataMigration withRecurringDonation(npe03__Recurring_Donation__c rd) {
+    public RD2_DataMigrationMapper(npe03__Recurring_Donation__c rd) {
         this.rd = rd;
-        return this;
     }
 
     /**
-     * @description Builder method with the collection of all related opportunities for this RD
+     * @description Adds related Opportunities to the mapper
      */
-    public RD2_DataMigration withRelatedOpportunities(List<Opportunity> opps) {
+    public RD2_DataMigrationMapper withRelatedOpportunities(List<Opportunity> opps) {
         this.opps = opps;
         return this;
     }
@@ -60,18 +59,8 @@ public class RD2_DataMigration {
      * on the record as required.
      * @return The updated record (or null if there is an exception?)
      */
-    public npe03__Recurring_Donation__c convertToRD2Format() {
-        return null;
-    }
-
-    /**
-     * @description Update Opportunities associated with this RD as required - For Pilot-1 this
-     * involves marking (somehow) the record as "to be deleted".
-     * TODO How will this work?
-     * @return List<Opportunity> Opps to be updated
-     */
-    public List<Opportunity> updateOpportunities() {
-        return new List<Opportunity>();
+    public npe03__Recurring_Donation__c convertToEnhancedRD() {
+        return rd;
     }
 
     /**
@@ -86,7 +75,7 @@ public class RD2_DataMigration {
      * @description Returns true if the RD record is already in RD2 format
      */
     @TestVisible
-    private Boolean hasAlreadyBeenConverted() {
+    private Boolean isConverted() {
         return rd.Status__c != null;
     }
 }
