@@ -675,6 +675,7 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
+        <members>GE_TemplateBuilder</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -696,7 +697,6 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
-        <members>geTemplateBuilderPlaceholder</members>
         <members>modalFooter</members>
         <members>modalHeader</members>
         <members>svg</members>

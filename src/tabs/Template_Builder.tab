@@ -2,5 +2,5 @@
 <CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
     <label>Template Builder</label>
     <motif>Custom41: Stack of Cash</motif>
-    <auraComponent>geTemplateBuilderPlaceholder</auraComponent>
+    <auraComponent>GE_TemplateBuilder</auraComponent>
 </CustomTab>
