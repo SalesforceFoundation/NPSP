@@ -1,46 +1,36 @@
 import { LightningElement, track, api } from 'lwc';
-import getFieldMappingSets from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingSetNames';
+//import getFieldMappingSets from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingSetNames';
 import getFieldAndObjectMappingsByFieldMappingSetName
     from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldAndObjectMappingsByFieldMappingSetName';
-import { FormSection, FormField, showToast, removeByProperty, findIndexByProperty, shiftToIndex, mutable, generateId } from 'c/utilTemplateBuilder';
+import { FormSection, FormField, findIndexByProperty, mutable, generateId, dispatch } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderSelectFields extends LightningElement {
     @track isLoading = true;
     @track selectedFieldMappingSet;
 
-    /* Public setter for the tracked property selectedFieldMappingSet
-    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     @api
     set selectedFieldMappingSet(selectedFieldMappingSet) {
         this.selectedFieldMappingSet = selectedFieldMappingSet;
     }
 
-    @track formSections = [];
-    /* Public setter for the tracked property formSections
-    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
-    @api
-    set formSections(formSections) {
-        this.formSections = formSections;
-    }
+    @api formSections;
 
-    @track activeFormSectionId;
+    @api activeFormSectionId;
     @track _sectionIdsByFieldMappingDeveloperNames = {};
     @track fieldMappingSetComboboxOptions;
-    _fieldMappingSets;
     @track objectMappings;
     _fieldMappingsForSelectedSet = [];
 
     @api
-    getTabData() {
-        const formLayoutComponent = this.template.querySelector('c-ge-template-builder-form-layout');
-        const formLayout = formLayoutComponent.getFormLayout();
-        return formLayout;
-    }
+    getSections() {
+        const formSectionComponents = this.template.querySelectorAll('c-ge-template-builder-form-section');
+        let formSections = [];
+        for (let i = 0; i < formSectionComponents.length; i++) {
+            let formSection = formSectionComponents[i].getFormSectionValues();
+            formSections.push(formSection);
+        }
 
-    @api
-    updateSection(section) {
-        console.log('********updateSection');
-        this.template.querySelector('c-ge-template-builder-form-layout').updateSection(section);
+        return formSections;
     }
 
     toggleModal(event) {
@@ -55,84 +45,42 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Container function for grouping various async functions.
+    * @description Method pulls the object and field mappings.
     */
     init = async () => {
-        console.log('init');
-        this.selectedFieldMappingSet = 'Migrated_Custom_Field_Mapping_Set';
         this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
             fieldMappingSetName: this.selectedFieldMappingSet
         });
 
-        // TODO: Enable when end users are able to create custom field mapping sets
-        //this._fieldMappingSets = await getFieldMappingSets();
-        //this.fieldMappingSetComboboxOptions = await this.getComboboxOptionsForFieldMappingSets(this._fieldMappingSets);
+        this.loadObjectAndFieldMappingSets();
 
-        // TODO: Need to finish or scrap lines between START and END comments
-        /* START */
-        /* tbd on this retrieve stuff :) */
-        // This section between START and END are directly tied to the button "Test Retrieve Form Template"
-        const weAreRetrievingAnExistingTemplate = this.selectedFieldMappingSet;
+        this.isLoading = false;
+    }
 
-        if (weAreRetrievingAnExistingTemplate) {
-            console.log('retrieving existing template');
-            this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
-                fieldMappingSetName: this.selectedFieldMappingSet
-            });
+    /*******************************************************************************
+    * @description Method determines whether or not we're pulling an existing
+    * template, populates the UI with the appropriate object and field mappings,
+    * and toggles field mapping checkboxes.
+    */
+    loadObjectAndFieldMappingSets() {
+        const isExistingTemplate = this.selectedFieldMappingSet;
+
+        if (isExistingTemplate) {
             this.setObjectAndFieldMappings(this.objectMappings);
 
             if (this.formSections) {
                 for (let i = 0; i < this.formSections.length; i++) {
                     const formSection = this.formSections[i];
-                    formSection.elements.forEach(element => { this.catalogSelectedField(element.value, formSection.id) });
+                    formSection.elements.forEach(element => {
+                        this.catalogSelectedField(element.value, formSection.id)
+                    });
                 }
                 this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
             }
         } else {
-            console.log('new template');
             this.setObjectAndFieldMappings(this.objectMappings);
         }
-        /* END */
-
-        this.isLoading = false;
     }
-
-    /*******************************************************************************
-    * @description Convert fieldMappingSets to usable picklist options for the
-    * lightning-combobox component.
-    *
-    * @param {object} fieldMappingSets: List of field mapping sets.
-    */
-    getComboboxOptionsForFieldMappingSets = async (fieldMappingSets) => {
-        let options = [];
-
-        fieldMappingSets.forEach(fieldMappingSet => {
-            let option = {
-                label: fieldMappingSet.MasterLabel,
-                value: fieldMappingSet.DeveloperName
-            }
-            options.push(option);
-        });
-
-        return options;
-    }
-
-    // TODO: Enable when end users are able to create custom field mapping sets
-    /*******************************************************************************
-    * @description Handles the onchange event for the field mapping set 
-    * lightning-combobox.
-    *
-    * @param {object} event: Onchange event from the lightning-combobox component.
-    */
-    /*handleChangeFieldMappingSet = async (event) => {
-        this.isLoading = true;
-        this.selectedFieldMappingSet = event.target.value;
-        this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
-            fieldMappingSetName: this.selectedFieldMappingSet
-        });
-        this.setObjectAndFieldMappings(this.objectMappings);
-        this.isLoading = false;
-    }*/
 
     /*******************************************************************************
     * @description Takes object mapping wrappers and sets them to a mutable property.
@@ -156,13 +104,14 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     *
     * @param {object} event: Onclick event object from lightning-button-icon
     */
+    @api
     handleDeleteFormSection(event) {
         const formSectionId = event.detail;
 
         let formSections = mutable(this.formSections);
-        let formSection = formSections.find(fs => fs.id == formSectionId);
+        let formSection = formSections.find(fs => fs.id === formSectionId);
 
-        if (formSection.id == this.activeFormSectionId) {
+        if (formSection.id === this.activeFormSectionId) {
             this.activeFormSectionId = undefined;
         }
 
@@ -179,21 +128,21 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         formSections.splice(formSectionIndex, 1);
 
         if (formSections.length === 1) {
-            this.activeFormSectionId = formSections[0].id;
+            dispatch(this, 'handleChangeActiveSection', formSections[0].id);
         }
 
-        this.formSections = formSections;
+        dispatch(this, 'refreshformsections', formSections);
     }
 
     /*******************************************************************************
-    * @description Handles the active section event from the child component
-    * geTemplateBuilderFormLayout and sets the activeFormSectionId property.
+    * @description Receives event from the child component and dispatches an event to
+    * notify parent component geTemplateBuilder that the active section has changed.
     *
     * @param {object} event: Event object containing the section id from the
-    * geTemplateBuilderFormLayout component.
+    * child component geTemplateBuilderFormSection.
     */
     handleChangeActiveSection(event) {
-        this.activeFormSectionId = event.detail;
+        dispatch(this, 'changeactivesection', event.detail);
     }
 
     /*******************************************************************************
@@ -209,8 +158,9 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
 
         if (removeField) {
             sectionId = this._sectionIdsByFieldMappingDeveloperNames[fieldMappingDeveloperName];
-            let section = this.formSections.find(fs => fs.id == sectionId);
-            removeByProperty(section.elements, 'value', fieldMappingDeveloperName);
+            dispatch(this, 'removefieldfromsection', {
+                sectionId: sectionId,
+                fieldName: fieldMappingDeveloperName});
         } else {
             if (!this.formSections || this.formSections.length === 0) {
                 sectionId = this.handleAddSection();
@@ -229,9 +179,9 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 fieldMapping.label,
                 false,
                 fieldMapping.value,
-                false,
+                true,
                 sectionId,
-                undefined,
+                null,
                 fieldMapping.dataType,
                 fieldMapping.picklistOptions
             )
@@ -253,138 +203,134 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Handles adding a new section to the formSections list.
+    * @description Handles adding a new section. Dispatches an event to notify parent
+    * component geTemplateBuilder that a new section needs to be added.
     *
-    * @param {list} fieldMappings: List of FormFields to be added with the section
+    * @return {string} id: Generated id of the new section.
     */
     handleAddSection() {
-        if (!this.formSections) { this.formSections = [] }
-        let formSections = this.getMutableFormSections()
-
         let newSection = new FormSection(
             generateId(),
             'accordion',
             'expanded',
             'displayRule',
-            'Test Label ' + formSections.length,
+            'Test Label: ' + this.formSections.length,
             []
         )
+        dispatch(this, 'addformsection', newSection);
 
-        formSections.push(newSection);
-        this.formSections = formSections;
-        this.activeFormSectionId = newSection.id;
-
-        return newSection.id;
+        return newSection.id
     }
 
     /*******************************************************************************
-    * @description Handles adding a new FormField to a FormSection.
+    * @description Handles adding a new FormField to a FormSection. Dispatches an
+    * event to notify parent component geTemplateBuilder that new FormField needs
+    * to be added to the FormSection with the given id.
     *
-    * @param {string} sectionId: Id of the FormSection
-    * @param {object} field: Instance of FormField to be added
+    * @param {string} sectionId: Id of the parent FormSection
+    * @param {object} field: Instance of FormField to be added to FormSection
     */
     handleAddFieldToSection(sectionId, field) {
-        let formSections = this.getMutableFormSections()
-        let formSection = formSections.find(fs => fs.id == sectionId);
-
-        if (formSection) {
-            field.sectionId = sectionId;
-            formSection.elements.push(field);
+        const detail = {
+            sectionId: sectionId,
+            field: field
         }
-
-        return formSections;
+        dispatch(this, 'addfieldtosection', detail);
     }
 
     /*******************************************************************************
-    * @description Handles shifting the FormField element up in the list and UI
+    * @description Receives event from child component and dispatches event to
+    * parent to move the given FormField up within its parent FormSection.
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Event object from child component.
+    * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
     */
     handleFormFieldUp(event) {
-        const formField = event.detail;
-        let formSections = this.getMutableFormSections()
-        let section = formSections.find(fs => fs.id == formField.sectionId);
-        let oldIndex = findIndexByProperty(section.elements, 'value', formField.value);
-        if (oldIndex > 0) {
-            section.elements = shiftToIndex(section.elements, oldIndex, oldIndex - 1);
-        }
-
-        this.formSections = formSections;
+        dispatch(this, 'formfieldup', event.detail);
     }
 
     /*******************************************************************************
-    * @description Handles shifting the FormField element down in the list and UI
+    * @description Receives event from child component and dispatches event to
+    * parent to move the given FormField down within its parent FormSection.
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Event object from child component.
+    * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
     */
     handleFormFieldDown(event) {
-        const formField = event.detail;
-        let formSections = this.getMutableFormSections()
-        let section = formSections.find(fs => fs.id == formField.sectionId);
-        let oldIndex = findIndexByProperty(section.elements, 'value', formField.value);
-        if (oldIndex < section.elements.length - 1) {
-            section.elements = shiftToIndex(section.elements, oldIndex, oldIndex + 1);
-        }
-
-        this.formSections = formSections;
+        dispatch(this, 'formfielddown', event.detail);
     }
 
     /*******************************************************************************
-    * @description Handles shifting the FormSection element up in the list and UI
+    * @description Receives event from child component and dispatches event to
+    * parent to remove the FormField from its parent FormSection.
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Event object from child component.
+    * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
+    */
+    handleDeleteFormField(event) {
+        const element = this.template.querySelector(`lightning-input[data-field-mapping="${event.detail.fieldName}"]`);
+        element.checked = false;
+
+        dispatch(this, 'deleteformfield', event.detail);
+    }
+
+    /*******************************************************************************
+    * @description Receives event from child component and dispatches event to
+    * parent to update the details of the given FormField.
+    *
+    * @param {object} event: Event object from child component.
+    * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
+    */
+    handleUpdateFormField(event) {
+        dispatch(this, 'updateformfield', event.detail);
+    }
+
+    /*******************************************************************************
+    * @description Receives event from child component and dispatches event to
+    * parent to move the given FormSection up.
+    *
+    * @param {object} event: Event object from child component.
+    * component chain: geTemplateBuilderFormSection -> here
     */
     handleFormSectionUp(event) {
         const sectionId = event.detail;
-        let formSections = this.getMutableFormSections()
-
-        const oldIndex = findIndexByProperty(formSections, 'id', sectionId);
-        if (oldIndex > 0) {
-            formSections = shiftToIndex(formSections, oldIndex, oldIndex - 1);
-        }
-
-        this.formSections = formSections;
+        dispatch(this, 'formsectionup', sectionId);
     }
 
     /*******************************************************************************
-    * @description Handles shifting the FormSection element down in the list and UI
+    * @description Receives event from child component and dispatches event to
+    * parent to move the given FormSection down.
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Event object from child component.
+    * component chain: geTemplateBuilderFormSection -> here
     */
     handleFormSectionDown(event) {
         const sectionId = event.detail;
-        let formSections = this.getMutableFormSections()
-
-        const oldIndex = findIndexByProperty(formSections, 'id', sectionId);
-        if (oldIndex < formSections.length - 1) {
-            formSections = shiftToIndex(formSections, oldIndex, oldIndex + 1);
-        }
-
-        this.formSections = formSections;
+        dispatch(this, 'formsectiondown', sectionId);
     }
 
-    getMutableFormSections() {
-        let formLayout = this.getTabData();
-        return formLayout.sections.length > 0 ? mutable(formLayout.sections) : mutable(this.formSections);
-    }
-
-    // TODO: Need to finish or scrap the incomplete function below
     /*******************************************************************************
-    * @description Function toggles the checkboxes for any existing/selected gift
+    * @description Method toggles the checkboxes for any existing/selected gift
     * fields. Used when retrieving an existing form template.
+    *
+    * @param {list} objectMappings: List of object mappings containing field mapping details
     */
     toggleCheckboxForSelectedFieldMappings(objectMappings) {
         const selectedFieldMappings = Object.keys(this._sectionIdsByFieldMappingDeveloperNames);
+
         if (selectedFieldMappings && selectedFieldMappings.length > 0) {
             for (let i = 0; i < objectMappings.length; i++) {
                 let fieldMappingCheckboxes = objectMappings[i].fieldMappingCheckboxes;
+
                 for (let ii = 0; ii < fieldMappingCheckboxes.length; ii++) {
                     let fieldMappingCheckbox = fieldMappingCheckboxes[ii];
+
                     if (selectedFieldMappings.includes(fieldMappingCheckbox.value)) {
                         fieldMappingCheckbox.checked = true;
                     }
                 }
             }
+
             this.objectMappings = objectMappings;
         }
     }
@@ -399,14 +345,5 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         } else {
             //console.log('Open sections: ' + openSections.join(', '));
         }
-    }
-
-    // TODO: Used for dev. Delete later.
-    logFormSections() {
-        //console.log('***logFormSections');
-        //console.log('***************************');
-        let formLayout = this.template.querySelector('c-ge-template-builder-form-layout');
-        let formSections = formLayout.getFormLayout();
-        //console.log('FormSections', mutable(formSections));
     }
 }
