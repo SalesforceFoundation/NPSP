@@ -1,13 +1,13 @@
 <aura:component implements="force:appHostable">
-    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib" />
 
     <aura:attribute name="sectionBeingEdited"
-                    type="Object"/>
+                    type="Object" />
 
     <aura:handler name="change"
                   value="{!v.sectionBeingEdited}"
-                  action="{!c.handleSectionModalEvent}"/>
+                  action="{!c.handleSectionModalEvent}" />
 
     <c:geTemplateBuilder aura:id="templateBuilder"
-                         ontogglemodal="{!c.handleShowModal}"/>
+                         ontogglemodal="{!c.handleShowModal}" />
 </aura:component>
