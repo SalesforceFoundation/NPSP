@@ -3556,7 +3556,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bgeUnmappedFieldsNoticeMessageAdvancedMapping</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Message used for the Batch Gift Entry tab unmapped fields notice.</shortDescription>
+        <shortDescription>Message used for the Batch Gift Entry unmapped fields warning when Advanced Mapping enabled.</shortDescription>
         <value>The following fields are included in this Batch, but their Field Mappings were deleted: {0}. To fix this, go to Advanced Mapping in NPSP Settings and map the fields again.</value>
     </labels>
     <labels>
