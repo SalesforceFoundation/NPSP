@@ -2,55 +2,59 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
 const FormTemplate = class FormTemplate {
-    constructor(name, description, layout) {
-        this.name = name;
-        this.description = description;
-        this.layout = layout;
+    constructor(name, description, layout, batchHeaderFields) {
+        this.name = name || null;
+        this.description = description || null;
+        this.layout = layout || null;
+        this.batchHeaderFields = batchHeaderFields || [];
     }
 }
 
 const FormLayout = class FormLayout {
     constructor(fieldMappingSetDevName, version, sections) {
-        this.fieldMappingSetDevName = fieldMappingSetDevName;
-        this.version = version;
-        this.sections = sections;
+        this.fieldMappingSetDevName = fieldMappingSetDevName || 'Migrated_Custom_Field_Mapping_Set';
+        this.version = version || null;
+        this.sections = sections || [];
     }
 }
 
 const FormSection = class FormSection {
     constructor(id, displayType, defaultDisplayMode, displayRule, label, elements) {
-        this.id = id;
-        this.displayType = displayType;
-        this.defaultDisplayMode = defaultDisplayMode;
-        this.displayRule = displayRule;
-        this.label = label;
+        this.id = id || null;
+        this.displayType = displayType || null;
+        this.defaultDisplayMode = defaultDisplayMode || null;
+        this.displayRule = displayRule || null;
+        this.label = label || null;
         this.elements = elements || [];
     }
 }
 
 const FormField = class FormField {
     constructor(label, required, value, allowDefaultValue, sectionId, defaultValue, dataType, picklistOptions) {
-        this.label = label;
-        this.required = required;
-        this.value = value;
-        this.allowDefaultValue = allowDefaultValue;
-        this.sectionId = sectionId;
-        this.defaultValue = defaultValue;
-        this.dataType = dataType;
-        this.picklistOptions = picklistOptions;
+        this.label = label || null;
+        this.required = required || false;
+        this.value = value || null;
+        this.allowDefaultValue = allowDefaultValue || true;
+        this.sectionId = sectionId || null;
+        this.defaultValue = defaultValue || null;
+        this.dataType = dataType || null;
+        this.picklistOptions = picklistOptions || null;
+        // TODO: defaults to FORM_Element as widgets don't currently exist
+        this.elementType = 'FORM_Element';
     }
 }
 
 const BatchHeaderField = class BatchHeaderField {
     constructor(label, value, required, isRequiredFieldDisabled, allowDefaultValue, defaultValue, dataType, picklistOptions) {
-        this.label = label;
-        this.value = value;
-        this.required = required;
-        this.isRequiredFieldDisabled = isRequiredFieldDisabled;
-        this.allowDefaultValue = allowDefaultValue;
-        this.defaultValue = defaultValue;
-        this.dataType = dataType;
-        this.picklistOptions = picklistOptions;
+        this.label = label || null;
+        this.value = value || null;
+        this.required = required || false;
+        this.isRequiredFieldDisabled = isRequiredFieldDisabled || false;
+        this.allowDefaultValue = allowDefaultValue || false;
+        this.defaultValue = defaultValue || null;
+        this.dataType = dataType || null;
+        this.picklistOptions = picklistOptions || null;
+        this.customLabel = null;
     }
 }
 
@@ -72,6 +76,14 @@ const shiftToIndex = (array, oldIndex, newIndex) => {
 // This method loses any Javascript properties that have no equivalent type in JSON
 const mutable = (obj) => {
     return JSON.parse(JSON.stringify(obj));
+}
+
+const dispatch = (context, name, detail, bubbles = false, composed = false) => {
+    context.dispatchEvent(new CustomEvent(name, {
+        detail: detail,
+        bubbles: bubbles,
+        composed: composed
+    }));
 }
 
 /*******************************************************************************
@@ -150,12 +162,6 @@ const generateId = () => {
         '-' + random4() + random4() + random4();
 };
 
-const TabEnums = Object.freeze({
-    INFO_TAB: 'geTemplateBuilderTemplateInfo',
-    SELECT_FIELDS_TAB: 'geTemplateBuilderSelectFields',
-    BATCH_HEADER_TAB: 'geTemplateBuilderBatchHeader'
-})
-
 const inputTypeByDescribeType = {
     'address': 'text',
     'base64': 'text',
@@ -199,11 +205,11 @@ export {
     findIndexByProperty,
     shiftToIndex,
     mutable,
+    dispatch,
+    sort,
     showToast,
     handleError,
     generateId,
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
-    sort,
-    TabEnums
 }
