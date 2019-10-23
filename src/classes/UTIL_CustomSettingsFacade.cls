@@ -1018,7 +1018,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     private static void enableAdvancedMapping(){
         Data_Import_Settings__c dis = getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
-        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         setDataImportSettings(dis);
     }
 

@@ -447,7 +447,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         UTIL_CustomSettingsFacade.enableAdvancedMapping();
 
         //Create a stub of BDI_FieldMappingCustomMetadata, to mock the scenario where some
-        //active/selected fields on the Batch have no mapping.
+        //active/selected fields on the Batch are not mapped.
         BDIFieldMappingMock mock = new BDIFieldMappingMock();
         BDI_FieldMappingCustomMetadata stub = (BDI_FieldMappingCustomMetadata) Test.createStub(
                 BDI_FieldMappingCustomMetadata.class,
@@ -465,7 +465,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         UTIL_CustomSettingsFacade.enableHelpTextMapping();
 
         //Create a stub of BDI_FieldMappingHelpText, to mock the scenario where some
-        //active/selected fields on the Batch have no mapping.
+        //active/selected fields on the Batch are not mapped.
         BDIFieldMappingMock mock = new BDIFieldMappingMock();
         BDI_FieldMappingHelpText stub = (BDI_FieldMappingHelpText) Test.createStub(
                 BDI_FieldMappingHelpText.class,
