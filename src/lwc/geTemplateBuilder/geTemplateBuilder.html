@@ -46,29 +46,46 @@
                 <lightning-tab value={TabEnums.INFO_TAB}
                                label="Template Info"
                                class="slds-p-around_none"
-                               onactive={handleInfoTab}>
-                    <c-ge-template-builder-template-info ongototab={handleGoToTab}
-                                                         template-info={templateInfo}>
+                               onactive={handleOnActiveTab}>
+                    <c-ge-template-builder-template-info template-name={formTemplate.name}
+                                                         template-description={formTemplate.description}
+                                                         onchangetemplateinfoname={handleChangeTemplateInfoName}
+                                                         onchangetemplateinfodescription={handleChangeTemplateInfoDescription}>
                     </c-ge-template-builder-template-info>
                 </lightning-tab>
 
                 <lightning-tab value={TabEnums.SELECT_FIELDS_TAB}
                                label="Select Fields"
                                class="slds-p-around_none"
-                               onactive={handleSelectFieldsTab}>
-                    <c-ge-template-builder-select-fields ongototab={handleGoToTab}
+                               onactive={handleOnActiveTab}>
+                    <c-ge-template-builder-select-fields selected-field-mapping-set={formLayout.fieldMappingSetDevName}
+                                                         form-sections={formSections}
+                                                         active-form-section-id={activeFormSectionId}
                                                          ontogglemodal={toggleModal}
-                                                         selected-field-mapping-set={selectedFieldMappingSet}
-                                                         form-sections={layoutSections}>
+                                                         onchangeactivesection={handleChangeActiveSection}
+                                                         onaddformsection={handleAddFormSection}
+                                                         onformsectionup={handleFormSectionUp}
+                                                         onformsectiondown={handleFormSectionDown}
+                                                         onaddfieldtosection={handleAddFieldToSection}
+                                                         onremovefieldfromsection={handleRemoveFieldFromSection}
+                                                         onformfieldup={handleFormFieldUp}
+                                                         onformfielddown={handleFormFieldDown}
+                                                         ondeleteformfield={handleDeleteFormField}
+                                                         onupdateformfield={handleUpdateFormField}
+                                                         onrefreshformsections={handleRefreshFormSections}>
                     </c-ge-template-builder-select-fields>
                 </lightning-tab>
 
                 <lightning-tab value={TabEnums.BATCH_HEADER_TAB}
                                label="Batch Header"
                                class="slds-p-around_none"
-                               onactive={handleBatchHeaderTab}>
-                    <c-ge-template-builder-batch-header ongototab={handleGoToTab}
-                                                        selected-batch-fields={batchHeaderFields}>
+                               onactive={handleOnActiveTab}>
+                    <c-ge-template-builder-batch-header selected-batch-fields={batchHeaderFields}
+                                                        onaddbatchheaderfield={handleAddBatchHeaderField}
+                                                        onremovebatchheaderfield={handleRemoveBatchHeaderField}
+                                                        onbatchheaderfieldup={handleBatchHeaderFieldUp}
+                                                        onbatchheaderfielddown={handleBatchHeaderFieldDown}
+                                                        onupdatebatchheaderfield={handleUpdateBatchHeaderField}>
                     </c-ge-template-builder-batch-header>
                 </lightning-tab>
 
