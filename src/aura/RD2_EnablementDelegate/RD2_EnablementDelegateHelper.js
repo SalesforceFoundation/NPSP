@@ -37,6 +37,9 @@
     * @description Confirms enhanced Recurring Donations enablement
     */
     confirmEnable: function (component) {
+        //disable the current active step so the next step is enabled only on current step success
+        component.set('v.state.isConfirmed', false);
+
         this.clearError(component);
 
         var action = component.get('c.confirmEnablement');
@@ -48,8 +51,10 @@
                 return;
             }
 
-            if (state === 'ERROR') {
-                component.set('v.state.isConfirmed', false);
+            if (state === 'SUCCESS') {
+                component.set('v.state.isConfirmed', true);
+
+            } else if (state === 'ERROR') {
                 this.handleError(component, response.getError(), '1');
             }
 
@@ -62,6 +67,9 @@
     * @description Enables enhanced Recurring Donations 
     */
     completeEnable: function (component) {
+        //disable the current active step so the next step is enabled only on current step success
+        component.set('v.state.isEnabled', false);
+
         this.clearError(component);
         this.disableEdit(component, "enable-toggle");
 
@@ -74,8 +82,10 @@
                 return;
             }
 
-            if (state === 'ERROR') {
-                component.set('v.state.isEnabled', false);
+            if (state === 'SUCCESS') {
+                component.set('v.state.isEnabled', true);
+
+            } else if (state === 'ERROR') {
                 this.handleError(component, response.getError(), '1');
             }
 
@@ -117,6 +127,9 @@
     * @description Confirms MetaDeploy has been deployed
     */
     confirmDeploy: function (component) {
+        //disable the current active step so the next step is enabled only on current step success
+        component.set('v.state.isMetaDeployConfirmed', false);
+
         this.clearError(component);
 
         var action = component.get('c.confirmMetaDeploy');
@@ -128,8 +141,10 @@
                 return;
             }
 
-            if (state === 'ERROR') {
-                component.set('v.state.isMetaDeployConfirmed', false);
+            if (state === 'SUCCESS') {
+                component.set('v.state.isMetaDeployConfirmed', true);
+
+            } else if (state === 'ERROR') {
                 this.handleError(component, response.getError(), '2');
             }
 

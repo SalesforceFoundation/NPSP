@@ -113,7 +113,8 @@
                                                     value="{!$Label.c.RD2_EnablementEnableConfirm}" />
                                             </label>
                                         </lightning:layoutItem>
-                                        <lightning:layoutItem size="2" class="slds-grid slds-grid_align-end">
+                                        <lightning:layoutItem size="2"
+                                            class="slds-grid slds-grid_align-end slds-p-right_medium">
                                             <lightning:input type="checkbox-button"
                                                 label="{!$Label.c.RD2_EnablementEnableConfirm}" aura:id="enable-confirm"
                                                 name="enable-confirm" checked="{!v.state.isConfirmed}"
@@ -139,7 +140,8 @@
                                                     value="{!$Label.c.RD2_EnablementEnableMessage}" />
                                             </label>
                                         </lightning:layoutItem>
-                                        <lightning:layoutItem size="2" class="slds-grid slds-grid_align-end">
+                                        <lightning:layoutItem size="2"
+                                            class="slds-grid slds-grid_align-end slds-p-right_medium">
                                             <lightning:input type="toggle"
                                                 label="{!$Label.c.RD2_EnablementEnableMessage}" variant="label-hidden"
                                                 aura:id="enable-toggle" name="enable-toggle"
@@ -147,7 +149,6 @@
                                                 messageToggleActive="{!$Label.c.stgStatusEnabled}"
                                                 messageToggleInactive="{!$Label.c.stgStatusDisabled}">
                                             </lightning:input>
-
                                         </lightning:layoutItem>
                                     </lightning:layout>
                                 </div>
@@ -168,7 +169,7 @@
 
                     <aura:if isTrue="{!equals(v.errorSection, '1')}">
                         <lightning:layout>
-                            <lightning:layoutItem size="10" class="slds-m-top_medium slds-p-right_medium">
+                            <lightning:layoutItem size="10">
                                 <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </lightning:layoutItem>
                         </lightning:layout>
@@ -213,10 +214,11 @@
                                                 value="{!$Label.c.RD2_EnablementMetaDeployLaunch}" />
                                         </lightning:layoutItem>
 
-                                        <lightning:layoutItem size="2" class="slds-grid slds-grid_align-end">
+                                        <lightning:layoutItem size="2"
+                                            class="slds-grid slds-grid_align-end slds-p-right_medium">
                                             <a href="https://metadeploy.herokuapp.com/products/npsp/RD2-enablement/npsp-rd2-pilot"
                                                 aura:id="metadeploy-link" onclick="{!c.handleMetaDeployLaunch}"
-                                                target=" _blank">
+                                                target="_blank">
                                                 <lightning:formattedText
                                                     value="{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}" />
                                                 <lightning:icon iconName="utility:new_window"
@@ -243,7 +245,8 @@
                                                     value="{!$Label.c.RD2_EnablementMetaDeployConfirm}" />
                                             </label>
                                         </lightning:layoutItem>
-                                        <lightning:layoutItem size="2" class="slds-grid slds-grid_align-end">
+                                        <lightning:layoutItem size="2"
+                                            class="slds-grid slds-grid_align-end slds-p-right_medium">
                                             <lightning:input type="checkbox-button"
                                                 label="{!$Label.c.RD2_EnablementMetaDeployConfirm}"
                                                 aura:id="metadeploy-confirm" name="metadeploy-confirm"
@@ -265,7 +268,7 @@
 
                     <aura:if isTrue="{!equals(v.errorSection, '2')}">
                         <lightning:layout>
-                            <lightning:layoutItem size="10" class="slds-m-top_medium">
+                            <lightning:layoutItem size="10">
                                 <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </lightning:layoutItem>
                         </lightning:layout>
@@ -291,7 +294,7 @@
                             <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationIntro}" />
                         </lightning:layoutItem>
 
-                        <lightning:layoutItem size="2" class="slds-grid slds-grid_align-end">
+                        <lightning:layoutItem size="2" class="slds-grid slds-grid_align-end slds-p-right_medium">
                             <lightning:button class="slds-m-left_x-small styleButton"
                                 label="{!$Label.c.RD2_EnablementMigrationButton}" variant="neutral"
                                 disabled="{!or(!v.state.isMetaDeployConfirmed, v.state.isMigrationRun)}" />
@@ -307,7 +310,7 @@
 
                     <aura:if isTrue="{!equals(v.errorSection, '3')}">
                         <lightning:layout>
-                            <lightning:layoutItem size="10" class="slds-m-top_medium slds-p-right_medium">
+                            <lightning:layoutItem size="10">
                                 <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </lightning:layoutItem>
                         </lightning:layout>

@@ -8,6 +8,9 @@
     color: #706e6b;
     cursor: default;
 }
-.THIS .activeIcon svg{
+.THIS .styleButton:disabled {
+    color: #706e6b;
+}
+.THIS .activeIcon svg {
     fill: #006dcc;
 }
