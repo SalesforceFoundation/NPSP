@@ -77,7 +77,7 @@ public without sharing class RD2_ScheduleService {
         if (!isFirstAndFifteenth(rd)) {
             rdsched.DayOfMonth__c = rd.Day_of_Month__c;
         }
-        else {
+        } else {
             rdsched.DayOfMonth__c = FIRST;
             schedulesToInsert.add(rdsched);
             rdsched = rdsched.clone();
