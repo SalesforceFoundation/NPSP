@@ -1,46 +1,43 @@
 import { LightningElement, track, api } from 'lwc';
 import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
-import { BatchHeaderField, findIndexByProperty, shiftToIndex, mutable, sort } from 'c/utilTemplateBuilder';
+import { BatchHeaderField, findIndexByProperty, mutable, sort, dispatch, handleError } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track isLoading = true;
     @track batchFields;
-    @track selectedBatchFields;
-
-    /* Public setter for the tracked property selectedBatchFields */
-    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template
-    @api
-    set selectedBatchFields(selectedBatchFields) {
-        this.selectedBatchFields = selectedBatchFields;
-    }
+    @api selectedBatchFields;
 
     connectedCallback() {
+        this.isLoading = true;
         this.init();
     }
 
     @api
     init = async () => {
-        this.isLoading = true;
-        this.batchFields = await getBatchFields();
-        this.batchFields = sort(this.batchFields, 'label', 'asc');
-        this.handleRequiredFields();
-        this.toggleCheckboxForSelectedBatchFields();
-        this.isLoading = false;
+        try {
+            this.batchFields = await getBatchFields();
+            this.batchFields = sort(this.batchFields, 'label', 'asc');
+            this.handleRequiredFields();
+            this.toggleCheckboxForSelectedBatchFields();
+            this.isLoading = false;
+        } catch (error) {
+            handleError(this, error);
+            this.isLoading = false;
+        }
     }
 
     /*******************************************************************************
-    * @description Public method that returns a list of batch header field instances
-    * of the BatchHeaderField class. Called when saving a form template.
+    * @description Public method that collects form field values from all instances
+    * of child component geTemplateBuilderFormField.
     *
-    * @return {list} batchHeaderFields: List of batch header field instances of the
-    * BatchHeaderField class.
+    * @return {list} batchHeaderFields: List of utilTemplateBuiilder.BatchHeaderField
+    * instances.
     */
     @api
     getTabData() {
         const selectedBatchFieldValues = this.template.querySelectorAll('c-ge-template-builder-form-field');
 
         let batchHeaderFields = [];
-
         for (let i = 0; i < selectedBatchFieldValues.length; i++) {
             let batchField = selectedBatchFieldValues[i].getFormFieldValues();
             batchHeaderFields.push(batchField);
@@ -50,10 +47,41 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     }
 
     /*******************************************************************************
+    * @description Receives event from child component and dispatches event to
+    * parent to update a batch header field's details.
+    *
+    * @param {object} event: Event received from child component.
+    * component chain: geTemplateBuilderFormField -> here
+    */
+    handleUpdateBatchHeaderField(event) {
+        dispatch(this, 'updatebatchheaderfield', event.detail);
+    }
+
+    /*******************************************************************************
+    * @description Receives event from child component and dispatches event to
+    * parent to move a batch header field up.
+    *
+    * @param {object} event: Event received from child component.
+    * component chain: geTemplateBuilderFormField -> here
+    */
+    handleFormFieldUp(event) {
+        dispatch(this, 'batchheaderfieldup', event.detail);
+    }
+
+    /*******************************************************************************
+    * @description Receives event from child component and dispatches event to
+    * parent to move a batch header field down.
+    *
+    * @param {object} event: Event received from child component.
+    * component chain: geTemplateBuilderFormField -> here
+    */
+    handleFormFieldDown(event) {
+        dispatch(this, 'batchheaderfielddown', event.detail);
+    }
+
+    /*******************************************************************************
     * @description Onchange event handler for the batch header field checkboxes.
-    * Adds BatchHeaderField objects to the selectedBatchFields array.
-    * selectedBatchFields is used in the UI to render instances of the
-    * geTemplateBuilderFormField component.
+    * Adds/removes batch header fields.
     *
     * @param {object} event: Onchange event object from lightning-input checkbox
     */
@@ -63,17 +91,18 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         const addSelectedField = index === -1 ? true : false;
 
         if (addSelectedField) {
-            this.addField(fieldName);
+            this.addField(fieldName)
         } else {
-            this.removeField(index);
+            this.removeField(index, fieldName);
         }
     }
 
     /*******************************************************************************
-    * @description Adds a field to the selected fields
+    * @description Creates an instance of BatchHeaderField. Dispatches an event to
+    * notify parent component geTemplateBuilder that a new batch header field
+    * needs to be added.
     *
-    * @param {object} target: Object containing the label and value of the field
-    * to be added
+    * @param {string} fieldName: DataImport__c field api name
     */
     addField(fieldName) {
         let batchField = this.batchFields.find(bf => {
@@ -86,53 +115,55 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             batchField.isRequired,
             batchField.isRequiredFieldDisabled,
             false,
-            undefined,
+            null,
             batchField.dataType,
             batchField.picklistOptions
         );
 
-        if (!this.selectedBatchFields) { this.selectedBatchFields = [] }
-        this.selectedBatchFields.push(field);
+        dispatch(this, 'addbatchheaderfield', field);
+
+        const batchFieldIndex = findIndexByProperty(
+            this.batchFields,
+            'value',
+            fieldName);
+        this.batchFields[batchFieldIndex].checked = true;
     }
 
     /*******************************************************************************
-    * @description Removes a field from the selected fields by index
+    * @description Finds the index of the BatchHeaderField to be removed. Dispatches
+    * an event to notify parent component geTemplateBuilder that a batch header field
+    * needs to be removed.
     *
-    * @param {integer} index: Index of the field to be removed
+    * @param {integer} index: Index of field in the selectedBatchHeaderFields
+    * @param {string} fieldName: DataImport__c field api name
     */
-    removeField(index) {
-        this.selectedBatchFields.splice(index, 1);
+    removeField(index, fieldName) {
+        const batchFieldIndex = findIndexByProperty(
+            this.batchFields,
+            'value',
+            fieldName);
+        this.batchFields[batchFieldIndex].checked = false;
+
+        dispatch(this, 'removebatchheaderfield', index);
     }
 
     /*******************************************************************************
-    * @description Handles shifting the BatchHeaderField element up in the list and UI
+    * @description Receives event from child component and calls removeField method
+    * to dispatch an event notifying parent component geTemplateBuilder that a
+    * batch header field needs to be removed.
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Event received from child component.
+    * component chain: geTemplateBuilderFormField -> here
     */
-    handleFormFieldUp(event) {
-        this.selectedBatchFields = this.getTabData();
-        let oldIndex = findIndexByProperty(this.selectedBatchFields, 'value', event.detail.value);
-        if (oldIndex > 0) {
-            this.selectedBatchFields = shiftToIndex(mutable(this.selectedBatchFields), oldIndex, oldIndex - 1);
-        }
+    handleDeleteBatchHeaderField(event) {
+        const fieldName = event.detail;
+        const index = findIndexByProperty(this.selectedBatchFields, 'value', fieldName);
+        this.removeField(index, fieldName);
     }
 
     /*******************************************************************************
-    * @description Handles shifting the BatchHeaderField element down in the list and UI
-    *
-    * @param {object} event: Onclick event object from lightning-button
-    */
-    handleFormFieldDown(event) {
-        this.selectedBatchFields = this.getTabData();
-        let oldIndex = findIndexByProperty(this.selectedBatchFields, 'value', event.detail.value);
-        if (oldIndex < this.selectedBatchFields.length - 1) {
-            this.selectedBatchFields = shiftToIndex(mutable(this.selectedBatchFields), oldIndex, oldIndex + 1);
-        }
-    }
-
-    // TODO: Needs to be cleaned up/reevaluated
-    /*******************************************************************************
-    * @description WIP. Function adds required fields to selectedBatchFields property
+    * @description Adds required fields to selectedBatchFields property and toggles
+    * their respective checkboxes.
     */
     handleRequiredFields() {
         const requiredFields = this.batchFields.filter(batchField => { return batchField.isRequired });
