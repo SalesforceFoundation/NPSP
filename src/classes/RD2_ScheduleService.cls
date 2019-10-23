@@ -56,14 +56,6 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Gets updated recurring donation schedules
-    * @return List<RecurringDonationSchedule__c>
-    */
-    public List<RecurringDonationSchedule__c> getRDSchedulesToUpdate() {
-        return schedulesToUpdate;
-    }
-
-    /***
     * @description Creates new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
     * @return RD2_Schedule_SVC
@@ -100,28 +92,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         return this;
-    }
-
-    // TODO: Update schedule to reflect recurringDonation - W-036113 (Placeholder)
-    public RD2_ScheduleService updateSchedule(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdScheds) {
-        return this;
-    }
-
-    // TODO: Will return next Donation date - W-036251 (Placeholder)
-    public Date getNextDonationDate(RecurringDonationSchedule__c rdSched) {
-        return null;
-    }
-
-    // TODO: Will return an inner class (Placeholder - RDScheduleDates)
-    public List<RDScheduleDates> visualizeSchedule(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdScheds) {
-        return new List<RDScheduleDates>();
-    }
-
-    // TODO: Placeholder internal class used for visualization)
-    public class RDScheduleDates {
-        public npe03__Recurring_Donation__c recurringDonation;
-        public List<RecurringDonationSchedule__c> rdSchedules;
-        public Date donationDate;
     }
 
     /***
