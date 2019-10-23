@@ -26,14 +26,14 @@
                     <lightning-input type="text"
                                      name="Template Name"
                                      label="Template Name"
-                                     value={templateInfo.name}
+                                     value={templateName}
                                      required
-                                     data-name="templateName">
+                                     onblur={handleChangeTemplateInfoName}>
                     </lightning-input>
                     <lightning-textarea name="Description"
                                         label="Description"
-                                        value={templateInfo.description}
-                                        data-name="description">
+                                        value={templateDescription}
+                                        onblur={handleChangeTemplateInfoDescription}>
                     </lightning-textarea>
                 </div>
             </div>
