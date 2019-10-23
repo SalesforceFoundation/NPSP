@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { mutable, inputTypeByDescribeType, lightningInputTypeByDataType, showToast } from 'c/utilTemplateBuilder';
+import { mutable, inputTypeByDescribeType, lightningInputTypeByDataType, showToast, dispatch } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderFormField extends LightningElement {
     @track field;
@@ -7,10 +7,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @api
     set field(field) {
         this.field = field;
-    }
-
-    get isDefaultValueAllowed() {
-        return this.field.allowDefaultValue ? false : true;
     }
 
     get isRequired() {
@@ -29,7 +25,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return this.lightningInputType === 'search' ? true : false;
     }
 
-    /* Needs to be reworked */
     get isLightningRichText() {
         return this.lightningInputType === 'richtext' ? true : false;
     }
@@ -58,79 +53,140 @@ export default class geTemplateBuilderFormField extends LightningElement {
         }
     }
 
-    /* TODO: Delete later. For debugging only */
-    connectedCallback() {
-        //console.log('FIELD: ', mutable(this.field));
-        //console.log('TYPE: ', this.lightningInputType);
-    }
-
     stopPropagation(event) {
         event.stopPropagation();
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component to shift the FormField
-    * up in the data structure.
+    * @description Dispatches an event to notify parent component that the form
+    * field's required property has changed.
+    *
+    * @param {object} event: Event object from lightning-input checkbox onchange
+    * event handler 
+    */
+    handleOnChangeRequiredField(event) {
+        this.stopPropagation(event);
+        let detail = {
+            fieldName: this.field.value,
+            property: 'required',
+            value: event.target.checked
+        }
+
+        dispatch(this, 'updateformfield', detail);
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event to notify parent component that the form
+    * field's defaultValue property for a combobox has changed.
+    *
+    * @param {object} event: Event object from lightning-combobox onchange event handler 
+    */
+    handleChangeCombobox(event) {
+        let detail = {
+            fieldName: this.field.value,
+            property: 'defaultValue',
+            value: event.target.value
+        }
+
+        dispatch(this, 'updateformfield', detail);
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event to notify parent component that the form
+    * field's defaultValue property has changed.
+    *
+    * @param {object} event: Event object from various lightning-input type's
+    * onblur event handler 
+    */
+    handleOnBlur(event) {
+        let value;
+
+        if (this.field.dataType && this.field.dataType.toLowerCase() === 'boolean') {
+            value = event.target.checked;
+        } else {
+            value = event.target.value;
+        }
+
+        let detail = {
+            fieldName: this.field.value,
+            property: 'defaultValue',
+            value: value
+        }
+
+        dispatch(this, 'updateformfield', detail);
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event to notify parent component that the form
+    * field's customLabel property has changed.
+    *
+    * @param {object} event: Event object from lightning-input onblur event handler 
+    */
+    handleOnBlurCustomLabel(event) {
+        let detail = {
+            fieldName: this.field.value,
+            property: 'customLabel',
+            value: event.target.value
+        }
+        dispatch(this, 'updateformfield', detail);
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event to notify parent component that the form
+    * field's needs to be removed.
+    *
+    * @param {object} event: Event object from lightning-button-icon onclick event handler
+    */
+    handleFormFieldDelete(event) {
+        this.stopPropagation(event);
+        dispatch(this, 'deleteformfield', this.field.value);
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event to notify parent component that the form
+    * field's needs to be moved up.
+    *
+    * @param {object} event: Event object from lightning-button-icon onclick event handler
     */
     handleFormFieldUp(event) {
         this.stopPropagation(event);
-        const field = this.getFormFieldValues();
-        this.dispatchEvent(new CustomEvent(
-            'formfieldup',
-            { detail: field }));
+        dispatch(this, 'formfieldup', this.field.value);
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component to shift the FormField
-    * down in the data structure.
+    * @description Dispatches an event to notify parent component that the form
+    * field's needs to be moved down.
+    *
+    * @param {object} event: Event object from lightning-button-icon onclick event handler
     */
     handleFormFieldDown(event) {
         this.stopPropagation(event);
-        const field = this.getFormFieldValues();
-        this.dispatchEvent(new CustomEvent(
-            'formfielddown',
-            { detail: field }));
-    }
-
-    /*******************************************************************************
-    * @description Enables the 'Default Value' input field.
-    * 
-    * @param {object} event: Onchange event from lightning-input checkbox
-    */
-    handleToggleDefaultValue(event) {
-        this.stopPropagation(event);
-        let field = mutable(this.field);
-        field.allowDefaultValue = !field.allowDefaultValue;
-        if (!field.allowDefaultValue) {
-            field.defaultValue = '';
-        }
-        this.field = field;
+        dispatch(this, 'formfielddown', this.field.value);
     }
 
     /*******************************************************************************
     * @description Public method that collects the current values of all the relevant
     * input fields for this FormField and return an instance of FormField. 
-    * 
+    *
     * @return {object} field: Instance of the FormField class
     */
     @api
     getFormFieldValues() {
-        const elementType = lightningInputTypeByDataType[this.lightningInputType] ? lightningInputTypeByDataType[this.lightningInputType] : 'lightning-input';
+        const inputType = lightningInputTypeByDataType[this.lightningInputType] ? lightningInputTypeByDataType[this.lightningInputType] : 'lightning-input';
         const required = this.template.querySelector('lightning-input[data-name="required"]').checked;
-        const allowDefaultValue = this.template.querySelector('lightning-input[data-name="allowDefaultValue"]').checked;
         const customLabel = this.template.querySelector('lightning-input[data-name="customLabel"]').value;
-        let defaultValue = allowDefaultValue ? this.template.querySelector(`${elementType}[data-name="defaultValue"]`).value : undefined;
+        let defaultValue = this.template.querySelector(`${inputType}[data-name="defaultValue"]`).value;
 
         // TODO: Clean up way of getting default value if checkbox
-        if (allowDefaultValue && this.field.dataType && this.field.dataType.toLowerCase() === 'boolean') {
-            defaultValue = this.template.querySelector(`${elementType}[data-name="defaultValue"]`).checked;
+        if (this.field.dataType && this.field.dataType.toLowerCase() === 'boolean') {
+            defaultValue = this.template.querySelector(`${inputType}[data-name="defaultValue"]`).checked;
         }
 
         let field = mutable(this.field);
         field.required = required;
-        field.allowDefaultValue = allowDefaultValue;
         field.defaultValue = defaultValue;
-        field.elementType = elementType;
+        // TODO: tbd on this prop's possible values (single/widget)
+        //field.elementType = elementType;
         field.displayRule = undefined;
         field.validationRule = undefined;
         field.customLabel = customLabel;
