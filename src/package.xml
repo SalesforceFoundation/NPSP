@@ -1411,6 +1411,7 @@
         <members>PageMessagesInfo</members>
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
+        <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>

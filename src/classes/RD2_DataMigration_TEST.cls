@@ -31,10 +31,159 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Data Migration Job to convert RD1 format records to RD2
+* @description Unit Test for the data migration batch job
 *
 */
 @IsTest
 private class RD2_DataMigration_TEST {
 
+    /**
+     * @description Verifies that the job should run with zero records processed when
+     * RD2 is not enabled
+     */
+    @IsTest
+    private static void shouldLaunchBatchJobWithNothingProcessed() {
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        npe03__Recurring_Donation__c rd = getNewRecurringDonationRD1Format(contact.Id);
+        rd.Id = null;
+        insert rd;
+
+        Exception jobException;
+        try {
+            Test.startTest();
+            RD2_DataMigration_BATCH batchJob = new RD2_DataMigration_BATCH();
+            Database.executeBatch(batchJob);
+            Test.stopTest();
+        } catch (Exception ex) {
+            jobException = ex;
+        }
+
+        System.assert(jobException != null, 'The batch job did not throw an exception');
+        System.assert(jobException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorDataMigrationJobCannotBeRun),
+            'The exception message did not contain the expected text');
+    }
+
+    /**
+     * @description Verifies that the batch job ran with one record processed when
+     * RD2 is enabled
+     */
+    @IsTest
+    private static void shouldLaunchBatchJobWithOneRecordProcessed() {
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        npe03__Recurring_Donation__c rd = getNewRecurringDonationRD1Format(contact.Id);
+        rd.Id = null;
+        insert rd;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_EnablementService_TEST.configureRecurringDonations2Enabled();
+
+        Test.startTest();
+        RD2_DataMigration_BATCH batchJob = new RD2_DataMigration_BATCH();
+        Database.executeBatch(batchJob);
+        Test.stopTest();
+
+        AsyncApexJob job = [SELECT Id, JobItemsProcessed FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+            AND ApexClass.Name = 'RD2_DataMigration_BATCH'
+            LIMIT 1];
+        System.assertEquals(1, job.JobItemsProcessed,
+            'One batches should have run with one child batches processed'
+        );
+    }
+
+    /**
+     * @description Verifies that an RD1 format RD is recognized correctly
+     */
+    @IsTest
+    private static void shouldRecognizeAsRd1Format() {
+        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        Id acctId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        npe03__Recurring_Donation__c rd = getNewRecurringDonationRD1Format(contactId);
+        Opportunity opp = getOpportunityForRd(acctId, rd.Id);
+        List<Opportunity> mockedRelatedOpps = new List<Opportunity>{ opp };
+
+        RD2_DataMigration migrationService = new RD2_DataMigration()
+            .withRecurringDonation(rd)
+            .withRelatedOpportunities(mockedRelatedOpps);
+
+        System.assertEquals(false, migrationService.hasAlreadyBeenConverted(),
+            'This RD should not be in RD2 format');
+    }
+
+    /**
+     * @description Verifies that an RD2 format RD is recognized correctly
+     */
+    @IsTest
+    private static void shouldRecognizeAsRd2Format() {
+        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        Id acctId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        npe03__Recurring_Donation__c rd = getNewRecurringDonationRD2Format(contactId);
+        Opportunity opp = getOpportunityForRd(acctId, rd.Id);
+        List<Opportunity> mockedRelatedOpps = new List<Opportunity>{ opp };
+
+        RD2_DataMigration migrationService = new RD2_DataMigration()
+            .withRecurringDonation(rd)
+            .withRelatedOpportunities(mockedRelatedOpps);
+
+        System.assertEquals(true, migrationService.hasAlreadyBeenConverted(),
+            'This RD should be in RD2 format');
+    }
+
+    // HELPER METHODS
+
+    /**
+     * @description Instantiate an RD1 format recurring donation for a specific ContactId
+     * @param contactId
+     * @return Instantiated RD
+     */
+    private static npe03__Recurring_Donation__c getNewRecurringDonationRD1Format(Id contactId) {
+        TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withMockId()
+            .withDefaultValues()
+            .withOpenEndedStatusOpen()
+            .withContact(contactId)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1');
+
+        return rdBuilder.build();
+    }
+
+    /**
+     * @description Instantiate an RD2 format recurring donation for a specific ContactId
+     * @param contactId
+     * @return Instantiated RD
+     */
+    private static npe03__Recurring_Donation__c getNewRecurringDonationRD2Format(Id contactId) {
+        TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withMockId()
+            .withDefaultValues()
+            .withContact(contactId)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1');
+
+        return rdBuilder.build();
+    }
+
+    /**
+     * @description Instantiate an Opportunity specific AccountId and Rd Id
+     * @param acctId AccountId
+     * @param rdId RecurringDonationId
+     * @return Instantiated Opportunity
+     */
+    private static Opportunity getOpportunityForRd(Id acctId, Id rdId) {
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withMockId()
+            .withRecurringDonation(rdId)
+            .withAmount(100)
+            .withAccount(acctId)
+            .withClosedWonStage();
+
+        return oppBuilder.build();
+    }
 }

@@ -85,6 +85,7 @@ public class RD2_DataMigration {
     /**
      * @description Returns true if the RD record is already in RD2 format
      */
+    @TestVisible
     private Boolean hasAlreadyBeenConverted() {
         return rd.Status__c != null;
     }

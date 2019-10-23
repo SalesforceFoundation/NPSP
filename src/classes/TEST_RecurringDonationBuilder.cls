@@ -50,32 +50,32 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Contains record field values 
+    * @description Contains record field values
     */
     private Map<String, Object> valuesByFieldName = new Map<String, Object>();
 
     /***
-    * @description Recurring Donation builder mode 
+    * @description Recurring Donation builder mode
     */
-    private Mode recordMode;    
+    private Mode recordMode;
 
     /***
-    * @description Constructor 
+    * @description Constructor
     */
     public TEST_RecurringDonationBuilder() {
         this.recordMode = RD2_EnablementService.isRecurringDonations2Enabled
             ? Mode.Enhanced
             : Mode.Legacy;
-        
+
         this.withName();
     }
 
     /***
-    * @description Constructor 
+    * @description Constructor
     */
     private TEST_RecurringDonationBuilder(Mode recordMode) {
         this.recordMode = recordMode;
-        
+
         this.withName();
     }
 
@@ -119,7 +119,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     public TEST_RecurringDonationBuilder withMockId() {
         valuesByFieldName.put('Id', UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType));
         return this;
-    }    
+    }
 
     /***
     * @description Sets the Owner to the current user Id
@@ -197,7 +197,7 @@ public without sharing class TEST_RecurringDonationBuilder {
         if (UserInfo.isMultiCurrencyOrganization()) {
             valuesByFieldName.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, ccyIsoCode);
         }
-        
+
         return this;
     }
 
@@ -222,14 +222,14 @@ public without sharing class TEST_RecurringDonationBuilder {
     /***
     * @description Sets Next Payment Date
     * @param dt Date
-    * @return TEST_RecurringDonationBuilder Builder instance    
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withNextPaymentDate(Date dt) {
         validateMode(Mode.Legacy);
 
         valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
         return this;
-    }    
+    }
 
     /***
     * @description Sets if the last day of month should be used
@@ -241,7 +241,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         valuesByFieldName.put('Always_Use_Last_Day_Of_Month__c', shouldUse);
         return this;
-    }    
+    }
 
     /***
     * @description Sets Day of Month
@@ -251,7 +251,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     public TEST_RecurringDonationBuilder withDayOfMonth(String dayOfMonth) {
         valuesByFieldName.put('Day_Of_Month__c', dayOfMonth);
         return this;
-    }    
+    }
 
     /***
     * @description Sets number of Installments
@@ -355,7 +355,22 @@ public without sharing class TEST_RecurringDonationBuilder {
         valuesByFieldName.put('npe03__Open_Ended_Status__c', status);
         return this;
     }
-    
+
+    /**
+     * @description Configure the RD with the appropriate default values based on the mode
+     */
+    public TEST_RecurringDonationBuilder withDefaultValues() {
+
+        // TODO Update to use the RD2_Constants class for these when available
+        if (recordMode == Mode.Enhanced) {
+            valuesByFieldName.put('Status__c', 'Active');
+            valuesByFieldName.put('RecurringType__c', 'Open');
+            valuesByFieldName.put('npe03__Installment_Period__c', 'Monthly');
+            valuesByFieldName.put('InstallmentFrequency__c', 1);
+        }
+
+        return this;
+    }
 
     /***
     * @description Builds Recurring Donation sObject based on the provided values
