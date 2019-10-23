@@ -71,6 +71,11 @@ public with sharing class GE_TemplateBuilderCtrl {
         return FORM_ServiceGiftEntry.retrieveDefaultFormTemplate();
     }
 
+    @AuraEnabled
+    public static FORM_RenderWrapper retrieveDefaultFormRenderWrapper() {
+        return GE_FormRendererService.getDefaultRenderWrapper();
+    }
+
     /*******************************************************************************************************
     * @description Method that retrieves all Field Mapping Sets in an org. Used in the Gift Fields tab's
     * Field Mapping Sets combobox in the Form Template Builder. Field Mapping Set selection determines

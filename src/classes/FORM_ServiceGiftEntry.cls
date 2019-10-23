@@ -55,7 +55,6 @@ public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
     * @description Method for retrieving the current default template.
-    * @param templateId - the Id of an existing form template record for retrieval.
     */
     public static FORM_Template retrieveDefaultFormTemplate() {
         FORM_Template template;
