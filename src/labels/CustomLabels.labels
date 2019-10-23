@@ -1391,6 +1391,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Confirm that you have installed the Enhanced Recurring Donations metadata.</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementMetaDeployConfirmError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMetaDeployConfirmError</shortDescription>
+        <value>You have not yet installed the Enhanced Recurring Donations metadata. Click Launch MetaDeploy and follow the instructions.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementMetaDeployIntro</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -9237,6 +9245,22 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Select one</value>
     </labels>
     <labels>
+        <fullName>stgStatusDisabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgStatusDisabled</shortDescription>
+        <value>Disabled</value>
+    </labels>
+    <labels>
+        <fullName>stgStatusEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgStatusEnabled</shortDescription>
+        <value>Enabled</value>
+    </labels>
+    <labels>
         <fullName>stgTools</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -9259,21 +9283,5 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgValidationHHAccountHHRules</shortDescription>
         <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
-    </labels>
-    <labels>
-        <fullName>ToggleEnabled</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ToggleEnabled</shortDescription>
-        <value>Enabled</value>
-    </labels>
-    <labels>
-        <fullName>ToggleDisabled</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ToggleDisabled</shortDescription>
-        <value>Disabled</value>
     </labels>
 </CustomLabels>

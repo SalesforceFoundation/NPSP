@@ -335,6 +335,7 @@
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
         <members>RD2_EnablementDelegate_CTRL</members>
+        <members>RD2_EnablementDelegate_TEST</members>
         <members>RD2_EnablementService</members>
         <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
@@ -1428,6 +1429,7 @@
         <members>RD2_EnablementEnableWarning</members>
         <members>RD2_EnablementIntro</members>
         <members>RD2_EnablementMetaDeployConfirm</members>
+        <members>RD2_EnablementMetaDeployConfirmError</members>
         <members>RD2_EnablementMetaDeployIntro</members>
         <members>RD2_EnablementMetaDeployLaunch</members>
         <members>RD2_EnablementMetaDeployLaunchLinkLabel</members>
@@ -1478,8 +1480,6 @@
         <members>Saved</members>
         <members>Settings_not_Saved</members>
         <members>SmartyStreets_Help_Text</members>
-        <members>ToggleDisabled</members>
-        <members>ToggleEnabled</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>
@@ -2403,6 +2403,8 @@
         <members>stgPowerOfUsHub</members>
         <members>stgReset</members>
         <members>stgSelectOne</members>
+        <members>stgStatusDisabled</members>
+        <members>stgStatusEnabled</members>
         <members>stgTools</members>
         <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>

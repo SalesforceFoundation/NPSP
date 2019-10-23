@@ -63,6 +63,7 @@
     */
     completeEnable: function (component) {
         this.clearError(component);
+        this.disableEdit(component, "enable-toggle");
 
         var action = component.get('c.enableEnhancement');
 
@@ -164,6 +165,12 @@
             enableProgress = 50;
         }
         component.set('v.state.enableProgress', enableProgress);
+
+        if (!enablementState.isConfirmed || enablementState.isEnabled) {
+            this.disableEdit(component, "enable-toggle");
+        } else {
+            this.enableEdit(component, "enable-toggle");
+        }
     },
     /****
     * @description Refreshes MetaDeploy section
@@ -192,6 +199,20 @@
     displayElement: function (component, elementName) {
         let element = component.find(elementName);
         $A.util.removeClass(element, "slds-hide");
+    },
+    /****
+    * @description Disables input field edit
+    */
+    disableEdit: function (component, inputName) {
+        let inputComp = component.find(inputName);
+        $A.util.addClass(inputComp, "disabledEdit");
+    },
+    /****
+    * @description Enables input field edit
+    */
+    enableEdit: function (component, inputName) {
+        let inputComp = component.find(inputName);
+        $A.util.removeClass(inputComp, "disabledEdit");
     },
     /****
     * @description Clears the errors on the page

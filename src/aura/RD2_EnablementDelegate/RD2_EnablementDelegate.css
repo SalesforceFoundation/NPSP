@@ -16,3 +16,8 @@
 .THIS .linkButton:disabled, .THIS .styleButton:disabled {
     color: #706e6b;
 }
+.THIS .disabledEdit {
+    pointer-events: none;
+    color: #706e6b;
+    cursor: default;
+}

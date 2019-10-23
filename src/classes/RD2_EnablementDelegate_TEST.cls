@@ -1,5 +1,5 @@
-<!--
-    Copyright (c) 2019, Salesforce.org
+/*
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -26,13 +26,16 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
--->
-<!--
-	@author Salesforce.org
-	@date 2019
-	@group Recurring Donations
-	@description Harness app for the Enhanced Recurring Donations Lightning Component.
--->
-<aura:application access="GLOBAL" extends="ltng:outApp">
-  <aura:dependency resource="c:RD2_EnablementDelegate" />
-</aura:application>
+*/
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Recurring Donations
+* @description Recurring Donations enablement options and status tests
+*
+*/
+@isTest(IsParallel=true)
+public with sharing class RD2_EnablementDelegate_TEST {
+
+
+}

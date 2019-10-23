@@ -36,21 +36,21 @@
 public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
     /***
-    * @description 
+    * @description A unique enhanced Recurring Donation enablement panel Id
     */
     public override String idPanel() { 
         return 'idPanelRD2Enablement'; 
     }
 
     /***
-    * @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed)
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
     */
-    public string getNamespace() {
+    public String getNamespace() {
         return UTIL_Namespace.getNamespace();
     }
 
     /***
-    * @description 
+    * @description Enablement service
     */
     private static RD2_EnablementService service {
         get {
@@ -63,7 +63,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description 
+    * @description Loads the enablement state so the current completed and pending options can be displayed
+    * @return String JSON representation of the current EnablementState
     */
     @AuraEnabled(cacheable=false)
     public static String loadState() {
@@ -71,36 +72,43 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description 
+    * @description Retrieves the current enablement state 
+    * @return EnablementState
     */
     public static EnablementState getEnablementState() {
         EnablementState state = new EnablementState();
 
-        String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
-        
-        if (String.isNotBlank(jsonState)) {
-            state = (EnablementState) JSON.deserialize(jsonState, EnablementState.class);
-        }
-        
-        state.isReady = service.isRecurringDonations2Ready();
-        state.isEnabled = service.isRecurringDonations2Enabled();
+        try {
+            String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
+            
+            if (String.isNotBlank(jsonState)) {
+                state = (EnablementState) JSON.deserialize(jsonState, EnablementState.class);
+            }
+            
+            state.isReady = service.isRecurringDonations2Ready();
+            state.isEnabled = service.isRecurringDonations2Enabled();
 
-        if (String.isBlank(jsonState)) {
-            state.isConfirmed = false;
-            state.isMetaDeployLaunched = false;
-            state.isMetaDeployConfirmed = false;
-            state.isMigrationRun = false;
-        } else {
-            state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
-            state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched;
-            state.isMigrationRun = state.isMigrationRun && state.isMetaDeployConfirmed;
+            if (String.isBlank(jsonState)) {
+                state.isConfirmed = false;
+                state.isMetaDeployLaunched = false;
+                state.isMetaDeployConfirmed = false;
+                state.isMigrationRun = false;
+            } else {
+                state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
+                state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched && isMetaDeployInstalled();
+                state.isMigrationRun = state.isMigrationRun && state.isMetaDeployConfirmed;
+            }
+
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
         }
 
         return state;
     }
 
     /***
-    * @description 
+    * @description Tracks the enablement confirmation user action
+    * @return void
     */
     @AuraEnabled
     public static void confirmEnablement() {
@@ -111,7 +119,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description 
+    * @description Tracks the MetaDeploy link click user action
+    * @return void
     */
     @AuraEnabled
     public static void launchMetaDeploy() {
@@ -122,10 +131,15 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description 
+    * @description Tracks the MetaDeploy install confirmation user action
+    * @return void
     */
     @AuraEnabled
-    public static void confirmMetaDeploy() {
+    public static void confirmMetaDeploy() {        
+        if (!isMetaDeployInstalled()) {
+            throw new AuraHandledException(System.Label.RD2_EnablementMetaDeployConfirmError);
+        }
+
         EnablementState state = getEnablementState();
         state.isMetaDeployConfirmed = true;
 
@@ -133,29 +147,62 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description 
+    * @description Checks if MetaDeploy has been installed
+    * @return Boolean
     */
-    private static void saveEnablementState(EnablementState state) {  
-        //do not save variables not being used from the saved enablement state   
-        state.isReady = null;
-        state.isEnabled = null;   
+    private static Boolean isMetaDeployInstalled() {
+        final String lastDayPicklistValue = 'Last_Day';
 
-        //save the state
-        STG_Panel.stgService.stgRD.RecurringDonations2EnablementState__c = JSON.serialize(state);
-        upsert STG_Panel.stgService.stgRD;
+        List<SelectOption> lastDayOfMonthOptions = UTIL_Describe.getSelectOptions(
+            String.valueOf(npe03__Recurring_Donation__c.SObjectType), 
+            SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c.Name
+        );
+
+        for (SelectOption option: lastDayOfMonthOptions) {
+            if (option.getValue() == lastDayPicklistValue) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /***
-    * @description 
+    * @description Saves the current enablement state
+    * @param state Enablement state
+    * @return void
+    */
+    private static void saveEnablementState(EnablementState state) {  
+        try {
+            //do not save variables not being used from the saved enablement state   
+            state.isReady = null;
+            state.isEnabled = null;   
+
+            //save the state
+            STG_Panel.stgService.stgRD.RecurringDonations2EnablementState__c = JSON.serialize(state);
+            upsert STG_Panel.stgService.stgRD;
+
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    /***
+    * @description Tracks the enhanced Recurring Donation enablement user action
+    * @return void
     */
     @AuraEnabled
     public static void enableEnhancement() {
-        STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c = true;
-        upsert STG_Panel.stgService.stgRD;
+        try {
+            STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c = true;
+            upsert STG_Panel.stgService.stgRD;
+
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     /***
-    * @description 
+    * @description Represents enhanced Recurring Donation options and status
     */
     public class EnablementState {
         public Boolean isReady = false;
