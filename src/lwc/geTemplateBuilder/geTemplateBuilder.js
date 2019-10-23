@@ -122,7 +122,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * field to batch headers.
     *
     * @param {object} event: Event received from child component.
-    * component chain: geTemplateBuilderBatchHeaders -> here
+    * component chain: geTemplateBuilderbatchHeader -> here
     */
     handleAddBatchHeaderField(event) {
         let batchHeaderField = event.detail;
@@ -134,7 +134,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * details on a batch header field.
     *
     * @param {object} event: Event received from child component.
-    * component chain: geTemplateBuilderFormField -> geTemplateBuilderBatchHeaders -> here
+    * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleUpdateBatchHeaderField(event) {
         const detail = event.detail;
@@ -153,7 +153,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * header field up.
     *
     * @param {object} event: Event received from child component.
-    * component chain: geTemplateBuilderFormField -> geTemplateBuilderBatchHeaders -> here
+    * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldUp(event) {
         const fieldName = event.detail;
@@ -170,7 +170,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * header field down.
     *
     * @param {object} event: Event received from child component.
-    * component chain: geTemplateBuilderFormField -> geTemplateBuilderBatchHeaders -> here
+    * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldDown(event) {
         const fieldName = event.detail;
@@ -187,9 +187,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * header field.
     *
     * @param {object} event: Event received from child component.
-    * component chain: geTemplateBuilderFormField -> geTemplateBuilderBatchHeaders -> here
+    * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     * OR
-    * geTemplateBuilderBatchHeaders -> here
+    * geTemplateBuilderbatchHeader -> here
     */
     handleRemoveBatchHeaderField(event) {
         const batchHeaderFieldIndex = event.detail;
