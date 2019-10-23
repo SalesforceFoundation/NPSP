@@ -1,5 +1,5 @@
 import { LightningElement, track, api } from 'lwc';
-import { mutable } from 'c/utilTemplateBuilder';
+import { mutable, dispatch } from 'c/utilTemplateBuilder';
 
 export default class UtilModal extends LightningElement {
     @track modalData;
@@ -13,32 +13,32 @@ export default class UtilModal extends LightningElement {
         return this.modalData ? this.modalData.section : {};
     }
 
+    /*******************************************************************************
+    * @description Dispatches an event to notify parent aura component GE_ModalProxy
+    * that the given section needs to be removed.
+    */
     handleDelete() {
-        console.log('Delete');
-        this.dispatchEvent(new CustomEvent('handlesave', {
-            detail: { action: 'delete', section: this.modalData.section }
-        }));
+        const detail = { action: 'delete', section: this.modalData.section };
+        dispatch(this, 'handlesave', detail);
     }
 
-    handleCancel() {
-        console.log('Cancel');
-        this.dispatchEvent(new CustomEvent('handlecancel'));
-        console.log('event has been dispatched');
-    }
-
+    /*******************************************************************************
+    * @description Dispatches an event to notify parent aura component GE_ModalProxy
+    * that the modal needs to be updated.
+    */
     handleSave() {
-        console.log('Save');
-        let modalData = mutable(this.modalData);
-        console.log('modalData: ', modalData);
-        const customLabel = this.template.querySelector('lightning-input[data-name="customLabel"]').value;
-        modalData.section.label = customLabel;
+        let section = mutable(this.modalData.section);
+        section.label = this.template.querySelector('lightning-input[data-name="customLabel"]').value;;
 
-        this.modalData = modalData;
+        const detail = { action: 'save', section: section };
+        dispatch(this, 'handlesave', detail);
+    }
 
-        this.dispatchEvent(new CustomEvent('handlesave', {
-            detail: { action: 'save', section: this.modalData.section }
-        }));
-
-        console.log('event has been dispatched');
+    /*******************************************************************************
+    * @description Dispatches an event to notify parent aura component GE_ModalProxy
+    * that the modal needs to be closed.
+    */
+    handleCancel() {
+        dispatch(this, 'handlecancel');
     }
 }
