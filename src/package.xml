@@ -332,6 +332,7 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>RD2_Constants</members>
         <members>RD2_DataMigration</members>
         <members>RD2_DataMigration_BATCH</members>
         <members>RD2_DataMigration_TEST</members>
