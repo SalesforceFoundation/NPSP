@@ -1010,4 +1010,26 @@ public without sharing class UTIL_CustomSettingsFacade {
         // New default settings for the Batch Data Import engine
         dataImportSettings = dis;
     }
+
+    /**
+    * @description Used to configure default Advanced Mapping settings in tests.
+    */
+    @TestVisible
+    private static void enableAdvancedMapping(){
+        Data_Import_Settings__c dis = getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        setDataImportSettings(dis);
+    }
+
+    /**
+    * @description Used to configure default Help Text Mapping settings in tests.
+    */
+    @TestVisible
+    private static void enableHelpTextMapping(){
+        Data_Import_Settings__c dis = getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_HELP_TEXT;
+        setDataImportSettings(dis);
+    }
 }
