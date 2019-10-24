@@ -1,0 +1,13 @@
+{
+  "orgName": "NPSP - Beta Test Org",
+  "edition": "Developer",
+  "language": "ja",
+  "hasSampleData": "true",
+  "settings": {
+    "orgPreferenceSettings": {
+      "chatterEnabled": true,
+      "notesReservedPref01": true,
+      "s1DesktopEnabled": true
+    }
+  }
+}
