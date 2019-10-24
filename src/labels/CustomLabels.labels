@@ -3547,6 +3547,34 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Gift Entry</value>
     </labels>
     <labels>
+        <fullName>bgeUnmappedFieldsNoticeHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header used for the Batch Gift Entry tab unmapped fields notice.</shortDescription>
+        <value>Field Mapping Changed</value>
+    </labels>
+    <labels>
+        <fullName>bgeUnmappedFieldsNoticeTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title used for the Batch Gift Entry tab unmapped fields notice.</shortDescription>
+        <value>Batch Includes Unmapped Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeUnmappedFieldsNoticeMessageAdvancedMapping</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message for Batch Gift Entry unmapped fields when Advanced Mapping enabled.</shortDescription>
+        <value>The following fields are included in this Batch, but their Field Mappings were deleted: {0}. To fix this, go to Advanced Mapping in NPSP Settings and map the fields again.</value>
+    </labels>
+    <labels>
+        <fullName>bgeUnmappedFieldsNoticeMessageHelpTextMapping</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message for Batch Gift Entry unmapped fields when Advanced Mapping disabled.</shortDescription>
+        <value>The following fields are included in this Batch, but their Field Mappings were deleted: {0}. To fix this, go to the NPSP Data Import object and map the fields again using Help Text.</value>
+    </labels>
+    <labels>
         <fullName>bgeWizardShowAdvancedOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>
