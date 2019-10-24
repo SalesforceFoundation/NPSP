@@ -67,7 +67,7 @@ public without sharing class RD2_ScheduleService {
         rdsched.InstallmentFrequency__c = rd.InstallmentFrequency__c;
         rdsched.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
         rdsched.PaymentMethod__c = rd.PaymentMethod__c;
-        rdsched.StartDate__c = rd.StartDate__c;
+        rdsched.StartDate__c = (rd.StartDate__c != null ? rd.StartDate__c : rd.Date_Established__c);
 
         if (!isFirstAndFifteenth(rd)) {
             rdsched.DayOfMonth__c = rd.Day_of_Month__c;
