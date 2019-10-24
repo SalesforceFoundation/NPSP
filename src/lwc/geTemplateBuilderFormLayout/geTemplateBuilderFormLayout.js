@@ -1,5 +1,4 @@
 import { LightningElement, api, track } from 'lwc';
-import { FormLayout } from 'c/utilTemplateBuilder';
 
 export default class GeTemplateBuilderFormLayout extends LightningElement {
     @api fieldMappingSet;
@@ -30,7 +29,12 @@ export default class GeTemplateBuilderFormLayout extends LightningElement {
 
         /* Where's this version number going to come from? */
         const version = '1.0';
-        let formLayout = new FormLayout(this.fieldMappingSet, version, formSections);
+        let formLayout = {
+            fieldMappingSetDevName: this.fieldMappingSet,
+            version: version,
+            sections: formSections
+        }
+
         return formLayout;
     }
 
