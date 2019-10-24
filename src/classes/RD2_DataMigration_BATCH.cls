@@ -188,7 +188,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
     * @param rds Collection of Recurring Donations to retrieve related Opps for
     * @return Map<Id, List<Opportunity>>
     */
-    public Map<Id, List<Opportunity>> getRelatedOpportunities(List<npe03__Recurring_Donation__c> rds) {
+    private Map<Id, List<Opportunity>> getRelatedOpportunities(List<npe03__Recurring_Donation__c> rds) {
         Map<Id, List<Opportunity>> oppsByRdId = new Map<Id, List<Opportunity>>();
 
         for (Opportunity opp : [SELECT Id,

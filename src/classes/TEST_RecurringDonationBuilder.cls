@@ -363,9 +363,9 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         // TODO Update to use the RD2_Constants class for these when available
         if (recordMode == Mode.Enhanced) {
-            valuesByFieldName.put('Status__c', 'Active');
-            valuesByFieldName.put('RecurringType__c', 'Open');
-            valuesByFieldName.put('npe03__Installment_Period__c', 'Monthly');
+            valuesByFieldName.put('Status__c', RD2_Constants.STATUS_ACTIVE);
+            valuesByFieldName.put('RecurringType__c', RD2_Constants.RECURRING_TYPE_OPEN);
+            valuesByFieldName.put('npe03__Installment_Period__c', RD2_Constants.FREQUENCY_MONTHLY);
             valuesByFieldName.put('InstallmentFrequency__c', 1);
         }
 

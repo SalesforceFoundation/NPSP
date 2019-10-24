@@ -60,7 +60,7 @@ private class RD2_DataMigration_TEST {
             jobException = ex;
         }
 
-        System.assertNotEquals(null, jobException, 'The batch job did not throw an exception');
+        System.assertNotEquals(null, jobException, 'The batch job should have thrown because RD2 is not enabled in the org');
         System.assert(jobException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorDataMigrationJobCannotBeRun),
             'The exception message should match ' + System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
     }
