@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Class with methods to create, modify and visualize RecurringDonationSchedule__c records.
+* @description All services specific to the Recurring Donation Schedule object
 *
 */
 
