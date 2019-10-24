@@ -5,11 +5,14 @@ const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'CURRENCY', 'DATE', 'DATETIME', 'EMAI
 const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
+const TEXT_AREA_TYPE = 'TEXTAREA';
 const DELAY = 300;
 
 export default class GeFormField extends LightningElement {
     @track value;
+    @track picklistValues = [];
     @api element;
+
     changeTimeout;
 
     handleValueChange(event) {
@@ -31,6 +34,10 @@ export default class GeFormField extends LightningElement {
         return GeFormService.getFieldInfo(this.element.value);
     }
 
+    get objectInfo() {
+        return GeFormService.getObjectInfo(this.objectDevName);
+    }
+
     get fieldType() {
         return this.fieldInfo.Target_Field_Data_Type;
     }
@@ -49,5 +56,21 @@ export default class GeFormField extends LightningElement {
 
     get isPicklist() {
         return this.fieldType === PICKLIST_TYPE;
+    }
+
+    get isTextArea() {
+        return this.fieldType === TEXT_AREA_TYPE;
+    }
+
+    get objectDevName() {
+        return this.fieldInfo.Target_Object_Mapping_Dev_Name;
+    }
+
+    get objectApiName() {
+        return this.objectInfo.Object_API_Name;
+    }
+
+    get fieldApiName() {
+        return this.fieldInfo.Target_Field_API_Name;
     }
 }

@@ -17,6 +17,7 @@ const inputTypeByDescribeType = {
 class GeFormService {
 
     fieldMappings;
+    objectMappings;
 
     getFormTemplate() {
         return new Promise((resolve, reject) => {
@@ -24,6 +25,7 @@ class GeFormService {
                 .then((result) => {
                     console.log(JSON.parse(JSON.stringify(result)));
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
+                    this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
                     resolve(result);
                 })
                 .catch(error => {
@@ -36,16 +38,14 @@ class GeFormService {
         return inputTypeByDescribeType[dataType];
     };
 
-    getFieldInfo(fieldName) {
-        return this.fieldMappings[fieldName];
+    getFieldInfo(fieldDevName) {
+        return this.fieldMappings[fieldDevName];
+    }
+
+    getObjectInfo(objectDevName) {
+        return this.objectMappings[objectDevName];
     }
 }
-
-
-
-const getInputTypeFromDataType = dataType => {
-    return inputTypeByDescribeType[dataType];
-};
 
 const geFormServiceInstance = new GeFormService();
 

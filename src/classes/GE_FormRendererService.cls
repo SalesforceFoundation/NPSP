@@ -1,7 +1,4 @@
 public with sharing class GE_FormRendererService {
-    public GE_FormRendererService() {
-
-    }
 
     @AuraEnabled
     public static FORM_RenderWrapper getRenderWrapperById(Id templateId) {
