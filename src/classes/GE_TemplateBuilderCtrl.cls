@@ -71,7 +71,11 @@ public with sharing class GE_TemplateBuilderCtrl {
         return FORM_ServiceGiftEntry.retrieveDefaultFormTemplate();
     }
 
-    @AuraEnabled
+    /**
+     * @description Retrieve the default form render wrapper for gift entry. Placeholder, uses the first record found.
+     * @return      A render wrapper containing a template and information about the object/field mappings.
+     */
+    @AuraEnabled(cacheable=true)
     public static FORM_RenderWrapper retrieveDefaultFormRenderWrapper() {
         return GE_FormRendererService.getDefaultRenderWrapper();
     }
