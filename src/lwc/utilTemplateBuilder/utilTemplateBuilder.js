@@ -1,30 +1,6 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
-const FormSection = class FormSection {
-    constructor(id, displayType, defaultDisplayMode, displayRule, label, elements) {
-        this.id = id;
-        this.displayType = displayType;
-        this.defaultDisplayMode = defaultDisplayMode;
-        this.displayRule = displayRule;
-        this.label = label;
-        this.elements = elements || [];
-    }
-}
-
-const FormField = class FormField {
-    constructor(label, required, value, allowDefaultValue, sectionId, defaultValue, dataType, picklistOptions) {
-        this.label = label;
-        this.required = required;
-        this.value = value;
-        this.allowDefaultValue = allowDefaultValue;
-        this.sectionId = sectionId;
-        this.defaultValue = defaultValue;
-        this.dataType = dataType;
-        this.picklistOptions = picklistOptions;
-    }
-}
-
 const BatchHeaderField = class BatchHeaderField {
     constructor(label, value, required, isRequiredFieldDisabled, allowDefaultValue, defaultValue, dataType, picklistOptions) {
         this.label = label;
@@ -168,8 +144,6 @@ const lightningInputTypeByDataType = {
 }
 
 export {
-    FormSection,
-    FormField,
     BatchHeaderField,
     removeByProperty,
     findIndexByProperty,

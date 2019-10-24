@@ -2,7 +2,7 @@ import { LightningElement, track, api } from 'lwc';
 import getFieldMappingSets from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingSetNames';
 import getFieldAndObjectMappingsByFieldMappingSetName
     from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldAndObjectMappingsByFieldMappingSetName';
-import { FormSection, FormField, showToast, removeByProperty, findIndexByProperty, shiftToIndex, mutable, generateId } from 'c/utilTemplateBuilder';
+import { showToast, removeByProperty, findIndexByProperty, shiftToIndex, mutable, generateId } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderGiftFields extends LightningElement {
     @track isLoading = true;
@@ -198,16 +198,16 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
             const fieldMapping =
                 this._fieldMappingsForSelectedSet.find(fm => fm.value === fieldMappingDeveloperName);
 
-            let formField = new FormField(
-                fieldMapping.label,
-                false,
-                fieldMapping.value,
-                false,
-                sectionId,
-                undefined,
-                fieldMapping.dataType,
-                fieldMapping.picklistOptions
-            )
+            let formField = {
+                label: fieldMapping.label,
+                required: false,
+                value: fieldMapping.value,
+                allowDefaultValue: false,
+                sectionId: sectionId,
+                defaultValue: null,
+                dataType: fieldMapping.dataType,
+                picklistOptions: fieldMapping.picklistOptions
+            }
 
             if (!this.formSections || this.formSections.length === 0) {
                 sectionId = this.handleAddSection();
@@ -242,16 +242,16 @@ export default class geTemplateBuilderGiftFields extends LightningElement {
     */
     handleAddSection() {
         if (!this.formSections) { this.formSections = [] }
-        let formSections = this.getMutableFormSections()
+        let formSections = this.getMutableFormSections();
 
-        let newSection = new FormSection(
-            generateId(),
-            'accordion',
-            'expanded',
-            'displayRule',
-            'Test Label ' + formSections.length,
-            []
-        )
+        let newSection = {
+            id: generateId(),
+            displayType: 'accordion',
+            defaultDisplayMode: 'expanded',
+            displayRule: 'displayRule',
+            label: 'Test Label ' + formSections.length,
+            elements: []
+        }
 
         formSections.push(newSection);
         this.formSections = formSections;
