@@ -332,6 +332,8 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>RD2_CreateOpportunityService</members>
+        <members>RD2_CreateOpportunityService_TEST</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
         <members>RD2_EnablementService</members>
