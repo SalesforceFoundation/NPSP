@@ -189,6 +189,71 @@ private with sharing class ALLO_Allocations_TEST {
 
     }
 
+    /*******************************************************************************************************
+    * @description When Payments are created after the Opportunity and Opportunity Allocations exist,
+    * ensure that the payment allocation percentages match those from the Opportunity Allocations, and
+    * are not overwritten by additional logic in the trigger.
+    * Also check that allocation rounding works correctly and no amounts are allocated to the Default GAU
+    ********************************************************************************************************/
+    @isTest
+    private static void confirmNewPaymentAllocationsMatchExistingOppAllocationRounding() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Account acc = new Account(Name='Account-pmtAlloPercentCheck');
+        insert acc;
+        Opportunity opp = new Opportunity(
+            Name = 'Opp-pmtAlloPercentCheck', 
+            Amount = 100.01, 
+            AccountID = acc.Id, 
+            CloseDate = System.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp;
+
+        List<General_Accounting_Unit__c> gauForInsert = new List<General_Accounting_Unit__c>();
+        
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name='GAU-1');
+        gauForInsert.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name='GAU-2');
+        gauForInsert.add(gau2);
+        insert gauForInsert;
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>{
+            createOppAllocation(gau1.Id, opp.Id, null, 25),
+            createOppAllocation(gau1.Id, opp.Id, 25, null),
+            createOppAllocation(gau2.Id, opp.Id, 50.01, null)
+        };
+        insert alloForInsert;
+
+        // This Payment amount will allow us to test rounding of allocation percentages and amounts
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 100.01, npe01__Opportunity__c = opp.Id);
+        Test.startTest();
+        insert pmt;
+        Test.stopTest();
+
+        // Check that each allocation has the correct amount and percent
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.Id, gau1.Id);
+
+        // Make sure the percent value carried through to the Payment Allocation
+        System.assertEquals(50, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
+        System.assertEquals(50, queryAllo[0].Amount__c, 'The amount of the allocation should be calculated based on the parent Opportunity allocation.');
+    
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, gau2.Id);
+
+        System.assertEquals(50, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
+        System.assertEquals(50.01, queryAllo[0].Amount__c, 'The amount of the allocation should be calculated based on the parent Opportunity allocation.');
+
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, defaultGau.Id);
+        System.assertEquals(queryAllo.size(), 0, 'This payment should be fully allocated without the Default GAU');
+
+    }
+
 
     /*******************************************************************************************************
     * @description When changing the amount of a Payment with Allocations:
@@ -1176,7 +1241,7 @@ private with sharing class ALLO_Allocations_TEST {
     * @param percent An Allocation percent
     * @return Allocation__c Allocation record with provided parameters filled in
     **********************************************************************************************************/
-    private static Allocation__c createOppAllocation(Id gauId, Id oppId, Double amt, Double percent) {
+    private static Allocation__c createOppAllocation(Id gauId, Id oppId, Decimal amt, Double percent) {
         return new Allocation__c(
             Opportunity__c = oppId, 
             General_Accounting_Unit__c = gauId,

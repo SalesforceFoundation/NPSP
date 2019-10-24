@@ -599,8 +599,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                     //Calculate proportional amount for non-percentage based Payment allocations
                     if (sObj instanceof npe01__OppPayment__c && allo.Percent__c == null) {
-                        allo.Percent__c = allo.Amount__c / wrap.parentAmount * 100;
-                        allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
+                        // Do not round the percent yet, we want the most accurate Amount value possible
+                        Decimal alloPercent = allo.Amount__c / wrap.parentAmount * 100;
+                        allo.Amount__c = (amount * alloPercent * .01).setScale(2);
+                        // Round the visible percentage value to 2 decimal places after the amount is calculated
+                        allo.Percent__c = alloPercent.setScale(2, System.RoundingMode.HALF_UP);
 
 
                     }
@@ -637,24 +640,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     }
                 }
 
-                // Only set the percentages and update the list to insert to the consolidated list
-                // when it's a payment.
+                // Only update the list to insert to the consolidated list when it's a payment.
                 if (isPaymentAllocation == true) {
-                    List<Allocation__c> consolidatedAllocationList = GAUtoAlloMapping.values();
-
-
-                    // Only set the percentage if it is a payment or an opportunity that isn't tied to a campaign or a recurring donation.
-                    // At this point, only the amounts on each allocation is correct, not the percentage.
-                    // Go through the allocation and adjust the percentage so it is correct.
-                    for (Allocation__c consolidatedAllocation : consolidatedAllocationList) {
-                        // Only recalculate if percent values were not set on the Allocations
-                        if (consolidatedAllocation.Percent__c == null) {
-                            consolidatedAllocation.Percent__c = consolidatedAllocation.Amount__c / amount * 100;
-                        }
-                    }
-
                     // Set the consolidated list as the list to insert
-                    listAlloForInsert = consolidatedAllocationList;
+                    listAlloForInsert = GAUtoAlloMapping.values();
                 }
 
 
