@@ -106,7 +106,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         'Phone': ['Phone', 'String'],
         'Picklist': ['Picklist', 'Boolean'],
         'Reference': ['Reference', 'String'],
-        'String': ['String', 'Picklist'],
+        'String': ['String', 'Picklist', 'Reference'],
         'Textarea': ['Textarea', 'String'],
         'Time': ['Time'],
         'Url': ['Url', 'String']
