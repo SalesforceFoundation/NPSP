@@ -37,14 +37,8 @@
 @IsTest
 private class BDI_FieldMappingHelpText_TEST {
 
-    @TestSetup
-    private static void configureHelpTextMapping() {
-        //Verify that the custom setting for Data import is set to use Help Text mapping
-        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
-        if (dis.Field_Mapping_Method__c != BDI_DataImportService.FM_HELP_TEXT) {
-            dis.Field_Mapping_Method__c = BDI_DataImportService.FM_HELP_TEXT;
-            UTIL_CustomSettingsFacade.setDataImportSettings(dis);
-        }
+    {
+        UTIL_CustomSettingsFacade.enableHelpTextMapping();
     }
 
     @IsTest
