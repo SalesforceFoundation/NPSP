@@ -1,19 +1,6 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
-const BatchHeaderField = class BatchHeaderField {
-    constructor(label, value, required, isRequiredFieldDisabled, allowDefaultValue, defaultValue, dataType, picklistOptions) {
-        this.label = label;
-        this.value = value;
-        this.required = required;
-        this.isRequiredFieldDisabled = isRequiredFieldDisabled;
-        this.allowDefaultValue = allowDefaultValue;
-        this.defaultValue = defaultValue;
-        this.dataType = dataType;
-        this.picklistOptions = picklistOptions;
-    }
-}
-
 const removeByProperty = (array, property, value) => {
     const index = array.findIndex(element => element[property] === value);
     array.splice(index, 1);
@@ -144,7 +131,6 @@ const lightningInputTypeByDataType = {
 }
 
 export {
-    BatchHeaderField,
     removeByProperty,
     findIndexByProperty,
     shiftToIndex,

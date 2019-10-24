@@ -1,6 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
-import { BatchHeaderField, findIndexByProperty, shiftToIndex, mutable, sort } from 'c/utilTemplateBuilder';
+import { findIndexByProperty, shiftToIndex, mutable, sort } from 'c/utilTemplateBuilder';
 
 const REQUIRED_FIELDS = [
     'Name'
@@ -96,16 +96,16 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             return bf.value === fieldName;
         });
 
-        let field = new BatchHeaderField(
-            batchField.label,
-            batchField.value,
-            batchField.isRequired,
-            batchField.isRequiredFieldDisabled,
-            false,
-            undefined,
-            batchField.dataType,
-            batchField.picklistOptions
-        );
+        let field = {
+            label: batchField.label,
+            value: batchField.value,
+            required: batchField.isRequired,
+            isRequiredFieldDisabled: batchField.isRequiredFieldDisabled,
+            allowDefaultValue: false,
+            defaultValue: null,
+            dataType: batchField.dataType,
+            picklistOptions: batchField.picklistOptions
+        };
 
         if (!this.selectedBatchFields) { this.selectedBatchFields = [] }
         this.selectedBatchFields = [...this.selectedBatchFields, field];
