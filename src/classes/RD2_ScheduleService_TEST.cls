@@ -62,7 +62,8 @@ private with sharing class RD2_ScheduleService_TEST {
         Contact contact = getContact();
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-                new TEST_RecurringDonationBuilder()
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                    .withMockId()
                         .withContact(contact.Id)
                         .withAmount(10)
                         .withInstallmentPeriodMonthly()
