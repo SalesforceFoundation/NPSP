@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019, Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,9 +27,45 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger TDTM_GeneralAccountingUnit on General_Accounting_Unit__c (after delete, after insert, after undelete,
-    after update, before delete, before insert, before update) {
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Recurring Donations
+* @description Enhanced Recurring Donations constants for specific picklist values and logic
+*
+*/
+public inherited sharing class RD2_Constants {
 
-    TDTM_Config_API.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete,
-        Trigger.isUndelete, Trigger.new, Trigger.old, Schema.SObjectType.General_Accounting_Unit__c);
+    /**
+    * @description Api Values of the npe03_RecurringDonation.Installment_Frequency__c picklist
+    */
+    public static final String FREQUENCY_MONTHLY = 'Monthly';
+    public static final String FREQUENCY_WEEKLY = 'Weekly';
+    public static final String FREQUENCY_YEARLY = 'Yearly';
+    public static final String FREQUENCY_FIRST_AND_FIFTEENTH = '1st and 15th';
+
+    /**
+    * @description Api Values of the npe03_RecurringDonation.Day_Of_Month__c picklist
+    */
+    public static final String DAY_OF_MONTH_FIRST = '1';
+    public static final String DAY_OF_MONTH_FIFTEENTH = '15';
+    public static final String DAY_OF_MONTH_LAST_DAY = 'Last_Day';
+
+    /**
+    * @description Api Values of the npe03_RecurringDonation.Status__c picklist
+    */
+    public static final String STATUS_ACTIVE = 'Active';
+    public static final String STATUS_LAPSED = 'Lapsed';
+    public static final String STATUS_CLOSED = 'Closed';
+
+    /**
+    * @description Api Values of the npe03__RecurringDonation.RecurringType__c picklist
+    */
+    public static final String RECURRING_TYPE_OPEN = 'Open';
+
+    /**
+    * @description The default batch size for the migration job if it's not specified
+    * in custom settings
+    */
+    public static final Integer DEFAULT_MIGRATION_JOB_BATCH_SIZE = 200;
 }

@@ -26,7 +26,6 @@ import stgBtnNew from '@salesforce/label/c.stgBtnNew';
 import stgBtnSave from '@salesforce/label/c.stgBtnSave';
 import stgLabelObject from '@salesforce/label/c.stgLabelObject';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
-import lblRequired from '@salesforce/label/c.lblRequired';
 
 export default class bdiFieldMappingModal extends LightningElement {
 
@@ -50,8 +49,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         stgBtnEdit,
         stgBtnNew,
         stgBtnSave,
-        stgLabelObject,
-        lblRequired
+        stgLabelObject
     };
 
     @api objectMapping;
@@ -71,8 +69,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         Source_Field_Display_Type_Label: undefined,
         Target_Field_API_Name: undefined,
         Target_Field_Label: undefined,
-        Target_Field_Display_Type_Label: undefined,
-        Required: undefined
+        Target_Field_Display_Type_Label: undefined
     };
 
     @track sourceFieldLabelOptions;
@@ -140,32 +137,6 @@ export default class bdiFieldMappingModal extends LightningElement {
         'Textarea': 'Text Area',
         'Time': 'Time',
         'Url': 'URL'
-    }
-
-    /*******************************************************************************
-    * @description List of core objects using legacy bdi processing logic. Used to
-    * disable the 'Required__c' checkbox as a stop gap because legacy code doesn't
-    * use this field.
-    */
-    coreObjects = [
-        'account',
-        'npsp__address__c',
-        'address__c',
-        'campaign',
-        'campaignmember',
-        'contact',
-        'npsp__allocation__c',
-        'allocation__c',
-        'opportunity',
-        'opportunitycontactrole',
-        'npe01__opppayment__c'
-    ]
-
-    get isRequiredFieldDisabled() {
-        if (this.coreObjects.includes(this.objectMapping.Object_API_Name.toLowerCase())) {
-            return true;
-        }
-         return false;
     }
 
     get isTargetFieldDisabled() {
@@ -244,7 +215,6 @@ export default class bdiFieldMappingModal extends LightningElement {
                 // Edit field mapping
                 this.modalMode = 'edit';
                 this.fieldMapping = this.parse(event.row);
-                this.fieldMapping.Required = this.fieldMapping.Required === 'Yes' ? true : false;
             } else {
                 // New field mapping
                 this.modalMode = 'new';
@@ -347,7 +317,7 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.targetFieldsByAPIName = targetFieldsByAPIName;
             this.targetFieldsByLabelByDisplayType = targetFieldsByLabelByDisplayType;
 
-            if (this.fieldMapping && this.fieldMapping.Source_Field_Display_Type) {
+            if (this.fieldMapping && this.fieldMapping.Source_Field_Data_Type) {
                 this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.fieldMapping);
             }
         } catch(error) {
@@ -381,14 +351,10 @@ export default class bdiFieldMappingModal extends LightningElement {
         try {
             let missingField = this.handleFieldValidations();
             if (missingField.length === 0) {
-                let inputFieldRequired =
-                    this.template.querySelector(`lightning-input[data-field-name="${lblRequired}"]`);
-                let isRequired = inputFieldRequired.checked === true ? 'Yes' : 'No';
                 let rowDetails;
 
                 if (this.modalMode === 'edit') {
                     // Set source and target fields
-                    this.fieldMapping.Required = isRequired;
                     rowDetails = JSON.stringify(this.fieldMapping);
                 } else if (this.modalMode === 'new') {
                     // New Field Mapping
@@ -397,7 +363,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                         MasterLabel: this.fieldMapping.Source_Field_Label,
                         Data_Import_Field_Mapping_Set: this.fieldMappingSetName,
                         Is_Deleted: false,
-                        Required: isRequired,
+                        Required: 'No',
                         Source_Field_API_Name: this.fieldMapping.Source_Field_API_Name,
                         Target_Field_API_Name: this.fieldMapping.Target_Field_API_Name,
                         Target_Object_Mapping: this.objectMapping.DeveloperName
@@ -496,13 +462,13 @@ export default class bdiFieldMappingModal extends LightningElement {
             this.fieldMapping = {
                 Source_Field_Label: fieldInfo.label,
                 Source_Field_API_Name: fieldAPIName,
-                Source_Field_Display_Type: displayType,
+                Source_Field_Data_Type: displayType,
                 Source_Field_Display_Type_Label: this.labelsByDisplayType[displayType],
                 Target_Field_API_Name: undefined,
             }
 
             this.hasSourceFieldErrors = false;
-            this.handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo);
+            this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.fieldMapping);
         }
     }
 
@@ -511,11 +477,12 @@ export default class bdiFieldMappingModal extends LightningElement {
     *
     * @param {string} displayType: Display Type of the currently selected source field
     */
-    handleAvailableTargetFieldsBySourceFieldDisplayType(fieldInfo) {
+    handleAvailableTargetFieldsBySourceFieldDisplayType(fieldMapping) {
+        const sourceFieldDataType = this.toTitleCase(fieldMapping.Source_Field_Data_Type);
         this.targetFieldLabelOptions = [];
-        let validTargetTypes = this.validTargetTypesBySourceType[this.toTitleCase(fieldInfo.displayType)];
+        let validTargetTypes = this.validTargetTypesBySourceType[sourceFieldDataType];
 
-        if (fieldInfo.displayType === 'PICKLIST' && !fieldInfo.isBooleanMappable) {
+        if (sourceFieldDataType === 'Picklist' && !fieldMapping.isBooleanMappable) {
             let index = validTargetTypes.indexOf('Boolean');
             validTargetTypes.splice(index, 1);
         }

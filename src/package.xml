@@ -86,6 +86,7 @@
         <members>BDI_FieldMappingCustomMetadata</members>
         <members>BDI_FieldMappingCustomMetadata_TEST</members>
         <members>BDI_FieldMappingHelpText</members>
+        <members>BDI_FieldMappingHelpText_TEST</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
@@ -331,6 +332,7 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>RD2_Constants</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
         <members>RD2_EnablementService</members>
@@ -639,13 +641,17 @@
         <members>TDTM_Campaign</members>
         <members>TDTM_CampaignMember</members>
         <members>TDTM_Contact</members>
+        <members>TDTM_DataImport</members>
+        <members>TDTM_DataImportBatch</members>
         <members>TDTM_EngagementPlan</members>
         <members>TDTM_EngagementPlanTask</members>
         <members>TDTM_GeneralAccountingUnit</members>
+        <members>TDTM_GrantDeadline</members>
         <members>TDTM_HouseholdObject</members>
         <members>TDTM_Lead</members>
         <members>TDTM_Level</members>
         <members>TDTM_Opportunity</members>
+        <members>TDTM_OpportunityContactRole</members>
         <members>TDTM_PartialSoftCredit</members>
         <members>TDTM_Payment</members>
         <members>TDTM_RecurringDonation</members>
@@ -1024,6 +1030,7 @@
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
         <members>Error_Settings__c.Error_Notifications_To__c</members>
+        <members>Error_Settings__c.OverrideFeature_PilotEnabled__c</members>
         <members>Error_Settings__c.Respect_Duplicate_Rule_Settings__c</members>
         <members>Error_Settings__c.Store_Errors_On__c</members>
         <members>Error__c.Context_Type__c</members>

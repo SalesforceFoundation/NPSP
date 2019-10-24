@@ -112,6 +112,10 @@ tasks:
             record_type_label: NPSP Default
             record_type_developer_name: NPSP_Default
             sobject: Opportunity
+    
+    is_rd2_enabled:
+        description: This preflight check ensures that Enhanced Recurring Donations is enabled
+        class_path: tasks.is_rd2_enabled
 
     robot:
         options:
@@ -310,6 +314,15 @@ tasks:
                     - NPSP_Engagement_Plan_Record_Page
                     - NPSP_GAU_Allocation
                     - NPSP_General_Accounting_Unit
+
+    enable_pilot_in_scratch_org:
+        description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
+                errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
+                upsert errSettings;
 
 flows:
     config_dev:
