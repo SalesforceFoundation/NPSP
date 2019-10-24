@@ -1,14 +1,6 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
-const FormTemplate = class FormTemplate {
-    constructor(name, description, layout) {
-        this.name = name;
-        this.description = description;
-        this.layout = layout;
-    }
-}
-
 const FormLayout = class FormLayout {
     constructor(fieldMappingSetDevName, version, sections) {
         this.fieldMappingSetDevName = fieldMappingSetDevName;
@@ -184,7 +176,6 @@ const lightningInputTypeByDataType = {
 }
 
 export {
-    FormTemplate,
     FormLayout,
     FormSection,
     FormField,
