@@ -19,7 +19,7 @@ export default class UtilModal extends LightningElement {
     */
     handleDelete() {
         const detail = { action: 'delete', section: this.modalData.section };
-        dispatch(this, 'handlesave', detail);
+        dispatch(this, 'utilModalEvent', detail, true);
     }
 
     /*******************************************************************************
@@ -31,7 +31,7 @@ export default class UtilModal extends LightningElement {
         section.label = this.template.querySelector('lightning-input[data-name="customLabel"]').value;;
 
         const detail = { action: 'save', section: section };
-        dispatch(this, 'handlesave', detail);
+        dispatch(this, 'utilModalEvent', detail, true);
     }
 
     /*******************************************************************************
@@ -39,6 +39,7 @@ export default class UtilModal extends LightningElement {
     * that the modal needs to be closed.
     */
     handleCancel() {
-        dispatch(this, 'handlecancel');
+        const detail = { action: 'cancel' };
+        dispatch(this, 'utilModalEvent', detail , true);
     }
 }

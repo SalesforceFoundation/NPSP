@@ -13,10 +13,8 @@
     * a public method on geTemplateBuilder to handle the change.
     */
     handleShowModal: function (component, event, helper) {
-        component.set('v.sectionBeingEdited', event.getParams('section'));
-
         $A.createComponents([
-            ["c:GE_ModalProxy", { sectionBeingEdited: component.getReference('v.sectionBeingEdited') }]
+            ["c:utilModal", { modalData: event.getParams('section') }]
         ],
             function (components, status, errorMessage) {
                 if (status === "SUCCESS") {
@@ -29,6 +27,21 @@
                         cssClass: component.getName() + ' customModal',
                         closeCallback: function () {
                         }
+                    }).then((overlay) => {
+                        /* We have to use the overlay reference returned by
+                        *  overlay library's showCustomModal promise in order
+                        *  to close the modal. Reference is lost otherwise.
+                        */
+                        const eventListener = function(event) {
+                            window.removeEventListener('utilModalEvent', eventListener);
+                            const modalData = event.detail;
+                            if (modalData.action === 'save' || modalData.action === 'delete') {
+                                component.find('templateBuilder').notify(modalData);
+                            }
+                            overlay.close();
+                        }
+
+                        window.addEventListener('utilModalEvent', eventListener);
                     });
                 }
             }
