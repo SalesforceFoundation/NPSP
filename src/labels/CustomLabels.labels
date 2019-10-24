@@ -1429,7 +1429,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Resources Page - Product Name</shortDescription>
         <value>Nonprofit Success Pack (NPSP)</value>
-    </labels> 
+    </labels>
     <labels>
         <fullName>RP_ReleaseGitHub</fullName>
         <language>en_US</language>
