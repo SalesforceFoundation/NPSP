@@ -37,11 +37,6 @@
 
 public without sharing class RD2_ScheduleService {
 
-    public static final String FIFTEENTH = '15';
-    public static final String FIRST = '1';
-    public static final String FIRST_AND_FIFTEENTH = '1st and 15th';
-
-
     private List<RecurringDonationSchedule__c> schedulesToInsert = new List<RecurringDonationSchedule__c>();
 
     /***
@@ -78,10 +73,10 @@ public without sharing class RD2_ScheduleService {
             rdsched.DayOfMonth__c = rd.Day_of_Month__c;
 
         } else {
-            rdsched.DayOfMonth__c = FIRST;
+            rdsched.DayOfMonth__c = RD2_Constants.DAY_OF_MONTH_FIRST;
             schedulesToInsert.add(rdsched);
             rdsched = rdsched.clone();
-            rdsched.DayOfMonth__c = FIFTEENTH;
+            rdsched.DayOfMonth__c = RD2_Constants.DAY_OF_MONTH_FIFTEENTH;
         }
 
         schedulesToInsert.add(rdsched);
@@ -95,7 +90,7 @@ public without sharing class RD2_ScheduleService {
     * @return Boolean
     */
     private Boolean isFirstAndFifteenth(npe03__Recurring_Donation__c rd) {
-        return rd.npe03__Installment_Period__c == FIRST_AND_FIFTEENTH;
+        return rd.npe03__Installment_Period__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH;
     }
 
 }
