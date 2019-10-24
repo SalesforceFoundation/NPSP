@@ -464,11 +464,13 @@ public with sharing class ADDR_Addresses_TEST2 {
         // this way we can test the scheduled job!
         insert listAddrT;
 
+        setSeasonalAddressBatchSize(10);
+
         // run the scheduled batch directly
         Test.startTest();
-        Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
+        new ADDR_Seasonal_SCHED().execute(null);
         Test.stopTest();
-        
+
         // verify that the HH and Contacts share the same address and it's new!
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
         list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
@@ -543,9 +545,11 @@ public with sharing class ADDR_Addresses_TEST2 {
         // this way we can test the scheduled job!
         update listAddrT;
 
+        setSeasonalAddressBatchSize(10);
+
         // run the scheduled batch directly
         Test.startTest();
-        Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
+        new ADDR_Seasonal_SCHED().execute(null);
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address and it's the old default!
@@ -1631,5 +1635,49 @@ public with sharing class ADDR_Addresses_TEST2 {
             System.assertEquals(true, ADDR_Addresses_TEST.isMatchAddressAccCon(updatedAcc, updatedCon), 'The new account address should match the contact.');
             System.assertEquals(false, updatedCon.is_Address_Override__c, 'The contact\'s override should not be set.');
         }
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms default value is used if Seasonal_Addresses_Batch_Size__c is negative
+    **********************************************************************************************************/
+    @isTest
+    private static void batchSizeShouldUseDefaultIfSeasonalAddressBatchSizeIsNegative() {
+        setSeasonalAddressBatchSize(-1);
+        System.assertEquals(ADDR_Seasonal_SCHED.DEFAULT_BATCH_SIZE, new ADDR_Seasonal_SCHED().batchSize,
+            'The default batch size should be used'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms default value is used if Seasonal_Addresses_Batch_Size__c is zero
+    **********************************************************************************************************/
+    @isTest
+    private static void batchSizeShouldUseDefaultIfSeasonalAddressBatchSizeIsZero() {
+        setSeasonalAddressBatchSize(0);
+        System.assertEquals(ADDR_Seasonal_SCHED.DEFAULT_BATCH_SIZE, new ADDR_Seasonal_SCHED().batchSize,
+            'The default batch size should be used'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms default value is used if Seasonal_Addresses_Batch_Size__c is null
+    **********************************************************************************************************/
+    @isTest
+    private static void batchSizeShouldUseDefaultIfSeasonalAddressBatchSizeIsNull() {
+        setSeasonalAddressBatchSize(null);
+        System.assertEquals(ADDR_Seasonal_SCHED.DEFAULT_BATCH_SIZE, new ADDR_Seasonal_SCHED().batchSize,
+            'The default batch size should be used'
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description sets Seasonal_Addresses_Batch_Size__c on npo02__Households_Settings__c
+    * @param batchSize: value for Seasonal_Addresses_Batch_Size__c
+    **********************************************************************************************************/
+    private static void setSeasonalAddressBatchSize(Integer batchSize) {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                Seasonal_Addresses_Batch_Size__c = batchSize
+            ));
     }
 }

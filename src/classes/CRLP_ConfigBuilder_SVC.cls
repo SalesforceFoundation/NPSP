@@ -107,7 +107,7 @@ public class CRLP_ConfigBuilder_SVC {
      * particular deployment and not a previous one.
      */
     public static String deployedQueuedMetadataTypes() {
-        String jobId = getUniqueJobId();
+        String jobId = CMT_MetadataAPI.getUniqueJobId();
         CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypes.clone());
         return jobId;
     }
@@ -125,7 +125,7 @@ public class CRLP_ConfigBuilder_SVC {
         CMT_MetadataAPI.MetadataCallbackHandler metadataHandler, 
         Map<String, Object> params) {
 
-        String jobId = getUniqueJobId();
+        String jobId = CMT_MetadataAPI.getUniqueJobId();
 
         CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId);
         if (metadataHandler != null) {
@@ -136,13 +136,4 @@ public class CRLP_ConfigBuilder_SVC {
         CMT_MetadataAPI.deployMetadata(queuedMetadataTypes.clone(), callback);
         return jobId;
     }
-
-    /**
-     * @return A 10 character unique 'jobId' to use for
-     */
-    private static String getUniqueJobId() {
-        return UserInfo.getUserId().left(15).right(4).toUpperCase() +
-                String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
-    }
-
 }

@@ -58,4 +58,16 @@
         <type>Text</type>
         <unique>true</unique>
     </fields>
+    <fields>
+        <fullName>Work_Order__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Work Order</label>
+        <referenceTo>WorkOrder</referenceTo>
+        <relationshipLabel>Work Order</relationshipLabel>
+        <relationshipName>WorkOrders</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>    
 </CustomObject>

@@ -35,13 +35,34 @@
 */ 
 public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedulable {
 
-    private static final Integer BATCH_SIZE = 10;
+    @TestVisible
+    private final static Integer DEFAULT_BATCH_SIZE = 10;
+
+    @TestVisible
+    private Integer batchSize {
+        get {
+            if (batchSize == null) {
+                npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
+                if (householdSettings.Seasonal_Addresses_Batch_Size__c == null
+                    || householdSettings.Seasonal_Addresses_Batch_Size__c <= 0
+                ){
+                    batchSize = DEFAULT_BATCH_SIZE;
+                } else {
+                    batchSize = householdSettings.Seasonal_Addresses_Batch_Size__c.intValue();
+                }
+
+            }
+            return batchSize;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
-        Database.executeBatch(new ADDR_Seasonal_SCHED(), BATCH_SIZE);
+        Database.executeBatch(new ADDR_Seasonal_SCHED(), batchSize);
     }
 
     /*******************************************************************************************************

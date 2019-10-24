@@ -189,6 +189,95 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Validates that when there are multiple allocations to the same GAU on the Opportunity,
+    * the allocation amount will be consolidated on the payment level on insert and update. Additionally,
+    * when there are multiple allocations to the same GAU on the payment level, it will be consolidated on the
+    * Opportunity level (Only going from payment to opportunity, not Recurring donation/campaign to opportunity)
+    ********************************************************************************************************/
+    static testMethod void duplicateGAUWithPayments() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Account acc = new Account(Name='Account-pmtAmountChange');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 100, AccountID=acc.id, CloseDate=system.today(), npe01__Do_Not_Automatically_Create_Payment__c = true, StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
+        insert gau;
+
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name='GAU2');
+        insert gau2;
+
+
+
+        //resetting these manually as a test is considered a single context for static variables
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        Allocation__c percentAllo = new Allocation__c(Opportunity__c=opp.id, Percent__c = 75, General_Accounting_Unit__c = gau.id);
+        alloForInsert.add(percentAllo);
+        Allocation__c amountAllo = new Allocation__c(Opportunity__c=opp.id, Amount__c = 25, General_Accounting_Unit__c = gau.id);
+        alloForInsert.add(amountAllo);
+        insert alloForInsert;
+
+        // Validate the consolidation is correct on insert.
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 100, npe01__Opportunity__c = opp.Id);
+        insert pmt;
+
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.Id, gau.Id);
+
+
+        System.assertEquals(1, queryAllo.size(), 'There should only be one allocation');
+        System.assertEquals(100, queryAllo[0].Amount__c, 'The allocation amount should be 100');
+
+        List<Allocation__c> oppAllocationList = getAllocationsOrderByPercent(opp.Id);
+        percentAllo.General_Accounting_Unit__c = gau2.Id;
+        percentAllo.Percent__c = 75;
+        percentAllo.Opportunity__c = opp.Id;
+
+        amountAllo.General_Accounting_Unit__c = gau2.Id;
+        amountAllo.Amount__c = 25;
+        amountAllo.Opportunity__c = opp.Id;
+        List<Allocation__c> alloForUpdate = new List<Allocation__c>();
+        alloForUpdate.add(percentAllo);
+        alloForUpdate.add(amountAllo);
+
+        // Validate the consolidation is correct on update.
+        update alloForUpdate;
+
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, gau2.Id);
+
+        System.assertEquals(1, queryAllo.size(), 'There should only be one allocation');
+        System.assertEquals(100, queryAllo[0].Amount__c, 'The allocation amount should be 100');
+
+        // Validate that the consolidation is correct going from payment to opportunity.
+        List<Allocation__c> alloForUpsert = new List<Allocation__c>();
+
+        Allocation__c paymentAllo = new Allocation__c(Payment__c=pmt.Id, Amount__c = 25, General_Accounting_Unit__c = gau.id);
+
+        Allocation__c existingPaymentAllo = queryAllo[0];
+        existingPaymentAllo.General_Accounting_Unit__c = gau.Id;
+        existingPaymentAllo.Percent__c = 75;
+        alloForUpsert.add(existingPaymentAllo);
+        alloForUpsert.add(paymentAllo);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
+
+        update existingPaymentAllo;
+        insert paymentAllo;
+
+        queryAllo = getAllocationsOrderByPercent(opp.Id);
+
+        System.assertEquals(1, queryAllo.size(), 'There should only be one allocation');
+        System.assertEquals(100, queryAllo[0].Amount__c, 'The allocation amount should be 100');
+
+    }
+
+    /*******************************************************************************************************
     * @description When working with negative amount Payments:
     * Updating the amount will adjust the percentage allocations.
     * Changing the amount sign from positive to negative and vice versa also flips the sign on the allocations
@@ -430,15 +519,15 @@ private with sharing class ALLO_Allocations_TEST {
         insert acc;
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            Name = 'foo',
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
-            npe03__Date_Established__c= system.today(),
-            npe03__Organization__c = acc.id,
-            npe03__Amount__c = 20,
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(System.today())
+            .withAccount(acc.id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
+            
         // this initial creation of the RD with default allocations set up, which get copied to the opp
         // will be what we soql limit profile in this test (and thus the startTest/stopTest).
         Test.startTest();
@@ -709,6 +798,238 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
         system.assertEquals(8, queryAllo[0].Amount__c, 'The default allocation should be of the total amount of the Opportunity.');
     }
+
+    /*******************************************************************************************************
+    * @description Tests that the default Allocation is created with a zero amount when default
+    * Allocations are created and the Opportunity Amount is 0 via ALLO_ALLOCATION_TDTM trigger
+    ********************************************************************************************************/
+    @isTest
+    private static void defaultAllocationsForZeroAmountOpportunityShouldRemainOnCreate() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        insert defaultGau;
+
+        General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
+        insert otherGau;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 0, null, null);
+
+        Test.startTest();
+
+        insert opps;
+
+        Test.stopTest();
+
+        list<Allocation__c>  allos = getAllocationsOrderByAmount();
+        System.assertEquals(1, allos.size(), 'One allocation should be present.');
+        system.assertEquals(0, allos[0].Amount__c, 'Allocation Amount');
+        System.assertEquals(defaultGau.Id, allos[0].General_Accounting_Unit__c, 'Allocation should be for the default');
+        System.assertEquals(opps[0].Id, allos[0].Opportunity__c, 'Opportunity');
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that $0 Allocations (Percentage based and fixed Amount) can be added for a $0
+    * Opportunity
+    ********************************************************************************************************/
+    @isTest
+    private static void createZeroAmountAllocationsForZeroAmountOpportunity() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'GAU 2');
+        gaus.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'GAU 3');
+        gaus.add(gau3);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 0, null, null);
+
+        insert opps;
+
+        Test.startTest();
+
+        List<Allocation__c> newAllos = new List<Allocation__c>();
+
+        // Percentaage Allocation for 50% to GAU 1
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau1.Id,
+                Percent__c = 50,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        // Fix Amount Allocation for $0 to GAU 2
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau2.Id,
+                Amount__c = 0,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        insert newAllos;
+
+        Test.stopTest();
+
+        List<Allocation__c> allos = getAllocationsOrderByPercent(opps[0].Id);
+        System.assertEquals (2, allos.size(), '# of Allocations');
+        System.assertEquals (gau1.Name, allos[1].General_Accounting_Unit__r.Name, 'Allocation 1 - GAU');
+        System.assertEquals (0, allos[1].Amount__c, 'Allocation 1 - Amount');
+        System.assertEquals (50, allos[1].Percent__c, 'Allocation 1 - Percent');
+        System.assertEquals (gau2.Name, allos[0].General_Accounting_Unit__r.Name, 'Allocation 0 - GAU');
+        System.assertEquals (0, allos[0].Amount__c, 'Allocation 0 - Amount');
+        System.assertEquals (null, allos[0].Percent__c, 'Allocation 0 - Percent');
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that Allocations are updated and preserved when changing an Opportunity from a
+    * non zero to a zero amount
+    ********************************************************************************************************/
+    @isTest
+    private static void chamgeOpportunityAmountFromNonZeroToZero() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'GAU 2');
+        gaus.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'GAU 3');
+        gaus.add(gau3);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 10, null, null);
+
+        insert opps;
+
+        List<Allocation__c> newAllos = new List<Allocation__c>();
+
+        // Percentaage Allocation for 50% to GAU 1
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau1.Id,
+                Percent__c = 50,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        // Fix Amount Allocation for $0 to GAU 2
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau2.Id,
+                Amount__c = 0,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        insert newAllos;
+
+        Test.startTest();
+
+        for (Opportunity opp : opps) {
+            opp.Amount = 0;
+        }
+
+        update opps;
+
+        Test.stopTest();
+
+        List<Allocation__c> allos = getAllocationsOrderByPercent(opps[0].Id);
+        System.assertEquals (2, allos.size(), '# of Allocations');
+        System.assertEquals (gau1.Name, allos[1].General_Accounting_Unit__r.Name, 'Allocation 1 - GAU');
+        System.assertEquals (0, allos[1].Amount__c, 'Allocation 1 - Amount');
+        System.assertEquals (50, allos[1].Percent__c, 'Allocation 1 - Percent');
+        System.assertEquals (gau2.Name, allos[0].General_Accounting_Unit__r.Name, 'Allocation 0 - GAU');
+        System.assertEquals (0, allos[0].Amount__c, 'Allocation 0 - Amount');
+        System.assertEquals (null, allos[0].Percent__c, 'Allocation 0 - Percent');
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that an error is generated if Opportunity Amount is 0 and a non zero fixed
+    * Amount Allocation is added
+    ********************************************************************************************************/
+    @isTest
+    private static void generateErrorForNonZeroFixedAmountAllocationIfOpportunityAmountIsZero() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'GAU 2');
+        gaus.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'GAU 3');
+        gaus.add(gau3);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 0, null, null);
+
+        insert opps;
+
+        Test.startTest();
+
+        List<Allocation__c> newAllos = new List<Allocation__c>();
+
+        // Percentaage Allocation for 50% to GAU 1
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau1.Id,
+                Percent__c = 50,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        // Fix Amount Allocation for $0 to GAU 2
+        newAllos.add(
+            new Allocation__c(
+                General_Accounting_Unit__c = gau2.Id,
+                Amount__c = 10,
+                Opportunity__c = opps[0].Id
+            )
+        );
+
+        try{
+            insert newAllos;
+            System.assert(false, 'Expected an exception due to Opportunity being Overallocated.');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(Label.alloTotalExceedsOppAmt), 'Expected Exception Text: ' + Label.alloExceedsOppAmount + '; Actual: ' + e.getMessage());
+        }
+
+        Test.stopTest();
+    }
+
+
 
     // Helpers
     ////////////

@@ -41,7 +41,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
         INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
         CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
         UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS_FOR_UPGRADE,
-        CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL
+        CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL, 
+        CREATE_OPP_STAGE_TO_STATE_RECORDS
     }
 
     /*******************************************************************************************************
@@ -122,6 +123,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL) {
                 populateNamespacePrefix();
+            } else if (action == InstallAction.CREATE_OPP_STAGE_TO_STATE_RECORDS) {
+                createOppStageToStateRecordsIfNecessary();
             }
 
         } catch(Exception e) {
@@ -366,6 +369,27 @@ global without sharing class STG_InstallScript implements InstallHandler {
         if (pkgSettings.Id == null) {
             pkgSettings.Namespace_Prefix__c = UTIL_Namespace.StrTokenNSPrefix('');
             insert pkgSettings;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates the finalized opp stage to state record based on what value is set as the 
+    * "Opportunity Stage for When Fully Paid" 
+    */
+    private void createOppStageToStateRecordsIfNecessary() {
+
+        // This is no longer being called in the post install script at all.
+        // We will revisit this very soon.
+        // There was issues with the upgrade process, so we are unable to
+        // get this in before GA.
+        List<Metadata.CustomMetadata> metadataToInsert = new List<Metadata.CustomMetadata>();
+        Map<String, Object> params = new Map<String, Object>();
+
+        metadataToInsert = Opp_StageMappingCMT.createPledgedOppStageToStateRecord(metadataToInsert);
+        metadataToInsert = Opp_StageMappingCMT.createFinalizedOppStageToStateRecord(metadataToInsert);
+
+        if (!metadataToInsert.isEmpty()) {
+            Opp_StageMappingCMT.deployOppStageToStateMetadata(metadataToInsert, params);
         }
     }
 

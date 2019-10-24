@@ -46,10 +46,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Opportunity Fields
     */
-    private static map<String, String> mapDIFieldToOppField {
+    private map<String, String> mapDIFieldToOppField {
         get {
             if (mapDIFieldToOppField == null) {
-                mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity', 
+                mapDIFieldToOppField = bdi.mapDataImportFields('Opportunity', 'Opportunity', 
                     BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToOppField;
@@ -60,10 +60,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Payment Fields
     */
-    private static map<string, string> mapDIFieldToPmtField { 
+    private map<string, string> mapDIFieldToPmtField { 
         get {
             if (mapDIFieldToPmtField == null) {
-                mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
+                mapDIFieldToPmtField = bdi.mapDataImportFields('Payment', 'npe01__OppPayment__c', 
                     BDI_DataImportService.listStrDataImportFields);
                 // special case Donation fields we defaultly map to Opp fields, but we will use with Payments too!
                 // note that these two work for matching rules.  
@@ -468,30 +468,32 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
         // now query for all Open Opportunities from these Contacts or Accounts
         integer cFilter = 0;
-        string strSoql = 'select ' + string.join(new list<String>(setOppFields), ',');
+        string strSoql = 'SELECT ' + string.join(new list<String>(setOppFields), ',');
         
         // add Payment subquery
-        strSoql += ', (select ' + string.join(new list<String>(setPmtFields), ',');
-        strSoql += ' from npe01__OppPayment__r where npe01__Paid__c = false )';
-        
-        strSoql += ' from Opportunity';
-        strSoql += ' where IsClosed = false and (';
+        strSoql += ', (SELECT ' + string.join(new list<String>(setPmtFields), ',');
+        strSoql += ' FROM npe01__OppPayment__r ' +
+                'WHERE npe01__Paid__c = false ' +
+                'AND npe01__Written_Off__c = false)';
+
+        strSoql += ' FROM Opportunity';
+        strSoql += ' WHERE IsClosed = false AND (';
         if (setOppId.size() > 0) {
-            strSoql += ' Id in :setOppId ';
+            strSoql += ' Id IN :setOppId ';
             cFilter++;
         }
         if (setAccId.size() > 0) {
             if (cFilter > 0) {
                 strSoql += ' or ';
             }
-            strSoql += ' AccountId in :setAccId ';
+            strSoql += ' AccountId IN :setAccId ';
             cFilter++;
         }
         if (setConId.size() > 0) {
             if (cFilter > 0) {
-                strSoql += ' or ';
+                strSoql += ' OR ';
             }
-            strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' in :setConId ';
+            strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' IN :setConId ';
             cFilter++;
         }
         strSoql += ') ';

@@ -5,7 +5,7 @@ project:
         name: Cumulus
         name_managed: Nonprofit Success Pack
         namespace: npsp
-        api_version: 43.0
+        api_version: 46.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
@@ -41,7 +41,7 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: ldv_tests/src
-        
+
     deploy_dev_config:
         description: Deploys the post-install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -62,6 +62,35 @@ tasks:
             path: unpackaged/config/qa
             namespace_inject: $project_config.project__package__namespace
 
+    retrieve_qa_config:
+        description: Retrieves additional fields used for QA purposes
+        class_path: cumulusci.tasks.salesforce.sourcetracking.RetrieveChanges
+        options:
+            path: unpackaged/config/qa
+            namespace_tokenize: $project_config.project__package__namespace
+            snapshot: True
+
+    deploy_qa_namespaced_config:
+        description: Deploys additional configuration required for namespaced QA orgs
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/qa_namespaced
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_qa_bdi_metadata_config:
+        description: Deploys Custom Metadata for BDI QA
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/qa_bdi_custom_metadata
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_rd2_config:
+        description: Deploys updates to fully enable Enhanced Recurring Donations
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/rd2_post_config
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -74,7 +103,7 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: unpackaged/config/delete
-    
+
     ensure_record_type:
         name: Ensure Opportunity Record Types
         description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
@@ -83,6 +112,10 @@ tasks:
             record_type_label: NPSP Default
             record_type_developer_name: NPSP_Default
             sobject: Opportunity
+    
+    is_rd2_enabled:
+        description: This preflight check ensures that Enhanced Recurring Donations is enabled
+        class_path: tasks.is_rd2_enabled
 
     robot:
         options:
@@ -94,7 +127,7 @@ tasks:
         options:
             path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot
             output: robot/Cumulus/doc/Keywords.html
-            
+
     update_admin_profile:
         options:
             package_xml: lib/admin_profile.xml
@@ -106,22 +139,47 @@ tasks:
                 - record_type: Opportunity.NPSP_Default
                   default: true
 
-    test_data_bdi:
-        description: 'Generate and load test data for BDI benchmarks into an org'
-        class_path: tasks.generate_bdi_data.GenerateBDIData
-        options:
-            mapping_yaml: 'datasets/bdi_benchmark/mapping.yml'
-            num_records: 5000
-            debug_db_path: /tmp/temp_db.db
-
-    performance_tests:
-        description: Runs Robot Framework performance tests
+    test_performance:
+        description: Runs Robot Framework performance tests for BDI Complex Objects
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
         options:
             suites: robot/Cumulus/perftests/
             options:
                 outputdir: robot/Cumulus/results
+
+    platformencryption_deploy_permset:
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/platformencryption_permset
+            namespace_inject: $project_config.project__package__namespace
+
+    platformencryption_assign_permset:
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                PermissionSet p = [
+                    SELECT Id, Name
+                    FROM PermissionSet
+                    WHERE Name = 'Encryption'
+                ];
+
+                insert new PermissionSetAssignment(
+                    PermissionSetId = p.Id,
+                    AssigneeId = UserInfo.getUserId()
+                );
+
+    platformencryption_create_tenant_secret:
+        description: 'Create a placeholder Tenant Secret to use Platform Encryption'
+        class_path: cumulusci.tasks.sfdx.SFDXOrgTask
+        options:
+            command: 'force:data:record:create -s TenantSecret -v "Description=test"'
+
+    platformencryption_deploy_field_configuration:
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/platformencryption_fields
+            namespace_inject: $project_config.project__package__namespace
 
     pmd:
         description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
@@ -257,6 +315,15 @@ tasks:
                     - NPSP_GAU_Allocation
                     - NPSP_General_Accounting_Unit
 
+    enable_pilot_in_scratch_org:
+        description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
+                errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
+                upsert errSettings;
+
 flows:
     config_dev:
         steps:
@@ -280,21 +347,54 @@ flows:
             6:
                 task: deploy_qa_config
             7:
-                task: update_admin_profile
+                task: deploy_qa_bdi_metadata_config
             8:
-                task: test_data_relationships
+                task: update_admin_profile
             9:
+                task: test_data_relationships
+            10:
                 task: deploy_reports
+
+    config_qa_namespaced:
+        steps:
+            1:
+                task: deploy_post
+            2:
+                task: None
+            3:
+                task: deploy_dev_config_delete
+            4:
+                task: deploy_trial_config
+            5:
+                task: npsp_default_settings
+            6:
+                task: deploy_qa_config
+            7:
+                task: deploy_qa_bdi_metadata_config
+                options:
+                    namespaced_org: True
+                    unmanaged: False
+            8:
+                task: update_admin_profile
+            9:
+                task: test_data_relationships
+            10:
+                task: deploy_reports
+            11:
+                task: deploy_qa_namespaced_config
+
 
     qa_org_namespaced:
         description: Execute the qa_org flow against a namespaced scratch org and patch help text.
         steps:
             1:
-                flow: qa_org
+                flow: dependencies
             2:
-                task: deploy
-                options:
-                    path: unpackaged/config/qa_namespaced
+                flow: deploy_unmanaged
+            3:
+                flow: config_qa_namespaced
+            4:
+                task: snapshot_changes
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
@@ -350,6 +450,18 @@ flows:
             1:
                 task: add_second_currency
 
+    config_platformencryption:
+        description: 'Configure Platform Encryption org to encrypt standard fields'
+        steps:
+            1:
+                task: platformencryption_deploy_permset
+            2:
+                task: platformencryption_assign_permset
+            3:
+                task: platformencryption_create_tenant_secret
+            4:
+                task: platformencryption_deploy_field_configuration
+
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
         steps:
@@ -393,24 +505,25 @@ flows:
             3:
                 task: ensure_record_type
 
-    test_performance:
-        description: 'Creates a BDI org and runs a performance test'
+    test_performance_scratch:
+        description: 'Creates a test org and runs BDI performance tests'
         steps:
             1:
-                flow: dev_org_namespaced
-            2:
-                task: deploy
-                options:
-                    unmanaged: False
-                    path: unpackaged/config/perf
-                    namespace_inject: $project_config.project__package__namespace
+                flow: qa_org
             3:
-                task: update_admin_profile
-            4:
-                task: performance_tests
+                task: test_performance
                 options:
-                    options:
-                        outputdir: .
+                    include: medium
+                    vars: persistent_org:False
+
+    test_performance_LDV:
+        description: 'Runs BDI performance tests against a pre-existing org'
+        steps:
+            1:
+                task: test_performance
+                options:
+                    include: ultra-long
+                    vars: persistent_org:True
 
     beta_dependencies:
         steps:
@@ -419,6 +532,9 @@ flows:
 
 orgs:
     scratch:
+        dev_multicurrency:
+            config_file: orgs/dev_multicurrency.json
+            days: 7
         dev_namespaced:
             config_file: orgs/dev.json
             namespaced: True
@@ -429,6 +545,8 @@ orgs:
             config_file: orgs/beta_multicurrency.json
         beta_personaccounts:
             config_file: orgs/beta_personaccounts.json
+        beta_platformencryption:
+            config_file: orgs/beta_platformencryption.json
         beta_statecountry:
             config_file: orgs/beta_statecountry.json
         prerelease:
@@ -466,23 +584,26 @@ plans:
                     first:
                         name: NPSP Config for Salesforce Mobile App
     new_org:
-        slug: trial
-        title: Install NPSP Trial
-        # This will be tier: unlisted once that is an option.
+        slug: trailhead
+        title: Install NPSP for Trailhead Playgrounds
         tier: additional
         is_listed: False
         steps:
             1:
-                flow: dependencies
-                ui_options:
-                    deploy_pre:
-                        account_record_types:
-                            name: Account Record Types
-                        opportunity_record_types:
-                            name: Opportunity Record Types
+                task: update_dependencies
             2:
-                task: install_managed
+                task: deploy
+                options:
+                    path: unpackaged/pre/account_record_types
+                ui_options:
+                    name: Account Record Types
             3:
+                task: ensure_record_type
+                ui_options:
+                    name: Opportunity Record Types
+            4:
+                task: install_managed
+            5:
                 flow: config_managed
                 options:
                     deploy_reports:
@@ -497,9 +618,27 @@ plans:
                         is_required: False
                     deploy_trial_config:
                         name: NPSP Trial Experience
+                    test_data_relationships:
+                        name: Set Default Relationship Settings
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
+    rd2:
+        slug: npsp-rd2-pilot
+        title: Enhanced Recurring Donations Metadata Updates
+        tier: additional
+        is_listed: False
+        checks:
+            - when: "not tasks.is_rd2_enabled()"
+              action: error
+              message: "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation."
+        steps:
+            1:
+                task: deploy_rd2_config
+                options:
+                    unmanaged: False
+                ui_options:
+                    name: "Enhanced Recurring Donations Metadata Updates"
     reports:
         slug: reports
         title: Install Reports & Dashboards

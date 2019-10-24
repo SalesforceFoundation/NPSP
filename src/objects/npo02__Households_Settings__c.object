@@ -22,4 +22,18 @@
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
+    <fields>
+        <fullName>Seasonal_Addresses_Batch_Size__c</fullName>
+        <defaultValue>10</defaultValue>
+        <description>Number of records per batch to process when setting seasonal address as the mailing address.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when setting seasonal address as the mailing address.</inlineHelpText>
+        <label>Seasonal Address Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
 </CustomObject>

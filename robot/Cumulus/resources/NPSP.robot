@@ -13,7 +13,7 @@ ${task2}     Make a Phone Call2
 *** Keywords ***
 
 Capture Screenshot and Delete Records and Close Browser
-    Capture Page Screenshot
+    Run Keyword If Any Tests Failed      Capture Page Screenshot
     Close Browser
     Delete Session Records
     
@@ -108,12 +108,31 @@ API Create Relationship
     # ...               Name=${plan_name}
     # ...               npsp__Description__c=This plan is created via Automation 
     # ...               &{fields}
-   
+
+API Create Recurring Donation
+    [Arguments]        &{fields}
+    ${ns} =            Get Npsp Namespace Prefix
+    ${recurring_id} =  Salesforce Insert  npe03__Recurring_Donation__c
+    ...                &{fields} 
+    &{recurringdonation} =           Salesforce Get     npe03__Recurring_Donation__c  ${recurring_id}
+    [return]           &{recurringdonation}
+
+API Query Installment
+    [Arguments]        ${id}                      ${installment}    &{fields}
+    @{object} =        Salesforce Query           Opportunity
+    ...                select=Id
+    ...                npe03__Recurring_Donation__c=${id}
+    ...                ${ns}Recurring_Donation_Installment_Name__c=${installment}
+    ...                &{fields}
+    [return]           @{object}
+
 API Create GAU
+    [Arguments]      &{fields}
     ${name} =   Generate Random String
     ${ns} =    Get Npsp Namespace Prefix
     ${gau_id} =  Salesforce Insert  ${ns}General_Accounting_Unit__c
     ...               Name=${name}
+    ...               &{fields} 
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
 
@@ -200,6 +219,7 @@ New Contact for HouseHold
     Wait Until Modal Is Closed
     Go To Object Home         Contact
     Click Link                link= ${first_name} ${last_name}
+    Wait Until Url Contains    /view
     ${contact_id} =           Get Current Record Id
     Store Session Record      Account  ${contact_id}
     [return]                  ${contact_id} 
@@ -282,6 +302,7 @@ Create Engagement Plan
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
     Click Button    Save
+    Wait Until Url Contains    /view
     ${ns} =  Get NPSP Namespace Prefix
     ${eng_id} =           Get Current Record Id
     Store Session Record    ${ns}Engagement_Plan_Template__c    ${eng_id}
@@ -303,7 +324,7 @@ Create Level
     Set Focus To Element   xpath: //input[@value='Save']
     Click Button  Save
     Unselect Frame
-    Wait For Locator  spl-breadcrumb  Level
+    Wait For Locator  obj-header  Level
     ${level_id} =            Get Current Record Id
     Store Session Record  Level__c  ${level_id}
     [Return]    ${level_id}  ${level_name}
@@ -351,8 +372,8 @@ Open NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Choose Frame    Nonprofit Success Pack Settings
     Wait Until Element Is Visible  text:${topmenu}
-    Click Link With Text    text=${topmenu}
-    Sleep  1
+    # Click Link With Text    text=${topmenu}
+    Click Element With Locator    npsp_settings.side_panel    idPanelBulkProcesses
     Wait Until Element Is Visible  text:${submenu}
     Click Link With Text    text=${submenu}
     Sleep  1
@@ -365,3 +386,12 @@ Click Field And Select Date
     [Arguments]    ${field}    ${date}
     Click Element With Locator    bge.field-input    ${field}    
     Click BGE Button    ${date}    
+    
+    
+Process Data Import Batch
+    [Documentation]        Go to NPSP Data Import Page and change view to 'To be Imported' and Process Batch
+    Go To Page                              Listing        DataImport__c
+    Change View To                          To Be Imported
+    Click                                   Start Data Import
+    Click Begin Data Import Process
+    Click Close Button    

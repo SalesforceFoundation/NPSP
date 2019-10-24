@@ -45,6 +45,10 @@ public with sharing class OPP_StageMappingUtil {
     @testVisible private static final String UNCOMMITTED_STATE_VAL = 'UNCOMMITTED';
     @testVisible private static final String COMMITTED_STATE_VAL = 'COMMITTED';
     @testVisible private static final String FINALIZED_STATE_VAL = 'FINALIZED';
+    @testVisible private static final String TEST_FINALIZED_STAGE = 'Closed Won';
+    @testVisible private static final String TEST_COMMITTED_STAGE = 'Pledged';
+    
+
 
     /******************************************************************************************************
     * @description Used to Cache Set of Opportunity Stages that mean Opportunity is in a Committed State.
@@ -91,10 +95,53 @@ public with sharing class OPP_StageMappingUtil {
     * necessary.
     ********************************************************************************************************/
     @testVisible private static void initializeStates() {
-        // These are temporary values to be used only during interim for internal development on Abacus project.
-        // This will be updated in March 2019 timeframe with revised code to retrieve from Custom Metadata instead
-        COMMITTED_STATE_SET = new Set<String> {'closed won'};
-        FINALIZED_STATE_SET = new Set<String> {'finalized'};
+
+        // If either the committed state set or the finalized state set is null, query for everything and 
+        // reinitialize everything. 
+        if (COMMITTED_STATE_SET == null || FINALIZED_STATE_SET == null) {
+            Map<String, Set<String>> oppStateStages = new Map<String, Set<String>>();
+            List<Opportunity_Stage_To_State_Mapping__mdt> stageToStateRecords = getOpportunityStageToStateMappings();
+            
+            for (Opportunity_Stage_To_State_Mapping__mdt mappingRecord : stageToStateRecords) {
+                if (mappingRecord.Opportunity_State__c != null) {
+
+                    String oppState = mappingRecord.Opportunity_State__c.trim().toUpperCase();
+                    String oppStage = mappingRecord.Opportunity_Stage__c.trim().toLowerCase();
+                    Set<String> stages = oppStateStages.containsKey(oppState) ? oppStateStages.get(oppState) : new Set<String>();
+                    stages.add(oppStage);
+                    oppStateStages.put(oppState, stages);
+                }
+            }
+            
+            COMMITTED_STATE_SET = oppStateStages.containsKey(COMMITTED_STATE_VAL) ? oppStateStages.get(COMMITTED_STATE_VAL) : new Set<String>();
+            FINALIZED_STATE_SET = oppStateStages.containsKey(FINALIZED_STATE_VAL) ? oppStateStages.get(FINALIZED_STATE_VAL) : new Set<String>();
+        }
     }
 
+    /*******************************************************************************************************
+    * @description Returns a list of Opportunity stage to state mappings. If it is a test running,
+    * return an artificially created list. Otherwise, get it from the database
+    ********************************************************************************************************/
+    private static List<Opportunity_Stage_To_State_Mapping__mdt> getOpportunityStageToStateMappings() {
+        List<Opportunity_Stage_To_State_Mapping__mdt> metadataRecordList = new List<Opportunity_Stage_To_State_Mapping__mdt>();
+
+        if (Test.isRunningTest()) {
+            
+            // If it's a test running, return artificial records. This ensures consistency in the testing. 
+            Opportunity_Stage_To_State_Mapping__mdt finalizedRecord = new Opportunity_Stage_To_State_Mapping__mdt();
+            finalizedRecord.Opportunity_Stage__c = TEST_FINALIZED_STAGE;
+            finalizedRecord.Opportunity_State__c = FINALIZED_STATE_VAL;
+
+            Opportunity_Stage_To_State_Mapping__mdt pledgedRecord = new Opportunity_Stage_To_State_Mapping__mdt();
+            pledgedRecord.Opportunity_Stage__c = TEST_COMMITTED_STAGE;
+            pledgedRecord.Opportunity_State__c = COMMITTED_STATE_VAL;
+
+            metadataRecordList.add(finalizedRecord);
+            metadataRecordList.add(pledgedRecord);
+        } else {
+            metadataRecordList = [SELECT Id, Opportunity_Stage__c, Opportunity_State__c FROM Opportunity_Stage_To_State_Mapping__mdt];
+        }
+
+        return metadataRecordList;
+    }
 }

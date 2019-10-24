@@ -28,6 +28,7 @@ Convert Lead To Account
     Wait Until Modal Is Closed
     Go To Object Home         Lead
     Click Link                link=${first_name} ${last_name}
+    Wait Until Page Contains    Convert
     Click Link                link=Convert
     Click Lead Button    vfFrameId    button    Convert
     #Sleep    2

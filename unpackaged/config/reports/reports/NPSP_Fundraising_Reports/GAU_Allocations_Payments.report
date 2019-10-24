@@ -90,7 +90,7 @@
         <blockId xsi:nil="true"/>
         <joinTable>fko</joinTable>
     </blockInfo>
-    <description>Joined report (Classic Only) that provides GAU Allocation and Payment information in a single view, grouped by Opportunity.</description>
+    <description>Joined report that provides GAU Allocation and Payment information in a single view, grouped by Opportunity.</description>
     <format>MultiBlock</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>

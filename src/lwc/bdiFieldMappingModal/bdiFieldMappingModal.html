@@ -1,0 +1,146 @@
+<template>
+    <section role="dialog"
+             tabindex="-1"
+             aria-labelledby="modal-heading-01-field-mapping-ui"
+             aria-modal="true"
+             aria-describedby="modal-content-id-1"
+             class={sectionClasses}>
+
+        <div class="slds-modal__container">
+
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text={customLabels.labelMessageLoading}></lightning-spinner>
+            </template>
+
+            <header id="modal-heading-01-field-mapping-ui" class="slds-modal__header">
+
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title={customLabels.bdiBtnClose}>
+                    <lightning-icon
+                        icon-name="utility:close"
+                        alternative-text={customLabels.bdiBtnClose}
+                        variant="inverse"
+                        size="small"
+                        onclick={handleCloseModal}>
+                    </lightning-icon>
+                    <span class="slds-assistive-text">{customLabels.bdiBtnClose}</span>
+                </button>
+
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                    <tempate if:true={isModalModeNew}>
+                        {customLabels.stgBtnNew}
+                    </tempate>
+                    <tempate if:false={isModalModeNew}>
+                        {customLabels.stgBtnEdit}
+                    </tempate>
+                    &nbsp;{objectMapping.MasterLabel} {customLabels.bdiFieldMapping}
+                </h2>
+
+            </header>
+
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+
+                <template if:true={isLoading}>
+                    <c-util-stencil row-count="10" column-count="1"></c-util-stencil>
+                </template>
+
+                <template if:false={isLoading}>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-section slds-is-open slds-m-bottom_small">
+
+                                <h3 class="slds-section__title">
+                                    <span class="slds-truncate"
+                                            title="Source (NPSP Data Import Object)">
+                                        {customLabels.bdiFMUISourceObject}
+                                    </span>
+                                </h3>
+
+                                <c-util-searchable-combobox
+                                    name="sourceFieldLabel"
+                                    search-input-label={customLabels.bdiFMUISearchSourceInputLabel}
+                                    combobox-label={customLabels.bdiFMUIFieldLabel}
+                                    selected-field-value={fieldMapping.Source_Field_API_Name}
+                                    options={sourceFieldLabelOptions}
+                                    searchable-options={searchableSourceFieldLabelOptions}
+                                    parent-listener-event-name="sourceFieldLabelChange"
+                                    field-level-help={customLabels.bdiFMUISourceFieldLabelHelp}
+                                    has-errors={hasSourceFieldErrors}>
+                                </c-util-searchable-combobox>
+
+                                <template if:true={fieldMapping.Source_Field_API_Name}>
+                                    <lightning-input
+                                        name="source-field-data-type"
+                                        label={customLabels.bdiFMUIDataType}
+                                        type="text"
+                                        read-only="true"
+                                        value={fieldMapping.Source_Field_Display_Type_Label}
+                                        class="slds-p-top_x-small"
+                                        field-level-help={customLabels.bdiFMUISourceFieldDataTypeHelp}>
+                                    </lightning-input>
+                                </template>
+
+                            </div>
+                        </div>
+
+                        <div class="slds-size_1-of-1 slds-m-vertical_medium">
+                            <h3 class="slds-text-align_center"><i>{customLabels.bdiFMUIDatatableMapsTo}</i></h3>
+                        </div>
+
+                        <div class="slds-size_1-of-1 slds-m-bottom_medium">
+                            <div class="slds-section slds-is-open slds-m-bottom_small">
+
+                                <h3 class="slds-section__title">
+                                    <span class="slds-truncate"
+                                          title="Source (NPSP Data Import Object)">
+                                        {customLabels.bdiFMUITarget}
+                                        ({objectMapping.MasterLabel} {customLabels.stgLabelObject})
+                                    </span>
+                                </h3>
+
+                                <c-util-searchable-combobox
+                                    name="targetFieldLabel"
+                                    search-input-label={customLabels.bdiFMUISearchTargetInputLabel}
+                                    combobox-label={customLabels.bdiFMUIFieldLabel}
+                                    selected-field-value={fieldMapping.Target_Field_API_Name}
+                                    options={targetFieldLabelOptions}
+                                    parent-listener-event-name="targetFieldLabelChange"
+                                    field-level-help={customLabels.bdiFMUITargetFieldLabelHelp}
+                                    disabled={isTargetFieldDisabled}
+                                    has-errors={hasTargetFieldErrors}>
+                                </c-util-searchable-combobox>
+
+                                <template if:true={fieldMapping.Target_Field_API_Name}>
+                                    <lightning-input
+                                        name="target-field-data-type"
+                                        label={customLabels.bdiFMUIDataType}
+                                        type="text"
+                                        read-only="true"
+                                        value={fieldMapping.Target_Field_Display_Type_Label}
+                                        class="slds-p-top_x-small"
+                                        field-level-help={customLabels.bdiFMUITargetFieldDataTypeHelp}>
+                                    </lightning-input>
+                                </template>
+
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral"
+                        onclick={handleCloseModal}>
+                    {customLabels.stgBtnCancel}
+                </button>
+                <button class="slds-button slds-button_brand"
+                        onclick={handleSave}>
+                    {customLabels.stgBtnSave}
+                </button>
+            </footer>
+
+        </div>
+    </section>
+
+    <div class={backdropClasses}></div>
+</template>

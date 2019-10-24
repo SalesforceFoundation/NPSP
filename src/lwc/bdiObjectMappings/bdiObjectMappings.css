@@ -1,0 +1,52 @@
+.slds-button_extension-back {
+    height: 40px;
+	color: #006DCC;
+	font-family: "Salesforce Sans";
+	font-size: 13px;
+    line-height: 40px;
+    font-weight: 300;
+}
+
+.slds-text-heading_medium_extension, .slds-text-heading_small_extension {
+    font-weight: 400;
+    font-family: "Salesforce Sans";
+}
+
+.slds-text_extension {
+    color: #080707;
+    font-family: "Salesforce Sans";
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.table-header {
+    color: #080707;
+    font-family: "Salesforce Sans";
+    font-size: 14px;
+    line-height: 21px;
+}
+
+.table-header-target {
+    margin-left: 1.75rem;
+}
+
+.table-no-field-mappings {
+    background-color: rgb(250, 250, 249);
+}
+
+.custom-col {
+    display: inline-block;
+    width: auto;
+}
+
+.custom-col_1, .custom-col_5 {
+    width: 20%;
+}
+
+.custom-col_3, .custom-col_7 {
+    width: 125px;
+}
+
+.custom-col_4 {
+    width: 95px;
+}

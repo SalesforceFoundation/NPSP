@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Unit Tests related to the org telemetry class
 */
-@IsTest(IsParallel=true)
+@IsTest
 private class UTIL_OrgTelemetry_TEST {
 
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
@@ -72,16 +72,15 @@ private class UTIL_OrgTelemetry_TEST {
         );
         insert opp;
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                Name = 'UTIL_OrgTelemetry_TEST',
-                npe03__Contact__c = c.Id,
-                npe03__Installments__c = 3,
-                npe03__Amount__c = 100,
-                npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                npe03__Date_Established__c = Date.newInstance(2018,6,15),
-                npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus
-        );
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(c.Id)
+            .withInstallments(3)
+            .withAmount(100)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(2018,6,15))
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
         insert rd;
 
         DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
@@ -107,6 +106,10 @@ private class UTIL_OrgTelemetry_TEST {
      */
     @IsTest
     private static void validateNPSPSettingsTelemetry() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c()
+        );
+
         UTIL_FeatureManagement_TEST.Mock asyncFeatureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
         UTIL_OrgTelemetry_SVC.asyncTelemetrySvc.featureManager =
             (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, asyncFeatureManagementMock);
@@ -164,6 +167,22 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageBooleanValue should have been called with the feature IsEnabled_CustomizableRollups'
         );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_BDICMT.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_BDICMT'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_RecurringDonations2.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_RecurringDonations2'
+        );
     }
 
     /**
@@ -187,15 +206,14 @@ private class UTIL_OrgTelemetry_TEST {
         Account donorAccount = new Account(Name = 'foo');
         insert donorAccount;
 
-        insert new npe03__Recurring_Donation__c(
-            Name = 'foo',
-            npe03__Installment_Period__c = CUSTOM_INSTALLMENT_PERIOD,
-            npe03__Date_Established__c= System.today(),
-            npe03__Organization__c = donorAccount.Id,
-            npe03__Amount__c = 20,
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
-        );
+        insert new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriod(CUSTOM_INSTALLMENT_PERIOD)
+            .withDateEstablished(System.today())
+            .withAccount(donorAccount.Id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
 
         Test.startTest();
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
@@ -321,7 +339,6 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageIntegerValue should have been called with the feature Org_CountTimedOutBatchJobsLast7Days'
         );
-
     }
 
     /**

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Data Import Object Mapping --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Data Import Object Mapping --></value>
+    </caseValues>
+    <fields>
+        <help><!-- If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method. --></help>
+        <label><!-- Custom Mapping Logic Class --></label>
+        <name>Custom_Mapping_Logic_Class__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Data Import Object Group containing this record. --></help>
+        <label><!-- Data Import Object Mapping Set --></label>
+        <name>Data_Import_Object_Mapping_Set__c</name>
+        <relationshipLabel><!-- Data Import Object Mappings --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The Field API Name on the NPSP Data Import object where the ID for the imported record will be placed when the import is successful. This is also where the code will verify if this record was imported or matched. --></help>
+        <label><!-- Imported Record Field Name --></label>
+        <name>Imported_Record_Field_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Field API Name where the success or failure of the import will be recorded for an NPSP Data Import record. --></help>
+        <label><!-- Imported Record Status Field Name --></label>
+        <name>Imported_Record_Status_Field_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing. --></help>
+        <label><!-- Is Deleted --></label>
+        <name>Is_Deleted__c</name>
+    </fields>
+    <fields>
+        <help><!-- The legacy Data Import object name of the object this Data Import Object Group is based on. --></help>
+        <label><!-- Legacy Data Import Object Name --></label>
+        <name>Legacy_Data_Import_Object_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API name of the target object for this Object Group. --></help>
+        <label><!-- Object API Name --></label>
+        <name>Object_API_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Data Import Object Group record that must exist before this record can be created (either Parent or Child). --></help>
+        <label><!-- Predecessor --></label>
+        <name>Predecessor__c</name>
+    </fields>
+    <fields>
+        <help><!-- If this Object Group is a child of the predecessor, this field should look up to the parent. If it&apos;s the parent of the predecessor, this should be the lookup field on the child record. --></help>
+        <label><!-- Relationship Field --></label>
+        <name>Relationship_Field__c</name>
+    </fields>
+    <fields>
+        <help><!-- This indicates if this object is a parent or child of the predecessor. --></help>
+        <label><!-- Relationship To Predecessor --></label>
+        <name>Relationship_To_Predecessor__c</name>
+        <picklistValues>
+            <masterLabel>Child</masterLabel>
+            <translation><!-- Child --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Predecessor</masterLabel>
+            <translation><!-- No Predecessor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Parent</masterLabel>
+            <translation><!-- Parent --></translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Feminine --></gender>
+    <layouts>
+        <layout>Data Import Object Mapping Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Object Relationship Details --></label>
+            <section>Custom Object Relationship Details</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

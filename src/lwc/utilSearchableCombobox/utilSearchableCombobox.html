@@ -1,0 +1,66 @@
+<template>
+    <div class="slds-grid slds-grid_vertical-align-end">
+        <template if:true={isSearchOpen}>
+            <div class="slds-size_11-of-12">
+                    <lightning-input
+                        type="text"
+                        name={name}
+                        label={searchInputLabel}
+                        onchange={debounceOnSearchKeyChange}
+                        value={searchKey}
+                        class={comboboxClass}>
+                    </lightning-input>
+            </div>
+            <div class="slds-size_1-of-12 slds-p-left_small">
+                <lightning-button-icon
+                    icon-name="utility:close"
+                    onclick={hideSearch}>
+                </lightning-button-icon>
+            </div>
+        </template>
+        <template if:false={isSearchOpen}>
+            <div class="slds-size_11-of-12">
+                <lightning-combobox
+                    name={name}
+                    label={comboboxLabel}
+                    value={selectedFieldValue}
+                    placeholder=""
+                    options={options}
+                    onchange={handleFieldChange}
+                    disabled={disabled}
+                    field-level-help={fieldLevelHelp}
+                    dropdown-alignment={dropdownAlignment}
+                    class={comboboxClass}>
+                </lightning-combobox>
+            </div>
+            <div class="slds-size_1-of-12 slds-p-left_small">
+                <lightning-button-icon
+                    icon-name="utility:search"
+                    onclick={showSearch}
+                    disabled={disabled}>
+                </lightning-button-icon>
+            </div>
+        </template>
+    </div>
+
+    <template if:true={areSearchResultsVisible}>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size_11-of-12">
+                <div class={customSearchResultBoxClasses}>
+                    <template for:each={searchResults} for:item="result">
+                        <p key={result.id}
+                           title={result.label}
+                           tabindex={result.id}
+                           data-id={result.id}
+                           data-field-label={result.label}
+                           data-field-value={result.value}
+                           onclick={selectSearchResult}
+                           class="slds-p-vertical_x-small slds-truncate">
+                            {result.label}
+                        </p>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </template>
+</template>

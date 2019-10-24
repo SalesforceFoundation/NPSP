@@ -1384,25 +1384,70 @@ private with sharing class BDI_DataImport_TEST2 {
     *    nothing imported
     *    records marked with fls error
     **********************************************************************************************************/            
-    static testMethod void testFieldLevelSecurity() {
+    @isTest
+    static void givenUserHasOnlyReadAccessWhenUsingHelpTextMapThenImportsShouldFail() {
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         listDI.add(BDI_DataImport_TEST.newDI('c2', 'C2'));
         listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3'));
         insert listDI;
-          
-        //run batch data import
-        Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        BDI_DataImportService.failFieldLevelSecurity = true;
-        ID ApexJobId = Database.executeBatch(bdi, 10);
-        Test.stopTest();
-    
+
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Read Only');
+        System.runAs(readOnlyUser) {
+            //run batch data import
+            Test.StartTest();
+            BDI_FieldMapping fieldMapper = BDI_FieldMappingHelpText.getInstance();
+            BDI_DataImportService dataImportService =
+                    new BDI_DataImportService(false, fieldMapper);
+            BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
+
+            ID ApexJobId = Database.executeBatch(bdi, 10);
+            Test.stopTest();
+        }
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(0, listCon.size());
       
+        listDI = getDIs();
+        System.assertEquals(4, listDI.size());
+        for (integer i = 0; i < 3; i++) {
+            System.assertEquals(listDI[i].Contact1Imported__c, null);
+            System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
+            string flsError = label.flsError;
+            flsError = flsError.replace('{0}', '');
+            flsError = flsError.replace('.', '');
+            System.assert(listDI[i].FailureInformation__c.contains(flsError));
+        }
+    }
+
+    @isTest
+    static void givenUserHasOnlyReadAccessWhenUsingCMTMapThenImportsShouldFail() {
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
+        listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
+        listDI.add(BDI_DataImport_TEST.newDI('c2', 'C2'));
+        listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3'));
+        insert listDI;
+
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Read Only');
+        System.runAs(readOnlyUser) {
+            //run batch data import
+            Test.StartTest();
+            BDI_FieldMapping fieldMapper = BDI_FieldMappingCustomMetadata.getInstance();
+            BDI_DataImportService dataImportService =
+                    new BDI_DataImportService(false, fieldMapper);
+            BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
+
+            ID ApexJobId = Database.executeBatch(bdi, 10);
+            Test.stopTest();
+        }
+
+        // verify expected results
+        List<Contact> listCon = getContacts();
+        System.assertEquals(0, listCon.size());
+
         listDI = getDIs();
         System.assertEquals(4, listDI.size());
         for (integer i = 0; i < 3; i++) {

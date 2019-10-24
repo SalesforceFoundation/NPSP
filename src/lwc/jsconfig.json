@@ -1,0 +1,41 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "c/bdiFieldMappingModal": [
+                "bdiFieldMappingModal/bdiFieldMappingModal.js"
+            ],
+            "c/bdiFieldMappings": [
+                "bdiFieldMappings/bdiFieldMappings.js"
+            ],
+            "c/bdiObjectMappingModal": [
+                "bdiObjectMappingModal/bdiObjectMappingModal.js"
+            ],
+            "c/bdiObjectMappings": [
+                "bdiObjectMappings/bdiObjectMappings.js"
+            ],
+            "c/pubsubNoPageRef": [
+                "pubsubNoPageRef/pubsubNoPageRef.js"
+            ],
+            "c/utilPlatformEventListener": [
+                "utilPlatformEventListener/utilPlatformEventListener.js"
+            ],
+            "c/utilSearchableCombobox": [
+                "utilSearchableCombobox/utilSearchableCombobox.js"
+            ],
+            "c/utilStencil": [
+                "utilStencil/utilStencil.js"
+            ]
+        },
+        "experimentalDecorators": true
+    },
+    "include": [
+        "**/*",
+        "../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}

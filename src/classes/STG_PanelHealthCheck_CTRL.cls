@@ -663,12 +663,16 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     }
 
     /**
-     * @description Compare the Trigger_Action list between two trigger handlers usnig logic that can ignore
+     * @description Compare the Trigger_Action list between two trigger handlers using logic that can ignore
      * both case and the sequence of the actions in the list.
      */
     private static Boolean compareTriggerHandlerActions(Trigger_Handler__c handlerA, Trigger_Handler__c handlerB) {
-        List<String> listA = handlerA.Trigger_Action__c.toLowerCase().split(';');
-        List<String> listB = handlerB.Trigger_Action__c.toLowerCase().split(';');
+        List<String> listA = String.isNotBlank(handlerA.Trigger_Action__c) 
+            ? handlerA.Trigger_Action__c.toLowerCase().split(';') 
+            : new List<String>();
+        List<String> listB = String.isNotBlank(handlerB.Trigger_Action__c) 
+            ? handlerB.Trigger_Action__c.toLowerCase().split(';') 
+            : new List<String>();
 
         Set<String> unionBintoA = new Set<String>();
         unionBintoA.addAll(listA);

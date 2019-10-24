@@ -224,12 +224,12 @@ public class PMT_PaymentCreator {
                             }
 
                         if (thisOpp.IsClosed && thisOpp.IsWon){
-                            op.npe01__paid__c = true;
+                            op.npe01__Paid__c = true;
                             op.npe01__payment_date__c = thisOpp.closeDate;
                         }
 
                         if (!thisOpp.IsClosed){
-                            op.npe01__paid__c = false;
+                            op.npe01__Paid__c = false;
                             op.npe01__scheduled_date__c = thisOpp.closeDate;
                         }
 
@@ -516,7 +516,9 @@ public class PMT_PaymentCreator {
         }
         soqlStatement += soqlSub;
         soqlStatement += 'npe01__scheduled_date__c ';
-        soqlStatement += 'FROM Opportunity.npe01__OppPayment__r) FROM Opportunity ';
+        soqlStatement += 'FROM Opportunity.npe01__OppPayment__r ' +
+                'WHERE npe01__Written_Off__c = false) ' +
+                'FROM Opportunity ';
 
         return soqlStatement;
     }
