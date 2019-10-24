@@ -1,16 +1,13 @@
 ({
     /*******************************************************************************
-    * @description Receives an event from geTemplateBuilder to open a modal through
-    * the aura overlay library. We're opting to use this library to get out-of-the-box
-    * acccessibility modal features like focus trapping, input focus, and tabbing.
+    * @description Receives an event from lightning web component geTemplateBuilder
+    * to open a modal using the aura overlay library. We're opting to use this library
+    * to get out-of-the-box acccessibility modal features like focus trapping,
+    * input focus, and tabbing.
     *
-    * This method sets a two-way bound aura attribute 'sectionBeingEdited' on this
-    * and the GE_ModalProxy aura components. The GE_ModalProxy component is a container
-    * for the lightning web component utilModal. GE_ModalProxy receives events from utilModal
-    * for actions (save, cancel, delete), GE_ModalProxy sets the 'sectionBeingEdited' aura
-    * attribute, and GE_TemplateBuilder listens for that change via an aura change handler on
-    * the attribute 'sectionBeingEdited'. When a change occurs on 'sectionBeingEdited' we fire
-    * a public method on geTemplateBuilder to handle the change.
+    * In the then() method of the showCustomModal promise, we register
+    * an event listener for custom event 'utilModalEvent' which gets
+    * dispatched from the modal's body lightning web component 'utilModal'.
     */
     handleShowModal: function (component, event, helper) {
         $A.createComponents([
@@ -28,9 +25,9 @@
                         closeCallback: function () {
                         }
                     }).then((overlay) => {
-                        /* We have to use the overlay reference returned by
-                        *  overlay library's showCustomModal promise in order
-                        *  to close the modal. Reference is lost otherwise.
+                        /* We're adding an event listener here because we need
+                        * the 'overlay' reference returned by the then() method
+                        * in order to close the modal. Reference is lost otherwise.
                         */
                         const eventListener = function(event) {
                             window.removeEventListener('utilModalEvent', eventListener);

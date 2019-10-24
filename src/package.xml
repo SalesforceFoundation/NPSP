@@ -675,7 +675,6 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
-        <members>GE_ModalProxy</members>
         <members>GE_TemplateBuilder</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
