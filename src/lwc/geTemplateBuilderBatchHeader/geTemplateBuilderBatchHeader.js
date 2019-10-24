@@ -2,11 +2,15 @@ import { LightningElement, track, api } from 'lwc';
 import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
 import { BatchHeaderField, findIndexByProperty, shiftToIndex, mutable, sort } from 'c/utilTemplateBuilder';
 
+const REQUIRED_FIELDS = [
+    'Name'
+];
+Object.freeze(REQUIRED_FIELDS);
+
 export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track isLoading = true;
     @track batchFields;
     @track selectedBatchFields;
-
     /* Public setter for the tracked property selectedBatchFields */
     // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template
     @api
@@ -104,7 +108,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         );
 
         if (!this.selectedBatchFields) { this.selectedBatchFields = [] }
-        this.selectedBatchFields.push(field);
+        this.selectedBatchFields = [...this.selectedBatchFields, field];
     }
 
     /*******************************************************************************
@@ -150,6 +154,13 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @description WIP. Function adds required fields to selectedBatchFields property
     */
     handleRequiredFields() {
+        for (let i = 0; i < this.batchFields.length; i++) {
+            if (REQUIRED_FIELDS.includes(this.batchFields[i].value)) {
+                this.batchFields[i].isRequired = true;
+                this.batchFields[i].isRequiredFieldDisabled = true;
+            }
+        }
+
         const requiredFields = this.batchFields.filter(batchField => { return batchField.isRequired });
 
         const selectedFieldsExists = this.selectedBatchFields && this.selectedBatchFields.length > 0;

@@ -48,13 +48,6 @@ public with sharing class GE_TemplateBuilderCtrl {
     private static final String TEMPLATE_VERSION = '1.0';
 
     /*******************************************************************************************************
-    * @description List of required DataImportBatch__c fields
-    */
-    private static final String[] REQUIRED_BATCH_HEADER_FIELDS = new String[]{
-        'name'
-    };
-
-    /*******************************************************************************************************
     * @description Just an intermediary method for calling the storeFormTemplate method in the FormServiceGiftEntry
     * class. I've modified the FormServiceGiftEntry to return the newly inserted Form_Template__c id so I can
     * navigate to the record page in the UI. Should probably revert this back later depending on how we want
@@ -137,13 +130,6 @@ public with sharing class GE_TemplateBuilderCtrl {
 
             if (dfr.isAccessible() && dfr.isCreateable()) {
                 CheckboxWrapper checkboxWrapper = new CheckboxWrapper(fields.get(key));
-
-                if (REQUIRED_BATCH_HEADER_FIELDS.contains(key)) {
-
-                    checkboxWrapper.isRequired = true;
-                    checkboxWrapper.isRequiredFieldDisabled = true;
-                }
-
                 wrappers.add(checkboxWrapper);
             }
         }
