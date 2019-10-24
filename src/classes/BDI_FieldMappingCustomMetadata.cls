@@ -104,6 +104,16 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
         return fieldMappingInstance;
     }
 
+    /**
+    * @description Sets instance member variable holding instance of this class.  Primarily
+    * used to facilitate dependency injection in tests.
+    * @param bdiFieldMappingInstance An instance of the BDI_FieldMappingCustomMetadata class.
+    */
+    @TestVisible
+    private static void setInstance(BDI_FieldMappingCustomMetadata bdiFieldMappingInstance){
+        fieldMappingInstance = bdiFieldMappingInstance;
+    }
+
     /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
     * return a map of DI field (key) to mapped field name on the destination record (value). 
