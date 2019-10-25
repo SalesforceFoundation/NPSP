@@ -106,7 +106,7 @@ export default class bdiFieldMappingModal extends LightningElement {
         'Phone': ['Phone', 'String'],
         'Picklist': ['Picklist', 'Boolean'],
         'Reference': ['Reference', 'String'],
-        'String': ['String', 'Picklist'],
+        'String': ['String', 'Picklist', 'Reference'],
         'Textarea': ['Textarea', 'String'],
         'Time': ['Time'],
         'Url': ['Url', 'String']
@@ -366,7 +366,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                         Required: 'No',
                         Source_Field_API_Name: this.fieldMapping.Source_Field_API_Name,
                         Target_Field_API_Name: this.fieldMapping.Target_Field_API_Name,
-                        Target_Object_Mapping: this.objectMapping.DeveloperName
+                        Target_Object_Mapping_Dev_Name: this.objectMapping.DeveloperName
                     });
                 }
 

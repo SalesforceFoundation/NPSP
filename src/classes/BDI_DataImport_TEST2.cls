@@ -1397,7 +1397,7 @@ private with sharing class BDI_DataImport_TEST2 {
         System.runAs(readOnlyUser) {
             //run batch data import
             Test.StartTest();
-            BDI_FieldMapping fieldMapper = BDI_FieldMappingHelpText.getInstance();
+            BDI_MappingService fieldMapper = BDI_MappingServiceHelpText.getInstance();
             BDI_DataImportService dataImportService =
                     new BDI_DataImportService(false, fieldMapper);
             BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
@@ -1435,7 +1435,7 @@ private with sharing class BDI_DataImport_TEST2 {
         System.runAs(readOnlyUser) {
             //run batch data import
             Test.StartTest();
-            BDI_FieldMapping fieldMapper = BDI_FieldMappingCustomMetadata.getInstance();
+            BDI_MappingService fieldMapper = BDI_MappingServiceAdvanced.getInstance();
             BDI_DataImportService dataImportService =
                     new BDI_DataImportService(false, fieldMapper);
             BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
@@ -1593,8 +1593,6 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
 
         listDI = getDIs();
-        
-        System.debug(listDI); 
 
         // The first import fails, because there would be two new 1x1 Contacts under the same Account
         System.assertEquals(label.bdiErrorOneToOneMultiContact, listDI[0].Contact1ImportStatus__c);

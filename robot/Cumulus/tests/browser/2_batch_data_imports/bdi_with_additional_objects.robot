@@ -8,7 +8,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Variables
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Variables
@@ -50,14 +50,8 @@ Setup Test Data
 
 Create Data Import with Additional Objects via API and Verify Values 
     [Documentation]    Create and a DI record with Contact, Account, Opportunity, Payment, Account Soft Credit and GAU details and verify that everything is saved as expected
-    [tags]  Unstable
-    Go To Page                              Listing        DataImport__c
-    Current page should be                  Listing        DataImport__c
-    Change View To                          To Be Imported
-    Click                                   Start Data Import
-    Click Begin Data Import Process
-    Click Close Button
-    &{data_import_upd} =     Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
+    Process Data Import Batch
+    &{data_import_upd} =      Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Verify Expected Values    nonns    Account            &{data_import_upd}[${ns}Account1Imported__c]
     ...    Name=${account}
     Verify Expected Values    nonns    Contact            &{data_import_upd}[${ns}Contact1Imported__c]
@@ -80,11 +74,11 @@ Create Data Import with Additional Objects via API and Verify Values
     ...    npe01__Payment_Method__c=Check
     ...    npe01__Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     ...    Payment_Status__c=Paid
-    Go To Page                               Detail        Opportunity     object_id=&{data_import_upd}[${ns}DonationImported__c]
-    Select Tab    Related
-    Verify Allocations    Account Soft Credits
+    Go To Page                Detail        Opportunity     object_id=&{data_import_upd}[${ns}DonationImported__c]
+    Select Tab                Related
+    Verify Allocations        Account Soft Credits
     ...    ${account}=$100.00
-    Verify Allocations    GAU Allocations
+    Verify Allocations        GAU Allocations
     ...    &{gau}[Name]=$100.00
     Verify Related Object Field Values    Contact Roles
     ...    ${first_name1} ${last_name1}=Donor

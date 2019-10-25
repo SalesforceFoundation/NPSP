@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019, Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,9 +27,32 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger TDTM_GeneralAccountingUnit on General_Accounting_Unit__c (after delete, after insert, after undelete,
-    after update, before delete, before insert, before update) {
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
+* @description Wrapper class to hold data related to the field mapping set.
+*/
+public with sharing class BDI_FieldMappingSet {
+    @AuraEnabled public String DeveloperName;
+    @AuraEnabled public String MasterLabel;
+    @AuraEnabled public Id Id;
+    @AuraEnabled public String Data_Import_Object_Mapping_Group_Dev_Name;
 
-    TDTM_Config_API.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete,
-        Trigger.isUndelete, Trigger.new, Trigger.old, Schema.SObjectType.General_Accounting_Unit__c);
+    @AuraEnabled public Map<String,BDI_ObjectMapping> objectMappingByDevName = new Map<String,BDI_ObjectMapping>();
+    @AuraEnabled public Map<String,BDI_FieldMapping> fieldMappingByDevName = new Map<String,BDI_FieldMapping>();
+
+    public BDI_FieldMappingSet(Data_Import_Field_Mapping_Set__mdt fieldMappingSet, 
+                                Map<String,BDI_ObjectMapping> objectMappingByDevName,
+                                Map<String,BDI_FieldMapping>  fieldMappingByDevName) {
+
+        this.DeveloperName = fieldMappingSet.DeveloperName;
+        this.MasterLabel = fieldMappingSet.MasterLabel;
+        this.Id = fieldMappingSet.Id;
+        this.Data_Import_Object_Mapping_Group_Dev_Name = fieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName;
+
+        this.objectMappingByDevName = objectMappingByDevName;
+        this.fieldMappingByDevName = fieldMappingByDevName;
+    }
 }

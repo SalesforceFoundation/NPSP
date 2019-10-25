@@ -108,7 +108,7 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
         diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
 
-        BDI_FieldMappingHelpText fieldMapper = BDI_FieldMappingHelpText.getInstance();
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
 
         // manually insert checkbox field mapping
         fieldMapper.addMappedField('Opportunity', 
@@ -200,7 +200,7 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
         diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
 
-        BDI_FieldMappingHelpText fieldMapper = BDI_FieldMappingHelpText.getInstance();
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
 
         // manually insert checkbox field mapping
         fieldMapper.addMappedField('Opportunity', 
