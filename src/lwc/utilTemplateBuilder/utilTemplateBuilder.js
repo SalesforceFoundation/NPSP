@@ -146,6 +146,20 @@ const handleError = (context, error) => {
     }
 }
 
+const getQueryParameters = () => {
+    let params = {};
+    let search = location.search.substring(1);
+
+    if (search) {
+        const url = `{"${search.replace(/&/g, '","').replace(/=/g, '":"')}"}`;
+        params = JSON.parse(url, (key, value) => {
+            return key === "" ? value : decodeURIComponent(value)
+        });
+    }
+
+    return params;
+}
+
 const generateId = () => {
     // NOTE: This format of 8 chars, followed by 3 groups of 4 chars, followed by 12 chars
     //       is known as a UUID and is defined in RFC4122 and is a standard for generating unique IDs.
@@ -209,6 +223,7 @@ export {
     sort,
     showToast,
     handleError,
+    getQueryParameters,
     generateId,
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
