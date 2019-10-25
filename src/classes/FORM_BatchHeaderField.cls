@@ -48,7 +48,7 @@ public with sharing class FORM_BatchHeaderField {
     @AuraEnabled public String defaultValue;
     @AuraEnabled public String dataType;
     // TODO: Potentially include this in unified wrapper class or another solution
-    @AuraEnabled public GE_TemplateBuilderCtrl.PicklistOptionWrapper[] picklistOptions;
+    @AuraEnabled public BDI_FieldMapping.PicklistOption[] picklistOptions;
     /* END */
 
     public FORM_BatchHeaderField(String elementType,

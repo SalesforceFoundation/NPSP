@@ -52,7 +52,7 @@ public with sharing class FORM_Element {
     @AuraEnabled public String defaultValue;
     @AuraEnabled public String dataType;
     // TODO: Potentially include this in unified wrapper class or another solution
-    @AuraEnabled public GE_TemplateBuilderCtrl.PicklistOptionWrapper[] picklistOptions;
+    @AuraEnabled public BDI_FieldMapping.PicklistOption[] picklistOptions;
     /* END */
 
     //Constructor for form field

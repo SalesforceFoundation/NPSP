@@ -50,6 +50,7 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public Boolean Is_Deleted;
     @AuraEnabled public String Source_Field_Display_Type_Label;
     @AuraEnabled public String Target_Field_Display_Type_Label;
+    @AuraEnabled public PicklistOption[] Picklist_Options;
 
     public BDI_FieldMapping() {
 
@@ -95,5 +96,32 @@ public virtual with sharing class BDI_FieldMapping {
         this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping__r.DeveloperName;
         this.Required = fieldMapping.Required__c;
         this.Is_Deleted = fieldMapping.Is_Deleted__c;
+
+        if (this.Target_Field_Data_Type == Schema.DisplayType.PICKLIST.name()) {
+            this.Picklist_Options = getPicklistOptions(targetFieldDescribe);
+        }
+    }
+
+    private PicklistOption[] getPicklistOptions(Schema.DescribeFieldResult describe) {
+        PicklistOption[] pickListValuesList= new PicklistOption[]{};
+        Schema.PicklistEntry[] ple = describe.getPicklistValues();
+        for( Schema.PicklistEntry pickListVal : ple) {
+            if (pickListVal.isActive()) {
+                pickListValuesList.add(new PicklistOption(
+                    pickListVal.getLabel(),
+                    pickListVal.getValue()));
+            }
+        }
+        return pickListValuesList;
+    }
+
+    public class PicklistOption {
+        @AuraEnabled public String label;
+        @AuraEnabled public String value;
+
+        public PicklistOption(String label, String value) {
+            this.label = label;
+            this.value = value;
+        }
     }
 }

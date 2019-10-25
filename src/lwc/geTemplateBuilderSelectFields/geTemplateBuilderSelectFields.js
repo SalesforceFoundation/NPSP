@@ -97,7 +97,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         this.objectMappings = mutable(objectMappings);
         for (const objectMapping of this.objectMappings) {
             this.objectMappingNames.push(objectMapping.DeveloperName);
-            this._fieldMappingsForSelectedSet.push(...objectMapping.fieldMappingCheckboxes);
+            this._fieldMappingsForSelectedSet.push(...objectMapping.Field_Mappings);
         }
     }
 
@@ -177,18 +177,18 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             }
 
             const fieldMapping =
-                this._fieldMappingsForSelectedSet.find(fm => fm.value === fieldMappingDeveloperName);
+                this._fieldMappingsForSelectedSet.find(fm => fm.DeveloperName === fieldMappingDeveloperName);
 
-            let formField = new FormField(
-                fieldMapping.label,
-                false,
-                fieldMapping.value,
-                true,
-                sectionId,
-                null,
-                fieldMapping.dataType,
-                fieldMapping.picklistOptions
-            )
+            let formField = {
+                label: fieldMapping.MasterLabel,
+                required: false,
+                value: fieldMapping.DeveloperName,
+                allowDefaultValue: false,
+                sectionId: sectionId,
+                defaultValue: null,
+                dataType: fieldMapping.Target_Field_Data_Type,
+                picklistOptions: fieldMapping.Picklist_Options
+            }
 
             this.catalogSelectedField(fieldMappingDeveloperName, sectionId);
             this.formSections = this.handleAddFieldToSection(sectionId, formField);
@@ -213,14 +213,14 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @return {string} id: Generated id of the new section.
     */
     handleAddSection() {
-        let newSection = new FormSection(
-            generateId(),
-            'accordion',
-            'expanded',
-            'displayRule',
-            'Test Label: ' + this.formSections.length,
-            []
-        )
+        let newSection = {
+            id: generateId(),
+            displayType: 'accordion',
+            defaultDisplayMode: 'expanded',
+            displayRule: 'displayRule',
+            label: 'New Section',
+            elements: []
+        }
         dispatch(this, 'addformsection', newSection);
 
         return newSection.id
@@ -324,13 +324,13 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
 
         if (selectedFieldMappings && selectedFieldMappings.length > 0) {
             for (let i = 0; i < objectMappings.length; i++) {
-                let fieldMappingCheckboxes = objectMappings[i].fieldMappingCheckboxes;
+                let fieldMappings = objectMappings[i].Field_Mappings;
 
-                for (let ii = 0; ii < fieldMappingCheckboxes.length; ii++) {
-                    let fieldMappingCheckbox = fieldMappingCheckboxes[ii];
+                for (let ii = 0; ii < fieldMappings.length; ii++) {
+                    let fieldMapping = fieldMappings[ii];
 
-                    if (selectedFieldMappings.includes(fieldMappingCheckbox.value)) {
-                        fieldMappingCheckbox.checked = true;
+                    if (selectedFieldMappings.includes(fieldMapping.DeveloperName)) {
+                        fieldMapping.checked = true;
                     }
                 }
             }

@@ -49,17 +49,17 @@
                                                          label={objectMapping.MasterLabel}
                                                          class="slds-truncate slds-accordion__section_extension">
 
-                                <template for:each={objectMapping.fieldMappingCheckboxes}
+                                <template for:each={objectMapping.Field_Mappings}
                                           for:item="fieldMapping">
                                     <lightning-input type="checkbox"
-                                                     key={fieldMapping.value}
-                                                     label={fieldMapping.label}
-                                                     value={fieldMapping.value}
+                                                     key={fieldMapping.DeveloperName}
+                                                     label={fieldMapping.MasterLabel}
+                                                     value={fieldMapping.DeveloperName}
                                                      checked={fieldMapping.checked}
                                                      onchange={handleToggleFieldMapping}
                                                      class="slds-truncate slds-p-bottom_xxx-small"
                                                      title={fieldMapping.DeveloperName}
-                                                     data-field-mapping={fieldMapping.value}
+                                                     data-field-mapping={fieldMapping.DeveloperName}
                                                      data-object-mapping={objectMapping.DeveloperName}>
                                     </lightning-input>
                                 </template>

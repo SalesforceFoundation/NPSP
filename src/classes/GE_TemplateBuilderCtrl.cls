@@ -146,38 +146,17 @@ public with sharing class GE_TemplateBuilderCtrl {
     * need to worry about namespaces in the fields.
     */
     @AuraEnabled
-    public static ObjectMappingWrapper[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
+    public static BDI_ObjectMapping[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
         bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(fieldMappingSetName);
-        ObjectMappingWrapper[] objectWrappers = new ObjectMappingWrapper[]{};
+        BDI_ObjectMapping[] objectMappings = new BDI_ObjectMapping[]{};
 
         for (BDI_ObjectMapping objectMapping : bdiMSAdv.objectMappingByDevName.values()) {
-            ObjectMappingWrapper omw = new ObjectMappingWrapper(objectMapping);
-
-<<<<<<< HEAD
-            if (objectMapping.Data_Import_Field_Mappings__r != null) {
-                String objectAPIName = objectMapping.Object_API_Name__c;
-
-                for (Data_Import_Field_Mapping__mdt fieldMapping : objectMapping.Data_Import_Field_Mappings__r) {
-                    CheckboxWrapper fieldMappingWrapper = new CheckboxWrapper(
-                        fieldMapping.MasterLabel,
-                        fieldMapping.DeveloperName,
-                        UTIL_Describe.getFieldDescribe(objectAPIName, fieldMapping.Target_Field_API_Name__c),
-                        false
-                    );
-=======
-            BDI_FieldMapping[] fieldMappings = bdiMSAdv.fieldMappingsByObjMappingDevName.get(objectMapping.Object_API_Name);
-            if (fieldMappings != null) {
-                for (BDI_FieldMapping fieldMapping : fieldMappings) {
-                    CheckboxWrapper fieldMappingWrapper = new CheckboxWrapper(fieldMapping,false);
->>>>>>> psadie/gift-entry__use-refactored-wrappers
-                    omw.fieldMappingCheckboxes.add(fieldMappingWrapper);
-                }
-            }
-
-            objectWrappers.add(omw);
+            objectMapping.Field_Mappings =
+                bdiMSAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
+            objectMappings.add(objectMapping);
         }
 
-        return objectWrappers;
+        return objectMappings;
     }
 
     /*******************************************************************************************************
@@ -224,15 +203,13 @@ public with sharing class GE_TemplateBuilderCtrl {
         @AuraEnabled public String label;
         @AuraEnabled public String value;
         @AuraEnabled public Boolean checked;
-<<<<<<< HEAD
         // TODO: Change to displayType and add new attribute for dataType
         @AuraEnabled public String dataType;
-        @AuraEnabled public PicklistOptionWrapper[] picklistOptions;
+        @AuraEnabled public BDI_FieldMapping.PicklistOption[] picklistOptions;
         @AuraEnabled public Boolean isRequired = false;
         @AuraEnabled public Boolean isRequiredFieldDisabled = false;
-=======
-        @AuraEnabled public String type;
->>>>>>> psadie/gift-entry__use-refactored-wrappers
+
+        public CheckboxWrapper() {}
 
         public CheckboxWrapper(Schema.DescribeFieldResult describe) {
             this.label = describe.getLabel();
@@ -249,53 +226,17 @@ public with sharing class GE_TemplateBuilderCtrl {
             }
         }
 
-        public CheckboxWrapper(String fieldMappingLabel,
-            String fieldMappingDeveloperName,
-            Schema.DescribeFieldResult targetFieldDescribe,
-            Boolean checked) {
-
-            this.label = fieldMappingLabel;
-            this.value = fieldMappingDeveloperName;
-            this.checked = checked;
-            this.dataType = String.valueOf(targetFieldDescribe.getType());
-
-            if (this.dataType == 'PICKLIST') {
-                picklistOptions = getPicklistOptions(targetFieldDescribe);
-            }
-
-            if (this.dataType == 'TEXTAREA' && targetFieldDescribe.isHtmlFormatted()) {
-                this.dataType = 'RICHTEXT';
-            }
-        }
-
-        private List<PicklistOptionWrapper> getPicklistOptions(Schema.DescribeFieldResult describe) {
-            List<PicklistOptionWrapper> pickListValuesList= new List<PicklistOptionWrapper>();
-            List<Schema.PicklistEntry> ple = describe.getPicklistValues();
+        private BDI_FieldMapping.PicklistOption[] getPicklistOptions(Schema.DescribeFieldResult describe) {
+            BDI_FieldMapping.PicklistOption[] pickListValuesList= new BDI_FieldMapping.PicklistOption[]{};
+            Schema.PicklistEntry[] ple = describe.getPicklistValues();
             for( Schema.PicklistEntry pickListVal : ple) {
                 if (pickListVal.isActive()) {
-                    pickListValuesList.add(new PicklistOptionWrapper(
+                    pickListValuesList.add(new BDI_FieldMapping.PicklistOption(
                         pickListVal.getLabel(),
                         pickListVal.getValue()));
                 }
             }
             return pickListValuesList;
-        }
-    }
-
-    public class PicklistOptionWrapper {
-        @AuraEnabled public String label;
-        @AuraEnabled public String value;
-
-        public PicklistOptionWrapper(String label, String value) {
-            this.label = label;
-            this.value = value;
-        }
-
-        public CheckboxWrapper(BDI_FieldMapping fieldMapping, Boolean checked){
-            this.label = fieldMapping.MasterLabel;
-            this.value = fieldMapping.Source_Field_API_Name;
-            this.type = fieldMapping.Source_Field_Data_Type;
-            this.checked = checked;
         }
     }
 }
