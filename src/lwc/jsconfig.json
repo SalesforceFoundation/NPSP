@@ -24,9 +24,6 @@
             "c/geTemplateBuilderFormField": [
                 "geTemplateBuilderFormField/geTemplateBuilderFormField.js"
             ],
-            "c/geTemplateBuilderFormLayout": [
-                "geTemplateBuilderFormLayout/geTemplateBuilderFormLayout.js"
-            ],
             "c/geTemplateBuilderFormSection": [
                 "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
             ],

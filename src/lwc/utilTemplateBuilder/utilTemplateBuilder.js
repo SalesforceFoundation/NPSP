@@ -1,63 +1,6 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
-const FormTemplate = class FormTemplate {
-    constructor(name, description, layout, batchHeaderFields) {
-        this.name = name || null;
-        this.description = description || null;
-        this.layout = layout || null;
-        this.batchHeaderFields = batchHeaderFields || [];
-    }
-}
-
-const FormLayout = class FormLayout {
-    constructor(fieldMappingSetDevName, version, sections) {
-        this.fieldMappingSetDevName = fieldMappingSetDevName || 'Migrated_Custom_Field_Mapping_Set';
-        this.version = version || null;
-        this.sections = sections || [];
-    }
-}
-
-const FormSection = class FormSection {
-    constructor(id, displayType, defaultDisplayMode, displayRule, label, elements) {
-        this.id = id || null;
-        this.displayType = displayType || null;
-        this.defaultDisplayMode = defaultDisplayMode || null;
-        this.displayRule = displayRule || null;
-        this.label = label || null;
-        this.elements = elements || [];
-    }
-}
-
-const FormField = class FormField {
-    constructor(label, required, value, allowDefaultValue, sectionId, defaultValue, dataType, picklistOptions) {
-        this.label = label || null;
-        this.required = required || false;
-        this.value = value || null;
-        this.allowDefaultValue = allowDefaultValue || true;
-        this.sectionId = sectionId || null;
-        this.defaultValue = defaultValue || null;
-        this.dataType = dataType || null;
-        this.picklistOptions = picklistOptions || null;
-        // TODO: defaults to FORM_Element as widgets don't currently exist
-        this.elementType = 'FORM_Element';
-    }
-}
-
-const BatchHeaderField = class BatchHeaderField {
-    constructor(label, value, required, isRequiredFieldDisabled, allowDefaultValue, defaultValue, dataType, picklistOptions) {
-        this.label = label || null;
-        this.value = value || null;
-        this.required = required || false;
-        this.isRequiredFieldDisabled = isRequiredFieldDisabled || false;
-        this.allowDefaultValue = allowDefaultValue || false;
-        this.defaultValue = defaultValue || null;
-        this.dataType = dataType || null;
-        this.picklistOptions = picklistOptions || null;
-        this.customLabel = null;
-    }
-}
-
 const removeByProperty = (array, property, value) => {
     const index = array.findIndex(element => element[property] === value);
     array.splice(index, 1);
@@ -210,11 +153,6 @@ const lightningInputTypeByDataType = {
 }
 
 export {
-    FormTemplate,
-    FormLayout,
-    FormSection,
-    FormField,
-    BatchHeaderField,
     removeByProperty,
     findIndexByProperty,
     shiftToIndex,

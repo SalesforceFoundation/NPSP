@@ -20,11 +20,20 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     recordId;
     @track isLoading = true;
     @track activeTab = this.TabEnums.INFO_TAB;
-    @track formTemplate = new FormTemplate();
+    @track formTemplate = {
+        name: null,
+        description: null,
+        batchHeaderFields: [],
+        layout: null
+    }
+    formLayout = {
+        fieldMappingSetDevName: null,
+        version: null,
+        sections: []
+    };
     @track batchHeaderFields = [];
     @track formSections = [];
     @track activeFormSectionId;
-    formLayout = new FormLayout();
 
     get inTemplateInfoTab() {
         return this.activeTab === this.TabEnums.INFO_TAB ? true : false;
