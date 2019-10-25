@@ -53,21 +53,54 @@ public with sharing class GE_TemplateBuilderCtrl {
     private static final String[] REQUIRED_BATCH_HEADER_FIELDS = new String[]{
         'name'
     };
-
+    
     /*******************************************************************************************************
-    * @description Just an intermediary method for calling the storeFormTemplate method in the FormServiceGiftEntry
-    * class. I've modified the FormServiceGiftEntry to return the newly inserted Form_Template__c id so I can
-    * navigate to the record page in the UI. Should probably revert this back later depending on how we want
-    * to handle what happens after save of a new template.
+    * @description Queries all Form_Template__c records.
+    *
+    * @return Form_Template__c[]: List of all Form_Template__c records
     */
     @AuraEnabled
-    public static String processFormTemplate(String templateJSON, String templateName, String templateDescription){
-        String id = FORM_ServiceGiftEntry.storeFormTemplate(null,
-            templateName,
-            templateDescription,
-            TEMPLATE_VERSION,
-            templateJSON);
-        return id;
+    public static Form_Template__c[] getAllFormTemplates() {
+        return [SELECT Id, Name, Template_JSON__c, Description__c, Format_Version__c FROM Form_Template__c];
+    }
+
+    /*******************************************************************************************************
+    * @description Method clones a Form_Template__c record by id.
+    *
+    * @param id: Form_Template__c record id
+    *
+    * @return clonedFormTemplate: A Form_Template__c record
+    */
+    @AuraEnabled
+    public static Form_Template__c cloneFormTemplate(String id) {
+        Form_Template__c[] templates = [SELECT Id,
+                Name,
+                Template_JSON__c,
+                Description__c,
+                Format_Version__c
+            FROM Form_Template__c
+            WHERE Id = :id];
+
+        if (templates.size() > 0) {
+            Form_Template__c clonedFormTemplate = templates[0].clone();
+            clonedFormTemplate.Name += ' [CLONED ' + Date.today().format() + ']';
+            insert clonedFormTemplate;
+
+            return clonedFormTemplate;
+        }
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Method deletes a Form_Template__c record by id.
+    *
+    * @param id: Form_Template__c record id
+    */
+    @AuraEnabled
+    public static void deleteFormTemplate(String id) {
+        Form_Template__c[] templates = [SELECT Id FROM Form_Template__c WHERE Id = :id];
+        delete templates;
     }
 
     /*******************************************************************************************************
@@ -76,6 +109,24 @@ public with sharing class GE_TemplateBuilderCtrl {
     @AuraEnabled
     public static FORM_Template retrieveFormTemplate(String templateId){
         return FORM_ServiceGiftEntry.retrieveFormTemplate(Id.valueOf(templateId));
+    }
+
+    /*******************************************************************************************************
+    * @description Stores the template JSON.
+    *
+    * @param id - the Id of an existing form template record if this is an update of an existing template
+    * @param name - The name that should be applied to template storage record.
+    * @param description - the description of the template.
+    * @param formatVersion - the version id/number of the template format
+    * @param templateJSON - The JSON for the FormTemplate class that is being stored.
+    *
+    * @return newRecordId - Form_Template__c record id
+    */
+    @AuraEnabled
+    public static String storeFormTemplate(String id, String name, String description, String formatVersion, String templateJSON) {
+        String newRecordId =
+            FORM_ServiceGiftEntry.storeFormTemplate(id, name, description, formatVersion, templateJSON);
+        return newRecordId;
     }
 
     /*******************************************************************************************************

@@ -1,8 +1,10 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import processFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.processFormTemplate';
+import storeFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.storeFormTemplate';
 import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormTemplate';
-import { FormTemplate, FormLayout, mutable, findIndexByProperty, shiftToIndex, removeByProperty, dispatch } from 'c/utilTemplateBuilder';
+import { FormTemplate, FormLayout, mutable, findIndexByProperty, shiftToIndex, removeByProperty, dispatch, getQueryParameters } from 'c/utilTemplateBuilder';
+
+const FORMAT_VERSION = '1.0';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
@@ -15,6 +17,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         BATCH_HEADER_TAB: 'geTemplateBuilderBatchHeader'
     })
 
+    recordId;
+    @track isLoading = true;
     @track activeTab = this.TabEnums.INFO_TAB;
     @track formTemplate = new FormTemplate();
     @track batchHeaderFields = [];
@@ -32,6 +36,28 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     get inSelectFieldsTab() {
         return this.activeTab === this.TabEnums.SELECT_FIELDS_TAB ? true : false;
+    }
+
+    connectedCallback() {
+        console.log('connectedCallback');
+        this.recordId = getQueryParameters().c__recordId;
+        console.log(this.recordId);
+
+        if (this.recordId) {
+            retrieveFormTemplate({ templateId: this.recordId })
+                .then(formTemplate => {
+                    this.formTemplate = formTemplate;
+                    this.batchHeaderFields = formTemplate.batchHeaderFields;
+                    this.formLayout = formTemplate.layout;
+                    this.formSections = this.formLayout.sections;
+                    this.isLoading = false;
+                })
+                .catch(error => {
+                    console.log('Error: ', error);
+                })
+        } else {
+            this.isLoading = false;
+        }
     }
 
     /*******************************************************************************
@@ -420,14 +446,33 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.formTemplate.layout = this.formLayout;
 
         const preppedFormTemplate = {
+            id: this.recordId || null,
             templateJSON: JSON.stringify(this.formTemplate),
-            templateName: this.formTemplate.name,
-            templateDescription: this.formTemplate.description
+            name: this.formTemplate.name,
+            description: this.formTemplate.description,
+            formatVersion: FORMAT_VERSION
         };
 
-        const formTemplateRecordId = await processFormTemplate(preppedFormTemplate);
+        console.log('Prepped: ', preppedFormTemplate);
 
-        this.navigateToRecordViewPage(formTemplateRecordId);
+        const formTemplateRecordId = await storeFormTemplate(preppedFormTemplate);
+
+        //this.navigateToRecordViewPage(formTemplateRecordId);
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: 'npsp__GE_Templates'
+            }
+        });
+    }
+
+    handleCancel() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: 'npsp__GE_Templates'
+            }
+        });
     }
 
     /*******************************************************************************

@@ -2,6 +2,11 @@
     <div role="container"
          class="main-container">
 
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="tab is loading">
+            </lightning-spinner>
+        </template>
+
         <c-util-page-header>
             <h1 slot="title">
                 <span class="slds-page-header__title"
@@ -12,22 +17,11 @@
             <div slot="actions"
                  class="slds-button-group"
                  role="group">
-                <!-- TODO: Remove below input field later. Used for dev. -->
-                <lightning-input type="text"
-                                 placeholder="Template Id"
-                                 variant="label-hidden"
-                                 data-name="templateId">
-                </lightning-input>
-                <lightning-button label="Test Retrieve Form Template"
-                                  title="Retrieve"
-                                  variant="neutral"
-                                  class="slds-float_right slds-m-right_small slds-m-left_small"
-                                  onclick={getFormTemplate}>
-                </lightning-button>
                 <lightning-button label="Cancel"
                                   title="Cancel"
                                   variant="neutral"
-                                  class="slds-float_right slds-m-right_small">
+                                  class="slds-float_right slds-m-right_small"
+                                  onclick={handleCancel}>
                 </lightning-button>
                 <lightning-button label="Save &amp; Close"
                                   title="Cancel"

@@ -2,10 +2,12 @@ import { LightningElement, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getAllFormTemplates from '@salesforce/apex/GE_TemplateBuilderCtrl.getAllFormTemplates';
 import deleteFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.deleteFormTemplate';
+import cloneFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.cloneFormTemplate';
 import { findIndexByProperty } from 'c/utilTemplateBuilder';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
+    { label: 'Clone', name: 'clone' },
     { label: 'Delete', name: 'delete' }
 ];
 
@@ -35,16 +37,24 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     handleRowAction(event) {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
+        this.isLoading = true;
 
         switch (actionName) {
             case 'edit':
                 this.navigateToTemplateBuilder(row.Id);
+                break;
+            case 'clone':
+                cloneFormTemplate({ id: row.Id }).then((clonedTemplate) => {
+                    this.templates = [...this.templates, clonedTemplate];
+                    this.isLoading = false;
+                });
                 break;
             case 'delete':
                 deleteFormTemplate({ id: row.Id }).then(() => {
                     const index = findIndexByProperty(this.templates, 'Id', row.Id);
                     this.templates.splice(index, 1);
                     this.templates = [...this.templates];
+                    this.isLoading = false;
                 });
                 break;
             default:
