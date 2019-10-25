@@ -30,15 +30,19 @@
 * @author Salesforce.org
 * @date 2019
 * @group Utilities
-* @description Mock Batch Class for tests of UTIL_AbstractCommon_BATCH class
+* @description Mock Batch Class for tests of UTIL_AbstractChunkingLDV_BATCH class
 */
 @isTest
-public class UTIL_AbstractCommon_MOCK extends UTIL_AbstractCommon_BATCH {
+public class UTIL_AbstractChunkingLDV_MOCK extends UTIL_AbstractChunkingLDV_BATCH {
 
     private Integer expectedResult;
+    private Boolean expectedLdvMode;
     private Integer testChunkSize = 1;
     private Integer testMaxNonLDVSize = 1;
     private String testWhereClause = '';
+
+    // Initialize private variable for record count to 0
+    private Integer recCnt = 0;
 
     /**
      * @description sets the Number of Records we expect to find at the end of execution during tests.
@@ -48,58 +52,12 @@ public class UTIL_AbstractCommon_MOCK extends UTIL_AbstractCommon_BATCH {
         this.expectedResult = anExpectedResult;
     }
 
-    // Initialize private variable for record count to 0
-    private Integer recCnt = 0;
-
     /**
-     * @description No parameter constructor
+     * @description sets the Number of Records we expect to find at the end of execution during tests.
+     * @param anExpectedResult - The Number of Records we expect to find
      */
-    public UTIL_AbstractCommon_MOCK() {
-        super();
-    }
-
-    /**
-     * @description Constructor
-     * @param batchSize How many records should be in each batch
-     */
-    public UTIL_AbstractCommon_MOCK(Integer batchSize) {
-        super(batchSize);
-    }
-
-    /**
-     * @description Constructor
-     * @param batchSize How many records should be in each batch
-     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
-     */
-    public UTIL_AbstractCommon_MOCK(Integer batchSize, String additionalWhereClause) {
-        super(batchSize, additionalWhereClause);
-    }
-
-    /**
-     * @description Constructor
-     * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
-     */
-    public UTIL_AbstractCommon_MOCK(Boolean ldvMode) {
-        super(ldvMode);
-    }
-
-    /**
-     * @description Constructor
-     * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
-     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
-     */
-    public UTIL_AbstractCommon_MOCK(Boolean ldvMode, String additionalWhereClause) {
-        super(ldvMode, additionalWhereClause);
-    }
-
-    /**
-     * @description Constructor
-     * @param batchSize How many records should be in each batch
-     * @param ldvMode - if true, will execute in chunking more regardless of distance between min and max record Id
-     * @param additionalWhereClause If present will be added to the inner query, or the batch query if executing in non ldv mode.
-     */
-    public UTIL_AbstractCommon_MOCK(Integer batchSize, Boolean ldvMode, String additionalWhereClause) {
-        super(batchSize, ldvMode, additionalWhereClause);
+    public void setExpectedLdvMode(Boolean anExpectedLdvMode) {
+        this.expectedLdvMode = anExpectedLdvMode;
     }
 
     /**
@@ -152,7 +110,7 @@ public class UTIL_AbstractCommon_MOCK extends UTIL_AbstractCommon_BATCH {
 
     /**
      * @description Called on completion of the batch job.  If this is running LDV Mode it may be called more than once.  All but the last invocation will
-     * have an isComplete value of false.  This method isd similar in nature/roughly equivalent to the finish method of a standard Apex Batch job
+     * have an isComplete value of false.  This method is similar in nature/roughly equivalent to the finish method of a standard Apex Batch job
      * @param bc BatchableContext
      * @param isComplete boolean value that indicates whether or not this is the final invocation, or will be executing against additional chunks
      */
@@ -160,6 +118,7 @@ public class UTIL_AbstractCommon_MOCK extends UTIL_AbstractCommon_BATCH {
         if (isComplete) {
             System.debug('# of Account Records Found: ' + recCnt);
             System.assertEquals (expectedResult, recCnt, 'Account Count Mismatch');
+            System.assertEquals (expectedLdvMode, ldvMode, 'Expected LDV Mode');
         }
     }
 
