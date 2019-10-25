@@ -456,9 +456,9 @@
         <members>USER_MixedDML_TEST</members>
         <members>USER_UserService</members>
         <members>USER_UserService_TEST</members>
-        <members>UTIL_AbstractCommon_BATCH</members>
-        <members>UTIL_AbstractCommon_BATCH_TEST</members>
-        <members>UTIL_AbstractCommon_MOCK</members>
+        <members>UTIL_AbstractChunkingLDV_BATCH</members>
+        <members>UTIL_AbstractChunkingLDV_BATCH_TEST</members>
+        <members>UTIL_AbstractChunkingLDV_MOCK</members>
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_Currency</members>
         <members>UTIL_CurrencyCache</members>
