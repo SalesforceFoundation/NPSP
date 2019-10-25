@@ -29,11 +29,16 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return this.lightningInputType === 'richtext' ? true : false;
     }
 
+    get isLightningCheckbox() {
+        return this.lightningInputType === 'checkbox' ? true : false;
+    }
+
     get isLightningInput() {
         if (this.lightningInputType !== 'textarea' &&
             this.lightningInputType !== 'combobox' &&
             this.lightningInputType !== 'richtext' &&
-            this.lightningInputType !== 'search') {
+            this.lightningInputType !== 'search' &&
+            this.lightningInputType !== 'checkbox') {
             return true;
         }
         return false;

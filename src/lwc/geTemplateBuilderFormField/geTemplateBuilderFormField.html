@@ -56,6 +56,18 @@
                         </lightning-combobox>
                     </template>
 
+                    <template if:true={isLightningCheckbox}>
+                        <lightning-input data-name="defaultValue"
+                                         class="slds-m-top_small"
+                                         type="checkbox"
+                                         value={field.defaultValue}
+                                         checked={field.defaultValue}
+                                         variant="label-stacked"
+                                         onclick={stopPropagation}
+                                         onchange={handleOnBlur}>
+                        </lightning-input>
+                    </template>
+
                     <template if:true={isLightningSearch}>
                         <lightning-input data-name="defaultValue"
                                          class="slds-m-around_none"
