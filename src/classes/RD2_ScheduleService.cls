@@ -38,9 +38,9 @@
 public without sharing class RD2_ScheduleService {
 
     /***
-    * @description Creates new recurring donation schedule(s) for recurring donation
+    * @description Builds new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
-    * @return RD2_Schedule_SVC
+    * @return List<RecurringDonationSchedule__c>
     */
     public List<RecurringDonationSchedule__c> getNewSchedules(npe03__Recurring_Donation__c rd) {
 
@@ -55,7 +55,7 @@ public without sharing class RD2_ScheduleService {
         schedule.EndDate__c = ??
          */
 
-        schedule.InstallmentAmount__c = rd.npe03__Installment_Amount__c;
+        schedule.InstallmentAmount__c = rd.npe03__Amount__c;
         schedule.InstallmentFrequency__c = rd.InstallmentFrequency__c;
         schedule.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
         schedule.PaymentMethod__c = rd.PaymentMethod__c;

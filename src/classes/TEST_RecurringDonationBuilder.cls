@@ -189,6 +189,18 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Amount
+    * @param amount Amount
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withPaymentMethod(String payMethod) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('PaymentMethod__c', payMethod);
+        return this;
+    }
+
+    /***
     * @description Sets CurrencyIsoCode
     * @param ccyIsoCode CurrencyIsoCode value
     * @return TEST_RecurringDonationBuilder Builder instance
