@@ -34,10 +34,7 @@
 * @description Create Opportunities from Recurring Donations
 *
 */
-public with sharing class RD2_CreateOpportunityService {
-
-    public static final String CREDITCARD = 'Credit Card';
-    public static final String ACH = 'ACH';
+public with sharing class RD2_OpportunityService {
 
     /***
     * @description inserts one or more Opportunity records for a specified set of Recurring Donations
@@ -119,19 +116,12 @@ public with sharing class RD2_CreateOpportunityService {
         System.debug('Here are the settings value:' + rds.InstallmentOppStageName__c );
         System.debug('What are keys:' + rdsWithCloseDates.keySet());
 
-        List<npe03__Recurring_Donation__c> rd = new List<npe03__Recurring_Donation__c>([
-            SELECT Id, Name, npe03__Donor_Name__c, npe03__Amount__c, npe03__Organization__c,
-            npe03__Contact__c, npe03__Recurring_Donation_Campaign__c
-            FROM
-            npe03__Recurring_Donation__c
-            WHERE id in :rdsWithCloseDates.keySet()
-        ]);
-        for (npe03__Recurring_Donation__c r : rd) {
+        for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keySet()) {
 
             for(;i< rdsWithCloseDates.get(r).size();i++) {
                 Opportunity opp = new Opportunity();
                 System.debug('Name in RD:'+ r.npe03__Donor_Name__c);
-                opp.Name = r.npe03__Donor_Name__c + ' ' + r.npe03__Amount__c + ' ' + rdsWithCloseDates.get(r)[i] + ' Recurring Donation';
+                opp.Name = r.npe03__Donor_Name__c + ' ' + r.npe03__Amount__c + ' ' + rdsWithCloseDates.get(r)[i].format() + ' Recurring Donation';
                 if ( r.npe03__Organization__c != null && String.isBlank(r.npe03__Contact__c)) {
                     opp.AccountId = r.npe03__Organization__c;
 

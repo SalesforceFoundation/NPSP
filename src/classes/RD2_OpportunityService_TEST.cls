@@ -35,7 +35,7 @@
 *
 */
 @isTest(IsParallel=true)
-private with sharing class RD2_CreateOpportunityService_TEST {
+private with sharing class RD2_OpportunityService_TEST {
 
     /***
     * @description Verifies if it creates opportunities when an recurring donation
