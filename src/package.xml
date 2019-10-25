@@ -2895,11 +2895,12 @@
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
+        <members>GE_Template_Builder</members>
+        <members>GE_Templates</members>
         <members>General_Accounting_Unit__c</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
-        <members>Template_Builder</members>
         <members>npe01__OppPayment__c</members>
         <members>npe4__Relationship__c</members>
         <members>npe5__Affiliation__c</members>
@@ -3023,6 +3024,7 @@
         <members>geTemplateBuilderFormSection</members>
         <members>geTemplateBuilderSelectFields</members>
         <members>geTemplateBuilderTemplateInfo</members>
+        <members>geTemplates</members>
         <members>pubsubNoPageRef</members>
         <members>utilIllustration</members>
         <members>utilModal</members>
@@ -3160,5 +3162,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>46.0</version>
+    <version>47.0</version>
 </Package>

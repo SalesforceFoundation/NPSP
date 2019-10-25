@@ -59,6 +59,9 @@
             ],
             "c/utilTemplateBuilder": [
                 "utilTemplateBuilder/utilTemplateBuilder.js"
+            ],
+            "c/geTemplates": [
+                "geTemplates/geTemplates.js"
             ]
         }
     },
