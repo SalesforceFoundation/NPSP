@@ -2,6 +2,11 @@ import { LightningElement, track, api } from 'lwc';
 import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
 import { BatchHeaderField, findIndexByProperty, mutable, sort, dispatch, handleError } from 'c/utilTemplateBuilder';
 
+const REQUIRED_FIELDS = [
+    'Name'
+];
+Object.freeze(REQUIRED_FIELDS);
+
 export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track isLoading = true;
     @track batchFields;
@@ -166,6 +171,13 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * their respective checkboxes.
     */
     handleRequiredFields() {
+        for (let i = 0; i < this.batchFields.length; i++) {
+            if (REQUIRED_FIELDS.includes(this.batchFields[i].value)) {
+                this.batchFields[i].isRequired = true;
+                this.batchFields[i].isRequiredFieldDisabled = true;
+            }
+        }
+
         const requiredFields = this.batchFields.filter(batchField => { return batchField.isRequired });
 
         const selectedFieldsExists = this.selectedBatchFields && this.selectedBatchFields.length > 0;

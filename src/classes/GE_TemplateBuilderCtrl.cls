@@ -46,13 +46,6 @@ public with sharing class GE_TemplateBuilderCtrl {
     * @description Template version
     */
     private static final String TEMPLATE_VERSION = '1.0';
-
-    /*******************************************************************************************************
-    * @description List of required DataImportBatch__c fields
-    */
-    private static final String[] REQUIRED_BATCH_HEADER_FIELDS = new String[]{
-        'name'
-    };
     
     /*******************************************************************************************************
     * @description Queries all Form_Template__c records.
@@ -174,13 +167,6 @@ public with sharing class GE_TemplateBuilderCtrl {
 
             if (dfr.isAccessible() && dfr.isCreateable()) {
                 CheckboxWrapper checkboxWrapper = new CheckboxWrapper(fields.get(key));
-
-                if (REQUIRED_BATCH_HEADER_FIELDS.contains(key)) {
-
-                    checkboxWrapper.isRequired = true;
-                    checkboxWrapper.isRequiredFieldDisabled = true;
-                }
-
                 wrappers.add(checkboxWrapper);
             }
         }
