@@ -39,9 +39,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     connectedCallback() {
-        console.log('connectedCallback');
         this.recordId = getQueryParameters().c__recordId;
-        console.log(this.recordId);
 
         if (this.recordId) {
             retrieveFormTemplate({ templateId: this.recordId })
@@ -441,6 +439,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * to the newly inserted Form_Template__c record detail page.
     */
     handleFormTemplateSave = async () => {
+        this.isLoading = true;
         this.formLayout.sections = this.formSections;
         this.formTemplate.batchHeaderFields = this.batchHeaderFields;
         this.formTemplate.layout = this.formLayout;
@@ -452,8 +451,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             description: this.formTemplate.description,
             formatVersion: FORMAT_VERSION
         };
-
-        console.log('Prepped: ', preppedFormTemplate);
 
         const formTemplateRecordId = await storeFormTemplate(preppedFormTemplate);
 
