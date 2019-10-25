@@ -16,7 +16,7 @@
             </p>
         </div>
         <div role="panel"
-             class="slds-size_9-of-12 slds-p-around_large">
+             class="slds-size_9-of-12 slds-p-around_large slds-border_left">
             <div role="grid"
                  class="slds-grid slds-wrap slds-grid_vertical-align-end">
                 <div class="slds-size_1-of-1">
@@ -33,7 +33,8 @@
                     <lightning-textarea name="Description"
                                         label="Description"
                                         value={templateDescription}
-                                        onblur={handleChangeTemplateInfoDescription}>
+                                        onblur={handleChangeTemplateInfoDescription}
+                                        maxlength="255">
                     </lightning-textarea>
                 </div>
             </div>

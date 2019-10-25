@@ -16,7 +16,7 @@
 .slds-card_extension_active:after {
     content: "";
     position: absolute;
-    top: 0;
+    top: -0.01rem;
     right: 0;
     border: 1rem solid transparent;
     border-right-color: #1589ee;
