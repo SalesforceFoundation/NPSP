@@ -349,7 +349,7 @@ public with sharing class RD2_EnablementService_TEST {
     * @param isEnabled Indicates if the PilotEnabled should be enabled using a Mock feature management
     * @return none
     */
-    private static void setPilotEnabledFeatureParameter(Boolean isEnabled) {
+    public static void setPilotEnabledFeatureParameter(Boolean isEnabled) {
         UTIL_FeatureEnablement featureEnablement = UTIL_FeatureEnablement.getInstance();
 
         featureEnablement.featureManagement = (UTIL_FeatureManagement) Test.createStub(
