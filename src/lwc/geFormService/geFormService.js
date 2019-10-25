@@ -19,11 +19,14 @@ class GeFormService {
     fieldMappings;
     objectMappings;
 
+    /**
+     * Retrieve the default form render wrapper.
+     * @returns {Promise<FORM_RenderWrapper>}
+     */
     getFormTemplate() {
         return new Promise((resolve, reject) => {
             getRenderWrapper()
                 .then((result) => {
-                    console.log(JSON.parse(JSON.stringify(result)));
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
                     resolve(result);
@@ -34,14 +37,29 @@ class GeFormService {
         });
     };
 
+    /**
+     * Get the type of lightning-input that should be used for a given field type.
+     * @param dataType  Data type of the field
+     * @returns {String}
+     */
     getInputTypeFromDataType(dataType) {
         return inputTypeByDescribeType[dataType];
     };
 
+    /**
+     * Get a field info object by dev name from the render wrapper object
+     * @param fieldDevName  Dev name of the object to retrieve
+     * @returns {BDI_FieldMapping}
+     */
     getFieldInfo(fieldDevName) {
         return this.fieldMappings[fieldDevName];
     }
 
+    /**
+     * Get a object info object by dev name from the render wrapper object
+     * @param objectDevName
+     * @returns {BDI_ObjectMapping}
+     */
     getObjectInfo(objectDevName) {
         return this.objectMappings[objectDevName];
     }

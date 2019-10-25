@@ -22,10 +22,10 @@ export default class GeFormSection extends LightningElement {
 
     /**
      * Get the css classname for the body of the twistable section, show/hide when closed/open
-     * @returns {string} 'slds-hidden' when the section is closed
+     * @returns {string} 'collapsed' when the section is closed
      */
     get sectionClassName() {
-        return this.expanded ? '' : 'slds-hidden';
+        return this.expanded ? '' : 'collapsed';
     }
 
     /**
