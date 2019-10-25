@@ -333,6 +333,9 @@
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD2_Constants</members>
+        <members>RD2_DataMigrationMapper</members>
+        <members>RD2_DataMigration_BATCH</members>
+        <members>RD2_DataMigration_TEST</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
         <members>RD2_EnablementDelegate_CTRL</members>
@@ -1239,6 +1242,7 @@
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
         <members>npe03__Recurring_Donation__c.StartDate__c</members>
         <members>npe03__Recurring_Donation__c.Status__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.DataMigrationBatchSize__c</members>
         <members>npe03__Recurring_Donations_Settings__c.EnableAutomaticNaming__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
@@ -1428,6 +1432,7 @@
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
+        <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementEnableConfirm</members>
@@ -1743,9 +1748,9 @@
         <members>bgeProcessBatch</members>
         <members>bgeTabHeader</members>
         <members>bgeUnmappedFieldsNoticeHeader</members>
-        <members>bgeUnmappedFieldsNoticeTitle</members>
         <members>bgeUnmappedFieldsNoticeMessageAdvancedMapping</members>
         <members>bgeUnmappedFieldsNoticeMessageHelpTextMapping</members>
+        <members>bgeUnmappedFieldsNoticeTitle</members>
         <members>bgeWizardHideAdvancedOptions</members>
         <members>bgeWizardShowAdvancedOptions</members>
         <members>btnContinue</members>
