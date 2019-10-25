@@ -32,10 +32,17 @@
 * @date 2019
 * @group Recurring Donations
 * @description Data Migration batch job used to convert Recurring Donation Records from
-* Legacy (RD1) to Enhanced Recurring Donation (RD2) format
+* Legacy to Enhanced Recurring Donation format
 *
 */
-public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
+public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Schedulable {
+
+    /**
+    * @description The default batch size for the migration job if it's not specified
+    * in custom settings
+    */
+    private static final Integer DEFAULT_MIGRATION_JOB_BATCH_SIZE = 200;
+
 
     private Boolean dryRunMode = false;
 
@@ -43,22 +50,29 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
     private List<RecurringDonationSchedule__c> rdSchedules = new List<RecurringDonationSchedule__c>();
 
     /**
-    * @description Batch size for Apex Job. Uses default of 200 if Custom Setting is null.
+    * @description Batch size for Apex Job. Uses default of 200 if Custom Setting is not provided.
     */
-    private Integer batchSize {
+    public Integer batchSize {
         get {
             if (batchSize == null) {
-                Decimal batchSizeVal = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().DataMigrationBatchSize__c;
-                if (batchSizeVal == null) {
-                    batchSizeVal = 200;
+                Decimal configValue = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().DataMigrationBatchSize__c;
+
+                if (configValue == null) {
+                    configValue = DEFAULT_MIGRATION_JOB_BATCH_SIZE;
                 }
-                batchSize = batchSizeVal.intValue();
+
+                batchSize = configValue.intValue();
             }
             return batchSize;
-        } set;
+        } 
+        private set;
     }
 
-    public RD2_DataMigration_BATCH() {
+    /***
+    * @description Schedulable executes the batch job
+    */
+    public void execute(SchedulableContext context) {
+        Database.executeBatch(new RD2_DataMigration_BATCH(), batchSize);
     }
 
     /**
@@ -83,12 +97,12 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject> {
     /**
     * @description Batch Execute Method
     */
-    public void execute(Database.BatchableContext BC, List<npe03__Recurring_Donation__c> scope) {
-        Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(scope);
+    public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
+        Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);
 
         Savepoint sp = Database.setSavepoint();
 
-        for (npe03__Recurring_Donation__c rd : scope) {
+        for (npe03__Recurring_Donation__c rd : rds) {
             handleConversion(rd, oppsByRdId.get(rd.Id));
         }
 

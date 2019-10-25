@@ -361,7 +361,6 @@ public without sharing class TEST_RecurringDonationBuilder {
      */
     public TEST_RecurringDonationBuilder withDefaultValues() {
 
-        // TODO Update to use the RD2_Constants class for these when available
         if (recordMode == Mode.Enhanced) {
             valuesByFieldName.put('Status__c', RD2_Constants.STATUS_ACTIVE);
             valuesByFieldName.put('RecurringType__c', RD2_Constants.RECURRING_TYPE_OPEN);

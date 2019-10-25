@@ -63,9 +63,4 @@ public inherited sharing class RD2_Constants {
     */
     public static final String RECURRING_TYPE_OPEN = 'Open';
 
-    /**
-    * @description The default batch size for the migration job if it's not specified
-    * in custom settings
-    */
-    public static final Integer DEFAULT_MIGRATION_JOB_BATCH_SIZE = 200;
 }
