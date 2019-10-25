@@ -86,7 +86,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         dataImportModel.id = batchId;
         dataImportModel.dataImportRows = getDataImportRows(batchId, rowOffset);
-        dataImportModel.columns = getColumns(batchId);
+        dataImportModel.setColumns();
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
         dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
@@ -373,35 +373,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the related list of columns for the BGE interface
-    * @return list of Columns to use in BGE_DataImportBatchEntry table
-    */
-    private static List<Column> getColumns(Id batchId) {
-        List<Column> columns = new List<Column>();
-
-        columns.addAll(getUserDefinedColumns(batchId));
-
-        //add derived matched record column
-        Column linkCol = new Column();
-        linkCol.label = Label.bdiDonation;
-        linkCol.fieldName = 'matchedRecordUrl';
-        linkCol.readOnly = true;
-        linkCol.type = 'url';
-        linkCol.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
-        columns.add(linkCol);
-
-        //status of the DI record
-        Column statusCol = new Column();
-        statusCol.label = Schema.SObjectType.DataImport__c.fields.Status__c.getLabel();
-        statusCol.fieldName = Schema.SObjectType.DataImport__c.fields.Status__c.getName();
-        statusCol.readOnly = true;
-        statusCol.type = 'text';
-        columns.add(statusCol);
-
-        return columns;
-    }
-
-    /*******************************************************************************************************
     * @description Gets the sum of the amount totals of all rows for that batch
     * @param recordId the ID of the NPSP_Data_Import_Batch__c
     * @return Decimal amount
@@ -421,111 +392,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     private static Integer getDataImportBatchTotalCount(Id recordId) {
         return [SELECT Count() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
-    }
-
-    /*******************************************************************************************************
-    * @description Retrieves the related list of columns defined by users in the Batch record Active_Fields__c
-    * @return list of Columns to use in BGE_DataImportBatchEntry table
-    */
-    private static List<Column> getUserDefinedColumns(Id batchId) {
-        List<Column> columns = new List<Column>();
-
-        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
-        String activeFieldsJSON = batch.Active_Fields__c;
-        if (activeFieldsJSON != null) {
-            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
-                (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(
-                    activeFieldsJSON,
-                    List<BGE_ConfigurationWizard_CTRL.BGEField>.class
-                );
-
-            Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(
-                    UTIL_Namespace.StrTokenNSPrefix('DataImport__c')
-            );
-
-            List<DescribeFieldResult> unpermittedFields = new List<DescribeFieldResult>();
-
-            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-                Schema.DescribeFieldResult dataImportDFR = fieldMap.get(field.name.toLowerCase());
-                if (dataImportDFR != null) {
-
-                    if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
-
-                        String targetObject = '';
-                        String targetField = '';
-                        BDI_TargetFields targetFields = 
-                            BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField.get(
-                                dataImportDFR.getSObjectField());
-
-                        Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject = 
-                            targetFields.getTargetFieldsByTargetObject();
-
-                        // One DI field can be mapped to multiple target fields although it will be rare 
-                        // and presents some issues with picklists; here we will return info for the first 
-                        // match
-                        for (Schema.SObjectType targetSObjType: targetFieldsByTargetObject.keySet()) {
-                            String aTargetObjectName = targetSObjType.getDescribe().getName();
-                            if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(
-                                aTargetObjectName)) {
-
-                                targetObject = aTargetObjectName;
-                                List<SObjectField> mappedTargetFields = 
-                                    new List<SObjectField> (targetFieldsByTargetObject.get(targetSObjType));
-                                if(mappedTargetFields.size() > 0) {
-                                    targetField = mappedTargetFields[0].getDescribe().getName();
-                                }
-                            }
-                        }
-                        DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject, targetField);
-
-                        Column col = new Column();
-
-                        col.label = dataImportDFR.label;
-                        col.fieldName = dataImportDFR.name;
-                        col.defaultValue = field.defaultValue;
-                        col.required = field.requiredInEntryForm;
-                        col.hide = field.hide;
-                        col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dataImportDFR.type);
-                        // lookups aren't editable in the grid since we don't have lookup support there
-                        col.readOnly = col.type == 'reference' ? true : false;
-                        col.typeAttributes = '{}';
-                        col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
-                        
-                        if (dataImportDFR.type == Schema.DisplayType.Reference) {
-                            if (targetDFR.getReferenceTo() == dataImportDFR.getReferenceTo()) {
-                                // manually construct EXTRA column for lookup link
-                                Column linkCol = new Column();
-                                linkCol.label = dataImportDFR.getLabel();
-                                String fieldLabel = dataImportDFR.name + '_label';
-                                String fieldName = dataImportDFR.name + '_link';
-                                linkCol.fieldName = fieldName;
-                                linkCol.readOnly = true;
-                                linkCol.required = field.requiredInEntryForm;
-                                linkCol.type = 'url';
-                                linkCol.typeAttributes = '{"label":{"fieldName":"' + fieldLabel + '"},"target":"_blank"}';
-
-                                columns.add(linkCol);
-                                columns.add(col);
-                            }
-                        } else {
-                            columns.add(col);
-                        }
-
-                        if (!UTIL_Permissions.canUpdate(targetDFR, false)) {
-                            unpermittedFields.add(targetDFR);
-                        }
-                    } else {
-                        unpermittedFields.add(dataImportDFR);
-                    }
-
-                }
-            }
-
-            BGE_BatchGiftEntry_UTIL.handleMissingPermissions(unpermittedFields);
-
-        }
-
-        return columns;
     }
 
     /*******************************************************************************************************
@@ -657,6 +523,193 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Integer totalCountOfRows;
         @AuraEnabled public Decimal totalRowAmount;
+        @AuraEnabled public List<UTIL_LightningComponentSupport.Notice> notices =
+                new List<UTIL_LightningComponentSupport.Notice>();
+
+        /*******************************************************************************************************
+        * @description Retrieves the related list of columns for the BGE interface
+        * @return list of Columns to use in BGE_DataImportBatchEntry table
+        */
+        public void setColumns() {
+            List<Column> columns = new List<Column>();
+
+            columns.addAll(getUserDefinedColumns());
+
+            //add derived matched record column
+            Column linkCol = new Column();
+            linkCol.label = Label.bdiDonation;
+            linkCol.fieldName = 'matchedRecordUrl';
+            linkCol.readOnly = true;
+            linkCol.type = 'url';
+            linkCol.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
+            columns.add(linkCol);
+
+            //status of the DI record
+            Column statusCol = new Column();
+            statusCol.label = Schema.SObjectType.DataImport__c.fields.Status__c.getLabel();
+            statusCol.fieldName = Schema.SObjectType.DataImport__c.fields.Status__c.getName();
+            statusCol.readOnly = true;
+            statusCol.type = 'text';
+            columns.add(statusCol);
+
+            this.columns = columns;
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the related list of columns defined by users in the Batch record Active_Fields__c
+        * @return list of Columns to use in BGE_DataImportBatchEntry table
+        */
+        private List<Column> getUserDefinedColumns() {
+            List<Column> columns = new List<Column>();
+
+            DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c
+            WHERE Id = :id];
+            String activeFieldsJSON = batch.Active_Fields__c;
+            if (activeFieldsJSON != null) {
+                List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
+                        (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(
+                                activeFieldsJSON,
+                                List<BGE_ConfigurationWizard_CTRL.BGEField>.class
+                        );
+
+                Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(
+                        UTIL_Namespace.StrTokenNSPrefix('DataImport__c')
+                );
+
+                List<DescribeFieldResult> unpermittedFields = new List<DescribeFieldResult>();
+                Set<String> unmappedFields = new Set<String>();
+
+                for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
+                    Schema.DescribeFieldResult dataImportDFR = fieldMap.get(field.name.toLowerCase());
+                    if (dataImportDFR != null) {
+
+                        if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
+
+                            String targetObject = '';
+                            String targetField = '';
+                            BDI_TargetFields targetFields =
+                                    BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField.get(
+                                            dataImportDFR.getSObjectField());
+
+                            if (targetFields == null) {
+                                if (unmappedFields == null) {
+                                    unmappedFields = new Set<String>();
+                                }
+                                unmappedFields.add(field.name);
+                                continue;
+                            }
+
+                            Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject =
+                                    targetFields.getTargetFieldsByTargetObject();
+
+                            // One DI field can be mapped to multiple target fields although it will be rare
+                            // and presents some issues with picklists; here we will return info for the first
+                            // match
+                            for (Schema.SObjectType targetSObjType: targetFieldsByTargetObject.keySet()) {
+                                String aTargetObjectName = targetSObjType.getDescribe().getName();
+                                if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(
+                                        aTargetObjectName)) {
+
+                                    targetObject = aTargetObjectName;
+                                    List<SObjectField> mappedTargetFields =
+                                            new List<SObjectField> (targetFieldsByTargetObject.get(targetSObjType));
+                                    if(mappedTargetFields.size() > 0) {
+                                        targetField = mappedTargetFields[0].getDescribe().getName();
+                                    }
+                                }
+                            }
+                            DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject, targetField);
+
+                            Column col = new Column();
+
+                            col.label = dataImportDFR.label;
+                            col.fieldName = dataImportDFR.name;
+                            col.defaultValue = field.defaultValue;
+                            col.required = field.requiredInEntryForm;
+                            col.hide = field.hide;
+                            col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dataImportDFR.type);
+                            // lookups aren't editable in the grid since we don't have lookup support there
+                            col.readOnly = col.type == 'reference' ? true : false;
+                            col.typeAttributes = '{}';
+                            col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
+
+                            if (dataImportDFR.type == Schema.DisplayType.Reference) {
+                                if (targetDFR.getReferenceTo() == dataImportDFR.getReferenceTo()) {
+                                    // manually construct EXTRA column for lookup link
+                                    Column linkCol = new Column();
+                                    linkCol.label = dataImportDFR.getLabel();
+                                    String fieldLabel = dataImportDFR.name + '_label';
+                                    String fieldName = dataImportDFR.name + '_link';
+                                    linkCol.fieldName = fieldName;
+                                    linkCol.readOnly = true;
+                                    linkCol.required = field.requiredInEntryForm;
+                                    linkCol.type = 'url';
+                                    linkCol.typeAttributes = '{"label":{"fieldName":"' + fieldLabel + '"},"target":"_blank"}';
+
+                                    columns.add(linkCol);
+                                    columns.add(col);
+                                }
+                            } else {
+                                columns.add(col);
+                            }
+
+                            if (!UTIL_Permissions.canUpdate(targetDFR, false)) {
+                                unpermittedFields.add(targetDFR);
+                            }
+                        } else {
+                            unpermittedFields.add(dataImportDFR);
+                        }
+
+                    }
+                }
+
+                BGE_BatchGiftEntry_UTIL.handleMissingPermissions(unpermittedFields);
+
+                if (!unmappedFields.isEmpty()) {
+                    notices.add(new UnmappedFieldsNotice(unmappedFields));
+                }
+            }
+
+            return columns;
+        }
+    }
+
+    /**
+    * @description The Notice displayed to the User when fields that are selected for
+    * display on the Batch do not have field mappings configured in the Advanced Mapping
+    * settings.
+    */
+    @TestVisible
+    private class UnmappedFieldsNotice extends UTIL_LightningComponentSupport.Notice {
+        private Set<String> unmappedFieldNames = new Set<String>();
+
+        public UnmappedFieldsNotice(Set<String> unmappedFieldNames) {
+            this.unmappedFieldNames = unmappedFieldNames;
+            this.header = Label.bgeUnmappedFieldsNoticeHeader;
+            this.title = Label.bgeUnmappedFieldsNoticeTitle;
+            this.message = getMessage();
+            setVariant(UTIL_LightningComponentSupport.Variant.WARNING);
+        }
+
+        private String getMessage() {
+            String fieldNames = String.join(new List<String>(unmappedFieldNames), ', ');
+            String unmappedFieldsTemplate = '';
+            String fieldMappingMethod =
+                    UTIL_CustomSettingsFacade.getDataImportSettings().Field_Mapping_Method__c;
+
+            if (fieldMappingMethod == BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING) {
+                unmappedFieldsTemplate =
+                        Label.bgeUnmappedFieldsNoticeMessageAdvancedMapping;
+            } else if (fieldMappingMethod == BDI_DataImportService.FM_HELP_TEXT) {
+                unmappedFieldsTemplate =
+                        Label.bgeUnmappedFieldsNoticeMessageHelpTextMapping;
+            }
+
+            return String.format(
+                    unmappedFieldsTemplate, new List<String>{
+                            fieldNames
+                    });
+        }
     }
 
     /*******************************************************************************************************
