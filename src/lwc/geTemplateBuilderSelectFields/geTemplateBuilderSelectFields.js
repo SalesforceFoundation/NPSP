@@ -2,7 +2,7 @@ import { LightningElement, track, api } from 'lwc';
 //import getFieldMappingSets from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingSetNames';
 import getFieldAndObjectMappingsByFieldMappingSetName
     from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldAndObjectMappingsByFieldMappingSetName';
-import { FormSection, FormField, findIndexByProperty, mutable, generateId, dispatch } from 'c/utilTemplateBuilder';
+import { findIndexByProperty, mutable, generateId, dispatch } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderSelectFields extends LightningElement {
     @track isLoading = true;
@@ -36,10 +36,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     }
 
     toggleModal(event) {
-        console.log('handleEdit');
-        this.dispatchEvent(new CustomEvent('togglemodal', {
-            detail: event.detail
-        }));
+        dispatch(this, 'togglemodal', event.detail);
     }
 
     connectedCallback() {

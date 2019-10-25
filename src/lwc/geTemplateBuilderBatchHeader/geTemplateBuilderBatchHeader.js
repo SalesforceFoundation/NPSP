@@ -162,7 +162,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     */
     handleSelectBatchField(event) {
         const fieldName = event.target.value;
-        const index = findIndexByProperty(this.selectedBatchFields, 'value', fieldName);
+        const index = findIndexByProperty(this.selectedBatchFields, 'apiName', fieldName);
         const addSelectedField = index === -1 ? true : false;
 
         if (addSelectedField) {
@@ -186,7 +186,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
 
         let field = {
             label: batchField.label,
-            value: batchField.apiName,
+            apiName: batchField.apiName,
             required: batchField.required,
             isRequiredFieldDisabled: batchField.isRequiredFieldDisabled,
             allowDefaultValue: true,
@@ -232,7 +232,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     */
     handleDeleteBatchHeaderField(event) {
         const fieldName = event.detail;
-        const index = findIndexByProperty(this.selectedBatchFields, 'value', fieldName);
+        const index = findIndexByProperty(this.selectedBatchFields, 'apiName', fieldName);
         this.removeField(index, fieldName);
     }
 
@@ -242,7 +242,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     */
     handleRequiredFields() {
         for (let i = 0; i < this.batchFields.length; i++) {
-            if (REQUIRED_FIELDS.includes(this.batchFields[i].value)) {
+            if (REQUIRED_FIELDS.includes(this.batchFields[i].apiName)) {
                 this.batchFields[i].required = true;
                 this.batchFields[i].isRequiredFieldDisabled = true;
             }
@@ -276,7 +276,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
                 const batchFieldIndex = findIndexByProperty(
                     _batchFields,
                     'apiName',
-                    selectedBatchField.value);
+                    selectedBatchField.apiName);
 
                 _batchFields[batchFieldIndex].checked = true;
             }

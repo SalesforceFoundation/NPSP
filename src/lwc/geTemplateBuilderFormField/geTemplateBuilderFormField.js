@@ -1,5 +1,6 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import { mutable, inputTypeByDescribeType, lightningInputTypeByDataType, showToast, dispatch } from 'c/utilTemplateBuilder';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 
 export default class geTemplateBuilderFormField extends LightningElement {
     @track field;
@@ -7,6 +8,36 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @api
     set field(field) {
         this.field = field;
+    }
+
+    _wiredAdapterArgs;
+
+    renderedCallback() {
+        console.log('renderedCallback');
+        if (!this._wiredAdapterArgs && this.field && this.field.fieldInfo) {
+            console.log('Field: ', mutable(this.field));
+            this._wiredAdapterArgs = this.field.fieldInfo;
+        }
+    }
+
+    @wire(getPicklistValues, {
+        recordTypeId: '$_wiredAdapterArgs.defaultRecordTypeId',
+        fieldApiName: '$_wiredAdapterArgs' })
+    wiredPicklistOptions({ error, data }) {
+        if (data) {
+            let field = mutable(this.field);
+            const picklistOptions = data.values;
+            field.picklistOptions = picklistOptions;
+            this.field = field;
+
+            let detail = {
+                fieldName: this.field.apiName,
+                property: 'picklistOptions',
+                value: picklistOptions
+            }
+
+            dispatch(this, 'updateformfield', detail);
+        }
     }
 
     get isRequired() {
@@ -72,7 +103,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     handleOnChangeRequiredField(event) {
         this.stopPropagation(event);
         let detail = {
-            fieldName: this.field.value,
+            fieldName: this.field.apiName,
             property: 'required',
             value: event.target.checked
         }
@@ -88,7 +119,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleChangeCombobox(event) {
         let detail = {
-            fieldName: this.field.value,
+            fieldName: this.field.apiName,
             property: 'defaultValue',
             value: event.target.value
         }
@@ -113,7 +144,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         }
 
         let detail = {
-            fieldName: this.field.value,
+            fieldName: this.field.apiName,
             property: 'defaultValue',
             value: value
         }
@@ -129,7 +160,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleOnBlurCustomLabel(event) {
         let detail = {
-            fieldName: this.field.value,
+            fieldName: this.field.apiName,
             property: 'customLabel',
             value: event.target.value
         }
@@ -144,7 +175,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleFormFieldDelete(event) {
         this.stopPropagation(event);
-        dispatch(this, 'deleteformfield', this.field.value);
+        dispatch(this, 'deleteformfield', this.field.apiName);
     }
 
     /*******************************************************************************
@@ -155,7 +186,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleFormFieldUp(event) {
         this.stopPropagation(event);
-        dispatch(this, 'formfieldup', this.field.value);
+        dispatch(this, 'formfieldup', this.field.apiName);
     }
 
     /*******************************************************************************
@@ -166,7 +197,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleFormFieldDown(event) {
         this.stopPropagation(event);
-        dispatch(this, 'formfielddown', this.field.value);
+        dispatch(this, 'formfielddown', this.field.apiName);
     }
 
     /*******************************************************************************

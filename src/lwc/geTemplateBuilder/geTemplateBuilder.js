@@ -165,7 +165,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const detail = event.detail;
 
         let batchHeaderField = this.batchHeaderFields.find((bf) => {
-            return bf.value === detail.fieldName
+            return bf.apiName === detail.fieldName
         });
 
         if (batchHeaderField) {
@@ -183,7 +183,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     handleBatchHeaderFieldUp(event) {
         const fieldName = event.detail;
 
-        let index = findIndexByProperty(this.batchHeaderFields, 'value', fieldName);
+        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', fieldName);
         if (index > 0) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index - 1);
@@ -200,7 +200,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     handleBatchHeaderFieldDown(event) {
         const fieldName = event.detail;
 
-        let index = findIndexByProperty(this.batchHeaderFields, 'value', fieldName);
+        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', fieldName);
         if (index < this.batchHeaderFields.length - 1) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index + 1);
