@@ -56,7 +56,7 @@
 * Recommend registering a default handler using an interface that can be switched out/overriden
 * as desired for specific use cases.
 */
-public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Database.Batchable<SObject>, Database.Stateful {
+public abstract inherited sharing class UTIL_AbstractChunkingLDV_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
     /**
      * @description The Maximum LDV Chunk size that is allowed to be used.  If > MAX will use the MAX
@@ -78,80 +78,45 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
     @testVisible private Id startId;
     @testVisible private Id endId;
     @testVisible private Id currentEndId;
-    @testVisible private Boolean endReached;
+    @testVisible private Boolean endReached = false;
     @testVisible private Integer batchSize = DEFAULT_BATCH_SIZE;
-    @testVisible private Integer chunkIteration;
+    @testVisible private Integer chunkIteration = 0;
     @testVisible private Boolean ldvMode = null;
-    @testVisible private String additionalWhereClause;
+    @testVisible private String additionalWhereClause = '';
+    @testVisible private Boolean batchJobInProgress = false;
 
     /**
-     * @description No argument constructor that assumes default batch size of 500, and that ldvMode will be
-     * determined by record distance between min and max Id for main object of batch
+     * @description No argument constructor
      */
-    public UTIL_AbstractCommon_BATCH() {
-        // batchSize, ldvMode, additionalWhereClause
-        this(DEFAULT_BATCH_SIZE, false, null);
+    public UTIL_AbstractChunkingLDV_BATCH() {
+    }
+
+    public void setBatchSize(Integer batchSize) {
+        if (!this.batchJobInProgress) {
+            this.batchSize = batchSize;
+        }
     }
 
     /**
-     * @description Constructor that assumes  that ldvMode will be
-     * determined by record distance between min and max Id for main object of batch
-     * @param batchSize Integer Size of each batch
+     * @description Sets the ldvMode value.  Only takes the value if the batch job
+     *              is not yet in progress, e.g. the start() method has not executed yet
+     * @param aldvMode AdditionalWhereClause to be added to the query
      */
-    public UTIL_AbstractCommon_BATCH(Integer batchSize) {
-        // batchSize, ldvMode, additionalWhereClause
-        this(batchSize, false, null);
+    public void setLdvMode(Boolean ldvMode) {
+        if (!this.batchJobInProgress) {
+            this.ldvMode = ldvMode;
+        }
     }
 
     /**
-     * @description Constructor that assumes  that ldvMode will be
-     * determined by record distance between min and max Id for main object of batch
-     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.
-     *                              If a main where clause is also present both will be encapsulated in () and anded.
-     * @param batchSize Integer Size of each batch
+     * @description Sets the additionalWhereClause value.  Only takes the value if the batch job
+     *              is not yet in progress, e.g. the start() method has not executed yet
+     * @param additionalWhereClause AdditionalWhereClause to be added to the query
      */
-    public UTIL_AbstractCommon_BATCH(Integer batchSize, String additionalWhereClause) {
-        // batchSize, ldvMode, additionalWhereClause
-        this(batchSize, false, additionalWhereClause);
-    }
-
-    /**
-     * @description Constructor that assumes default batch size of 500, if ldvMode is false/null it will
-     * use the default logic to determine whether to run in LDV Chunking mode, calculating record distance between the min and
-     * max Id for the object
-     * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
-     */
-    public UTIL_AbstractCommon_BATCH(Boolean ldvMode) {
-        // batchSize, ldvMode
-        this(DEFAULT_BATCH_SIZE, ldvMode, null);
-    }
-
-   /**
-     * @description Constructor that assumes default batch size of 500, if ldvMode is false/null it will
-     * use the default logic to determine whether to run in LDV Chunking mode, calculating record distance between the min and
-     * max Id for the object
-     * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
-     */
-    public UTIL_AbstractCommon_BATCH(Boolean ldvMode, String additionalWhereClause) {
-        // batchSize, ldvMode
-        this(DEFAULT_BATCH_SIZE, ldvMode, additionalWhereClause);
-    }
-
-    /**
-     * @description Constructor, if ldvMode is false/null it will
-     * use the default logic to determine whether to run in LDV Chunking mode, calculating record distance between the min and
-     * max Id for the object
-     * @param batchSize Integer Size of each batch
-     * @param ldvMode Boolean, if true will execute in LDV Chunking mode by default
-     * @param additionalWhereClause if present, will be applied to the inner query, or the main query if executing in non ldv mode.
-     *                               If a main where clause is also present both will be encapsulated in () and anded.
-     */
-    public UTIL_AbstractCommon_BATCH(Integer batchSize, Boolean ldvMode, String additionalWhereClause) {
-        this.endReached = false;
-        this.batchSize = batchSize;
-        this.chunkIteration = 0;
-        this.ldvMode = ldvMode;
-        this.additionalWhereClause = additionalWhereClause;
+    public void setAdditionalWhereClause(String additionalWhereClause) {
+        if (!this.batchJobinProgress) {
+            this.additionalWhereClause = additionalWhereClause;
+        }
     }
 
     /**
@@ -162,6 +127,9 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      * @return Database.QueryLocator Querylocator for batch
      */
     public Database.QueryLocator start(Database.BatchableContext bc) {
+        // Past this point, the initialization member variables cannot be modified from outside the class:
+        // ldvMode, batchSize, additionalWhereClause;
+        this.batchJobInProgress = true;
         onStart(bc, isFirstChunk());
 
         if (startId == null) {
@@ -260,18 +228,17 @@ public abstract inherited sharing class UTIL_AbstractCommon_BATCH implements Dat
      * @return String Where clause fragment
      */
     @testVisible private String getQueryNonLDVWhereClause() {
-        String fullWhereClause = '';
 
-        String whereClause = getWhereClause();
+        String whereClause = this.getWhereClause();
 
-        Boolean mainWhere = String.isNotBlank(whereClause);
-        Boolean addtlWhere = String.isNotBlank(additionalWhereClause);
-        if (mainWhere && addtlWhere) {
-            return '(' + whereClause.trim() + ') AND (' + additionalWhereClause.trim() + ')';
-        } else if (mainWhere && !addtlWhere) {
+        Boolean hasMainWhereClause = String.isNotBlank(whereClause);
+        Boolean hasAddtlWhereClause = String.isNotBlank(this.additionalWhereClause);
+        if (hasMainWhereClause && hasAddtlWhereClause) {
+            return '(' + whereClause.trim() + ') AND (' + this.additionalWhereClause.trim() + ')';
+        } else if (hasMainWhereClause && !hasAddtlWhereClause) {
             return whereClause.trim();
-        } else if (!mainWhere && addtlWhere) {
-            return additionalWhereClause.trim();
+        } else if (!hasMainWhereClause && hasAddtlWhereClause) {
+            return this.additionalWhereClause.trim();
         } else {
             return '';
         }
