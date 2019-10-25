@@ -68,6 +68,9 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             this.setObjectAndFieldMappings(this.objectMappings);
 
             if (this.formSections) {
+                if (this.formSections.length === 1) {
+                    this.handleChangeActiveSection({detail: this.formSections[0].id});
+                }
                 for (let i = 0; i < this.formSections.length; i++) {
                     const formSection = this.formSections[i];
                     formSection.elements.forEach(element => {
@@ -128,7 +131,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         formSections.splice(formSectionIndex, 1);
 
         if (formSections.length === 1) {
-            dispatch(this, 'handleChangeActiveSection', formSections[0].id);
+            this.handleChangeActiveSection({detail: this.formSections[0].id});
         }
 
         dispatch(this, 'refreshformsections', formSections);
