@@ -220,10 +220,10 @@
         <members>CRLP_VRollupHandler</members>
         <members>CallableApiParameters</members>
         <members>CallableApiParameters_TEST</members>
-        <members>Callable_API</members>
-        <members>Callable_API_TEST</members>
         <members>CallableDispatchService_ERR</members>
         <members>CallableDispatchService_ERR_TEST</members>
+        <members>Callable_API</members>
+        <members>Callable_API_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -344,6 +344,8 @@
         <members>RD2_NamingService_TEST</members>
         <members>RD2_RecurringDonations_TDTM</members>
         <members>RD2_RecurringDonations_TEST</members>
+        <members>RD2_ValidationService</members>
+        <members>RD2_ValidationService_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -1417,6 +1419,8 @@
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
+        <members>RD_ContactMustBelongToAccount</members>
+        <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
@@ -1709,9 +1713,9 @@
         <members>bgeProcessBatch</members>
         <members>bgeTabHeader</members>
         <members>bgeUnmappedFieldsNoticeHeader</members>
-        <members>bgeUnmappedFieldsNoticeTitle</members>
         <members>bgeUnmappedFieldsNoticeMessageAdvancedMapping</members>
         <members>bgeUnmappedFieldsNoticeMessageHelpTextMapping</members>
+        <members>bgeUnmappedFieldsNoticeTitle</members>
         <members>bgeWizardHideAdvancedOptions</members>
         <members>bgeWizardShowAdvancedOptions</members>
         <members>btnContinue</members>
@@ -1721,9 +1725,9 @@
         <members>campaignMemberStatusResponded</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
+        <members>conMergeErrNoPersonAccounts</members>
         <members>conMergeErrorNoDeleteObjPermission</members>
         <members>conMergeErrorNoDeleteRecAccess</members>
-        <members>conMergeErrNoPersonAccounts</members>
         <members>conMergeFoundContacts</members>
         <members>conMergePageTitle</members>
         <members>conMergePageTitleDetail</members>
