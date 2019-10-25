@@ -17,15 +17,15 @@
 
             <template for:each={batchFields}
                       for:item="field">
-                <lightning-input key={field.id}
+                <lightning-input key={field.apiName}
+                                 class="slds-truncate"
                                  type="checkbox"
                                  label={field.label}
-                                 value={field.value}
+                                 value={field.apiName}
                                  onchange={handleSelectBatchField}
                                  title={field.label}
                                  checked={field.checked}
-                                 class="slds-truncate"
-                                 required={field.isRequired}
+                                 required={field.required}
                                  disabled={field.isRequiredFieldDisabled}
                                  data-type={field.dataType}>
                 </lightning-input>

@@ -1,6 +1,7 @@
-import { LightningElement, track, api } from 'lwc';
-import getBatchFields from '@salesforce/apex/GE_TemplateBuilderCtrl.getBatchFields';
-import { BatchHeaderField, findIndexByProperty, mutable, sort, dispatch, handleError } from 'c/utilTemplateBuilder';
+import { LightningElement, track, api, wire } from 'lwc';
+import { findIndexByProperty, mutable, sort, dispatch, handleError } from 'c/utilTemplateBuilder';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 
 const REQUIRED_FIELDS = [
     'Name'
@@ -9,23 +10,92 @@ Object.freeze(REQUIRED_FIELDS);
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track isLoading = true;
-    @track batchFields;
+    @track batchFields = [];
     @api selectedBatchFields;
+    dataImportBatchInfo;
+    wireAdapterArg;
+
+    additionalRequiredFields = [
+        'Name',
+    ];
+
+    blacklistedFields = [
+        'Batch_Process_Size__c',
+        'Run_Opportunity_Rollups_while_Processing__c',
+        //'Donation_Matching_Behavior__c',
+        'Donation_Matching_Implementing_Class__c',
+        'Donation_Matching_Rule__c',
+        'Donation_Date_Range__c',
+        'Post_Process_Implementing_Class__c',
+        'OwnerId',
+    ]
+
+    @wire(getObjectInfo, { objectApiName: DATA_IMPORT_BATCH_OBJECT })
+    wiredBatchDataImportObject({ error, data }) {
+        if (data) {
+            this.dataImportBatchInfo = data;
+            this.init();
+        } else if (error) {
+            console.log(error);
+        }
+    }
 
     connectedCallback() {
-        this.isLoading = true;
-        this.init();
+        if (this.dataImportBatchInfo) {
+            this.handleRequiredFields();
+            this.toggleCheckboxForSelectedBatchFields();
+        }
     }
 
     @api
     init = async () => {
         try {
-            this.batchFields = await getBatchFields();
+            console.log('Data Import Batch Info: ', mutable(this.dataImportBatchInfo));
+            console.log('Selected Batch Fields: ', this.selectedBatchFields);
+            let batchFields = mutable(this.dataImportBatchInfo.fields);
+
+            Object.getOwnPropertyNames(batchFields).forEach((key) => {
+                let field = batchFields[key];
+
+                if (this.blacklistedFields.includes(field.apiName.replace('npsp__', ''))) {
+                    return;
+                }
+
+                if (field.dataType === 'Picklist') {
+                    field.isPicklist = true;
+                } else {
+                    field.isPicklist = false;
+                }
+
+                field.fieldInfo = {
+                    fieldApiName: field.apiName || field.value,
+                    objectApiName: this.dataImportBatchInfo.apiName,
+                    defaultRecordTypeId: this.dataImportBatchInfo.defaultRecordTypeId
+                }
+
+                if (this.additionalRequiredFields.includes(field.apiName)) {
+                    field.required = true;
+                }
+
+                if (field.createable && field.updateable) {
+                    if (field.required) {
+                        field.checked = true;
+                        field.isRequiredFieldDisabled = true;
+                    } else {
+                        field.checked = false;
+                        field.isRequiredFieldDisabled = false;
+                    }
+
+                    this.batchFields.push(field);
+                }
+            });
+
             this.batchFields = sort(this.batchFields, 'label', 'asc');
             this.handleRequiredFields();
             this.toggleCheckboxForSelectedBatchFields();
             this.isLoading = false;
         } catch (error) {
+            console.log(error);
             handleError(this, error);
             this.isLoading = false;
         }
@@ -111,25 +181,25 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     */
     addField(fieldName) {
         let batchField = this.batchFields.find(bf => {
-            return bf.value === fieldName;
+            return bf.apiName === fieldName;
         });
 
-        let field = new BatchHeaderField(
-            batchField.label,
-            batchField.value,
-            batchField.isRequired,
-            batchField.isRequiredFieldDisabled,
-            false,
-            null,
-            batchField.dataType,
-            batchField.picklistOptions
-        );
+        let field = {
+            label: batchField.label,
+            value: batchField.apiName,
+            required: batchField.required,
+            isRequiredFieldDisabled: batchField.isRequiredFieldDisabled,
+            allowDefaultValue: true,
+            defaultValue: null,
+            dataType: batchField.dataType,
+            fieldInfo: batchField.fieldInfo
+        }
 
         dispatch(this, 'addbatchheaderfield', field);
 
         const batchFieldIndex = findIndexByProperty(
             this.batchFields,
-            'value',
+            'apiName',
             fieldName);
         this.batchFields[batchFieldIndex].checked = true;
     }
@@ -145,7 +215,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     removeField(index, fieldName) {
         const batchFieldIndex = findIndexByProperty(
             this.batchFields,
-            'value',
+            'apiName',
             fieldName);
         this.batchFields[batchFieldIndex].checked = false;
 
@@ -173,22 +243,22 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     handleRequiredFields() {
         for (let i = 0; i < this.batchFields.length; i++) {
             if (REQUIRED_FIELDS.includes(this.batchFields[i].value)) {
-                this.batchFields[i].isRequired = true;
+                this.batchFields[i].required = true;
                 this.batchFields[i].isRequiredFieldDisabled = true;
             }
         }
 
-        const requiredFields = this.batchFields.filter(batchField => { return batchField.isRequired });
+        const requiredFields = this.batchFields.filter(batchField => { return batchField.required });
 
         const selectedFieldsExists = this.selectedBatchFields && this.selectedBatchFields.length > 0;
 
         requiredFields.forEach((field) => {
             if (selectedFieldsExists) {
-                const alreadySelected = this.batchFields.find(bf => { return bf.value === field.value; });
+                const alreadySelected = this.batchFields.find(bf => { return bf.apiName === field.apiName; });
                 if (alreadySelected) { return; }
             }
 
-            this.addField(field.value);
+            this.addField(field.apiName);
         });
     }
 
@@ -205,7 +275,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
                 const selectedBatchField = this.selectedBatchFields[i];
                 const batchFieldIndex = findIndexByProperty(
                     _batchFields,
-                    'value',
+                    'apiName',
                     selectedBatchField.value);
 
                 _batchFields[batchFieldIndex].checked = true;

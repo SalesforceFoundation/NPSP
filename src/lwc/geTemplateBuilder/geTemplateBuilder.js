@@ -151,7 +151,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     handleAddBatchHeaderField(event) {
         let batchHeaderField = event.detail;
-        this.batchHeaderFields.push(batchHeaderField);
+        this.batchHeaderFields = [...this.batchHeaderFields, batchHeaderField];
     }
 
     /*******************************************************************************
