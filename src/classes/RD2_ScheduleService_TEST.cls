@@ -64,14 +64,14 @@ private with sharing class RD2_ScheduleService_TEST {
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
                 TEST_RecurringDonationBuilder.constructEnhancedBuilder()
                     .withMockId()
-                        .withContact(contact.Id)
-                        .withAmount(10)
-                        .withInstallmentPeriodMonthly()
-                        .withInstallmentFrequency(1)
-                        .withDayOfMonth('20')
-                        .withDateEstablished(Date.newInstance(2019, 9, 15))
-                        .withStartDate(Date.newInstance(2019, 9, 15))
-                        .build()
+                    .withContact(contact.Id)
+                    .withAmount(10)
+                    .withInstallmentPeriodMonthly()
+                    .withInstallmentFrequency(1)
+                    .withDayOfMonth('20')
+                    .withDateEstablished(Date.newInstance(2019, 9, 15))
+                    .withStartDate(Date.newInstance(2019, 9, 15))
+                    .build()
         };
 
         Test.startTest();

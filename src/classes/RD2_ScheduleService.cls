@@ -37,51 +37,44 @@
 
 public without sharing class RD2_ScheduleService {
 
-    private List<RecurringDonationSchedule__c> schedulesToInsert = new List<RecurringDonationSchedule__c>();
-
-    /***
-    * @description Gets new recurring donation schedules
-    * @return List<RecurringDonationSchedule__c>
-    */
-    public List<RecurringDonationSchedule__c> getRDSchedulesToInsert() {
-        return schedulesToInsert;
-    }
-
     /***
     * @description Creates new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
     * @return RD2_Schedule_SVC
     */
-    public RD2_ScheduleService createSchedule(npe03__Recurring_Donation__c rd) {
+    public List<RecurringDonationSchedule__c> getNewSchedules(npe03__Recurring_Donation__c rd) {
 
-        RecurringDonationSchedule__c rdsched = new RecurringDonationSchedule__c();
+        List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
-        rdsched.RecurringDonation__c = rd.Id;
-        rdsched.Campaign__c = rd.npe03__Recurring_Donation_Campaign__c;
+        RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c();
+
+        schedule.RecurringDonation__c = rd.Id;
+        schedule.Campaign__c = rd.npe03__Recurring_Donation_Campaign__c;
 
         /* TODO: For fixed length recurring donations we may need to calculate this
-        rdsched.EndDate__c = ??
+        schedule.EndDate__c = ??
          */
 
-        rdsched.InstallmentAmount__c = rd.npe03__Installment_Amount__c;
-        rdsched.InstallmentFrequency__c = rd.InstallmentFrequency__c;
-        rdsched.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
-        rdsched.PaymentMethod__c = rd.PaymentMethod__c;
-        rdsched.StartDate__c = (rd.StartDate__c != null ? rd.StartDate__c : rd.Date_Established__c);
+        schedule.InstallmentAmount__c = rd.npe03__Installment_Amount__c;
+        schedule.InstallmentFrequency__c = rd.InstallmentFrequency__c;
+        schedule.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
+        schedule.PaymentMethod__c = rd.PaymentMethod__c;
+        schedule.StartDate__c = (rd.StartDate__c != null ? rd.StartDate__c : rd.npe03__Date_Established__c);
 
-        if (!isFirstAndFifteenth(rd)) {
-            rdsched.DayOfMonth__c = rd.Day_of_Month__c;
+        if (isFirstAndFifteenth(rd)) {
+            schedule.DayOfMonth__c = RD2_Constants.DAY_OF_MONTH_FIRST;
+            newSchedules.add(schedule);
+
+            schedule = schedule.clone();
+            schedule.DayOfMonth__c = RD2_Constants.DAY_OF_MONTH_FIFTEENTH;
 
         } else {
-            rdsched.DayOfMonth__c = RD2_Constants.DAY_OF_MONTH_FIRST;
-            schedulesToInsert.add(rdsched);
-            rdsched = rdsched.clone();
-            rdsched.DayOfMonth__c = RD2_Constants.DAY_OF_MONTH_FIFTEENTH;
+            schedule.DayOfMonth__c = rd.Day_of_Month__c;
         }
 
-        schedulesToInsert.add(rdsched);
+        newSchedules.add(schedule);
 
-        return this;
+        return newSchedules;
     }
 
     /***

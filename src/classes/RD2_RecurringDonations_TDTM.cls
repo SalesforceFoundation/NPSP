@@ -125,12 +125,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     private void buildNewSchedules(List<npe03__Recurring_Donation__c> rds) {
 
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+
         for (npe03__Recurring_Donation__c rd: rds) {
-            dmlActions.objectsToInsert.addAll(
-                    new RD2_ScheduleService()
-                            .createSchedule(rd)
-                            .getRDSchedulesToInsert()
-            );
+            dmlActions.objectsToInsert.addAll(scheduleService.getNewSchedules(rd));
         }
     }
 
