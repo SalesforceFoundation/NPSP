@@ -13,30 +13,31 @@ export default class geTemplateBuilderFormField extends LightningElement {
     _wiredAdapterArgs;
 
     renderedCallback() {
-        console.log('renderedCallback');
         if (!this._wiredAdapterArgs && this.field && this.field.fieldInfo) {
-            console.log('Field: ', mutable(this.field));
             this._wiredAdapterArgs = this.field.fieldInfo;
         }
     }
 
     @wire(getPicklistValues, {
         recordTypeId: '$_wiredAdapterArgs.defaultRecordTypeId',
-        fieldApiName: '$_wiredAdapterArgs' })
+        fieldApiName: '$_wiredAdapterArgs'
+    })
     wiredPicklistOptions({ error, data }) {
         if (data) {
-            let field = mutable(this.field);
             const picklistOptions = data.values;
-            field.picklistOptions = picklistOptions;
-            this.field = field;
 
-            let detail = {
-                fieldName: this.field.apiName,
-                property: 'picklistOptions',
-                value: picklistOptions
+            if (picklistOptions) {
+                let field = mutable(this.field);
+                field.picklistOptions = picklistOptions;
+                this.field = field;
+                let detail = {
+                    fieldName: this.field.apiName,
+                    property: 'picklistOptions',
+                    value: picklistOptions
+                }
+
+                dispatch(this, 'updateformfield', detail);
             }
-
-            dispatch(this, 'updateformfield', detail);
         }
     }
 

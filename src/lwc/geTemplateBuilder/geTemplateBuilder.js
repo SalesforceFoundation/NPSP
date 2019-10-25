@@ -326,7 +326,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         let formSections = mutable(this.formSections);
         let section = formSections.find(fs => fs.id === sectionId);
-        removeByProperty(section.elements, 'value', fieldName);
+        removeByProperty(section.elements, 'apiName', fieldName);
 
         this.formSections = formSections;
     }
@@ -343,7 +343,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const { sectionId, fieldName } = event.detail;
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
-        let index = findIndexByProperty(section.elements, 'value', fieldName);
+        let index = findIndexByProperty(section.elements, 'apiName', fieldName);
 
         if (index > 0) {
             section = shiftToIndex(section.elements, index, index - 1);
@@ -362,7 +362,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const { sectionId, fieldName } = event.detail;
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
-        let index = findIndexByProperty(section.elements, 'value', fieldName);
+        let index = findIndexByProperty(section.elements, 'apiName', fieldName);
 
         if (index < section.elements.length - 1) {
             section = shiftToIndex(section.elements, index, index + 1);
@@ -383,7 +383,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const { sectionId, fieldName } = event.detail;
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
-        let index = findIndexByProperty(section.elements, 'value', fieldName);
+        let index = findIndexByProperty(section.elements, 'apiName', fieldName);
 
         section.elements.splice(index, 1);
     }
@@ -400,7 +400,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const { sectionId, fieldName, property, value } = event.detail;
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
-        let element = section.elements.find((e) => { return e.value === fieldName });
+        let element = section.elements.find((e) => { return e.apiName === fieldName });
 
         if (element) {
             element[property] = value;

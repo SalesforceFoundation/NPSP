@@ -71,7 +71,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 for (let i = 0; i < this.formSections.length; i++) {
                     const formSection = this.formSections[i];
                     formSection.elements.forEach(element => {
-                        this.catalogSelectedField(element.value, formSection.id)
+                        this.catalogSelectedField(element.apiName, formSection.id)
                     });
                 }
                 this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
@@ -119,7 +119,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             const formFields = formSection.elements;
             for (let i = 0; i < formFields.length; i++) {
                 let checkbox =
-                    this.template.querySelector(`lightning-input[data-field-mapping="${formFields[i].value}"]`);
+                    this.template.querySelector(`lightning-input[data-field-mapping="${formFields[i].apiName}"]`);
                 checkbox.checked = false;
             }
         }
@@ -179,7 +179,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             let formField = {
                 label: fieldMapping.MasterLabel,
                 required: false,
-                value: fieldMapping.DeveloperName,
+                apiName: fieldMapping.DeveloperName,
                 allowDefaultValue: false,
                 sectionId: sectionId,
                 defaultValue: null,

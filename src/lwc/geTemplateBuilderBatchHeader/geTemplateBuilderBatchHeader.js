@@ -50,8 +50,6 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     @api
     init = async () => {
         try {
-            console.log('Data Import Batch Info: ', mutable(this.dataImportBatchInfo));
-            console.log('Selected Batch Fields: ', this.selectedBatchFields);
             let batchFields = mutable(this.dataImportBatchInfo.fields);
 
             Object.getOwnPropertyNames(batchFields).forEach((key) => {
