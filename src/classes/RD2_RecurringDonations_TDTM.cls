@@ -61,7 +61,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @return dmlWrapper
     */
     public override DmlWrapper run(
-        List<SObject> rds, List<SObject> oldRds, 
+        List<SObject> rds, List<SObject> oldRds,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
 
@@ -70,6 +70,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
+        validate(rds, triggerAction);
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
@@ -79,7 +80,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Autogenerates recurring donation names 
+    * @description Autogenerates recurring donation names
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
@@ -88,9 +89,22 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             namingService.autogenerateNames(rds);
-            
+
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             namingService.autogenerateNamesOnChange(rds, oldRds);
+        }
+    }
+
+    /***
+    * @description Validates Recurring Donations data
+    * @param rds Trigger.new records
+    * @param triggerAction BeforeInsert, BeforeUpdate, etc.
+    */
+    public void validate(List<SObject> rds, TDTM_Runnable.Action triggerAction) {
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+           new RD2_ValidationService().validate(rds);
+
         }
     }
 

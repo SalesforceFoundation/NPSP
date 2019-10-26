@@ -31,36 +31,51 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Enhanced Recurring Donations constants for specific picklist values and logic
+* @description Mapper used to convert legacy Recurring Donations to enhanced Recurring Donations.
 *
 */
-public inherited sharing class RD2_Constants {
+public class RD2_DataMigrationMapper {
+
+    private npe03__Recurring_Donation__c rd;
+    private List<Opportunity> opps;
 
     /**
-    * @description Api Values of the npe03_RecurringDonation.Installment_Frequency__c picklist
-    */
-    public static final String FREQUENCY_MONTHLY = 'Monthly';
-    public static final String FREQUENCY_WEEKLY = 'Weekly';
-    public static final String FREQUENCY_YEARLY = 'Yearly';
-    public static final String FREQUENCY_FIRST_AND_FIFTEENTH = '1st and 15th';
+     * @description Constructor
+     */
+    public RD2_DataMigrationMapper(npe03__Recurring_Donation__c rd) {
+        this.rd = rd;
+    }
 
     /**
-    * @description Api Values of the npe03_RecurringDonation.Day_Of_Month__c picklist
-    */
-    public static final String DAY_OF_MONTH_FIRST = '1';
-    public static final String DAY_OF_MONTH_FIFTEENTH = '15';
-    public static final String DAY_OF_MONTH_LAST_DAY = 'Last_Day';
+     * @description Adds related Opportunities to the mapper
+     */
+    public RD2_DataMigrationMapper withRelatedOpportunities(List<Opportunity> opps) {
+        this.opps = opps;
+        return this;
+    }
 
     /**
-    * @description Api Values of the npe03_RecurringDonation.Status__c picklist
-    */
-    public static final String STATUS_ACTIVE = 'Active';
-    public static final String STATUS_LAPSED = 'Lapsed';
-    public static final String STATUS_CLOSED = 'Closed';
+     * @description Converts the RD record to RD2 format by updating the new and existing fields
+     * on the record as required.
+     * @return The updated record (or null if there is an exception?)
+     */
+    public npe03__Recurring_Donation__c convertToEnhancedRD() {
+        return rd;
+    }
 
     /**
-    * @description Api Values of the npe03__RecurringDonation.RecurringType__c picklist
-    */
-    public static final String RECURRING_TYPE_OPEN = 'Open';
+     * @description Generate the RDSchedule Record(s) for the Recurring Donation
+     * @return List<RecurringDonationSchedule__c> Schedule records to insert
+     */
+    public List<RecurringDonationSchedule__c> getScheduleRecords() {
+        return new List<RecurringDonationSchedule__c>();
+    }
 
+    /**
+     * @description Returns true if the RD record is already in RD2 format
+     */
+    @TestVisible
+    private Boolean isConverted() {
+        return rd.Status__c != null;
+    }
 }
