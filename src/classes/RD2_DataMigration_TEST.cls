@@ -34,8 +34,12 @@
 * @description Unit Test for the data migration batch job
 *
 */
-@IsTest
+@IsTest(isParallel=true)
 private class RD2_DataMigration_TEST {
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = 
+        new TEST_SObjectGateway.RecurringDonationGateway().withEnhancedMode();
+
+    private static final Date DATE_ESTABLISHED = Date.newInstance(2010, 12, 23);
 
     /**
      * @description Verifies that the job should run with zero records processed when
@@ -46,21 +50,24 @@ private class RD2_DataMigration_TEST {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
-        npe03__Recurring_Donation__c rd = getNewRecurringDonationLegacyFormat(contact.Id);
-        rd.Id = null;
-        insert rd;
+        insert getLegacyRecurringDonationBuilder(contact.Id)
+            .withId(null)
+            .build();
 
         Exception jobException;
         try {
             Test.startTest();
-            RD2_DataMigration_BATCH batchJob = new RD2_DataMigration_BATCH();
-            Database.executeBatch(batchJob);
+            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+            Database.executeBatch(batch);
             Test.stopTest();
+
         } catch (Exception ex) {
             jobException = ex;
         }
 
-        System.assertNotEquals(null, jobException, 'The batch job should have thrown because RD2 is not enabled in the org');
+        System.assertNotEquals(null, jobException, 
+            'The exception should be generated because enhanced Recurring Donations setting is not enabled');
+
         System.assert(jobException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorDataMigrationJobCannotBeRun),
             'The exception message should match ' + System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
     }
@@ -74,16 +81,18 @@ private class RD2_DataMigration_TEST {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
-        npe03__Recurring_Donation__c rd = getNewRecurringDonationLegacyFormat(contact.Id);
-        rd.Id = null;
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contact.Id)
+            .withId(null)
+            .build();
         insert rd;
 
+        //enablement should be done after the legacy Recurring Donation has been created
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_EnablementService_TEST.configureRecurringDonations2Enabled();
 
         Test.startTest();
-        RD2_DataMigration_BATCH batchJob = new RD2_DataMigration_BATCH();
-        Database.executeBatch(batchJob);
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        Database.executeBatch(batch);
         Test.stopTest();
 
         AsyncApexJob job = [SELECT Id, JobItemsProcessed FROM AsyncApexJob
@@ -91,8 +100,48 @@ private class RD2_DataMigration_TEST {
             AND ApexClass.Name = 'RD2_DataMigration_BATCH'
             LIMIT 1];
         System.assertEquals(1, job.JobItemsProcessed,
-            'One batches should have run with one child batches processed'
+            'The batch should have run with one child batch processed'
         );
+    }
+
+    /**
+     * @description Verifies that the batch job converts Recurring Donations from legacy to enhanced format
+     */
+    @IsTest
+    private static void shouldConvertLegacyToEnhancedRecurringDonationInTheBatch() {
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contact.Id)
+            .withId(null)
+            .build();
+        insert rd;
+
+        //enablement should be done after the legacy Recurring Donation has been created
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_EnablementService_TEST.configureRecurringDonations2Enabled();
+
+        Test.startTest();
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
+        Test.stopTest();
+
+        npe03__Recurring_Donation__c convertedRD = rdGateway.getRecord(rd.Id);
+        Date minCloseDate = (Date) [
+            SELECT MIN(CloseDate) minCloseDate
+            FROM Opportunity 
+            WHERE npe03__Recurring_Donation__c = :rd.Id
+            GROUP BY rollup(npe03__Recurring_Donation__c)
+        ][0].get('minCloseDate');
+
+        System.assertEquals(rd.npe03__Date_Established__c, convertedRD.npe03__Date_Established__c, 'Date Established should be unchanged');   
+        System.assertEquals(minCloseDate, convertedRD.StartDate__c, 'Start Date should match with the earliest Opp Close Date');        
+        System.assertEquals(rd.Day_of_Month__c, convertedRD.Day_of_Month__c, 'Day of Month should be unchanged');
+        System.assertEquals(1, convertedRD.InstallmentFrequency__c, 'Installment Frequency should match');
+
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, convertedRD.npe03__Installment_Period__c, 
+            'Installment Period should be unchanged');
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, convertedRD.Status__c, 'Status should match');
     }
 
     /**
@@ -100,17 +149,12 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldRecognizeAsLegacyFormat() {
-        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
-        Id acctId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
-        npe03__Recurring_Donation__c rd = getNewRecurringDonationLegacyFormat(contactId);
-        Opportunity opp = getOpportunityForRd(acctId, rd.Id);
-        List<Opportunity> mockedRelatedOpps = new List<Opportunity>{ opp };
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder().build();
 
-        RD2_DataMigrationMapper migrationService = new RD2_DataMigrationMapper(rd)
-            .withRelatedOpportunities(mockedRelatedOpps);
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
 
-        System.assertEquals(false, migrationService.isConverted(),
-            'This RD should not be in Enhanced format');
+        System.assertEquals(false, mapper.isConverted(),
+            'This RD should be in legacy Recurring Donation format');
     }
 
     /**
@@ -118,70 +162,309 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldRecognizeAsEnhancedFormat() {
-        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
-        Id acctId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
-        npe03__Recurring_Donation__c rd = getNewRecurringDonationEnhancedFormat(contactId);
-        Opportunity opp = getOpportunityForRd(acctId, rd.Id);
-        List<Opportunity> mockedRelatedOpps = new List<Opportunity>{ opp };
+        npe03__Recurring_Donation__c rd = getEnhancedRecurringDonationBuilder().build();
 
-        RD2_DataMigrationMapper migrationService = new RD2_DataMigrationMapper(rd)
-            .withRelatedOpportunities(mockedRelatedOpps);
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
 
-        System.assertEquals(true, migrationService.isConverted(),
-            'This RD should be in Enhanced RD format');
+        System.assertEquals(true, mapper.isConverted(),
+            'This RD should be in Enhanced Recurring Donation format');
     }
+
+    /**
+     * @description Verifies that converted Recurring Donation is in enhanced Recurring Donation format
+     */
+    @IsTest
+    private static void shouldRecognizeConvertedRDAsEnhancedFormat() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder().build();
+
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
+        mapper.convertToEnhancedRD();
+
+        System.assertEquals(true, mapper.isConverted(),
+            'This RD should be in Enhanced Recurring Donation format');
+    }
+
+    /**
+     * @description Verifies Installment Frequency is set to 3 when Installment Period is Quarterly
+     */
+    @IsTest
+    private static void shouldSetInstallmentFrequencyToThreeWhenInstallmentPeriodIsQuarterly() {
+
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
+            getLegacyRecurringDonationBuilder()
+                .withInstallmentPeriodQuarterly()
+                .build()
+        ).convertToEnhancedRD();
+
+        System.assertEquals(3, convertedRD.InstallmentFrequency__c, 'Installment Frequency should match');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, convertedRD.npe03__Installment_Period__c, 
+            'Installment Period should match');
+
+        convertedRD = new RD2_DataMigrationMapper(convertedRD).convertToEnhancedRD();
+        System.assertEquals(3, convertedRD.InstallmentFrequency__c, 
+            'Should not change Installment Frequency when the converted RD is picked up by data migration again');
+    }
+
+    /**
+     * @description Verifies Installment Frequency is set to 1 when Installment Period is Yearly
+     */
+    @IsTest
+    private static void shouldSetInstallmentFrequencyToOneWhenInstallmentPeriodIsYearly() {
+        
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
+            getLegacyRecurringDonationBuilder()
+                .withInstallmentPeriodYearly()
+                .build()
+        ).convertToEnhancedRD();
+           
+        System.assertEquals(1, convertedRD.InstallmentFrequency__c, 'Installment Frequency should match');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_YEARLY, convertedRD.npe03__Installment_Period__c, 
+            'Installment Period should be unchanged');
+    }
+
+    /**
+     * @description Verifies Installment Frequency is set to 1 when Installment Period is Monthly
+     */
+    @IsTest
+    private static void shouldSetInstallmentFrequencyToOneWhenInstallmentPeriodIsMonthly() {
+        
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
+            getLegacyRecurringDonationBuilder()
+                .withInstallmentPeriodMonthly()
+                .build()
+        ).convertToEnhancedRD();
+           
+        System.assertEquals(1, convertedRD.InstallmentFrequency__c, 'Installment Frequency should match');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, convertedRD.npe03__Installment_Period__c, 
+            'Installment Period should be unchanged');
+    }
+
+    /**
+     * @description Verifies Installment Frequency is set to 1 when Installment Period is Weekly
+     */
+    @IsTest
+    private static void shouldSetInstallmentFrequencyToOneWhenInstallmentPeriodIsWeekly() {
+        
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
+            getLegacyRecurringDonationBuilder()
+                .withInstallmentPeriodWeekly()
+                .build()
+        ).convertToEnhancedRD();
+           
+        System.assertEquals(1, convertedRD.InstallmentFrequency__c, 'Installment Frequency should match');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_WEEKLY, convertedRD.npe03__Installment_Period__c, 
+            'Installment Period should be unchanged');
+    }
+
+    /**
+     * @description Verifies Start Date is set to Date Established when 
+     * the Recurring Donation does not have assigned Opportunities
+     */
+    @IsTest
+    private static void shouldSetStartDateAsEstablishedDateWhenRDHasNoOpps() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withDateEstablished(DATE_ESTABLISHED)
+            .build();
+        
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+           
+        System.assertEquals(DATE_ESTABLISHED, convertedRD.StartDate__c, 
+            'Start Date should match the Recurring Donation Established Date');
+    }
+
+    /**
+     * @description Verifies Start Date is set to the earliest Opp Close Date when 
+     * the Recurring Donation has assigned Opportunities
+     */
+    @IsTest
+    private static void shouldSetStartDateAsTheEarliestOppCloseDate() {
+        Id accId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withDateEstablished(DATE_ESTABLISHED)
+            .build();
+
+        List<Opportunity> opps = new List<Opportunity>{ 
+            getOpportunityBuilder(accId, rd.Id)
+                .withCloseDate(DATE_ESTABLISHED.addDays(10))
+                .withClosedLostStage()
+                .build(),            
+            getOpportunityBuilder(accId, rd.Id)
+                .withCloseDate(DATE_ESTABLISHED.addDays(20))
+                .withOpenStage()
+                .build(),            
+            getOpportunityBuilder(accId, rd.Id)
+                .withCloseDate(DATE_ESTABLISHED.addDays(30))
+                .withClosedWonStage()
+                .build()
+        };
+        
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd)
+            .withRelatedOpportunities(opps)
+            .convertToEnhancedRD();
+           
+        System.assertEquals(opps[0].CloseDate, convertedRD.StartDate__c, 
+            'Start Date should match the earliest Opportunity Close Date');
+    }
+
+    /**
+     * @description Verifies Day of Month is unchanged when it is not the last day of month
+     */
+    @IsTest
+    private static void shouldNotChangeDayOfMonth() {           
+        for (Integer i = 1; i < 29; i++) {
+            String dayOfMonth = String.valueOf(i);
+
+            npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
+                getLegacyRecurringDonationBuilder()
+                    .withAlwaysUseLastDayOfMonth(false)
+                    .withDayOfMonth(dayOfMonth)
+                    .build()
+            ).convertToEnhancedRD();
+
+            System.assertEquals(dayOfMonth, convertedRD.Day_of_Month__c, 'Day of Month should be unchanged');
+        }
+    }
+
+    /**
+     * @description Verifies Day of Month is set as Last Day for specific RDs
+     */
+    @IsTest
+    private static void shouldSetDayOfMonthAsTheLastDay() {
+        List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
+        
+        for (Integer i = 28; i <= 31; i++) {
+            Boolean useLastDayOfMonth = i == 28;
+
+            convertedRDs.add(new RD2_DataMigrationMapper(
+                getLegacyRecurringDonationBuilder()
+                    .withAlwaysUseLastDayOfMonth(useLastDayOfMonth)
+                    .withDayOfMonth(String.valueOf(i))
+                    .build()
+                ).convertToEnhancedRD()
+            );
+        }
+           
+        for (npe03__Recurring_Donation__c convertedRD : convertedRDs) {
+            System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, convertedRD.Day_of_Month__c, 
+                'Day of Month should be Last Day');
+        }
+    }
+
+    /**
+     * @description Verifies Status field is set to Active when Open Ended Status is not Closed
+     */
+    @IsTest
+    private static void shouldSetStatusAsActiveWhenOpenEndedStatusIsNotClosed() {
+        
+        List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>{
+            new RD2_DataMigrationMapper(
+                getLegacyRecurringDonationBuilder()
+                    .withOpenEndedStatusOpen()
+                    .build()
+            ).convertToEnhancedRD(),
+
+            new RD2_DataMigrationMapper(
+                getLegacyRecurringDonationBuilder()
+                    .withOpenEndedStatusNone()
+                    .build()
+            ).convertToEnhancedRD(),
+
+            new RD2_DataMigrationMapper(
+                getLegacyRecurringDonationBuilder()
+                    .withOpenEndedStatus(null)
+                    .build()
+            ).convertToEnhancedRD()
+        };
+           
+        for (npe03__Recurring_Donation__c convertedRD : convertedRDs) {
+            System.assertEquals(RD2_Constants.STATUS_ACTIVE, convertedRD.Status__c, 'Status should match');
+        }
+    }
+
+    /**
+     * @description Verifies Status field is set to Closed when Open Ended Status is Closed
+     */
+    @IsTest
+    private static void shouldSetStatusAsClosedWhenOpenEndedStatusIsClosed() {
+        
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
+            getLegacyRecurringDonationBuilder()
+                .withOpenEndedStatusClosed()
+                .build()
+        ).convertToEnhancedRD();
+           
+        System.assertEquals(RD2_Constants.STATUS_CLOSED, convertedRD.Status__c, 'Status should match');
+    }
+
+
 
     // HELPER METHODS
 
     /**
      * @description Instantiate an Legacy format recurring donation for a specific ContactId
-     * @param contactId
-     * @return Instantiated RD
+     * @return TEST_RecurringDonationBuilder New Recurring Donation builder
      */
-    private static npe03__Recurring_Donation__c getNewRecurringDonationLegacyFormat(Id contactId) {
-        TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder() {
+        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+
+        return getLegacyRecurringDonationBuilder(contactId);
+    }
+
+    /**
+     * @description Instantiate an Legacy format recurring donation for a specific ContactId
+     * @param contactId
+     * @return TEST_RecurringDonationBuilder New Recurring Donation builder
+     */
+    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder(Id contactId) {
+        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withMockId()
-            .withDefaultValues()
+            .withDateEstablished(DATE_ESTABLISHED)
             .withOpenEndedStatusOpen()
             .withContact(contactId)
             .withAmount(100)
             .withInstallmentPeriodMonthly()
             .withDayOfMonth('1');
+    }
 
-        return rdBuilder.build();
+    /**
+     * @description Instantiate an Enhanced RD format recurring donation for a specific ContactId
+     * @return TEST_RecurringDonationBuilder New Recurring Donation builder
+     */
+    private static TEST_RecurringDonationBuilder getEnhancedRecurringDonationBuilder() {
+        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+
+        return getEnhancedRecurringDonationBuilder(contactId);
     }
 
     /**
      * @description Instantiate an Enhanced RD format recurring donation for a specific ContactId
      * @param contactId
-     * @return Instantiated RD
+     * @return TEST_RecurringDonationBuilder New Recurring Donation builder
      */
-    private static npe03__Recurring_Donation__c getNewRecurringDonationEnhancedFormat(Id contactId) {
-        TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+    private static TEST_RecurringDonationBuilder getEnhancedRecurringDonationBuilder(Id contactId) {
+        return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withMockId()
             .withDefaultValues()
             .withContact(contactId)
             .withAmount(100)
             .withInstallmentPeriodMonthly()
             .withDayOfMonth('1');
-
-        return rdBuilder.build();
     }
 
     /**
-     * @description Instantiate an Opportunity specific AccountId and Rd Id
+     * @description Instantiate an Opportunity specific AccountId and Recurring Donation Id
      * @param acctId AccountId
      * @param rdId RecurringDonationId
-     * @return Instantiated Opportunity
+     * @return TEST_OpportunityBuilder New Opportunity builder
      */
-    private static Opportunity getOpportunityForRd(Id acctId, Id rdId) {
-        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+    private static TEST_OpportunityBuilder getOpportunityBuilder(Id acctId, Id rdId) {
+        return new TEST_OpportunityBuilder()
             .withMockId()
             .withRecurringDonation(rdId)
             .withAmount(100)
             .withAccount(acctId)
             .withClosedWonStage();
-
-        return oppBuilder.build();
     }
 }

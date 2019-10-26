@@ -60,11 +60,108 @@ public class RD2_DataMigrationMapper {
      * @return The updated record (or null if there is an exception?)
      */
     public npe03__Recurring_Donation__c convertToEnhancedRD() {
+        if (isConverted()) {
+            return rd;
+        }
+
+        setInstallmentFields(rd);
+        setStartDate(rd);
+        setDayOfMonth(rd);
+        setStatus(rd);
+
         return rd;
     }
 
     /**
-     * @description Generate the RDSchedule Record(s) for the Recurring Donation
+     * @description Sets Installment Frequency and Installment Period fields where applicable
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setInstallmentFields(npe03__Recurring_Donation__c rd) {
+
+        Set<String> quarterlyInstallmentPeriods = new Set<String>{
+            'Quarterly',
+            System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly
+        };
+
+        Set<String> frequencyOneInstallmentPeriods = new Set<String>{
+            RD2_Constants.INSTALLMENT_PERIOD_YEARLY,
+            RD2_Constants.INSTALLMENT_PERIOD_MONTHLY,
+            RD2_Constants.INSTALLMENT_PERIOD_WEEKLY,
+            System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
+            System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
+            System.Label.npe03.RecurringDonationInstallmentPeriodWeekly
+        };
+
+        if (quarterlyInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
+            rd.InstallmentFrequency__c = 3;
+            rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
+
+        } else if (frequencyOneInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
+            rd.InstallmentFrequency__c = 1;
+        }
+    }
+
+    /**
+     * @description Sets Recurring Donation Start Date field
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setStartDate(npe03__Recurring_Donation__c rd) {
+
+        if (opps == null || opps.isEmpty()) {
+            rd.StartDate__c = rd.npe03__Date_Established__c;
+
+        } else {
+            Date startDate;
+            for (Opportunity opp : opps) {
+                if (startDate == null || startDate > opp.CloseDate) {
+                    startDate = opp.CloseDate;
+                }
+            }
+
+            rd.StartDate__c = startDate;
+        }
+    }
+
+    /**
+     * @description Sets Day of Month field
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setDayOfMonth(npe03__Recurring_Donation__c rd) {
+        Set<String> lastDaysOfMonth = new Set<String>{ '29', '30', '31' };
+
+        if (rd.Always_Use_Last_Day_Of_Month__c == true
+            || lastDaysOfMonth.contains(rd.Day_of_Month__c)
+        ) {
+            rd.Day_of_Month__c = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
+        }
+    }
+
+    /**
+     * @description Sets Status field
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setStatus(npe03__Recurring_Donation__c rd) {
+
+        Set<String> closedStatuses = new Set<String>{
+            'Closed',
+            System.Label.npe03.RecurringDonationClosedStatus
+        };
+        
+        if (closedStatuses.contains(rd.npe03__Open_Ended_Status__c)) {
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+
+        } else {
+            rd.Status__c = RD2_Constants.STATUS_ACTIVE;
+        }
+    }
+
+
+    /**
+     * @description Builds the Schedule Record(s) for the Recurring Donation
      * @return List<RecurringDonationSchedule__c> Schedule records to insert
      */
     public List<RecurringDonationSchedule__c> getScheduleRecords() {
@@ -72,10 +169,10 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Returns true if the RD record is already in RD2 format
+     * @description Returns true if the RD record is already in enhanced Recurring Donation format
      */
     @TestVisible
     private Boolean isConverted() {
-        return rd.Status__c != null;
+        return String.isNotBlank(rd.Status__c);
     }
 }

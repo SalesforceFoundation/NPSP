@@ -266,6 +266,18 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Installment Frequency
+    * @param frequency Installment Frequency
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withInstallmentFrequency(Integer frequency) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('InstallmentFrequency__c', frequency);
+        return this;
+    }
+
+    /***
     * @description Sets Installment Period to Yearly
     * @return TEST_RecurringDonationBuilder Builder instance
     */
@@ -356,16 +368,57 @@ public without sharing class TEST_RecurringDonationBuilder {
         return this;
     }
 
+    /***
+    * @description Sets Recurring Donation Status to Active 
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatusActive() {
+        return withStatus(RD2_Constants.STATUS_ACTIVE);
+    }
+
+    /***
+    * @description Sets Status field
+    * @param status Status value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatus(String status) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('Status__c', status);
+        return this;
+    }
+
+    /***
+    * @description Sets Recurring Type field
+    * @param recurringType Recurring Type value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withRecurringTypeOpen() {
+        return withRecurringType(RD2_Constants.RECURRING_TYPE_OPEN);
+    }
+
+    /***
+    * @description Sets Recurring Type field
+    * @param recurringType Recurring Type value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withRecurringType(String recurringType) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('RecurringType__c', recurringType);
+        return this;
+    }
+
     /**
      * @description Configure the RD with the appropriate default values based on the mode
      */
     public TEST_RecurringDonationBuilder withDefaultValues() {
 
         if (recordMode == Mode.Enhanced) {
-            valuesByFieldName.put('Status__c', RD2_Constants.STATUS_ACTIVE);
-            valuesByFieldName.put('RecurringType__c', RD2_Constants.RECURRING_TYPE_OPEN);
-            valuesByFieldName.put('npe03__Installment_Period__c', RD2_Constants.FREQUENCY_MONTHLY);
-            valuesByFieldName.put('InstallmentFrequency__c', 1);
+            this.withStatusActive()
+                .withRecurringTypeOpen()
+                .withInstallmentPeriodMonthly()
+                .withInstallmentFrequency(1);
         }
 
         return this;
