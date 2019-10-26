@@ -81,10 +81,9 @@ private class RD2_DataMigration_TEST {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
-        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contact.Id)
+        insert getLegacyRecurringDonationBuilder(contact.Id)
             .withId(null)
             .build();
-        insert rd;
 
         //enablement should be done after the legacy Recurring Donation has been created
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -145,7 +144,7 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies that an Legacy format RD is recognized correctly
+     * @description Verifies that a legacy RD is recognized correctly
      */
     @IsTest
     private static void shouldRecognizeAsLegacyFormat() {
@@ -285,16 +284,18 @@ private class RD2_DataMigration_TEST {
             .withDateEstablished(DATE_ESTABLISHED)
             .build();
 
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(accId, rd.Id);
+
         List<Opportunity> opps = new List<Opportunity>{ 
-            getOpportunityBuilder(accId, rd.Id)
+            oppBuilder
                 .withCloseDate(DATE_ESTABLISHED.addDays(10))
                 .withClosedLostStage()
                 .build(),            
-            getOpportunityBuilder(accId, rd.Id)
+            oppBuilder
                 .withCloseDate(DATE_ESTABLISHED.addDays(20))
                 .withOpenStage()
                 .build(),            
-            getOpportunityBuilder(accId, rd.Id)
+            oppBuilder
                 .withCloseDate(DATE_ESTABLISHED.addDays(30))
                 .withClosedWonStage()
                 .build()
@@ -312,12 +313,14 @@ private class RD2_DataMigration_TEST {
      * @description Verifies Day of Month is unchanged when it is not the last day of month
      */
     @IsTest
-    private static void shouldNotChangeDayOfMonth() {           
+    private static void shouldNotChangeDayOfMonth() {  
+        TEST_RecurringDonationBuilder rdBuilder = getLegacyRecurringDonationBuilder();
+
         for (Integer i = 1; i < 29; i++) {
             String dayOfMonth = String.valueOf(i);
 
             npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
-                getLegacyRecurringDonationBuilder()
+                rdBuilder
                     .withAlwaysUseLastDayOfMonth(false)
                     .withDayOfMonth(dayOfMonth)
                     .build()
@@ -333,12 +336,13 @@ private class RD2_DataMigration_TEST {
     @IsTest
     private static void shouldSetDayOfMonthAsTheLastDay() {
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
+        TEST_RecurringDonationBuilder rdBuilder = getLegacyRecurringDonationBuilder();
         
         for (Integer i = 28; i <= 31; i++) {
             Boolean useLastDayOfMonth = i == 28;
 
             convertedRDs.add(new RD2_DataMigrationMapper(
-                getLegacyRecurringDonationBuilder()
+                rdBuilder
                     .withAlwaysUseLastDayOfMonth(useLastDayOfMonth)
                     .withDayOfMonth(String.valueOf(i))
                     .build()
@@ -357,22 +361,23 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldSetStatusAsActiveWhenOpenEndedStatusIsNotClosed() {
+        TEST_RecurringDonationBuilder rdBuilder = getLegacyRecurringDonationBuilder();
         
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>{
             new RD2_DataMigrationMapper(
-                getLegacyRecurringDonationBuilder()
+                rdBuilder
                     .withOpenEndedStatusOpen()
                     .build()
             ).convertToEnhancedRD(),
 
             new RD2_DataMigrationMapper(
-                getLegacyRecurringDonationBuilder()
+                rdBuilder
                     .withOpenEndedStatusNone()
                     .build()
             ).convertToEnhancedRD(),
 
             new RD2_DataMigrationMapper(
-                getLegacyRecurringDonationBuilder()
+                rdBuilder
                     .withOpenEndedStatus(null)
                     .build()
             ).convertToEnhancedRD()
@@ -403,7 +408,7 @@ private class RD2_DataMigration_TEST {
     // HELPER METHODS
 
     /**
-     * @description Instantiate an Legacy format recurring donation for a specific ContactId
+     * @description Instantiate a legacy recurring donation for a specific ContactId
      * @return TEST_RecurringDonationBuilder New Recurring Donation builder
      */
     private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder() {
@@ -413,7 +418,7 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Instantiate an Legacy format recurring donation for a specific ContactId
+     * @description Instantiate a legacy recurring donation for a specific ContactId
      * @param contactId
      * @return TEST_RecurringDonationBuilder New Recurring Donation builder
      */
