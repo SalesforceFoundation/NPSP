@@ -68,8 +68,16 @@ public class RD2_DataMigrationMapper {
         setStartDate(rd);
         setDayOfMonth(rd);
         setStatus(rd);
+        setOtherFields(rd);
 
         return rd;
+    }
+
+    /**
+     * @description Returns true if the RD record is already in enhanced Recurring Donation format
+     */
+    public Boolean isConverted() {
+        return String.isNotBlank(rd.Status__c);
     }
 
     /**
@@ -97,7 +105,7 @@ public class RD2_DataMigrationMapper {
             rd.InstallmentFrequency__c = 3;
             rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
 
-        } else if (frequencyOneInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
+        } else if (frequencyOneInstallmentPeriods.contains(rd.npe03__Installment_Period__c) && rd.InstallmentFrequency__c == null) {
             rd.InstallmentFrequency__c = 1;
         }
     }
@@ -159,6 +167,14 @@ public class RD2_DataMigrationMapper {
         }
     }
 
+    /**
+     * @description Sets other fields on the legacy Recurring Donation to complete conversion to the enhanced format
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setOtherFields(npe03__Recurring_Donation__c rd) {
+        rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+    }
 
     /**
      * @description Builds the Schedule Record(s) for the Recurring Donation
@@ -166,13 +182,5 @@ public class RD2_DataMigrationMapper {
      */
     public List<RecurringDonationSchedule__c> getScheduleRecords() {
         return new List<RecurringDonationSchedule__c>();
-    }
-
-    /**
-     * @description Returns true if the RD record is already in enhanced Recurring Donation format
-     */
-    @TestVisible
-    private Boolean isConverted() {
-        return String.isNotBlank(rd.Status__c);
     }
 }

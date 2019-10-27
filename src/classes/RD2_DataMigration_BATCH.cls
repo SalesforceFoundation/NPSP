@@ -44,7 +44,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     private static final Integer DEFAULT_MIGRATION_JOB_BATCH_SIZE = 200;
 
 
-    private Boolean dryRunMode = false;
+    private Boolean isDryRunMode = false;
 
     private List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
     private List<RecurringDonationSchedule__c> rdSchedules = new List<RecurringDonationSchedule__c>();
@@ -79,7 +79,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @description Enables Dry Run Mode for the migration job
     */
     public RD2_DataMigration_BATCH enableDryRunMode() {
-        dryRunMode = true;
+        isDryRunMode = true;
         return this;
     }
 
@@ -121,18 +121,19 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @param opps All Related Opportunities for this RD
     */
     private void handleConversion(npe03__Recurring_Donation__c rd, List<Opportunity> opps) {
-        RD2_DataMigrationMapper migration = new RD2_DataMigrationMapper(rd)
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd)
             .withRelatedOpportunities(opps);
 
-        npe03__Recurring_Donation__c convertedRD = migration.convertToEnhancedRD();
-
-        if (convertedRD != null) {
-            convertedRDs.add(convertedRD);
-
-            rdSchedules.addAll(migration.getScheduleRecords());
-
-            // TODO Opportunity Updates
+        if (mapper.isConverted()) {
+            return;
         }
+
+        convertedRDs.add(mapper.convertToEnhancedRD());
+
+        rdSchedules.addAll(mapper.getScheduleRecords());
+
+        // TODO Opportunity Updates
+
         // TODO Retrieve any validation errors that blocked the conversion
     }
 
@@ -147,7 +148,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         // TODO If there is an error updating an RD, do not insert the schedule or update Opps for that RD
         Database.insert(rdSchedules, false);
 
-        if (this.dryRunMode) {
+        if (this.isDryRunMode) {
             Database.rollback(sp);
         }
 
