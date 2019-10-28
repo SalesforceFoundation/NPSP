@@ -18,6 +18,20 @@ writers.
 
 NPSP includes many org definitions tailored for testing - in particular, beta testing - of the product in a variety of org shapes.
 
+Differences between these orgs are relatively slight. All orgs specify a required core set of features for NPSP:
+
+ - Chatter
+ - Enhanced Notes
+ - Lightning
+
+Additionally, depending on the intended use case of the org, features for development may be enabled:
+
+ - Translation Workbench
+ - Disabled Lightning cache
+ - Disabled parallel Apex testing
+
+as well as nny other features needed to define the workspace for the org's intended purpose.
+
 | Org Shape                 | Namespaced | Managed Installs | Description                                                             |
 | ------------------------- | ---------- | ---------------- | ----------------------------------------------------------------------- |
 | `dev`                     |            | No               | Development org                                                         |
