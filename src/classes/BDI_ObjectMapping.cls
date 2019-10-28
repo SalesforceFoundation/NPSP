@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Wrapper class to hold data related to the object mapping 
 */
-public with sharing class BDI_ObjectMapping {
+public virtual with sharing class BDI_ObjectMapping {
     @AuraEnabled public Id Id;
     @AuraEnabled public String DeveloperName;
     @AuraEnabled public String MasterLabel;
@@ -49,20 +49,38 @@ public with sharing class BDI_ObjectMapping {
     @AuraEnabled public String Predecessor_Label_Name;
     @AuraEnabled public String Relationship_Field;
     @AuraEnabled public String Relationship_To_Predecessor;
+    @AuraEnabled public BDI_FieldMapping[] Field_Mappings;
+
+    public BDI_ObjectMapping() {
+        
+    }
 
     public BDI_ObjectMapping(Data_Import_Object_Mapping__mdt objectMapping) {
         this.Id = objectMapping.Id;
         this.MasterLabel = objectMapping.MasterLabel;
         this.DeveloperName = objectMapping.DeveloperName;
+
+        //If the code is not in the npsp namespace, then the npsp field prefixes will need to be systematically removed.
+        if (UTIL_Namespace.shouldAlignNamespace) {
+            objectMapping.Imported_Record_Field_Name__c = 
+                UTIL_Namespace.alignSchemaNSWithEnvironment(objectMapping.Imported_Record_Field_Name__c);
+            objectMapping.Imported_Record_Status_Field_Name__c = 
+                UTIL_Namespace.alignSchemaNSWithEnvironment(objectMapping.Imported_Record_Status_Field_Name__c);
+            objectMapping.Object_API_Name__c = 
+                UTIL_Namespace.alignSchemaNSWithEnvironment(objectMapping.Object_API_Name__c);
+            objectMapping.Relationship_Field__c = 
+                UTIL_Namespace.alignSchemaNSWithEnvironment(objectMapping.Relationship_Field__c);
+        }
+
         this.Custom_Mapping_Logic_Class = objectMapping.Custom_Mapping_Logic_Class__c;
         this.Data_Import_Object_Mapping_Set = objectMapping.Data_Import_Object_Mapping_Set__c;
         this.Data_Import_Object_Mapping_Set_Dev_Name = objectMapping.Data_Import_Object_Mapping_Set__r.DeveloperName;
         this.Imported_Record_Field_Name = objectMapping.Imported_Record_Field_Name__c;
         this.Imported_Record_Status_Field_Name = objectMapping.Imported_Record_Status_Field_Name__c;
-        this.Is_Deleted = objectMapping.Is_Deleted__c;
         this.Object_API_Name = objectMapping.Object_API_Name__c;
-        this.Predecessor = objectMapping.Predecessor__c;
         this.Relationship_Field = objectMapping.Relationship_Field__c;
+        this.Is_Deleted = objectMapping.Is_Deleted__c;
+        this.Predecessor = objectMapping.Predecessor__c;
         this.Relationship_To_Predecessor = objectMapping.Relationship_To_Predecessor__c;
     }
 }

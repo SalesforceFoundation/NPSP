@@ -682,6 +682,7 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
+        <members>GE_TemplateBuilder</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -703,7 +704,6 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
-        <members>geTemplateBuilderPlaceholder</members>
         <members>modalFooter</members>
         <members>modalHeader</members>
         <members>svg</members>
@@ -2902,6 +2902,8 @@
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
+        <members>GE_Template_Builder</members>
+        <members>GE_Templates</members>
         <members>General_Accounting_Unit__c</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
@@ -3025,11 +3027,14 @@
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
-        <members>geTemplateBuilderFormLayout</members>
         <members>geTemplateBuilderFormSection</members>
-        <members>geTemplateBuilderGiftFields</members>
+        <members>geTemplateBuilderSelectFields</members>
         <members>geTemplateBuilderTemplateInfo</members>
+        <members>geTemplates</members>
         <members>pubsubNoPageRef</members>
+        <members>utilIllustration</members>
+        <members>utilModal</members>
+        <members>utilPageHeader</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
@@ -3163,5 +3168,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>46.0</version>
+    <version>47.0</version>
 </Package>

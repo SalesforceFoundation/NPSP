@@ -46,14 +46,12 @@ public with sharing class FORM_Element {
     /* PS Additional props for FormFields */
     @AuraEnabled public String label;
     @AuraEnabled public Boolean required;
-    @AuraEnabled public String value;
+    @AuraEnabled public String apiName;
     @AuraEnabled public Boolean allowDefaultValue;
     @AuraEnabled public String sectionId;
     @AuraEnabled public String defaultValue;
     @AuraEnabled public String dataType;
-    // TODO: Potentially include this in unified wrapper class or another solution
-    @AuraEnabled public GE_TemplateBuilderCtrl.PicklistOptionWrapper[] picklistOptions;
-    /* END */
+    @AuraEnabled public BDI_FieldMapping.PicklistOption[] picklistOptions;
 
     //Constructor for form field
     public FORM_Element(String elementType,

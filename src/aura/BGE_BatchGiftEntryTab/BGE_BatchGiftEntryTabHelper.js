@@ -164,6 +164,7 @@
                 ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],
             function (components, status, errorMessage) {
+                console.log(components, status, errorMessage);
                 if (status === 'SUCCESS') {
                     modalBody = components[0];
                     modalHeader = components[1];

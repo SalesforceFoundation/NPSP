@@ -1,0 +1,6 @@
+<aura:component implements="force:appHostable">
+    <lightning:overlayLibrary aura:id="overlayLib" />
+
+    <c:geTemplateBuilder aura:id="templateBuilder"
+                         ontogglemodal="{!c.handleShowModal}" />
+</aura:component>

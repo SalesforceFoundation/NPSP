@@ -1,98 +1,90 @@
 <template>
     <article key={formSection.id}
-             class="slds-card slds-card_extension slds-m-vertical_small slds-p-around_small">
-        <header class="slds-media slds-media_center slds-has-flexi-truncate">
-            <div role="body" class="slds-media__body">
-                <template if:true={isEditMode}>
-                    <lightning-input type="text"
-                                     variant="label-hidden"
-                                     value={formSection.label}
-                                     data-name="formSectionLabelInputElement"
-                                     class="slds-m-right_x-small">
-                    </lightning-input>
-                </template>
-                <template if:false={isEditMode}>
-                    <h2 class="slds-card__header-title">
-                        {formSection.label}
-                    </h2>
-                </template>
+             class={sectionClass}
+             onclick={handleSelectActiveSection}
+             data-section-id={formSection.id}>
+
+        <header role="header"
+                class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-vertical_small slds-p-left_small slds-p-right_x-large">
+            <div role="body"
+                 class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                    {formSection.label}
+                </h2>
             </div>
+
             <div class="slds-no-flex">
-                <lightning-button-icon icon-name="utility:animal_and_nature"
-                                       onclick={getFormSectionValues}>
+                <lightning-button-icon icon-name="utility:settings"
+                                       alternative-text="Section Settings Button"
+                                       onclick={handleEditFormSection}
+                                       class="slds-m-left_x-small">
                 </lightning-button-icon>
-                <template if:true={isEditMode}>
-                    <lightning-button-icon icon-name="utility:save"
-                                           alternative-text="Save Form Section Button"
-                                           onclick={handleSaveFormSection}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:close"
-                                           alternative-text="Exit Form Section Edit Button"
-                                           onclick={handleExitEditMode}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                </template>
-                <template if:false={isEditMode}>
-                    <lightning-button-icon icon-name="utility:settings"
-                                           alternative-text="Section Settings Button"
-                                           onclick={handleEditFormSection}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:chevronup"
-                                           alternative-text="Move section up"
-                                           onclick={handleFormSectionUp}
-                                           data-section-id={formSection.id}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:chevrondown"
-                                           alternative-text="Move section down"
-                                           onclick={handleFormSectionDown}
-                                           data-section-id={formSection.id}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:delete"
-                                           alternative-text="Delete section"
-                                           onclick={handleDeleteSection}
-                                           data-section-id={formSection.id}
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                    <lightning-button-icon icon-name={isActiveFormSectionIcon}
-                                           alternative-text="Select active section"
-                                           onclick={handleSelectActiveSection}
-                                           data-section-id={formSection.id}
-                                           data-name="activeSectionButton"
-                                           class="slds-m-left_x-small">
-                    </lightning-button-icon>
-                </template>
+                <lightning-button-icon icon-name="utility:chevronup"
+                                       alternative-text="Move section up"
+                                       onclick={handleFormSectionUp}
+                                       data-section-id={formSection.id}
+                                       class="slds-m-left_x-small">
+                </lightning-button-icon>
+                <lightning-button-icon icon-name="utility:chevrondown"
+                                       alternative-text="Move section down"
+                                       onclick={handleFormSectionDown}
+                                       data-section-id={formSection.id}
+                                       class="slds-m-left_x-small">
+                </lightning-button-icon>
             </div>
+
+            <template if:true={isActive}>
+                <span role="icon"
+                      class="slds-icon_container slds-icon_container_extension slds-visual-picker__text-check slds-p-top_xxx-small">
+                    <lightning-icon alternative-text="Active Section"
+                                    icon-name="utility:check"
+                                    variant="inverse"
+                                    size="x-small">
+                    </lightning-icon>
+                </span>
+            </template>
+
         </header>
+
         <div role="card body"
-             class="slds-card__body slds-card__body_inner">
-            <div role="grid"
-                 class="slds-grid slds-grid_vertical-align-center">
-                <div class="slds-size_3-of-12">
+             class="slds-card__body slds-card__body_inner slds-p-around_small">
+
+            <template if:true={isEmptySection}>
+                <c-util-illustration title="No fields yet"
+                                     message="Select gift fields to add to this section"
+                                     size="small"
+                                     variant="lake-mountain">
+                </c-util-illustration>
+            </template>
+
+            <template if:false={isEmptySection}>
+                <div role="grid"
+                     class="slds-grid slds-grid_vertical-align-center">
+                    <div class="slds-size_5-of-12">
+                        Field Label
+                    </div>
+                    <div class="slds-size_1-of-12">
+                        Required
+                    </div>
+                    <div class="slds-size_5-of-12">
+                        Default Value
+                    </div>
+                    <div class="slds-size_1-of-12">
+                    </div>
                 </div>
-                <div class="slds-size_1-of-12">
-                    Required
-                </div>
-                <div class="slds-size_2-of-12">
-                    Allow Default Value
-                </div>
-                <div class="slds-size_5-of-12">
-                    Default Value
-                </div>
-                <div class="slds-size_1-of-12">
-                </div>
-            </div>
-            <template for:each={formSection.elements}
-                      for:item="element">
-                <c-ge-template-builder-form-field key={element.value}
-                                                  field={element}
-                                                  data-value={element.value}
-                                                  onformfieldup={handleFormFieldUp}
-                                                  onformfielddown={handleFormFieldDown}>
-                </c-ge-template-builder-form-field>
+
+                <template for:each={formSection.elements}
+                          for:item="element">
+                    <c-ge-template-builder-form-field key={element.value}
+                                                      field={element}
+                                                      data-value={element.value}
+                                                      onformfieldup={handleFormFieldUp}
+                                                      onformfielddown={handleFormFieldDown}
+                                                      onupdateformfield={handleUpdateFormField}
+                                                      ondeleteformfield={handleDeleteFormField}>
+                    </c-ge-template-builder-form-field>
+                </template>
+
             </template>
         </div>
     </article>

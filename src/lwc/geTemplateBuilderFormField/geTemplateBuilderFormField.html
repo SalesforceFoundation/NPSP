@@ -1,94 +1,118 @@
 <template>
     <article class="slds-card slds-card_extension slds-m-vertical_small">
         <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-grid slds-grid_vertical-align-center">
-                <div class="slds-size_3-of-12 slds-p-right_small">
+            <div class="slds-grid slds-grid_vertical-align-start">
+                <div class="slds-size_5-of-12 slds-p-right_small">
                     <lightning-input type="text"
                                      class="slds-truncate"
                                      label={field.label}
                                      field-level-help={field.value}
                                      value={field.customLabel}
-                                     data-name="customLabel">
+                                     data-name="customLabel"
+                                     onclick={stopPropagation}
+                                     onblur={handleOnBlurCustomLabel}>
                     </lightning-input>
                 </div>
-                <div class="slds-size_1-of-12">
+
+                <div class="slds-size_1-of-12 slds-p-left_medium slds-p-top_small">
                     <lightning-input type="checkbox"
                                      checked={isRequired}
                                      variant="label-stacked"
                                      disabled={field.isRequiredFieldDisabled}
-                                     data-name="required">
+                                     data-name="required"
+                                     onclick={stopPropagation}
+                                     onchange={handleOnChangeRequiredField}>
                     </lightning-input>
                 </div>
-                <div class="slds-size_2-of-12">
-                    <lightning-input type="checkbox"
-                                     class="slds-m-left_x-large"
-                                     checked={field.allowDefaultValue}
-                                     variant="label-stacked"
-                                     onchange={handleToggleDefaultValue}
-                                     data-name="allowDefaultValue">
-                    </lightning-input>
-                </div>
-                <div class="slds-size_5-of-12">
+
+                <div class="slds-size_5-of-12 slds-p-right_small">
+
                     <template if:true={isLightningRichText}>
                         <lightning-input-rich-text data-name="defaultValue"
+                                                   class="slds-m-around_none"
                                                    value={field.defaultValue}
                                                    variant="label-stacked"
-                                                   disabled={isDefaultValueAllowed}>
+                                                   onclick={stopPropagation}>
                         </lightning-input-rich-text>
                     </template>
+
                     <template if:true={isLightningTextarea}>
                         <lightning-textarea data-name="defaultValue"
+                                            class="slds-m-around_none"
                                             value={field.defaultValue}
                                             variant="label-stacked"
-                                            disabled={isDefaultValueAllowed}>
+                                            onclick={stopPropagation}
+                                            onblur={handleOnBlur}>
                         </lightning-textarea>
                     </template>
+
                     <template if:true={isLightningCombobox}>
                         <lightning-combobox data-name="defaultValue"
+                                            class="slds-m-around_none"
                                             options={field.picklistOptions}
                                             value={field.defaultValue}
                                             variant="label-stacked"
-                                            disabled={isDefaultValueAllowed}>
+                                            onchange={handleChangeCombobox}>
                         </lightning-combobox>
                     </template>
+
+                    <template if:true={isLightningCheckbox}>
+                        <lightning-input data-name="defaultValue"
+                                         class="slds-m-top_small"
+                                         type="checkbox"
+                                         value={field.defaultValue}
+                                         checked={field.defaultValue}
+                                         variant="label-stacked"
+                                         onclick={stopPropagation}
+                                         onchange={handleOnBlur}>
+                        </lightning-input>
+                    </template>
+
                     <template if:true={isLightningSearch}>
                         <lightning-input data-name="defaultValue"
+                                         class="slds-m-around_none"
                                          type="search"
                                          value={field.defaultValue}
                                          variant="label-stacked"
-                                         disabled={isDefaultValueAllowed}
-                                         onkeyup={handleSearch}>
+                                         onkeyup={handleSearch}
+                                         onclick={stopPropagation}
+                                         onblur={handleOnBlur}>
                         </lightning-input>
                     </template>
+
                     <template if:true={isLightningInput}>
                         <lightning-input data-name="defaultValue"
+                                         class="slds-m-around_none"
                                          type={lightningInputType}
                                          value={field.defaultValue}
                                          variant="label-stacked"
                                          checked={field.defaultValue}
-                                         disabled={isDefaultValueAllowed}>
+                                         onclick={stopPropagation}
+                                         onblur={handleOnBlur}>
                         </lightning-input>
                     </template>
+
                 </div>
-                <div class="slds-size_1-of-12">
-                    <div class="slds-grid slds-wrap">
-                        <div class="slds-size_1-of-1">
-                            <lightning-button-icon class="slds-float_right slds-m-bottom_x-small"
-                                                   icon-name="utility:chevronup"
-                                                   alternative-text="Settings"
-                                                   size="x-small"
-                                                   onclick={handleFormFieldUp}>
-                            </lightning-button-icon>
-                        </div>
-                        <div class="slds-size_1-of-1">
-                            <lightning-button-icon class="slds-float_right"
-                                                   icon-name="utility:chevrondown"
-                                                   alternative-text="Settings"
-                                                   size="x-small"
-                                                   onclick={handleFormFieldDown}>
-                            </lightning-button-icon>
-                        </div>
-                    </div>
+
+                <div class="slds-size_1-of-12 slds-p-top_large">
+                    <lightning-button-icon class="slds-m-right_xxx-small"
+                                           icon-name="utility:delete"
+                                           alternative-text="Delete"
+                                           size="x-small"
+                                           onclick={handleFormFieldDelete}>
+                    </lightning-button-icon>
+                    <lightning-button-icon class="slds-m-right_xxx-small"
+                                           icon-name="utility:chevronup"
+                                           alternative-text="Move up"
+                                           size="x-small"
+                                           onclick={handleFormFieldUp}>
+                    </lightning-button-icon>
+                    <lightning-button-icon class=""
+                                           icon-name="utility:chevrondown"
+                                           alternative-text="Move down"
+                                           size="x-small"
+                                           onclick={handleFormFieldDown}>
+                    </lightning-button-icon>
                 </div>
 
             </div>
