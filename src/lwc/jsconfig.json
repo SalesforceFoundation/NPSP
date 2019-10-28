@@ -39,9 +39,6 @@
             "c/utilIllustration": [
                 "utilIllustration/utilIllustration.js"
             ],
-            "c/utilModal": [
-                "utilModal/utilModal.js"
-            ],
             "c/utilPageHeader": [
                 "utilPageHeader/utilPageHeader.js"
             ],
@@ -59,6 +56,9 @@
             ],
             "c/geTemplates": [
                 "geTemplates/geTemplates.js"
+            ],
+            "c/geTemplateBuilderSectionModalBody": [
+                "geTemplateBuilderSectionModalBody/geTemplateBuilderSectionModalBody.js"
             ]
         }
     },

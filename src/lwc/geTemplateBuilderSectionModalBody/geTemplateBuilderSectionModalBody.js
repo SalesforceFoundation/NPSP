@@ -1,7 +1,7 @@
 import { LightningElement, track, api } from 'lwc';
 import { mutable, dispatch } from 'c/utilTemplateBuilder';
 
-export default class UtilModal extends LightningElement {
+export default class GeTemplateBuilderSectionModalBody extends LightningElement {
     @track modalData;
 
     @api
@@ -19,7 +19,7 @@ export default class UtilModal extends LightningElement {
     */
     handleDelete() {
         const detail = { action: 'delete', section: this.modalData.section };
-        dispatch(this, 'utilModalEvent', detail, true);
+        dispatch(this, 'geTemplateBuilderSectionModalBodyEvent', detail, true);
     }
 
     /*******************************************************************************
@@ -28,10 +28,10 @@ export default class UtilModal extends LightningElement {
     */
     handleSave() {
         let section = mutable(this.modalData.section);
-        section.label = this.template.querySelector('lightning-input[data-name="customLabel"]').value;;
+        section.label = this.template.querySelector('lightning-input[data-name="customLabel"]').value;
 
         const detail = { action: 'save', section: section };
-        dispatch(this, 'utilModalEvent', detail, true);
+        dispatch(this, 'geTemplateBuilderSectionModalBodyEvent', detail, true);
     }
 
     /*******************************************************************************
@@ -40,6 +40,6 @@ export default class UtilModal extends LightningElement {
     */
     handleCancel() {
         const detail = { action: 'cancel' };
-        dispatch(this, 'utilModalEvent', detail , true);
+        dispatch(this, 'geTemplateBuilderSectionModalBodyEvent', detail , true);
     }
 }

@@ -3028,12 +3028,12 @@
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
         <members>geTemplateBuilderFormSection</members>
+        <members>geTemplateBuilderSectionModalBody</members>
         <members>geTemplateBuilderSelectFields</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>geTemplates</members>
         <members>pubsubNoPageRef</members>
         <members>utilIllustration</members>
-        <members>utilModal</members>
         <members>utilPageHeader</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>

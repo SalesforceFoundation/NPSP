@@ -6,12 +6,12 @@
     * input focus, and tabbing.
     *
     * In the then() method of the showCustomModal promise, we register
-    * an event listener for custom event 'utilModalEvent' which gets
-    * dispatched from the modal's body lightning web component 'utilModal'.
+    * an event listener for custom event 'geTemplateBuilderSectionModalBodyEvent' which gets
+    * dispatched from the modal's body lightning web component 'geTemplateBuilderSectionModalBody'.
     */
     handleShowModal: function (component, event, helper) {
         $A.createComponents([
-            ["c:utilModal", { modalData: event.getParams('section') }]
+            ["c:geTemplateBuilderSectionModalBody", { modalData: event.getParams('section') }]
         ],
             function (components, status, errorMessage) {
                 if (status === "SUCCESS") {
@@ -30,7 +30,7 @@
                         * in order to close the modal. Reference is lost otherwise.
                         */
                         const eventListener = function(event) {
-                            window.removeEventListener('utilModalEvent', eventListener);
+                            window.removeEventListener('geTemplateBuilderSectionModalBodyEvent', eventListener);
                             const modalData = event.detail;
                             if (modalData.action === 'save' || modalData.action === 'delete') {
                                 component.find('templateBuilder').notify(modalData);
@@ -38,7 +38,7 @@
                             overlay.close();
                         }
 
-                        window.addEventListener('utilModalEvent', eventListener);
+                        window.addEventListener('geTemplateBuilderSectionModalBodyEvent', eventListener);
                     });
                 }
             }
