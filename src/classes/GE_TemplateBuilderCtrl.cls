@@ -218,12 +218,5 @@ public with sharing class GE_TemplateBuilderCtrl {
             this.label = label;
             this.value = value;
         }
-
-        public CheckboxWrapper(BDI_FieldMapping fieldMapping, Boolean checked){
-            this.label = fieldMapping.MasterLabel;
-            this.value = fieldMapping.Source_Field_API_Name;
-            this.type = fieldMapping.Source_Field_Data_Type;
-            this.checked = checked;
-        }
     }
 }
