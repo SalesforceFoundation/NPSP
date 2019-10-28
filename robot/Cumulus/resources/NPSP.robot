@@ -13,7 +13,7 @@ ${task2}     Make a Phone Call2
 *** Keywords ***
 
 Capture Screenshot and Delete Records and Close Browser
-    Capture Page Screenshot
+    Run Keyword If Any Tests Failed      Capture Page Screenshot
     Close Browser
     Delete Session Records
     
@@ -108,7 +108,24 @@ API Create Relationship
     # ...               Name=${plan_name}
     # ...               npsp__Description__c=This plan is created via Automation 
     # ...               &{fields}
-   
+
+API Create Recurring Donation
+    [Arguments]        &{fields}
+    ${ns} =            Get Npsp Namespace Prefix
+    ${recurring_id} =  Salesforce Insert  npe03__Recurring_Donation__c
+    ...                &{fields} 
+    &{recurringdonation} =           Salesforce Get     npe03__Recurring_Donation__c  ${recurring_id}
+    [return]           &{recurringdonation}
+
+API Query Installment
+    [Arguments]        ${id}                      ${installment}    &{fields}
+    @{object} =        Salesforce Query           Opportunity
+    ...                select=Id
+    ...                npe03__Recurring_Donation__c=${id}
+    ...                ${ns}Recurring_Donation_Installment_Name__c=${installment}
+    ...                &{fields}
+    [return]           @{object}
+
 API Create GAU
     [Arguments]      &{fields}
     ${name} =   Generate Random String
@@ -369,3 +386,12 @@ Click Field And Select Date
     [Arguments]    ${field}    ${date}
     Click Element With Locator    bge.field-input    ${field}    
     Click BGE Button    ${date}    
+    
+    
+Process Data Import Batch
+    [Documentation]        Go to NPSP Data Import Page and change view to 'To be Imported' and Process Batch
+    Go To Page                              Listing        DataImport__c
+    Change View To                          To Be Imported
+    Click                                   Start Data Import
+    Click Begin Data Import Process
+    Click Close Button    

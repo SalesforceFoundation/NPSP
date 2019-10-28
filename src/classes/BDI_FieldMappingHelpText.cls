@@ -37,8 +37,8 @@
 
 public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
-
     private static BDI_FieldMappingHelpText fieldMappingInstance = null;
+    private final UTIL_Describe describeService = UTIL_Describe.getInstance();
 
     /*******************************************************************************************************
     * @description manually specified mappings addition to those specified in help text
@@ -53,6 +53,16 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
             fieldMappingInstance = new BDI_FieldMappingHelpText();
         }
         return fieldMappingInstance;
+    }
+
+    /**
+    * @description Sets instance member variable holding instance of this class.  Primarily
+    * used to facilitate dependency injection in tests.
+    * @param bdiFieldMappingInstance An instance of the BDI_FieldMappingHelpText class.
+    */
+    @TestVisible
+    private static void setInstance(BDI_FieldMappingHelpText bdiFieldMappingInstance){
+        fieldMappingInstance = bdiFieldMappingInstance;
     }
 
     /*******************************************************************************************************
@@ -100,7 +110,37 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
                 targetFieldsBySourceField.put(sourceSObjectField, targetFields);
             }
         }
+
+        Boolean applyDefaultRecordTypeMapping =
+                String.isBlank(
+                        describeService.getHelpText(DataImport__c.Donation_Record_Type_Name__c)
+                ) && !targetFieldsBySourceField.keySet().contains(
+                        DataImport__c.Donation_Record_Type_Name__c
+                );
+
+        if (applyDefaultRecordTypeMapping) {
+            targetFieldsBySourceField.put(
+                    DataImport__c.Donation_Record_Type_Name__c,
+                    defaultDonationRecordTypeMapping
+            );
+        }
+
         return targetFieldsBySourceField;
+    }
+
+    /*******************************************************************************************************
+    * @description Provides the default target mapping for Donation Record Type Name.
+    * Primarily used when help text mapping is missing for this field in an Org.
+    */
+    private BDI_TargetFields defaultDonationRecordTypeMapping {
+        get {
+            BDI_TargetFields defaultTargetFieldForDonationRecordType
+                    = new BDI_TargetFields();
+            defaultTargetFieldForDonationRecordType.addTargetField(
+                    Opportunity.SObjectType.getDescribe().getName(),
+                    Opportunity.RecordTypeId.getDescribe().getName());
+            return defaultTargetFieldForDonationRecordType;
+        }
     }
 
     /*******************************************************************************************************
