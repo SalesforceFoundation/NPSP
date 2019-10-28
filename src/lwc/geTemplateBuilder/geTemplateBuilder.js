@@ -17,7 +17,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         BATCH_HEADER_TAB: 'geTemplateBuilderBatchHeader'
     })
 
-    recordId;
+    formTemplateRecordId;
     @track isLoading = true;
     @track activeTab = this.TabEnums.INFO_TAB;
     @track formTemplate = {
@@ -48,10 +48,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     connectedCallback() {
-        this.recordId = getQueryParameters().c__recordId;
+        this.formTemplateRecordId = getQueryParameters().c__recordId;
 
-        if (this.recordId) {
-            retrieveFormTemplate({ templateId: this.recordId })
+        if (this.formTemplateRecordId) {
+            retrieveFormTemplate({ templateId: this.formTemplateRecordId })
                 .then(formTemplate => {
                     this.formTemplate = formTemplate;
                     this.batchHeaderFields = formTemplate.batchHeaderFields;
@@ -458,7 +458,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.formTemplate.layout.fieldMappingSetDevName = 'Migrated_Custom_Field_Mapping_Set';
 
         const preppedFormTemplate = {
-            id: this.recordId || null,
+            id: this.formTemplateRecordId || null,
             templateJSON: JSON.stringify(this.formTemplate),
             name: this.formTemplate.name,
             description: this.formTemplate.description,
@@ -488,11 +488,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     /*******************************************************************************
     * @description Navigates to a record detail page by record id.
     */
-    navigateToRecordViewPage(recordId) {
+    navigateToRecordViewPage(formTemplateRecordId) {
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
             attributes: {
-                recordId: recordId,
+                recordId: formTemplateRecordId,
                 actionName: 'view'
             }
         });
