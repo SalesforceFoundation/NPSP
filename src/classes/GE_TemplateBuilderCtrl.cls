@@ -67,8 +67,8 @@ public with sharing class GE_TemplateBuilderCtrl {
     * @description Just an intermediary method. Can just import this method directly in the lwc.
     */
     @AuraEnabled
-    public static FORM_Template retrieveDefaultFormTemplate(){
-        return FORM_ServiceGiftEntry.retrieveDefaultFormTemplate();
+    public static FORM_Template retrieveFormTemplate(String templateId){
+        return FORM_ServiceGiftEntry.retrieveFormTemplate(Id.valueOf(templateId));
     }
 
     /**
@@ -105,10 +105,13 @@ public with sharing class GE_TemplateBuilderCtrl {
             ObjectMappingWrapper omw = new ObjectMappingWrapper(objectMapping);
 
             if (objectMapping.Data_Import_Field_Mappings__r != null) {
+                String objectAPIName = objectMapping.Object_API_Name__c;
+
                 for (Data_Import_Field_Mapping__mdt fieldMapping : objectMapping.Data_Import_Field_Mappings__r) {
                     CheckboxWrapper fieldMappingWrapper = new CheckboxWrapper(
                         fieldMapping.MasterLabel,
                         fieldMapping.DeveloperName,
+                        UTIL_Describe.getFieldDescribe(objectAPIName, fieldMapping.Target_Field_API_Name__c),
                         false
                     );
                     omw.fieldMappingCheckboxes.add(fieldMappingWrapper);
@@ -130,9 +133,16 @@ public with sharing class GE_TemplateBuilderCtrl {
         CheckboxWrapper[] wrappers = new CheckboxWrapper[]{};
 
         Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImportBatch__c.Name);
+
         for (String key : fields.keySet()) {
-            wrappers.add(new CheckboxWrapper(fields.get(key)));
+            DescribeFieldResult dfr = fields.get(key);
+
+            if (dfr.isAccessible() && dfr.isCreateable()) {
+                CheckboxWrapper checkboxWrapper = new CheckboxWrapper(fields.get(key));
+                wrappers.add(checkboxWrapper);
+            }
         }
+
         return wrappers;
     }
 
@@ -154,20 +164,67 @@ public with sharing class GE_TemplateBuilderCtrl {
         @AuraEnabled public String label;
         @AuraEnabled public String value;
         @AuraEnabled public Boolean checked;
-       // @AuraEnabled public String type;
+        // TODO: Change to displayType and add new attribute for dataType
+        @AuraEnabled public String dataType;
+        @AuraEnabled public PicklistOptionWrapper[] picklistOptions;
+        @AuraEnabled public Boolean isRequired = false;
+        @AuraEnabled public Boolean isRequiredFieldDisabled = false;
 
         public CheckboxWrapper(Schema.DescribeFieldResult describe) {
             this.label = describe.getLabel();
             this.value = describe.getName();
             this.checked = false;
-            /* Remember, got a grandchild branch that uses this to determine what type of lightning-input to render in the UI */
-            //this.type = String.valueOf(describe.getType());
+            this.dataType = String.valueOf(describe.getType());
+
+            if (this.dataType == 'PICKLIST') {
+                picklistOptions = getPicklistOptions(describe);
+            }
+
+            if (this.dataType == 'TEXTAREA' && describe.isHtmlFormatted()) {
+                this.dataType = 'RICHTEXT';
+            }
         }
 
-        public CheckboxWrapper(String label, String value, Boolean checked) {
+        public CheckboxWrapper(String fieldMappingLabel,
+            String fieldMappingDeveloperName,
+            Schema.DescribeFieldResult targetFieldDescribe,
+            Boolean checked) {
+
+            this.label = fieldMappingLabel;
+            this.value = fieldMappingDeveloperName;
+            this.checked = checked;
+            this.dataType = String.valueOf(targetFieldDescribe.getType());
+
+            if (this.dataType == 'PICKLIST') {
+                picklistOptions = getPicklistOptions(targetFieldDescribe);
+            }
+
+            if (this.dataType == 'TEXTAREA' && targetFieldDescribe.isHtmlFormatted()) {
+                this.dataType = 'RICHTEXT';
+            }
+        }
+
+        private List<PicklistOptionWrapper> getPicklistOptions(Schema.DescribeFieldResult describe) {
+            List<PicklistOptionWrapper> pickListValuesList= new List<PicklistOptionWrapper>();
+            List<Schema.PicklistEntry> ple = describe.getPicklistValues();
+            for( Schema.PicklistEntry pickListVal : ple) {
+                if (pickListVal.isActive()) {
+                    pickListValuesList.add(new PicklistOptionWrapper(
+                        pickListVal.getLabel(),
+                        pickListVal.getValue()));
+                }
+            }
+            return pickListValuesList;
+        }
+    }
+
+    public class PicklistOptionWrapper {
+        @AuraEnabled public String label;
+        @AuraEnabled public String value;
+
+        public PicklistOptionWrapper(String label, String value) {
             this.label = label;
             this.value = value;
-            this.checked = checked;
         }
     }
 }
