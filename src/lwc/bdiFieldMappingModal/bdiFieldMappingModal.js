@@ -465,6 +465,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                 Source_Field_Data_Type: displayType,
                 Source_Field_Display_Type_Label: this.labelsByDisplayType[displayType],
                 Target_Field_API_Name: undefined,
+                isBooleanMappable: fieldInfo.isBooleanMappable,
             }
 
             this.hasSourceFieldErrors = false;
