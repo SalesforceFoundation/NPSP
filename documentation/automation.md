@@ -7,12 +7,12 @@ writers.
 
 | Workflow                 | Flow                           | Org Type       | Managed | Namespaced |
 | ------------------------ | ------------------------------ | -------------- | ------- | ---------- |
-| Development              | `dev_org`                      | dev            |         |            |
-| Development (Namespaced) | `dev_org_namespaced`           | dev_namespaced |         | ✔          |
-| QA                       | `qa_org`                       | dev            |         |            |
-| QA (Namespaced)          | `qa_org_namespaced`            | dev            |         | ✔          |
-| Regression               | `regression_org`               | regression     | ✔       |            |
-| Trial (Clone of TSO)     | None (`cci org browser trial`) | trial          | ✔       |            |
+| Development              | `dev_org`                      | `dev`            |         |            |
+| Development (Namespaced) | `dev_org_namespaced`           | `dev_namespaced` |         | ✔          |
+| QA                       | `qa_org`                       | `dev`            |         |            |
+| QA (Namespaced)          | `qa_org_namespaced`            | `dev_namespaced`            |         | ✔          |
+| Regression               | `regression_org`               | `beta`     | ✔       |            |
+| Trial (Clone of TSO)     | None (`cci org browser trial`) | `trial`          | ✔       |            |
 
 ### Org Definitions
 
