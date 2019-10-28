@@ -1,5 +1,5 @@
-/*
-    Copyright (c) 2019 Salesforce.org
+<!--
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -26,41 +26,13 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
-*/
-/**
-* @author Salesforce.org
-* @date 2019
-* @group Recurring Donations
-* @description Enhanced Recurring Donations constants for specific picklist values and logic
-*
-*/
-public inherited sharing class RD2_Constants {
-
-    /**
-    * @description Api Values of the npe03_RecurringDonation.Installment_Frequency__c picklist
-    */
-    public static final String FREQUENCY_MONTHLY = 'Monthly';
-    public static final String FREQUENCY_WEEKLY = 'Weekly';
-    public static final String FREQUENCY_YEARLY = 'Yearly';
-    public static final String FREQUENCY_FIRST_AND_FIFTEENTH = '1st and 15th';
-
-    /**
-    * @description Api Values of the npe03_RecurringDonation.Day_Of_Month__c picklist
-    */
-    public static final String DAY_OF_MONTH_FIRST = '1';
-    public static final String DAY_OF_MONTH_FIFTEENTH = '15';
-    public static final String DAY_OF_MONTH_LAST_DAY = 'Last_Day';
-
-    /**
-    * @description Api Values of the npe03_RecurringDonation.Status__c picklist
-    */
-    public static final String STATUS_ACTIVE = 'Active';
-    public static final String STATUS_LAPSED = 'Lapsed';
-    public static final String STATUS_CLOSED = 'Closed';
-
-    /**
-    * @description Api Values of the npe03__RecurringDonation.RecurringType__c picklist
-    */
-    public static final String RECURRING_TYPE_OPEN = 'Open';
-
-}
+-->
+<!--
+	@author Salesforce.org
+	@date 2019
+	@group Recurring Donations
+	@description Harness app for the Enhanced Recurring Donations Lightning Component.
+-->
+<aura:application access="GLOBAL" extends="ltng:outApp">
+  <aura:dependency resource="c:RD2_EnablementDelegate" />
+</aura:application>
