@@ -46,6 +46,10 @@ public without sharing class RD2_ScheduleService {
 
         List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
+        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+            return newSchedules;
+        }
+
         RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c();
 
         schedule.RecurringDonation__c = rd.Id;

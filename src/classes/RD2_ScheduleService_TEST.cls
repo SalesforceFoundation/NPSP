@@ -57,9 +57,7 @@ private with sharing class RD2_ScheduleService_TEST {
                     .build()
         };
 
-        System.debug('rds - ' + rds);
         List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds[0]);
-        System.debug('schedules - ' + schedules);
 
         System.assertEquals(schedules.size(), 1, 'Number of RDs should be 1');
         System.assertEquals(schedules[0].InstallmentAmount__c, 100, 'Installment Amount should be 100');
@@ -166,6 +164,32 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(schedules[0].StartDate__c, Date.newInstance(2019, 11, 1), 'Start Date should be 11/1/2019');
         System.assertEquals(schedules[0].DayOfMonth__c, null, 'Day of Month should be null');
         System.assertEquals(schedules[0].EndDate__c, null, 'End Date should be null');
+
+    }
+
+    /***
+    * @description Verifies schedule is not created when RD is closed.
+    */
+    @isTest
+    private static void shouldNotCreateAScheduleWhenClosed() {
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withMockId()
+                        .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                        .withAmount(400)
+                        .withPaymentMethod('Check')
+                        .withInstallmentPeriodWeekly()
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 9, 15))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .withRecurringDonationStatusClosed()
+                        .build()
+        };
+
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds[0]);
+
+        System.assertEquals(schedules.size(), 0, 'Number of RDs should be 0');
 
     }
 

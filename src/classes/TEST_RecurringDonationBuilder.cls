@@ -405,6 +405,17 @@ public without sharing class TEST_RecurringDonationBuilder {
         return this;
     }
 
+    /***
+    * @description Sets Open Ended Status to None
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withRecurringDonationStatusClosed() {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('Status__c', RD2_Constants.STATUS_CLOSED);
+        return this;
+    }
+
 
     /***
     * @description Builds Recurring Donation sObject based on the provided values
