@@ -30,7 +30,7 @@ Additionally, depending on the intended use case of the org, features for develo
  - Disabled Lightning cache
  - Disabled parallel Apex testing
 
-as well as nny other features needed to define the workspace for the org's intended purpose.
+as well as many other features needed to define the workspace for the org's intended purpose.
 
 | Org Shape                 | Namespaced | Managed Installs | Description                                                             |
 | ------------------------- | ---------- | ---------------- | ----------------------------------------------------------------------- |
