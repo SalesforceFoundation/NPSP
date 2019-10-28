@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group Batch
+* @group Batch Job
 * @description Batch job service
 */
 public with sharing class UTIL_BatchJobService {

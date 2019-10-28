@@ -256,6 +256,5 @@
 
         component.set('v.errorSection', section);
         component.set('v.errorMessage', message);
-        console.log('Unexpected Error: ' + component.get('v.errorMessage'));
     }
 })

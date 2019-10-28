@@ -317,6 +317,14 @@
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>BatchJobProgressTitle</fullName>
+        <categories>BatchJob</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchJobProgressTitle</shortDescription>
+        <value>Latest Batch Details</value>
+    </labels>
+    <labels>
         <fullName>CONV_Accept_Risk</fullName>
         <language>en_US</language>
         <protected>false</protected>

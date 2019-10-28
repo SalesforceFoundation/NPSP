@@ -307,6 +307,10 @@
                         </lightning:layoutItem>
                         <lightning:layoutItem size="2" />
 
+                        <lightning:layoutItem size="12">
+                            <c:batchProgress className="RD2_DataMigration_BATCH" />
+                        </lightning:layoutItem>
+
                     </lightning:layout>
 
                     <aura:if isTrue="{!equals(v.errorSection, '3')}">
