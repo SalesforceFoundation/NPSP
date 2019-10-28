@@ -1,18 +1,22 @@
 import { LightningElement, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import processFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.processFormTemplate';
-import retrieveDefaultFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultFormTemplate';
-import { FormTemplate, FormLayout, mutable } from 'c/utilTemplateBuilder';
+import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormTemplate';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
     @track activeTab;
     _previousTab;
 
-    @track formTemplate = new FormTemplate(
-        undefined,
-        undefined,
-        new FormLayout()
-    );
+    @track formTemplate = {
+        name: null,
+        description: null,
+        batchHeaderFields: [],
+        layout: {
+            fieldMappingSetDevName: null,
+            version: null,
+            sections: []
+        }
+    }
 
     /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     get templateInfo() {
@@ -94,9 +98,14 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
     getFormTemplate() {
-        retrieveDefaultFormTemplate()
+        const templateId = this.template.querySelector('lightning-input[data-name="templateId"]').value;
+        retrieveFormTemplate({ templateId: templateId })
             .then(data => {
                 this.formTemplate = data;
+                const batchHeaderComponent = this.template.querySelector('c-ge-template-builder-batch-header');
+                if (batchHeaderComponent) {
+                    batchHeaderComponent.init();
+                }
             })
             .catch(error => {
                 console.log('Error: ', error);
