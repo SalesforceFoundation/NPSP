@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 import { LightningElement, api, track } from 'lwc';
-import { mutable } from 'c/utilTemplateBuilder';
+import { mutable, inputTypeByDescribeType, lightningInputTypeByDataType, showToast } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderFormField extends LightningElement {
     @track field;
@@ -18,22 +17,72 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return (this.field.required === 'Yes' || this.field.required === true) ? true : false;
     }
 
-    /*******************************************************************************
-    * @description Sends an event up to geTemplateBuilder to shift the FormField
-    * up in the array and UI.
-    */
-    handleFormFieldUp() {
-        const field = this.getFormFieldValues();
-        this.dispatchEvent(new CustomEvent('formfieldup', { detail: field }));
+    get isLightningTextarea() {
+        return this.lightningInputType === 'textarea' ? true : false;
+    }
+
+    get isLightningCombobox() {
+        return this.lightningInputType === 'combobox' ? true : false;
+    }
+
+    get isLightningSearch() {
+        return this.lightningInputType === 'search' ? true : false;
+    }
+
+    /* Needs to be reworked */
+    get isLightningRichText() {
+        return this.lightningInputType === 'richtext' ? true : false;
+    }
+
+    get isLightningInput() {
+        if (this.lightningInputType !== 'textarea' &&
+            this.lightningInputType !== 'combobox' &&
+            this.lightningInputType !== 'richtext' &&
+            this.lightningInputType !== 'search') {
+            return true;
+        }
+        return false;
+    }
+
+    get lightningInputType() {
+        return this.field.dataType ? inputTypeByDescribeType[this.field.dataType.toLowerCase()] : 'text';
+    }
+
+    // TODO: Needs to be completed for lookup fields
+    handleSearch(event) {
+        console.log('handle search');
+        const isEnterKey = event.keyCode === 13;
+        if (isEnterKey) {
+            showToast(this, 'Search Test', event.target.value, 'warning');
+        }
+    }
+
+    /* TODO: Delete later. For debugging only */
+    connectedCallback() {
+        //console.log('FIELD: ', mutable(this.field));
+        //console.log('TYPE: ', this.lightningInputType);
     }
 
     /*******************************************************************************
-    * @description Sends an event up to geTemplateBuilder to shift the FormField
-    * down in the array and UI.
+    * @description Dispatches an event up to parent component to shift the FormField
+    * up in the data structure.
+    */
+    handleFormFieldUp() {
+        const field = this.getFormFieldValues();
+        this.dispatchEvent(new CustomEvent(
+            'formfieldup',
+            { detail: field }));
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event up to parent component to shift the FormField
+    * down in the data structure.
     */
     handleFormFieldDown() {
         const field = this.getFormFieldValues();
-        this.dispatchEvent(new CustomEvent('formfielddown', { detail: field }));
+        this.dispatchEvent(new CustomEvent(
+            'formfielddown',
+            { detail: field }));
     }
 
     /*******************************************************************************
@@ -41,9 +90,13 @@ export default class geTemplateBuilderFormField extends LightningElement {
     * 
     * @param {object} event: Onchange event from lightning-input checkbox
     */
-    handleAllowDefaultValue(event) {
-        let defaultValueInputField = this.template.querySelector('lightning-input[data-name="defaultValue"]');
-        defaultValueInputField.disabled = !event.target.checked;
+    handleToggleDefaultValue(event) {
+        let field = mutable(this.field);
+        field.allowDefaultValue = !field.allowDefaultValue;
+        if (!field.allowDefaultValue) {
+            field.defaultValue = '';
+        }
+        this.field = field;
     }
 
     /*******************************************************************************
@@ -54,20 +107,26 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     @api
     getFormFieldValues() {
-        let required = this.template.querySelector('lightning-input[data-name="required"]').checked;
-        let allowDefaultValue = this.template.querySelector('lightning-input[data-name="allowDefaultValue"]').checked;
-        let defaultValue = allowDefaultValue ? this.template.querySelector('lightning-input[data-name="defaultValue"]').value : undefined;
+        const elementType = lightningInputTypeByDataType[this.lightningInputType] ? lightningInputTypeByDataType[this.lightningInputType] : 'lightning-input';
+        const required = this.template.querySelector('lightning-input[data-name="required"]').checked;
+        const allowDefaultValue = this.template.querySelector('lightning-input[data-name="allowDefaultValue"]').checked;
+        const customLabel = this.template.querySelector('lightning-input[data-name="customLabel"]').value;
+        let defaultValue = allowDefaultValue ? this.template.querySelector(`${elementType}[data-name="defaultValue"]`).value : undefined;
+
+        // TODO: Clean up way of getting default value if checkbox
+        if (allowDefaultValue && this.field.dataType && this.field.dataType.toLowerCase() === 'boolean') {
+            defaultValue = this.template.querySelector(`${elementType}[data-name="defaultValue"]`).checked;
+        }
 
         let field = mutable(this.field);
         field.required = required;
         field.allowDefaultValue = allowDefaultValue;
         field.defaultValue = defaultValue;
-
-        field.elementType = 'placeholder';
-        field.displayRule = 'placeholder';
-        field.validationRule = 'placeholder';
-        field.customLabel = field.label;
-        field.dataImportFieldMappingDevNames = [this.field.value];
+        field.elementType = elementType;
+        field.displayRule = undefined;
+        field.validationRule = undefined;
+        field.customLabel = customLabel;
+        field.dataImportFieldMappingDevNames = [field.value];
 
         return field;
     }

@@ -1,4 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
+import { mutable } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
     @track templateInfo;
@@ -18,10 +19,11 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     */
     @api
     getTabData() {
-        this.templateInfo.name = this.template.querySelector('lightning-input[data-name="templateName"]').value;
-        this.templateInfo.description = this.template.querySelector('lightning-textarea[data-name="description"]').value;
+        let templateInfo = mutable(this.templateInfo);
+        templateInfo.name = this.template.querySelector('lightning-input[data-name="templateName"]').value;
+        templateInfo.description = this.template.querySelector('lightning-textarea[data-name="description"]').value;
 
-        return this.templateInfo;
+        return templateInfo;
     }
 
     /*******************************************************************************
@@ -33,13 +35,9 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     * @param {object} event: Onclick event object from lightning-button
     */
     handleGoToTab(event) {
-        let tabData = this.getTabData();
-
         let detail = {
-            tabData: tabData,
             tabValue: event.target.getAttribute('data-tab-value')
         }
-
         this.dispatchEvent(new CustomEvent('gototab', { detail: detail }));
     }
 }

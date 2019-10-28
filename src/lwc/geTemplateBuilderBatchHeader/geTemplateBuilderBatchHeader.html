@@ -19,10 +19,13 @@
                                  type="checkbox"
                                  label={field.label}
                                  value={field.value}
-                                 onchange={handleSelectBatchField}
+                                 onchange={handleToggleBatchField}
                                  title={field.label}
                                  checked={field.checked}
-                                 class="slds-truncate">
+                                 class="slds-truncate"
+                                 required={field.isRequired}
+                                 disabled={field.isRequiredFieldDisabled}
+                                 data-type={field.dataType}>
                 </lightning-input>
             </template>
         </div>
