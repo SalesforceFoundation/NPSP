@@ -41,16 +41,6 @@ public class TEST_SObjectGateway {
     * @description Retrieves Recurring Donation record(s)
     */
     public class RecurringDonationGateway {
-        private Boolean isEnhancedMode = false;
-
-        /***
-        * @description Retrieves enhanced Recurring Donation fields
-        * @return RecurringDonationGateway
-        */
-        public RecurringDonationGateway withEnhancedMode() {
-            isEnhancedMode = true;
-            return this;
-        }
 
         /***
         * @description Retrieves Recurring Donation record for the specified Id
@@ -80,28 +70,6 @@ public class TEST_SObjectGateway {
         * @return List<npe03__Recurring_Donation__c>
         */
         public List<npe03__Recurring_Donation__c> getRecords(Set<Id> rdIds) {
-            if (isEnhancedMode) {
-                return [
-                    SELECT 
-                        Name, 
-                        npe03__Organization__c,
-                        npe03__Contact__c,
-                        npe03__Amount__c,
-                        npe03__Paid_Amount__c,
-                        npe03__Next_Payment_Date__c, 
-                        npe03__Last_Payment_Date__c,
-                        npe03__Date_Established__c,
-                        StartDate__c,
-                        Day_of_Month__c,
-                        InstallmentFrequency__c,
-                        npe03__Installment_Period__c,
-                        Status__c
-                    FROM npe03__Recurring_Donation__c 
-                    WHERE Id IN :rdIds
-                ];
-            } 
-
-            //return fields applicable to both legacy and enhanced Recurring Donations
             return [
                 SELECT 
                     Name, 
@@ -110,7 +78,14 @@ public class TEST_SObjectGateway {
                     npe03__Amount__c,
                     npe03__Paid_Amount__c,
                     npe03__Next_Payment_Date__c, 
-                    npe03__Last_Payment_Date__c
+                    npe03__Last_Payment_Date__c,
+                    npe03__Date_Established__c,
+                    StartDate__c,
+                    Day_of_Month__c,
+                    InstallmentFrequency__c,
+                    npe03__Installment_Period__c,
+                    RecurringType__c,
+                    Status__c
                 FROM npe03__Recurring_Donation__c 
                 WHERE Id IN :rdIds
             ];

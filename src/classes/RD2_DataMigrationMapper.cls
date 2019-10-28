@@ -60,10 +60,6 @@ public class RD2_DataMigrationMapper {
      * @return The updated record (or null if there is an exception?)
      */
     public npe03__Recurring_Donation__c convertToEnhancedRD() {
-        if (isConverted()) {
-            return rd;
-        }
-
         setInstallmentFields(rd);
         setStartDate(rd);
         setDayOfMonth(rd);
@@ -74,39 +70,31 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Returns true if the RD record is already in enhanced Recurring Donation format
-     */
-    public Boolean isConverted() {
-        return String.isNotBlank(rd.Status__c);
-    }
-
-    /**
      * @description Sets Installment Frequency and Installment Period fields where applicable
      * @param rd Recurring Donation in the legacy format
      * @return void
      */
     private void setInstallmentFields(npe03__Recurring_Donation__c rd) {
 
-        Set<String> quarterlyInstallmentPeriods = new Set<String>{
-            'Quarterly',
-            System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly
-        };
-
         Set<String> frequencyOneInstallmentPeriods = new Set<String>{
-            RD2_Constants.INSTALLMENT_PERIOD_YEARLY,
-            RD2_Constants.INSTALLMENT_PERIOD_MONTHLY,
-            RD2_Constants.INSTALLMENT_PERIOD_WEEKLY,
             System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
             System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
             System.Label.npe03.RecurringDonationInstallmentPeriodWeekly
         };
 
-        if (quarterlyInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
+        if (rd.npe03__Installment_Period__c == System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly) {
             rd.InstallmentFrequency__c = 3;
             rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
 
         } else if (frequencyOneInstallmentPeriods.contains(rd.npe03__Installment_Period__c) && rd.InstallmentFrequency__c == null) {
             rd.InstallmentFrequency__c = 1;
+        }
+
+        if (rd.npe03__Schedule_Type__c == System.Label.npe03.RecurringDonationDivideValue
+            && rd.npe03__Installment_Amount__c != null 
+            && rd.npe03__Installment_Amount__c != 0
+        ) {
+            rd.npe03__Amount__c = rd.npe03__Installment_Amount__c;
         }
     }
 
@@ -153,13 +141,8 @@ public class RD2_DataMigrationMapper {
      * @return void
      */
     private void setStatus(npe03__Recurring_Donation__c rd) {
-
-        Set<String> closedStatuses = new Set<String>{
-            'Closed',
-            System.Label.npe03.RecurringDonationClosedStatus
-        };
         
-        if (closedStatuses.contains(rd.npe03__Open_Ended_Status__c)) {
+        if (rd.npe03__Open_Ended_Status__c == System.Label.npe03.RecurringDonationClosedStatus) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
 
         } else {

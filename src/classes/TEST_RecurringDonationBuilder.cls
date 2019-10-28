@@ -326,9 +326,18 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withScheduleTypeMultiplyValue() {
+        return withScheduleType(System.Label.npe03.RecurringDonationMultiplyValue);
+    }
+
+    /***
+    * @description Sets Schedule Type
+    * @param scheduleType Recurrig Donation schedule type
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withScheduleType(String scheduleType) {
         validateMode(Mode.Legacy);
 
-        valuesByFieldName.put('npe03__Schedule_Type__c', System.Label.npe03.RecurringDonationMultiplyValue);
+        valuesByFieldName.put('npe03__Schedule_Type__c', scheduleType);
         return this;
     }
 
