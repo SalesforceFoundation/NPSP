@@ -2,7 +2,7 @@ import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import storeFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.storeFormTemplate';
 import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormTemplate';
-import { FormTemplate, FormLayout, mutable, findIndexByProperty, shiftToIndex, removeByProperty, dispatch, getQueryParameters } from 'c/utilTemplateBuilder';
+import { mutable, findIndexByProperty, shiftToIndex, removeByProperty, dispatch, getQueryParameters } from 'c/utilTemplateBuilder';
 
 const FORMAT_VERSION = '1.0';
 
