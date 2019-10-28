@@ -1,7 +1,7 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 
-const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL', 'PERCENT'];
+const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'PERCENT', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
 const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -21,13 +21,16 @@ export default class GeFormField extends LightningElement {
         this.changeTimeout = setTimeout(() => {
             // parent component (formSection) should bind to onchange event
             const evt = new CustomEvent('change', {field: this.element, value: this.value});
-            console.log(evt); 
             this.dispatchEvent(evt);
         }, DELAY);
     }
 
     get inputType() {
-        return GeFormService.getInputTypeFromDataType(this.element.dataType);
+        return GeFormService.getInputTypeFromDataType(this.fieldType);
+    }
+
+    get formatter() {
+        return GeFormService.getNumberFormatterByDescribeType(this.fieldType);
     }
 
     get fieldInfo() {

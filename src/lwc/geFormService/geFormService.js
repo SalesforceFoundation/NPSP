@@ -7,11 +7,16 @@ const inputTypeByDescribeType = {
     'DATETIME': 'datetime-local',
     'EMAIL': 'email',
     'NUMBER': 'number',
+    'PERCENT': 'number',
     'STRING': 'text',
     'PHONE': 'tel',
     'TEXT': 'text',
     'TIME': 'time',
     'URL': 'url'
+};
+
+const numberFormatterByDescribeType = {
+  'PERCENT': 'percent-fixed'
 };
 
 class GeFormService {
@@ -35,7 +40,7 @@ class GeFormService {
                     console.error(JSON.stringify(error));
                 });
         });
-    };
+    }
 
     /**
      * Get the type of lightning-input that should be used for a given field type.
@@ -44,7 +49,16 @@ class GeFormService {
      */
     getInputTypeFromDataType(dataType) {
         return inputTypeByDescribeType[dataType];
-    };
+    }
+
+    /**
+     * Get the formatter for a lightning-input that should be used for a given field type
+     * @param dataType  Data type of the field
+     * @returns {String | undefined}
+     */
+    getNumberFormatterByDescribeType(dataType) {
+        return numberFormatterByDescribeType[dataType];
+    }
 
     /**
      * Get a field info object by dev name from the render wrapper object

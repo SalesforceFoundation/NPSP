@@ -11,7 +11,6 @@ export default class GeFormRenderer extends LightningElement {
 
     connectedCallback() {
         GeFormService.getFormTemplate().then(response => {
-
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
                 const { formTemplate } = response;
