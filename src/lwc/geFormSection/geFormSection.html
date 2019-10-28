@@ -1,0 +1,23 @@
+<template>
+    <button class='slds-size_1-of-1 slds-text-align_left slds-page-header slds-page-header__title'
+            aria-expanded='true'
+            onclick={toggleExpand}>
+        <h2>
+            <lightning-icon icon-name={iconName} 
+                size='x-small'
+                alternative-text='{altTextLabel}'>
+            </lightning-icon>
+            {section.label}
+        </h2>
+    </button>
+    <lightning-layout multiple-rows='true'>
+        <template for:each={section.elements} for:item='element'>
+            <lightning-layout-item key={element.value} class={sectionClassName}
+                    padding='around-small' 
+                    size='6' 
+                    medium-device-size='3'>
+                <c-ge-form-field element={element}></c-ge-form-field>
+            </lightning-layout-item>
+        </template>
+    </lightning-layout>
+</template>
