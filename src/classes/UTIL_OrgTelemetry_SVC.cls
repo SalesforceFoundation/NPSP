@@ -297,7 +297,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private void handleIsPaymentAllocationEnabled() {
         Allocations_Settings__c allocationCustomSetting = UTIL_CustomSettingsFacade.getAllocationsSettings();
         
-        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocation.name(), allocationCustomSetting.Payment_Allocations_Enabled__c);
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocation.name(), allocationCustomSetting.Payment_Allocations_Enabled__c == true);
     }
 
     /**
