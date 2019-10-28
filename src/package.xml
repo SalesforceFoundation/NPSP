@@ -220,10 +220,10 @@
         <members>CRLP_VRollupHandler</members>
         <members>CallableApiParameters</members>
         <members>CallableApiParameters_TEST</members>
-        <members>Callable_API</members>
-        <members>Callable_API_TEST</members>
         <members>CallableDispatchService_ERR</members>
         <members>CallableDispatchService_ERR_TEST</members>
+        <members>Callable_API</members>
+        <members>Callable_API_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -1707,9 +1707,9 @@
         <members>campaignMemberStatusResponded</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
+        <members>conMergeErrNoPersonAccounts</members>
         <members>conMergeErrorNoDeleteObjPermission</members>
         <members>conMergeErrorNoDeleteRecAccess</members>
-        <members>conMergeErrNoPersonAccounts</members>
         <members>conMergeFoundContacts</members>
         <members>conMergePageTitle</members>
         <members>conMergePageTitleDetail</members>
@@ -2909,6 +2909,7 @@
         <members>IsEnabled_CustomizableRollups</members>
         <members>IsEnabled_DefaultGAU</members>
         <members>IsEnabled_HouseholdAcctModel</members>
+        <members>IsEnabled_PaymentAllocation</members>
         <members>IsEnabled_RecurringDonations2</members>
         <members>Org_IsEnabled_AdvancedMultiCurrency</members>
         <members>PilotEnabled</members>

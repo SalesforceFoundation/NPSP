@@ -73,6 +73,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_BDICMT,
         IsEnabled_CustomizableRollups,
         IsEnabled_DefaultGAU,
+        IsEnabled_PaymentAllocation,
         IsEnabled_RecurringDonations2,
         Data_CountErrorLog,
         Data_CountOppsWithMultiplePayments,
@@ -184,6 +185,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 handleNonEnglishLanguageCount();
                 handleLongestRunningBatchLast7Days();
                 handleCountTimedOutBatchJobsLast7Days();
+                handleIsPaymentAllocationEnabled();
             }
 
             when Data_MaxNumRelatedOpps {
@@ -287,6 +289,15 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             } catch (Exception e) { }
         }
         featureManager.setPackageBooleanValue(TelemetryParameterName.Org_IsEnabled_AdvancedMultiCurrency.name(), isEnabled);
+    }
+
+    /**
+     * @description Checks the Allocation Settings Custom Setting to determine if the Payment Allocation option is enabled. 
+     */
+    private void handleIsPaymentAllocationEnabled() {
+        Allocations_Settings__c allocationCustomSetting = UTIL_CustomSettingsFacade.getAllocationsSettings();
+        
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocation.name(), allocationCustomSetting.Payment_Allocations_Enabled__c);
     }
 
     /**
