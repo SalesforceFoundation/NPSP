@@ -453,6 +453,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.formTemplate.batchHeaderFields = this.batchHeaderFields;
         this.formTemplate.layout = this.formLayout;
 
+        // TODO: Currently hardcoded as we're not providing a way to
+        // create custom migrated field mapping sets yet.
+        this.formTemplate.layout.fieldMappingSetDevName = 'Migrated_Custom_Field_Mapping_Set';
+
         const preppedFormTemplate = {
             id: this.recordId || null,
             templateJSON: JSON.stringify(this.formTemplate),
