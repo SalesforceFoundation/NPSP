@@ -28,6 +28,12 @@ export default class GeFormRenderer extends LightningElement {
         });
     }
 
+    handleCancel() {
+        console.log('Form Cancel button clicked');
+    }
 
+    handleSave() {
+        console.log('Form Save button clicked');
+    }
 
 }
