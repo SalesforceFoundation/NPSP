@@ -147,6 +147,46 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
+     * @description Verifies that a legacy RD is recognized correctly
+     */
+    @IsTest
+    private static void shouldRecognizeAsLegacyFormat() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder().build();
+
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
+
+        System.assertEquals(false, mapper.isConverted(),
+            'This RD should be in legacy Recurring Donation format');
+    }
+
+    /**
+     * @description Verifies that an Enhanced Recurring Donations format RD is recognized correctly
+     */
+    @IsTest
+    private static void shouldRecognizeAsEnhancedFormat() {
+        npe03__Recurring_Donation__c rd = getEnhancedRecurringDonationBuilder().build();
+
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
+
+        System.assertEquals(true, mapper.isConverted(),
+            'This RD should be in Enhanced Recurring Donation format');
+    }
+
+    /**
+     * @description Verifies that converted Recurring Donation is in enhanced Recurring Donation format
+     */
+    @IsTest
+    private static void shouldRecognizeConvertedRDAsEnhancedFormat() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder().build();
+
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
+        mapper.convertToEnhancedRD();
+
+        System.assertEquals(true, mapper.isConverted(),
+            'This RD should be in Enhanced Recurring Donation format');
+    }
+
+    /**
      * @description Verifies Installment Frequency is set to 3 when Installment Period is Quarterly
      */
     @IsTest
@@ -570,6 +610,7 @@ private class RD2_DataMigration_TEST {
             .withContact(contactId)
             .withAmount(AMOUNT_VALUE)
             .withInstallmentPeriodMonthly()
+            .withInstallmentFrequency(1)
             .withDayOfMonth('1');
     }
 

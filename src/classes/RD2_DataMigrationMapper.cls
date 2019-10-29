@@ -55,11 +55,15 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Converts the RD record to RD2 format by updating the new and existing fields
-     * on the record as required.
-     * @return The updated record (or null if there is an exception?)
+     * @description Converts the RD record to enhanced Recurring Donation format 
+     * by updating the new and existing fields on the record as required.
+     * @return npe03__Recurring_Donation__c Recurring Donation in enhanced format
      */
     public npe03__Recurring_Donation__c convertToEnhancedRD() {
+        if (isConverted()) {
+            return rd;
+        }
+        
         setInstallmentFields(rd);
         setStartDate(rd);
         setDayOfMonth(rd);
@@ -67,6 +71,16 @@ public class RD2_DataMigrationMapper {
         setOtherFields(rd);
 
         return rd;
+    }
+
+    /**	
+     * @description Returns true if the RD record is already in enhanced Recurring Donation format	
+     */	
+    public Boolean isConverted() {	
+        return String.isNotBlank(rd.Status__c) 
+            && rd.InstallmentFrequency__c != null;	
+            //frequency is null for "1st and 15th" installment period even when converted
+            //check if the RD schedule exists //TODO
     }
 
     /**

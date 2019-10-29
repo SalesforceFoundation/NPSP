@@ -124,6 +124,10 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd)
             .withRelatedOpportunities(opps);
 
+        if (mapper.isConverted()) {	
+            return;	
+        }
+
         convertedRDs.add(mapper.convertToEnhancedRD());
 
         rdSchedules.addAll(mapper.getScheduleRecords());
