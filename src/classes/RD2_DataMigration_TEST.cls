@@ -219,6 +219,114 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
+     * @description Verifies Installment Frequency is not set when Installment Period is "1st and 15th"
+     */
+    @IsTest
+    private static void shouldNotSetInstallmentFrequencyWhenInstallmentPeriodIs1stAnd15th() {
+        
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
+            getLegacyRecurringDonationBuilder()
+                .withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th)
+                .build()
+        ).convertToEnhancedRD();
+           
+        System.assertEquals(null, convertedRD.InstallmentFrequency__c, 'Installment Frequency should not be set');
+    }
+
+    /**
+     * @description Verifies an exception is thrown when Installment Period cannot be converted
+     */
+    @IsTest
+    private static void shouldThrowExceptionWhenInstallmentPeriodCannotBeConverted() {
+        String installmentPeriod = 'foo';
+        
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withInstallmentPeriod(installmentPeriod)
+            .build();
+
+        Exception actualException;
+        try {
+            rd = new RD2_DataMigrationMapper(rd).convertToEnhancedRD();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+           
+        String expectedMessage = String.format(
+            System.Label.RD2_DataMigrationInvalidInstallmentPeriod,
+            new String[]{ installmentPeriod }
+        );
+
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+        System.assertEquals(expectedMessage, actualException.getMessage(), 'An exception message should match');
+        System.assertEquals(null, rd.InstallmentFrequency__c, 'Installment Frequency should not be set');
+    }
+
+    /**
+     * @description Verifies custom Installment Period "Days" is converted
+     */
+    @IsTest
+    private static void shouldConvertCustomInstallmentIncrementDays() {
+        String installmentIncrement = 'Days';
+        Integer installmentFrequency = 4;
+
+        testCustomInstallmentConversion(installmentIncrement, installmentFrequency, RD2_Constants.INSTALLMENT_PERIOD_DAILY);
+    }
+    /**
+     * @description Verifies custom Installment Period "Weeks" is converted
+     */
+    @IsTest
+    private static void shouldConvertCustomInstallmentIncrementWeeks() {
+        String installmentIncrement = 'Weeks';
+        Integer installmentFrequency = 3;
+
+        testCustomInstallmentConversion(installmentIncrement, installmentFrequency, RD2_Constants.INSTALLMENT_PERIOD_WEEKLY);
+    }
+
+    /**
+     * @description Verifies custom Installment Period "Months" is converted
+     */
+    @IsTest
+    private static void shouldConvertCustomInstallmentIncrementMonths() {
+        String installmentIncrement = 'Months';
+        Integer installmentFrequency = 2;
+
+        testCustomInstallmentConversion(installmentIncrement, installmentFrequency, RD2_Constants.INSTALLMENT_PERIOD_MONTHLY);
+    }
+
+    /**
+     * @description Verifies custom Installment Period "Years" is converted
+     */
+    @IsTest
+    private static void shouldConvertCustomInstallmentIncrementYears() {
+        String installmentIncrement = 'Years';
+        Integer installmentFrequency = 1;
+
+        testCustomInstallmentConversion(installmentIncrement, installmentFrequency, RD2_Constants.INSTALLMENT_PERIOD_YEARLY);
+    }
+
+    /**
+     * @description Verifies custom Installment Period is converted
+     * @param installmentIncrement Custom Installment Increment
+     * @param installmentFrequency Custom Installment Frequency
+     * @param expectedInstallmentPeriod Expected converted Installment Period
+     * @return void
+     */
+    private static void testCustomInstallmentConversion(String installmentIncrement, Integer installmentFrequency, String expectedInstallmentPeriod) {
+
+        createCustomInstallmentSettings(installmentIncrement, installmentFrequency);
+
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
+            getLegacyRecurringDonationBuilder()
+                .withInstallmentPeriod(installmentIncrement)
+                .build()
+        ).convertToEnhancedRD();
+           
+        System.assertEquals(expectedInstallmentPeriod, convertedRD.npe03__Installment_Period__c, 'Installment Period should match');
+        System.assertEquals(installmentFrequency, convertedRD.InstallmentFrequency__c, 'Installment Frequency should match');
+    }
+
+    /**
      * @description Verifies Amount is set from Installment Amount when Schedule Type is "Divide By"
      */
     @IsTest
@@ -486,5 +594,21 @@ private class RD2_DataMigration_TEST {
      */
     private static List<npe03__Recurring_Donation__c> getRecords() {
         return Database.query(new RD2_DataMigration_BATCH().getRDMigrationQuery());
+    }
+
+    /**
+     * @description Creates custom installment period settings
+     * @param installmentIncrement Installment Increment (Days, Weeks, Months, Years)
+     * @param installmentFrequency Frequency for the specific custom Installment Period
+     * @return void
+     */
+    private static void createCustomInstallmentSettings(String installmentIncrement, Integer installmentFrequency) {
+        npe03__Custom_Installment_Settings__c installment = new npe03__Custom_Installment_Settings__c(
+            npe03__Increment__c = installmentIncrement,
+            npe03__Value__c = installmentFrequency,
+            Name = installmentIncrement
+        );
+
+        insert installment; 
     }
 }

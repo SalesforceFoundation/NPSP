@@ -83,11 +83,16 @@ public class RD2_DataMigrationMapper {
         };
 
         if (rd.npe03__Installment_Period__c == System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly) {
-            rd.InstallmentFrequency__c = 3;
             rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
+            rd.InstallmentFrequency__c = 3;
 
-        } else if (frequencyOneInstallmentPeriods.contains(rd.npe03__Installment_Period__c) && rd.InstallmentFrequency__c == null) {
-            rd.InstallmentFrequency__c = 1;
+        } else if (frequencyOneInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
+            if (rd.InstallmentFrequency__c == null) {
+                rd.InstallmentFrequency__c = 1;
+            }
+
+        } else if (rd.npe03__Installment_Period__c != System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th) {
+            handleCustomInstallmentPeriod(rd);
         }
 
         if (rd.npe03__Schedule_Type__c == System.Label.npe03.RecurringDonationDivideValue
@@ -96,6 +101,55 @@ public class RD2_DataMigrationMapper {
         ) {
             rd.npe03__Amount__c = rd.npe03__Installment_Amount__c;
         }
+    }
+
+    /**
+     * @description Sets Installment Frequency and Installment Period for custom Installment Period
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void handleCustomInstallmentPeriod(npe03__Recurring_Donation__c rd) {
+        npe03__Custom_Installment_Settings__c settings = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings()
+            .get(rd.npe03__Installment_Period__c);
+
+        if (settings == null) {
+            throwInvalidInstallmentPeriodException(rd.npe03__Installment_Period__c);
+        }
+
+        String settingsIncrement = settings.npe03__Increment__c;
+        switch on settingsIncrement {
+            when 'Days' {
+                rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_DAILY;
+            }
+            when 'Weeks' {
+                rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_WEEKLY;
+            }
+            when 'Months' {
+                rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
+            }
+            when 'Years' {
+                rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_YEARLY;
+            }
+            when else {
+                throwInvalidInstallmentPeriodException(rd.npe03__Installment_Period__c);
+            }
+        }
+
+        rd.InstallmentFrequency__c = Integer.valueOf(settings.npe03__Value__c);
+    }
+
+    /**
+     * @description Throws invalid installment period exception
+     * @param installmentPeriod Recurring Donation installment period
+     * @return void
+     */
+    private void throwInvalidInstallmentPeriodException(String installmentPeriod) {
+        throw new MigrationException(
+            String.format(
+                System.Label.RD2_DataMigrationInvalidInstallmentPeriod,
+                new String[]{ installmentPeriod }
+            )
+        );
     }
 
     /**
@@ -166,4 +220,6 @@ public class RD2_DataMigrationMapper {
     public List<RecurringDonationSchedule__c> getScheduleRecords() {
         return new List<RecurringDonationSchedule__c>();
     }
+
+    public class MigrationException extends Exception { }
 }

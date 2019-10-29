@@ -43,6 +43,7 @@ public inherited sharing class RD2_Constants {
     public static final String INSTALLMENT_PERIOD_MONTHLY = 'Monthly';
     public static final String INSTALLMENT_PERIOD_WEEKLY = 'Weekly';
     public static final String INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH = '1st and 15th';
+    public static final String INSTALLMENT_PERIOD_DAILY = 'Daily';
 
     /**
     * @description npe03_RecurringDonation.Day_Of_Month__c picklist API values
