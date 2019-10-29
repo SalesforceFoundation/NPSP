@@ -3391,7 +3391,7 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of op
     </customLabels>
     <customLabels>
         <name>stgHelpNPSPSettings</name>
-        <label>Configureer het Nonprofit Success Pack zo dat het voldoet aan de noden van uw organisatie. U kunt ook de toestand van uw Salesforce-organisatie opvolgen of batchprocessen uitvoeren om gegevens bij te werken.</label>
+        <label>Configureer het Nonprofit Success Pack zo dat het voldoet aan de behoeften van uw organisatie. U kunt ook de toestand van uw Salesforce-organisatie volgen of batchprocessen uitvoeren om gegevens bij te werken.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpNameConnector</name>
@@ -4227,7 +4227,7 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
     </customLabels>
     <customLabels>
         <name>stgNavRelReciprocal</name>
-        <label>Instellingen Wederkerige Relaties</label>
+        <label>Instellingen voor wederzijdse relaties</label>
     </customLabels>
     <customLabels>
         <name>stgNavRelationships</name>

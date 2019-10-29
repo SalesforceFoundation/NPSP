@@ -5,24 +5,4 @@
     <help>Le nombre d’enreg. à traiter en une fois lors de l’exécution du traitement par lots des dons réguliers. La taille par défaut est 50. Si le traitement par lots des dons réguliers échoue à cause des limites du système, réduisez-le à un nombre moins élevé.</help>
     <label>Taille du lot de dons réguliers</label>
   </fields>
-  <fields>
-      <help><!-- The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation. --></help>
-      <label><!-- Stage Name for Installment Opportunities --></label>
-      <name>InstallmentOppStageName__c</name>
-  </fields>
-  <fields>
-      <help><!-- This option enables Enhanced Recurring Donations. IMPORTANT: You must enable Enhanced Recurring Donations in NPSP Settings. Enabling in Custom Settings may cause data inconsistencies. --></help>
-      <label><!-- Enhanced Recurring Donations --></label>
-      <name>IsRecurringDonations2Enabled__c</name>
-  </fields>
-  <caseValues>
-      <plural>false</plural>
-      <value><!-- Recurring Donations Settings --></value>
-  </caseValues>
-  <caseValues>
-      <plural>true</plural>
-      <value><!-- Recurring Donations Settings --></value>
-  </caseValues>
-  <gender><!-- Masculine --></gender>
-  <startsWith><!-- Consonant --></startsWith>
 </CustomObjectTranslation>
