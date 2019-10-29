@@ -108,11 +108,11 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 state.isConfirmed = false;
                 state.isMetaDeployLaunched = false;
                 state.isMetaDeployConfirmed = false;
-                state.isMigrationRun = false;
+                state.isMigrationCompleted = false;
             } else {
                 state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
                 state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched && isMetaDeployInstalled();
-                state.isMigrationRun = state.isMigrationRun && state.isMetaDeployConfirmed;
+                state.isMigrationCompleted = state.isMigrationCompleted && state.isMetaDeployConfirmed;
             }
 
         } catch (Exception e) {
@@ -199,6 +199,17 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Starts data migration batch
+    * @return void
+    */
+    @AuraEnabled
+    public static void runMigration() {
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        Database.executeBatch(batch, batch.batchSize);
+    }
+
+
+    /***
     * @description Saves the current enablement state
     * @param state Enablement state
     * @return void
@@ -241,7 +252,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         public Boolean isEnabled = false;
         public Boolean isMetaDeployLaunched = false;
         public Boolean isMetaDeployConfirmed = false;
-        public Boolean isMigrationRun = false;
+        public Boolean isMigrationCompleted = false;
     }
 
 }

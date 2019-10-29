@@ -9,31 +9,42 @@ export default class BatchProgress extends LightningElement {
     @api className;
     @track batchJob;
 
+    pollingTimer;
+    pollingTimeout = 1000;
+
     labels = {
         batchJobProgressTitle
     };
 
-
     /***
-    * @description Returns the batch job object
+    * @description Starts polling for the batch job details until the batch job is completed
     */
     @api
-    get batchJob() {
-        return this._batchJob;
-    }
+    refreshBatchJob() {
+        var self = this;
+        console.log('refreshBatchJob ');
 
-    /***
-    * @description Loads batch job details
-    * @param value Current batch job
-    */
-    set batchJob(value) {
-        this._batchJob = loadBatchJob({ className: this.className });
+        this.pollingTimer = setTimeout(function () {
+            loadBatchJob({ className: self.className })
+                .then((data) => {
+                    self.batchJob = JSON.parse(data);
+                    console.log('Polling: ' + self.batchJob);
+
+                    if (self.batchJob && self.batchJob.isInProgress === true) {
+                        self.refreshBatchJob();
+                    }
+                })
+                .catch((error) => {
+                    self.handleError(error);
+                });
+
+
+        }, this.pollingTimeout, self);
     }
 
 
     /***
     * @description Notifies user of the error
-    *
     * @param {object} error: Event holding error details
     */
     handleError(error) {

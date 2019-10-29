@@ -241,7 +241,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match');
         System.assertEquals(expectedState.isMetaDeployLaunched, state.isMetaDeployLaunched, 'isMetaDeployLaunched should match');
         System.assertEquals(expectedState.isMetaDeployConfirmed, state.isMetaDeployConfirmed, 'isMetaDeployConfirmed should match');
-        System.assertEquals(expectedState.isMigrationRun, state.isMigrationRun, 'isMigrationRun should match');
+        System.assertEquals(expectedState.isMigrationCompleted, state.isMigrationCompleted, 'isMigrationCompleted should match');
     }
 
 

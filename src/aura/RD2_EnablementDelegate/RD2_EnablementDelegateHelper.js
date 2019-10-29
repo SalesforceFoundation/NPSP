@@ -154,6 +154,36 @@
         $A.enqueueAction(action);
     },
     /****
+    * @description Starts data migration batch
+    */
+    runMigration: function (component) {
+        component.set('v.isMigrationInProgress', true);
+
+        this.clearError(component);
+
+        var action = component.get('c.runMigration');
+
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+
+            if (!component.isValid()) {
+                return;
+            }
+
+            if (state === 'SUCCESS') {
+                component.find('rdMigrationBatchJob').refreshBatchJob();
+
+            } else if (state === 'ERROR') {
+                component.set('v.isMigrationInProgress', false);
+                this.handleError(component, response.getError(), '3');
+            }
+
+            this.refreshMetaDeploy(component);
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
     * @description Disables page elements and reloads the enablement state
     */
     refreshView: function (component) {

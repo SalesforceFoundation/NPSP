@@ -4,7 +4,27 @@
         <div class="slds-section slds-is-open slds-theme_shade">
             <h3 class="slds-section__title slds-theme_shade slds-p-horizontal_small"
                 title={labels.batchJobProgressTitle}>
-                {labels.batchJobProgressTitle}</h3>
+                {labels.batchJobProgressTitle}
+            </h3>
+
+            <div aria-hidden="false" class="slds-section__content">
+                <lightning-layout horizontal-align="spread" multiple-rows="true">
+
+                    <lightning-layout-item padding="horizontal-small" size="3">
+                        <c-progress-ring ring-content={batchJob.percentComplete} value-now={batchJob.percentComplete}
+                            status="active" class="slds-m-right_small">
+                        </c-progress-ring>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-large" size="8">
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-large" size="1">
+                    </lightning-layout-item>
+
+                </lightning-layout>
+            </div>
+
         </div>
     </template>
 

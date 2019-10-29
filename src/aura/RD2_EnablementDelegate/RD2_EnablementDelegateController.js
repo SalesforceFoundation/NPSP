@@ -14,6 +14,9 @@
     handleMetaDeployConfirm: function (component, event, helper) {
         helper.confirmDeploy(component);
     },
+    handleRunMigration: function (component, event, helper) {
+        helper.runMigration(component);
+    },
     refreshView: function (component, event, helper) {
         helper.refreshView(component);
     }

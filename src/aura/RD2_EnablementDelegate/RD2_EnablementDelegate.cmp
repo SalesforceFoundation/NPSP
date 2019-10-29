@@ -37,6 +37,8 @@
     implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressable" access="global">
 
     <aura:attribute name="state" type="Object" description="Contains enablement state attributes" />
+    <aura:attribute name="isMigrationInProgress" type="Boolean" default="false"
+        description="Indicates if the migration is in progress" />
     <aura:attribute name="errorSection" type="String" description="Contains section number where error has occurred" />
     <aura:attribute name="errorMessage" type="String" description="Contains latest error message" />
 
@@ -236,7 +238,7 @@
 
                                 <c:progressMarker isComplete="{!v.state.isMetaDeployConfirmed}"
                                     isPreviousComplete="{!v.state.isMetaDeployLaunched}"
-                                    isNextComplete="{!v.state.isMigrationRun}" />
+                                    isNextComplete="{!v.state.isMigrationCompleted}" />
 
                                 <div class="slds-progress__item_content">
                                     <lightning:layout>
@@ -283,8 +285,8 @@
             <lightning:card class="pageSection" aura:id="migration">
 
                 <aura:set attribute="title">
-                    <c:progressRing ringContent="3" valueNow="{!if(v.state.isMigrationRun, '100', '0')}"
-                        status="{!if(v.state.isMigrationRun, 'complete', '')}" class="slds-m-right_small" />
+                    <c:progressRing ringContent="3" valueNow="{!if(v.state.isMigrationCompleted, '100', '0')}"
+                        status="{!if(v.state.isMigrationCompleted, 'complete', '')}" class="slds-m-right_small" />
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementMigrationTitle}" />
                 </aura:set>
 
@@ -298,7 +300,8 @@
                         <lightning:layoutItem size="2" class="slds-grid slds-grid_align-end slds-p-right_medium">
                             <lightning:button class="slds-m-left_x-small styleButton"
                                 label="{!$Label.c.RD2_EnablementMigrationButton}" variant="neutral"
-                                disabled="{!or(!v.state.isMetaDeployConfirmed, v.state.isMigrationRun)}" />
+                                onclick="{!c.handleRunMigration}"
+                                disabled="{!or(!v.state.isMetaDeployConfirmed, v.isMigrationInProgress, v.state.isMigrationCompleted)}" />
                         </lightning:layoutItem>
 
                         <lightning:layoutItem size="10">
@@ -308,7 +311,7 @@
                         <lightning:layoutItem size="2" />
 
                         <lightning:layoutItem size="12">
-                            <c:batchProgress className="RD2_DataMigration_BATCH" />
+                            <c:batchProgress className="RD2_DataMigration_BATCH" aura:id="rdMigrationBatchJob" />
                         </lightning:layoutItem>
 
                     </lightning:layout>
