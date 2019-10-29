@@ -77,10 +77,7 @@ public class RD2_DataMigrationMapper {
      * @description Returns true if the RD record is already in enhanced Recurring Donation format	
      */	
     public Boolean isConverted() {	
-        return String.isNotBlank(rd.Status__c) 
-            && rd.InstallmentFrequency__c != null;	
-            //frequency is null for "1st and 15th" installment period even when converted
-            //check if the RD schedule exists //TODO
+        return String.isNotBlank(rd.Status__c) && rd.InstallmentFrequency__c != null;
     }
 
     /**
@@ -93,7 +90,8 @@ public class RD2_DataMigrationMapper {
         Set<String> frequencyOneInstallmentPeriods = new Set<String>{
             System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
             System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            System.Label.npe03.RecurringDonationInstallmentPeriodWeekly
+            System.Label.npe03.RecurringDonationInstallmentPeriodWeekly,
+            System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th
         };
 
         if (rd.npe03__Installment_Period__c == System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly) {
@@ -105,7 +103,7 @@ public class RD2_DataMigrationMapper {
                 rd.InstallmentFrequency__c = 1;
             }
 
-        } else if (rd.npe03__Installment_Period__c != System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th) {
+        } else {
             handleCustomInstallmentPeriod(rd);
         }
 

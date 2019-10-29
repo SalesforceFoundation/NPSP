@@ -259,10 +259,10 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies Installment Frequency is not set when Installment Period is "1st and 15th"
+     * @description Verifies Installment Frequency is set to 1 when Installment Period is "1st and 15th"
      */
     @IsTest
-    private static void shouldNotSetInstallmentFrequencyWhenInstallmentPeriodIs1stAnd15th() {
+    private static void shouldSetInstallmentFrequencyToOneWhenInstallmentPeriodIs1stAnd15th() {
         
         npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
             getLegacyRecurringDonationBuilder()
@@ -270,7 +270,7 @@ private class RD2_DataMigration_TEST {
                 .build()
         ).convertToEnhancedRD();
            
-        System.assertEquals(null, convertedRD.InstallmentFrequency__c, 'Installment Frequency should not be set');
+        System.assertEquals(1, convertedRD.InstallmentFrequency__c, 'Installment Frequency should match');
     }
 
     /**
@@ -354,11 +354,11 @@ private class RD2_DataMigration_TEST {
      */
     private static void testCustomInstallmentConversion(String installmentIncrement, Integer installmentFrequency, String expectedInstallmentPeriod) {
 
-        createCustomInstallmentSettings(installmentIncrement, installmentFrequency);
+        npe03__Custom_Installment_Settings__c installment = createCustomInstallmentSettings(installmentIncrement, installmentFrequency);
 
         npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
             getLegacyRecurringDonationBuilder()
-                .withInstallmentPeriod(installmentIncrement)
+                .withInstallmentPeriod(installment.Name)
                 .build()
         ).convertToEnhancedRD();
            
@@ -641,15 +641,19 @@ private class RD2_DataMigration_TEST {
      * @description Creates custom installment period settings
      * @param installmentIncrement Installment Increment (Days, Weeks, Months, Years)
      * @param installmentFrequency Frequency for the specific custom Installment Period
-     * @return void
+     * @return npe03__Custom_Installment_Settings__c Custom installment settings
      */
-    private static void createCustomInstallmentSettings(String installmentIncrement, Integer installmentFrequency) {
+    private static npe03__Custom_Installment_Settings__c createCustomInstallmentSettings(
+        String installmentIncrement, Integer installmentFrequency
+    ) {
+
         npe03__Custom_Installment_Settings__c installment = new npe03__Custom_Installment_Settings__c(
             npe03__Increment__c = installmentIncrement,
             npe03__Value__c = installmentFrequency,
-            Name = installmentIncrement
+            Name = installmentIncrement + UTIL_UnitTestData_TEST.getUniqueString()
         );
 
         insert installment; 
+        return installment;
     }
 }

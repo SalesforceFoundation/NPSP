@@ -1324,7 +1324,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Installment Period cannot be converted to enhanced Recurring Donation format</shortDescription>
-        <value>Recurring Donation Installment Period "{0}" cannot be converted to enhanced Recurring Donation format.</value>
+        <value>Recurring Donation Installment Period "{0}" cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
