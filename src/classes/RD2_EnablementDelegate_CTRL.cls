@@ -240,7 +240,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         // Disable/Hide the rollup and update the Description on the rollup to reflect the change
         cmtRollup.isDeleted = true;
         cmtRollup.isActive = false;
-        cmtRollup.description = 'Date of the next Opportunity set to close. This rollup was disabled automatically when Enhanced Recurring Donations as enabled in this org.';
+        cmtRollup.description += '\nThis rollup was disabled automatically when Enhanced Recurring Donations was enabled.';
 
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{ cmtRollup };
         CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
