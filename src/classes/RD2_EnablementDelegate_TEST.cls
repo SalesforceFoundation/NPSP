@@ -124,6 +124,8 @@ public with sharing class RD2_EnablementDelegate_TEST {
     */
     @isTest
     private static void shouldLaunchMetaDeploy() {
+        mockRecurringDonationCRLP();
+
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
         setEnablementState(JSON.serialize(expectedState));
@@ -183,6 +185,8 @@ public with sharing class RD2_EnablementDelegate_TEST {
     */
     @isTest
     private static void shouldThrowExceptionWhenMetaDeployIsConfirmedButNotInstalled() {
+        mockRecurringDonationCRLP();
+
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
         expectedState.isMetaDeployLaunched = true;
@@ -195,7 +199,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
                 .withRecurringDonations2Enabled()
         );
 
-        //mock value that does not exist but it is expected
+        //mock value that does not exist but is expected
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '32';
 
         Exception actualException;
@@ -206,7 +210,8 @@ public with sharing class RD2_EnablementDelegate_TEST {
         }
 
         System.assertNotEquals(null, actualException, 'The exception should be thrown');
-        System.assertEquals(System.Label.RD2_EnablementMetaDeployConfirmError, actualException.getMessage(), 'The exception message should match');
+        System.assertEquals(System.Label.RD2_EnablementMetaDeployConfirmError,
+            actualException.getMessage(), 'The exception message should match');
 
         expectedState.isReady = true;
         expectedState.isEnabled = true;
@@ -250,5 +255,19 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(expectedState.isMigrationRun, state.isMigrationRun, 'isMigrationRun should match');
     }
 
+
+    /**
+     * @description Mock the Next Donation Date customizable rollup
+     */
+    private static void mockRecurringDonationCRLP() {
+        String rollupsJSON = '[' +
+            CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', null,
+                CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                'npe03__Next_Payment_Date__c', CRLP_Operation.RollupType.First, 'CloseDate') +
+            ']';
+
+        // Deserialize the rollups to use for testing
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+    }
 
 }

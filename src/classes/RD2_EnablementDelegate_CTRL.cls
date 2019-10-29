@@ -220,9 +220,13 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
      * where "next" means always in the future.
      */
     private static void disableLegacyNextPaymentDateRollupInCRLP() {
-        CRLP_RollupCMT.Rollup cmtRollup;
+        List<Rollup__mdt> rdRollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType);
+        if (rdRollups == null) {
+            return;
+        }
 
-        for (Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType)) {
+        CRLP_RollupCMT.Rollup cmtRollup;
+        for (Rollup__mdt rlp : rdRollups) {
             if (rlp.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
                 cmtRollup  = new CRLP_RollupCMT.Rollup(rlp);
                 break;
