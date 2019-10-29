@@ -43,7 +43,7 @@ public with sharing virtual class BDI_ObjectMappingLogic {
             return objWraps;
         }
         
-        String sourceObjName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__DataImport__c');
+        String sourceObjName = SObjectType.DataImport__c.getName();
         
         for (BDI_ObjectWrapper objWrap : objWraps) {
 

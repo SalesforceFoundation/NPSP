@@ -51,10 +51,18 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public String Source_Field_Display_Type_Label;
     @AuraEnabled public String Target_Field_Display_Type_Label;
 
+
+    /*******************************************************************************************************
+    * @description No parameter constructor to enable use as virtual class.
+    */
     public BDI_FieldMapping() {
 
     }
 
+    /*******************************************************************************************************
+    * @description Constructor that populates the wrapper with data from a Data_Import_Field_Mapping__mdt record.
+    * @param fieldMapping the Data_Import_Field_Mapping__mdt to populate from.
+    */
     public BDI_FieldMapping(Data_Import_Field_Mapping__mdt fieldMapping) {
         String dataImport = SobjectType.DataImport__c.Name;
 

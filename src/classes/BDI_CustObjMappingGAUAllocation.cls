@@ -45,7 +45,7 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
         String PAYMENT_FIELDNAME = SObjectType.Allocation__c.fields.Payment__c.Name;
         String OPPORTUNITY_FIELDNAME = SObjectType.Allocation__c.fields.Opportunity__c.Name;
 
-        String sourceObjName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__DataImport__c');
+        String sourceObjName = SObjectType.DataImport__c.getName();
 
         for (BDI_ObjectWrapper objWrap : objWraps) {
 

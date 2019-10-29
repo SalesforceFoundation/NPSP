@@ -50,10 +50,18 @@ public virtual with sharing class BDI_ObjectMapping {
     @AuraEnabled public String Relationship_Field;
     @AuraEnabled public String Relationship_To_Predecessor;
 
+
+    /*******************************************************************************************************
+    * @description No parameter constructor to enable use as virtual class.
+    */
     public BDI_ObjectMapping() {
         
     }
 
+    /*******************************************************************************************************
+    * @description Constructor that populates the wrapper with data from a Data_Import_Object_Mapping__mdt record.
+    * @param objectMapping the Data_Import_Object_Mapping__mdt to populate from.
+    */
     public BDI_ObjectMapping(Data_Import_Object_Mapping__mdt objectMapping) {
         this.Id = objectMapping.Id;
         this.MasterLabel = objectMapping.MasterLabel;

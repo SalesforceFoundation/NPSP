@@ -43,6 +43,14 @@ public with sharing class BDI_FieldMappingSet {
     @AuraEnabled public Map<String,BDI_ObjectMapping> objectMappingByDevName = new Map<String,BDI_ObjectMapping>();
     @AuraEnabled public Map<String,BDI_FieldMapping> fieldMappingByDevName = new Map<String,BDI_FieldMapping>();
 
+
+    /*******************************************************************************************************
+    * @description Constructor that wraps together the field mapping set info using already constructed
+    * BDI_ObjectMapping and BDI_FieldMapping objects and a Data_Import_Field_Mapping_Set__mdt record.
+    * @param fieldMappingSet
+    * @param objectMappingByDevName
+    * @param fieldMappingByDevName
+    */
     public BDI_FieldMappingSet(Data_Import_Field_Mapping_Set__mdt fieldMappingSet, 
                                 Map<String,BDI_ObjectMapping> objectMappingByDevName,
                                 Map<String,BDI_FieldMapping>  fieldMappingByDevName) {
