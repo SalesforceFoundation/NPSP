@@ -1,4 +1,5 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultFormRenderWrapper';
+import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 
 const inputTypeByDescribeType = {
     'CHECKBOX': 'checkbox',
@@ -76,6 +77,22 @@ class GeFormService {
      */
     getObjectInfo(objectDevName) {
         return this.objectMappings[objectDevName];
+    }
+
+    /**
+     * Takes a Data Import record, processes it, and returns the new Opportunity created from it.
+     * @returns {Promise<Id>}
+     */
+    createOpportunityFromDataImport(diRecord) {
+        return new Promise((resolve, reject) => {
+            saveAndProcessGift(diRecord)
+                .then((result) => {
+                    resolve(result);
+                })
+                .catch(error => {
+                    console.error(JSON.stringify(error));
+                });
+        });
     }
 }
 

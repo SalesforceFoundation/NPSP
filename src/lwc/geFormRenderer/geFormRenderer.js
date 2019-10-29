@@ -34,6 +34,8 @@ export default class GeFormRenderer extends LightningElement {
 
     handleSave() {
         console.log('Form Save button clicked');
+        // TODO: Pass the actual Data Import record, and navigate to the new Opportunity
+        // const OpportunityId = GeFormService.createOpportunityFromDataImport(dataImport);
     }
 
 }
