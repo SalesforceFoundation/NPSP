@@ -152,10 +152,8 @@ public with sharing class RD2_OpportunityService {
             OppIdRdId.put(oppty.id,oppty.npe03__Recurring_Donation__c);
         }
         for (npe01__OppPayment__c payment : paymentRecForOpps) {
-            System.debug('RD id here:' + OppIdRdId.get(payment.npe01__Opportunity__c));
-            System.debug('Payment method--' + rdPayment.get(OppIdRdId.get(payment.npe01__Opportunity__c)));
             if (String.IsBlank(rdPayment.get(OppIdRdId.get(payment.npe01__Opportunity__c)))) {
-              return;
+              continue;
             }
             payment.npe01__Payment_Method__c = rdPayment.get(OppIdRdId.get(payment.npe01__Opportunity__c));
             paymentForUpdates.add(payment);
