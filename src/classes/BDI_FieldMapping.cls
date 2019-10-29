@@ -50,7 +50,9 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public Boolean Is_Deleted;
     @AuraEnabled public String Source_Field_Display_Type_Label;
     @AuraEnabled public String Target_Field_Display_Type_Label;
-
+    // A mapping of picklist value to label. 
+    // Schema.PicklistEntry does not work with AuraEnabled. 
+    @AuraEnabled public Map<String, String>  Target_Field_Picklist_Values = new Map<String, String>(); 
 
     /*******************************************************************************************************
     * @description No parameter constructor to enable use as virtual class.
@@ -103,5 +105,15 @@ public virtual with sharing class BDI_FieldMapping {
         this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping__r.DeveloperName;
         this.Required = fieldMapping.Required__c;
         this.Is_Deleted = fieldMapping.Is_Deleted__c;
+        List<Schema.PicklistEntry> picklistEntriesList = targetFieldDescribe.getPicklistValues();
+        
+        for (Schema.PicklistEntry picklistEntry : picklistEntriesList) {
+            
+            // Create a mapping of active picklist entry value to label 
+            if (picklistEntry.isActive()) {
+                Target_Field_Picklist_Values.put(picklistEntry.getValue(), picklistEntry.getLabel());
+            }
+            
+        }
     }
 }

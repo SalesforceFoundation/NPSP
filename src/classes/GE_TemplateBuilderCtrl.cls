@@ -71,6 +71,15 @@ public with sharing class GE_TemplateBuilderCtrl {
         return FORM_ServiceGiftEntry.retrieveFormTemplate(Id.valueOf(templateId));
     }
 
+    /**
+     * @description Retrieve the default form render wrapper for gift entry. Placeholder, uses the first record found.
+     * @return      A render wrapper containing a template and information about the object/field mappings.
+     */
+    @AuraEnabled(cacheable=true)
+    public static FORM_RenderWrapper retrieveDefaultFormRenderWrapper() {
+        return GE_FormRendererService.getDefaultRenderWrapper();
+    }
+
     /*******************************************************************************************************
     * @description Method that retrieves all Field Mapping Sets in an org. Used in the Gift Fields tab's
     * Field Mapping Sets combobox in the Form Template Builder. Field Mapping Set selection determines

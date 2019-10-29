@@ -202,7 +202,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     /*******************************************************************************
     * @description Handles escape key press and closes the modal
     */
-    escapeFunction(event) {
+    escapefunction(event) {
         if (event.keyCode === 27) {
             this.handleCloseModal();
         }
