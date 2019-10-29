@@ -38,7 +38,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     /***
     * @description Returns Day of Month field picklist value specific to enhanced Recurring Donations
     */
-    @TestVisible 
+    @TestVisible
     private static String dayOfMonthPicklistValue {
         get {
             if (dayOfMonthPicklistValue == null) {
@@ -52,8 +52,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     /***
     * @description A unique enhanced Recurring Donation enablement panel Id
     */
-    public override String idPanel() { 
-        return 'idPanelRD2Enablement'; 
+    public override String idPanel() {
+        return 'idPanelRD2Enablement';
     }
 
     /***
@@ -87,7 +87,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Retrieves the current enablement state 
+    * @description Retrieves the current enablement state
     * @return EnablementState
     */
     @TestVisible
@@ -96,11 +96,11 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         try {
             String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
-            
+
             if (String.isNotBlank(jsonState)) {
                 state = (EnablementState) JSON.deserialize(jsonState, EnablementState.class);
             }
-            
+
             state.isReady = service.isRecurringDonations2Ready();
             state.isEnabled = service.isRecurringDonations2Enabled();
 
@@ -111,7 +111,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 state.isMigrationRun = false;
             } else {
                 state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
-                state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched && isMetaDeployInstalled();
+                state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched && hasMetaDeployCompleted();
                 state.isMigrationRun = state.isMigrationRun && state.isMetaDeployConfirmed;
             }
 
@@ -161,6 +161,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         EnablementState state = getEnablementState();
         state.isMetaDeployLaunched = true;
 
+        System.enqueueJob(new PreMetadeployQueuableAction());
+
         saveEnablementState(state);
     }
 
@@ -169,8 +171,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @return void
     */
     @AuraEnabled
-    public static void confirmMetaDeploy() {        
-        if (!isMetaDeployInstalled()) {
+    public static void confirmMetaDeploy() {
+        if (!hasMetaDeployCompleted()) {
             throwAuraHandledException(System.Label.RD2_EnablementMetaDeployConfirmError);
         }
 
@@ -181,12 +183,12 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Checks if MetaDeploy has been installed
+    * @description Checks if MetaDeploy has completed
     * @return Boolean
     */
-    private static Boolean isMetaDeployInstalled() {
+    private static Boolean hasMetaDeployCompleted() {
         List<SelectOption> lastDayOfMonthOptions = UTIL_Describe.getSelectOptions(
-            String.valueOf(npe03__Recurring_Donation__c.SObjectType), 
+            String.valueOf(npe03__Recurring_Donation__c.SObjectType),
             SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c.Name
         );
 
@@ -198,20 +200,65 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         return false;
     }
 
+    /**
+     * @description Queueable to disable a legacy CRLP rollup for Recurring Donations. Queueable
+     * needed to avoid a Mixed DML Operation error.
+     */
+    private class PreMetadeployQueuableAction implements Queueable {
+        public void execute(QueueableContext qc) {
+            disableLegacyNextPaymentDateRollupInCRLP();
+        }
+    }
+
+    /**
+     * @description When Enhanced Recurring Donations is enabled, the "Next Donation Date" field
+     * (npe03__Next_Payment_Date__c) is no longer calculated as a rollup, but instead is calculated
+     * as a service process in many places during Enhanced Recurring Donations automation. The previous
+     * rollup was inaccurate in what it calculated relative to the field label. In legacy RD, this
+     * field actually contained the CloseDate of the earliest open Opportunity associated with the RD.
+     * In Enhanced Recurring Donations this field will contain the "next" expected installment due date
+     * where "next" means always in the future.
+     */
+    private static void disableLegacyNextPaymentDateRollupInCRLP() {
+        CRLP_RollupCMT.Rollup cmtRollup;
+
+        for (Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType)) {
+            if (rlp.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
+                cmtRollup  = new CRLP_RollupCMT.Rollup(rlp);
+                break;
+            }
+        }
+
+        if (cmtRollup == null) {
+            return;
+        }
+
+        // Disable/Hide the rollup and update the Description on the rollup to reflect the change
+        cmtRollup.isDeleted = true;
+        cmtRollup.isActive = false;
+        cmtRollup.description = 'Date of the next Opportunity set to close. This rollup was disabled automatically when Enhanced Recurring Donations as enabled in this org.';
+
+        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{ cmtRollup };
+        CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
+
+        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
+        CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
+    }
+
     /***
     * @description Saves the current enablement state
     * @param state Enablement state
     * @return void
     */
-    private static void saveEnablementState(EnablementState state) {  
+    private static void saveEnablementState(EnablementState state) {
         try {
-            //do not save variables obsolete in the saved enablement state   
+            //do not save variables obsolete in the saved enablement state
             state.isReady = null;
-            state.isEnabled = null;   
+            state.isEnabled = null;
 
             //save the state
             STG_Panel.stgService.stgRD.RecurringDonations2EnablementState__c = JSON.serialize(state);
-            
+
             if (!Test.isRunningTest()) {
                 upsert STG_Panel.stgService.stgRD;
             }
