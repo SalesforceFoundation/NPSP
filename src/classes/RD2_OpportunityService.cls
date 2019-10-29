@@ -60,15 +60,7 @@ public with sharing class RD2_OpportunityService {
             rdPaymentMethod.put(r.Id,r.PaymentMethod__c);
 
         }
-        //Create a Map of Contact Ids and Contact Records
-        if (contactIds.size() > 0) {
-            contactMap = new Map<Id,Contact>([
-              SELECT Id, AccountId
-              FROM Contact
-              WHERE Id IN :contactIds
-              AND AccountId != null
-            ]);
-        }
+        contactMap = getContactMap(contactIds);
 
         opportunityInserts = getInstallmentOpportunities(rdsWithCloseDates, contactMap);
 
@@ -108,20 +100,24 @@ public with sharing class RD2_OpportunityService {
         updatePaymentRecordOnCreatedOpp(createdOppIds, rdPaymentMethod);
     }
 
+    /***
+    * @description Gets one or more Opportunity records for a specified set of Recurring Donations with close dates
+    * @param rdsWithCloseDates the Map of Recurring Donations with close dates
+    * @param contactMap the Map of contact with account ids.
+    * @return the list of Opportunities to be created.
+    */
     private List<Opportunity> getInstallmentOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates, Map<Id,Contact> contactMap) {
 
         List<Opportunity> opportunityInserts = new List<Opportunity>();
         Integer i = 0;
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        System.debug('Here are the settings value:' + rds.InstallmentOppStageName__c );
-        System.debug('What are keys:' + rdsWithCloseDates.keySet());
 
         for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keySet()) {
 
             for(;i< rdsWithCloseDates.get(r).size();i++) {
                 Opportunity opp = new Opportunity();
-                System.debug('Name in RD:'+ r.npe03__Donor_Name__c);
-                opp.Name = r.npe03__Donor_Name__c + ' ' + r.npe03__Amount__c + ' ' + rdsWithCloseDates.get(r)[i].format() + ' Recurring Donation';
+                opp.Name = r.npe03__Donor_Name__c + ' ' + r.npe03__Amount__c.format() + ' ' + rdsWithCloseDates.get(r)[i].format() + ' ' + System.Label.stgNavRecurringDonations;
+
                 if ( r.npe03__Organization__c != null && String.isBlank(r.npe03__Contact__c)) {
                     opp.AccountId = r.npe03__Organization__c;
 
@@ -145,6 +141,11 @@ public with sharing class RD2_OpportunityService {
 
     }
 
+     /***
+    * @description Update payment method on the payment records for the created opportunities.
+    * @param oppIds set of opportnity Ids
+    * @param rdPayment is the map of Recurrding donation Ids with Payment method.
+    */
     private void updatePaymentRecordOnCreatedOpp(Set<Id> oppIds, Map<Id,String> rdPayment) {
 
         List<npe01__OppPayment__c> paymentForUpdates = new List <npe01__OppPayment__c> ();
@@ -179,4 +180,26 @@ public with sharing class RD2_OpportunityService {
         Database.SaveResult[] lsr = Database.update(paymentForUpdates, false);
 
     }
+
+    /***
+    * @description Get contact maps for the provided list of contacts
+    * @param List of contact ids
+    * @return Map<Id, Contact> containing the AccountId to Contact.
+    */
+    private Map<Id, Contact> getContactMap (List<Id> contactIds) {
+        Map<Id,Contact> contactMap;
+
+        if (contactIds.size() > 0) {
+            contactMap = new Map<Id,Contact>([
+              SELECT Id, AccountId
+              FROM Contact
+              WHERE Id IN :contactIds
+              AND AccountId != null
+            ]);
+
+        }
+
+        return contactMap;
+    }
+
 }

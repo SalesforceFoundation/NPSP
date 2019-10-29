@@ -333,8 +333,6 @@
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD2_Constants</members>
-        <members>RD2_CreateOpportunityService</members>
-        <members>RD2_CreateOpportunityService_TEST</members>
         <members>RD2_DataMigrationMapper</members>
         <members>RD2_DataMigration_BATCH</members>
         <members>RD2_DataMigration_TEST</members>
@@ -346,6 +344,8 @@
         <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
+        <members>RD2_OpportunityService</members>
+        <members>RD2_OpportunityService_TEST</members>
         <members>RD2_RecurringDonations_TDTM</members>
         <members>RD2_RecurringDonations_TEST</members>
         <members>RD2_ValidationService</members>
