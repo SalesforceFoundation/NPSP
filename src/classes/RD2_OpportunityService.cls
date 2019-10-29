@@ -49,7 +49,6 @@ public with sharing class RD2_OpportunityService {
         List<Id> contactIds = new List<Id>();
         Map<Id,Contact> contactMap;
         Map<Id,String> rdPaymentMethod = new Map<Id,String>();
-        Database.SaveResult[] lsr;
         List<Database.SaveResult> badSRs = new List<Database.SaveResult>();
         List<Opportunity> badOpps = new List<Opportunity>();
 
@@ -65,18 +64,7 @@ public with sharing class RD2_OpportunityService {
         opportunityInserts = getInstallmentOpportunities(rdsWithCloseDates, contactMap);
 
         if (opportunityInserts.size() > 0) {
-            Set<Id> RDID = new Set<Id>();
-            for (Opportunity o : opportunityInserts) {
-                RDID.add(o.npe03__Recurring_Donation__c);
-            }
-            //Check if the Recurring donation is one or more to know if it gets saved from UI or from batch
-            if (RDID.size() == 1) {
-                lsr = Database.insert(opportunityInserts, true);
-
-            } else {//otherwise, this is a bulk operation.
-                lsr = Database.insert(opportunityInserts, false);
-            }
-            for (Database.SaveResult s : lsr) {
+            for (Database.SaveResult s : insertOpportunities(opportunityInserts)) {
                 if (s.isSuccess() == true) {
                     //get all the new OppIds into a list
                     createdOppIds.add(s.getId());
@@ -93,10 +81,6 @@ public with sharing class RD2_OpportunityService {
                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD.name());
             }
         }
-        System.debug('IDS:' + createdOppIds);
-        System.debug('Payment method:' + rdPaymentMethod);
-
-
         updatePaymentRecordOnCreatedOpp(createdOppIds, rdPaymentMethod);
     }
 
@@ -202,4 +186,28 @@ public with sharing class RD2_OpportunityService {
         return contactMap;
     }
 
+     /***
+    * @description insert opportunities for the specified recurring donations.
+    * @param opportunityInserts List of opportunities
+    * @return the saveresults after the DML operation.
+    */
+    private static List<Database.SaveResult> insertOpportunities(List<Opportunity> opportunityInserts) {
+
+        Set<Id> RDID = new Set<Id>();
+        Database.SaveResult[] lsr;
+
+        if (opportunityInserts.size() > 0) {
+            for (Opportunity o : opportunityInserts) {
+                RDID.add(o.npe03__Recurring_Donation__c);
+            }
+            //Check if the Recurring donation is one or more to know if it gets saved from UI or from batch
+            if (RDID.size() == 1) {
+                lsr = Database.insert(opportunityInserts, true);
+
+            } else {//otherwise, this is a bulk operation.
+                lsr = Database.insert(opportunityInserts, false);
+            }
+        }
+        return lsr;
+    }
 }
