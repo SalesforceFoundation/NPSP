@@ -37,7 +37,7 @@
 public inherited sharing class RD2_Constants {
 
     /**
-    * @description npe03_RecurringDonation.InstallmentPeriod__c picklist API values
+    * @description Recurring Donation "Installment Period" picklist API values
     */
     public static final String INSTALLMENT_PERIOD_YEARLY = 'Yearly';
     public static final String INSTALLMENT_PERIOD_MONTHLY = 'Monthly';
@@ -46,21 +46,21 @@ public inherited sharing class RD2_Constants {
     public static final String INSTALLMENT_PERIOD_DAILY = 'Daily';
 
     /**
-    * @description npe03_RecurringDonation.Day_Of_Month__c picklist API values
+    * @description Recurring Donation "Day of Month" picklist API values
     */
     public static final String DAY_OF_MONTH_FIRST = '1';
     public static final String DAY_OF_MONTH_FIFTEENTH = '15';
     public static final String DAY_OF_MONTH_LAST_DAY = 'Last_Day';
 
     /**
-    * @description npe03_RecurringDonation.Status__c picklist API values
+    * @description Recurring Donation "Status" picklist API values
     */
     public static final String STATUS_ACTIVE = 'Active';
     public static final String STATUS_LAPSED = 'Lapsed';
     public static final String STATUS_CLOSED = 'Closed';
 
     /**
-    * @description npe03__RecurringDonation.RecurringType__c picklist API values
+    * @description Recurring Donation "Recurring Type" picklist API values
     */
     public static final String RECURRING_TYPE_OPEN = 'Open';
 
