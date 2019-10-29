@@ -43,21 +43,20 @@ private with sharing class RD2_ScheduleService_TEST {
     @isTest
     private static void shouldCreateMonthlySchedule() {
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                    .withMockId()
-                    .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-                    .withAmount(100)
-                    .withPaymentMethod('Check')
-                    .withInstallmentPeriodMonthly()
-                    .withInstallmentFrequency(1)
-                    .withDayOfMonth('20')
-                    .withDateEstablished(Date.newInstance(2019, 9, 15))
-                    .withStartDate(Date.newInstance(2019, 9, 15))
-                    .build()
-        };
+        npe03__Recurring_Donation__c rds =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(100)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodMonthly()
+                .withInstallmentFrequency(1)
+                .withDayOfMonth('20')
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2019, 9, 15))
+                .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds[0]);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds);
 
         System.assertEquals(schedules.size(), 1, 'Number of RDs should be 1');
         System.assertEquals(schedules[0].InstallmentAmount__c, 100, 'Installment Amount should be 100');
@@ -76,20 +75,19 @@ private with sharing class RD2_ScheduleService_TEST {
     @isTest
     private static void shouldCreateFirstandFifteenthSchedule() {
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                    .withMockId()
-                    .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-                    .withAmount(200)
-                    .withPaymentMethod('ACH/EFT')
-                    .withInstallmentPeriod(RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH)
-                    .withInstallmentFrequency(2)
-                    .withDateEstablished(Date.newInstance(2019, 9, 15))
-                    .withStartDate(Date.newInstance(2019, 10, 1))
-                    .build()
-        };
+        npe03__Recurring_Donation__c rds =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(200)
+                .withPaymentMethod('ACH/EFT')
+                .withInstallmentPeriod(RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH)
+                .withInstallmentFrequency(2)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2019, 10, 1))
+                .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds[0]);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds);
 
         System.assertEquals(schedules.size(), 2, 'Number of RDs should be 2');
         System.assertEquals(schedules[0].InstallmentAmount__c, 200, 'Installment Amount should be 200');
@@ -109,20 +107,19 @@ private with sharing class RD2_ScheduleService_TEST {
     @isTest
     private static void shouldCreateYearlySchedule() {
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                    .withMockId()
-                    .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-                    .withAmount(300)
-                    .withPaymentMethod('Credit Card')
-                    .withInstallmentPeriodYearly()
-                    .withInstallmentFrequency(3)
-                    .withDateEstablished(Date.newInstance(2019, 9, 15))
-                    .withStartDate(Date.newInstance(2020, 3, 4))
-                    .build()
-        };
+        npe03__Recurring_Donation__c rds =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(300)
+                .withPaymentMethod('Credit Card')
+                .withInstallmentPeriodYearly()
+                .withInstallmentFrequency(3)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2020, 3, 4))
+                .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds[0]);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds);
 
         System.assertEquals(schedules.size(), 1, 'Number of RDs should be 1');
         System.assertEquals(schedules[0].InstallmentAmount__c, 300, 'Installment Amount should be 300');
@@ -141,20 +138,19 @@ private with sharing class RD2_ScheduleService_TEST {
     @isTest
     private static void shouldCreateWeeklySchedule() {
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                    .withMockId()
-                    .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-                    .withAmount(400)
-                    .withPaymentMethod('Check')
-                    .withInstallmentPeriodWeekly()
-                    .withInstallmentFrequency(13)
-                    .withDateEstablished(Date.newInstance(2019, 9, 15))
-                    .withStartDate(Date.newInstance(2019, 11, 1))
-                    .build()
-        };
+        npe03__Recurring_Donation__c rds =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(13)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2019, 11, 1))
+                .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds[0]);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds);
 
         System.assertEquals(schedules.size(), 1, 'Number of RDs should be 1');
         System.assertEquals(schedules[0].InstallmentAmount__c, 400, 'Installment Amount should be 400');
@@ -173,21 +169,20 @@ private with sharing class RD2_ScheduleService_TEST {
     @isTest
     private static void shouldNotCreateAScheduleWhenClosed() {
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                        .withMockId()
-                        .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-                        .withAmount(400)
-                        .withPaymentMethod('Check')
-                        .withInstallmentPeriodWeekly()
-                        .withInstallmentFrequency(1)
-                        .withDateEstablished(Date.newInstance(2019, 9, 15))
-                        .withStartDate(Date.newInstance(2019, 11, 1))
-                        .withRecurringDonationStatusClosed()
-                        .build()
-        };
+        npe03__Recurring_Donation__c rds =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2019, 11, 1))
+                .withRecurringDonationStatusClosed()
+                .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds[0]);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds);
 
         System.assertEquals(schedules.size(), 0, 'Number of RDs should be 0');
 
