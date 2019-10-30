@@ -83,9 +83,9 @@ class GeFormService {
      * Takes a Data Import record, processes it, and returns the new Opportunity created from it.
      * @returns {Promise<Id>}
      */
-    createOpportunityFromDataImport(diRecord) {
+    createOpportunityFromDataImport(createdDIRecord) {
         return new Promise((resolve, reject) => {
-            saveAndProcessGift(diRecord)
+            saveAndProcessGift({diRecord: createdDIRecord})
                 .then((result) => {
                     resolve(result);
                 })
@@ -104,25 +104,23 @@ class GeFormService {
             fieldData = { ...fieldData, ...(section.values)};
         });
 
-        console.log('this is the field data:');
-        console.log(fieldData);
-
-        // Massage the data into a DI object
+        // Build the DI Record
         let diRecord = {};
-
 
         for (let key in fieldData) {
             if (fieldData.hasOwnProperty(key)) {
                 let value = fieldData[key];
+
+                // Get the field mapping wrapper with the CMT record name (this is the key variable). 
                 let fieldWrapper = this.getFieldMappingWrapper(key);
 
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
             }
         }
 
-        console.log('di record is: ' );
-        console.log(diRecord);
+        const opportunityID =this.createOpportunityFromDataImport(diRecord);
 
+        return opportunityID;
     }
 }
 
