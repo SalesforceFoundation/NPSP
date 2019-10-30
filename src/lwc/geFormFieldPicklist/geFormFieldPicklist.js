@@ -30,6 +30,6 @@ export default class GeFormFieldPicklist extends LightningElement {
 
     handleValueChange(event) {
         this.value = event.detail.value;
-        this.dispatch(new CustomEvent('onchange', event)); // bubble up to ge-form-field
+        this.dispatchEvent(new CustomEvent('onchange', event)); // bubble up to ge-form-field
     }
 }
