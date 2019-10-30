@@ -189,6 +189,18 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Amount
+    * @param amount Amount
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withPaymentMethod(String payMethod) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('PaymentMethod__c', payMethod);
+        return this;
+    }
+
+    /***
     * @description Sets CurrencyIsoCode
     * @param ccyIsoCode CurrencyIsoCode value
     * @return TEST_RecurringDonationBuilder Builder instance
@@ -432,6 +444,40 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         return this;
     }
+
+    /***
+    * @description Sets Installment Frequency to input integer
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withInstallmentFrequency(Integer frequency) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('InstallmentFrequency__c', frequency);
+        return this;
+    }
+
+    /***
+    * @description Sets Open Ended Status to None
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStartDate(Date sDate) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('StartDate__c', sDate);
+        return this;
+    }
+
+    /***
+    * @description Sets Open Ended Status to None
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withRecurringDonationStatusClosed() {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('Status__c', RD2_Constants.STATUS_CLOSED);
+        return this;
+    }
+
 
     /***
     * @description Builds Recurring Donation sObject based on the provided values
