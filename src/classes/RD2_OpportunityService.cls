@@ -39,6 +39,20 @@ public with sharing class RD2_OpportunityService {
     npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
     /***
+    * @description return the oppStageName from the custom settings rdsettings if it exists or
+    * from the label RecurringDonationStageName
+    */
+    @TestVisible
+    private String oppStageName {
+        get {
+            if (oppStageName == null) {
+                oppStageName = (rdSettings.InstallmentOppStageName__c != null
+                    ? rdSettings.InstallmentOppStageName__c : System.Label.npe03.RecurringDonationStageName);
+            }
+            return oppStageName;
+        } set;
+    }
+    /***
     * @description inserts one or more Opportunity records for a specified set of Recurring Donations
     * @param rdsWithCloseDates the Map of Recurring Donations with close dates
     */
@@ -109,10 +123,9 @@ public with sharing class RD2_OpportunityService {
             AccountId = rd.npe03__Organization__c,
             Primary_Contact__c = rd.npe03__Contact__c,
             CloseDate = closeDate,
-            StageName = rdSettings.InstallmentOppStageName__c,
+            StageName = oppStageName,
             Amount = rd.npe03__Amount__c,
-            Name = rd.npe03__Donor_Name__c + ' ' + rd.npe03__Amount__c.format() + ' ' + closeDate.format()
-                + ' ' + System.Label.stgNavRecurringDonations,
+            Name = buildOpportunityName(rd, closeDate),
             npe03__Recurring_Donation__c = rd.Id,
             Recurring_Donation_Installment_Number__c = (rd.npe03__Total_Paid_Installments__c != null ?
                 rd.npe03__Total_Paid_Installments__c + 1 : 1)
@@ -122,6 +135,19 @@ public with sharing class RD2_OpportunityService {
             opp.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
         }
         return opp;
+    }
+
+    /***
+    * @description build the opportunity name in specific format.
+    * @param rd is the Recurring donation record
+    * @param closeDate is the next donation date on the recurring donation.
+    * @return the opportunity name
+    */
+    private String buildOpportunityName(npe03__Recurring_Donation__c rd, Date closeDate) {
+        return rd.npe03__Donor_Name__c + ' ' +
+            (rd.npe03__Amount__c != null ? rd.npe03__Amount__c.format() : '0') + ' ' +
+            (closeDate != null ? closeDate.format() : '') + ' ' +
+            System.Label.stgNavRecurringDonations;
     }
 
     /***
@@ -141,10 +167,12 @@ public with sharing class RD2_OpportunityService {
         ]);
 
         for (npe01__OppPayment__c payment : paymentRecords) {
-            if (String.IsBlank(rdPaymentMethods.get(payment.npe01__Opportunity__r.npe03__Recurring_Donation__c))) {
+            String rdPaymentMethod = rdPaymentMethods.get(payment.npe01__Opportunity__r.npe03__Recurring_Donation__c);
+
+            if (String.IsBlank(rdPaymentMethod)) {
                 continue;
             }
-            payment.npe01__Payment_Method__c = rdPaymentMethods.get(payment.npe01__Opportunity__r.npe03__Recurring_Donation__c);
+            payment.npe01__Payment_Method__c = rdPaymentMethod;
             paymentForUpdates.add(payment);
         }
 
