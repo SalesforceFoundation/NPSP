@@ -91,7 +91,14 @@ global with sharing class _API implements System. {
                 // parameter service depending on which action was invoked
                 return DispatchService_ERR.dispatch(paramService);
 
-            } when 'allo.processoppsandpmts' { 
+            } when 'allo.processoppsandpmts' {
+                Set<Id> opportunityIds = paramService.getSetId(ApiParameters.PARAM_OPPORTUNITY_IDS);
+                String contextType = paramService.getString(ApiParameters.CONTEXT_TYPE);
+                Datetime processingBoundary = paramService.getDatetime(ApiParameters.PROCESSING_BOUNDARY);
+                Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(ApiParameters.DISABLE_ALLOCATION_TRIGGERS);
+
+                return Set<Id> successfullyProcessedOppIds = ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, false);
+                return successfullyProcessedOppIds;  
 
             } when 'allo.validatepmtallocationconfig' { 
                 List<String> configProblems = ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();

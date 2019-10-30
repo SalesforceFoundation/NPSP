@@ -44,6 +44,10 @@ public class CallableApiParameters {
     public static final String PARAM_ROLLUP_DATA = 'RollupData';
     public static final String PARAM_ROLLUP_COMMIT = 'CommitToDatabase';
     public static final String PARAM_OPPORTUNITY_STAGE = 'OpportunityStage';
+    public static final String PARAM_OPPORTUNITY_IDS = 'OpportunityIds';
+    public static final String PARAM_CONTEXT_TYPE = 'ContextType';
+    public static final String PARAM_PROCESSING_BOUNDARY = 'ProcessingBoundary';
+    public static final String PARAM_DISABLE_ALLOCATION_TRIGGERS = 'DisableAllocationTriggers';
 
     private Map<String, Object> params;
 
@@ -98,6 +102,22 @@ public class CallableApiParameters {
     }
 
     /**
+     * @description Retrieve the specified Parameter as a Datetime value
+     * @param paramName paramName to look in the parameter map under
+     * @param defaultValue Default if null
+     */
+    public Datetime getDatetime(String paramName) {
+        try {
+            if (params.get(paramName) != null) {
+                return (Datetime) params.get(paramName);
+            }
+        } catch (Exception ex) {
+            throwParameterException('Datetime', paramName);
+        }
+        return null;
+    }
+
+    /**
      * @description Retrieve the specified Parameter as a Boolean value, and use the default if not found in the map
      * @param paramName paramName to look in the parameter map under
      * @param defaultValue Default if null
@@ -136,6 +156,20 @@ public class CallableApiParameters {
         }
         return null;
     }
+
+    /**
+     * @description Retrieve the specified Parameter as a Set<Id> collection
+     * @param paramName
+     */
+    public Set<Id> getSetId(String paramName) {
+        try {
+            return (Set<Id>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Set<Id>', paramName);
+        }
+        return null;
+    }
+
     /**
      * @description Retrieve the specified Parameter as a Set<String> collection
      * @param paramName
