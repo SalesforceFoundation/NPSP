@@ -90,7 +90,6 @@ private with sharing class RD2_OpportunityService_TEST {
 
         oppNameFormat = rd.npe03__Donor_Name__c +  ' ' + rd.npe03__Amount__c.format();
         oppNameFormat += ' ' + CloseDate[0].format() +   ' ' + System.Label.stgNavRecurringDonations;
-        System.assert(rd != null );
 
         rdsWithCloseDates.put(rd, CloseDate);
 
