@@ -198,6 +198,34 @@ private with sharing class RD2_RecurringDonations_TEST {
 
     }
 
+    /***
+    * @description Verifies next donation date is calculated when recurring donation is inserted
+    */
+    @isTest
+    private static void shouldCalculateNextDonationDateOnInsert() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(contact.Id)
+            .withAmount(10)
+            .withInstallmentPeriodMonthly()
+            .withInstallmentFrequency(1)
+            .withDayOfMonth('20')
+            .withDateEstablished(Date.newInstance(2019, 9, 15))
+            .withStartDate(Date.newInstance(2019, 9, 15))
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd2.npe03__Next_Payment_Date__c, Date.newInstance(2019, 9, 20), 'Next Donation date should equal 9/20/2019');
+
+    }
+
 
     // Helpers
     ///////////////////
