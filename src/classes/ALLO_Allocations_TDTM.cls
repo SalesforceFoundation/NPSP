@@ -840,8 +840,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.defaultDupesById.values());
                         }
                     }
+
                     //if the payment amount has decreased, we run the risk of allocations exceeding the total payment amount
-                    if ((pmtWrap.totalAmount >= 0 && pmtWrap.totalAmount > pmtWrap.parentAmount)||(pmtWrap.totalAmount < 0 && pmtWrap.totalAmount < pmtWrap.parentAmount)) {
+                    // We only check this when there are allocations other than the default.
+                    // If it is the default, it can't exceed the total payment amount.
+                    if ((!pmtWrap.listAllo.isEmpty()) && ((pmtWrap.totalAmount >= 0 && pmtWrap.totalAmount > pmtWrap.parentAmount)||(pmtWrap.totalAmount < 0 && pmtWrap.totalAmount < pmtWrap.parentAmount))) {
                         //using addError here because we want to block payment update, display the error inline, and block the DML of updating all the related allocations
                         pmt.npe01__Payment_Amount__c.addError(Label.alloExceedsPmtAmount);
                     }
