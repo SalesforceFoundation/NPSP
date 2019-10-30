@@ -36,6 +36,8 @@
 */
 public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
+    DmlWrapper dmlActions = new DmlWrapper();
+
     /***
     * @description Recurring Donation naming service instance
     */
@@ -72,7 +74,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
-        return null;
+        handleRDSchedules(rds, oldRds, triggerAction);
+
+        return dmlActions;
     }
 
     /***
@@ -113,6 +117,32 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     private void dispatchToIntegrationGateway(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
             integrationGateway.handleBeforeDelete(oldRds);
+        }
+    }
+
+    /***
+    * @description Creates/modifies schedule record(s) after insert/update of recurring donation
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    private void handleRDSchedules(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            buildNewSchedules(rds);
+        }
+    }
+
+    /***
+    * @description Handles schedule creation after insert of recurring donation
+    * @param rds Trigger.new records
+    */
+    private void buildNewSchedules(List<npe03__Recurring_Donation__c> rds) {
+
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+
+        for (npe03__Recurring_Donation__c rd: rds) {
+            dmlActions.objectsToInsert.addAll(scheduleService.getNewSchedules(rd));
         }
     }
 
