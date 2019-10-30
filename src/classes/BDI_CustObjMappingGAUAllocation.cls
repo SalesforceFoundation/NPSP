@@ -42,15 +42,14 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
 
         Allocations_Settings__c settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
-        Map<String, Schema.DescribeFieldResult> sourceFieldDescByFieldName = UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImport__c.getName());
-
         String PAYMENT_FIELDNAME = SObjectType.Allocation__c.fields.Payment__c.Name;
         String OPPORTUNITY_FIELDNAME = SObjectType.Allocation__c.fields.Opportunity__c.Name;
 
-        for (BDI_ObjectWrapper objWrap : objWraps) {
-            Map<String, Schema.DescribeFieldResult> targetFieldDescByFieldName = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
+        String sourceObjName = SObjectType.DataImport__c.getName();
 
-            objWrap.sObj = UTIL_Describe.getPrototypeObject(objWrap.objMapping.Object_API_Name__c);
+        for (BDI_ObjectWrapper objWrap : objWraps) {
+
+            objWrap.sObj = UTIL_Describe.getPrototypeObject(objWrap.objMapping.Object_API_Name);
 
             if (objWrap.existingSObjectId != null) {
                 objWrap.sObj.put('Id', objWrap.existingSObjectId);
@@ -59,23 +58,23 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
             Object paymentIdValue;
             Object opportunityIdValue;
 
-            for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
-                String sourceFieldName = fieldMapping.Source_Field_API_Name__c;
-                String targetFieldName = fieldMapping.Target_Field_API_Name__c;
+            for (BDI_FieldMapping fieldMapping : objWrap.fieldMappings) {
+                String sourceFieldName = fieldMapping.Source_Field_API_Name;
+                String targetFieldName = fieldMapping.Target_Field_API_Name;
 
                 Object value = objWrap.dataImport.get(sourceFieldName);
 
-                Schema.DescribeFieldResult sourceFieldDescribe = sourceFieldDescByFieldName.get(sourceFieldName.toLowerCase());
-                Schema.DescribeFieldResult targetFieldDescribe = targetFieldDescByFieldName.get(targetFieldName.toLowerCase());
+                Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(sourceObjName, sourceFieldName);
+                Schema.DescribeFieldResult targetFieldDescribe = UTIL_Describe.getFieldDescribe(objWrap.objMapping.Object_API_Name, targetFieldName);
 
                 //Confirm that it is real field, and that it is accessible to the running user.
                 if (targetFieldDescribe != null && targetFieldDescribe.isAccessible()) {
                     //Confirm that either the sObj Id is null (ie new record) or that the field is updatable if it is not new.
                     if (objWrap.sObj.Id == null || targetFieldDescribe.isUpdateable()) {
                         // If the target field mapping is one of the key parent objects, then extract the values for later logic
-                        if (fieldMapping.Target_Field_API_Name__c == PAYMENT_FIELDNAME) {
+                        if (fieldMapping.Target_Field_API_Name == PAYMENT_FIELDNAME) {
                             paymentIdValue = value;
-                        } else if (fieldMapping.Target_Field_API_Name__c == OPPORTUNITY_FIELDNAME) {
+                        } else if (fieldMapping.Target_Field_API_Name == OPPORTUNITY_FIELDNAME) {
                             opportunityIdValue = value;
                         } else {
                             castAndCopyField(objWrap, sourceFieldName, sourceFieldDescribe, targetFieldName, targetFieldDescribe);

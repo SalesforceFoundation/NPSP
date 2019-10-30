@@ -83,19 +83,22 @@
         <members>BDI_Donations_TEST</members>
         <members>BDI_DryRun_TEST</members>
         <members>BDI_FieldMapping</members>
-        <members>BDI_FieldMappingCustomMetadata</members>
-        <members>BDI_FieldMappingCustomMetadata_TEST</members>
-        <members>BDI_FieldMappingHelpText</members>
-        <members>BDI_FieldMappingHelpText_TEST</members>
+        <members>BDI_FieldMappingSet</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
         <members>BDI_ManageAdvancedMappingCtrl_TEST</members>
+        <members>BDI_MappingService</members>
+        <members>BDI_MappingServiceAdvanced</members>
+        <members>BDI_MappingServiceAdvanced_TEST</members>
+        <members>BDI_MappingServiceHelpText</members>
+        <members>BDI_MappingServiceHelpText_TEST</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_MigrationMappingHelper</members>
         <members>BDI_MigrationMappingHelper_TEST</members>
         <members>BDI_MigrationMappingUtility</members>
         <members>BDI_MigrationMappingUtility_TEST</members>
+        <members>BDI_ObjectMapping</members>
         <members>BDI_ObjectMappingLogic</members>
         <members>BDI_ObjectWrapper</members>
         <members>BDI_PerfLogger</members>
@@ -220,10 +223,10 @@
         <members>CRLP_VRollupHandler</members>
         <members>CallableApiParameters</members>
         <members>CallableApiParameters_TEST</members>
-        <members>Callable_API</members>
-        <members>Callable_API_TEST</members>
         <members>CallableDispatchService_ERR</members>
         <members>CallableDispatchService_ERR_TEST</members>
+        <members>Callable_API</members>
+        <members>Callable_API_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -252,8 +255,19 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
+        <members>FORM_BatchHeaderField</members>
+        <members>FORM_Element</members>
+        <members>FORM_Layout</members>
+        <members>FORM_RenderWrapper</members>
+        <members>FORM_Section</members>
+        <members>FORM_Service</members>
+        <members>FORM_ServiceGiftEntry</members>
+        <members>FORM_ServiceGiftEntryTest</members>
+        <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
+        <members>GE_FormRendererService</members>
+        <members>GE_TemplateBuilderCtrl</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -691,6 +705,8 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
+        <members>geFormRendererPlaceholder</members>
+        <members>geTemplateBuilderPlaceholder</members>
         <members>modalFooter</members>
         <members>modalHeader</members>
         <members>svg</members>
@@ -1041,6 +1057,9 @@
         <members>Error__c.Related_Record_ID__c</members>
         <members>Error__c.Retry_Pending__c</members>
         <members>Error__c.Stack_Trace__c</members>
+        <members>Form_Template__c.Description__c</members>
+        <members>Form_Template__c.Format_Version__c</members>
+        <members>Form_Template__c.Template_JSON__c</members>
         <members>General_Accounting_Unit__c.Active__c</members>
         <members>General_Accounting_Unit__c.Average_Allocation__c</members>
         <members>General_Accounting_Unit__c.Description__c</members>
@@ -1715,9 +1734,9 @@
         <members>campaignMemberStatusResponded</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
+        <members>conMergeErrNoPersonAccounts</members>
         <members>conMergeErrorNoDeleteObjPermission</members>
         <members>conMergeErrorNoDeleteRecAccess</members>
-        <members>conMergeErrNoPersonAccounts</members>
         <members>conMergeFoundContacts</members>
         <members>conMergePageTitle</members>
         <members>conMergePageTitleDetail</members>
@@ -2497,6 +2516,7 @@
         <members>Engagement_Plan__c</members>
         <members>Error_Settings__c</members>
         <members>Error__c</members>
+        <members>Form_Template__c</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
         <members>Grant_Deadline__c</members>
@@ -2975,6 +2995,7 @@
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
         <members>Error__c-Error Layout</members>
+        <members>Form_Template__c-Form Template Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
@@ -3008,10 +3029,23 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>geFormField</members>
+        <members>geFormFieldPicklist</members>
+        <members>geFormRenderer</members>
+        <members>geFormSection</members>
+        <members>geFormService</members>
+        <members>geTemplateBuilder</members>
+        <members>geTemplateBuilderBatchHeader</members>
+        <members>geTemplateBuilderFormField</members>
+        <members>geTemplateBuilderFormLayout</members>
+        <members>geTemplateBuilderFormSection</members>
+        <members>geTemplateBuilderGiftFields</members>
+        <members>geTemplateBuilderTemplateInfo</members>
         <members>pubsubNoPageRef</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
+        <members>utilTemplateBuilder</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>

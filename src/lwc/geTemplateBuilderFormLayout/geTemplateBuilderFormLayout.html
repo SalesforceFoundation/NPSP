@@ -1,0 +1,15 @@
+<template>
+    <template for:each={formSections}
+              for:item="formSection">
+        <c-ge-template-builder-form-section key={formSection.id}
+                                            form-section={formSection}
+                                            active-form-section-id={activeFormSectionId}
+                                            onchangeactivesection={handleSelectActiveSection}
+                                            onformsectionup={handleFormSectionUp}
+                                            onformsectiondown={handleFormSectionDown}
+                                            ondeleteformsection={handleDeleteFormSection}
+                                            onformfieldup={handleFormFieldUp}
+                                            onformfielddown={handleFormFieldDown}>
+        </c-ge-template-builder-form-section>
+    </template>
+</template>

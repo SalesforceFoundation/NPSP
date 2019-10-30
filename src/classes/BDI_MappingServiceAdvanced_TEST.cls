@@ -35,27 +35,31 @@
 * @description Unit tests to cover changes made to support custom metadata mapping for BDI.
 */
 @isTest
-private class BDI_FieldMappingCustomMetadata_TEST {
+private class BDI_MappingServiceAdvanced_TEST {
     /*******************************************************************************************************
-    * @description Tests that the BDI_FieldMappingCustomMetadata class can be instantiated correctly based on the custom setting value
-    *  and that it will return a string map for a core object when called (using the default set of field mappings).
+    * @description Tests that the BDI_MappingServiceAdvanced class can be instantiated correctly 
+    *  based on the custom setting value and that it will return a string map for a core object 
+    *  when called (using the default set of field mappings).
     */
     @isTest static void shouldReturnMapOfFieldsForCoreObject() {
 
         //Set the custom setting for Data import to use Data Import Field Mappings (eg Custom Metadata Type Mapping)
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
-        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        dis.Default_Data_Import_Field_Mapping_Set__c = 
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
-        //Retrieve a field mapping using the getDefaultFieldMapping method and confirm it is the custom metadata implementation
-        BDI_FieldMapping bdiFM= BDI_DataImportService.getDefaultFieldMapping();
-        String className = String.valueOf(bdiFM).split(':')[0];
-        System.assertEquals('BDI_FieldMappingCustomMetadata',className);
+        //Retrieve a mapping service instance using the getDefaultMappingService method 
+        //and confirm it is the custom metadata implementation
+        BDI_MappingService bdiMS = BDI_DataImportService.getDefaultMappingService();
+        String className = String.valueOf(bdiMS).split(':')[0];
+        System.assertEquals('BDI_MappingServiceAdvanced',className);
 
         //Instantiate and call the data import service with the field mapping specified
-        BDI_DataImportService bdiDis = new BDI_DataImportService(false, bdiFM);
-        Map<String,String> accountFieldMapping = bdiDis.mapDataImportFields('Account1','Account',BDI_DataImportService.listStrDataImportFields);
+        BDI_DataImportService bdiDis = new BDI_DataImportService(false, bdiMS);
+        Map<String,String> accountFieldMapping = 
+            bdiDis.mapDataImportFields('Account1','Account',BDI_DataImportService.listStrDataImportFields);
         System.assertNotEquals(null,accountFieldMapping);
         //Confirm that there are at least 8 records
         System.assert(accountFieldMapping.size() >= 8);
@@ -85,8 +89,27 @@ private class BDI_FieldMappingCustomMetadata_TEST {
         Data_Import_Settings__c dis2 = UTIL_CustomSettingsFacade.getDataImportSettings();
 
         System.assertEquals(BDI_DataImportService.FM_HELP_TEXT,dis2.Field_Mapping_Method__c);
-        System.assertEquals(BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME,dis2.Default_Data_Import_Field_Mapping_Set__c);
+        System.assertEquals(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME,dis2.Default_Data_Import_Field_Mapping_Set__c);
 
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that the BDI_FieldMappingSet is properly constructed when getting an instance 
+    * of the mapping service.
+    */
+    @isTest static void shouldReturnPopulatedBDIFieldMappingSet() {
+        //Set the custom setting for Data import to use Data Import Field Mappings (eg Custom Metadata Type Mapping)
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        //Retrieve a mapping service instance
+        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance();
+
+        System.assert(bdiMSAdv.fieldMappingSet != null);
+        System.assert(bdiMSAdv.fieldMappingSet.objectMappingByDevName.size() > 0);
+        System.assert(bdiMSAdv.fieldMappingSet.fieldMappingByDevName.size() > 0);
     }
     
 }

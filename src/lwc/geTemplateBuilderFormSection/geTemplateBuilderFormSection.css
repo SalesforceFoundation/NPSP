@@ -1,0 +1,11 @@
+.slds-accordion__section_extension {
+    /*background-color: #F3F2F2;
+    margin: 0.75rem 0;
+    border-radius: .25rem;
+    border: 0;*/
+}
+
+.slds-card_extension {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+    border: 1px solid rgb(221, 219, 218);
+}

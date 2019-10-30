@@ -54,7 +54,7 @@ private class BDI_DataImportFLSService_TEST {
                 new List<DataImport__c>{
                         dataImport
                 },
-                BDI_FieldMappingCustomMetadata.getInstance(),
+                BDI_MappingServiceAdvanced.getInstance(),
                 accessLevels
         );
 
@@ -83,7 +83,7 @@ private class BDI_DataImportFLSService_TEST {
                     new List<DataImport__c>{
                             dataImport
                     },
-                    BDI_FieldMappingCustomMetadata.getInstance(),
+                    BDI_MappingServiceAdvanced.getInstance(),
                     accessLevels
             );
 
@@ -125,7 +125,7 @@ private class BDI_DataImportFLSService_TEST {
         //Process the Data Import record
         BDI_DataImportService dataImportService = new BDI_DataImportService(
                 false,
-                BDI_DataImportService.getDefaultFieldMapping());
+                BDI_DataImportService.getDefaultMappingService());
         dataImportService.process(
                 null,
                 BDI_DataImportService.loadSettings(null),

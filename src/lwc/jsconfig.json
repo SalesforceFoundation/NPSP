@@ -14,6 +14,21 @@
             "c/bdiObjectMappings": [
                 "bdiObjectMappings/bdiObjectMappings.js"
             ],
+            "c/geTemplateBuilder": [
+                "geTemplateBuilder/geTemplateBuilder.js"
+            ],
+            "c/geTemplateBuilderBatchHeader": [
+                "geTemplateBuilderBatchHeader/geTemplateBuilderBatchHeader.js"
+            ],
+            "c/geTemplateBuilderFormField": [
+                "geTemplateBuilderFormField/geTemplateBuilderFormField.js"
+            ],
+            "c/geTemplateBuilderGiftFields": [
+                "geTemplateBuilderGiftFields/geTemplateBuilderGiftFields.js"
+            ],
+            "c/geTemplateBuilderTemplateInfo": [
+                "geTemplateBuilderTemplateInfo/geTemplateBuilderTemplateInfo.js"
+            ],
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
             ],
@@ -25,6 +40,15 @@
             ],
             "c/utilStencil": [
                 "utilStencil/utilStencil.js"
+            ],
+            "c/geTemplateBuilderFormLayout": [
+                "geTemplateBuilderFormLayout/geTemplateBuilderFormLayout.js"
+            ],
+            "c/utilTemplateBuilder": [
+                "utilTemplateBuilder/utilTemplateBuilder.js"
+            ],
+            "c/geTemplateBuilderFormSection": [
+                "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
             ]
         },
         "experimentalDecorators": true
