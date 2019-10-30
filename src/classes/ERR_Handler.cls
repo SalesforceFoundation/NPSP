@@ -361,23 +361,6 @@ public class ERR_Handler {
 
     /*******************************************************************************************************
     * @description Creates an error record from an exception.
-    * @param msg The message to record.
-    * @param context The context the exception was raised on.
-    * @return Error__c Error record.
-    */
-    private static Error__c createError(String msg, String context) {
-        Error__c error = new Error__c();
-        error.Datetime__c = System.now();
-        error.Error_Type__c = System.Label.errErrorTypeOther;
-        error.Full_Message__c = msg;
-        error.Context_Type__c = context;
-
-
-        return error;
-    }
-
-    /*******************************************************************************************************
-    * @description Creates an error record from an exception.
     * @param e Exception to create error record from.
     * @param context The context the exception was raised on.
     * @return Error__c Error record.
