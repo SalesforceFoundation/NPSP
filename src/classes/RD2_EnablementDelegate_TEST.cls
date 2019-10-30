@@ -124,7 +124,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     */
     @isTest
     private static void shouldLaunchMetaDeploy() {
-        mockRecurringDonationCRLP();
+        mockCustomizableRollups();
 
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
@@ -146,9 +146,9 @@ public with sharing class RD2_EnablementDelegate_TEST {
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
 
         List<AsyncApexJob> asyncJobs = [SELECT Id
-                                        FROM AsyncApexJob
-                                        WHERE ApexClass.Name = 'RD2_EnablementDelegate_CTRL'
-                                        LIMIT 1];
+            FROM AsyncApexJob
+            WHERE ApexClass.Name = 'RD2_EnablementDelegate_CTRL'
+            LIMIT 1];
         System.assert(!asyncJobs.isEmpty(), 'Expected to find a Queueable job after clicking the MetaDeploy link');
     }
 
@@ -185,7 +185,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     */
     @isTest
     private static void shouldThrowExceptionWhenMetaDeployIsConfirmedButNotInstalled() {
-        mockRecurringDonationCRLP();
+        mockCustomizableRollups();
 
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
@@ -259,7 +259,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     /**
      * @description Mock the Next Donation Date customizable rollup
      */
-    private static void mockRecurringDonationCRLP() {
+    private static void mockCustomizableRollups() {
         String rollupsJSON = '[' +
             CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', null,
                 CMT_UnitTestData_TEST.RollupRecordType.OppToRD,

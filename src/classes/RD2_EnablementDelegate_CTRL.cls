@@ -161,9 +161,9 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         EnablementState state = getEnablementState();
         state.isMetaDeployLaunched = true;
 
-        System.enqueueJob(new PreMetadeployQueuableAction());
-
         saveEnablementState(state);
+
+        System.enqueueJob(new EnablementQueueable());
     }
 
     /***
@@ -198,55 +198,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             }
         }
         return false;
-    }
-
-    /**
-     * @description Queueable to disable a legacy CRLP rollup for Recurring Donations. Queueable
-     * needed to avoid a Mixed DML Operation error.
-     */
-    private class PreMetadeployQueuableAction implements Queueable {
-        public void execute(QueueableContext qc) {
-            disableLegacyNextPaymentDateRollupInCRLP();
-        }
-    }
-
-    /**
-     * @description When Enhanced Recurring Donations is enabled, the "Next Donation Date" field
-     * (npe03__Next_Payment_Date__c) is no longer calculated as a rollup, but instead is calculated
-     * as a service process in many places during Enhanced Recurring Donations automation. The previous
-     * rollup was inaccurate in what it calculated relative to the field label. In legacy RD, this
-     * field actually contained the CloseDate of the earliest open Opportunity associated with the RD.
-     * In Enhanced Recurring Donations this field will contain the "next" expected installment due date
-     * where "next" means always in the future.
-     */
-    private static void disableLegacyNextPaymentDateRollupInCRLP() {
-        List<Rollup__mdt> rdRollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType);
-        if (rdRollups == null) {
-            return;
-        }
-
-        CRLP_RollupCMT.Rollup cmtRollup;
-        for (Rollup__mdt rlp : rdRollups) {
-            if (rlp.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
-                cmtRollup  = new CRLP_RollupCMT.Rollup(rlp);
-                break;
-            }
-        }
-
-        if (cmtRollup == null) {
-            return;
-        }
-
-        // Disable/Hide the rollup and update the Description on the rollup to reflect the change
-        cmtRollup.isDeleted = true;
-        cmtRollup.isActive = false;
-        cmtRollup.description += '\nThis rollup was disabled automatically when Enhanced Recurring Donations was enabled.';
-
-        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{ cmtRollup };
-        CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
-
-        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
-        CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
     }
 
     /***
@@ -295,4 +246,53 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         public Boolean isMigrationRun = false;
     }
 
+    /**
+     * @description Queueable to disable a legacy CRLP rollup for Recurring Donations. Queueable
+     * needed to avoid a Mixed DML Operation error.
+     */
+    private class EnablementQueueable implements Queueable {
+        public void execute(QueueableContext context) {
+            disableNextPaymentDateRollup();
+        }
+
+        /**
+        * @description When Enhanced Recurring Donations is enabled, the "Next Donation Date" field
+        * (npe03__Next_Payment_Date__c) is no longer calculated as a rollup, but instead is calculated
+        * as a service process in many places during Enhanced Recurring Donations automation. The previous
+        * rollup was inaccurate in what it calculated relative to the field label. In legacy RD, this
+        * field actually contained the CloseDate of the earliest open Opportunity associated with the RD.
+        * In Enhanced Recurring Donations this field will contain the "next" expected installment due date
+        * where "next" means always in the future.
+        */
+        private void disableNextPaymentDateRollup() {
+            List<Rollup__mdt> rdRollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType);
+            if (rdRollups == null) {
+                return;
+            }
+
+            CRLP_RollupCMT.Rollup cmtRollup;
+            for (Rollup__mdt rlp : rdRollups) {
+                if (rlp.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
+                    cmtRollup  = new CRLP_RollupCMT.Rollup(rlp);
+                    break;
+                }
+            }
+
+            if (cmtRollup == null) {
+                return;
+            }
+
+            // Disable/Hide the rollup and update the Description on the rollup to reflect the change
+            cmtRollup.isDeleted = true;
+            cmtRollup.isActive = false;
+            cmtRollup.description += '\nThis rollup was disabled automatically when Enhanced Recurring Donations was enabled.';
+
+            List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{ cmtRollup };
+            CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
+
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
+            CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
+        }
+
+    }
 }
