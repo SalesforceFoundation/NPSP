@@ -77,6 +77,7 @@ private with sharing class RD2_OpportunityService_TEST {
             .withContact(primaryContacts[0].Id)
             .withInstallmentPeriodMonthly()
             .withDayOfMonth('20')
+            .withPaymentMethod(CREDITCARD)
             .withDateEstablished(Date.newInstance(2019, 9, 15))
             .withAmount(415)
             .withCampaign(campaign.id)
@@ -84,10 +85,8 @@ private with sharing class RD2_OpportunityService_TEST {
 
         insert rd;
 
-        rd.PaymentMethod__c = CREDITCARD;
-        update rd;
-
         rd = getRd(rd);
+        System.assert(rd != null );
 
         oppNameFormat = rd.npe03__Donor_Name__c +  ' ' + rd.npe03__Amount__c.format();
         oppNameFormat += ' ' + CloseDate[0].format() +   ' ' + System.Label.stgNavRecurringDonations;
@@ -159,15 +158,13 @@ private with sharing class RD2_OpportunityService_TEST {
             .withAccount(acc.Id)
             .withInstallmentPeriodMonthly()
             .withDayOfMonth('20')
+            .withPaymentMethod(CREDITCARD)
             .withDateEstablished(Date.newInstance(2019, 11, 15))
             .withAmount(415)
             .withCampaign(campaign.id)
             .build();
 
         insert rd;
-
-        rd.PaymentMethod__c = CREDITCARD;
-        update rd;
 
         rd = getRd(rd);
         System.assert(rd != null );
