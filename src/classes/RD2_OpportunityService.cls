@@ -36,6 +36,8 @@
 */
 public with sharing class RD2_OpportunityService {
 
+    npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+
     /***
     * @description inserts one or more Opportunity records for a specified set of Recurring Donations
     * @param rdsWithCloseDates the Map of Recurring Donations with close dates
@@ -45,23 +47,15 @@ public with sharing class RD2_OpportunityService {
         List<Opportunity> oppsToInsert;
         Set<Id> createdOppIds = new Set<Id>();
         Integer oppItem = 0;
-        //Create a list of ContactIds and contactmap used in these RecurringDonations
-        List<Id> contactIds = new List<Id>();
-        Map<Id,Contact> contactMap;
-        Map<Id,String> rdPaymentMethod = new Map<Id,String>();
+        Map<Id,String> rdPaymentMethods = new Map<Id,String>();
         List<Database.SaveResult> badSRs = new List<Database.SaveResult>();
         List<Opportunity> badOpps = new List<Opportunity>();
 
         for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keyset()) {
-            if (r.npe03__Contact__c != null) {
-                contactIds.add(r.npe03__Contact__c);
-            }
-            rdPaymentMethod.put(r.Id,r.PaymentMethod__c);
-
+            rdPaymentMethods.put(r.Id,r.PaymentMethod__c);
         }
-        contactMap = getContacts(contactIds);
 
-        oppsToInsert = getInstallmentOpportunities(rdsWithCloseDates, contactMap);
+        oppsToInsert = getInstallmentOpportunities(rdsWithCloseDates);
 
         if (oppsToInsert.size() > 0) {
             for (Database.SaveResult s : insertOpportunities(oppsToInsert)) {
@@ -75,13 +69,13 @@ public with sharing class RD2_OpportunityService {
                 }
                 oppItem++;
             }
-            //Confirm if the error handling is needed due to bulk operations
+            //Error handling due to bulk operations
             if (!badSRs.isEmpty()) {
                ERR_Handler.Errors errors = ERR_Handler.getErrors(badSRs, badOpps);
                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD.name());
             }
         }
-        updatePaymentRecordOnCreatedOpp(createdOppIds, rdPaymentMethod);
+        updatePaymentRecordOnCreatedOpp(createdOppIds, rdPaymentMethods);
     }
 
     /***
@@ -90,97 +84,72 @@ public with sharing class RD2_OpportunityService {
     * @param contactMap the Map of contact with account ids.
     * @return the list of Opportunities to be created.
     */
-    private List<Opportunity> getInstallmentOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates, Map<Id,Contact> contactMap) {
+    private List<Opportunity> getInstallmentOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates) {
 
         List<Opportunity> oppsToInsert = new List<Opportunity>();
-        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
         for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keySet()) {
-
             for(Integer i = 0;i< rdsWithCloseDates.get(r).size();i++) {
-                Opportunity opp = new Opportunity();
-                opp.Name = r.npe03__Donor_Name__c + ' ' + r.npe03__Amount__c.format() + ' ' + rdsWithCloseDates.get(r)[i].format() + ' ' + System.Label.stgNavRecurringDonations;
+                oppsToInsert.add(buildOppForRd(r, rdsWithCloseDates.get(r)[i]));
 
-                if ( r.npe03__Organization__c != null && String.isBlank(r.npe03__Contact__c)) {
-                    opp.AccountId = r.npe03__Organization__c;
-
-                } else if (contactMap.containsKey(r.npe03__Contact__c)) {
-                    Contact c = contactMap.get(r.npe03__Contact__c);
-                    opp.AccountId = c.AccountId;
-                    opp.Primary_Contact__c = c.id;
-                }
-                opp.CloseDate = rdsWithCloseDates.get(r)[i];
-                opp.StageName = rds.InstallmentOppStageName__c ;
-                opp.Amount = r.npe03__Amount__c;
-                opp.npe03__Recurring_Donation__c = r.Id;
-                if (r.npe03__Recurring_Donation_Campaign__c != null && rds.npe03__Add_Campaign_to_All_Opportunites__c ) {
-                    opp.CampaignId = r.npe03__Recurring_Donation_Campaign__c;
-                }
-                oppsToInsert.add(opp);
             }
           }
-
         return oppsToInsert;
-
     }
 
-     /***
+    /***
+    * @description populate the opportunity's fields from recurring donation.
+    * @param rd is the Recurring donation record
+    * @param closeDate is the next donation date on the recurring donation.
+    * @return the opportunity record
+    */
+    private Opportunity buildOppForRd(npe03__Recurring_Donation__c rd, Date closeDate) {
+
+        Opportunity opp = new Opportunity(
+            AccountId = rd.npe03__Organization__c,
+            Primary_Contact__c = rd.npe03__Contact__c,
+            CloseDate = closeDate,
+            StageName = rdSettings.InstallmentOppStageName__c,
+            Amount = rd.npe03__Amount__c,
+            Name = rd.npe03__Donor_Name__c + ' ' + rd.npe03__Amount__c.format() + ' ' + closeDate.format()
+                + ' ' + System.Label.stgNavRecurringDonations,
+            npe03__Recurring_Donation__c = rd.Id,
+            Recurring_Donation_Installment_Number__c = (rd.npe03__Total_Paid_Installments__c != null ?
+                rd.npe03__Total_Paid_Installments__c + 1 : 1)
+        );
+
+        if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c ) {
+            opp.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
+        }
+        return opp;
+    }
+
+    /***
     * @description Update payment method on the payment records for the created opportunities.
     * @param oppIds set of opportnity Ids
-    * @param rdPayment is the map of Recurrding donation Ids with Payment method.
+    * @param rdPaymentMethods is the map of Recurrding donation Ids with Payment method.
     */
-    private void updatePaymentRecordOnCreatedOpp(Set<Id> oppIds, Map<Id,String> rdPayment) {
+    private void updatePaymentRecordOnCreatedOpp(Set<Id> oppIds, Map<Id,String> rdPaymentMethods) {
 
         List<npe01__OppPayment__c> paymentForUpdates = new List <npe01__OppPayment__c> ();
 
-        List<npe01__OppPayment__c> paymentRecForOpps = new List <npe01__OppPayment__c> ([
-            SELECT Id,npe01__Payment_Method__c,npe01__Payment_Date__c, npe01__Opportunity__c
+        List<npe01__OppPayment__c> paymentRecords = new List <npe01__OppPayment__c> ([
+            SELECT Id,npe01__Payment_Method__c,npe01__Payment_Date__c, npe01__Opportunity__c,
+            npe01__Opportunity__r.npe03__Recurring_Donation__c
             FROM npe01__OppPayment__c
             WHERE npe01__Opportunity__c IN :oppIds
-            ]);
+        ]);
 
-        Map<Id,Id> OppIdRdId = new Map<Id,Id>();
-
-        List<Opportunity> oppList = new List<Opportunity> ([
-            SELECT ID,npe03__Recurring_Donation__c
-            FROM Opportunity
-            WHERE Id in :oppIds
-            ]);
-
-        for (Opportunity oppty: oppList) {
-            OppIdRdId.put(oppty.id,oppty.npe03__Recurring_Donation__c);
-        }
-        for (npe01__OppPayment__c payment : paymentRecForOpps) {
-            if (String.IsBlank(rdPayment.get(OppIdRdId.get(payment.npe01__Opportunity__c)))) {
-              continue;
+        for (npe01__OppPayment__c payment : paymentRecords) {
+            if (String.IsBlank(rdPaymentMethods.get(payment.npe01__Opportunity__r.npe03__Recurring_Donation__c))) {
+                continue;
             }
-            payment.npe01__Payment_Method__c = rdPayment.get(OppIdRdId.get(payment.npe01__Opportunity__c));
+            payment.npe01__Payment_Method__c = rdPaymentMethods.get(payment.npe01__Opportunity__r.npe03__Recurring_Donation__c);
             paymentForUpdates.add(payment);
         }
 
         Database.SaveResult[] saveResults = Database.update(paymentForUpdates, false);
 
-    }
-
-    /***
-    * @description Get contact maps for the provided list of contacts
-    * @param List of contact ids
-    * @return Map<Id, Contact> containing the AccountId to Contact.
-    */
-    private Map<Id, Contact> getContacts (List<Id> contactIds) {
-        Map<Id,Contact> contactMap = new Map<Id,Contact>();
-
-        if (contactIds.size() > 0) {
-            contactMap = new Map<Id,Contact>([
-              SELECT Id, AccountId
-              FROM Contact
-              WHERE Id IN :contactIds
-              AND AccountId != null
-            ]);
-
-        }
-
-        return contactMap;
     }
 
      /***

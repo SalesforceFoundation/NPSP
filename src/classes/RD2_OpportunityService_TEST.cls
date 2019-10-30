@@ -248,7 +248,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static npe03__Recurring_Donation__c getRd(npe03__Recurring_Donation__c rd) {
         return [
             SELECT Id, npe03__Amount__c, npe03__Contact__c, npe03__Recurring_Donation_Campaign__c,
-            npe03__Organization__c, npe03__Donor_Name__c, PaymentMethod__c
+            npe03__Organization__c, npe03__Donor_Name__c, PaymentMethod__c, npe03__Total_Paid_Installments__c
             FROM npe03__Recurring_Donation__c
             WHERE Id = :rd.Id
         ];
