@@ -317,12 +317,60 @@
         <value>Warning</value>
     </labels>
     <labels>
-        <fullName>BatchJobProgressTitle</fullName>
-        <categories>BatchJob</categories>
+        <fullName>BatchProgressCompletedDate</fullName>
+        <categories>BatchProgress</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>BatchJobProgressTitle</shortDescription>
-        <value>Latest Batch Details</value>
+        <shortDescription>BatchProgressCompletedDate</shortDescription>
+        <value>Completed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressExtendedStatus</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressExtendedStatus</shortDescription>
+        <value>Extended Status:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressJobItemsProcessed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressJobItemsProcessed</shortDescription>
+        <value>Batches Processed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatus</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatus</shortDescription>
+        <value>Status:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTimeElapsed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTimeElapsed</shortDescription>
+        <value>Time Elapsed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTitleRD2DataMigration</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTitleRD2DataMigration</shortDescription>
+        <value>Latest data migration batch details</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalJobItems</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalJobItems</shortDescription>
+        <value>Total Batches:</value>
     </labels>
     <labels>
         <fullName>CONV_Accept_Risk</fullName>

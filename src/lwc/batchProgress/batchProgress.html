@@ -2,24 +2,65 @@
 
     <template if:true={batchJob}>
         <div class="slds-section slds-is-open slds-theme_shade">
-            <h3 class="slds-section__title slds-theme_shade slds-p-horizontal_small"
-                title={labels.batchJobProgressTitle}>
-                {labels.batchJobProgressTitle}
+            <h3 class="slds-section__title slds-theme_shade slds-p-horizontal_small slds-m-top_small slds-m-bottom_xx-small"
+                title={title}>
+                {title}
             </h3>
 
             <div aria-hidden="false" class="slds-section__content">
                 <lightning-layout horizontal-align="spread" multiple-rows="true">
 
                     <lightning-layout-item padding="horizontal-small" size="3">
-                        <c-progress-ring ring-content={batchJob.percentComplete} value-now={batchJob.percentComplete}
-                            status="active" class="slds-m-right_small">
-                        </c-progress-ring>
+                        <div>
+                            <div id="progressBarLabel">
+                                <span>
+                                    <strong>{batchJob.percentComplete}%</strong>
+                                </span>
+                            </div>
+                            <div>
+                                <lightning-progress-bar value={batchJob.percentComplete} size="large"
+                                    variant="circular">
+                                </lightning-progress-bar>
+                            </div>
+                        </div>
                     </lightning-layout-item>
 
-                    <lightning-layout-item padding="horizontal-large" size="8">
+                    <lightning-layout-item padding="horizontal-medium" size="6">
+                        <dl class="slds-dl_horizontal">
+                            <dt class="slds-dl_horizontal__label">{labels.labelStatus}</dt>
+                            <dd class="slds-dl_horizontal__detail">{batchJob.status}</dd>
+                            <dt class="slds-dl_horizontal__label">{labels.labelTimeElapsed}</dt>
+                            <dd class="slds-dl_horizontal__detail">{batchJob.timeElapsed}</dd>
+
+                            <template if:true={batchJob.completedDate}>
+                                <dt class="slds-dl_horizontal__label">{labels.labelCompletedDate}</dt>
+                                <dd class="slds-dl_horizontal__detail">
+                                    <lightning-formatted-date-time value={batchJob.completedDate} year="numeric"
+                                        month="long" day="2-digit" hour="2-digit" minute="2-digit">
+                                    </lightning-formatted-date-time>
+                                </dd>
+                            </template>
+
+                            <dt class="slds-dl_horizontal__label">{labels.labelTotalJobItems}</dt>
+                            <dd class="slds-dl_horizontal__detail">
+                                <lightning-formatted-number value={batchJob.totalJobItems}>
+                                </lightning-formatted-number>
+                            </dd>
+                            <dt class="slds-dl_horizontal__label">{labels.labelJobItemsProcessed}</dt>
+                            <dd class="slds-dl_horizontal__detail">
+                                <lightning-formatted-number value={batchJob.jobItemsProcessed}>
+                                </lightning-formatted-number>
+                            </dd>
+
+                            <template if:true={batchJob.extendedStatus}>
+                                <dt class="slds-dl_horizontal__label">{labels.labelExtendedStatus}</dt>
+                                <dd class="slds-dl_horizontal__detail">{batchJob.extendedStatus}</dd>
+                            </template>
+                        </dl>
                     </lightning-layout-item>
 
-                    <lightning-layout-item padding="horizontal-large" size="1">
+                    <lightning-layout-item size="3">
+                        <lightning-badge label={batchJob.status} class={themeClass}></lightning-badge>
                     </lightning-layout-item>
 
                 </lightning-layout>

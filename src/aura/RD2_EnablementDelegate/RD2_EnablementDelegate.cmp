@@ -310,9 +310,11 @@
                         </lightning:layoutItem>
                         <lightning:layoutItem size="2" />
 
-                        <lightning:layoutItem size="12">
-                            <c:batchProgress className="RD2_DataMigration_BATCH" aura:id="rdMigrationBatchJob" />
+                        <lightning:layoutItem size="10" class="slds-m-top_medium slds-m-bottom_medium">
+                            <c:batchProgress title="{!$Label.c.BatchProgressTitleRD2DataMigration}"
+                                className="RD2_DataMigration_BATCH" aura:id="rdMigrationBatchJob" />
                         </lightning:layoutItem>
+                        <lightning:layoutItem size="2" />
 
                     </lightning:layout>
 

@@ -69,7 +69,7 @@ public with sharing class UTIL_BatchJobService {
 
         List<AsyncApexJob> apexJobs = [
             SELECT
-                Status, ExtendedStatus,
+                Status, ExtendedStatus, NumberOfErrors,
                 TotalJobItems, JobItemsProcessed,
                 CreatedDate, CompletedDate
             FROM AsyncApexJob
@@ -94,11 +94,11 @@ public with sharing class UTIL_BatchJobService {
         public String extendedStatus;
         public Integer jobItemsProcessed;
         public Integer totalJobItems;
+        public Integer numberOfErrors;
 
         @TestVisible 
         private DateTime createdDate;
-        @TestVisible 
-        private DateTime completedDate;
+        public DateTime completedDate;
 
         public String timeElapsed;
         public Long percentComplete = 0;
@@ -117,6 +117,7 @@ public with sharing class UTIL_BatchJobService {
             extendedStatus = job.ExtendedStatus;
             jobItemsProcessed = job.JobItemsProcessed;
             totalJobItems = job.TotalJobItems;
+            numberOfErrors = job.NumberOfErrors;
 
             createdDate = job.CreatedDate;
             completedDate = job.CompletedDate;
