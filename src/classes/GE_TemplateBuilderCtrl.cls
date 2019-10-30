@@ -101,19 +101,22 @@ public with sharing class GE_TemplateBuilderCtrl {
         bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(fieldMappingSetName);
         ObjectMappingWrapper[] objectWrappers = new ObjectMappingWrapper[]{};
 
-        for (Data_Import_Object_Mapping__mdt objectMapping : bdiMSAdv.objMappingsByDevName.values()) {
+        for (BDI_ObjectMapping objectMapping : bdiMSAdv.objectMappingByDevName.values()) {
             ObjectMappingWrapper omw = new ObjectMappingWrapper(objectMapping);
 
-            if (objectMapping.Data_Import_Field_Mappings__r != null) {
-                String objectAPIName = objectMapping.Object_API_Name__c;
+            BDI_FieldMapping[] fieldMappings = bdiMSAdv.fieldMappingsByObjMappingDevName.get(objectMapping.Object_API_Name);
+            if (fieldMappings != null) {
+                for (BDI_FieldMapping fieldMapping : fieldMappings) {
 
-                for (Data_Import_Field_Mapping__mdt fieldMapping : objectMapping.Data_Import_Field_Mappings__r) {
+                    String objectAPIName = objectMapping.Object_API_Name;
+
                     CheckboxWrapper fieldMappingWrapper = new CheckboxWrapper(
                         fieldMapping.MasterLabel,
                         fieldMapping.DeveloperName,
-                        UTIL_Describe.getFieldDescribe(objectAPIName, fieldMapping.Target_Field_API_Name__c),
+                        UTIL_Describe.getFieldDescribe(objectAPIName, fieldMapping.Target_Field_API_Name),
                         false
                     );
+
                     omw.fieldMappingCheckboxes.add(fieldMappingWrapper);
                 }
             }
@@ -146,16 +149,13 @@ public with sharing class GE_TemplateBuilderCtrl {
         return wrappers;
     }
 
-    public class ObjectMappingWrapper {
-        @AuraEnabled public String DeveloperName;
-        @AuraEnabled public String MasterLabel;
-        @AuraEnabled public String Object_API_Name;
+    public class ObjectMappingWrapper extends BDI_ObjectMapping {
         @AuraEnabled public CheckboxWrapper[] fieldMappingCheckboxes;
 
-        ObjectMappingWrapper(Data_Import_Object_Mapping__mdt objectMapping) {
+        ObjectMappingWrapper(BDI_ObjectMapping objectMapping) {
             this.DeveloperName = objectMapping.DeveloperName;
             this.MasterLabel = objectMapping.MasterLabel;
-            this.Object_API_Name = objectMapping.Object_API_Name__c;
+            this.Object_API_Name = objectMapping.Object_API_Name;
             this.fieldMappingCheckboxes = new CheckboxWrapper[]{};
         }
     }
@@ -164,6 +164,7 @@ public with sharing class GE_TemplateBuilderCtrl {
         @AuraEnabled public String label;
         @AuraEnabled public String value;
         @AuraEnabled public Boolean checked;
+
         // TODO: Change to displayType and add new attribute for dataType
         @AuraEnabled public String dataType;
         @AuraEnabled public PicklistOptionWrapper[] picklistOptions;
