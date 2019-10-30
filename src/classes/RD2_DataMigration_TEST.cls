@@ -131,6 +131,22 @@ private class RD2_DataMigration_TEST {
             'This RD should be in Enhanced RD format');
     }
 
+     /**
+     * @description Verifies that a schedule record is created for Enhanced Recurring Donation record.
+     */
+    @IsTest
+    private static void shouldCreateScheduleForEnhancedRDs() {
+        List<RecurringDonationSchedule__c> rdSchedules  = new List<RecurringDonationSchedule__c>();
+        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+
+        npe03__Recurring_Donation__c rd = getNewRecurringDonationEnhancedFormat(contactId);
+
+        RD2_DataMigrationMapper migrationService = new RD2_DataMigrationMapper(rd);
+        rdSchedules = migrationService.getScheduleRecords();
+
+        System.assertEquals(rdSchedules.size(), 1, 'Number of RDs should be 1');
+    }
+
     // HELPER METHODS
 
     /**
@@ -184,4 +200,5 @@ private class RD2_DataMigration_TEST {
 
         return oppBuilder.build();
     }
+
 }

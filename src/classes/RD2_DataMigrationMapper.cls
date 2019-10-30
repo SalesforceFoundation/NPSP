@@ -68,7 +68,8 @@ public class RD2_DataMigrationMapper {
      * @return List<RecurringDonationSchedule__c> Schedule records to insert
      */
     public List<RecurringDonationSchedule__c> getScheduleRecords() {
-        return new List<RecurringDonationSchedule__c>();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        return scheduleService.getNewSchedules(rd);
     }
 
     /**
