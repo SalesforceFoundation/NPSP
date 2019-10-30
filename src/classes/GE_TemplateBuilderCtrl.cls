@@ -104,7 +104,7 @@ public with sharing class GE_TemplateBuilderCtrl {
         for (BDI_ObjectMapping objectMapping : bdiMSAdv.objectMappingByDevName.values()) {
             ObjectMappingWrapper omw = new ObjectMappingWrapper(objectMapping);
 
-            BDI_FieldMapping[] fieldMappings = bdiMSAdv.fieldMappingsByObjMappingDevName.get(objectMapping.Object_API_Name);
+            BDI_FieldMapping[] fieldMappings = bdiMSAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
             if (fieldMappings != null) {
                 for (BDI_FieldMapping fieldMapping : fieldMappings) {
 
