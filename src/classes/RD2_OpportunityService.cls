@@ -42,9 +42,9 @@ public with sharing class RD2_OpportunityService {
     */
     public void createInstallmentOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates) {
 
-        List<Opportunity> opportunityInserts;
+        List<Opportunity> oppsToInsert;
         Set<Id> createdOppIds = new Set<Id>();
-        Integer j = 0;
+        Integer oppItem = 0;
         //Create a list of ContactIds and contactmap used in these RecurringDonations
         List<Id> contactIds = new List<Id>();
         Map<Id,Contact> contactMap;
@@ -59,21 +59,21 @@ public with sharing class RD2_OpportunityService {
             rdPaymentMethod.put(r.Id,r.PaymentMethod__c);
 
         }
-        contactMap = getContactMap(contactIds);
+        contactMap = getContacts(contactIds);
 
-        opportunityInserts = getInstallmentOpportunities(rdsWithCloseDates, contactMap);
+        oppsToInsert = getInstallmentOpportunities(rdsWithCloseDates, contactMap);
 
-        if (opportunityInserts.size() > 0) {
-            for (Database.SaveResult s : insertOpportunities(opportunityInserts)) {
+        if (oppsToInsert.size() > 0) {
+            for (Database.SaveResult s : insertOpportunities(oppsToInsert)) {
                 if (s.isSuccess() == true) {
                     //get all the new OppIds into a list
                     createdOppIds.add(s.getId());
 
                 } else {//handle errors on insert
                     badSRs.add(s);
-                    badOpps.add(opportunityInserts[j]);
+                    badOpps.add(oppsToInsert[oppItem]);
                 }
-                j++;
+                oppItem++;
             }
             //Confirm if the error handling is needed due to bulk operations
             if (!badSRs.isEmpty()) {
@@ -92,13 +92,12 @@ public with sharing class RD2_OpportunityService {
     */
     private List<Opportunity> getInstallmentOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates, Map<Id,Contact> contactMap) {
 
-        List<Opportunity> opportunityInserts = new List<Opportunity>();
-        Integer i = 0;
+        List<Opportunity> oppsToInsert = new List<Opportunity>();
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
         for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keySet()) {
 
-            for(;i< rdsWithCloseDates.get(r).size();i++) {
+            for(Integer i = 0;i< rdsWithCloseDates.get(r).size();i++) {
                 Opportunity opp = new Opportunity();
                 opp.Name = r.npe03__Donor_Name__c + ' ' + r.npe03__Amount__c.format() + ' ' + rdsWithCloseDates.get(r)[i].format() + ' ' + System.Label.stgNavRecurringDonations;
 
@@ -117,11 +116,11 @@ public with sharing class RD2_OpportunityService {
                 if (r.npe03__Recurring_Donation_Campaign__c != null && rds.npe03__Add_Campaign_to_All_Opportunites__c ) {
                     opp.CampaignId = r.npe03__Recurring_Donation_Campaign__c;
                 }
-                opportunityInserts.add(opp);
+                oppsToInsert.add(opp);
             }
           }
 
-        return opportunityInserts;
+        return oppsToInsert;
 
     }
 
@@ -159,7 +158,7 @@ public with sharing class RD2_OpportunityService {
             paymentForUpdates.add(payment);
         }
 
-        Database.SaveResult[] lsr = Database.update(paymentForUpdates, false);
+        Database.SaveResult[] saveResults = Database.update(paymentForUpdates, false);
 
     }
 
@@ -168,8 +167,8 @@ public with sharing class RD2_OpportunityService {
     * @param List of contact ids
     * @return Map<Id, Contact> containing the AccountId to Contact.
     */
-    private Map<Id, Contact> getContactMap (List<Id> contactIds) {
-        Map<Id,Contact> contactMap;
+    private Map<Id, Contact> getContacts (List<Id> contactIds) {
+        Map<Id,Contact> contactMap = new Map<Id,Contact>();
 
         if (contactIds.size() > 0) {
             contactMap = new Map<Id,Contact>([
@@ -186,26 +185,26 @@ public with sharing class RD2_OpportunityService {
 
      /***
     * @description insert opportunities for the specified recurring donations.
-    * @param opportunityInserts List of opportunities
+    * @param oppsToInsert List of opportunities
     * @return the saveresults after the DML operation.
     */
-    private static List<Database.SaveResult> insertOpportunities(List<Opportunity> opportunityInserts) {
+    private static List<Database.SaveResult> insertOpportunities(List<Opportunity> oppsToInsert) {
 
-        Set<Id> RDID = new Set<Id>();
-        Database.SaveResult[] lsr;
+        Set<Id> rdIds = new Set<Id>();
+        Database.SaveResult[] saveResults;
 
-        if (opportunityInserts.size() > 0) {
-            for (Opportunity o : opportunityInserts) {
-                RDID.add(o.npe03__Recurring_Donation__c);
+        if (oppsToInsert.size() > 0) {
+            for (Opportunity o : oppsToInsert) {
+                rdIds.add(o.npe03__Recurring_Donation__c);
             }
             //Check if the Recurring donation is one or more to know if it gets saved from UI or from batch
-            if (RDID.size() == 1) {
-                lsr = Database.insert(opportunityInserts, true);
+            if (rdIds.size() == 1) {
+                saveResults = Database.insert(oppsToInsert, true);
 
             } else {//otherwise, this is a bulk operation.
-                lsr = Database.insert(opportunityInserts, false);
+                saveResults = Database.insert(oppsToInsert, false);
             }
         }
-        return lsr;
+        return saveResults;
     }
 }

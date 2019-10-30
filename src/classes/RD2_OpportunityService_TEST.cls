@@ -73,7 +73,7 @@ private with sharing class RD2_OpportunityService_TEST {
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
         insert campaign;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withContact(primaryContacts[0].Id)
             .withInstallmentPeriodMonthly()
             .withDayOfMonth('20')
@@ -155,7 +155,7 @@ private with sharing class RD2_OpportunityService_TEST {
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
         insert campaign;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withAccount(acc.Id)
             .withInstallmentPeriodMonthly()
             .withDayOfMonth('20')
@@ -166,7 +166,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         insert rd;
 
-        rd.PaymentMethod__c ='Credit Card';
+        rd.PaymentMethod__c = CREDITCARD;
         update rd;
 
         rd = getRd(rd);
@@ -206,7 +206,7 @@ private with sharing class RD2_OpportunityService_TEST {
     * @param Installment stagename
     * @return void
     */
-    public static void createRdSettingsWithStage(String stageName) {
+    private static void createRdSettingsWithStage(String stageName) {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
             InstallmentOppStageName__c = stageName,
             npe03__Add_Campaign_to_All_Opportunites__c = true,
