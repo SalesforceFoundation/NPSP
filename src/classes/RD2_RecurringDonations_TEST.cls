@@ -37,6 +37,7 @@
 @isTest(IsParallel=true)
 private with sharing class RD2_RecurringDonations_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
 
     /****
     * @description Creates data required for unit tests
@@ -162,6 +163,40 @@ private with sharing class RD2_RecurringDonations_TEST {
             'The triggerOld parameter should contain the data from the oldList parameter');
     }
 
+    /***
+    * @description Verifies schedule is created when recurring donation is inserted
+    */
+    @isTest
+    private static void shouldCreateNewRDScheduleOnInsert() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(10)
+                        .withInstallmentPeriodMonthly()
+                        .withInstallmentFrequency(1)
+                        .withDayOfMonth('20')
+                        .withDateEstablished(Date.newInstance(2019, 9, 15))
+                        .withStartDate(Date.newInstance(2019, 9, 15))
+                        .build()
+        };
+
+        Test.startTest();
+        insert rds;
+        Test.stopTest();
+
+        Map<Id, npe03__Recurring_Donation__c> actualRdById = new Map<Id, npe03__Recurring_Donation__c>(
+                rdGateway.getRecords(rds)
+        );
+        System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
+
+        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rds);
+        System.assertEquals(rds.size(), rdSchedules.size(), 'Number of RD schedule records should equal the number of RD records');
+
+    }
 
 
     // Helpers
