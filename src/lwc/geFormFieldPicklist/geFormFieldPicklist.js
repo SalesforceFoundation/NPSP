@@ -3,7 +3,7 @@ import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 
 export default class GeFormFieldPicklist extends LightningElement {
     @api objectName;
-    @api fieldName; // e.g. Account.Industry
+    @api fieldName;
     @api label;
 
     @track picklistValues;
@@ -12,7 +12,7 @@ export default class GeFormFieldPicklist extends LightningElement {
     @wire(getObjectInfo, { objectApiName: '$objectName' } ) objectInfo;
 
     @wire(getPicklistValues, {
-        fieldApiName: '$fullFieldName',
+        fieldApiName: '$fullFieldApiName',
         recordTypeId: '$objectInfo.data.defaultRecordTypeId' })
     wiredPicklistValues({error, data}) {
         if(data) {
@@ -24,7 +24,7 @@ export default class GeFormFieldPicklist extends LightningElement {
         }
     }
 
-    get fullFieldName() {
+    get fullFieldApiName() {
         return `${this.objectName}.${this.fieldName}`;
     }
 

@@ -76,8 +76,4 @@ export default class GeFormField extends LightningElement {
     get fieldApiName() {
         return this.fieldInfo.Target_Field_API_Name;
     }
-
-    get fieldFullApiName() {
-        return `${this.objectApiName}.${this.fieldApiName}`;
-    }
 }
