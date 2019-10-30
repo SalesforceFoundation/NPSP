@@ -179,7 +179,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withInstallmentFrequency(1)
                 .withDateEstablished(Date.newInstance(2019, 9, 15))
                 .withStartDate(Date.newInstance(2019, 11, 1))
-                .withRecurringDonationStatusClosed()
+                .withStatusClosed()
                 .build();
 
         List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rds);

@@ -266,6 +266,18 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Start Date
+    * @param startDate Start Date
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStartDate(Date startDate) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('StartDate__c', startDate);
+        return this;
+    }
+
+    /***
     * @description Sets number of Installments
     * @param numberOfInstallments Number of Installments
     * @return TEST_RecurringDonationBuilder Builder instance
@@ -397,6 +409,15 @@ public without sharing class TEST_RecurringDonationBuilder {
         return withStatus(RD2_Constants.STATUS_ACTIVE);
     }
 
+
+    /***
+    * @description Sets Recurring Donation Status to Closed 
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatusClosed() {
+        return withStatus(RD2_Constants.STATUS_CLOSED);
+    }
+
     /***
     * @description Sets Status field
     * @param status Status value
@@ -442,39 +463,6 @@ public without sharing class TEST_RecurringDonationBuilder {
                 .withInstallmentFrequency(1);
         }
 
-        return this;
-    }
-
-    /***
-    * @description Sets Installment Frequency to input integer
-    * @return TEST_RecurringDonationBuilder Builder instance
-    */
-    public TEST_RecurringDonationBuilder withInstallmentFrequency(Integer frequency) {
-        validateMode(Mode.Enhanced);
-
-        valuesByFieldName.put('InstallmentFrequency__c', frequency);
-        return this;
-    }
-
-    /***
-    * @description Sets Open Ended Status to None
-    * @return TEST_RecurringDonationBuilder Builder instance
-    */
-    public TEST_RecurringDonationBuilder withStartDate(Date sDate) {
-        validateMode(Mode.Enhanced);
-
-        valuesByFieldName.put('StartDate__c', sDate);
-        return this;
-    }
-
-    /***
-    * @description Sets Open Ended Status to None
-    * @return TEST_RecurringDonationBuilder Builder instance
-    */
-    public TEST_RecurringDonationBuilder withRecurringDonationStatusClosed() {
-        validateMode(Mode.Enhanced);
-
-        valuesByFieldName.put('Status__c', RD2_Constants.STATUS_CLOSED);
         return this;
     }
 
