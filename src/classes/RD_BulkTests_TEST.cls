@@ -46,7 +46,6 @@ public class RD_BulkTests_TEST {
         Integer opportunityCount = 20;
         
         List<Contact> contacts = new List<Contact>();
-        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
         
         Account a = new Account();
         a.Name = 'test Individual';
@@ -59,19 +58,16 @@ public class RD_BulkTests_TEST {
             c.AccountId = a.Id;
             contacts.add(c);
         }
-        insert contacts;
-        
-        for(Integer i=0;i<recurringDonationCount;i++){
-            npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-            r1.Name = 'test';
-            r1.npe03__Installments__c = opportunityCount;
-            r1.npe03__Contact__c = contacts[i].Id;
-            r1.npe03__Amount__c = 100;
-            r1.npe03__Installment_Period__c = 'Yearly';
-            r1.npe03__Date_Established__c = System.today();
-            r1.npe03__Schedule_Type__c = 'Multiply By';
-            recurringDonations.add(r1);
-        }
+        insert contacts;        
+
+        List<npe03__Recurring_Donation__c> recurringDonations = new TEST_RecurringDonationBuilder()
+          .withInstallments(opportunityCount)
+          .withAmount(100)
+          .withInstallmentPeriodYearly()
+          .withDateEstablished(System.today())
+          .withScheduleTypeMultiplyValue()
+          .build(contacts);
+
         test.startTest();
         insert recurringDonations;
         test.stopTest();
