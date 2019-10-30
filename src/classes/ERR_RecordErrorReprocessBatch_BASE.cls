@@ -49,7 +49,7 @@
 *              or will assume all records if not.
 * @group ErrorHandling
 */
-public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE extends UTIL_AbstractCommon_BATCH {
+public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE extends UTIL_AbstractChunkinglDV_BATCH {
 
     @testVisible private DateTime boundary;
 
@@ -57,7 +57,6 @@ public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE exten
      * @description Constructor
     *******************************************************************************************************/
     public ERR_RecordErrorReprocessBatch_Base() {
-        super();
         this.boundary = System.now().addDays(1);
     }
 
@@ -67,19 +66,7 @@ public abstract inherited sharing class ERR_RecordErrorReprocessBatch_BASE exten
      *        be processed
     *******************************************************************************************************/
     public ERR_RecordErrorReprocessBatch_Base(DateTime boundary) {
-        super();
         this.boundary = (boundary != null) ? boundary :System.now().addDays(1);
-    }
-
-    /*******************************************************************************************************
-     * @description Constructor
-     * @param Integer batchSize # of records to be returned per batch
-     * @param DateTime boundary Only records whose LastModifiedDate <= boundary will
-     *        be processed
-    *******************************************************************************************************/
-    public ERR_RecordErrorReprocessBatch_Base(Integer batchSize, DateTime boundary) {
-        super(batchSize);
-        this.boundary = (boundary != null) ? boundary : System.now().addDays(1);
     }
 
     /*******************************************************************************************************
