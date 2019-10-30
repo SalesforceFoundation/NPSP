@@ -66,7 +66,7 @@ class GeFormService {
      * @param fieldDevName  Dev name of the object to retrieve
      * @returns {BDI_FieldMapping}
      */
-    getFieldInfo(fieldDevName) {
+    getFieldMappingWrapper(fieldDevName) {
         return this.fieldMappings[fieldDevName];
     }
 
@@ -75,7 +75,7 @@ class GeFormService {
      * @param objectDevName
      * @returns {BDI_ObjectMapping}
      */
-    getObjectInfo(objectDevName) {
+    getObjectMappingWrapper(objectDevName) {
         return this.objectMappings[objectDevName];
     }
 
@@ -93,6 +93,36 @@ class GeFormService {
                     console.error(JSON.stringify(error));
                 });
         });
+    }
+
+    handleSave(sectionList) {
+        
+        // Gather all the data from the input
+        let fieldData = {};
+
+        sectionList.forEach(section => {
+            fieldData = { ...fieldData, ...(section.values)};
+        });
+
+        console.log('this is the field data:');
+        console.log(fieldData);
+
+        // Massage the data into a DI object
+        let diRecord = {};
+
+
+        for (let key in fieldData) {
+            if (fieldData.hasOwnProperty(key)) {
+                let value = fieldData[key];
+                let fieldWrapper = this.getFieldMappingWrapper(key);
+
+                diRecord[fieldWrapper.Source_Field_API_Name] = value;
+            }
+        }
+
+        console.log('di record is: ' );
+        console.log(diRecord);
+
     }
 }
 
