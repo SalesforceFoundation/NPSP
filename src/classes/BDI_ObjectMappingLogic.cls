@@ -42,13 +42,12 @@ public with sharing virtual class BDI_ObjectMappingLogic {
         if (objWraps == null) {
             return objWraps;
         }
-
-        Map<String, Schema.DescribeFieldResult> sourceFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__DataImport__c'));
+        
+        String sourceObjName = SObjectType.DataImport__c.getName();
         
         for (BDI_ObjectWrapper objWrap : objWraps) {
-            Map<String, Schema.DescribeFieldResult> targetFieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(objWrap.objMapping.Object_API_Name__c);
 
-            objWrap.sObj = UTIL_Describe.getPrototypeObject(objWrap.objMapping.Object_API_Name__c);
+            objWrap.sObj = UTIL_Describe.getPrototypeObject(objWrap.objMapping.Object_API_Name);
 
             // If the object already has an existing SObject Id, then set it in the sObj
             if (objWrap.existingSObjectId != null) {
@@ -57,12 +56,12 @@ public with sharing virtual class BDI_ObjectMappingLogic {
 
             updateChildToPredecessorRelationship(objWrap);
             
-            for (Data_Import_Field_Mapping__mdt fieldMapping : objWrap.fieldMappings) {
-                String sourceFieldName = fieldMapping.Source_Field_API_Name__c;
-                String targetFieldName = fieldMapping.Target_Field_API_Name__c;
+            for (BDI_FieldMapping fieldMapping : objWrap.fieldMappings) {
+                String sourceFieldName = fieldMapping.Source_Field_API_Name;
+                String targetFieldName = fieldMapping.Target_Field_API_Name;
                 
-                Schema.DescribeFieldResult sourceFieldDescribe = sourceFieldDescribeMap.get(sourceFieldName.toLowerCase());
-                Schema.DescribeFieldResult targetFieldDescribe = targetFieldDescribeMap.get(targetFieldName.toLowerCase());
+                Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(sourceObjName, sourceFieldName);
+                Schema.DescribeFieldResult targetFieldDescribe = UTIL_Describe.getFieldDescribe(objWrap.objMapping.Object_API_Name, targetFieldName);
 
                 //Confirm that it is real field, and that it is accessible to the running user.
                 if (targetFieldDescribe != null && targetFieldDescribe.isAccessible()) {
@@ -83,9 +82,9 @@ public with sharing virtual class BDI_ObjectMappingLogic {
     // of the predecessor into the defined relationship field on a new SObject.
     public static void updateChildToPredecessorRelationship(BDI_ObjectWrapper objWrap) {
         // If the object we are working on is a child to its predecessor then set the relationship field 
-        if (objWrap.sObj.Id == null && objWrap.objMapping.Relationship_To_Predecessor__c == 'Child') {
+        if (objWrap.sObj.Id == null && objWrap.objMapping.Relationship_To_Predecessor == 'Child') {
 
-            objWrap.sObj.put(objWrap.objMapping.Relationship_Field__c,objWrap.dataImport.get(objWrap.predecessorObjMapping.Imported_Record_Field_Name__c));
+            objWrap.sObj.put(objWrap.objMapping.Relationship_Field,objWrap.dataImport.get(objWrap.predecessorObjMapping.Imported_Record_Field_Name));
         }
     }
 

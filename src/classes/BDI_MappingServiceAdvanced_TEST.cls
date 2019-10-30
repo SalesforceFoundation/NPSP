@@ -110,7 +110,6 @@ private class BDI_MappingServiceAdvanced_TEST {
         System.assert(bdiMSAdv.fieldMappingSet != null);
         System.assert(bdiMSAdv.fieldMappingSet.objectMappingByDevName.size() > 0);
         System.assert(bdiMSAdv.fieldMappingSet.fieldMappingByDevName.size() > 0);
-        System.assert(bdiMSAdv.fieldMappingSet.fieldMappingsByObjMappingDevName.size() > 0);
     }
     
 }
