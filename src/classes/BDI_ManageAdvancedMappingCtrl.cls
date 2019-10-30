@@ -48,7 +48,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     /*******************************************************************************************************
     * @description Instance of BDI_MappingServiceAdvanced
     */
-    private static BDI_MappingServiceAdvanced bdiCMT = BDI_MappingServiceAdvanced.getInstance();
+    private static BDI_MappingServiceAdvanced bdiMsAdv = BDI_MappingServiceAdvanced.getInstance();
 
     /*******************************************************************************************************
     * @description Current package namespace
@@ -89,7 +89,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     */
     @AuraEnabled(cacheable=true)
     public static String getFieldMappingSetName() {
-        return UTIL_CustomSettings_API.getDataImportSettings().Default_Data_Import_Field_Mapping_Set__c;
+        return bdiMsAdv.fieldMappingSet.DeveloperName;
     }
 
     /*******************************************************************************************************
@@ -104,29 +104,20 @@ public class BDI_ManageAdvancedMappingCtrl {
     * @return List: List of Data Import Object Mapping
     */
     @AuraEnabled(cacheable=false)
-    public static DataImportObjectMappingWrapper[] getObjectMappings(){
+    public static BDI_ObjectMapping[] getObjectMappings(){
 
-        DataImportObjectMappingWrapper[] objMappingWrappers = new DataImportObjectMappingWrapper[]{};
-        Data_Import_Object_Mapping__mdt[] objMappings = bdiCMT.objMappingsByDevName.values();
-
-        Map<String,DataImportObjectMappingWrapper> objMappingWrappersByDevName = new Map<String,DataImportObjectMappingWrapper>();
-
-        for (Data_Import_Object_Mapping__mdt objMapping : objMappings) {
-            DataImportObjectMappingWrapper objMappingWrapper = new DataImportObjectMappingWrapper(objMapping);
-            objMappingWrappers.add(objMappingWrapper);
-            objMappingWrappersByDevName.put(objMappingWrapper.DeveloperName, objMappingWrapper);
-        }
+        BDI_ObjectMapping[] objMappings = bdiMsAdv.objectMappingByDevName.values();
 
         //Assign the label name field for the predecessor using the constructed map by dev name.
-        for (DataImportObjectMappingWrapper objMappingWrapper : objMappingWrappers) {
+        for (BDI_ObjectMapping objMapping : objMappings) {
 
-            DataImportObjectMappingWrapper predecessorObjMappingWrapper = objMappingWrappersByDevName.get(objMappingWrapper.Predecessor);
-            if(predecessorObjMappingWrapper != null) {
-                objMappingWrapper.Predecessor_Label_Name = predecessorObjMappingWrapper.MasterLabel;
+            BDI_ObjectMapping predecessorObjMapping = bdiMsAdv.objectMappingByDevName.get(objMapping.Predecessor);
+            if(predecessorObjMapping != null) {
+                objMapping.Predecessor_Label_Name = predecessorObjMapping.MasterLabel;
             }
         }
 
-        return objMappingWrappers;
+        return objMappings;
     }
 
     /*******************************************************************************************************
@@ -199,14 +190,14 @@ public class BDI_ManageAdvancedMappingCtrl {
         DataImportFieldMappingWrapper[] fieldMappingWrappers =
             new List<DataImportFieldMappingWrapper>();
 
-        Data_Import_Field_Mapping__mdt[] fieldMappings =
-            bdiCMT.fieldMappingsByObjMappingDevName.get(objectName);
+        BDI_FieldMapping[] fieldMappings =
+            bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectName);
 
         if (fieldMappings != null) {
-            for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
+            for (BDI_FieldMapping fieldMapping : fieldMappings) {
 
-            if (fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName == fieldMappingSetname &&
-                fieldMapping.Is_Deleted__c == false) {
+                if (bdiMsAdv.fieldMappingSet.DeveloperName == fieldMappingSetname &&
+                    fieldMapping.Is_Deleted == false) {
 
                     fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
                 }
@@ -221,7 +212,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     *
     * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
     *
-    * @return String: Deployment Id or Data_Import_Field_Mapping__mdt instance JSON when in tests
+    * @return String: Deployment Id or BDI_FieldMapping instance JSON when in tests
     */
     @AuraEnabled
     public static String createDataImportFieldMapping(String fieldMappingString) {
@@ -244,7 +235,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     *
     * @param fieldMappingString: DataImportFieldMappingWrapper as JSON
     *
-    * @return String: Deployment Id or Data_Import_Field_Mapping__mdt instance JSON when in tests
+    * @return String: Deployment Id or BDI_FieldMapping instance JSON when in tests
     */
     private static Data_Import_Field_Mapping__mdt constructDataImportFieldMapping(String fieldMappingString) {
         DataImportFieldMappingWrapper fieldMappingWrapper =
@@ -264,21 +255,21 @@ public class BDI_ManageAdvancedMappingCtrl {
             '{ "' + diFieldMappingSetFieldName + '" : "' +
             UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Data_Import_Field_Mapping_Set) + '",' +
             '"' + targetObjectMappingFieldName + '": "' +
-            UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Target_Object_Mapping)  + '"}';
+            UTIL_Namespace.StrAllNSPrefix(fieldMappingWrapper.Target_Object_Mapping_Dev_Name)  + '"}';
 
-        Data_Import_Field_Mapping__mdt fieldMapping =
+        Data_Import_Field_Mapping__mdt diFieldMapping =
             (Data_Import_Field_Mapping__mdt)JSON.deserialize(
                 tempFieldMappingString,
                 Data_Import_Field_Mapping__mdt.class);
 
-        fieldMapping.MasterLabel = fieldMappingWrapper.MasterLabel;
-        fieldMapping.DeveloperName = fieldMappingWrapper.DeveloperName;
-        fieldMapping.Is_Deleted__c = fieldMappingWrapper.Is_Deleted;
-        fieldMapping.Required__c = fieldMappingWrapper.Required;
-        fieldMapping.Source_Field_API_Name__c = fieldMappingWrapper.Source_Field_API_Name;
-        fieldMapping.Target_Field_API_Name__c = fieldMappingWrapper.Target_Field_API_Name;
+        diFieldMapping.MasterLabel = fieldMappingWrapper.MasterLabel;
+        diFieldMapping.DeveloperName = fieldMappingWrapper.DeveloperName;
+        diFieldMapping.Is_Deleted__c = fieldMappingWrapper.Is_Deleted;
+        diFieldMapping.Required__c = fieldMappingWrapper.Required;
+        diFieldMapping.Source_Field_API_Name__c = fieldMappingWrapper.Source_Field_API_Name;
+        diFieldMapping.Target_Field_API_Name__c = fieldMappingWrapper.Target_Field_API_Name;
 
-        return fieldMapping;
+        return diFieldMapping;
     }
 
     /*******************************************************************************************************
@@ -492,70 +483,33 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /*******************************************************************************************************
-    * @description Data_Import_Field_Mapping__mdt wrapper class used in the Field Mapping UI and for
+    * @description BDI_FieldMapping wrapper class used in the Field Mapping UI and for
     * building corresponding custom metadata type records.
     */
-    public class DataImportFieldMappingWrapper {
-        @AuraEnabled public String DeveloperName;
-        @AuraEnabled public String MasterLabel;
+    public class DataImportFieldMappingWrapper extends BDI_FieldMapping {
         @AuraEnabled public String Label;
         @AuraEnabled public String Maps_To_Icon;
-        @AuraEnabled public String Source_Field_Label;
-        @AuraEnabled public String Source_Field_API_Name;
-        @AuraEnabled public String Source_Field_Data_Type;
-        @AuraEnabled public String Target_Field_Label;
-        @AuraEnabled public String Target_Field_API_Name;
-        @AuraEnabled public String Target_Field_Data_Type;
-        @AuraEnabled public String Data_Import_Field_Mapping_Set;
-        @AuraEnabled public String Target_Object_Mapping;
-        @AuraEnabled public String Required;
-        @AuraEnabled public Boolean Is_Deleted;
-        @AuraEnabled public String Source_Field_Display_Type_Label;
-        @AuraEnabled public String Target_Field_Display_Type_Label;
 
-        public DataImportFieldMappingWrapper(Data_Import_Field_Mapping__mdt fieldMapping) {
-            String dataImport = SobjectType.DataImport__c.Name;
-            String objectAPIName = fieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
-            String sourceFieldAPIName = fieldMapping.Source_Field_API_Name__c;
-            String targetFieldAPIName = fieldMapping.Target_Field_API_Name__c;
-
-            if (UTIL_Namespace.shouldAlignNamespace) {
-                objectAPIName =
-                    UTIL_Namespace.alignSchemaNSWithEnvironment(
-                        fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
-                sourceFieldAPIName =
-                    UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Source_Field_API_Name__c);
-                targetFieldAPIName =
-                    UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Target_Field_API_Name__c);
-            }
-
-            Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
-                dataImport,
-                sourceFieldAPIName);
-
-            Schema.DescribeFieldResult targetFieldDescribe = UTIL_Describe.getFieldDescribe(
-                objectAPIName,
-                targetFieldAPIName);
-
+        public DataImportFieldMappingWrapper(BDI_FieldMapping fieldMapping) {
             this.DeveloperName = fieldMapping.DeveloperName;
             this.MasterLabel = fieldMapping.MasterLabel;
-            this.Label =fieldMapping.MasterLabel;
-            this.Source_Field_Label = sourceFieldDescribe.label;
-            this.Source_Field_API_Name = fieldMapping.Source_Field_API_Name__c;
-            this.Source_Field_Data_Type = String.valueOf(sourceFieldDescribe.type);
-            this.Source_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Source_Field_Data_Type);
+            this.Label = fieldMapping.MasterLabel;
+            this.Source_Field_Label = fieldMapping.Source_Field_Label;
+            this.Source_Field_API_Name = fieldMapping.Source_Field_API_Name;
+            this.Source_Field_Data_Type = fieldMapping.Source_Field_Data_Type;
+            this.Source_Field_Display_Type_Label = fieldMapping.Source_Field_Display_Type_Label;
 
-            this.Target_Field_Label = targetFieldDescribe.label;
-            this.Target_Field_API_Name = fieldMapping.Target_Field_API_Name__c;
-            this.Target_Field_Data_Type = String.valueOf(targetFieldDescribe.type);
-            this.Target_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Target_Field_Data_Type);
+            this.Target_Field_Label = fieldMapping.Target_Field_Label;
+            this.Target_Field_API_Name = fieldMapping.Target_Field_API_Name;
+            this.Target_Field_Data_Type = fieldMapping.Target_Field_Data_Type;
+            this.Target_Field_Display_Type_Label = fieldMapping.Target_Field_Display_Type_Label;
 
             this.Maps_To_Icon = UTILITY_FORWARD_SLDS_ICON;
 
-            this.Data_Import_Field_Mapping_Set = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
-            this.Target_Object_Mapping = fieldMapping.Target_Object_Mapping__r.DeveloperName;
-            this.Required = fieldMapping.Required__c;
-            this.Is_Deleted = fieldMapping.Is_Deleted__c;
+            this.Data_Import_Field_Mapping_Set = fieldMapping.Data_Import_Field_Mapping_Set;
+            this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping_Dev_Name;
+            this.Required = fieldMapping.Required;
+            this.Is_Deleted = fieldMapping.Is_Deleted;
         }
     }
 
@@ -798,14 +752,14 @@ public class BDI_ManageAdvancedMappingCtrl {
 
         Set<String> mappedFieldNamesSet = new Set<String>();
 
-        if (bdiCMT.fieldMappingsByObjMappingDevName != null) {
-            for (String objMappingDevName : bdiCMT.fieldMappingsByObjMappingDevName.keySet()) {
-                Data_Import_Field_Mapping__mdt[] fieldMappings =
-                    bdiCMT.fieldMappingsByObjMappingDevName.get(objMappingDevName);
+        if (bdiMsAdv.fieldMappingsByObjMappingDevName != null) {
+            for (String objMappingDevName : bdiMsAdv.fieldMappingsByObjMappingDevName.keySet()) {
+                BDI_FieldMapping[] fieldMappings =
+                    bdiMsAdv.fieldMappingsByObjMappingDevName.get(objMappingDevName);
 
                 if (fieldMappings != null) {
-                    for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappings) {
-                        mappedFieldNamesSet.add(fieldMapping.Source_Field_API_Name__c.toLowerCase());
+                    for (BDI_FieldMapping fieldMapping : fieldMappings) {
+                        mappedFieldNamesSet.add(fieldMapping.Source_Field_API_Name.toLowerCase());
                     }
                 }
             }

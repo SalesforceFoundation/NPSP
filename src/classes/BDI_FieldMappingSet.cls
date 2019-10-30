@@ -42,33 +42,25 @@ public with sharing class BDI_FieldMappingSet {
 
     @AuraEnabled public Map<String,BDI_ObjectMapping> objectMappingByDevName = new Map<String,BDI_ObjectMapping>();
     @AuraEnabled public Map<String,BDI_FieldMapping> fieldMappingByDevName = new Map<String,BDI_FieldMapping>();
-    @AuraEnabled public Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingDevName = new Map<String,BDI_FieldMapping[]>();
 
+
+    /*******************************************************************************************************
+    * @description Constructor that wraps together the field mapping set info using already constructed
+    * BDI_ObjectMapping and BDI_FieldMapping objects and a Data_Import_Field_Mapping_Set__mdt record.
+    * @param fieldMappingSet
+    * @param objectMappingByDevName
+    * @param fieldMappingByDevName
+    */
     public BDI_FieldMappingSet(Data_Import_Field_Mapping_Set__mdt fieldMappingSet, 
-                                Data_Import_Object_Mapping__mdt[] diObjectMappings,
-                                Data_Import_Field_Mapping__mdt[] diFieldMappings) {
+                                Map<String,BDI_ObjectMapping> objectMappingByDevName,
+                                Map<String,BDI_FieldMapping>  fieldMappingByDevName) {
 
         this.DeveloperName = fieldMappingSet.DeveloperName;
         this.MasterLabel = fieldMappingSet.MasterLabel;
         this.Id = fieldMappingSet.Id;
         this.Data_Import_Object_Mapping_Group_Dev_Name = fieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName;
 
-        for (Data_Import_Object_Mapping__mdt diObjectMapping : diObjectMappings) {
-            BDI_ObjectMapping objectMapping = new BDI_ObjectMapping(diObjectMapping);
-            this.objectMappingByDevName.put(objectMapping.DeveloperName,objectMapping);
-        }
-
-        for (Data_Import_Field_Mapping__mdt diFieldMapping : diFieldMappings) {
-            BDI_FieldMapping fieldMapping = new BDI_FieldMapping(diFieldMapping);
-            this.fieldMappingByDevName.put(fieldMapping.DeveloperName,fieldMapping);
-
-            BDI_FieldMapping[] fieldMappings = new BDI_FieldMapping[]{};
-            if (this.fieldMappingsByObjMappingDevName.get(fieldMapping.Target_Object_Mapping_Dev_Name) != null){
-                fieldMappings = this.fieldMappingsByObjMappingDevName.get(fieldMapping.Target_Object_Mapping_Dev_Name);
-            }
-            fieldMappings.add(fieldMapping);
-            this.fieldMappingsByObjMappingDevName.put(fieldMapping.Target_Object_Mapping_Dev_Name,fieldMappings);
-        }
-
+        this.objectMappingByDevName = objectMappingByDevName;
+        this.fieldMappingByDevName = fieldMappingByDevName;
     }
 }

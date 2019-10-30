@@ -773,44 +773,49 @@ private class BDI_AdditionalObjectService_TEST {
 
         BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultMappingService());
         
-        BDI_MappingServiceAdvanced bdiFMCM = BDI_MappingServiceAdvanced.getInstance();
+        BDI_MappingServiceAdvanced bdiMsAdv = BDI_MappingServiceAdvanced.getInstance();
 
-        String[] objMappingNames = new List<String>(bdiFMCM.objMappingsByDevName.keySet());
-        Data_Import_Object_Mapping__mdt predecessorObjMapping = bdiFMCM.objMappingsByDevName.get('Opportunity');
-        Data_Import_Field_Mapping__mdt[] opptFieldMappings = bdiFMCM.fieldMappingsByObjMappingDevName.get('Opportunity'); 
+        String[] objMappingNames = new List<String>(bdiMsAdv.objectMappingByDevName.keySet());
+        BDI_ObjectMapping predecessorObjMapping = bdiMsAdv.objectMappingByDevName.get('Opportunity');
+        BDI_FieldMapping[] opptFieldMappings = bdiMsAdv.fieldMappingsByObjMappingDevName.get('Opportunity'); 
 
 
         Data_Import_Object_Mapping__mdt diom = 
             new Data_Import_Object_Mapping__mdt(DeveloperName = 'TestTestHonoree324',
                             MasterLabel = 'Honoree',
-                            Data_Import_Object_Mapping_Set__c = predecessorObjMapping.Data_Import_Object_Mapping_Set__c,
+                            Data_Import_Object_Mapping_Set__c = predecessorObjMapping.Data_Import_Object_Mapping_Set,
                             Object_API_Name__c = 'Contact',
                             Predecessor__c = predecessorObjMapping.DeveloperName,
                             Imported_Record_Field_Name__c = 'Contact1_Title__c',
                             Imported_Record_Status_Field_Name__c = 'Contact1ImportStatus__c',
                             Relationship_Field__c = 'Honoree_Contact__c',
                             Relationship_To_Predecessor__c = 'Parent');
-        Data_Import_Field_Mapping__mdt honoreeLastName = 
-            new Data_Import_Field_Mapping__mdt(DeveloperName = 'fakeHonoreeLastNameSFDOTest34',
-                            MasterLabel = 'fakeHonoreeLastNameSFDOTest34',
-                            Data_Import_Field_Mapping_Set__c = opptFieldMappings[0].Data_Import_Field_Mapping_Set__c,
-                            Required__c = 'Yes',
-                            Source_Field_API_Name__c = DataImport__c.Contact1_Alternate_Email__c.getDescribe().getName(),
-                            Target_Field_API_Name__c = 'LastName' );
 
-        Data_Import_Field_Mapping__mdt honoreeAccountId = 
-            new Data_Import_Field_Mapping__mdt(DeveloperName = 'fakeHonoreeAcctSFDOTest34',
-                            MasterLabel = 'fakeHonoreeAcctSFDOTest34',
-                            Data_Import_Field_Mapping_Set__c = opptFieldMappings[0].Data_Import_Field_Mapping_Set__c,
-                            Required__c = 'No',
-                            Source_Field_API_Name__c = DataImport__c.Account1Imported__c.getDescribe().getName(),
-                            Target_Field_API_Name__c = 'AccountId' );
+        BDI_ObjectMapping testObjMapping = new BDI_ObjectMapping(diom);
 
-        Data_Import_Field_Mapping__mdt[] honoreeFieldMappings = 
-            new Data_Import_Field_Mapping__mdt[]{honoreeLastName,honoreeAccountId};
+        BDI_FieldMapping testFM1 = new BDI_FieldMapping();
+        testFM1.MasterLabel = 'fakeHonoreeLastNameSFDOTest34';
+        testFM1.DeveloperName = 'fakeHonoreeLastNameSFDOTest34';
+        testFM1.Target_Object_API_Name = 'Contact';
+        testFM1.Data_Import_Field_Mapping_Set = opptFieldMappings[0].Data_Import_Field_Mapping_Set;
+        testFM1.Required = 'Yes';
+        testFM1.Source_Field_API_Name = DataImport__c.Contact1_Alternate_Email__c.getDescribe().getName();
+        testFM1.Target_Field_API_Name = 'LastName';
 
-        bdiFMCM.objMappingsByDevName.put(diom.DeveloperName,diom);
-        bdiFMCM.fieldMappingsByObjMappingDevName.put(diom.DeveloperName,honoreeFieldMappings);
+        BDI_FieldMapping testFM2 = new BDI_FieldMapping();
+        testFM2.MasterLabel = 'fakeHonoreeAcctSFDOTest34';
+        testFM2.DeveloperName = 'fakeHonoreeAcctSFDOTest34';
+        testFM2.Target_Object_API_Name = 'Contact';
+        testFM2.Data_Import_Field_Mapping_Set = opptFieldMappings[0].Data_Import_Field_Mapping_Set;
+        testFM2.Required = 'No';
+        testFM2.Source_Field_API_Name = DataImport__c.Account1Imported__c.getDescribe().getName();
+        testFM2.Target_Field_API_Name = 'AccountId';
+
+        BDI_FieldMapping[] honoreeFieldMappings = 
+            new BDI_FieldMapping[]{testFM1,testFM2};
+
+        bdiMsAdv.objectMappingByDevName.put(testObjMapping.DeveloperName,testObjMapping);
+        bdiMsAdv.fieldMappingsByObjMappingDevName.put(testObjMapping.DeveloperName,honoreeFieldMappings);
 
         bdiDIS.process(null, dis, diRecords);
         
