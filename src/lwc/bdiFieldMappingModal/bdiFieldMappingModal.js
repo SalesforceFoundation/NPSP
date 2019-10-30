@@ -479,6 +479,11 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @param {string} displayType: Display Type of the currently selected source field
     */
     handleAvailableTargetFieldsBySourceFieldDisplayType(fieldMapping) {
+        if (fieldMapping.isBooleanMappable === undefined) {
+            fieldMapping.isBooleanMappable =
+                this.diFieldsByAPIName[this.fieldMapping.Source_Field_API_Name].isBooleanMappable;
+        }
+
         const sourceFieldDataType = this.toTitleCase(fieldMapping.Source_Field_Data_Type);
         this.targetFieldLabelOptions = [];
         let validTargetTypes = this.validTargetTypesBySourceType[sourceFieldDataType];
