@@ -137,18 +137,15 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Handles schedule creation after insert of recurring donation
+    * @description Handles next donation calculation before insert of recurring donation
     * @param rds Trigger.new records
     */
-    // TODO: Calculate next donation date for new schedules - W-035251 (Placeholder)
     private void calculateNextDonationDates(List<npe03__Recurring_Donation__c> rds) {
 
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
         for (npe03__Recurring_Donation__c rd: rds) {
-            if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-                rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
-            }
+            rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
         }
     }
 

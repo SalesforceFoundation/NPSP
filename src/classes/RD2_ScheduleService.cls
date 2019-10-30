@@ -87,6 +87,10 @@ public without sharing class RD2_ScheduleService {
 * @return Date
 */
     public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {
+        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+            return null;
+        }
+
         return getNextDonationDate(getNewSchedules(rd));
     }
 
