@@ -37,29 +37,30 @@
 public inherited sharing class RD2_Constants {
 
     /**
-    * @description Api Values of the npe03_RecurringDonation.Installment_Frequency__c picklist
+    * @description Recurring Donation "Installment Period" picklist API values
     */
-    public static final String FREQUENCY_MONTHLY = 'Monthly';
-    public static final String FREQUENCY_WEEKLY = 'Weekly';
-    public static final String FREQUENCY_YEARLY = 'Yearly';
-    public static final String FREQUENCY_FIRST_AND_FIFTEENTH = '1st and 15th';
+    public static final String INSTALLMENT_PERIOD_YEARLY = 'Yearly';
+    public static final String INSTALLMENT_PERIOD_MONTHLY = 'Monthly';
+    public static final String INSTALLMENT_PERIOD_WEEKLY = 'Weekly';
+    public static final String INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH = '1st and 15th';
+    public static final String INSTALLMENT_PERIOD_DAILY = 'Daily';
 
     /**
-    * @description Api Values of the npe03_RecurringDonation.Day_Of_Month__c picklist
+    * @description Recurring Donation "Day of Month" picklist API values
     */
     public static final String DAY_OF_MONTH_FIRST = '1';
     public static final String DAY_OF_MONTH_FIFTEENTH = '15';
     public static final String DAY_OF_MONTH_LAST_DAY = 'Last_Day';
 
     /**
-    * @description Api Values of the npe03_RecurringDonation.Status__c picklist
+    * @description Recurring Donation "Status" picklist API values
     */
     public static final String STATUS_ACTIVE = 'Active';
     public static final String STATUS_LAPSED = 'Lapsed';
     public static final String STATUS_CLOSED = 'Closed';
 
     /**
-    * @description Api Values of the npe03__RecurringDonation.RecurringType__c picklist
+    * @description Recurring Donation "Recurring Type" picklist API values
     */
     public static final String RECURRING_TYPE_OPEN = 'Open';
 
