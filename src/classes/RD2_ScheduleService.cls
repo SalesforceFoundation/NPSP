@@ -108,9 +108,9 @@ public without sharing class RD2_ScheduleService {
 
             nextDate = schedule.StartDate__c;
 
-            if (schedule.DayOfMonth__c != null && schedule.DayOfMonth__c.isNumeric() && (
-                schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_MONTHLY ||
-                schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH))
+            if (schedule.DayOfMonth__c != null && (
+                    schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_MONTHLY ||
+                    schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH))
             {
                 nextDate = Date.newInstance(
                     nextDate.year(),
