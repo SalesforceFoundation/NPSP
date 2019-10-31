@@ -21,6 +21,14 @@ const mutable = (obj) => {
     return JSON.parse(JSON.stringify(obj));
 }
 
+const dispatch = (context, name, detail, bubbles = false, composed = false) => {
+    context.dispatchEvent(new CustomEvent(name, {
+        detail: detail,
+        bubbles: bubbles,
+        composed: composed
+    }));
+}
+
 /*******************************************************************************
 * @description Sorts the given list by field name and direction
 *
@@ -34,8 +42,8 @@ const sort = (list, property, sortDirection) => {
     const reverse = sortDirection === 'asc' ? 1 : -1;
 
     data.sort((a, b) => {
-        let valueA = key(a) ? key(a).toLowerCase() : '';
-        let valueB = key(b) ? key(b).toLowerCase() : '';
+        let valueA = key(a) ? key(a) : '';
+        let valueB = key(b) ? key(b) : '';
         return reverse * ((valueA > valueB) - (valueB > valueA));
     });
 
@@ -79,6 +87,20 @@ const handleError = (context, error) => {
     } else {
         showToast(context, stgUnknownError, '', 'error', 'sticky');
     }
+}
+
+const getQueryParameters = () => {
+    let params = {};
+    let search = location.search.substring(1);
+
+    if (search) {
+        const url = `{"${search.replace(/&/g, '","').replace(/=/g, '":"')}"}`;
+        params = JSON.parse(url, (key, value) => {
+            return key === "" ? value : decodeURIComponent(value)
+        });
+    }
+
+    return params;
 }
 
 const generateId = () => {
@@ -135,10 +157,12 @@ export {
     findIndexByProperty,
     shiftToIndex,
     mutable,
+    dispatch,
+    sort,
     showToast,
     handleError,
+    getQueryParameters,
     generateId,
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
-    sort
 }

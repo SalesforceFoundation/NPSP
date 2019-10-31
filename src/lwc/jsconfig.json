@@ -64,6 +64,12 @@
             ],
             "c/geTemplates": [
                 "geTemplates/geTemplates.js"
+            ],
+            "c/utilIllustration": [
+                "utilIllustration/utilIllustration.js"
+            ],
+            "c/utilPageHeader": [
+                "utilPageHeader/utilPageHeader.js"
             ]
         },
         "experimentalDecorators": true
