@@ -28,7 +28,7 @@ Generate Data
     [Arguments]    ${count}
     ${count} =  Convert To Integer	${count}
 
-    Run Task Class   tasks.generate_and_load_data.GenerateAndLoadData
+    Run Task Class   cumulusci.tasks.bulkdata.generate_and_load_data.GenerateAndLoadData
     ...                 num_records=${count}
     ...                 batch_size=${500000}
 #    ...                 database_url=sqlite:////tmp/temp_db.db  # turn this on to look at the DB for debugging
