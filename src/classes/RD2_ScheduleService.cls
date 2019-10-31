@@ -129,6 +129,31 @@ public without sharing class RD2_ScheduleService {
         return nextDate;
     }
 
+/***
+* @description Synchronizes the schedule records to match an updated recurring donation
+* @param rd Recurring Donation record
+* @param schedules Recurring Donation Schedule record
+* @return TDTM_Runnable.DMLWrapper
+*/
+    public TDTM_Runnable.DMLWrapper getUpdatedSchedules(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> schedules) {
+
+        Date newStartDate = rd.StartDate__c;
+        TDTM_Runnable.DMLWrapper scheduleChanges = new TDTM_Runnable.DMLWrapper();
+
+        for (RecurringDonationSchedule__c schedule : schedules) {
+            schedule.EndDate__c = newStartDate.addDays(-1);
+            scheduleChanges.objectsToUpdate.add(schedule);
+        }
+
+        List<RecurringDonationSchedule__c> newSchedules = getNewSchedules(rd);
+        for (RecurringDonationSchedule__c newSchedule : newSchedules) {
+            newSchedule.StartDate__c = newStartDate;
+        }
+        scheduleChanges.objectsToInsert.addAll(newSchedules);
+
+        return scheduleChanges;
+    }
+
     /***
     * @description Determines whether '1st and 15th' is the schedule selected.
     * @param rd Recurring Donation record
