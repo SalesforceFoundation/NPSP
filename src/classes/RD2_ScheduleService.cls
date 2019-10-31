@@ -81,11 +81,11 @@ public without sharing class RD2_ScheduleService {
         return newSchedules;
     }
 
-/***
-* @description Calculates the date of the next donation
-* @param rd Recurring Donation record
-* @return Date
-*/
+    /***
+    * @description Calculates the date of the next donation
+    * @param rd Recurring Donation record
+    * @return Date
+    */
     public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {
         if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return null;
@@ -94,11 +94,11 @@ public without sharing class RD2_ScheduleService {
         return getNextDonationDate(getNewSchedules(rd));
     }
 
-/***
-* @description Calculates the date of the next donation
-* @param schedule Recurring Donation Schedule record
-* @return Date
-*/
+    /***
+    * @description Calculates the date of the next donation
+    * @param schedule Recurring Donation Schedule record
+    * @return Date
+    */
     public Date getNextDonationDate(List<RecurringDonationSchedule__c> rdSchedules) {
 
         Date nextDate;
@@ -108,13 +108,16 @@ public without sharing class RD2_ScheduleService {
 
             nextDate = schedule.StartDate__c;
 
-            if (schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_MONTHLY || schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH) {
+            if (schedule.DayOfMonth__c != null && schedule.DayOfMonth__c.isNumeric() && (
+                schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_MONTHLY ||
+                schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH))
+            {
                 nextDate = Date.newInstance(
-                        nextDate.year(),
-                        nextDate.month(),
-                        schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
-                                Date.daysInMonth(nextDate.year(), nextDate.month()) :
-                                Integer.valueOf(schedule.DayOfMonth__c)
+                    nextDate.year(),
+                    nextDate.month(),
+                    schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
+                        Date.daysInMonth(nextDate.year(), nextDate.month()) :
+                        Integer.valueOf(schedule.DayOfMonth__c)
                 );
                 nextDate = nextDate >= schedule.StartDate__c ? nextDate : nextDate.addMonths(1);
             }
