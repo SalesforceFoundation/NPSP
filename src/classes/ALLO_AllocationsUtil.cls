@@ -721,8 +721,8 @@ public class ALLO_AllocationsUtil {
     public static void copyAllocationsToTarget(SObject targetObj, Decimal sourceAmount, List<Allocation__c> sourceAllocations, AllocationResults allocResults, Boolean copyInactiveAllocations, Boolean convertToPercentages) {
         Decimal amount = getAmountFor(targetObj);
 
-        // Allocations should not be copied to the target if the target object's amount is 0/null
-        if (amount == null || amount == 0) {
+        // Allocations should not be copied to the target if the target object's amount is null
+        if (amount == null) {
             return;
         }
 
