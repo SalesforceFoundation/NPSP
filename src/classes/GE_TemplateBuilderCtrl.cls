@@ -48,19 +48,52 @@ public with sharing class GE_TemplateBuilderCtrl {
     private static final String TEMPLATE_VERSION = '1.0';
 
     /*******************************************************************************************************
-    * @description Just an intermediary method for calling the storeFormTemplate method in the FormServiceGiftEntry
-    * class. I've modified the FormServiceGiftEntry to return the newly inserted Form_Template__c id so I can
-    * navigate to the record page in the UI. Should probably revert this back later depending on how we want
-    * to handle what happens after save of a new template.
+    * @description Queries all Form_Template__c records.
+    *
+    * @return Form_Template__c[]: List of all Form_Template__c records
     */
     @AuraEnabled
-    public static String processFormTemplate(String templateJSON, String templateName, String templateDescription){
-        String id = FORM_ServiceGiftEntry.storeFormTemplate(null,
-            templateName,
-            templateDescription,
-            TEMPLATE_VERSION,
-            templateJSON);
-        return id;
+    public static Form_Template__c[] getAllFormTemplates() {
+        return [SELECT Id, Name, Template_JSON__c, Description__c, Format_Version__c FROM Form_Template__c];
+    }
+
+    /*******************************************************************************************************
+    * @description Method clones a Form_Template__c record by id.
+    *
+    * @param id: Form_Template__c record id
+    *
+    * @return clonedFormTemplate: A Form_Template__c record
+    */
+    @AuraEnabled
+    public static Form_Template__c cloneFormTemplate(String id) {
+        Form_Template__c[] templates = [SELECT Id,
+                Name,
+                Template_JSON__c,
+                Description__c,
+                Format_Version__c
+            FROM Form_Template__c
+            WHERE Id = :id];
+
+        if (templates.size() > 0) {
+            Form_Template__c clonedFormTemplate = templates[0].clone();
+            clonedFormTemplate.Name += ' [CLONED ' + Date.today().format() + ']';
+            insert clonedFormTemplate;
+
+            return clonedFormTemplate;
+        }
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Method deletes a Form_Template__c record by id.
+    *
+    * @param id: Form_Template__c record id
+    */
+    @AuraEnabled
+    public static void deleteFormTemplate(String id) {
+        Form_Template__c[] templates = [SELECT Id FROM Form_Template__c WHERE Id = :id];
+        delete templates;
     }
 
     /*******************************************************************************************************
@@ -81,6 +114,24 @@ public with sharing class GE_TemplateBuilderCtrl {
     }
 
     /*******************************************************************************************************
+    * @description Stores the template JSON.
+    *
+    * @param id - the Id of an existing form template record if this is an update of an existing template
+    * @param name - The name that should be applied to template storage record.
+    * @param description - the description of the template.
+    * @param formatVersion - the version id/number of the template format
+    * @param templateJSON - The JSON for the FormTemplate class that is being stored.
+    *
+    * @return newRecordId - Form_Template__c record id
+    */
+    @AuraEnabled
+    public static String storeFormTemplate(String id, String name, String description, String formatVersion, String templateJSON) {
+        String newRecordId =
+            FORM_ServiceGiftEntry.storeFormTemplate(id, name, description, formatVersion, templateJSON);
+        return newRecordId;
+    }
+
+    /*******************************************************************************************************
     * @description Method that retrieves all Field Mapping Sets in an org. Used in the Gift Fields tab's
     * Field Mapping Sets combobox in the Form Template Builder. Field Mapping Set selection determines
     * which Object Groups and Field Mappings are available to the Form Builder.
@@ -97,135 +148,16 @@ public with sharing class GE_TemplateBuilderCtrl {
     * need to worry about namespaces in the fields.
     */
     @AuraEnabled
-    public static ObjectMappingWrapper[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
+    public static BDI_ObjectMapping[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
         bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(fieldMappingSetName);
-        ObjectMappingWrapper[] objectWrappers = new ObjectMappingWrapper[]{};
+        BDI_ObjectMapping[] objectMappings = new BDI_ObjectMapping[]{};
 
         for (BDI_ObjectMapping objectMapping : bdiMSAdv.objectMappingByDevName.values()) {
-            ObjectMappingWrapper omw = new ObjectMappingWrapper(objectMapping);
-
-            BDI_FieldMapping[] fieldMappings = bdiMSAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
-            if (fieldMappings != null) {
-                for (BDI_FieldMapping fieldMapping : fieldMappings) {
-
-                    String objectAPIName = objectMapping.Object_API_Name;
-
-                    CheckboxWrapper fieldMappingWrapper = new CheckboxWrapper(
-                        fieldMapping.MasterLabel,
-                        fieldMapping.DeveloperName,
-                        UTIL_Describe.getFieldDescribe(objectAPIName, fieldMapping.Target_Field_API_Name),
-                        false
-                    );
-
-                    omw.fieldMappingCheckboxes.add(fieldMappingWrapper);
-                }
-            }
-
-            objectWrappers.add(omw);
+            objectMapping.Field_Mappings =
+                bdiMSAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
+            objectMappings.add(objectMapping);
         }
 
-        return objectWrappers;
-    }
-
-    /*******************************************************************************************************
-    * @description Method checks the Data Import Batch object's field describes and returns a list of
-    * CheckboxWrappers for use in the UI's Batch Header tab.
-    */
-    @AuraEnabled(cacheable=true)
-    public static CheckboxWrapper[] getBatchFields() {
-        CheckboxWrapper[] wrappers = new CheckboxWrapper[]{};
-
-        Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImportBatch__c.Name);
-
-        for (String key : fields.keySet()) {
-            DescribeFieldResult dfr = fields.get(key);
-
-            if (dfr.isAccessible() && dfr.isCreateable()) {
-                CheckboxWrapper checkboxWrapper = new CheckboxWrapper(fields.get(key));
-                wrappers.add(checkboxWrapper);
-            }
-        }
-
-        return wrappers;
-    }
-
-    public class ObjectMappingWrapper extends BDI_ObjectMapping {
-        @AuraEnabled public CheckboxWrapper[] fieldMappingCheckboxes;
-
-        ObjectMappingWrapper(BDI_ObjectMapping objectMapping) {
-            this.DeveloperName = objectMapping.DeveloperName;
-            this.MasterLabel = objectMapping.MasterLabel;
-            this.Object_API_Name = objectMapping.Object_API_Name;
-            this.fieldMappingCheckboxes = new CheckboxWrapper[]{};
-        }
-    }
-
-    public class CheckboxWrapper {
-        @AuraEnabled public String label;
-        @AuraEnabled public String value;
-        @AuraEnabled public Boolean checked;
-
-        // TODO: Change to displayType and add new attribute for dataType
-        @AuraEnabled public String dataType;
-        @AuraEnabled public PicklistOptionWrapper[] picklistOptions;
-        @AuraEnabled public Boolean isRequired = false;
-        @AuraEnabled public Boolean isRequiredFieldDisabled = false;
-
-        public CheckboxWrapper(Schema.DescribeFieldResult describe) {
-            this.label = describe.getLabel();
-            this.value = describe.getName();
-            this.checked = false;
-            this.dataType = String.valueOf(describe.getType());
-
-            if (this.dataType == 'PICKLIST') {
-                picklistOptions = getPicklistOptions(describe);
-            }
-
-            if (this.dataType == 'TEXTAREA' && describe.isHtmlFormatted()) {
-                this.dataType = 'RICHTEXT';
-            }
-        }
-
-        public CheckboxWrapper(String fieldMappingLabel,
-            String fieldMappingDeveloperName,
-            Schema.DescribeFieldResult targetFieldDescribe,
-            Boolean checked) {
-
-            this.label = fieldMappingLabel;
-            this.value = fieldMappingDeveloperName;
-            this.checked = checked;
-            this.dataType = String.valueOf(targetFieldDescribe.getType());
-
-            if (this.dataType == 'PICKLIST') {
-                picklistOptions = getPicklistOptions(targetFieldDescribe);
-            }
-
-            if (this.dataType == 'TEXTAREA' && targetFieldDescribe.isHtmlFormatted()) {
-                this.dataType = 'RICHTEXT';
-            }
-        }
-
-        private List<PicklistOptionWrapper> getPicklistOptions(Schema.DescribeFieldResult describe) {
-            List<PicklistOptionWrapper> pickListValuesList= new List<PicklistOptionWrapper>();
-            List<Schema.PicklistEntry> ple = describe.getPicklistValues();
-            for( Schema.PicklistEntry pickListVal : ple) {
-                if (pickListVal.isActive()) {
-                    pickListValuesList.add(new PicklistOptionWrapper(
-                        pickListVal.getLabel(),
-                        pickListVal.getValue()));
-                }
-            }
-            return pickListValuesList;
-        }
-    }
-
-    public class PicklistOptionWrapper {
-        @AuraEnabled public String label;
-        @AuraEnabled public String value;
-
-        public PicklistOptionWrapper(String label, String value) {
-            this.label = label;
-            this.value = value;
-        }
+        return objectMappings;
     }
 }
