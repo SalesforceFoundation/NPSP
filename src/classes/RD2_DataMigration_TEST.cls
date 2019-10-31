@@ -584,12 +584,13 @@ private class RD2_DataMigration_TEST {
     private static void shouldNotCreateScheduleForClosedEnhancedRDs() {
 
         List<RecurringDonationSchedule__c> rdSchedules  = new List<RecurringDonationSchedule__c>();
+        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
 
-        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-            .withStatusClosed()
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contactId)
+            .withOpenEndedStatusClosed()
             .build();
 
-        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rds);
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
         mapper.convertToEnhancedRD();
 
         rdSchedules = mapper.getScheduleRecords();

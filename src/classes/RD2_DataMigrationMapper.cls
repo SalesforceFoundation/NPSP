@@ -81,15 +81,6 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Generate the RDSchedule Record(s) for the Recurring Donation
-     * @return List<RecurringDonationSchedule__c> Schedule records to insert
-     */
-    public List<RecurringDonationSchedule__c> getScheduleRecords() {
-        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-        return scheduleService.getNewSchedules(rd);
-    }
-
-    /**
      * @description Sets Installment Frequency and Installment Period fields where applicable
      * @param rd Recurring Donation in the legacy format
      * @return void
@@ -232,6 +223,15 @@ public class RD2_DataMigrationMapper {
      */
     private void setOtherFields(npe03__Recurring_Donation__c rd) {
         rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+    }
+
+    /**
+     * @description Builds the Schedule Record(s) for the Recurring Donation
+     * @return List<RecurringDonationSchedule__c> Schedule records to insert
+     */
+    public List<RecurringDonationSchedule__c> getScheduleRecords() {
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        return scheduleService.getNewSchedules(rd);
     }
 
     public class MigrationException extends Exception { }
