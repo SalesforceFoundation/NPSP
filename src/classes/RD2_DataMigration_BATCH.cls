@@ -44,7 +44,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     private static final Integer DEFAULT_MIGRATION_JOB_BATCH_SIZE = 200;
 
 
-    private Boolean dryRunMode = false;
+    private Boolean isDryRunMode = false;
 
     private List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
     private List<RecurringDonationSchedule__c> rdSchedules = new List<RecurringDonationSchedule__c>();
@@ -79,7 +79,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @description Enables Dry Run Mode for the migration job
     */
     public RD2_DataMigration_BATCH enableDryRunMode() {
-        dryRunMode = true;
+        isDryRunMode = true;
         return this;
     }
 
@@ -121,18 +121,19 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @param opps All Related Opportunities for this RD
     */
     private void handleConversion(npe03__Recurring_Donation__c rd, List<Opportunity> opps) {
-        RD2_DataMigrationMapper migration = new RD2_DataMigrationMapper(rd)
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd)
             .withRelatedOpportunities(opps);
 
-        npe03__Recurring_Donation__c convertedRD = migration.convertToEnhancedRD();
-
-        if (convertedRD != null) {
-            convertedRDs.add(convertedRD);
-
-            rdSchedules.addAll(migration.getScheduleRecords());
-
-            // TODO Opportunity Updates
+        if (mapper.isConverted()) {	
+            return;	
         }
+
+        convertedRDs.add(mapper.convertToEnhancedRD());
+
+        rdSchedules.addAll(mapper.getScheduleRecords());
+
+        // TODO Opportunity Updates
+
         // TODO Retrieve any validation errors that blocked the conversion
     }
 
@@ -142,12 +143,14 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     private void handleDmlAndLogging(Savepoint sp) {
         // TODO Rewrite this to capture and log dml exceptions in a new logging service
-        Database.update(convertedRDs, false);
+        //Database.update(convertedRDs, false);
+        update convertedRDs;
 
         // TODO If there is an error updating an RD, do not insert the schedule or update Opps for that RD
-        Database.insert(rdSchedules, false);
+        //Database.insert(rdSchedules, false);
+        insert rdSchedules;
 
-        if (this.dryRunMode) {
+        if (this.isDryRunMode) {
             Database.rollback(sp);
         }
 
@@ -158,26 +161,27 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @description Build the query of all standard RD fields to use for the batch query
     * @return SOQL
     */
+    @TestVisible
     private String getRDMigrationQuery() {
         Set<String> rdFields = new Set<String>{
             'Id',
             'Name',
-            'npe03__Open_ended_status__c',
-            'npe03__Next_payment_date__c',
+            'npe03__Open_Ended_Status__c',
+            'npe03__Next_Payment_Date__c',
             'npe03__Paid_Amount__c',
             'npe03__Organization__c',
             'npe03__Contact__c',
-            'npe03__Installment_amount__c',
+            'npe03__Installment_Amount__c',
             'npe03__Installments__c',
             'npe03__Amount__c',
             'npe03__Total__c',
-            'npe03__Installment_period__c',
-            'npe03__Date_established__c',
-            'npe03__Schedule_type__c',
-            'npe03__Recurring_donation_campaign__c',
-            'npe03__Total_paid_installments__c',
+            'npe03__Installment_Period__c',
+            'npe03__Date_Established__c',
+            'npe03__Schedule_Type__c',
+            'npe03__Recurring_Donation_Campaign__c',
+            'npe03__Total_Paid_Installments__c',
             'Ownerid',
-            'Always_use_last_day_of_month__c',
+            'Always_Use_Last_Day_of_Month__c',
             'Day_of_Month__c',
             'StartDate__c',
             'InstallmentFrequency__c',
@@ -189,12 +193,11 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             rdFields.add('CurrencyIsoCode');
         }
 
-        UTIL_Query queryBuilder = new UTIL_Query()
+        return new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
             .withSelectFields(rdFields)
-            .withOrderBy('npe03__Last_Payment_Date__c');
-
-        return queryBuilder.build();
+            .withOrderBy('npe03__Last_Payment_Date__c')
+            .build();
     }
 
     /**

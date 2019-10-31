@@ -77,9 +77,16 @@ public class TEST_SObjectGateway {
                     npe03__Contact__c,
                     npe03__Amount__c,
                     npe03__Paid_Amount__c,
-                    npe03__Next_Payment_Date__c,
-                    npe03__Last_Payment_Date__c
-                FROM npe03__Recurring_Donation__c
+                    npe03__Next_Payment_Date__c, 
+                    npe03__Last_Payment_Date__c,
+                    npe03__Date_Established__c,
+                    StartDate__c,
+                    Day_of_Month__c,
+                    InstallmentFrequency__c,
+                    npe03__Installment_Period__c,
+                    RecurringType__c,
+                    Status__c
+                FROM npe03__Recurring_Donation__c 
                 WHERE Id IN :rdIds
             ];
         }
