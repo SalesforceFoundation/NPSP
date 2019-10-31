@@ -6,6 +6,7 @@ import labelJobItemsProcessed from '@salesforce/label/c.BatchProgressJobItemsPro
 import labelTimeElapsed from '@salesforce/label/c.BatchProgressTimeElapsed';
 import labelCompletedDate from '@salesforce/label/c.BatchProgressCompletedDate';
 import labelExtendedStatus from '@salesforce/label/c.BatchProgressExtendedStatus';
+import labelLoading from '@salesforce/label/c.labelMessageLoading';
 import labelUnknownError from '@salesforce/label/c.stgUnknownError';
 
 import loadBatchJob from '@salesforce/apex/UTIL_BatchJobProgress_CTRL.loadBatchJob';
@@ -16,18 +17,19 @@ export default class BatchProgress extends LightningElement {
 
     @track batchJob;
 
-    pollingTimeout = 1000;
+    pollingTimeout = 1000;//TODO change to 10000
     labels = {
         labelStatus,
         labelTotalJobItems,
         labelJobItemsProcessed,
         labelTimeElapsed,
         labelCompletedDate,
-        labelExtendedStatus
+        labelExtendedStatus,
+        labelLoading
     };
 
     /***
-    * @description Starts polling for the batch job details until the batch job is completed
+    * @description Starts polling for the batch job progress details until the batch job is not in the progress
     */
     @api
     refreshBatchJob() {
@@ -52,15 +54,9 @@ export default class BatchProgress extends LightningElement {
         }, this.pollingTimeout, self);
     }
 
-    get hasJobItems() {
-
-        if (this.batchJob === undefined || this.batchJob == null) {
-            return false;
-        }
-
-        return this.batchJob.totalJobItems > 0;
-    }
-
+    /***
+    * @description Sets theme based on the batch job status
+    */
     get themeClass() {
         let themeClass = '';
 

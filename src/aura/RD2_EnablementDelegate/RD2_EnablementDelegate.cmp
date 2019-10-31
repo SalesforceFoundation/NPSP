@@ -301,7 +301,7 @@
                             <lightning:button class="slds-m-left_x-small styleButton"
                                 label="{!$Label.c.RD2_EnablementMigrationButton}" variant="neutral"
                                 onclick="{!c.handleRunMigration}"
-                                disabled="{!or(!v.state.isMetaDeployConfirmed, v.isMigrationInProgress, v.state.isMigrationCompleted)}" />
+                                disabled="{!or(!v.state.isMetaDeployConfirmed, v.state.isMigrationCompleted)}" />
                         </lightning:layoutItem>
 
                         <lightning:layoutItem size="10">
