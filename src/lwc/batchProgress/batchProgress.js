@@ -29,6 +29,32 @@ export default class BatchProgress extends LightningElement {
     };
 
     /***
+    * @description Sets theme based on the batch job status
+    */
+    get themeClass() {
+        let themeClass = '';
+
+        if (this.batchJob === undefined || this.batchJob == null) {
+            return '';
+        }
+
+        switch (this.batchJob.status) {
+            case 'Aborted':
+                themeClass = 'slds-theme_warning';
+                break;
+            case 'Failed':
+                themeClass = 'slds-theme_error';
+                break;
+            case 'Completed':
+                themeClass = this.batchJob.numberOfErrors > 0 ? 'slds-theme_warning' : 'slds-theme_success';
+                break;
+            default:
+        }
+
+        return themeClass;
+    }
+
+    /***
     * @description Initializes the component
     */
     connectedCallback() {
@@ -76,11 +102,11 @@ export default class BatchProgress extends LightningElement {
             return;
         }
 
-        const isFirstRender = previousBatchJob === undefined || previousBatchJob === null;
+        const isFirstLoad = previousBatchJob === undefined || previousBatchJob === null;
 
-        if ((isFirstRender || !previousBatchJob.isInProgress && currentBatchJob.isInProgress)
-            || (!isFirstRender && previousBatchJob.isInProgress !== currentBatchJob.isInProgress)
-            || (!isFirstRender && previousBatchJob.numberOfErrors !== currentBatchJob.numberOfErrors)
+        if (isFirstLoad
+            || previousBatchJob.isInProgress !== currentBatchJob.isInProgress
+            || previousBatchJob.numberOfErrors !== currentBatchJob.numberOfErrors
         ) {
             const batchProgress = {
                 className: this.className,
@@ -94,33 +120,6 @@ export default class BatchProgress extends LightningElement {
             });
             this.dispatchEvent(statusChangeEvent);
         }
-    }
-
-
-    /***
-    * @description Sets theme based on the batch job status
-    */
-    get themeClass() {
-        let themeClass = '';
-
-        if (this.batchJob === undefined || this.batchJob == null) {
-            return '';
-        }
-
-        switch (this.batchJob.status) {
-            case 'Aborted':
-                themeClass = 'slds-theme_warning';
-                break;
-            case 'Failed':
-                themeClass = 'slds-theme_error';
-                break;
-            case 'Completed':
-                themeClass = this.batchJob.numberOfErrors > 0 ? 'slds-theme_warning' : 'slds-theme_success';
-                break;
-            default:
-        }
-
-        return themeClass;
     }
 
     /***
