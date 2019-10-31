@@ -143,10 +143,12 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     private void handleDmlAndLogging(Savepoint sp) {
         // TODO Rewrite this to capture and log dml exceptions in a new logging service
-        Database.update(convertedRDs, false);
+        //Database.update(convertedRDs, false);
+        update convertedRDs;
 
         // TODO If there is an error updating an RD, do not insert the schedule or update Opps for that RD
-        Database.insert(rdSchedules, false);
+        //Database.insert(rdSchedules, false);
+        insert rdSchedules;
 
         if (this.isDryRunMode) {
             Database.rollback(sp);
