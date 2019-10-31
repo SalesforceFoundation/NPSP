@@ -122,6 +122,16 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         return fieldMappingInstance;
     }
 
+    /**
+    * @description Sets instance member variable holding instance of this class.  Primarily
+    * used to facilitate dependency injection in tests.
+    * @param bdiFieldMappingInstance An instance of the BDI_MappingServiceAdvanced class.
+    */
+    @TestVisible
+    private static void setInstance(BDI_MappingServiceAdvanced bdiFieldMappingInstance){
+        fieldMappingInstance = bdiFieldMappingInstance;
+    }
+
     /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
     * return a map of DI field (key) to mapped field name on the destination record (value). 
