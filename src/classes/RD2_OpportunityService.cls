@@ -147,7 +147,7 @@ public with sharing class RD2_OpportunityService {
         return rd.npe03__Donor_Name__c + ' ' +
             (rd.npe03__Amount__c != null ? rd.npe03__Amount__c.format() : '0') + ' ' +
             (closeDate != null ? closeDate.format() : '') + ' ' +
-            System.Label.stgNavRecurringDonations;
+            UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c');
     }
 
     /***

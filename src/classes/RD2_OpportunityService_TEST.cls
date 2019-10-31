@@ -89,7 +89,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assert(rd != null );
 
         oppNameFormat = rd.npe03__Donor_Name__c +  ' ' + rd.npe03__Amount__c.format();
-        oppNameFormat += ' ' + CloseDate[0].format() +   ' ' + System.Label.stgNavRecurringDonations;
+        oppNameFormat += ' ' + CloseDate[0].format() +   ' ' + UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c');
 
         rdsWithCloseDates.put(rd, CloseDate);
 
@@ -169,7 +169,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assert(rd != null );
 
         oppNameFormat = rd.npe03__Donor_Name__c +  ' ' + rd.npe03__Amount__c.format();
-        oppNameFormat += ' ' + CloseDate[0].format() +  ' ' + System.Label.stgNavRecurringDonations;
+        oppNameFormat += ' ' + CloseDate[0].format() +  ' ' + UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c');
 
         rdsWithCloseDates.put(rd, CloseDate);
 
