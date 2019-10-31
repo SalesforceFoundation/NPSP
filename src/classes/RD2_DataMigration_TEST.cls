@@ -135,16 +135,48 @@ private class RD2_DataMigration_TEST {
      * @description Verifies that a schedule record is created for Enhanced Recurring Donation record.
      */
     @IsTest
-    private static void shouldCreateScheduleForEnhancedRDs() {
+    private static void shouldCreateScheduleForActiveEnhancedRDs() {
         List<RecurringDonationSchedule__c> rdSchedules  = new List<RecurringDonationSchedule__c>();
         Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
-
         npe03__Recurring_Donation__c rd = getNewRecurringDonationEnhancedFormat(contactId);
 
-        RD2_DataMigrationMapper migrationService = new RD2_DataMigrationMapper(rd);
-        rdSchedules = migrationService.getScheduleRecords();
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
+        mapper.convertToEnhancedRD();
 
-        System.assertEquals(rdSchedules.size(), 1, 'Number of RDs should be 1');
+        rdSchedules = mapper.getScheduleRecords();
+
+        System.assertEquals(1, rdSchedules.size(), 'Number of RDs should be 1');
+        System.assertEquals(100, rdSchedules[0].InstallmentAmount__c, 'Installment Amount should be 100');
+        System.assertEquals('1', rdSchedules[0].DayOfMonth__c,  'Day of Month should be 1');
+    }
+
+    /**
+     * @description Verifies that a schedule record is not created for Closed Enhanced Recurring Donation record.
+     */
+    @IsTest
+    private static void shouldNotCreateScheduleForClosedEnhancedRDs() {
+
+        List<RecurringDonationSchedule__c> rdSchedules  = new List<RecurringDonationSchedule__c>();
+
+        npe03__Recurring_Donation__c rds =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2019, 11, 1))
+                .withRecurringDonationStatusClosed()
+                .build();
+
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rds);
+        mapper.convertToEnhancedRD();
+
+        rdSchedules = mapper.getScheduleRecords();
+
+        System.assertEquals(0, rdSchedules.size(), 'Number of RDs should be 0');
     }
 
     // HELPER METHODS
