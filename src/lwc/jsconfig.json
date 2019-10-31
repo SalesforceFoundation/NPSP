@@ -70,6 +70,12 @@
             ],
             "c/utilPageHeader": [
                 "utilPageHeader/utilPageHeader.js"
+            ],
+            "c/geTemplateBuilderSectionModalBody": [
+                "geTemplateBuilderSectionModalBody/geTemplateBuilderSectionModalBody.js"
+            ],
+            "c/geTemplateBuilderSelectFields": [
+                "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
             ]
         },
         "experimentalDecorators": true
