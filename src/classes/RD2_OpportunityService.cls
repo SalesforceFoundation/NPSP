@@ -95,7 +95,6 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Gets one or more Opportunity records for a specified set of Recurring Donations with close dates
     * @param rdsWithCloseDates the Map of Recurring Donations with close dates
-    * @param contactMap the Map of contact with account ids.
     * @return the list of Opportunities to be created.
     */
     private List<Opportunity> getInstallmentOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates) {
@@ -113,7 +112,7 @@ public with sharing class RD2_OpportunityService {
 
     /***
     * @description populate the opportunity's fields from recurring donation.
-    * @param rd is the Recurring donation record
+    * @param rd is the Recurring donation record.
     * @param closeDate is the next donation date on the recurring donation.
     * @return the opportunity record
     */
