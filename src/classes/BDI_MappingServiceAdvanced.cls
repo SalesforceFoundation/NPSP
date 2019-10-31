@@ -125,10 +125,10 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     /**
     * @description Sets instance member variable holding instance of this class.  Primarily
     * used to facilitate dependency injection in tests.
-    * @param bdiFieldMappingInstance An instance of the BDI_FieldMappingCustomMetadata class.
+    * @param bdiFieldMappingInstance An instance of the BDI_MappingServiceAdvanced class.
     */
     @TestVisible
-    private static void setInstance(BDI_FieldMappingCustomMetadata bdiFieldMappingInstance){
+    private static void setInstance(BDI_MappingServiceAdvanced bdiFieldMappingInstance){
         fieldMappingInstance = bdiFieldMappingInstance;
     }
 
