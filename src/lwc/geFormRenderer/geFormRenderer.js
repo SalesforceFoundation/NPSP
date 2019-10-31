@@ -1,7 +1,8 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
+import { NavigationMixin } from 'lightning/navigation';
 
-export default class GeFormRenderer extends LightningElement {
+export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track sections = [];
     @track ready = false;
     @track name = '';
@@ -38,6 +39,18 @@ export default class GeFormRenderer extends LightningElement {
         // const OpportunityId = GeFormService.createOpportunityFromDataImport(dataImport);
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         
-        const opportunityId = GeFormService.handleSave(sectionsList);
+        GeFormService.handleSave(sectionsList).then(opportunityId => {
+            this.navigateToRecordPage(opportunityId);
+        });
+    }
+
+    navigateToRecordPage(recordId) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: recordId,
+                actionName: 'view'
+            }
+        });
     }
 }
