@@ -470,6 +470,8 @@
         <members>UTIL_AbstractChunkingLDV_BATCH_TEST</members>
         <members>UTIL_AbstractChunkingLDV_MOCK</members>
         <members>UTIL_AbstractRollup_BATCH</members>
+        <members>UTIL_BatchJobProgress_CTRL</members>
+        <members>UTIL_BatchJobService</members>
         <members>UTIL_Currency</members>
         <members>UTIL_CurrencyCache</members>
         <members>UTIL_CurrencyCache_TEST</members>
@@ -1301,6 +1303,13 @@
         <members>AssistiveTextError</members>
         <members>AssistiveTextNewWindow</members>
         <members>AssistiveTextWarning</members>
+        <members>BatchProgressCompletedDate</members>
+        <members>BatchProgressExtendedStatus</members>
+        <members>BatchProgressJobItemsProcessed</members>
+        <members>BatchProgressStatus</members>
+        <members>BatchProgressTimeElapsed</members>
+        <members>BatchProgressTitleRD2DataMigration</members>
+        <members>BatchProgressTotalJobItems</members>
         <members>CMT_DeleteConfirm</members>
         <members>CMT_FilterGroupActiveRollupsHelpText</members>
         <members>CMT_FilterGroupDeleteError</members>
@@ -3055,6 +3064,7 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>batchProgress</members>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>

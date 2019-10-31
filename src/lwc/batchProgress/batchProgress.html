@@ -33,52 +33,44 @@
                         </div>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size="6" class="slds-media slds-media_center">
+                    <lightning-layout-item size="7" class="slds-media slds-media_center">
                         <dl class="slds-dl_horizontal slds-m-left_large">
-                            <dt class="slds-dl_horizontal__label"><span
-                                    class="slds-truncate">{labels.labelStatus}</span></dt>
-                            <dd class="slds-dl_horizontal__detail"><span class="slds-truncate">{batchJob.status}</span>
-                            </dd>
-                            <dt class="slds-dl_horizontal__label"><span
-                                    class="slds-truncate">{labels.labelTimeElapsed}</span></dt>
-                            <dd class="slds-dl_horizontal__detail"><span
-                                    class="slds-truncate">{batchJob.timeElapsed}</span></dd>
+                            <dt class="slds-dl_horizontal__label">{labels.labelStatus}</dt>
+                            <dd class="slds-dl_horizontal__detail">{batchJob.status}</dd>
+                            <dt class="slds-dl_horizontal__label">{labels.labelTimeElapsed}</dt>
+                            <dd class="slds-dl_horizontal__detail">{batchJob.timeElapsed}</dd>
 
                             <template if:true={batchJob.completedDate}>
-                                <dt class="slds-dl_horizontal__label"><span
-                                        class="slds-truncate">{labels.labelCompletedDate}</span></dt>
+                                <dt class="slds-dl_horizontal__label">{labels.labelCompletedDate}</dt>
                                 <dd class="slds-dl_horizontal__detail">
-                                    <span class="slds-truncate">
-                                        <lightning-formatted-date-time value={batchJob.completedDate} year="numeric"
-                                            month="long" day="2-digit" hour="2-digit" minute="2-digit">
-                                        </lightning-formatted-date-time>
-                                    </span>
+                                    <lightning-formatted-date-time value={batchJob.completedDate} year="numeric"
+                                        month="long" day="2-digit" hour="2-digit" minute="2-digit">
+                                    </lightning-formatted-date-time>
                                 </dd>
                             </template>
 
-                            <dt class="slds-dl_horizontal__label"><span
-                                    class="slds-truncate">{labels.labelTotalJobItems}</span></dt>
+                            <dt class="slds-dl_horizontal__label">{labels.labelTotalJobItems}</dt>
                             <dd class="slds-dl_horizontal__detail">
                                 <lightning-formatted-number value={batchJob.totalJobItems}>
                                 </lightning-formatted-number>
                             </dd>
-                            <dt class="slds-dl_horizontal__label"><span
-                                    class="slds-truncate">{labels.labelJobItemsProcessed}</span></dt>
+                            <dt class="slds-dl_horizontal__label">{labels.labelJobItemsProcessed}</dt>
                             <dd class="slds-dl_horizontal__detail">
                                 <lightning-formatted-number value={batchJob.jobItemsProcessed}>
                                 </lightning-formatted-number>
                             </dd>
 
                             <template if:true={batchJob.extendedStatus}>
-                                <dt class="slds-dl_horizontal__label"><span
-                                        class="slds-truncate">{labels.labelExtendedStatus}</span></dt>
-                                <dd class="slds-dl_horizontal__detail"><span
-                                        class="slds-truncate">{batchJob.extendedStatus}</span></dd>
+                                <dt class="slds-dl_horizontal__label">{labels.labelExtendedStatus}</dt>
+                                <dd class="slds-dl_horizontal__detail">
+                                    <lightning-formatted-rich-text class="slds-text-longform"
+                                        value={batchJob.extendedStatus}></lightning-formatted-rich-text>
+                                </dd>
                             </template>
                         </dl>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size="3" class="slds-media slds-media_center">
+                    <lightning-layout-item size="2" class="slds-media slds-media_center">
                         <lightning-badge label={batchJob.status} class={themeClass}></lightning-badge>
                     </lightning-layout-item>
 

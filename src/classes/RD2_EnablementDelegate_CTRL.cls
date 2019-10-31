@@ -199,15 +199,30 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Starts data migration batch
+    * @description Starts the data migration batch
     * @return void
     */
     @AuraEnabled
     public static void runMigration() {
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        Database.executeBatch(batch, batch.batchSize);
-    }
+        try {
+            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+            Database.executeBatch(batch, batch.batchSize);
 
+        } catch (Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
+    }
+    /***
+    * @description Saves data migration successful completion state
+    * @return void
+    */
+    @AuraEnabled
+    public static void completeMigration() {        
+        EnablementState state = getEnablementState();
+        state.isMigrationCompleted = true;
+
+        saveEnablementState(state);
+    }
 
     /***
     * @description Saves the current enablement state

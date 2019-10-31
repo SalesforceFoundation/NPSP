@@ -13,7 +13,7 @@
             }
 
             if (state === "SUCCESS") {
-                var enablementState = JSON.parse(response.getReturnValue());
+                const enablementState = JSON.parse(response.getReturnValue());
 
                 if (!enablementState.isReady && !enablementState.isEnabled) {
                     this.displayElement(component, "enablement-disabled");
@@ -21,6 +21,7 @@
                 }
 
                 this.displayElement(component, "enabler");
+                enablementState.isMigrationInProgress = false;
                 component.set('v.state', enablementState);
 
                 this.refreshEnable(component);
@@ -45,7 +46,7 @@
         var action = component.get('c.confirmEnablement');
 
         action.setCallback(this, function (response) {
-            var state = response.getState();
+            const state = response.getState();
 
             if (!component.isValid()) {
                 return;
@@ -76,7 +77,7 @@
         var action = component.get('c.enableEnhancement');
 
         action.setCallback(this, function (response) {
-            var state = response.getState();
+            const state = response.getState();
 
             if (!component.isValid()) {
                 return;
@@ -104,7 +105,7 @@
         var action = component.get('c.launchMetaDeploy');
 
         action.setCallback(this, function (response) {
-            var state = response.getState();
+            const state = response.getState();
 
             if (!component.isValid()) {
                 return;
@@ -135,7 +136,7 @@
         var action = component.get('c.confirmMetaDeploy');
 
         action.setCallback(this, function (response) {
-            var state = response.getState();
+            const state = response.getState();
 
             if (!component.isValid()) {
                 return;
@@ -157,28 +158,102 @@
     * @description Starts data migration batch
     */
     runMigration: function (component) {
-        component.set('v.isMigrationInProgress', true);
+        component.set('v.state.isMigrationInProgress', true);
 
         this.clearError(component);
 
         var action = component.get('c.runMigration');
 
         action.setCallback(this, function (response) {
-            var state = response.getState();
+            const state = response.getState();
 
             if (!component.isValid()) {
                 return;
             }
 
             if (state === 'SUCCESS') {
-                component.find('rdMigrationBatchJob').refreshBatchJob();
+                component.find('rdMigrationBatchJob').handleLoadBatchJob();
 
             } else if (state === 'ERROR') {
-                component.set('v.isMigrationInProgress', false);
+                component.set('v.state.isMigrationInProgress', false);
                 this.handleError(component, response.getError(), '3');
             }
+        });
 
-            this.refreshMetaDeploy(component);
+        $A.enqueueAction(action);
+    },
+    /****
+    * @description Updates page and settings based on the migration batch job status change
+    */
+    processMigrationStatusChange: function (component, event) {
+        if (!component.isValid()) {
+            return;
+        }
+
+        const batchProgress = event.getParam('batchProgress');
+        if (batchProgress === undefined
+            || batchProgress === null
+            || batchProgress.className !== 'RD2_DataMigration_BATCH'
+        ) {
+            return;
+        }
+
+        if (batchProgress.isInProgress) {
+            component.set('v.state.isMigrationInProgress', true);
+
+        } else if (batchProgress.isSuccess) {
+            this.confirmMigration(component);
+        }
+    },
+    /****
+    * @description Displays an unexpected error generated during data migration batch execution
+    */
+    processMigrationError: function (component, event) {
+        if (!component.isValid()) {
+            return;
+        }
+
+        const errorDetail = event.getParam('errorDetail');
+        if (errorDetail === undefined
+            || errorDetail === null
+            || errorDetail.className !== 'RD2_DataMigration_BATCH'
+        ) {
+            return;
+        }
+
+        this.clearError(component);
+        this.handleError(component, errorDetail, '3');
+    },
+    /****
+    * @description Starts data migration batch
+    */
+    confirmMigration: function (component) {
+        let enablementState = component.get("v.state");
+
+        if (enablementState.isMigrationCompleted) {
+            return;
+        }
+
+        component.set('v.state.isMigrationCompleted', true);
+
+        this.clearError(component);
+
+        var action = component.get('c.completeMigration');
+
+        action.setCallback(this, function (response) {
+            const state = response.getState();
+
+            if (!component.isValid()) {
+                return;
+            }
+
+            if (state === 'SUCCESS') {
+                component.set('v.state.isMigrationInProgress', false);
+
+            } else if (state === 'ERROR') {
+                component.set('v.state.isMigrationCompleted', false);
+                this.handleError(component, response.getError(), '3');
+            }
         });
 
         $A.enqueueAction(action);

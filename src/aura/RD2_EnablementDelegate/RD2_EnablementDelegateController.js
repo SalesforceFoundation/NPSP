@@ -17,6 +17,12 @@
     handleRunMigration: function (component, event, helper) {
         helper.runMigration(component);
     },
+    handleMigrationStatusChange: function (component, event, helper) {
+        helper.processMigrationStatusChange(component, event);
+    },
+    handleMigrationError: function (component, event, helper) {
+        helper.processMigrationError(component, event);
+    },
     refreshView: function (component, event, helper) {
         helper.refreshView(component);
     }

@@ -17,7 +17,7 @@ export default class BatchProgress extends LightningElement {
 
     @track batchJob;
 
-    pollingTimeout = 1000;//TODO change to 10000
+    pollingTimeout = 10000;
     labels = {
         labelStatus,
         labelTotalJobItems,
@@ -29,30 +29,73 @@ export default class BatchProgress extends LightningElement {
     };
 
     /***
-    * @description Starts polling for the batch job progress details until the batch job is not in the progress
+    * @description Initializes the component
+    */
+    connectedCallback() {
+        this.handleLoadBatchJob();
+    }
+
+    /***
+    * @description Loads batch job details
     */
     @api
+    handleLoadBatchJob() {
+        loadBatchJob({ className: this.className })
+            .then((data) => {
+                let previousBatchJob = this.batchJob;
+                this.batchJob = JSON.parse(data);
+
+                this.notifyOnStatusChange(previousBatchJob, this.batchJob);
+
+                if (this.batchJob && this.batchJob.isInProgress === true) {
+                    this.refreshBatchJob();
+                }
+            })
+            .catch((error) => {
+                this.handleError(error);
+            });
+    }
+
+    /***
+    * @description Starts polling for the batch job progress details until the batch job is not in the progress
+    */
     refreshBatchJob() {
         var self = this;
-        console.log('refreshBatchJob ');
 
         setTimeout(function () {
-            loadBatchJob({ className: self.className })
-                .then((data) => {
-                    self.batchJob = JSON.parse(data);
-                    console.log('Polling: ' + self.batchJob);
-
-                    if (self.batchJob && self.batchJob.isInProgress === true) {
-                        self.refreshBatchJob();
-                    }
-                })
-                .catch((error) => {
-                    self.handleError(error);
-                });
-
+            self.handleLoadBatchJob();
 
         }, this.pollingTimeout, self);
     }
+
+    /***
+    * @description Notifies other components about the batch status change
+    */
+    notifyOnStatusChange(previousBatchJob, currentBatchJob) {
+        if (currentBatchJob === undefined || currentBatchJob === null) {
+            return;
+        }
+
+        const isFirstRender = previousBatchJob === undefined || previousBatchJob === null;
+
+        if ((isFirstRender || !previousBatchJob.isInProgress && currentBatchJob.isInProgress)
+            || (!isFirstRender && previousBatchJob.isInProgress !== currentBatchJob.isInProgress)
+            || (!isFirstRender && previousBatchJob.numberOfErrors !== currentBatchJob.numberOfErrors)
+        ) {
+            const batchProgress = {
+                className: this.className,
+                status: currentBatchJob.status,
+                isInProgress: currentBatchJob.isInProgress,
+                isSuccess: currentBatchJob.status === 'Completed' && currentBatchJob.numberOfErrors === 0
+            };
+
+            const statusChangeEvent = new CustomEvent('statuschange', {
+                detail: { batchProgress }
+            });
+            this.dispatchEvent(statusChangeEvent);
+        }
+    }
+
 
     /***
     * @description Sets theme based on the batch job status
@@ -81,16 +124,30 @@ export default class BatchProgress extends LightningElement {
     }
 
     /***
-    * @description Notifies user of the error
+    * @description Notifies parent component of the error
+    * In the case LightningOut is used, then showToastMessage cannot be invoked.
+    * Thus, let the parent component define how user should be notified of the error.
     * @param {object} error: Event holding error details
     */
     handleError(error) {
+        let errorMessage;
         if (error && error.status && error.body) {
-            console.log(`${error.name} + ${error.statusText} + ${error.body.message}`);
+            errorMessage = `${error.name} + ${error.statusText} + ${error.body.message}`;
         } else if (error && error.name && error.message) {
-            console.log(`${error.name} + ${error.message}`);
+            errorMessage = `${error.name} + ${error.message}`;
         } else {
-            console.log(labelUnknownError);
+            errorMessage = labelUnknownError;
         }
+
+        const errorDetail = {
+            className: this.className,
+            message: errorMessage
+        };
+        const errorEvent = new CustomEvent('error', {
+            detail: { errorDetail }
+        });
+        this.dispatchEvent(errorEvent);
     }
+
+
 }
