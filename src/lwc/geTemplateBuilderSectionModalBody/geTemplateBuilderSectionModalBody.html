@@ -1,0 +1,30 @@
+<template>
+    <div class="slds-grid slds-wrap slds-p-around_small">
+        <div class="slds-size_1-of-1 slds-p-bottom_small">
+            <lightning-input type="text"
+                             value={sectionBeingEdited.label}
+                             label="Section Label"
+                             data-name="customLabel">
+            </lightning-input>
+        </div>
+    </div>
+    <footer class="slds-modal__footer">
+        <lightning-button-icon icon-name="utility:delete"
+                               alternative-text="Delete section"
+                               onclick={handleDelete}
+                               class="slds-m-right_small">
+        </lightning-button-icon>
+        <lightning-button label="Save"
+                          title="Modal"
+                          variant="brand"
+                          class="slds-float_right"
+                          onclick={handleSave}>
+        </lightning-button>
+        <lightning-button label="Cancel"
+                          title="Modal"
+                          variant="neutral"
+                          class="slds-float_right slds-m-right_small"
+                          onclick={handleCancel}>
+        </lightning-button>
+    </footer>
+</template>
