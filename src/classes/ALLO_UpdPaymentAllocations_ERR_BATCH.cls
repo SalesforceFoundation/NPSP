@@ -40,12 +40,11 @@ public class ALLO_UpdPaymentAllocations_ERR_BATCH extends ERR_RecordErrorReproce
 
     /**
      * @description Constructor
-     * @param Integer batchSize The batch size the job should be re-executed with if multiple iterations are necessary
      * @param Datetime boundary The point after which Error Records for this process should be ignored because they are
      *        too recent (meaning they happened in the most recent batch execution)
      */
-    public ALLO_UpdPaymentAllocations_ERR_BATCH(Integer batchSize, Datetime boundary) {
-        super(batchSize, boundary);
+    public ALLO_UpdPaymentAllocations_ERR_BATCH(Datetime boundary) {
+        super(boundary);
     }
 
     /**

@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Batch Job to update/recalculate Payment Allocations (Main Batch, Driven by Opportunity Object)
 */
-public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH {
+public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractChunkingLDV_BATCH {
 
     public class AlloPaymentAllocationBatchException extends Exception { }
 
@@ -47,33 +47,6 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
     private Integer recCnt;
     private Integer reviewCnt;
     private Boolean paymentAllocConfigurationValid;
-
-   /**
-     * Constructor (takes no arguments)
-     */
-     public ALLO_UpdPaymentAllocations_BATCH() {
-        super();
-        initialize();
-    }
-
-    /**
-     * Constructor (takes batchSize as parameters)
-     * @param  batchSize Controls the number of records that can be processed in a batch
-     */
-    public ALLO_UpdPaymentAllocations_BATCH(Integer batchSize) {
-        super(batchSize);
-        initialize();
-    }
-
-    /**
-     * Constructor (takes batchSize, additionalWhere as parameters)
-     * @param  batchSize Controls the number of records that can be processed in a batch
-     * @param  additionalWhereClause Any additional whereclause fragment to add to the batch job
-     */
-    public ALLO_UpdPaymentAllocations_BATCH(Integer batchSize, String additionalWhereClause) {
-        super(batchSize, additionalWhereClause);
-        initialize();
-    }
 
     /**
      * @description Sets up various tracking/usage variables, and looks up the current boundary timestamp (or defaults it if not already present)
@@ -227,7 +200,10 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractCommon_BATCH 
             upsert allocationsSettings;
 
             // Execute Error Batch Phase
-            ALLO_UpdPaymentAllocations_ERR_BATCH alloErrBatch = new ALLO_UpdPaymentAllocations_ERR_BATCH(getBatchSize(), this.jobStart);
+            ALLO_UpdPaymentAllocations_ERR_BATCH alloErrBatch = new ALLO_UpdPaymentAllocations_ERR_BATCH(this.jobStart);
+
+            alloErrBatch.setBatchSize(getBatchSize());
+
             Database.executeBatch(alloErrBatch, this.getBatchSize());
         }
     }

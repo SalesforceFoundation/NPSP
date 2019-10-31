@@ -137,6 +137,19 @@ public class CallableApiParameters {
         return null;
     }
 
+   /**
+     * @description Retrieve the specified Parameter as a Set<String> collection
+     * @param paramName
+     */
+    public Map<Id, String> getStringsById(String paramName) {
+        try {
+            return (Map<Id, String>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Map<Id, String>', paramName);
+        }
+        return null;
+    }
+
     /**
      * @description Retrieve the specified Parameter as a List<SObject> collection
      * @param paramName Map key for the params collection

@@ -56,7 +56,6 @@
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
         <members>ALLO_UpdPaymentAllocations_SCHED</members>
-        <members>ALLO_ScheduleAllocationBatch_TEST</members>
         <members>ALLO_UpdPaymentAllocations_BATCH</members>
         <members>ALLO_UpdPaymentAllocations_ERR_BATCH</members>
         <members>ALLO_UpdPaymentAllocations_TEST</members>

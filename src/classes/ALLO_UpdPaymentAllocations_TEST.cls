@@ -36,6 +36,10 @@
 */
 @IsTest
 private class ALLO_UpdPaymentAllocations_TEST {
+
+    /* @description Default # of records to be pulled per batch iteration in tests. */
+    public static Integer TEST_BATCH_SIZE = 200;
+
     // TODO: Confirm job ends and Errors are added if Payment Allocations Configuration is not Correct
     @isTest
     private static void incorrectPaymentAllocationsConfigurationLogsErrors() {
