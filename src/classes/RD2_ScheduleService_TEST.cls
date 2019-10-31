@@ -339,4 +339,244 @@ private with sharing class RD2_ScheduleService_TEST {
 
     }
 
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void startdate() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void amount() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void period() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void dayofmonth() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void frequency() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void paymentmethod() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void status() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void campaign() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void contact() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for weekly donation.
+    */
+    @isTest
+    private static void closed() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+            new RD2_ScheduleService().getNextDonationDate(rd),
+            'Next Donation Date should equal 3/17/2018');
+
+    }
+
 }
