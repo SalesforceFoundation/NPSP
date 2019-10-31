@@ -61,6 +61,9 @@
             ],
             "c/geFormService": [
                 "geFormService/geFormService.js"
+            ],
+            "c/geTemplates": [
+                "geTemplates/geTemplates.js"
             ]
         },
         "experimentalDecorators": true
