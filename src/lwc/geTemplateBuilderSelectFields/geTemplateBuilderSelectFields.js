@@ -87,12 +87,11 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * selections.
     */
     addInWidgetsPlaceholder() {
-        console.log('addInWidgetsPlaceholder');
         const widgets = {
             MasterLabel: 'Widgets',
             Field_Mappings: [
                 {
-                    DeveloperName: 'Credit_Card',
+                    DeveloperName: 'geCreditCardWidget',
                     MasterLabel: 'Credit Card',
                     Target_Field_Label: 'Credit Card',
                     Required: 'No',
@@ -100,7 +99,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                     Widget_Fields: ['Card_Holder_Name__c', 'Card_Number__c', 'Expiration_Month__c', 'Expiration_Year__c', 'Security_Code__c']
                 },
                 {
-                    DeveloperName: 'Some_Other_Widget',
+                    DeveloperName: 'geSomeOtherWidget',
                     MasterLabel: 'Some Other Widget',
                     Target_Field_Label: 'Some Other Widget',
                     Required: 'No',
