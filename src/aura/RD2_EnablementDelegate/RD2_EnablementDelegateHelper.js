@@ -6,11 +6,10 @@
         var action = component.get("c.loadState");
 
         action.setCallback(this, function (response) {
-            let state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === "SUCCESS") {
                 const enablementState = JSON.parse(response.getReturnValue());
@@ -46,11 +45,10 @@
         var action = component.get('c.confirmEnablement');
 
         action.setCallback(this, function (response) {
-            const state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isConfirmed', true);
@@ -77,11 +75,10 @@
         var action = component.get('c.enableEnhancement');
 
         action.setCallback(this, function (response) {
-            const state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isEnabled', true);
@@ -97,6 +94,29 @@
         $A.enqueueAction(action);
     },
     /****
+    * @description Loads the enablement state and enables/disables page elements based on it
+    */
+    getDeployURL: function (component) {
+        var action = component.get("c.getMetaDeployURL");
+
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            let state = response.getState();
+
+            if (state === "SUCCESS") {
+                const metaDeployURL = response.getReturnValue();
+                component.set('v.metaDeployURL', metaDeployURL);
+
+            } else if (state === "ERROR") {
+                component.set('v.metaDeployURL', 'https://install.salesforce.org/products/npsp/npsp-rd2-pilot');
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
     * @description Confirms MetaDeploy has been launched
     */
     launchDeploy: function (component) {
@@ -105,11 +125,10 @@
         var action = component.get('c.launchMetaDeploy');
 
         action.setCallback(this, function (response) {
-            const state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isMetaDeployLaunched', true);
@@ -136,11 +155,10 @@
         var action = component.get('c.confirmMetaDeploy');
 
         action.setCallback(this, function (response) {
-            const state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isMetaDeployConfirmed', true);
@@ -165,11 +183,10 @@
         var action = component.get('c.runMigration');
 
         action.setCallback(this, function (response) {
-            const state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.find('rdMigrationBatchJob').handleLoadBatchJob();
@@ -244,11 +261,10 @@
         var action = component.get('c.completeMigration');
 
         action.setCallback(this, function (response) {
-            const state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isMigrationInProgress', false);
@@ -267,8 +283,6 @@
     refreshView: function (component) {
         this.hideElement(component, "enablement-disabled");
         this.hideElement(component, "enabler");
-
-        this.clearError(component);
 
         this.loadState(component);
     },
@@ -358,6 +372,10 @@
         let message;
         if (errors && errors[0] && errors[0].message) {
             message = errors[0].message;
+
+        } else if (errors && errors.message) {
+            message = errors.message;
+
         } else {
             message = $A.get('$Label.c.stgUnknownError');
         }

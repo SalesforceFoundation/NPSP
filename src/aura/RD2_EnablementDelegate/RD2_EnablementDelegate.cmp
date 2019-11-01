@@ -37,6 +37,7 @@
     implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressable" access="global">
 
     <aura:attribute name="state" type="Object" description="Contains enablement state attributes" />
+    <aura:attribute name="metaDeployURL" type="String" description="Contains metadata deployment URL" />
     <aura:attribute name="errorSection" type="String" description="Contains section number where error has occurred" />
     <aura:attribute name="errorMessage" type="String" description="Contains latest error message" />
 
@@ -216,9 +217,9 @@
 
                                         <lightning:layoutItem size="3"
                                             class="slds-grid slds-grid_align-end slds-p-right_medium">
-                                            <a href="https://metadeploy.herokuapp.com/products/npsp/RD2-enablement/npsp-rd2-pilot"
-                                                aura:id="metadeploy-link" onclick="{!c.handleMetaDeployLaunch}"
-                                                target="_blank">
+
+                                            <a href="{!v.metaDeployURL}" aura:id="metadeploy-link"
+                                                onclick="{!c.handleMetaDeployLaunch}" target="_blank">
                                                 <lightning:formattedText
                                                     value="{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}" />
                                                 <lightning:icon iconName="utility:new_window"
@@ -226,6 +227,7 @@
                                                     class="slds-button__icon_right"
                                                     alternativeText="{!$Label.c.AssistiveTextNewWindow}" />
                                             </a>
+
                                         </lightning:layoutItem>
                                     </lightning:layout>
                                 </div>

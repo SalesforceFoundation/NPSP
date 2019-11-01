@@ -36,7 +36,9 @@
 public with sharing class UTIL_BatchJobService {
     public class BatchException extends Exception {}
 
+    @TestVisible
     private static final String BATCH_JOB_REQUIRED = 'Batch job is required';
+    
     private static final String JOB_TYPE_BATCH = 'BatchApex';
 
     public enum ApexJobStatus { 

@@ -153,6 +153,30 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Returns metadata deploy link
+    * @return String MetaDeploy URL
+    */
+    @AuraEnabled(cacheable=false)
+    public static String getMetaDeployURL() {
+        String urlFormat = 'https://install.salesforce.org/products/npsp/{0}npsp-rd2-pilot';
+        String version;
+
+        if (UTIL_Namespace.isCustomerOrg()) {
+            UTIL_Version_API versionAPI = new UTIL_Version_API();
+            
+            //Note: the exception cannot be caught in Apex
+            version = String.valueOf(versionAPI.requestVersion()); 
+        }
+
+        version = String.isBlank(version) ? '' : (version + '/');
+        
+        return String.format(
+            urlFormat,
+            new String[]{ version }
+        );
+    }
+
+    /***
     * @description Tracks the MetaDeploy link click user action
     * @return void
     */

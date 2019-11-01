@@ -1,6 +1,7 @@
 ({
     doInit: function (component, event, helper) {
         helper.loadState(component);
+        helper.getDeployURL(component);
     },
     handleEnableConfirm: function (component, event, helper) {
         helper.confirmEnable(component);

@@ -471,7 +471,9 @@
         <members>UTIL_AbstractChunkingLDV_MOCK</members>
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_BatchJobProgress_CTRL</members>
+        <members>UTIL_BatchJobProgress_TEST</members>
         <members>UTIL_BatchJobService</members>
+        <members>UTIL_BatchJobService_TEST</members>
         <members>UTIL_Currency</members>
         <members>UTIL_CurrencyCache</members>
         <members>UTIL_CurrencyCache_TEST</members>

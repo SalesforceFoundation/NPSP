@@ -129,18 +129,25 @@ export default class BatchProgress extends LightningElement {
     * @param {object} error: Event holding error details
     */
     handleError(error) {
-        let errorMessage;
+        let toastTitle;
+        let message;
+
         if (error && error.status && error.body) {
-            errorMessage = `${error.name} + ${error.statusText} + ${error.body.message}`;
+            toastTitle = `${error.status} ${error.statusText}`;
+            message = error.body.message;
+
         } else if (error && error.name && error.message) {
-            errorMessage = `${error.name} + ${error.message}`;
+            toastTitle = `${error.name}`;
+            message = error.message;
+
         } else {
-            errorMessage = labelUnknownError;
+            message = labelUnknownError;
         }
 
         const errorDetail = {
             className: this.className,
-            message: errorMessage
+            title: toastTitle,
+            message: message
         };
         const errorEvent = new CustomEvent('error', {
             detail: { errorDetail }
