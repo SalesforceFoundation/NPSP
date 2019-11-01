@@ -468,9 +468,9 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 5, 18));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 9, 16));
 
-        System.assertNotEquals(null /*Date.newInstance(2018, 9, 1*/,
+        System.assertEquals(Date.newInstance(2019, 2, 1),
             service.getNextDonationDate(rd),
             'Next Donation Date should equal 9/1/2018');
 
