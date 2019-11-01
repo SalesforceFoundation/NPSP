@@ -2910,6 +2910,7 @@
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
         <members>GE_Template_Builder</members>
+        <members>GE_Templates</members>
         <members>General_Accounting_Unit__c</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
@@ -3040,8 +3041,13 @@
         <members>geTemplateBuilderFormLayout</members>
         <members>geTemplateBuilderFormSection</members>
         <members>geTemplateBuilderGiftFields</members>
+        <members>geTemplateBuilderSectionModalBody</members>
+        <members>geTemplateBuilderSelectFields</members>
         <members>geTemplateBuilderTemplateInfo</members>
+        <members>geTemplates</members>
         <members>pubsubNoPageRef</members>
+        <members>utilIllustration</members>
+        <members>utilPageHeader</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
