@@ -36,7 +36,24 @@
 */
 public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
-    DmlWrapper dmlActions = new DmlWrapper();
+    /***
+    * @description dml actions gathered during trigger execution
+    */
+    private DmlWrapper dmlActions = new DmlWrapper();
+
+    /***
+    * @description Recurring Donation schedule service instance
+    */
+    @TestVisible
+    private RD2_ScheduleService scheduleService {
+        get {
+            if (scheduleService == null) {
+                scheduleService = new RD2_ScheduleService();
+            }
+            return scheduleService;
+        }
+        set;
+    }
 
     /***
     * @description Recurring Donation naming service instance
@@ -142,8 +159,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     private void calculateNextDonationDates(List<npe03__Recurring_Donation__c> rds) {
 
-        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-
         for (npe03__Recurring_Donation__c rd: rds) {
             rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
         }
@@ -154,8 +169,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param rds Trigger.new records
     */
     private void buildNewSchedules(List<npe03__Recurring_Donation__c> rds) {
-
-        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
         for (npe03__Recurring_Donation__c rd: rds) {
             dmlActions.objectsToInsert.addAll(scheduleService.getNewSchedules(rd));
