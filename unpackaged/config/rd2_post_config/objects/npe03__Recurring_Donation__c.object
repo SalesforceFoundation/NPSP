@@ -2,6 +2,7 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
         <fullName>npe03__Amount__c</fullName>
+        <description>The amount for each installment Opportunity.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount for each installment Opportunity.</inlineHelpText>
         <label>Amount</label>
@@ -15,6 +16,7 @@
     <fields>
         <fullName>npe03__Date_Established__c</fullName>
         <defaultValue>Today()</defaultValue>
+        <description>The initial inception date for this Recurring Donation. The default is the current date.</description>
         <externalId>false</externalId>
         <inlineHelpText>The initial inception date for this recurring donation. The default is the current date.</inlineHelpText>
         <label>Date Established</label>
@@ -25,7 +27,6 @@
     </fields>
     <fields>
         <fullName>%%%NAMESPACE%%%Day_of_Month__c</fullName>
-        <description>Sets the specific day of the month for future installments when the Installment Period is Monthly</description>
         <externalId>false</externalId>
         <inlineHelpText>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly.</inlineHelpText>
         <label>Day of Month</label>
@@ -252,7 +253,7 @@
     </fields>
     <fields>
         <fullName>npe03__Last_Payment_Date__c</fullName>
-        <description>Date of the last payment for this Recurring Donation</description>
+        <description>NPSP calculates this value automatically based on the last time an installment Opportunity was marked paid (read only).</description>
         <externalId>false</externalId>
         <inlineHelpText>NPSP calculates this value automatically based on the last time an installment Opportunity was marked paid (read only).</inlineHelpText>
         <label>Last Donation Date</label>
@@ -263,10 +264,10 @@
     </fields>
     <fields>
         <fullName>npe03__Paid_Amount__c</fullName>
-        <description>Total Amount paid on this Recurring Donation</description>
+        <description>The total amount paid on this Recurring Donation. Calculated automatically as the total amount of all Closed/Won installment Opportunities (read only).</description>
         <externalId>false</externalId>
         <inlineHelpText>The total amount paid on this Recurring Donation. Calculated automatically as the total amount of all Closed/Won installment Opportunities (read only).</inlineHelpText>
-        <label>Paid Amount</label>
+        <label>Total Paid Amount</label>
         <precision>18</precision>
         <required>false</required>
         <scale>2</scale>
@@ -276,10 +277,10 @@
     </fields>
     <fields>
         <fullName>npe03__Total_Paid_Installments__c</fullName>
-        <description>Total number of installments paid on this Recurring Donation.</description>
+        <description>Total number of installment Opportunities paid on this Recurring Donation (read only).</description>
         <externalId>false</externalId>
         <inlineHelpText>Total number of installment Opportunities paid on this Recurring Donation (read only).</inlineHelpText>
-        <label>Total Paid Installments</label>
+        <label>Number Of Paid Installments</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
@@ -300,7 +301,7 @@
         <type>Date</type>
     </fields>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>Recurring Donations with no end date.</description>
+    <description>Recurring Donations track charitable giving where a donor specifies an amount of money to be given on a regular basis.</description>
     <label>Recurring Donations</label>
     <nameField>
         <label>Recurring Donation Name</label>
