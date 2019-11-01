@@ -158,9 +158,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService oppEvalSvc = new RD2_OpportunityEvaluationService();
         oppEvalSvc.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
 
-        System.assertEquals(true, oppEvalSvc.isEligibleForInstallmentOpp(rd1), 'RD1 should be eligible for an Installment Opp');
-        System.assertEquals(true, oppEvalSvc.isEligibleForInstallmentOpp(rd2), 'RD2 should be eligible for an Installment Opp');
-        System.assertEquals(true, oppEvalSvc.isEligibleForInstallmentOpp(rd3), 'RD3 should be eligible for an Installment Opp');
+        System.assertEquals(true, oppEvalSvc.isCandidate(rd1), 'RD1 should be eligible for an Installment Opp');
+        System.assertEquals(true, oppEvalSvc.isCandidate(rd2), 'RD2 should be eligible for an Installment Opp');
+        System.assertEquals(true, oppEvalSvc.isCandidate(rd3), 'RD3 should be eligible for an Installment Opp');
     }
 
     /**
@@ -214,9 +214,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService oppEvalSvc = new RD2_OpportunityEvaluationService();
         oppEvalSvc.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
 
-        System.assertEquals(false, oppEvalSvc.isEligibleForInstallmentOpp(rd1), 'Closed RD1 should not be eligible for an Installment Opp');
-        System.assertEquals(false, oppEvalSvc.isEligibleForInstallmentOpp(rd2), 'RD2 with no Schedules should not be eligible for an Installment Opp');
-        System.assertEquals(false, oppEvalSvc.isEligibleForInstallmentOpp(rd3), 'RD3 without a NextDonationDate should not be eligible for an Installment Opp');
+        System.assertEquals(false, oppEvalSvc.isCandidate(rd1), 'Closed RD1 should not be eligible for an Installment Opp');
+        System.assertEquals(false, oppEvalSvc.isCandidate(rd2), 'RD2 with no Schedules should not be eligible for an Installment Opp');
+        System.assertEquals(false, oppEvalSvc.isCandidate(rd3), 'RD3 without a NextDonationDate should not be eligible for an Installment Opp');
     }
 
     /**

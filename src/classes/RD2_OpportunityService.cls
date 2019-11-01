@@ -59,6 +59,10 @@ public with sharing class RD2_OpportunityService {
     */
     public void createInstallmentOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates) {
 
+        if (rdsWithCloseDates.isEmpty()) {
+            return;
+        }
+
         List<Opportunity> oppsToInsert;
         Set<Id> createdOppIds = new Set<Id>();
         Integer oppItem = 0;

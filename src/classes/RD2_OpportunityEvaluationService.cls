@@ -101,26 +101,21 @@ public class RD2_OpportunityEvaluationService {
         Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (!isEligibleForInstallmentOpp(rd)) {
+            if (!isCandidate(rd)) {
                 continue;
             }
 
             if (isNewRecurringDonation(rd)) {
-                rdsWithCloseDates.put(rd, getOppCloseDatesToCreateInstallmentsFor(rd) );
+                rdsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
                 continue;
             }
-            /*if (hasKeyScheduleFieldChanged(rd)) {
-                // TODO Update the Future Installment Opportunity if needed
-            }
-            reviewCurrentInstallmentOpps(rd);*/
+            // TODO Update the Future Installment Opportunity if needed
         }
 
         // TODO Recalculate NextDonationDate
         // Date nextDonationDate = scheduleService.calculateNextDonationDate(rd);
 
-        if (!rdsWithCloseDates.isEmpty()) {
-            oppService.createInstallmentOpportunities(rdsWithCloseDates);
-        }
+        oppService.createInstallmentOpportunities(rdsWithCloseDates);
 
         return this;
     }
@@ -133,7 +128,7 @@ public class RD2_OpportunityEvaluationService {
      * Active Schedule records.
      */
     @TestVisible
-    private Boolean isEligibleForInstallmentOpp(npe03__Recurring_Donation__c rd) {
+    private Boolean isCandidate(npe03__Recurring_Donation__c rd) {
         return (rd.npe03__Next_Payment_Date__c != null &&
             rd.Status__c == RD2_Constants.STATUS_ACTIVE &&
             !rd.RecurringDonationSchedules__r.isEmpty());
@@ -161,7 +156,7 @@ public class RD2_OpportunityEvaluationService {
      * @return List<Date>
      */
     @TestVisible
-    private List<Date> getOppCloseDatesToCreateInstallmentsFor(npe03__Recurring_Donation__c rd) {
+    private List<Date> getInstallmentOppCloseDates(npe03__Recurring_Donation__c rd) {
         return new List<Date>{ rd.npe03__Next_Payment_Date__c != null ? rd.npe03__Next_Payment_Date__c : Date.Today() };
     }
 
@@ -171,7 +166,7 @@ public class RD2_OpportunityEvaluationService {
      * @return List<RecurringDonation>
      */
     @TestVisible
-    public List<npe03__Recurring_Donation__c> getRecurringDonationRecords(Set<Id> rdIds) {
+    private List<npe03__Recurring_Donation__c> getRecurringDonationRecords(Set<Id> rdIds) {
         String PARENT_ACCOUNT_ID = 'npe03__Contact__r.AccountId';
 
         Map<String, Schema.DescribeFieldResult> allRdFields =
@@ -213,7 +208,6 @@ public class RD2_OpportunityEvaluationService {
             .withSelectFields(queryFields)
             .withWhere('Id IN :rdIds')
             .build();
-        System.debug(soql);
 
         return Database.query(soql);
     }

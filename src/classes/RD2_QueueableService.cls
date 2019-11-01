@@ -51,7 +51,12 @@ public class RD2_QueueableService {
             this.rdIds = rdIds;
         }
 
-        public void execute(QueueableContext qc) {
+        /**
+         * @description Execute method called when the Queueable runs. Delegates to the
+         * evaluation service
+         * @param context queuableContext
+         */
+        public void execute(QueueableContext context) {
             if (rdIds == null || rdIds.isEmpty()) {
                 return;
             }
@@ -59,6 +64,9 @@ public class RD2_QueueableService {
             executeOppEvaluationService();
         }
 
+        /**
+         * @description Delegate processing of the Recurring Donations to the Evaluation Service
+         */
         public void executeOppEvaluationService() {
             RD2_OpportunityEvaluationService oppService = new RD2_OpportunityEvaluationService()
                 .withRds(rdIds);

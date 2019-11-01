@@ -79,6 +79,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         validate(rds, triggerAction);
         handleRDSchedules(rds, oldRds, triggerAction);
 
+        // Insert/Update any pending RecurringDonationSchedule records before the
+        // evaluation service is called so that the full schedule is available to the
+        // service to determine what Opportunities to insert or modify
         TDTM_TriggerHandler.processDML(dmlActions);
         dmlActions = null;
 
