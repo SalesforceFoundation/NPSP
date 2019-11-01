@@ -71,7 +71,7 @@ public class ALLO_AllocationsUtil {
      * process as much as possible while skipping what it has to
      ********************************************************************************************************/
     public class RecordExclusions {
-        private Map<Id, Set<PROCESS_DEF>> exclusionsByRecordId = new Map<Id, Set<PROCESS_DEF>>();
+        @testVisible private Map<Id, Set<PROCESS_DEF>> exclusionsByRecordId = new Map<Id, Set<PROCESS_DEF>>();
 
         /*******************************************************************************************************
          * @description Adds an exclusion for the specified record.
@@ -134,15 +134,15 @@ public class ALLO_AllocationsUtil {
         public List<Allocation__c> allocationsForInsert = new List<Allocation__c>();
         public List<Allocation__c> allocationsForUpdate = new List<Allocation__c>();
         public List<Allocation__c> allocationsForDelete = new List<Allocation__c>();
-        public Map<String, List<String>> errorsByRecordId = new Map<String, List<String>>();
+        public Map<Id, List<String>> errorsByRecordId = new Map<Id, List<String>>();
 
         /*******************************************************************************************************
          * @description Adds an error to the list of errors for a specific record Id.  If no errors are
          *              present for that record Id, a new error list is created
-         * @param String recordId The Id of the record
+         * @param Id recordId The Id of the record
          * @param String error to add
          ********************************************************************************************************/
-        public void addError(String recordId, String error) {
+        public void addError(Id recordId, String error) {
             if (this.errorsByRecordId.containsKey(recordId)) {
                 this.errorsByRecordId.get(recordId).add(error);
             } else {
@@ -153,7 +153,7 @@ public class ALLO_AllocationsUtil {
         /*******************************************************************************************************
          * @description Adds a list of errors to the existing list of errors for a specific record Id.  If no
          *              errors are present for that record Id, the list is inserted as is.
-         * @param String recordId The Id of the record
+         * @param Id recordId The Id of the record
          * @param List<String> errors to add
          ********************************************************************************************************/
         public void addAllErrors(String recordId, List<String> errors) {
@@ -673,7 +673,7 @@ public class ALLO_AllocationsUtil {
      * @param SObject oppObjType - (Opportunity SObject) Used when adding an error to the list of Record
      *        Errors so it can store the Object as "Opportunity"
     ********************************************************************************************************/
-    @testVisible private static void processFunctionalErrors(RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, Map<String, List<String>> errorsByRecordId, SObject oppObjType) {
+    @testVisible private static void processFunctionalErrors(RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, Map<Id, List<String>> errorsByRecordId, SObject oppObjType) {
         // Functional errors
         if (errorsByRecordId != null && !errorsByRecordId.isEmpty()) {
             for(String soId :errorsByRecordId.keySet()) {
@@ -783,10 +783,10 @@ public class ALLO_AllocationsUtil {
                     Decimal allocationPercent = ((allocation.Amount__c != null) ? allocation.Amount__c : 0) / sourceAmount * 100;
 
                     // Do not round the percent yet, we want the most accurate Amount value possible
-                    allocation.Amount__c = (amount * allocationPercent__c * .01).setScale(2);
+                    allocation.Amount__c = (amount * allocationPercent * .01).setScale(2);
 
                     // Round the visible percentage value to 2 decimal places after the amount is calculated
-                    allo.Percent__c = allocationPercent.setScale(2, System.RoundingMode.HALF_UP);
+                    allocation.Percent__c = allocationPercent.setScale(2, System.RoundingMode.HALF_UP);
                 }
                 remainder -= (allocation.Amount__c != null) ? allocation.Amount__c : 0;
             }

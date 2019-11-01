@@ -34,24 +34,138 @@
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Tests for ALLO_AllocationsUTIL class
 */
-@IsTest
+@IsTest(isParallel=true)
 public class ALLO_AllocationsUtil_TEST {
 
     /*******************************************************************************************************
      * RecordExclusions Inner Class Tests
      ********************************************************************************************************/
 
-    //TODO: Test 1 - Add Exclusion (Add and Confirm Individal Exlusion [ALLO_AllocationsUtil.RecordExclusions.addExclusion]
-    //TODO: Test 2 - Add Set of Exclusions) (Add Set of Exclusions and Confirm) [ALLO_AllocationsUtil.RecordExclusions.addExclusions]
-    //TODO: Test 3 - Verify Exclusion via "Has Exclusion" [ALLO_AllocationsUtil.RecordExclusions.hasExclusion]
-    //TODO: Test 4 - Verify Has No Exclusions call [ALLO_AllocationsUtil.RecordExclusions.hasNoExclusions]
+    /* @description Test 1 - Add Exclusion (Add and Confirm Individal Exlusions
+                    [ALLO_AllocationsUtil.RecordExclusions.addExclusion] */
+    @isTest private static void addIndividualRecordExclusions() {
+        ALLO_AllocationsUTIL.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        recExcl.addExclusion (UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD);
+
+        System.assertEquals (true, recExcl.exclusionsByRecordId.containsKey(UserInfo.getUserId()), 'User Id is present in the Exclusions By Record Id Map');
+        Set<ALLO_AllocationsUtil.PROCESS_DEF> excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(1, excls.size(), '# of Exclusions Present after adding first exclusion');
+
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD + ' should be present');
+
+        // Add additional Exclusion
+        recExcl.addExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD);
+
+        System.assertEquals (true, recExcl.exclusionsByRecordId.containsKey(UserInfo.getUserId()), 'User Id is present in the Exclusions By Record Id Map');
+        excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(2, excls.size(), '# of Exclusions Present after adding second exclusion');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD + ' should be present');
+
+        // Test Adding Same Exclusion
+        recExcl.addExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD);
+        excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(2, excls.size(), '# of Exclusions Present after adding same exclusion again');
+    }
+
+    /* @description Test 2 - Add Set of Exclusions) (Add Set of Exclusions and Confirm)
+                    [ALLO_AllocationsUtil.RecordExclusions.addExclusions] */
+    @isTest private static void addSetOfRecordExclusions() {
+        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        recExcl.addExclusions (UserInfo.getUserId(), new Set<ALLO_AllocationsUtil.PROCESS_DEF> { ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD, ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD});
+        System.assertEquals (true, recExcl.exclusionsByRecordId.containsKey(UserInfo.getUserId()), 'User Id is present in the Exclusions By Record Id Map');
+        Set<ALLO_AllocationsUtil.PROCESS_DEF> excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(2, excls.size(), '# of Exclusions Present after adding exclusion set');
+
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD + ' should be present');
+
+        recExcl.addExclusions(UserInfo.getUserId(), new Set<ALLO_AllocationsUtil.PROCESS_DEF> {ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC, ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE});
+        excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(4, excls.size(), '# of Exclusions Present after adding additional set of exclusions');
+
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE + ' should be present');
+    }
+
+     /* @description Test 3 - Verify Exclusion via "Has Exclusion"
+                     [ALLO_AllocationsUtil.RecordExclusions.hasExclusion] */
+    @isTest private static void addExclusionsAndConfirmHasExclusions() {
+        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        recExcl.addExclusions (UserInfo.getUserId(), new Set<ALLO_AllocationsUtil.PROCESS_DEF> { ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD, ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD});
+        System.assertEquals(true, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion should be present for' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD);
+        System.assertEquals(true, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion should be present for' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD);
+        System.assertEquals(false, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.ALL), 'Exclusion should not be present for' + ALLO_AllocationsUtil.PROCESS_DEF.ALL);
+    }
+
+
+
+    /* @description Test 4 - Verify Has No Exclusions is true when no exclusions are present. call
+                    [ALLO_AllocationsUtil.RecordExclusions.hasNoExclusions] */
+    @isTest private static void confirmHasNoExclusionsIsTrueWhenExclusionsAreNotPresentAndIsFalseWhenPresent() {
+        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        System.assertEquals(true, recExcl.hasNoExclusions(UserInfo.getUserId()), 'Should be no exclusions initially');
+
+        recExcl.addExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.ALL);
+        System.assertEquals(false, recExcl.hasNoExclusions(UserInfo.getUserId()), 'Should be exclusions present after adding on for current user');
+        System.assertEquals(true, recExcl.hasNoExclusions(UserInfo.getOrganizationId()), 'Should be no exclusions for Organization Id');
+    }
 
     /*******************************************************************************************************
      * AllocationResults Inner Class Tests
      ********************************************************************************************************/
-    //TODO: Test 1 - Test Add an Error [ALLO_AllocationsUtil.AllocationResults.addError]
-    //TODO: Test 2 - Test Add Errors [ALLO_AllocationsUtil.AllocationResults.addAllErrors]
+    /* @description Test 1 - Test Add an Error
+                    [ALLO_AllocationsUtil.AllocationResults.addError] */
+    @isTest private static void addErrorsIndividuallyToTheAllocationsResultsAndConfirmResult() {
 
+        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResult();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        allocResults.addError(UserInfo.getUserId(), 'Test Error');
+
+        System.assertEquals (true, allocResults.errorsByRecordId.containsKey(UserInfo.getUserId()), 'Errors are present for ' + UserInfo.getUserId());
+        System.assertEquals (1, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '1 Error is present for ' + UserInfo.getUserId());
+
+        allocResults.addError(UserInfo.getUserId(), 'Test Error 2');
+        System.assertEquals (2, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '2 Errors are present for ' + UserInfo.getUserId());
+
+        System.assertEquals (false, allocResults.errorsByRecordId.get(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
+    }
+
+    /* @description Test 2 - Test Add Errors
+                    [ALLO_AllocationsUtil.AllocationResults.addAllErrors] */
+    @isTest private static void addMultipleErrorsToTheAllocationsResultsAndConfirmResult() {
+        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResult();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        allocResults.addAllErrors(UserInfo.getUserId(), new List<String> {'Test 1 Error', 'Test 2 Error'});
+
+        System.assertEquals (true, allocResults.errorsByRecordId.containsKey(UserInfo.getUserId()), 'Errors are present for ' + UserInfo.getUserId());
+        System.assertEquals (2, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '# of Errors present for ' + UserInfo.getUserId());
+
+        allocResults.addAllErrors(UserInfo.getUserId(), new List<String> {'Test 3 Error', 'Test 4 Error'});
+        System.assertEquals (4, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '4 Errors are present for ' + UserInfo.getUserId());
+
+        System.assertEquals (false, allocResults.errorsByRecordId.get(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
+
+
+    }
     /*******************************************************************************************************
      * RecordsForReview Inner Class Tests
      ********************************************************************************************************/
