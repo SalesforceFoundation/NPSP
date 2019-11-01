@@ -197,7 +197,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies schedule is created when recurring donation is inserted
+    * @description Verifies new schedule is created when recurring donation is updated
     */
     @isTest
     private static void shouldCreateNewRDScheduleOnUpdate() {
@@ -219,13 +219,15 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         Test.startTest();
         insert rds;
+        rds[0].InstallmentFrequency__c = 3;
+        update rds;
         Test.stopTest();
 
         Map<Id, npe03__Recurring_Donation__c> actualRdById = new Map<Id, npe03__Recurring_Donation__c>(rdGateway.getRecords(rds));
         System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rds);
-        System.assertEquals(rds.size(), rdSchedules.size(), 'Number of RD schedule records should equal the number of RD records');
+        System.assertEquals(rds.size()+1, rdSchedules.size(), 'Number of RD schedule records should be one greater than the number of RD records');
 
     }
 
@@ -268,19 +270,21 @@ private with sharing class RD2_RecurringDonations_TEST {
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withContact(contact.Id)
             .withAmount(10)
-            .withInstallmentPeriodMonthly()
+            .withInstallmentPeriodWeekly()
             .withInstallmentFrequency(1)
-            .withDayOfMonth('20')
             .withDateEstablished(Date.newInstance(2019, 9, 15))
             .withStartDate(Date.newInstance(2019, 9, 15))
             .build();
 
         Test.startTest();
         insert rd;
+        rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
+        rd.Day_of_Month__c = '20';
+        update rd;
         Test.stopTest();
 
         npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(rd2.npe03__Next_Payment_Date__c, Date.newInstance(2019, 9, 20), 'Next Donation date should equal 9/20/2019');
+        System.assertEquals(rd2.npe03__Next_Payment_Date__c.day(), 20, 'Next Donation day should equal 20');
 
     }
 

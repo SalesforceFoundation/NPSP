@@ -250,4 +250,30 @@ public without sharing class RD2_ScheduleService {
         return rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
     }
 
+    /***
+    * @description Determines whether changes to recurring donation should trigger creation of new schedule(s)
+    * @param rd Trigger.new record
+    * @param oldRd Trigger.old record
+    * @return Boolean
+    */
+    public Boolean recurringDonationScheduleUpdateNeeded(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+
+        Boolean updateNeeded = false;
+
+        if (
+            rd.StartDate__c != oldRd.StartDate__c ||
+            rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
+            rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+            rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
+            rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
+            rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
+            rd.Status__c != oldRd.Status__c ||
+            rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c
+        ) {
+            updateNeeded = true;
+        }
+
+        return updateNeeded;
+    }
+
 }

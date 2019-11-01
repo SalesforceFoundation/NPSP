@@ -195,12 +195,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         for (npe03__Recurring_Donation__c rd : rds) {
             npe03__Recurring_Donation__c oldRd = mapOldRecurringDonationsByIds.get(rd.Id);
 
-            if (recurringDonationScheduleUpdateNeeded(rd, oldRd)) {
+            if (scheduleService.recurringDonationScheduleUpdateNeeded(rd, oldRd)) {
                 filteredRecurringDonations.put(rd.Id, rd);
             }
         }
-
-        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
         for (npe03__Recurring_Donation__c rd : filteredRecurringDonations.values()) {
             rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
@@ -221,7 +219,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         for (npe03__Recurring_Donation__c rd : rds) {
             npe03__Recurring_Donation__c oldRd = mapOldRecurringDonationsByIds.get(rd.Id);
 
-            if (recurringDonationScheduleUpdateNeeded(rd, oldRd)) {
+            if (scheduleService.recurringDonationScheduleUpdateNeeded(rd, oldRd)) {
                 filteredRecurringDonations.put(rd.Id, rd);
             }
         }
@@ -238,38 +236,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         DmlWrapper revisedSchedules;
-        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
         for (npe03__Recurring_Donation__c rd : filteredRecurringDonations.values()) {
             revisedSchedules = scheduleService.getUpdatedSchedules(rd, oldSchedules.get(rd.Id));
             dmlActions.objectsToInsert.addAll(revisedSchedules.objectsToInsert);
             dmlActions.objectsToUpdate.addAll(revisedSchedules.objectsToUpdate);
         }
-    }
-
-    /***
-    * @description Determines whether changes to recurring donation should trigger creation of new schedule(s)
-    * @param rd Trigger.new record
-    * @param oldRd Trigger.old record
-    * @return Boolean
-    */
-    private Boolean recurringDonationScheduleUpdateNeeded(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        Boolean retval = false;
-
-        if (
-                rd.StartDate__c != oldRd.StartDate__c ||
-                rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
-                rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
-                rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
-                rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
-                rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
-                rd.Status__c != oldRd.Status__c ||
-                rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c
-            )
-        {
-            retval = true;
-        }
-
-        return retval;
     }
 
 }

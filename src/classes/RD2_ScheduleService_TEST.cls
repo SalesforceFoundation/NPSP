@@ -432,7 +432,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
                 .withAmount(400)
                 .withPaymentMethod('Check')
-                .withInstallmentPeriodWeekly()
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
                 .withInstallmentFrequency(1)
                 .withDateEstablished(Date.newInstance(2019, 9, 15))
                 .withStartDate(Date.newInstance(2018, 3, 17))
