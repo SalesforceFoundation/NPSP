@@ -131,6 +131,7 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         Integer jobItemsProcessed = 0;
         Integer totalJobItems = 100;
+        
         String status = UTIL_BatchJobService.ApexJobStatus.HOLDING.name();
         Long percentComplete = batchJob.calcPercentComplete(jobItemsProcessed, totalJobItems, status);
         System.assertEquals(defaultPercentage, percentComplete);

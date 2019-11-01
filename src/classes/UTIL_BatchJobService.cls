@@ -183,7 +183,7 @@ public with sharing class UTIL_BatchJobService {
             if (ApexJobStatus.COMPLETED.name() == status) {
                 percentComplete = 100;
 
-            } else if (ApexJobStatus.QUEUED.name() == status) {
+            } else if (ApexJobStatus.QUEUED.name() == status || ApexJobStatus.HOLDING.name() == status) {
                 percentComplete = defaultPercentComplete;
 
             } else if (ApexJobStatus.PREPARING.name() == status) {
