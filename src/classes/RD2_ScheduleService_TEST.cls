@@ -463,16 +463,16 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withAmount(400)
                 .withPaymentMethod('Check')
                 .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
-                .withInstallmentFrequency(17)
+                .withInstallmentFrequency(5)
                 .withDateEstablished(Date.newInstance(2019, 9, 15))
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 5, 1));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 9, 16));
 
-        System.assertEquals(Date.newInstance(2019, 1, 15),
+        System.assertEquals(Date.newInstance(2019, 2, 1),
             service.getNextDonationDate(rd),
-            'Next Donation Date should equal 1/15/2019');
+            'Next Donation Date should equal 2/1/2019');
 
     }
 
