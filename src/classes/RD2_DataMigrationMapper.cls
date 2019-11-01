@@ -55,7 +55,7 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Converts the RD record to enhanced Recurring Donation format 
+     * @description Converts the RD record to enhanced Recurring Donation format
      * by updating the new and existing fields on the record as required.
      * @return npe03__Recurring_Donation__c Recurring Donation in enhanced format
      */
@@ -63,7 +63,7 @@ public class RD2_DataMigrationMapper {
         if (isConverted()) {
             return rd;
         }
-        
+
         setInstallmentFields(rd);
         setStartDate(rd);
         setDayOfMonth(rd);
@@ -73,10 +73,10 @@ public class RD2_DataMigrationMapper {
         return rd;
     }
 
-    /**	
-     * @description Returns true if the RD record is already in enhanced Recurring Donation format	
-     */	
-    public Boolean isConverted() {	
+    /**
+     * @description Returns true if the RD record is already in enhanced Recurring Donation format
+     */
+    public Boolean isConverted() {
         return String.isNotBlank(rd.Status__c) && rd.InstallmentFrequency__c != null;
     }
 
@@ -108,7 +108,7 @@ public class RD2_DataMigrationMapper {
         }
 
         if (rd.npe03__Schedule_Type__c == System.Label.npe03.RecurringDonationDivideValue
-            && rd.npe03__Installment_Amount__c != null 
+            && rd.npe03__Installment_Amount__c != null
             && rd.npe03__Installment_Amount__c != 0
         ) {
             rd.npe03__Amount__c = rd.npe03__Installment_Amount__c;
@@ -207,7 +207,7 @@ public class RD2_DataMigrationMapper {
      * @return void
      */
     private void setStatus(npe03__Recurring_Donation__c rd) {
-        
+
         if (rd.npe03__Open_Ended_Status__c == System.Label.npe03.RecurringDonationClosedStatus) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
 
@@ -230,7 +230,8 @@ public class RD2_DataMigrationMapper {
      * @return List<RecurringDonationSchedule__c> Schedule records to insert
      */
     public List<RecurringDonationSchedule__c> getScheduleRecords() {
-        return new List<RecurringDonationSchedule__c>();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        return scheduleService.getNewSchedules(rd);
     }
 
     public class MigrationException extends Exception { }
