@@ -43,17 +43,41 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         this.init();
     }
 
-    /*******************************************************************************
-    * @description Method pulls the object and field mappings.
-    */
     init = async () => {
-        this.objectMappings = await getFieldAndObjectMappingsByFieldMappingSetName({
-            fieldMappingSetName: this.selectedFieldMappingSet
-        });
-
+        this.objectMappings = await this.handleGetFieldAndObjectMappings(this.selectedFieldMappingSet);
+        this.handleSortFieldMappings();
         this.loadObjectAndFieldMappingSets();
-
         this.isLoading = false;
+    }
+
+    /*******************************************************************************
+    * @description Intermediary async method for getting the object and field mappings
+    * based on the selected field mapping set.
+    */
+    handleGetFieldAndObjectMappings = async (selectedFieldMappingSet) => {
+        return getFieldAndObjectMappingsByFieldMappingSetName({ fieldMappingSetName: selectedFieldMappingSet });
+    }
+
+    /*******************************************************************************
+    * @description Sorts the field mappings within their respective object mappings
+    * alphabetically and by their requiredness.
+    */
+    handleSortFieldMappings() {
+        let objectMappings = mutable(this.objectMappings);
+        for (let i = 0; i < objectMappings.length; i++) {
+            let objectMapping = objectMappings[i];
+
+            if (objectMapping.Field_Mappings) {
+                objectMapping.Field_Mappings.sort(function (a, b) {
+                    const requiredCompare = b.Is_Required - a.Is_Required;
+                    const labelCompare = a.Target_Field_Label.localeCompare(b.Target_Field_Label);
+
+                    return requiredCompare || labelCompare;
+                });
+            }
+        }
+
+        this.objectMappings = objectMappings;
     }
 
     /*******************************************************************************
@@ -69,7 +93,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
 
             if (this.formSections) {
                 if (this.formSections.length === 1) {
-                    this.handleChangeActiveSection({detail: this.formSections[0].id});
+                    this.handleChangeActiveSection({ detail: this.formSections[0].id });
                 }
                 for (let i = 0; i < this.formSections.length; i++) {
                     const formSection = this.formSections[i];
@@ -131,7 +155,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         formSections.splice(formSectionIndex, 1);
 
         if (formSections.length === 1) {
-            this.handleChangeActiveSection({detail: this.formSections[0].id});
+            this.handleChangeActiveSection({ detail: this.formSections[0].id });
         }
 
         dispatch(this, 'refreshformsections', formSections);
