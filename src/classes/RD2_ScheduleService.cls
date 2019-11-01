@@ -114,7 +114,7 @@ public without sharing class RD2_ScheduleService {
         Date previousDate;
 
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
-            nextDate = getNextDonationDateGreaterOrEqualDate(schedule, currentDate);
+            nextDate = getNextDonationDateGreaterThanToday(schedule);
 
             if (previousDate < nextDate) {
                 nextDate = previousDate;
@@ -152,11 +152,87 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
+    * @description Calculates the next donation date >= currentDate
+    * @param schedule Recurring Donation Schedule record
+    * @return Date
+    */
+    private Date getNextDonationDateGreaterThanToday(RecurringDonationSchedule__c schedule) {
+
+        Integer frequency = Integer.valueOf(schedule.InstallmentFrequency__c);
+        Date firstValid = getFirstPossibleDonationDateFromStart(schedule);
+
+        if (firstValid >= currentDate) {
+            return firstValid;
+        }
+
+        Integer unitsBetween;
+        Integer remains;
+        Date adjusted;
+
+        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+
+            unitsBetween = firstValid.monthsBetween(currentDate);
+            remains = Math.mod(unitsBetween, frequency);
+            adjusted = firstValid.addMonths(unitsBetween);
+
+            if (remains > 0) {
+                adjusted = adjusted.addMonths(1);
+            }
+
+            if (adjusted < currentDate) {
+                adjusted = adjusted.addMonths(frequency);
+            }
+
+            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+                adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
+            }
+        }
+
+        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
+
+            unitsBetween = firstValid.monthsBetween(currentDate);
+            remains = Math.mod(unitsBetween, frequency*12);
+            adjusted = firstValid.addYears(unitsBetween / (12));
+
+            if (remains > 0) {
+                adjusted = adjusted.addYears(frequency);
+            }
+
+            if (adjusted < currentDate) {
+                adjusted = adjusted.addYears(frequency);
+            }
+        }
+
+        else if (
+                schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ||
+                        schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
+
+            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
+                frequency *= 7;
+            }
+
+            unitsBetween = firstValid.daysBetween(currentDate);
+            remains = Math.mod(unitsBetween, frequency);
+            adjusted = firstValid.addDays((unitsBetween / (frequency)) * (frequency));
+
+            if (remains > 0) {
+                adjusted = adjusted.addDays(frequency);
+            }
+
+            if (adjusted < currentDate) {
+                adjusted = adjusted.addDays(frequency);
+            }
+        }
+
+        return adjusted;
+    }
+
+    /***
     * @description Calculates the earliest valid donation date based on start date.
     * @param schedule Recurring Donation Schedule record
     * @return Date
     */
-    private Date getFirstValidDonationDate(RecurringDonationSchedule__c schedule) {
+    private Date getFirstPossibleDonationDateFromStart(RecurringDonationSchedule__c schedule) {
 
         Date nextDate = schedule.StartDate__c;
 
@@ -175,83 +251,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         return nextDate;
-    }
-
-    /***
-    * @description Calculates the next donation date >= greaterOrEqualDate
-    * @param schedule Recurring Donation Schedule record
-    * @param greaterOrEqualDate Earliest date limiter (normally today)
-    * @return Date
-    */
-    private Date getNextDonationDateGreaterOrEqualDate(RecurringDonationSchedule__c schedule, Date greaterOrEqualDate) {
-
-        Integer frequency = Integer.valueOf(schedule.InstallmentFrequency__c);
-        Date firstValid = getFirstValidDonationDate(schedule);
-
-        if (firstValid >= greaterOrEqualDate) {
-            return firstValid;
-        }
-
-        Integer unitsBetween;
-        Integer remains;
-        Date adjusted;
-
-        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
-
-            unitsBetween = firstValid.monthsBetween(greaterOrEqualDate);
-            remains = Math.mod(unitsBetween, frequency);
-            adjusted = firstValid.addMonths(unitsBetween);
-
-            if (remains > 0) {
-                adjusted = adjusted.addMonths(1);
-            }
-
-            if (adjusted < greaterOrEqualDate) {
-                adjusted = adjusted.addMonths(frequency);
-            }
-
-            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
-                adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
-            }
-        }
-
-        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
-
-            unitsBetween = firstValid.monthsBetween(greaterOrEqualDate);
-            remains = Math.mod(unitsBetween, frequency*12);
-            adjusted = firstValid.addYears(unitsBetween / (12));
-
-            if (remains > 0) {
-                adjusted = adjusted.addYears(frequency);
-            }
-
-            if (adjusted < greaterOrEqualDate) {
-                adjusted = adjusted.addYears(frequency);
-            }
-        }
-
-        else if (
-            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ||
-            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
-
-            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
-                frequency *= 7;
-            }
-
-            unitsBetween = firstValid.daysBetween(greaterOrEqualDate);
-            remains = Math.mod(unitsBetween, frequency);
-            adjusted = firstValid.addDays((unitsBetween / (frequency)) * (frequency));
-
-            if (remains > 0) {
-                adjusted = adjusted.addDays(frequency);
-            }
-
-            if (adjusted < greaterOrEqualDate) {
-                adjusted = adjusted.addDays(frequency);
-            }
-        }
-
-        return adjusted;
     }
 
     /***
