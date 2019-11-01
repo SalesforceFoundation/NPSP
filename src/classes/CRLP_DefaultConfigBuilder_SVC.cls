@@ -74,7 +74,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollupsToSoftDelete);
             allChangedRollups.addAll(rollupsToSoftDelete);
         }
- 
+
         allChangedFilterGroups.addAll(filterGroups);
         allChangedRollups.addAll(rollups);
 
@@ -440,7 +440,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleOpenStage.value = 'false';
         ruleOpenStage.isDeleted = false;
         groupOpenDonations.rules.add(ruleOpenStage);
-    
+
         // ==============================================================================================================
         // Default "Donations: Close/Won Stage WITHOUT RT Exclusions" filter group -- Recurring Donations Rollups
         // ==============================================================================================================
@@ -777,6 +777,14 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // 6 = IntValue
 
         for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
+
+            // When RD2 is enabled, this rollup has been disabled. If the Admin were to reset all CRLP's
+            // via NPSP settings, this method would incorrectly reactivate that rollup by default.
+            if (RD2_EnablementService.getInstance().isRecurringDonations2Enabled() &&
+                        summaryObjectField == 'npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c') {
+                continue;
+            }
+
             List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
             List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
             CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
@@ -901,7 +909,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             }
             catch(Exception ex) {
                 continue;
-            }  
+            }
         }
         return rollups;
     }
