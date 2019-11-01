@@ -38,8 +38,14 @@
 public without sharing class RD2_ScheduleService {
 
     @TestVisible
-    private Date testCurrentDate = Date.today();
-
+    private Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = Date.today();
+            }
+            return currentDate;
+        } set;
+    }
     /***
     * @description Builds new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
@@ -104,7 +110,6 @@ public without sharing class RD2_ScheduleService {
     */
     public Date getNextDonationDate(List<RecurringDonationSchedule__c> rdSchedules) {
 
-        Date currentDate = Test.isRunningTest() ? testCurrentDate : Date.today();
         Date nextDate;
         Date previousDate;
 
@@ -200,9 +205,13 @@ public without sharing class RD2_ScheduleService {
             }
         }
 
-        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
+        else if (
+            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ||
+            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
 
-            frequency *= 7;
+            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
+                frequency *= 7;
+            }
 
             unitsBetween = firstValid.daysBetween(greaterOrEqualDate);
             remains = Math.mod(unitsBetween, frequency);
