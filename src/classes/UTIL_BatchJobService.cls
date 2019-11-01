@@ -38,7 +38,7 @@ public with sharing class UTIL_BatchJobService {
 
     @TestVisible
     private static final String BATCH_JOB_REQUIRED = 'Batch job is required';
-    
+
     private static final String JOB_TYPE_BATCH = 'BatchApex';
 
     public enum ApexJobStatus { 
@@ -54,6 +54,8 @@ public with sharing class UTIL_BatchJobService {
 
     /***
     * @description Determines if the batch job is in progress
+    * @param batchId Batch Id
+    * @return Boolean
     */
     public Boolean isInProgress(Id batchId) {
         if (batchId == null) {
@@ -65,6 +67,8 @@ public with sharing class UTIL_BatchJobService {
 
     /***
     * @description Loads the latest batch job for the specified batch class name
+    * @param className Batch class name
+    * @return BatchJob
     */
     public BatchJob getBatchJob(String className) {
         String namespacePrefix = UTIL_Namespace.getNamespace();
@@ -108,6 +112,7 @@ public with sharing class UTIL_BatchJobService {
 
         /***
         * @description Constructor
+        * @param job AsyncApexJob record
         */
         public BatchJob(AsyncApexJob job) {
             if (job == null) {
@@ -131,8 +136,11 @@ public with sharing class UTIL_BatchJobService {
 
         /***
         * @description Calculates time elapsed since the batch job has started. 
-        * If the batch is completed, the endDate is completion date; 
+        * 
+        * @param startDate Batch Start Date
+        * @param endDate When completed, the endDate is completion date; 
         * otherwise, the endDate is the current datetime.
+        * @return String Time elapsed
         */
         @TestVisible
         private String calcTimeElapsed(DateTime startDate, DateTime endDate) {
@@ -143,7 +151,7 @@ public with sharing class UTIL_BatchJobService {
 
             DateTime diffDate = DateTime.newInstance(milliseconds);
 
-            return (days > 0 ? String.valueOf(days) + ' day(s) ' : '') +
+            return (days > 0 ? String.valueOf(days) + ' ' + System.Label.BatchProgressTimeElapsedDays + ' ' : '') +
                 String.format(
                     '{0}:{1}:{2}', 
                     new String[] { formatTime(diffDate.hourGmt()), formatTime(diffDate.minuteGmt()), formatTime(diffDate.secondGmt()) }
@@ -152,6 +160,8 @@ public with sharing class UTIL_BatchJobService {
 
         /***
         * @description Formats hours, minutes and seconds of the time
+        * @param value Time
+        * @return String Formatted time
         */
         private String formatTime(Long value) {
             return String.valueOf(value).leftPad(2, '0').right(2);
@@ -159,6 +169,10 @@ public with sharing class UTIL_BatchJobService {
 
         /***
         * @description Calculates the percentage of the batch job completion
+        * @param jobItemsProcessed Processed batch iterations
+        * @param totalJobItems Total batch iterations
+        * @param status Batch job status
+        * @return Long Percentage completed
         */
         @TestVisible
         private Long calcPercentComplete(Integer jobItemsProcessed, Integer totalJobItems, String status) {
@@ -193,6 +207,8 @@ public with sharing class UTIL_BatchJobService {
 
         /***
         * @description Determines if the batch job is in progress
+        * @param status Batch job status
+        * @return Boolean
         */
         @TestVisible
         private Boolean isInProgress(String status) {

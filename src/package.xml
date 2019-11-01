@@ -1310,6 +1310,7 @@
         <members>BatchProgressJobItemsProcessed</members>
         <members>BatchProgressStatus</members>
         <members>BatchProgressTimeElapsed</members>
+        <members>BatchProgressTimeElapsedDays</members>
         <members>BatchProgressTitleRD2DataMigration</members>
         <members>BatchProgressTotalJobItems</members>
         <members>CMT_DeleteConfirm</members>

@@ -38,6 +38,8 @@
 public with sharing class UTIL_BatchJobService_TEST {
     public static final Id MOCK_BATCH_ID = '707f100007HyXHJAA3';
 
+	private static final String TIME_ELAPSED_DAYS = System.Label.BatchProgressTimeElapsedDays;
+
     /***
     * @description Verifies the constructor throws an error when the batch job input argument is null
     */
@@ -71,7 +73,7 @@ public with sharing class UTIL_BatchJobService_TEST {
         System.assertEquals(job.CompletedDate, batchJob.completedDate);
         System.assertEquals(job.jobItemsProcessed, batchJob.jobItemsProcessed);
         System.assertEquals(job.totalJobItems, batchJob.totalJobItems);
-        System.assertEquals('3 day(s) 00:00:00', batchJob.timeElapsed);
+        System.assertEquals('3 ' + TIME_ELAPSED_DAYS + ' 00:00:00', batchJob.timeElapsed);
         System.assertEquals(100, batchJob.percentComplete);
         System.assertEquals(false, batchJob.isInProgress);
     }
@@ -91,15 +93,15 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         startDate = DateTime.newInstance(2018, 01, 30, 15, 20, 40);
         endDate = DateTime.newInstance(2018, 01, 31, 18, 20, 40);
-        System.assertEquals('1 day(s) 03:00:00', batchJob.calcTimeElapsed(startDate, endDate));
+        System.assertEquals('1 ' + TIME_ELAPSED_DAYS + ' 03:00:00', batchJob.calcTimeElapsed(startDate, endDate));
 
         startDate = DateTime.newInstance(2018, 01, 30, 15, 20, 40);
         endDate = DateTime.newInstance(2018, 02, 1, 18, 20, 40);
-        System.assertEquals('2 day(s) 03:00:00', batchJob.calcTimeElapsed(startDate, endDate));
+        System.assertEquals('2 ' + TIME_ELAPSED_DAYS + ' 03:00:00', batchJob.calcTimeElapsed(startDate, endDate));
 
         startDate = DateTime.newInstance(2018, 01, 30, 15, 15, 50);
         endDate = DateTime.newInstance(2018, 02, 1, 18, 20, 40);
-        System.assertEquals('2 day(s) 03:04:50', batchJob.calcTimeElapsed(startDate, endDate));
+        System.assertEquals('2 ' + TIME_ELAPSED_DAYS + ' 03:04:50', batchJob.calcTimeElapsed(startDate, endDate));
     }
 
     /***
@@ -116,7 +118,6 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         System.assertNotEquals(null, actual);
     }
-
 
     /***
     * @description Verifies batch job end date is set to DateTime.now() when the batch is in progress

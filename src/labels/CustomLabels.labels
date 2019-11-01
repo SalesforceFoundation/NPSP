@@ -357,6 +357,14 @@
         <value>Time Elapsed:</value>
     </labels>
     <labels>
+        <fullName>BatchProgressTimeElapsedDays</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTimeElapsedDays</shortDescription>
+        <value>day(s)</value>
+    </labels>
+    <labels>
         <fullName>BatchProgressTitleRD2DataMigration</fullName>
         <categories>BatchProgress</categories>
         <language>en_US</language>
