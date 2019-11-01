@@ -241,11 +241,10 @@ private with sharing class RD2_RecurringDonations_TEST {
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withContact(contact.Id)
             .withAmount(10)
-            .withInstallmentPeriodMonthly()
+            .withInstallmentPeriodWeekly()
             .withInstallmentFrequency(1)
-            .withDayOfMonth('20')
             .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
+            .withStartDate(Date.today())
             .build();
 
         Test.startTest();
@@ -253,7 +252,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         Test.stopTest();
 
         npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(rd2.npe03__Next_Payment_Date__c, Date.newInstance(2019, 9, 20), 'Next Donation date should equal 9/20/2019');
+        System.assertEquals(Date.today(), rd2.npe03__Next_Payment_Date__c, 'Next Donation date should equal today');
 
     }
 

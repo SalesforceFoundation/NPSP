@@ -37,6 +37,9 @@
 
 public without sharing class RD2_ScheduleService {
 
+    @TestVisible
+    private Date testCurrentDate = Date.today();
+
     /***
     * @description Builds new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
@@ -81,43 +84,32 @@ public without sharing class RD2_ScheduleService {
         return newSchedules;
     }
 
-/***
-* @description Calculates the date of the next donation
-* @param rd Recurring Donation record
-* @return Date
-*/
+    /***
+    * @description Calculates the date of the next donation
+    * @param rd Recurring Donation record
+    * @return Date
+    */
     public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+        if (rd.Status__c == RD2_Constants.STATUS_CLOSED || rd.Status__c == RD2_Constants.STATUS_LAPSED) {
             return null;
         }
 
         return getNextDonationDate(getNewSchedules(rd));
     }
 
-/***
-* @description Calculates the date of the next donation
-* @param schedule Recurring Donation Schedule record
-* @return Date
-*/
+    /***
+    * @description Calculates the date of the next donation
+    * @param rdSchedules Recurring Donation Schedule records
+    * @return Date
+    */
     public Date getNextDonationDate(List<RecurringDonationSchedule__c> rdSchedules) {
 
+        Date currentDate = Test.isRunningTest() ? testCurrentDate : Date.today();
         Date nextDate;
         Date previousDate;
 
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
-
-            nextDate = schedule.StartDate__c;
-
-            if (schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_MONTHLY || schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH) {
-                nextDate = Date.newInstance(
-                        nextDate.year(),
-                        nextDate.month(),
-                        schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
-                                Date.daysInMonth(nextDate.year(), nextDate.month()) :
-                                Integer.valueOf(schedule.DayOfMonth__c)
-                );
-                nextDate = nextDate >= schedule.StartDate__c ? nextDate : nextDate.addMonths(1);
-            }
+            nextDate = getNextDonationDateGreaterOrEqualDate(schedule, currentDate);
 
             if (previousDate < nextDate) {
                 nextDate = previousDate;
@@ -155,12 +147,107 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
+    * @description Calculates the earliest valid donation date based on start date.
+    * @param schedule Recurring Donation Schedule record
+    * @return Date
+    */
+    private Date getFirstValidDonationDate(RecurringDonationSchedule__c schedule) {
+
+        Date nextDate = schedule.StartDate__c;
+
+        if (schedule.DayOfMonth__c != null && (
+            schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_MONTHLY ||
+            schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH))
+        {
+            nextDate = Date.newInstance(
+                nextDate.year(),
+                nextDate.month(),
+                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
+                    Date.daysInMonth(nextDate.year(), nextDate.month()) :
+                    Integer.valueOf(schedule.DayOfMonth__c)
+            );
+            nextDate = nextDate >= schedule.StartDate__c ? nextDate : nextDate.addMonths(1);
+        }
+
+        return nextDate;
+    }
+
+    /***
+    * @description Calculates the next donation date >= greaterOrEqualDate
+    * @param schedule Recurring Donation Schedule record
+    * @param greaterOrEqualDate Earliest date limiter (normally today)
+    * @return Date
+    */
+    private Date getNextDonationDateGreaterOrEqualDate(RecurringDonationSchedule__c schedule, Date greaterOrEqualDate) {
+
+        Integer frequency = Integer.valueOf(schedule.InstallmentFrequency__c);
+        Date firstValid = getFirstValidDonationDate(schedule);
+
+        if (firstValid >= greaterOrEqualDate) {
+            return firstValid;
+        }
+
+        Integer unitsBetween;
+        Integer remains;
+        Date adjusted;
+
+        if (schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_MONTHLY || schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH) {
+
+            unitsBetween = firstValid.monthsBetween(greaterOrEqualDate);
+            remains = Math.mod(unitsBetween, frequency);
+            adjusted = firstValid.addMonths(unitsBetween);
+
+            if (remains > 0) {
+                adjusted = adjusted.addMonths(1);
+            }
+
+            if (adjusted < greaterOrEqualDate) {
+                adjusted = adjusted.addMonths(frequency);
+            }
+        }
+
+        else if (schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_YEARLY) {
+
+            unitsBetween = firstValid.monthsBetween(greaterOrEqualDate);
+            remains = Math.mod(unitsBetween, frequency*12);
+            adjusted = firstValid.addYears(unitsBetween / (12));
+
+            if (remains > 0) {
+                adjusted = adjusted.addYears(frequency);
+            }
+
+            if (adjusted < greaterOrEqualDate) {
+                adjusted = adjusted.addYears(frequency);
+            }
+        }
+
+        else if (schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_WEEKLY) {
+
+            frequency *= 7;
+
+            unitsBetween = firstValid.daysBetween(greaterOrEqualDate);
+            remains = Math.mod(unitsBetween, frequency);
+            adjusted = firstValid.addDays((unitsBetween / (frequency)) * (frequency));
+
+            if (remains > 0) {
+                adjusted = adjusted.addDays(frequency);
+            }
+
+            if (adjusted < greaterOrEqualDate) {
+                adjusted = adjusted.addDays(frequency);
+            }
+        }
+
+        return adjusted;
+    }
+
+    /***
     * @description Determines whether '1st and 15th' is the schedule selected.
     * @param rd Recurring Donation record
     * @return Boolean
     */
     private Boolean isFirstAndFifteenth(npe03__Recurring_Donation__c rd) {
-        return rd.npe03__Installment_Period__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH;
+        return rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
     }
 
 }

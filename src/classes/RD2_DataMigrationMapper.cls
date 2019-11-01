@@ -55,27 +55,184 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Converts the RD record to RD2 format by updating the new and existing fields
-     * on the record as required.
-     * @return The updated record (or null if there is an exception?)
+     * @description Converts the RD record to enhanced Recurring Donation format
+     * by updating the new and existing fields on the record as required.
+     * @return npe03__Recurring_Donation__c Recurring Donation in enhanced format
      */
     public npe03__Recurring_Donation__c convertToEnhancedRD() {
+        if (isConverted()) {
+            return rd;
+        }
+
+        setInstallmentFields(rd);
+        setStartDate(rd);
+        setDayOfMonth(rd);
+        setStatus(rd);
+        setOtherFields(rd);
+
         return rd;
     }
 
     /**
-     * @description Generate the RDSchedule Record(s) for the Recurring Donation
-     * @return List<RecurringDonationSchedule__c> Schedule records to insert
+     * @description Returns true if the RD record is already in enhanced Recurring Donation format
      */
-    public List<RecurringDonationSchedule__c> getScheduleRecords() {
-        return new List<RecurringDonationSchedule__c>();
+    public Boolean isConverted() {
+        return String.isNotBlank(rd.Status__c) && rd.InstallmentFrequency__c != null;
     }
 
     /**
-     * @description Returns true if the RD record is already in RD2 format
+     * @description Sets Installment Frequency and Installment Period fields where applicable
+     * @param rd Recurring Donation in the legacy format
+     * @return void
      */
-    @TestVisible
-    private Boolean isConverted() {
-        return rd.Status__c != null;
+    private void setInstallmentFields(npe03__Recurring_Donation__c rd) {
+
+        Set<String> frequencyOneInstallmentPeriods = new Set<String>{
+            System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
+            System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
+            System.Label.npe03.RecurringDonationInstallmentPeriodWeekly,
+            System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th
+        };
+
+        if (rd.npe03__Installment_Period__c == System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly) {
+            rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
+            rd.InstallmentFrequency__c = 3;
+
+        } else if (frequencyOneInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
+            if (rd.InstallmentFrequency__c == null) {
+                rd.InstallmentFrequency__c = 1;
+            }
+
+        } else {
+            handleCustomInstallmentPeriod(rd);
+        }
+
+        if (rd.npe03__Schedule_Type__c == System.Label.npe03.RecurringDonationDivideValue
+            && rd.npe03__Installment_Amount__c != null
+            && rd.npe03__Installment_Amount__c != 0
+        ) {
+            rd.npe03__Amount__c = rd.npe03__Installment_Amount__c;
+        }
     }
+
+    /**
+     * @description Sets Installment Frequency and Installment Period for custom Installment Period
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void handleCustomInstallmentPeriod(npe03__Recurring_Donation__c rd) {
+        npe03__Custom_Installment_Settings__c settings = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings()
+            .get(rd.npe03__Installment_Period__c);
+
+        if (settings == null) {
+            throwInvalidInstallmentPeriodException(rd.npe03__Installment_Period__c);
+        }
+
+        String settingsIncrement = settings.npe03__Increment__c;
+        switch on settingsIncrement {
+            when 'Days' {
+                rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_DAILY;
+            }
+            when 'Weeks' {
+                rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_WEEKLY;
+            }
+            when 'Months' {
+                rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
+            }
+            when 'Years' {
+                rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_YEARLY;
+            }
+            when else {
+                throwInvalidInstallmentPeriodException(rd.npe03__Installment_Period__c);
+            }
+        }
+
+        rd.InstallmentFrequency__c = Integer.valueOf(settings.npe03__Value__c);
+    }
+
+    /**
+     * @description Throws invalid installment period exception
+     * @param installmentPeriod Recurring Donation installment period
+     * @return void
+     */
+    private void throwInvalidInstallmentPeriodException(String installmentPeriod) {
+        throw new MigrationException(
+            String.format(
+                System.Label.RD2_DataMigrationInvalidInstallmentPeriod,
+                new String[]{ installmentPeriod }
+            )
+        );
+    }
+
+    /**
+     * @description Sets Recurring Donation Start Date field
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setStartDate(npe03__Recurring_Donation__c rd) {
+
+        if (opps == null || opps.isEmpty()) {
+            rd.StartDate__c = rd.npe03__Date_Established__c;
+
+        } else {
+            Date startDate;
+            for (Opportunity opp : opps) {
+                if (startDate == null || startDate > opp.CloseDate) {
+                    startDate = opp.CloseDate;
+                }
+            }
+
+            rd.StartDate__c = startDate;
+        }
+    }
+
+    /**
+     * @description Sets Day of Month field
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setDayOfMonth(npe03__Recurring_Donation__c rd) {
+        Set<String> lastDaysOfMonth = new Set<String>{ '29', '30', '31' };
+
+        if (rd.Always_Use_Last_Day_Of_Month__c == true
+            || lastDaysOfMonth.contains(rd.Day_of_Month__c)
+        ) {
+            rd.Day_of_Month__c = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
+        }
+    }
+
+    /**
+     * @description Sets Status field
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setStatus(npe03__Recurring_Donation__c rd) {
+
+        if (rd.npe03__Open_Ended_Status__c == System.Label.npe03.RecurringDonationClosedStatus) {
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+
+        } else {
+            rd.Status__c = RD2_Constants.STATUS_ACTIVE;
+        }
+    }
+
+    /**
+     * @description Sets other fields on the legacy Recurring Donation to complete conversion to the enhanced format
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setOtherFields(npe03__Recurring_Donation__c rd) {
+        rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+    }
+
+    /**
+     * @description Builds the Schedule Record(s) for the Recurring Donation
+     * @return List<RecurringDonationSchedule__c> Schedule records to insert
+     */
+    public List<RecurringDonationSchedule__c> getScheduleRecords() {
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        return scheduleService.getNewSchedules(rd);
+    }
+
+    public class MigrationException extends Exception { }
 }
