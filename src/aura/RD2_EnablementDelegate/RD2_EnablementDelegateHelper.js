@@ -203,6 +203,9 @@
 
         } else if (batchProgress.isSuccess) {
             this.confirmMigration(component);
+
+        } else {
+            component.set('v.state.isMigrationInProgress', false);
         }
     },
     /****

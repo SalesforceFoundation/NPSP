@@ -91,7 +91,7 @@
 
                     <lightning:layout>
                         <lightning:layoutItem size="9">
-                            <lightning:formattedRichText class="slds-text-longform"
+                            <lightning:formattedText class="slds-text-longform"
                                 value="{!$Label.c.RD2_EnablementEnableIntro}" />
                         </lightning:layoutItem>
                     </lightning:layout>
@@ -109,7 +109,7 @@
                                         <lightning:layoutItem size="9"
                                             class="slds-p-right_medium slds-media slds-media_center">
                                             <label for="enable-confirm">
-                                                <lightning:formattedRichText
+                                                <lightning:formattedText
                                                     value="{!$Label.c.RD2_EnablementEnableConfirm}" />
                                             </label>
                                         </lightning:layoutItem>
@@ -136,7 +136,7 @@
                                         <lightning:layoutItem size="9"
                                             class="slds-p-right_medium slds-media slds-media_center">
                                             <label for="enable-toggle">
-                                                <lightning:formattedRichText
+                                                <lightning:formattedText
                                                     value="{!$Label.c.RD2_EnablementEnableMessage}" />
                                             </label>
                                         </lightning:layoutItem>
@@ -193,7 +193,7 @@
 
                     <lightning:layout>
                         <lightning:layoutItem size="9">
-                            <lightning:formattedRichText class="slds-text-longform"
+                            <lightning:formattedText class="slds-text-longform"
                                 value="{!$Label.c.RD2_EnablementMetaDeployIntro}" />
                         </lightning:layoutItem>
                     </lightning:layout>
@@ -210,7 +210,7 @@
                                 <div class="slds-progress__item_content">
                                     <lightning:layout>
                                         <lightning:layoutItem size="9" class="slds-media slds-media_center">
-                                            <lightning:formattedRichText
+                                            <lightning:formattedText
                                                 value="{!$Label.c.RD2_EnablementMetaDeployLaunch}" />
                                         </lightning:layoutItem>
 
@@ -242,7 +242,7 @@
                                     <lightning:layout>
                                         <lightning:layoutItem size="9" class="slds-media slds-media_center">
                                             <label for="metadeploy-confirm">
-                                                <lightning:formattedRichText
+                                                <lightning:formattedText
                                                     value="{!$Label.c.RD2_EnablementMetaDeployConfirm}" />
                                             </label>
                                         </lightning:layoutItem>
@@ -292,7 +292,7 @@
                     <lightning:layout multipleRows="true">
 
                         <lightning:layoutItem size="9">
-                            <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationIntro}" />
+                            <lightning:formattedText value="{!$Label.c.RD2_EnablementMigrationIntro}" />
                         </lightning:layoutItem>
 
                         <lightning:layoutItem size="3" class="slds-grid slds-grid_align-end slds-p-right_medium">
@@ -305,17 +305,25 @@
 
                         </lightning:layoutItem>
 
-                        <lightning:layoutItem size="9">
+                        <lightning:layoutItem size="9" class="slds-p-top_medium">
                             <c:pageNotification severity="warning" size="xx-small"
                                 message="{!$Label.c.RD2_EnablementMigrationWarning}" />
                         </lightning:layoutItem>
                         <lightning:layoutItem size="3" />
 
-                        <lightning:layoutItem size="9" padding="around-medium">
+                        <lightning:layoutItem size="9" padding="horizontal-medium" class="slds-p-top_medium">
                             <c:batchProgress aura:id="rdMigrationBatchJob"
                                 title="{!$Label.c.BatchProgressTitleRD2DataMigration}"
                                 className="RD2_DataMigration_BATCH" onstatuschange="{!c.handleMigrationStatusChange}"
                                 onerror="{!c.handleMigrationError}" />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="3" />
+
+                        <lightning:layoutItem size="9" class="slds-p-top_medium">
+                            <aura:if isTrue="{!v.state.isMigrationCompleted}">
+                                <lightning:formattedRichText class="slds-p-bottom_x-large"
+                                    value="{!$Label.c.RD2_EnablementMigrationCompleteMessage}" />
+                            </aura:if>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="3" />
 

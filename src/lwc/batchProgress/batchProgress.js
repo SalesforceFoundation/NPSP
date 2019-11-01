@@ -35,7 +35,7 @@ export default class BatchProgress extends LightningElement {
         let themeClass = '';
 
         if (this.batchJob === undefined || this.batchJob == null) {
-            return '';
+            return themeClass;
         }
 
         switch (this.batchJob.status) {
@@ -83,7 +83,7 @@ export default class BatchProgress extends LightningElement {
     }
 
     /***
-    * @description Starts polling for the batch job progress details until the batch job is not in the progress
+    * @description Starts polling for the batch job progress details until the batch job stops
     */
     refreshBatchJob() {
         var self = this;
@@ -124,7 +124,7 @@ export default class BatchProgress extends LightningElement {
 
     /***
     * @description Notifies parent component of the error
-    * In the case LightningOut is used, then showToastMessage cannot be invoked.
+    * In the case LightningOut is used, then showToast message cannot be invoked.
     * Thus, let the parent component define how user should be notified of the error.
     * @param {object} error: Event holding error details
     */
