@@ -132,7 +132,7 @@ public class ALLO_AllocationsUtil_TEST {
                     [ALLO_AllocationsUtil.AllocationResults.addError] */
     @isTest private static void addErrorsIndividuallyToTheAllocationsResultsAndConfirmResult() {
 
-        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResult();
+        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
         // is not a core part of this test
@@ -144,13 +144,13 @@ public class ALLO_AllocationsUtil_TEST {
         allocResults.addError(UserInfo.getUserId(), 'Test Error 2');
         System.assertEquals (2, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '2 Errors are present for ' + UserInfo.getUserId());
 
-        System.assertEquals (false, allocResults.errorsByRecordId.get(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
+        System.assertEquals (false, allocResults.errorsByRecordId.containsKey(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
     }
 
     /* @description Test 2 - Test Add Errors
                     [ALLO_AllocationsUtil.AllocationResults.addAllErrors] */
     @isTest private static void addMultipleErrorsToTheAllocationsResultsAndConfirmResult() {
-        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResult();
+        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
         // is not a core part of this test
@@ -162,7 +162,7 @@ public class ALLO_AllocationsUtil_TEST {
         allocResults.addAllErrors(UserInfo.getUserId(), new List<String> {'Test 3 Error', 'Test 4 Error'});
         System.assertEquals (4, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '4 Errors are present for ' + UserInfo.getUserId());
 
-        System.assertEquals (false, allocResults.errorsByRecordId.get(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
+        System.assertEquals (false, allocResults.errorsByRecordId.containsKey(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
 
 
     }
