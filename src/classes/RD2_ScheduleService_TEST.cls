@@ -205,7 +205,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withInstallmentFrequency(1)
                 .withDateEstablished(Date.newInstance(2019, 9, 15))
                 .withStartDate(Date.newInstance(2019, 11, 24))
-                .withRecurringDonationStatusClosed()
+                .withStatusClosed()
                 .build();
 
         System.assertEquals(null,
@@ -276,7 +276,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
                 .withAmount(400)
                 .withPaymentMethod('Check')
-                .withInstallmentPeriod(RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH)
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
                 .withInstallmentFrequency(1)
                 .withDateEstablished(Date.newInstance(2019, 9, 15))
                 .withStartDate(Date.newInstance(2019, 11, 14))

@@ -131,8 +131,8 @@ public without sharing class RD2_ScheduleService {
         Date nextDate = schedule.StartDate__c;
 
         if (schedule.DayOfMonth__c != null && (
-            schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_MONTHLY ||
-            schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH))
+            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ||
+            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH))
         {
             nextDate = Date.newInstance(
                 nextDate.year(),
@@ -166,7 +166,7 @@ public without sharing class RD2_ScheduleService {
         Integer remains;
         Date adjusted;
 
-        if (schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_MONTHLY || schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH) {
+        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
 
             unitsBetween = firstValid.monthsBetween(greaterOrEqualDate);
             remains = Math.mod(unitsBetween, frequency);
@@ -181,7 +181,7 @@ public without sharing class RD2_ScheduleService {
             }
         }
 
-        else if (schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_YEARLY) {
+        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
 
             unitsBetween = firstValid.monthsBetween(greaterOrEqualDate);
             remains = Math.mod(unitsBetween, frequency*12);
@@ -196,7 +196,7 @@ public without sharing class RD2_ScheduleService {
             }
         }
 
-        else if (schedule.InstallmentPeriod__c == RD2_Constants.FREQUENCY_WEEKLY) {
+        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
 
             frequency *= 7;
 
