@@ -173,10 +173,10 @@ public without sharing class RD2_ScheduleService {
 
             unitsBetween = firstValid.monthsBetween(currentDate);
             remains = Math.mod(unitsBetween, frequency);
-            adjusted = firstValid.addMonths(unitsBetween);
+            adjusted = firstValid.addMonths((unitsBetween / frequency) * frequency);
 
             if (remains > 0) {
-                adjusted = adjusted.addMonths(1);
+                adjusted = adjusted.addMonths(frequency);
             }
 
             if (adjusted < currentDate) {
