@@ -14,6 +14,7 @@
     <fields>
         <description>The amount for each installment Opportunity.</description>
         <fullName>npe03__Amount__c</fullName>
+        <description>The amount for each installment Opportunity.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount for each installment Opportunity.</inlineHelpText>
         <label>Amount</label>
@@ -28,6 +29,7 @@
         <description>The initial inception date for this Recurring Donation. The default is the current date.</description>
         <fullName>npe03__Date_Established__c</fullName>
         <defaultValue>Today()</defaultValue>
+        <description>The initial inception date for this Recurring Donation. The default is the current date.</description>
         <externalId>false</externalId>
         <inlineHelpText>The initial inception date for this recurring donation. The default is the current date.</inlineHelpText>
         <label>Date Established</label>
@@ -38,7 +40,6 @@
     </fields>
     <fields>
         <fullName>%%%NAMESPACE%%%Day_of_Month__c</fullName>
-        <description>Sets the specific day of the month for future installments when the Installment Period is Monthly</description>
         <externalId>false</externalId>
         <inlineHelpText>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly.</inlineHelpText>
         <label>Day of Month</label>
