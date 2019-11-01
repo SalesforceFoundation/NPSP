@@ -222,7 +222,7 @@ public without sharing class RD2_ScheduleService {
     * @return Boolean
     */
     private Boolean isFirstAndFifteenth(npe03__Recurring_Donation__c rd) {
-        return rd.npe03__Installment_Period__c == RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH;
+        return rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
     }
 
 }

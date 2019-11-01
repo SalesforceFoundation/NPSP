@@ -61,7 +61,7 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(schedules.size(), 1, 'Number of RDs should be 1');
         System.assertEquals(schedules[0].InstallmentAmount__c, 100, 'Installment Amount should be 100');
         System.assertEquals(schedules[0].InstallmentFrequency__c, 1, 'Installment Frequency should be 1');
-        System.assertEquals(schedules[0].InstallmentPeriod__c, RD2_Constants.FREQUENCY_MONTHLY, 'Installment Period should be Monthly');
+        System.assertEquals(schedules[0].InstallmentPeriod__c, RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, 'Installment Period should be Monthly');
         System.assertEquals(schedules[0].PaymentMethod__c, 'Check', 'Payment Method should be check');
         System.assertEquals(schedules[0].StartDate__c, Date.newInstance(2019, 9, 15), 'Start Date should be 9/15/2019');
         System.assertEquals(schedules[0].DayOfMonth__c, '20', 'Day of Month should be 20');
@@ -81,7 +81,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
                 .withAmount(200)
                 .withPaymentMethod('ACH/EFT')
-                .withInstallmentPeriod(RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH)
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
                 .withInstallmentFrequency(2)
                 .withDateEstablished(Date.newInstance(2019, 9, 15))
                 .withStartDate(Date.newInstance(2019, 10, 1))
@@ -92,7 +92,7 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(schedules.size(), 2, 'Number of RDs should be 2');
         System.assertEquals(schedules[0].InstallmentAmount__c, 200, 'Installment Amount should be 200');
         System.assertEquals(schedules[0].InstallmentFrequency__c, 2, 'Installment Frequency should be 2');
-        System.assertEquals(schedules[0].InstallmentPeriod__c, RD2_Constants.FREQUENCY_FIRST_AND_FIFTEENTH, 'Installment Period should be 1st and 15th');
+        System.assertEquals(schedules[0].InstallmentPeriod__c, RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH, 'Installment Period should be 1st and 15th');
         System.assertEquals(schedules[0].PaymentMethod__c, 'ACH/EFT', 'Payment Method should be ACH/EFT');
         System.assertEquals(schedules[0].StartDate__c, Date.newInstance(2019, 10, 1), 'Start Date should be 10/1/2019');
         System.assertEquals(schedules[0].DayOfMonth__c, '1', 'Day of Month should be 1');
@@ -124,7 +124,7 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(schedules.size(), 1, 'Number of RDs should be 1');
         System.assertEquals(schedules[0].InstallmentAmount__c, 300, 'Installment Amount should be 300');
         System.assertEquals(schedules[0].InstallmentFrequency__c, 3, 'Installment Frequency should be 3');
-        System.assertEquals(schedules[0].InstallmentPeriod__c, RD2_Constants.FREQUENCY_YEARLY, 'Installment Period should be Yearly');
+        System.assertEquals(schedules[0].InstallmentPeriod__c, RD2_Constants.INSTALLMENT_PERIOD_YEARLY, 'Installment Period should be Yearly');
         System.assertEquals(schedules[0].PaymentMethod__c, 'Credit Card', 'Payment Method should be credit card');
         System.assertEquals(schedules[0].StartDate__c, Date.newInstance(2020, 3, 4), 'Start Date should be 3/4/2020');
         System.assertEquals(schedules[0].DayOfMonth__c, null, 'Day of Month should be null');
@@ -155,7 +155,7 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(schedules.size(), 1, 'Number of RDs should be 1');
         System.assertEquals(schedules[0].InstallmentAmount__c, 400, 'Installment Amount should be 400');
         System.assertEquals(schedules[0].InstallmentFrequency__c, 13, 'Installment Frequency should be 13');
-        System.assertEquals(schedules[0].InstallmentPeriod__c, RD2_Constants.FREQUENCY_WEEKLY, 'Installment Period should be Weekly');
+        System.assertEquals(schedules[0].InstallmentPeriod__c, RD2_Constants.INSTALLMENT_PERIOD_WEEKLY, 'Installment Period should be Weekly');
         System.assertEquals(schedules[0].PaymentMethod__c, 'Check', 'Payment Method should be check');
         System.assertEquals(schedules[0].StartDate__c, Date.newInstance(2019, 11, 1), 'Start Date should be 11/1/2019');
         System.assertEquals(schedules[0].DayOfMonth__c, null, 'Day of Month should be null');
@@ -179,7 +179,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withInstallmentFrequency(1)
                 .withDateEstablished(Date.newInstance(2019, 9, 15))
                 .withStartDate(Date.newInstance(2019, 11, 1))
-                .withRecurringDonationStatusClosed()
+                .withStatusClosed()
                 .build();
 
         List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
