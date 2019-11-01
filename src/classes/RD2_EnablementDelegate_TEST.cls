@@ -38,10 +38,10 @@
 public with sharing class RD2_EnablementDelegate_TEST {
 
     /****
-    * @description Verifies enablement state values are not set by default 
+    * @description Verifies enablement state values are not set by default
     */
     @isTest
-    private static void shouldReturnDefaultEnablementStateWhenNotSetup() {             
+    private static void shouldReturnDefaultEnablementStateWhenNotSetup() {
         setEnablementState(null);
 
         RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
@@ -54,11 +54,11 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /****
-    * @description Verifies enablement state isReady reflects enablement service 
+    * @description Verifies enablement state isReady reflects enablement service
     * enhanced Recurring Donations ready status
     */
     @isTest
-    private static void shouldSetEnablementStateIsReady() {            
+    private static void shouldSetEnablementStateIsReady() {
         setEnablementState(null);
 
         RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
@@ -72,11 +72,11 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /****
-    * @description Verifies enablement state isEnabled reflects enablement service 
+    * @description Verifies enablement state isEnabled reflects enablement service
     * enhanced Recurring Donations enabled status
     */
     @isTest
-    private static void shouldSetEnablementStateIsEnabled() {            
+    private static void shouldSetEnablementStateIsEnabled() {
         setEnablementState(null);
 
         RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
@@ -93,7 +93,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @description Verifies user action to confirm enablement is saved
     */
     @isTest
-    private static void shouldConfirmEnablement() {    
+    private static void shouldConfirmEnablement() {
         setEnablementState(null);
 
         RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
@@ -113,7 +113,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @description Verifies user action to enable Recurring Donations
     */
     @isTest
-    private static void shouldEnableEnhancedRDs() {  
+    private static void shouldEnableEnhancedRDs() {
         RD2_EnablementDelegate_CTRL.enableEnhancement();
 
         System.assertEquals(true, STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c, 'Custom Settings field should be set');
@@ -123,13 +123,15 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @description Verifies user action to launch MetaDeploy is saved
     */
     @isTest
-    private static void shouldLaunchMetaDeploy() {  
+    private static void shouldLaunchMetaDeploy() {
+        mockCustomizableRollups();
+
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
         setEnablementState(JSON.serialize(expectedState));
 
         RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
-            RD2_EnablementService.class, 
+            RD2_EnablementService.class,
             new RD2_EnablementService_TEST.Stub()
                 .withRecurringDonations2Ready()
                 .withRecurringDonations2Enabled()
@@ -142,20 +144,26 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isMetaDeployLaunched = true;
 
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+
+        List<AsyncApexJob> asyncJobs = [SELECT Id
+            FROM AsyncApexJob
+            WHERE ApexClass.Name = 'RD2_EnablementDelegate_CTRL'
+            LIMIT 1];
+        System.assert(!asyncJobs.isEmpty(), 'Expected to find a Queueable job after clicking the MetaDeploy link');
     }
 
     /****
     * @description Verifies user action to confirm MetaDeploy is saved
     */
     @isTest
-    private static void shouldConfirmMetaDeploy() {  
+    private static void shouldConfirmMetaDeploy() {
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
         expectedState.isMetaDeployLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
 
         RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
-            RD2_EnablementService.class, 
+            RD2_EnablementService.class,
             new RD2_EnablementService_TEST.Stub()
                 .withRecurringDonations2Ready()
                 .withRecurringDonations2Enabled()
@@ -176,20 +184,22 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @description Verifies user action to confirm MetaDeploy throws an exception when metadata is not installed
     */
     @isTest
-    private static void shouldThrowExceptionWhenMetaDeployIsConfirmedButNotInstalled() {  
+    private static void shouldThrowExceptionWhenMetaDeployIsConfirmedButNotInstalled() {
+        mockCustomizableRollups();
+
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
         expectedState.isMetaDeployLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
 
         RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
-            RD2_EnablementService.class, 
+            RD2_EnablementService.class,
             new RD2_EnablementService_TEST.Stub()
                 .withRecurringDonations2Ready()
                 .withRecurringDonations2Enabled()
         );
 
-        //mock value that does not exist but it is expected
+        //mock value that does not exist but is expected
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '32';
 
         Exception actualException;
@@ -200,7 +210,8 @@ public with sharing class RD2_EnablementDelegate_TEST {
         }
 
         System.assertNotEquals(null, actualException, 'The exception should be thrown');
-        System.assertEquals(System.Label.RD2_EnablementMetaDeployConfirmError, actualException.getMessage(), 'The exception message should match');
+        System.assertEquals(System.Label.RD2_EnablementMetaDeployConfirmError,
+            actualException.getMessage(), 'The exception message should match');
 
         expectedState.isReady = true;
         expectedState.isEnabled = true;
@@ -220,7 +231,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @param state
     * @return void
     */
-    private static void setEnablementState(String state) {                   
+    private static void setEnablementState(String state) {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 RecurringDonations2EnablementState__c = state,
@@ -235,7 +246,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @param state Actual enablement state
     * @return void
     */
-    private static void assertEnablementState(RD2_EnablementDelegate_CTRL.EnablementState expectedState, RD2_EnablementDelegate_CTRL.EnablementState state) {             
+    private static void assertEnablementState(RD2_EnablementDelegate_CTRL.EnablementState expectedState, RD2_EnablementDelegate_CTRL.EnablementState state) {
         System.assertEquals(expectedState.isReady, state.isReady, 'isReady should match');
         System.assertEquals(expectedState.isConfirmed, state.isConfirmed, 'isConfirmed should match');
         System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match');
@@ -244,5 +255,19 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(expectedState.isMigrationCompleted, state.isMigrationCompleted, 'isMigrationCompleted should match');
     }
 
+
+    /**
+     * @description Mock the Next Donation Date customizable rollup
+     */
+    private static void mockCustomizableRollups() {
+        String rollupsJSON = '[' +
+            CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', null,
+                CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                'npe03__Next_Payment_Date__c', CRLP_Operation.RollupType.First, 'CloseDate') +
+            ']';
+
+        // Deserialize the rollups to use for testing
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+    }
 
 }
