@@ -477,10 +477,39 @@ private with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
-    * @description Verifies next donation date for weekly donation.
+    * @description Verifies update is needed when status on recurring donation is changed.
     */
     @isTest
-    private static void startdate() {
+    private static void shouldDetermineUpdateNeededWhenStatusChanged() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .withStatusClosed()
+                .build();
+
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.Status__c = RD2_Constants.STATUS_ACTIVE;
+
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+
+        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
+
+    }
+
+    /***
+    * @description Verifies update is needed when start date on recurring donation is changed.
+    */
+    @isTest
+    private static void shouldDetermineUpdateNeededWhenStartDateChanged() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -494,17 +523,21 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-            new RD2_ScheduleService().getNextDonationDate(rd),
-            'Next Donation Date should equal 3/17/2018');
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.StartDate__c = Date.today();
+
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+
+        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
 
     }
 
     /***
-    * @description Verifies next donation date for weekly donation.
+    * @description Verifies update is needed when amount on recurring donation is changed.
     */
     @isTest
-    private static void amount() {
+    private static void shouldDetermineUpdateNeededWhenAmountChanged() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -518,17 +551,21 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-            new RD2_ScheduleService().getNextDonationDate(rd),
-            'Next Donation Date should equal 3/17/2018');
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.npe03__Amount__c = 200;
+
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+
+        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
 
     }
 
     /***
-    * @description Verifies next donation date for weekly donation.
+    * @description Verifies update is needed when installment period on recurring donation is changed.
     */
     @isTest
-    private static void period() {
+    private static void shouldDetermineUpdateNeededWhenPeriodChanged() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -544,17 +581,21 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-            new RD2_ScheduleService().getNextDonationDate(rd),
-            'Next Donation Date should equal 3/17/2018');
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_DAILY;
+
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+
+        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
 
     }
 
     /***
-    * @description Verifies next donation date for weekly donation.
+    * @description Verifies update is needed when day of month on recurring donation is changed.
     */
     @isTest
-    private static void dayofmonth() {
+    private static void shouldDetermineUpdateNeededWhenDayOfMonthChanged() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -568,17 +609,21 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-            new RD2_ScheduleService().getNextDonationDate(rd),
-            'Next Donation Date should equal 3/17/2018');
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.Day_of_Month__c = '23';
+
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+
+        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
 
     }
 
     /***
-    * @description Verifies next donation date for weekly donation.
+    * @description Verifies update is needed when installment frequency on recurring donation is changed.
     */
     @isTest
-    private static void frequency() {
+    private static void shouldDetermineUpdateNeededWhenFrequencyChanged() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -592,17 +637,21 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-            new RD2_ScheduleService().getNextDonationDate(rd),
-            'Next Donation Date should equal 3/17/2018');
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.InstallmentFrequency__c = 5;
+
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+
+        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
 
     }
 
     /***
-    * @description Verifies next donation date for weekly donation.
+    * @description Verifies update is needed when payment method on recurring donation is changed.
     */
     @isTest
-    private static void paymentmethod() {
+    private static void shouldDetermineUpdateNeededWhenPaymentMethodChanged() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -616,17 +665,21 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-            new RD2_ScheduleService().getNextDonationDate(rd),
-            'Next Donation Date should equal 3/17/2018');
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.PaymentMethod__c = 'Credit Card';
+
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+
+        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
 
     }
 
     /***
-    * @description Verifies next donation date for weekly donation.
+    * @description Verifies update is needed when campaign on recurring donation is changed.
     */
     @isTest
-    private static void status() {
+    private static void shouldDetermineUpdateNeededWhenCampaignChanged() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -640,17 +693,21 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-            new RD2_ScheduleService().getNextDonationDate(rd),
-            'Next Donation Date should equal 3/17/2018');
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.npe03__Recurring_Donation_Campaign__c = UTIL_UnitTestData_TEST.mockId(Campaign.getSObjectType());
+
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+
+        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
 
     }
 
     /***
-    * @description Verifies next donation date for weekly donation.
+    * @description Verifies update is NOT needed when contact on recurring donation is changed.
     */
     @isTest
-    private static void campaign() {
+    private static void shouldDetermineNoUpdateNeededWhenContactChanged() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -664,17 +721,21 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-            new RD2_ScheduleService().getNextDonationDate(rd),
-            'Next Donation Date should equal 3/17/2018');
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.npe03__Contact__c = UTIL_UnitTestData_TEST.mockId(Contact.getSObjectType());
+
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+
+        System.assertEquals(false, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return false.');
 
     }
 
     /***
-    * @description Verifies next donation date for weekly donation.
+    * @description Verifies update is NOT needed when status on updated recurring donation is closed.
     */
     @isTest
-    private static void contact() {
+    private static void shouldDetermineNoUpdateNeededWhenStatusClosed() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -688,33 +749,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-            new RD2_ScheduleService().getNextDonationDate(rd),
-            'Next Donation Date should equal 3/17/2018');
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+        rd2.Status__c = RD2_Constants.STATUS_CLOSED;
 
-    }
+        RD2_ScheduleService schedule = new RD2_ScheduleService();
+        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
 
-    /***
-    * @description Verifies next donation date for weekly donation.
-    */
-    @isTest
-    private static void closed() {
-
-        npe03__Recurring_Donation__c rd =
-            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                .withMockId()
-                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-                .withAmount(400)
-                .withPaymentMethod('Check')
-                .withInstallmentPeriodWeekly()
-                .withInstallmentFrequency(1)
-                .withDateEstablished(Date.newInstance(2019, 9, 15))
-                .withStartDate(Date.newInstance(2018, 3, 17))
-                .build();
-
-        System.assertEquals(Date.newInstance(2018, 3, 17),
-                new RD2_ScheduleService().getNextDonationDate(rd),
-                'Next Donation Date should equal 3/17/2018');
+        System.assertEquals(false, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return false.');
 
     }
 

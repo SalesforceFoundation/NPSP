@@ -271,7 +271,10 @@ public without sharing class RD2_ScheduleService {
 
         Boolean updateNeeded = false;
 
-        if (
+        if (rd.Status__c == RD2_Constants.STATUS_CLOSED || rd.Status__c == RD2_Constants.STATUS_LAPSED) {
+            return updateNeeded;
+
+        } else if (
             rd.StartDate__c != oldRd.StartDate__c ||
             rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
             rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
