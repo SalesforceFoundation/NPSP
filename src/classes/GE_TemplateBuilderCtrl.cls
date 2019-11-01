@@ -100,7 +100,7 @@ public with sharing class GE_TemplateBuilderCtrl {
     * @description Just an intermediary method. Can just import this method directly in the lwc.
     */
     @AuraEnabled
-    public static FORM_Template retrieveFormTemplate(String templateId){
+    public static FORM_Template retrieveFormTemplate(String templateId) {
         return FORM_ServiceGiftEntry.retrieveFormTemplate(Id.valueOf(templateId));
     }
 
@@ -159,5 +159,13 @@ public with sharing class GE_TemplateBuilderCtrl {
         }
 
         return objectMappings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the currently active field mapping method
+    */
+    @AuraEnabled
+    public static string getFieldMappingMethod() {
+        return UTIL_CustomSettingsFacade.getDataImportSettings().Field_Mapping_Method__c;
     }
 }
