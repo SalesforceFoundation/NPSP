@@ -21,6 +21,40 @@ const mutable = (obj) => {
     return JSON.parse(JSON.stringify(obj));
 }
 
+const isObject = (obj) => {
+    const type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
+}
+
+/*******************************************************************************
+* @description Loop through provided array or object properties. Recursively check
+* if the current value is an object or an array and copy accordingly.
+*
+* @param {any} src: Thing to clone
+*/
+const deepClone = (src) => {
+    let clone = null;
+
+    if (isObject(src)) {
+        clone = {};
+        for (let property in src) {
+            if (src.hasOwnProperty(property)) {
+                // if the value is a nested object, recursively copy all it's properties
+                clone[property] = isObject(src[property]) ? deepClone(src[property]) : src[property];
+            }
+        }
+    }
+
+    if (Array.isArray(src)) {
+        clone = [];
+        for (let item of src) {
+            clone.push(deepClone(item));
+        }
+    }
+
+    return clone;
+}
+
 const dispatch = (context, name, detail, bubbles = false, composed = false) => {
     context.dispatchEvent(new CustomEvent(name, {
         detail: detail,
@@ -165,4 +199,5 @@ export {
     generateId,
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
+    deepClone
 }
