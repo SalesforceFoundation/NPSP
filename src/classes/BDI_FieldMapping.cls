@@ -50,21 +50,16 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public Boolean Is_Deleted;
     @AuraEnabled public String Source_Field_Display_Type_Label;
     @AuraEnabled public String Target_Field_Display_Type_Label;
-    // A mapping of picklist value to label. 
-    // Schema.PicklistEntry does not work with AuraEnabled. 
-    @AuraEnabled public Map<String, String>  Target_Field_Picklist_Values = new Map<String, String>(); 
+    @AuraEnabled public List<Map<String, String>> Target_Field_Picklist_Options = new List<Map<String, String>>();
 
-    /*******************************************************************************************************
-    * @description No parameter constructor to enable use as virtual class.
-    */
     public BDI_FieldMapping() {
 
     }
 
-    /*******************************************************************************************************
-    * @description Constructor that populates the wrapper with data from a Data_Import_Field_Mapping__mdt record.
-    * @param fieldMapping the Data_Import_Field_Mapping__mdt to populate from.
-    */
+    // A mapping of picklist value to label.
+    // Schema.PicklistEntry does not work with AuraEnabled.
+    @AuraEnabled public Map<String, String>  Target_Field_Picklist_Values = new Map<String, String>();
+
     public BDI_FieldMapping(Data_Import_Field_Mapping__mdt fieldMapping) {
         String dataImport = SobjectType.DataImport__c.Name;
 
@@ -105,15 +100,21 @@ public virtual with sharing class BDI_FieldMapping {
         this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping__r.DeveloperName;
         this.Required = fieldMapping.Required__c;
         this.Is_Deleted = fieldMapping.Is_Deleted__c;
+
         List<Schema.PicklistEntry> picklistEntriesList = targetFieldDescribe.getPicklistValues();
         
         for (Schema.PicklistEntry picklistEntry : picklistEntriesList) {
-            
+
             // Create a mapping of active picklist entry value to label 
             if (picklistEntry.isActive()) {
                 Target_Field_Picklist_Values.put(picklistEntry.getValue(), picklistEntry.getLabel());
             }
-            
+
+            if (picklistEntry.isActive()) {
+                Target_Field_Picklist_Options.add(new Map<String, String> {
+                    'label' => picklistEntry.getLabel(),
+                    'value' => picklistEntry.getValue()});
+            }
         }
     }
 }

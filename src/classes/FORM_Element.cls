@@ -44,16 +44,13 @@ public with sharing class FORM_Element {
     @AuraEnabled public String[] dataImportFieldMappingDevNames;
 
     /* PS Additional props for FormFields */
+    @AuraEnabled public String id;
     @AuraEnabled public String label;
     @AuraEnabled public Boolean required;
-    @AuraEnabled public String value;
-    @AuraEnabled public Boolean allowDefaultValue;
     @AuraEnabled public String sectionId;
     @AuraEnabled public String defaultValue;
     @AuraEnabled public String dataType;
-    // TODO: Potentially include this in unified wrapper class or another solution
-    @AuraEnabled public GE_TemplateBuilderCtrl.PicklistOptionWrapper[] picklistOptions;
-    /* END */
+    @AuraEnabled public List<Map<String, String>> picklistOptions;
 
     //Constructor for form field
     public FORM_Element(String elementType,
