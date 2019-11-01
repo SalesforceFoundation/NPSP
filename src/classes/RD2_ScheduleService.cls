@@ -179,6 +179,10 @@ public without sharing class RD2_ScheduleService {
             if (adjusted < greaterOrEqualDate) {
                 adjusted = adjusted.addMonths(frequency);
             }
+
+            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+                adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
+            }
         }
 
         else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
