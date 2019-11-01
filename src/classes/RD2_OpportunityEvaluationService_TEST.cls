@@ -332,7 +332,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         rd = TEST_RecurringDonationBuilder.addForeignKey(rd, 'npe03__Contact__r', contact);
         rd = TEST_RecurringDonationBuilder.addRelatedList(rd, 'npe03__Donations__r', opps);
-        rd = TEST_RecurringDonationBuilder.addRelatedList(rd, 'RecurringDonationSchedules__r', schedules);
+        rd = TEST_RecurringDonationBuilder.addRelatedList(rd, UTIL_Namespace.StrTokenNSPrefix('RecurringDonationSchedules__r'), schedules);
 
         return rd;
     }
