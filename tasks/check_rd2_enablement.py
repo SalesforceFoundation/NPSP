@@ -5,7 +5,7 @@ class is_rd2_enabled(BaseSalesforceApiTask):
     def _run_task(self):
         try:
             settings = self.sf.query(
-                "SELECT IsRecurringDonations2Enabled__c "
+                "SELECT npsp__IsRecurringDonations2Enabled__c "
                 "FROM npe03__Recurring_Donations_Settings__c "
                 "WHERE SetupOwnerId IN (SELECT Id FROM Organization)"
             )
@@ -17,7 +17,7 @@ class is_rd2_enabled(BaseSalesforceApiTask):
             return
 
         if settings.get("records"):
-            if settings["records"][0]["IsRecurringDonations2Enabled__c"]:
+            if settings["records"][0]["npsp__IsRecurringDonations2Enabled__c"]:
                 self.return_values = True
                 self.logger.info("Identified Enhanced Recurring Donations status: {}".format(self.return_values))
                 return
