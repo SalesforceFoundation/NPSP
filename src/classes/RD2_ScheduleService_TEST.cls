@@ -472,6 +472,32 @@ private with sharing class RD2_ScheduleService_TEST {
 
         System.assertEquals(Date.newInstance(2019, 2, 1),
             service.getNextDonationDate(rd),
+            'Next Donation Date should equal 9/1/2018');
+
+    }
+
+    /***
+    * @description Verifies next donation date for 1st and 15th donation with frequency > 1.
+    */
+    @isTest
+    private static void shouldCreateNextDonationDateWithFrequency5FirstAndFifteenth() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
+                .withInstallmentFrequency(5)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 9, 16));
+
+        System.assertEquals(Date.newInstance(2019, 2, 1),
+            service.getNextDonationDate(rd),
             'Next Donation Date should equal 2/1/2019');
 
     }
@@ -729,5 +755,5 @@ private with sharing class RD2_ScheduleService_TEST {
 
         return scheduleService;
     }
-    
+
 }
