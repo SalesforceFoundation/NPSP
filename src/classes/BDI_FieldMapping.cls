@@ -53,8 +53,9 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public List<Map<String, String>> Target_Field_Picklist_Options = new List<Map<String, String>>();
     // TODO: Clean up later, need to figure out what constitutes an actual required field for the template
     @AuraEnabled public Boolean Is_Required;
-    @AuraEnabled public Boolean Is_Target_Field_Required;
     @AuraEnabled public Boolean Is_Source_Field_Required;
+    // Used for the Form Template Builder and Renderer
+    @AuraEnabled public String Element_Type = 'field';
 
     public BDI_FieldMapping() {
 

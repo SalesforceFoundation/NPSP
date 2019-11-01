@@ -431,11 +431,14 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * geTemplateBuilderSelectFields -> here
     */
     handleDeleteFormField(event) {
-        const { sectionId, fieldName } = event.detail;
-
+        console.log('handleDeleteFormField');
+        const { sectionId, fieldName, id } = event.detail;
+        console.log('OUTPUT : ',sectionId);
+        console.log('OUTPUT : ',fieldName);
+        console.log('OUTPUT : ',id);
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
         let index = section.elements.findIndex((element) => {
-            return element.dataImportFieldMappingDevNames[0] === fieldName;
+            return element.id === id;
         });
 
         section.elements.splice(index, 1);

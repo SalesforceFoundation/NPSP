@@ -156,7 +156,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         event.stopPropagation();
         const detail = {
             sectionId: this.formSection.id,
-            fieldName: event.detail
+            fieldName: event.detail.fieldName,
+            id: event.detail.id
         }
         dispatch(this, 'deleteformfield', detail);
     }

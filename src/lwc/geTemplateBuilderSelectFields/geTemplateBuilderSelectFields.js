@@ -93,9 +93,19 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             Field_Mappings: [
                 {
                     DeveloperName: 'Credit_Card',
+                    MasterLabel: 'Credit Card',
                     Target_Field_Label: 'Credit Card',
                     Required: 'No',
-                    Target_Field_Data_Type: 'widget'
+                    Element_Type: 'widget',
+                    Widget_Fields: ['Card_Holder_Name__c', 'Card_Number__c', 'Expiration_Month__c', 'Expiration_Year__c', 'Security_Code__c']
+                },
+                {
+                    DeveloperName: 'Some_Other_Widget',
+                    MasterLabel: 'Some Other Widget',
+                    Target_Field_Label: 'Some Other Widget',
+                    Required: 'No',
+                    Element_Type: 'widget',
+                    Widget_Fields: ['Some_Other_Field__c', 'Maybe_Another__c']
                 }
             ]
         };
@@ -121,7 +131,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 for (let i = 0; i < this.formSections.length; i++) {
                     const formSection = this.formSections[i];
                     formSection.elements.forEach(element => {
-                        this.catalogSelectedField(element.dataImportFieldMappingDevNames[0], formSection.id)
+                        const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+                        this.catalogSelectedField(name, formSection.id)
                     });
                 }
                 this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
@@ -168,8 +179,9 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         if (formSection.elements && formSection.elements.length > 0) {
             const formFields = formSection.elements;
             for (let i = 0; i < formFields.length; i++) {
+                const inputName = formFields[i].componentName ? formFields[i].componentName : formFields[i].dataImportFieldMappingDevNames[0];
                 let checkbox =
-                    this.template.querySelector(`lightning-input[data-field-mapping="${formFields[i].dataImportFieldMappingDevNames[0]}"]`);
+                    this.template.querySelector(`lightning-input[data-field-mapping="${inputName}"]`);
                 checkbox.checked = false;
             }
         }
@@ -228,15 +240,30 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             const objectMapping =
                 this.objectMappings.find(om => om.DeveloperName === fieldMapping.Target_Object_Mapping_Dev_Name);
 
-            let formField = {
-                id: generateId(),
-                label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
-                required: false,
-                sectionId: sectionId,
-                defaultValue: null,
-                dataType: fieldMapping.Target_Field_Data_Type,
-                picklistOptions: fieldMapping.Target_Field_Picklist_Options,
-                dataImportFieldMappingDevNames: [fieldMapping.DeveloperName] 
+            let formField;
+
+            if (fieldMapping.Element_Type === 'field') {
+                formField = {
+                    id: generateId(),
+                    label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
+                    required: false,
+                    sectionId: sectionId,
+                    defaultValue: null,
+                    dataType: fieldMapping.Target_Field_Data_Type,
+                    picklistOptions: fieldMapping.Target_Field_Picklist_Options,
+                    dataImportFieldMappingDevNames: [fieldMapping.DeveloperName],
+                    elementType: fieldMapping.Element_Type
+                }
+            } else if (fieldMapping.Element_Type === 'widget') {
+                formField = {
+                    id: generateId(),
+                    componentName: fieldMapping.DeveloperName,
+                    label: fieldMapping.MasterLabel,
+                    required: false,
+                    sectionId: sectionId,
+                    dataImportFieldMappingDevNames: [...fieldMapping.Widget_Fields],
+                    elementType: fieldMapping.Element_Type
+                }
             }
 
             this.catalogSelectedField(fieldMappingDeveloperName, sectionId);

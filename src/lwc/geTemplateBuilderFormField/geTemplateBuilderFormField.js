@@ -13,6 +13,10 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get fieldName() {
+        if (this.field.elementType === 'widget') {
+            return this.field.componentName;
+        }
+
         if (this.field.apiName) {
             return this.field.apiName;
         }
@@ -65,7 +69,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
     // TODO: Update from dataType to elementType
     get isWidget() {
-        return this.field.dataType === 'widget' ? true : false;
+        return this.field.elementType === 'widget' ? true : false;
     }
 
     get isLightningTextarea() {
@@ -208,8 +212,11 @@ export default class geTemplateBuilderFormField extends LightningElement {
     * @param {object} event: Event object from lightning-button-icon onclick event handler
     */
     handleFormFieldDelete(event) {
+        console.log('handleFormFieldDelete');
         this.stopPropagation(event);
-        dispatch(this, 'deleteformfield', this.fieldName);
+        const detail = {id: this.field.id, fieldName: this.fieldName};
+        console.log('OUTPUT : ',detail);
+        dispatch(this, 'deleteformfield', detail);
     }
 
     /*******************************************************************************

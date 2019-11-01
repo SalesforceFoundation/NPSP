@@ -29,6 +29,7 @@
                         * the 'overlay' reference returned by the then() method
                         * in order to close the modal. Reference is lost otherwise.
                         */
+
                         const eventListener = function(event) {
                             window.removeEventListener('geTemplateBuilderSectionModalBodyEvent', eventListener);
                             const modalData = event.detail;
