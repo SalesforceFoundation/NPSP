@@ -208,7 +208,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStatusClosed()
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2019, 11, 24));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 24));
 
         System.assertEquals(null, service.getNextDonationDate(rd), 'Next Donation Date should be null');
 
@@ -233,7 +233,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2019, 11, 24))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2019, 11, 24));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 24));
 
         System.assertEquals(Date.newInstance(2019, 12, 23),
             service.getNextDonationDate(rd),
@@ -260,7 +260,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2019, 11, 1))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
 
         System.assertEquals(Date.newInstance(2019, 11, 23),
             service.getNextDonationDate(rd),
@@ -286,7 +286,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2019, 11, 14))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2019, 11, 14));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 14));
 
         System.assertEquals(Date.newInstance(2019, 11, 15),
             service.getNextDonationDate(rd),
@@ -312,7 +312,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2020, 11, 1))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
 
         System.assertEquals(Date.newInstance(2020, 11, 1),
             service.getNextDonationDate(rd),
@@ -338,7 +338,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2018, 3, 17));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 3, 17));
 
         System.assertEquals(Date.newInstance(2018, 3, 17),
             service.getNextDonationDate(rd),
@@ -364,7 +364,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2018, 7, 1))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2018, 7, 17));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 7, 17));
 
         System.assertEquals(Date.newInstance(2018, 7, 31),
                 service.getNextDonationDate(rd),
@@ -390,7 +390,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2018, 4, 8));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 4, 8));
 
         System.assertEquals(Date.newInstance(2018, 4, 28),
             service.getNextDonationDate(rd),
@@ -416,7 +416,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2019, 2, 18));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 2, 18));
 
         System.assertEquals(Date.newInstance(2020, 1, 17),
             service.getNextDonationDate(rd),
@@ -442,7 +442,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2023, 3, 18));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2023, 3, 18));
 
         System.assertEquals(Date.newInstance(2028, 3, 17),
             service.getNextDonationDate(rd),
@@ -468,33 +468,13 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2018, 3, 17))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithDateOverride(Date.newInstance(2023, 3, 18));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2023, 3, 18));
 
         System.assertEquals(Date.newInstance(2028, 3, 17),
                 service.getNextDonationDate(rd),
                 'Next Donation Date should equal 3/17/2028');
 
     }
-
-
-//    //// Helpers
-//        npe03__Recurring_Donation__c rd =
-//            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-//                .withMockId()
-//                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-//                .withAmount(400)
-//                .withPaymentMethod('Check')
-//                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
-//                .withInstallmentFrequency(1)
-//                .withDateEstablished(Date.newInstance(2019, 9, 15))
-//                .withStartDate(Date.newInstance(2018, 3, 17))
-//                .build();
-//
-//        System.assertEquals(Date.newInstance(2018, 3, 17),
-//            new RD2_ScheduleService().getNextDonationDate(rd),
-//            'Next Donation Date should equal 3/17/2018');
-//
-//    }
 
     /***
     * @description Verifies next donation date for weekly donation.
@@ -730,12 +710,22 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-    private static RD2_ScheduleService getScheduleServiceWithDateOverride(Date currDateOverride) {
+        System.assertEquals(Date.newInstance(2018, 3, 17),
+                new RD2_ScheduleService().getNextDonationDate(rd),
+                'Next Donation Date should equal 3/17/2018');
+
+    }
+
+
+
+    //// Helpers
+
+    private static RD2_ScheduleService getScheduleServiceWithCurrentDateOverride(Date currDateOverride) {
 
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
         scheduleService.currentDate = currDateOverride;
 
         return scheduleService;
     }
-
+    
 }
