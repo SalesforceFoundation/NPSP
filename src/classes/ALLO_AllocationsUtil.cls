@@ -131,9 +131,9 @@ public class ALLO_AllocationsUtil {
      *              errors by Opportunity or Payment Id
      ********************************************************************************************************/
     public class AllocationResults {
-        public List<Allocation__c> allocationsForInsert= new List<Allocation__c>();
-        public List<Allocation__c> allocationsForUpdate= new List<Allocation__c>();
-        public List<Allocation__c> allocationsForDelete= new List<Allocation__c>();
+        public List<Allocation__c> allocationsForInsert = new List<Allocation__c>();
+        public List<Allocation__c> allocationsForUpdate = new List<Allocation__c>();
+        public List<Allocation__c> allocationsForDelete = new List<Allocation__c>();
         public Map<String, List<String>> errorsByRecordId = new Map<String, List<String>>();
 
         /*******************************************************************************************************
@@ -247,6 +247,7 @@ public class ALLO_AllocationsUtil {
             //TODO: Add checks for circumstances where Campaign Allocations and/or Recurring Donation Allocations differ from Opportunity Allocations, and thus need to update the Opportunity Allocations.
             // These checks will likely be fairly complex, and involve complex comparisons between the campaign or recurring donation allocations and the Opportunity.
             // Believe this to be out of scope for GA, but will confirm.
+            // Requirement:  If there are differences, and the Opportunity is Open, recopy the Allocations from the Parent.
 
             return false;
         }
@@ -708,6 +709,8 @@ public class ALLO_AllocationsUtil {
      * @description Copies Allocations from the source to the target.  It should only do this if there are
      *              no allocations present on the target.
      *              Note: This will not actually modify any records.
+     *              Refactored from
+     *              ALLO_ALLOCATIONS_TDTM.copyRecurringDonationCampaignAndPaymentAllocations
      * @param SObject targetObj The record the Allocations will be copied to
      * @param List<Allocation__c> sourceAllocations The Allocations associated with the source that will
      *        be copied to the target
@@ -762,12 +765,12 @@ public class ALLO_AllocationsUtil {
                 if (IS_MULTICURRENCY_ORG) {
                     if (allocation.Amount__c != null) {
                         allocation.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
-                            (String)allocation.get('CurrencyIsoCode'),
-                            (String)targetObj.get('CurrencyIsoCode'),
+                            (String)allocation.get(UTIL_Query.CURRENCYISOCODE_FIELD),
+                            (String)targetObj.get(UTIL_Query.CURRENCYISOCODE_FIELD),
                             allocation.Amount__c
                         );
                     }
-                    allocation.put('CurrencyIsoCode', targetObj.get('CurrencyIsoCode'));
+                    allocation.put(UTIL_Query.CURRENCYISOCODE_FIELD, targetObj.get(UTIL_Query.CURRENCYISOCODE_FIELD));
                 }
 
                 if (allocation.Percent__c != null) {
@@ -777,8 +780,13 @@ public class ALLO_AllocationsUtil {
                 //Calculate proportional amount for non-percentage based Payment allocations
                 // convertToPercentages must be true, the Percentage null, sourceAmount cannot be null and either Default Allocations are not enabled or the allocation is not for the Default Allocation
                 if (convertToPercentages && allocation.Percent__c == null & sourceAmount != null) {
-                    allocation.Percent__c = ((allocation.Amount__c != null) ? allocation.Amount__c : 0) / sourceAmount * 100;
-                    allocation.Amount__c = (amount * allocation.Percent__c * .01).setScale(2);
+                    Decimal allocationPercent = ((allocation.Amount__c != null) ? allocation.Amount__c : 0) / sourceAmount * 100;
+
+                    // Do not round the percent yet, we want the most accurate Amount value possible
+                    allocation.Amount__c = (amount * allocationPercent__c * .01).setScale(2);
+
+                    // Round the visible percentage value to 2 decimal places after the amount is calculated
+                    allo.Percent__c = allocationPercent.setScale(2, System.RoundingMode.HALF_UP);
                 }
                 remainder -= (allocation.Amount__c != null) ? allocation.Amount__c : 0;
             }
@@ -820,8 +828,9 @@ public class ALLO_AllocationsUtil {
     /*******************************************************************************************************
     * @description In the event a parent's Amount has increased or Decreased, or it has changed sign, or
     *              new Allocations have been added, or Allocations have been removed, the parentObj's
-    *              Allocations must be recalculated/resized.  If the parent object's amount becomes null
-    *              or zero, clear allocations should instead be called.
+    *              Allocations must be recalculated/resized.  If the parent object's amount becomes null,
+    *              clear allocations should instead be called.
+    *              Refactored from ALLO_Allocations_TDTM.opportunityAmountCurrencyChange
     * @param SObject parentObj An Opportunity or Payment.
     * @param List<Allocation__c> List of any Allocations associated with the parentObj
     * @param AllocationResults allocResults The results of this call.
@@ -834,8 +843,8 @@ public class ALLO_AllocationsUtil {
         Decimal totalOfPercentages = 0;
         Decimal parentAmount = getAmountFor(parentObj);
 
-        // Resizing of Allocations for null/0 Amounts is not done in this method, as null/0 resizing is a special case.
-        if (parentAmount == null || parentAmount == 0) {
+        // Resizing of Allocations for null/0 Amounts is not done in this method, as null resizing is a special case.
+        if (parentAmount == null) {
             clearAllocations(parentObj, allocations, allocResults);
             return;
         }
@@ -845,14 +854,14 @@ public class ALLO_AllocationsUtil {
         List<Allocation__c> proposedAllocations = new List<Allocation__c>();
         List<Allocation__c> proposedAllocDeletes = new List<Allocation__c>();
         List<Allocation__c> defaultAllocations = new List<Allocation__c>();
-        String parentCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) parentObj.get('CurrencyIsoCode') : null;
+        String parentCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) parentObj.get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
         Boolean errorsFound = false;
 
         for (Allocation__c allocation : allocations.deepClone(true, true, true)) {
             if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c) {
                 defaultAllocations.add(allocation);
             } else {
-                String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) allocation.get('CurrencyIsoCode') : null;
+                String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) allocation.get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
                 Decimal curAllocAmount = (allocation.Percent__c != null) ? allocation.Percent__c * 0.01 * parentAmount : allocation.Amount__c;
                 Boolean updatesToAllocation = false;
 
@@ -876,7 +885,7 @@ public class ALLO_AllocationsUtil {
                     if (updatesToAllocation) {
                         allocation.Amount__c = curAllocAmount;
                         if (IS_MULTICURRENCY_ORG) {
-                            allocation.put('CurrencyIsoCode', parentCurrencyIsoCode);
+                            allocation.put(UTIL_Query.CURRENCYISOCODE_FIELD, parentCurrencyIsoCode);
                         }
                         proposedAllocations.add(allocation);
                     }
@@ -938,7 +947,7 @@ public class ALLO_AllocationsUtil {
 
         Boolean requiresUpdates = false;
 
-        String parentCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) parentObj.get('CurrencyIsoCode') : null;
+        String parentCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) parentObj.get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
 
         List<Allocation__c> proposedAllocations = new List<Allocation__c>();
         List<Allocation__c> proposedAllocDeletes = new List<Allocation__c>();
@@ -957,7 +966,7 @@ public class ALLO_AllocationsUtil {
                 if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c) {
                     proposedAllocDeletes.add(allocation);
                 } else {
-                    String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) allocation.get('CurrencyIsoCode') : null;
+                    String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) allocation.get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
                     Boolean updatesToAllocation = false;
 
                     if (allocation.Percent__c != 0 && allocation.Percent__c != null) {
@@ -1037,12 +1046,12 @@ public class ALLO_AllocationsUtil {
             allocResults.allocationsForDelete.addAll(defaultAllocations);
         } else if ((parentAmount > 0 && defaultAllocationAmount > 0) || (parentAmount < 0 && defaultAllocationAmount < 0)) {
             if (!defaultAllocations.isEmpty()) {
-                String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) defaultAllocations[0].get('CurrencyIsoCode') : null;
+                String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) defaultAllocations[0].get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
                 if (defaultAllocationAmount != defaultAllocations[0].Amount__c || parentCurrencyIsoCode != allocCurrencyIsoCode || defaultAllocations[0].Percent__c != null) {
                     defaultAllocations[0].Amount__c = defaultAllocationAmount;
                     defaultAllocations[0].Percent__c = null;
                     if (IS_MULTICURRENCY_ORG) {
-                        defaultAllocations[0].put('CurrencyIsoCode', parentCurrencyIsoCode);
+                        defaultAllocations[0].put(UTIL_Query.CURRENCYISOCODE_FIELD, parentCurrencyIsoCode);
                     }
                     allocResults.allocationsForUpdate.add(defaultAllocations[0]);
                 }
@@ -1076,7 +1085,7 @@ public class ALLO_AllocationsUtil {
         );
 
         if (IS_MULTICURRENCY_ORG) {
-            defaultAllo.put('CurrencyIsoCode', parentSObj.get('CurrencyIsoCode'));
+            defaultAllo.put(UTIL_Query.CURRENCYISOCODE_FIELD, parentSObj.get(UTIL_Query.CURRENCYISOCODE_FIELD));
         }
 
         return defaultAllo;
@@ -1430,7 +1439,7 @@ public class ALLO_AllocationsUtil {
         DateTime lastModifiedDate = (DateTime) parentSObj.get('LastModifiedDate');
         String currencyIsoCode = null;
         if (IS_MULTICURRENCY_ORG) {
-            currencyIsoCode = (String) parentSObj.get('CurrencyIsoCode');
+            currencyIsoCode = (String) parentSObj.get(UTIL_Query.CURRENCYISOCODE_FIELD);
         }
 
         // Data Modified since last execution
@@ -1457,7 +1466,7 @@ public class ALLO_AllocationsUtil {
             allocAmount += (alloc.Amount__c != null) ? alloc.Amount__c : 0;
 
             if (IS_MULTICURRENCY_ORG) { // Only check if CurrencyIsoCode is different if Multi Currency Organization
-                String alloCurrencyIsoCode = (String) alloc.get('CurrencyIsoCode');
+                String alloCurrencyIsoCode = (String) alloc.get(UTIL_Query.CURRENCYISOCODE_FIELD);
                 if (alloCurrencyIsoCode != currencyIsoCode) {
                     return true;
                 }
