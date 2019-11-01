@@ -1,164 +1,174 @@
 <template>
-    <div role="container"
-         class="main-container">
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="tab is loading"></lightning-spinner>
+    </template>
 
-        <template if:true={isLoading}>
-            <lightning-spinner alternative-text="tab is loading">
-            </lightning-spinner>
-        </template>
+    <template if:true={isAccessible}>
+        <div role="container"
+             class="main-container">
 
-        <c-util-page-header>
-            <h1 slot="title">
-                <span class="slds-page-header__title"
-                      title="Batch Gift Entry">
-                    New Template
-                </span>
-            </h1>
-            <div slot="actions"
-                 class="slds-button-group"
-                 role="group">
-                <lightning-button label="Cancel"
-                                  title="Cancel"
-                                  variant="neutral"
-                                  class="slds-float_right slds-m-right_small"
-                                  onclick={handleCancel}>
-                </lightning-button>
-                <lightning-button label="Save &amp; Close"
-                                  title="Cancel"
-                                  variant="brand"
-                                  class="slds-float_right"
-                                  onclick={handleFormTemplateSave}>
-                </lightning-button>
+            <c-util-page-header>
+                <h1 slot="title">
+                    <span class="slds-page-header__title"
+                          title="Batch Gift Entry">
+                        New Template
+                    </span>
+                </h1>
+                <div slot="actions"
+                     class="slds-button-group"
+                     role="group">
+                    <lightning-button label="Cancel"
+                                      title="Cancel"
+                                      variant="neutral"
+                                      class="slds-float_right slds-m-right_small"
+                                      onclick={handleCancel}>
+                    </lightning-button>
+                    <lightning-button label="Save &amp; Close"
+                                      title="Cancel"
+                                      variant="brand"
+                                      class="slds-float_right"
+                                      onclick={handleFormTemplateSave}>
+                    </lightning-button>
+                </div>
+            </c-util-page-header>
+
+            <div role="card"
+                 class="slds-card slds-card_extension">
+                <lightning-tabset active-tab-value={activeTab}
+                                  class="extension_test">
+
+                    <lightning-tab value={TabEnums.INFO_TAB}
+                                   label="Template Info"
+                                   class="slds-p-around_none"
+                                   onactive={handleOnActiveTab}>
+                        <c-ge-template-builder-template-info template-name={formTemplate.name}
+                                                             template-description={formTemplate.description}
+                                                             onchangetemplateinfoname={handleChangeTemplateInfoName}
+                                                             onchangetemplateinfodescription={handleChangeTemplateInfoDescription}>
+                        </c-ge-template-builder-template-info>
+                    </lightning-tab>
+
+                    <lightning-tab value={TabEnums.SELECT_FIELDS_TAB}
+                                   label="Select Fields"
+                                   class="slds-p-around_none"
+                                   onactive={handleOnActiveTab}>
+                        <c-ge-template-builder-select-fields selected-field-mapping-set={formLayout.fieldMappingSetDevName}
+                                                             form-sections={formSections}
+                                                             active-form-section-id={activeFormSectionId}
+                                                             ontogglemodal={toggleModal}
+                                                             onchangeactivesection={handleChangeActiveSection}
+                                                             onaddformsection={handleAddFormSection}
+                                                             onformsectionup={handleFormSectionUp}
+                                                             onformsectiondown={handleFormSectionDown}
+                                                             onaddfieldtosection={handleAddFieldToSection}
+                                                             onremovefieldfromsection={handleRemoveFieldFromSection}
+                                                             onformfieldup={handleFormFieldUp}
+                                                             onformfielddown={handleFormFieldDown}
+                                                             ondeleteformfield={handleDeleteFormField}
+                                                             onupdateformfield={handleUpdateFormField}
+                                                             onrefreshformsections={handleRefreshFormSections}>
+                        </c-ge-template-builder-select-fields>
+                    </lightning-tab>
+
+                    <lightning-tab value={TabEnums.BATCH_HEADER_TAB}
+                                   label="Batch Header"
+                                   class="slds-p-around_none"
+                                   onactive={handleOnActiveTab}>
+                        <c-ge-template-builder-batch-header selected-batch-fields={batchHeaderFields}
+                                                            onaddbatchheaderfield={handleAddBatchHeaderField}
+                                                            onremovebatchheaderfield={handleRemoveBatchHeaderField}
+                                                            onbatchheaderfieldup={handleBatchHeaderFieldUp}
+                                                            onbatchheaderfielddown={handleBatchHeaderFieldDown}
+                                                            onupdatebatchheaderfield={handleUpdateBatchHeaderField}>
+                        </c-ge-template-builder-batch-header>
+                    </lightning-tab>
+
+                </lightning-tabset>
             </div>
-        </c-util-page-header>
 
+            <div class="slds-docked-form-footer"
+                 aria-label="Utility Bar">
+
+                <div class="slds-grid slds-nowrap slds-p-around_small">
+                    <div class="slds-size_1-of-3">
+                        <template if:true={inSelectFieldsTab}>
+                            <lightning-button label="Back: Template Info"
+                                              title="Previous"
+                                              onclick={handleGoToTab}
+                                              variant="outline-brand"
+                                              data-tab-value={TabEnums.INFO_TAB}>
+                            </lightning-button>
+                        </template>
+                        <template if:true={inBatchHeaderTab}>
+                            <lightning-button label="Back: Select Fields"
+                                              title="Previous"
+                                              onclick={handleGoToTab}
+                                              variant="outline-brand"
+                                              class="slds-m-right_small"
+                                              data-tab-value={TabEnums.SELECT_FIELDS_TAB}>
+                            </lightning-button>
+                        </template>
+                    </div>
+                    <div class="slds-size_1-of-3">
+                        <lightning-progress-indicator current-step={activeTab}
+                                                      type="base"
+                                                      variant="base">
+                            <lightning-progress-step label="Template Info"
+                                                     aria-label="Template Info"
+                                                     value={TabEnums.INFO_TAB}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Select Fields"
+                                                     aria-label="Select Fields"
+                                                     value={TabEnums.SELECT_FIELDS_TAB}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Batch Header"
+                                                     aria-label="Batch Header"
+                                                     value={TabEnums.BATCH_HEADER_TAB}>
+                            </lightning-progress-step>
+                        </lightning-progress-indicator>
+                    </div>
+                    <div class="slds-size_1-of-3">
+                        <template if:true={inTemplateInfoTab}>
+                            <lightning-button label="Next: Select Fields"
+                                              title="Next"
+                                              variant="brand"
+                                              class="slds-float_right"
+                                              onclick={handleGoToTab}
+                                              data-tab-value={TabEnums.SELECT_FIELDS_TAB}>
+                            </lightning-button>
+                        </template>
+                        <template if:true={inSelectFieldsTab}>
+                            <lightning-button label="Next: Batch Header"
+                                              title="Next"
+                                              class="slds-float_right"
+                                              onclick={handleGoToTab}
+                                              variant="brand"
+                                              data-tab-value={TabEnums.BATCH_HEADER_TAB}>
+                            </lightning-button>
+                        </template>
+                        <template if:true={inBatchHeaderTab}>
+                            <lightning-button label="Save &amp; Close"
+                                              title="Next"
+                                              class="slds-float_right"
+                                              onclick={handleFormTemplateSave}
+                                              variant="brand">
+                            </lightning-button>
+                        </template>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </template>
+
+    <template if:false={isAccessible}>
         <div role="card"
-             class="slds-card slds-card_extension">
-            <lightning-tabset active-tab-value={activeTab}
-                              class="extension_test">
-
-                <lightning-tab value={TabEnums.INFO_TAB}
-                               label="Template Info"
-                               class="slds-p-around_none"
-                               onactive={handleOnActiveTab}>
-                    <c-ge-template-builder-template-info template-name={formTemplate.name}
-                                                         template-description={formTemplate.description}
-                                                         onchangetemplateinfoname={handleChangeTemplateInfoName}
-                                                         onchangetemplateinfodescription={handleChangeTemplateInfoDescription}>
-                    </c-ge-template-builder-template-info>
-                </lightning-tab>
-
-                <lightning-tab value={TabEnums.SELECT_FIELDS_TAB}
-                               label="Select Fields"
-                               class="slds-p-around_none"
-                               onactive={handleOnActiveTab}>
-                    <c-ge-template-builder-select-fields selected-field-mapping-set={formLayout.fieldMappingSetDevName}
-                                                         form-sections={formSections}
-                                                         active-form-section-id={activeFormSectionId}
-                                                         ontogglemodal={toggleModal}
-                                                         onchangeactivesection={handleChangeActiveSection}
-                                                         onaddformsection={handleAddFormSection}
-                                                         onformsectionup={handleFormSectionUp}
-                                                         onformsectiondown={handleFormSectionDown}
-                                                         onaddfieldtosection={handleAddFieldToSection}
-                                                         onremovefieldfromsection={handleRemoveFieldFromSection}
-                                                         onformfieldup={handleFormFieldUp}
-                                                         onformfielddown={handleFormFieldDown}
-                                                         ondeleteformfield={handleDeleteFormField}
-                                                         onupdateformfield={handleUpdateFormField}
-                                                         onrefreshformsections={handleRefreshFormSections}>
-                    </c-ge-template-builder-select-fields>
-                </lightning-tab>
-
-                <lightning-tab value={TabEnums.BATCH_HEADER_TAB}
-                               label="Batch Header"
-                               class="slds-p-around_none"
-                               onactive={handleOnActiveTab}>
-                    <c-ge-template-builder-batch-header selected-batch-fields={batchHeaderFields}
-                                                        onaddbatchheaderfield={handleAddBatchHeaderField}
-                                                        onremovebatchheaderfield={handleRemoveBatchHeaderField}
-                                                        onbatchheaderfieldup={handleBatchHeaderFieldUp}
-                                                        onbatchheaderfielddown={handleBatchHeaderFieldDown}
-                                                        onupdatebatchheaderfield={handleUpdateBatchHeaderField}>
-                    </c-ge-template-builder-batch-header>
-                </lightning-tab>
-
-            </lightning-tabset>
+             class="slds-card slds-card_extension slds-p-around_large">
+            <c-util-illustration title='You do not have access to this page'
+                                 message='Template Builder requires Advanced Mapping. Please go to NPSP Settings and turn on Advanced Mapping.'
+                                 size="large">
+            </c-util-illustration>
         </div>
-
-        <div class="slds-docked-form-footer"
-             aria-label="Utility Bar">
-
-            <div slot="body"
-                 class="slds-grid slds-nowrap slds-p-around_small">
-                <div class="slds-size_1-of-3">
-                    <template if:true={inSelectFieldsTab}>
-                        <lightning-button label="Back: Template Info"
-                                          title="Previous"
-                                          onclick={handleGoToTab}
-                                          variant="outline-brand"
-                                          data-tab-value={TabEnums.INFO_TAB}>
-                        </lightning-button>
-                    </template>
-                    <template if:true={inBatchHeaderTab}>
-                        <lightning-button label="Back: Select Fields"
-                                          title="Previous"
-                                          onclick={handleGoToTab}
-                                          variant="outline-brand"
-                                          class="slds-m-right_small"
-                                          data-tab-value={TabEnums.SELECT_FIELDS_TAB}>
-                        </lightning-button>
-                    </template>
-                </div>
-                <div class="slds-size_1-of-3">
-                    <lightning-progress-indicator current-step={activeTab}
-                                                  type="base"
-                                                  variant="base">
-                        <lightning-progress-step label="Template Info"
-                                                 aria-label="Template Info"
-                                                 value={TabEnums.INFO_TAB}>
-                        </lightning-progress-step>
-                        <lightning-progress-step label="Select Fields"
-                                                 aria-label="Select Fields"
-                                                 value={TabEnums.SELECT_FIELDS_TAB}>
-                        </lightning-progress-step>
-                        <lightning-progress-step label="Batch Header"
-                                                 aria-label="Batch Header"
-                                                 value={TabEnums.BATCH_HEADER_TAB}>
-                        </lightning-progress-step>
-                    </lightning-progress-indicator>
-                </div>
-                <div class="slds-size_1-of-3">
-                    <template if:true={inTemplateInfoTab}>
-                        <lightning-button label="Next: Select Fields"
-                                          title="Next"
-                                          variant="brand"
-                                          class="slds-float_right"
-                                          onclick={handleGoToTab}
-                                          data-tab-value={TabEnums.SELECT_FIELDS_TAB}>
-                        </lightning-button>
-                    </template>
-                    <template if:true={inSelectFieldsTab}>
-                        <lightning-button label="Next: Batch Header"
-                                          title="Next"
-                                          class="slds-float_right"
-                                          onclick={handleGoToTab}
-                                          variant="brand"
-                                          data-tab-value={TabEnums.BATCH_HEADER_TAB}>
-                        </lightning-button>
-                    </template>
-                    <template if:true={inBatchHeaderTab}>
-                        <lightning-button label="Save &amp; Close"
-                                          title="Next"
-                                          class="slds-float_right"
-                                          onclick={handleFormTemplateSave}
-                                          variant="brand">
-                        </lightning-button>
-                    </template>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
+    </template>
 </template>

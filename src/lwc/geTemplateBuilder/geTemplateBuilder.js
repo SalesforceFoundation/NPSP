@@ -2,10 +2,11 @@ import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import storeFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.storeFormTemplate';
 import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormTemplate';
-import { mutable, findIndexByProperty, shiftToIndex, dispatch, getQueryParameters } from 'c/utilTemplateBuilder';
+import getFieldMappingMethod from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingMethod';
+import { mutable, findIndexByProperty, shiftToIndex, dispatch, getQueryParameters, handleError } from 'c/utilTemplateBuilder';
 
 const FORMAT_VERSION = '1.0';
-
+const ADVANCED_MAPPING = 'Data Import Field Mapping';
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
     /*******************************************************************************
@@ -19,6 +20,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     formTemplateRecordId;
     @track isLoading = true;
+    @track isAccessible = true;
     @track activeTab = this.TabEnums.INFO_TAB;
     @track formTemplate = {
         name: null,
@@ -48,23 +50,55 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     connectedCallback() {
-        this.formTemplateRecordId = getQueryParameters().c__recordId;
+        console.log('connectedCallback');
+        this.init();
+    }
 
-        if (this.formTemplateRecordId) {
-            retrieveFormTemplate({ templateId: this.formTemplateRecordId })
-                .then(formTemplate => {
+    init = async () => {
+        try {
+            const fieldMappingMethod = await this.handleGetFieldMappingMethod();
+
+            if (fieldMappingMethod !== ADVANCED_MAPPING) {
+                this.isAccessible = false;
+                this.isLoading = false;
+
+            } else if (fieldMappingMethod === ADVANCED_MAPPING) {
+                // Check if there's a record id in the url
+                this.formTemplateRecordId = getQueryParameters().c__recordId;
+
+                if (this.formTemplateRecordId) {
+                    let formTemplate = await this.handleGetFormTemplate(this.formTemplateRecordId);
+
                     this.formTemplate = formTemplate;
                     this.batchHeaderFields = formTemplate.batchHeaderFields;
                     this.formLayout = formTemplate.layout;
                     this.formSections = this.formLayout.sections;
-                    this.isLoading = false;
-                })
-                .catch(error => {
-                    console.log('Error: ', error);
-                })
-        } else {
-            this.isLoading = false;
+                }
+
+                this.isLoading = false;
+                this.isAccessible = true;
+            }
+        } catch (error) {
+            handleError(error);
         }
+    }
+
+    /*******************************************************************************
+    * @description Async intermediary method for getting the currently active
+    * field mapping method so we can use async/await in the init method.
+    */
+    handleGetFieldMappingMethod = async () => {
+        return getFieldMappingMethod();
+    }
+
+    /*******************************************************************************
+    * @description Async intermediary method for retrieving a form template so
+    * we can use async/await in the init method.
+    *
+    * @param {string} formTemplateId: Record id of the Form_Template__c to retrieve
+    */
+    handleGetFormTemplate = async (formTemplateId) => {
+        return retrieveFormTemplate({ templateId: formTemplateId });
     }
 
     /*******************************************************************************
@@ -335,7 +369,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         let formSections = mutable(this.formSections);
         let section = formSections.find(fs => fs.id === sectionId);
-        const index = section.elements.findIndex((element) =>  {
+        const index = section.elements.findIndex((element) => {
             return element.dataImportFieldMappingDevNames[0] === fieldName;
         });
         section.elements.splice(index, 1);
