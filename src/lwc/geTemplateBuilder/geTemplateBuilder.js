@@ -370,7 +370,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         let formSections = mutable(this.formSections);
         let section = formSections.find(fs => fs.id === sectionId);
         const index = section.elements.findIndex((element) => {
-            return element.dataImportFieldMappingDevNames[0] === fieldName;
+            const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+            return name === fieldName;
         });
         section.elements.splice(index, 1);
 
@@ -386,8 +387,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * geTemplateBuilderSelectFields -> here
     */
     handleFormFieldUp(event) {
-        console.log('handleFormFieldUp');
-        console.log('detai: ', mutable(event.detail));
         const { sectionId, fieldName } = event.detail;
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
@@ -431,11 +430,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * geTemplateBuilderSelectFields -> here
     */
     handleDeleteFormField(event) {
-        console.log('handleDeleteFormField');
-        const { sectionId, fieldName, id } = event.detail;
-        console.log('OUTPUT : ',sectionId);
-        console.log('OUTPUT : ',fieldName);
-        console.log('OUTPUT : ',id);
+        const { sectionId, id } = event.detail;
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
         let index = section.elements.findIndex((element) => {
             return element.id === id;
