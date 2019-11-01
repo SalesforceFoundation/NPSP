@@ -454,7 +454,7 @@ private with sharing class RD2_ScheduleService_TEST {
     * @description Verifies next donation date for yearly donation with frequency > 1.
     */
     @isTest
-    private static void shouldCreateNextDonationDateWithFrequency2FirstAndFifteenth() {
+    private static void shouldCreateNextDonationDateWithFrequency5FirstAndFifteenth() {
 
         npe03__Recurring_Donation__c rd =
                 TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -463,16 +463,16 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withAmount(400)
                         .withPaymentMethod('Check')
                         .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
-                        .withInstallmentFrequency(5)
+                        .withInstallmentFrequency(17)
                         .withDateEstablished(Date.newInstance(2019, 9, 15))
                         .withStartDate(Date.newInstance(2018, 3, 17))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2023, 3, 18));
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 5, 1));
 
-        System.assertEquals(Date.newInstance(2028, 3, 17),
+        System.assertEquals(Date.newInstance(2019, 1, 15),
                 service.getNextDonationDate(rd),
-                'Next Donation Date should equal 3/17/2028');
+                'Next Donation Date should equal 1/15/2019');
 
     }
 
