@@ -520,6 +520,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         });
     }
 
+    /*******************************************************************************
+    * @description Navigates to the list view GE_Templates tab.
+    */
     handleCancel() {
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',

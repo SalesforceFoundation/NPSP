@@ -45,6 +45,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
 
     init = async () => {
         this.objectMappings = await this.handleGetFieldAndObjectMappings(this.selectedFieldMappingSet);
+        this.addInWidgetsPlaceholder();
         this.handleSortFieldMappings();
         this.loadObjectAndFieldMappingSets();
         this.isLoading = false;
@@ -78,6 +79,28 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         }
 
         this.objectMappings = objectMappings;
+    }
+
+    // TODO: Update when widgets concept is more complete
+    /*******************************************************************************
+    * @description Temporary placeholder for adding widgets into the available
+    * selections.
+    */
+    addInWidgetsPlaceholder() {
+        console.log('addInWidgetsPlaceholder');
+        const widgets = {
+            MasterLabel: 'Widgets',
+            Field_Mappings: [
+                {
+                    DeveloperName: 'Credit_Card',
+                    Target_Field_Label: 'Credit Card',
+                    Required: 'No',
+                    Target_Field_Data_Type: 'widget'
+                }
+            ]
+        };
+
+        this.objectMappings = [...this.objectMappings, widgets];
     }
 
     /*******************************************************************************
@@ -213,7 +236,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 defaultValue: null,
                 dataType: fieldMapping.Target_Field_Data_Type,
                 picklistOptions: fieldMapping.Target_Field_Picklist_Options,
-                dataImportFieldMappingDevNames: [fieldMapping.DeveloperName]
+                dataImportFieldMappingDevNames: [fieldMapping.DeveloperName] 
             }
 
             this.catalogSelectedField(fieldMappingDeveloperName, sectionId);

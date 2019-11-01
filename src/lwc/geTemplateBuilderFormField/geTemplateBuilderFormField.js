@@ -63,6 +63,11 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return (this.field.isRequiredFieldDisabled === false || !this.field.isRequiredFieldDisabled) ? true : false;
     }
 
+    // TODO: Update from dataType to elementType
+    get isWidget() {
+        return this.field.dataType === 'widget' ? true : false;
+    }
+
     get isLightningTextarea() {
         return this.lightningInputType === 'textarea' ? true : false;
     }

@@ -2,106 +2,114 @@
     <article class="slds-card slds-card_extension slds-m-vertical_small">
         <div class="slds-card__body slds-card__body_inner">
             <div class="slds-grid slds-grid_vertical-align-start">
-                <div class="slds-size_5-of-12 slds-p-right_small">
-                    <lightning-input type="text"
-                                     class="slds-truncate"
-                                     label={field.label}
-                                     field-level-help={field.label}
-                                     value={field.customLabel}
-                                     data-name="customLabel"
-                                     onclick={stopPropagation}
-                                     onblur={handleOnBlurCustomLabel}>
-                    </lightning-input>
-                </div>
 
-                <div class="slds-size_1-of-12 slds-p-left_medium slds-p-top_small">
-                    <lightning-input type="checkbox"
-                                     checked={isRequired}
-                                     variant="label-stacked"
-                                     disabled={field.isRequiredFieldDisabled}
-                                     data-name="required"
-                                     onclick={stopPropagation}
-                                     onchange={handleOnChangeRequiredField}>
-                    </lightning-input>
-                </div>
-
-                <div class="slds-size_5-of-12 slds-p-right_small">
-
-                    <template if:true={isLightningRichText}>
-                        <lightning-input-rich-text data-name="defaultValue"
-                                                   class="slds-m-around_none"
-                                                   value={field.defaultValue}
-                                                   variant="label-stacked"
-                                                   onclick={stopPropagation}>
-                        </lightning-input-rich-text>
-                    </template>
-
-                    <template if:true={isLightningTextarea}>
-                        <lightning-textarea data-name="defaultValue"
-                                            class="slds-m-around_none"
-                                            value={field.defaultValue}
-                                            variant="label-stacked"
-                                            onclick={stopPropagation}
-                                            onblur={handleOnBlur}>
-                        </lightning-textarea>
-                    </template>
-
-                    <template if:true={isLightningCombobox}>
-                        <lightning-combobox data-name="defaultValue"
-                                            class="slds-m-around_none"
-                                            options={field.picklistOptions}
-                                            value={field.defaultValue}
-                                            variant="label-stacked"
-                                            onchange={handleChangeCombobox}>
-                        </lightning-combobox>
-                    </template>
-
-                    <template if:true={isLightningCheckbox}>
-                        <lightning-input data-name="defaultValue"
-                                         class="slds-m-top_small"
-                                         type="checkbox"
-                                         checked={defaultValueForCheckbox}
-                                         variant="label-stacked"
+                <template if:true={isWidget}>
+                    <div class="slds-size_11-of-12 slds-p-top_large slds-p-bottom_large">
+                        <p class="slds-text_title">This is a widget</p>
+                    </div>
+                </template>
+                <template if:false={isWidget}>
+                    <div class="slds-size_5-of-12 slds-p-right_small">
+                        <lightning-input type="text"
+                                         class="slds-truncate"
+                                         label={field.label}
+                                         field-level-help={field.label}
+                                         value={field.customLabel}
+                                         data-name="customLabel"
                                          onclick={stopPropagation}
-                                         onchange={handleOnBlur}>
+                                         onblur={handleOnBlurCustomLabel}>
                         </lightning-input>
-                    </template>
+                    </div>
 
-                    <template if:true={isLightningSearch}>
-                        <lightning-input data-name="defaultValue"
-                                         class="slds-m-around_none"
-                                         type="search"
-                                         value={field.defaultValue}
+                    <div class="slds-size_1-of-12 slds-p-left_medium slds-p-top_small">
+                        <lightning-input type="checkbox"
+                                         checked={isRequired}
                                          variant="label-stacked"
-                                         onkeyup={handleSearch}
+                                         disabled={field.isRequiredFieldDisabled}
+                                         data-name="required"
                                          onclick={stopPropagation}
-                                         onblur={handleOnBlur}>
+                                         onchange={handleOnChangeRequiredField}>
                         </lightning-input>
-                    </template>
+                    </div>
 
-                    <template if:true={isLightningDateOrDatetime}>
-                        <lightning-input data-name="defaultValue"
-                                         class="slds-m-around_none"
-                                         type={lightningInputType}
-                                         value={field.defaultValue}
-                                         variant="label-stacked"
-                                         onclick={stopPropagation}
-                                         onchange={handleOnBlur}>
-                        </lightning-input>
-                    </template>
+                    <div class="slds-size_5-of-12 slds-p-right_small">
 
-                    <template if:true={isLightningInput}>
-                        <lightning-input data-name="defaultValue"
-                                         class="slds-m-around_none"
-                                         type={lightningInputType}
-                                         value={field.defaultValue}
-                                         variant="label-stacked"
-                                         onclick={stopPropagation}
-                                         onblur={handleOnBlur}>
-                        </lightning-input>
-                    </template>
+                        <template if:true={isLightningRichText}>
+                            <lightning-input-rich-text data-name="defaultValue"
+                                                       class="slds-m-around_none"
+                                                       value={field.defaultValue}
+                                                       variant="label-stacked"
+                                                       onclick={stopPropagation}>
+                            </lightning-input-rich-text>
+                        </template>
 
-                </div>
+                        <template if:true={isLightningTextarea}>
+                            <lightning-textarea data-name="defaultValue"
+                                                class="slds-m-around_none"
+                                                value={field.defaultValue}
+                                                variant="label-stacked"
+                                                onclick={stopPropagation}
+                                                onblur={handleOnBlur}>
+                            </lightning-textarea>
+                        </template>
+
+                        <template if:true={isLightningCombobox}>
+                            <lightning-combobox data-name="defaultValue"
+                                                class="slds-m-around_none"
+                                                options={field.picklistOptions}
+                                                value={field.defaultValue}
+                                                variant="label-stacked"
+                                                onchange={handleChangeCombobox}>
+                            </lightning-combobox>
+                        </template>
+
+                        <template if:true={isLightningCheckbox}>
+                            <lightning-input data-name="defaultValue"
+                                             class="slds-m-top_small"
+                                             type="checkbox"
+                                             checked={defaultValueForCheckbox}
+                                             variant="label-stacked"
+                                             onclick={stopPropagation}
+                                             onchange={handleOnBlur}>
+                            </lightning-input>
+                        </template>
+
+                        <template if:true={isLightningSearch}>
+                            <lightning-input data-name="defaultValue"
+                                             class="slds-m-around_none"
+                                             type="search"
+                                             value={field.defaultValue}
+                                             variant="label-stacked"
+                                             onkeyup={handleSearch}
+                                             onclick={stopPropagation}
+                                             onblur={handleOnBlur}>
+                            </lightning-input>
+                        </template>
+
+                        <template if:true={isLightningDateOrDatetime}>
+                            <lightning-input data-name="defaultValue"
+                                             class="slds-m-around_none"
+                                             type={lightningInputType}
+                                             value={field.defaultValue}
+                                             variant="label-stacked"
+                                             onclick={stopPropagation}
+                                             onchange={handleOnBlur}>
+                            </lightning-input>
+                        </template>
+
+                        <template if:true={isLightningInput}>
+                            <lightning-input data-name="defaultValue"
+                                             class="slds-m-around_none"
+                                             type={lightningInputType}
+                                             value={field.defaultValue}
+                                             variant="label-stacked"
+                                             onclick={stopPropagation}
+                                             onblur={handleOnBlur}>
+                            </lightning-input>
+                        </template>
+
+                    </div>
+                </template>
 
                 <div class="slds-size_1-of-12 slds-p-top_large">
                     <div class="slds-float_right">
