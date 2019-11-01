@@ -3032,6 +3032,7 @@
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
         <members>geFormField</members>
+        <members>geFormFieldPicklist</members>
         <members>geFormRenderer</members>
         <members>geFormSection</members>
         <members>geFormService</members>
