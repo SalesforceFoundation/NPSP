@@ -3034,6 +3034,7 @@
         <members>geFormRenderer</members>
         <members>geFormSection</members>
         <members>geFormService</members>
+        <members>geFormWidget</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
