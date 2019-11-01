@@ -193,6 +193,7 @@
                 <value>
                     <fullName>Last_Day</fullName>
                     <default>false</default>
+                    <isActive>true</isActive>
                     <label>Last Day Of Month</label>
                 </value>
                 <value>

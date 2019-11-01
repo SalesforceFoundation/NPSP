@@ -60,6 +60,12 @@ public without sharing class TEST_RecurringDonationBuilder {
     private Mode recordMode;
 
     /***
+    * @description Set to true to automatically calculate the NextPaymentDate field value when building the RD
+    * For enhanced mode only
+    */
+    private Boolean calculateNextDonationDate = false;
+
+    /***
     * @description Constructor
     */
     public TEST_RecurringDonationBuilder() {
@@ -402,7 +408,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Recurring Donation Status to Active 
+    * @description Sets Recurring Donation Status to Active
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withStatusActive() {
@@ -411,7 +417,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
 
     /***
-    * @description Sets Recurring Donation Status to Closed 
+    * @description Sets Recurring Donation Status to Closed
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withStatusClosed() {
@@ -451,9 +457,32 @@ public without sharing class TEST_RecurringDonationBuilder {
         return this;
     }
 
+    /***
+    * @description Sets Next Donation Date. It's the same field as NextPaymentDate, but in RD2 this field is generally
+    * calculated automatically during insert.
+    * @param dt Date
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withNextDonationDate(Date dt) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
+        return this;
+    }
+
+    /***
+    * @description Tell the build process to call the getNextDonationDate() method in the ScheduleService
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCalculateNextDonationDate() {
+        validateMode(Mode.Enhanced);
+        this.calculateNextDonationDate = true;
+        return this;
+    }
+
     /**
-     * @description Configure the RD with the appropriate default values based on the mode
-     */
+    * @description Configure the RD with the appropriate default values based on the mode
+    */
     public TEST_RecurringDonationBuilder withDefaultValues() {
 
         if (recordMode == Mode.Enhanced) {
@@ -476,6 +505,12 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         for (String fieldName : valuesByFieldName.keySet()) {
             rd.put(fieldName, valuesByFieldName.get(fieldName));
+        }
+
+        if (calculateNextDonationDate) {
+            RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+            // TODO Uncomment this after the method has been merged
+            // rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate();
         }
 
         return rd;
@@ -537,4 +572,42 @@ public without sharing class TEST_RecurringDonationBuilder {
         return rds;
     }
 
+    /**
+    * @description Adds a child relationship to the Recurring Donation instance
+    * @param rd RecuringDonation instance
+    * @param relationshipName Name of the relationship to add
+    * @param records List of SObjects to include for the relationship
+    * @return Updated npe03__Recurring_Donation__c record
+    */
+    public static npe03__Recurring_Donation__c addRelatedList(npe03__Recurring_Donation__c rd, String relationshipName, List<SObject> records) {
+        String rdRecord = JSON.serialize(rd);
+        rdRecord = rdRecord.left(rdRecord.length()-1);
+
+        String objJson = JSON.serialize(records);
+        rdRecord += ',"' + relationshipName + '":{"totalSize":' + records.size() + ',"done":true,"records":' + objJson + '}';
+
+        rdRecord += '}';
+
+        return (npe03__Recurring_Donation__c)JSON.deserialize(rdRecord, npe03__Recurring_Donation__c.class);
+    }
+
+
+    /**
+    * @description Adds a foreign key relationship to the Recurring Donation instance, such as Contact__r.AccountId
+    * @param rd RecuringDonation instance
+    * @param relationshipName Name of the relationship to add
+    * @param foreignObject The SObject for the relationship
+    * @return Updated npe03__Recurring_Donation__c record
+    */
+    public static npe03__Recurring_Donation__c addForeignKey(npe03__Recurring_Donation__c rd, String relationshipName, SObject foreignObject) {
+        String rdRecord = JSON.serialize(rd);
+        rdRecord = rdRecord.left(rdRecord.length()-1);
+
+        String objJson = JSON.serialize(foreignObject);
+        rdRecord += ',"' + relationshipName + '":' + objJson + '';
+
+        rdRecord += '}';
+
+        return (npe03__Recurring_Donation__c)JSON.deserialize(rdRecord, npe03__Recurring_Donation__c.class);
+    }
 }
