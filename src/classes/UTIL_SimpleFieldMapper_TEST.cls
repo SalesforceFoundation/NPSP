@@ -84,4 +84,24 @@ private class UTIL_SimpleFieldMapper_TEST {
         }
     }
 
+    /*******************************************************************************************************************
+    * @description Determine Mappable Fields Between Contact and Account
+    */
+    @isTest private static void determineMappableFieldsBetweenContactAndAccount() {
+        UTIL_SimpleFieldMapper sFldMapper = UTIL_SimpleFieldMapper.getInstanceOf(Account.getSObjectType(), Contact.getSObjectType());
+
+        Set<String> mappableFields = sFldMapper.determineMappableFields();
+
+        System.assertNotEquals(0, mappableFields.size(), 'There should be mappable custom fields between the Contact and Account');
+
+        Map<String, Schema.SObjectField> accountFields = Account.getSObjectType().getDescribe().fields.getMap();
+        Map<String, Schema.SObjectField> contactFields = Contact.getSObjectType().getDescribe().fields.getMap();
+        for (String mappableField : mappableFields) {
+            System.assertEquals (true, accountFields.containsKey(mappableField), 'Field \'' +  mappableField + 'should be present on Account');
+            System.assertEquals (true, contactFields.containsKey(mappableField), 'Field \'' +  mappableField + 'should be present on Contact');
+        }
+
+        // TODO: Setup Regression Tests Outside of this process that deploy specific extra custom fields and assert their presence.
+    }
+
 }
