@@ -195,7 +195,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         for (npe03__Recurring_Donation__c rd : rds) {
             npe03__Recurring_Donation__c oldRd = mapOldRecurringDonationsByIds.get(rd.Id);
 
-            if (scheduleService.recurringDonationScheduleUpdateNeeded(rd, oldRd)) {
+            if (scheduleService.isScheduleUpdateNeeded(rd, oldRd)) {
                 filteredRecurringDonations.put(rd.Id, rd);
             }
         }
@@ -219,7 +219,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         for (npe03__Recurring_Donation__c rd : rds) {
             npe03__Recurring_Donation__c oldRd = mapOldRecurringDonationsByIds.get(rd.Id);
 
-            if (scheduleService.recurringDonationScheduleUpdateNeeded(rd, oldRd)) {
+            if (scheduleService.isScheduleUpdateNeeded(rd, oldRd)) {
                 filteredRecurringDonations.put(rd.Id, rd);
             }
         }

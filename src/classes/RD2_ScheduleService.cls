@@ -273,18 +273,18 @@ public without sharing class RD2_ScheduleService {
 
         Boolean updateNeeded = false;
 
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED || rd.Status__c == RD2_Constants.STATUS_LAPSED) {
+        if (newRd.Status__c == RD2_Constants.STATUS_CLOSED || newRd.Status__c == RD2_Constants.STATUS_LAPSED) {
             return updateNeeded;
 
         } else if (
-            rd.StartDate__c != oldRd.StartDate__c ||
-            rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
-            rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
-            rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
-            rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
-            rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
-            rd.Status__c != oldRd.Status__c ||
-            rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c
+            newRd.StartDate__c != oldRd.StartDate__c ||
+            newRd.npe03__Amount__c != oldRd.npe03__Amount__c ||
+            newRd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+            newRd.Day_of_Month__c != oldRd.Day_of_Month__c ||
+            newRd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
+            newRd.PaymentMethod__c != oldRd.PaymentMethod__c ||
+            newRd.Status__c != oldRd.Status__c ||
+            newRd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c
         ) {
             updateNeeded = true;
         }
