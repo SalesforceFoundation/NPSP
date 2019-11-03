@@ -101,9 +101,11 @@ public without sharing class RD2_ScheduleService {
         Date newStartDate = rd.StartDate__c;
         TDTM_Runnable.DMLWrapper scheduleChanges = new TDTM_Runnable.DMLWrapper();
 
-        for (RecurringDonationSchedule__c schedule : schedules) {
-            schedule.EndDate__c = newStartDate.addDays(-1);
-            scheduleChanges.objectsToUpdate.add(schedule);
+        if (schedules != null) {
+            for (RecurringDonationSchedule__c schedule : schedules) {
+                schedule.EndDate__c = newStartDate.addDays(-1);
+                scheduleChanges.objectsToUpdate.add(schedule);
+            }
         }
 
         List<RecurringDonationSchedule__c> newSchedules = getNewSchedules(rd);
