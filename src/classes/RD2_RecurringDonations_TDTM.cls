@@ -228,7 +228,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         for (RecurringDonationSchedule__c oldSchedule : [
                 SELECT RecurringDonation__c, EndDate__c FROM RecurringDonationSchedule__c
                 WHERE RecurringDonation__c IN :filteredRecurringDonations.keySet()
-                AND (EndDate__c = null OR EndDate__c >= TODAY)]) {
+                AND Active__c = true]) {
             if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
                 oldSchedules.put(oldSchedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
             }
