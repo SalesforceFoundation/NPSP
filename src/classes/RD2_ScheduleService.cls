@@ -269,7 +269,7 @@ public without sharing class RD2_ScheduleService {
     * @param oldRd Trigger.old record
     * @return Boolean
     */
-    public Boolean recurringDonationScheduleUpdateNeeded(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+    public Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
 
         Boolean updateNeeded = false;
 
