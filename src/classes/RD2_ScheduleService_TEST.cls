@@ -495,7 +495,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStatusClosed()
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
+        npe03__Recurring_Donation__c changedRd = rd.clone();
         rd2.Status__c = RD2_Constants.STATUS_ACTIVE;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
