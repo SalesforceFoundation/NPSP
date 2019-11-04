@@ -7,6 +7,10 @@
         </lightning-layout-item>
     </lightning-layout>
 
+    <div if:true={showSpinner} class="spinnerContainer">
+        <lightning-spinner alternative-text={label.messageLoading} size="large"></lightning-spinner>
+    </div>
+
     <div class="slds-docked-form-footer" style="height: 50px;">
         <lightning-button label="Cancel" title="Cancel" onclick={handleCancel} class="slds-m-left_x-small"></lightning-button>
         <lightning-button variant="brand" label="Save" title="Save" onclick={handleSave} class="slds-m-left_x-small"></lightning-button>
