@@ -98,6 +98,15 @@ public class TEST_SObjectGateway {
     public class RecurringDonationScheduleGateway {
 
         /***
+        * @description Retrieves Recurring Donation Schedule records for the specified RD record
+        * @param npe03__Recurring_Donation__c Recurring donation
+        * @return List<RecurringDonationSchedule__c>
+        */
+        public List<RecurringDonationSchedule__c> getRecords(npe03__Recurring_Donation__c rd) {
+            return getRecords(new List<npe03__Recurring_Donation__c>{rd});
+        }
+
+        /***
         * @description Retrieves Recurring Donation Schedule records for the specified RD records
         * @param List<npe03__Recurring_Donation__c> Recurring donations
         * @return List<RecurringDonationSchedule__c>

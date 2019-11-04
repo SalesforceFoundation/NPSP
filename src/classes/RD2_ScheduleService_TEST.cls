@@ -759,7 +759,92 @@ private with sharing class RD2_ScheduleService_TEST {
 
     }
 
+    /***
+    * @description Verifies updated schedule is created when day of month is changed.
+    */
+    @isTest
+    private static void shouldCreateNewMonthlySchedule() {
 
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodMonthly()
+                .withDayOfMonth('20')
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.getNewSchedules(rd);
+        rd.Day_of_Month__c = '21';
+
+        TDTM_Runnable.DMLWrapper changes = service.getUpdatedSchedules(rd, schedules);
+        System.assertEquals(Date.newInstance(2018,3,16), changes.objectsToUpdate[0].get('EndDate__c'), 'End Date should be set to 3/16/2018.');
+        System.assertEquals('21', changes.objectsToInsert[0].get('DayOfMonth__c'), 'Day of month should be set to 21.');
+
+    }
+
+    /***
+    * @description Verifies schedule is ended when RD is closed.
+    */
+    @isTest
+    private static void shouldInactivateCurrentSchedule() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodMonthly()
+                .withDayOfMonth('20')
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.getNewSchedules(rd);
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+
+        TDTM_Runnable.DMLWrapper changes = service.getUpdatedSchedules(rd, schedules);
+        System.assertEquals(Date.today().addDays(-1), changes.objectsToUpdate[0].get('EndDate__c'), 'End Date should be set to yesterday.');
+        System.assertEquals(0, changes.objectsToInsert.size(), 'There should be no objects to insert.');
+
+    }
+
+    /***
+    * @description Verifies new weekly schedule is created on change from 1st and 15th
+    */
+    @isTest
+    private static void shouldChangeFromFirstAndFifteenthToWeekly() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.getNewSchedules(rd);
+        rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_WEEKLY;
+
+        TDTM_Runnable.DMLWrapper changes = service.getUpdatedSchedules(rd, schedules);
+        System.assertEquals(Date.newInstance(2018,3,16), changes.objectsToUpdate[0].get('EndDate__c'), 'End Date should be set to 3/16/2018.');
+        System.assertEquals(Date.newInstance(2018,3,16), changes.objectsToUpdate[1].get('EndDate__c'), 'End Date should be set to 3/16/2018.');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_WEEKLY, changes.objectsToInsert[0].get('InstallmentPeriod__c'), 'Installment period should be set to weekly.');
+
+    }
 
     //// Helpers
 

@@ -205,29 +205,36 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         Contact contact = getContact();
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                .withContact(contact.Id)
-                .withAmount(10)
-                .withInstallmentPeriodMonthly()
-                .withInstallmentFrequency(1)
-                .withDayOfMonth('20')
-                .withDateEstablished(Date.newInstance(2019, 9, 15))
-                .withStartDate(Date.newInstance(2019, 9, 15))
-                .build()
-        };
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(contact.Id)
+            .withAmount(10)
+            .withInstallmentPeriodMonthly()
+            .withInstallmentFrequency(1)
+            .withDayOfMonth('20')
+            .withDateEstablished(Date.newInstance(2019, 9, 15))
+            .withStartDate(Date.newInstance(2019, 9, 15))
+            .build();
 
         Test.startTest();
-        insert rds;
-        rds[0].InstallmentFrequency__c = 3;
-        update rds;
+        insert rd;
+        rd.InstallmentFrequency__c = 3;
+        update rd;
         Test.stopTest();
 
-        Map<Id, npe03__Recurring_Donation__c> actualRdById = new Map<Id, npe03__Recurring_Donation__c>(rdGateway.getRecords(rds));
-        System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
+        Integer endedCount = 0;
+        Integer frequency3Count = 0;
+        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
 
-        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rds);
-        System.assertEquals(rds.size()+1, rdSchedules.size(), 'Number of RD schedule records should be one greater than the number of RD records');
+        for (RecurringDonationSchedule__c schedule: rdSchedules) {
+            if (schedule.EndDate__c != null) {
+                endedCount++;
+                System.assertEquals(1, schedule.InstallmentFrequency__c, 'Installment frequency should be 1');
+            } else {
+                System.assertEquals(3, schedule.InstallmentFrequency__c, 'Installment frequency should be 3');
+            }
+        }
+        System.assertEquals(1, endedCount, 'End Date should be populated in 1 record');
+        System.assertEquals(2, rdSchedules.size(), 'Number of RD schedule records should be 2');
 
     }
 

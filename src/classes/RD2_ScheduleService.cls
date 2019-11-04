@@ -103,7 +103,11 @@ public without sharing class RD2_ScheduleService {
 
         if (schedules != null) {
             for (RecurringDonationSchedule__c schedule : schedules) {
-                schedule.EndDate__c = newStartDate.addDays(-1);
+                if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+                    schedule.EndDate__c = newStartDate.addDays(-1);
+                } else {
+                    schedule.EndDate__c = currentDate.addDays(-1);
+                }
                 scheduleChanges.objectsToUpdate.add(schedule);
             }
         }
