@@ -390,7 +390,7 @@ public with sharing class RD2_EnablementService_TEST {
     }
 
     /***
-    * @description Stubs enhanced Recurring Donations as not enabled
+    * @description Disable the Enhanced Recurring Donations trigger in TDTM
     * @return none
     */
     private static void disableRD2Trigger() {
