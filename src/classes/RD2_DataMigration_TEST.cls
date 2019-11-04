@@ -512,6 +512,78 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
+     * @description Verifies Day of Month is set based on the NextPaymentDate
+     */
+    @IsTest
+    private static void shouldSetDayOfMonthUsingNextPaymentDate() {
+        List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
+        TEST_RecurringDonationBuilder rdBuilder = getLegacyRecurringDonationBuilder();
+
+        for (Integer i = 1; i <= 31; i++) {
+            Boolean useLastDayOfMonth = i == 28;
+
+            convertedRDs.add(new RD2_DataMigrationMapper(
+                rdBuilder
+                    .withNextPaymentDate(Date.newInstance(2019, 10, i))
+                    .withDateEstablished(null)
+                    .withDayOfMonth(null)
+                    .build()
+                ).convertToEnhancedRD()
+            );
+        }
+
+        for (npe03__Recurring_Donation__c convertedRD : convertedRDs) {
+            System.assertNotEquals(null, convertedRD.Day_of_Month__c, 'Day of Month should not be null');
+
+            Integer dayOfMonth = convertedRD.npe03__Next_Payment_Date__c.day();
+            if (dayOfMonth < 29) {
+                System.assertEquals(dayOfMonth, Integer.valueOf(convertedRD.Day_of_Month__c),
+                    'Day of Month should match the Next Payment Date day when less than 29: '
+                        + JSON.serialize(convertedRD));
+            } else {
+                System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, convertedRD.Day_of_Month__c,
+                    'Day of Month should be Last Day');
+            }
+        }
+    }
+
+    /**
+     * @description Verifies Day of Month is set based on the DateEstablished
+     */
+    @IsTest
+    private static void shouldSetDayOfMonthUsingDateEstablished() {
+        List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
+        TEST_RecurringDonationBuilder rdBuilder = getLegacyRecurringDonationBuilder();
+
+        for (Integer i = 1; i <= 31; i++) {
+            Boolean useLastDayOfMonth = i == 28;
+
+            convertedRDs.add(new RD2_DataMigrationMapper(
+                rdBuilder
+                    .withDateEstablished(Date.newInstance(2019, 10, i))
+                    .withNextPaymentDate(null)
+                    .withDayOfMonth(null)
+                    .build()
+                ).convertToEnhancedRD()
+            );
+        }
+
+        for (npe03__Recurring_Donation__c convertedRD : convertedRDs) {
+            System.assertNotEquals(null, convertedRD.Day_of_Month__c, 'Day of Month should not be null');
+
+            Integer dayOfMonth = convertedRD.npe03__Date_Established__c.day();
+            if (dayOfMonth < 29) {
+                System.assertEquals(dayOfMonth, Integer.valueOf(convertedRD.Day_of_Month__c),
+                    'Day of Month should match the Date Established day when less than 29: '
+                        + JSON.serialize(convertedRD));
+            } else {
+                System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, convertedRD.Day_of_Month__c,
+                    'Day of Month should be Last Day');
+            }
+        }
+    }
+
+    /**
      * @description Verifies Status field is set to Active when Open Ended Status is not Closed
      */
     @IsTest
