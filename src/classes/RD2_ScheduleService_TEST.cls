@@ -496,12 +496,12 @@ private with sharing class RD2_ScheduleService_TEST {
                 .build();
 
         npe03__Recurring_Donation__c changedRd = rd.clone();
-        rd2.Status__c = RD2_Constants.STATUS_ACTIVE;
+        changedRd.Status__c = RD2_Constants.STATUS_ACTIVE;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changedRd, rd);
 
-        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
+        System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
     }
 
@@ -523,13 +523,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
-        rd2.StartDate__c = Date.today();
+        npe03__Recurring_Donation__c changeRd = rd.clone();
+        changeRd.StartDate__c = Date.today();
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
-        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
+        System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
     }
 
@@ -551,13 +551,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
-        rd2.npe03__Amount__c = 200;
+        npe03__Recurring_Donation__c changeRd = rd.clone();
+        changeRd.npe03__Amount__c = 200;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
-        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
+        System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
     }
 
@@ -581,13 +581,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
-        rd2.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_DAILY;
+        npe03__Recurring_Donation__c changeRd = rd.clone();
+        changeRd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_DAILY;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
-        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
+        System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
     }
 
@@ -609,13 +609,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
-        rd2.Day_of_Month__c = '23';
+        npe03__Recurring_Donation__c changeRd = rd.clone();
+        changeRd.Day_of_Month__c = '23';
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
-        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
+        System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
     }
 
@@ -637,13 +637,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
-        rd2.InstallmentFrequency__c = 5;
+        npe03__Recurring_Donation__c changeRd = rd.clone();
+        changeRd.InstallmentFrequency__c = 5;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
-        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
+        System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
     }
 
@@ -665,13 +665,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
-        rd2.PaymentMethod__c = 'Credit Card';
+        npe03__Recurring_Donation__c changeRd = rd.clone();
+        changeRd.PaymentMethod__c = 'Credit Card';
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
-        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
+        System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
     }
 
@@ -693,13 +693,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
-        rd2.npe03__Recurring_Donation_Campaign__c = UTIL_UnitTestData_TEST.mockId(Campaign.getSObjectType());
+        npe03__Recurring_Donation__c changeRd = rd.clone();
+        changeRd.npe03__Recurring_Donation_Campaign__c = UTIL_UnitTestData_TEST.mockId(Campaign.getSObjectType());
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
-        System.assertEquals(true, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return true.');
+        System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
     }
 
@@ -721,13 +721,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
-        rd2.npe03__Contact__c = UTIL_UnitTestData_TEST.mockId(Contact.getSObjectType());
+        npe03__Recurring_Donation__c changeRd = rd.clone();
+        changeRd.npe03__Contact__c = UTIL_UnitTestData_TEST.mockId(Contact.getSObjectType());
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
-        System.assertEquals(false, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return false.');
+        System.assertEquals(false, updateNeeded, 'isScheduleUpdateNeeded should return false.');
 
     }
 
@@ -735,7 +735,7 @@ private with sharing class RD2_ScheduleService_TEST {
     * @description Verifies update is NOT needed when status on updated recurring donation is closed.
     */
     @isTest
-    private static void shouldDetermineNoUpdateNeededWhenStatusClosed() {
+    private static void shouldDetermineNoUpdateNeededWhenStatusLapsed() {
 
         npe03__Recurring_Donation__c rd =
             TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -749,13 +749,13 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        npe03__Recurring_Donation__c rd2 = rd.clone();
-        rd2.Status__c = RD2_Constants.STATUS_CLOSED;
+        npe03__Recurring_Donation__c changeRd = rd.clone();
+        changeRd.Status__c = RD2_Constants.STATUS_LAPSED;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.recurringDonationScheduleUpdateNeeded(rd2, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
-        System.assertEquals(false, updateNeeded, 'recurringDonationScheduleUpdateNeeded should return false.');
+        System.assertEquals(false, updateNeeded, 'isScheduleUpdateNeeded should return false.');
 
     }
 
