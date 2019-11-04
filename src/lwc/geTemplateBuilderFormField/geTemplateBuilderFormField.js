@@ -13,35 +13,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
         this.field = field;
     }
 
-    get fieldName() {
-        if (this.field.elementType === 'widget') {
-            return this.field.componentName;
-        }
-
-        if (this.field.dataImportFieldMappingDevNames && this.field.dataImportFieldMappingDevNames[0]) {
-            return this.field.dataImportFieldMappingDevNames[0];
-        }
-
-        // TODO: Not needed? Delete later
-        if (this.field.apiName) {
-            return this.field.apiName;
-        }
-
-        return null;
-    }
-
-    get fieldMapping() {
-        return TemplateBuilderService.fieldMappingByDevName[this.fieldName] ? TemplateBuilderService.fieldMappingByDevName[this.fieldName] : null;
-    }
-
-    get targetFieldApiName() {
-        return this.fieldMapping.Target_Field_API_Name ? this.fieldMapping.Target_Field_API_Name : null;
-    }
-
-    get objectApiName() {
-        return this.fieldMapping.Target_Object_API_Name ? this.fieldMapping.Target_Object_API_Name : null;
-    }
-
     wiredAdapterArgs;
 
     renderedCallback() {
@@ -63,7 +34,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
                 field.picklistOptions = picklistOptions;
                 this.field = field;
                 let detail = {
-                    fieldName: this.fieldName,
+                    fieldName: this.name,
                     property: 'picklistOptions',
                     value: picklistOptions
                 }
@@ -71,6 +42,36 @@ export default class geTemplateBuilderFormField extends LightningElement {
                 dispatch(this, 'updateformfield', detail);
             }
         }
+    }
+
+    get name() {
+        if (this.field.elementType === 'widget') {
+            return this.field.componentName;
+        }
+
+        // Used for field mappings
+        if (this.field.dataImportFieldMappingDevNames && this.field.dataImportFieldMappingDevNames[0]) {
+            return this.field.dataImportFieldMappingDevNames[0];
+        }
+
+        // Used for standard/custom fields (i.e. DataImportBatch__c fields)
+        if (this.field.apiName) {
+            return this.field.apiName;
+        }
+
+        return null;
+    }
+
+    get fieldMapping() {
+        return TemplateBuilderService.fieldMappingByDevName[this.name] ? TemplateBuilderService.fieldMappingByDevName[this.name] : null;
+    }
+
+    get targetFieldApiName() {
+        return this.fieldMapping.Target_Field_API_Name ? this.fieldMapping.Target_Field_API_Name : null;
+    }
+
+    get objectApiName() {
+        return this.fieldMapping.Target_Object_API_Name ? this.fieldMapping.Target_Object_API_Name : null;
     }
 
     get isRequired() {
@@ -81,7 +82,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return (this.field.isRequiredFieldDisabled === false || !this.field.isRequiredFieldDisabled) ? true : false;
     }
 
-    // TODO: Update from dataType to elementType
     get isWidget() {
         return this.field.elementType === 'widget' ? true : false;
     }
@@ -155,7 +155,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     handleOnChangeRequiredField(event) {
         this.stopPropagation(event);
         let detail = {
-            fieldName: this.fieldName,
+            fieldName: this.name,
             property: 'required',
             value: event.target.checked
         }
@@ -171,7 +171,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleChangeCombobox(event) {
         let detail = {
-            fieldName: this.fieldName,
+            fieldName: this.name,
             property: 'defaultValue',
             value: event.target.value
         }
@@ -196,7 +196,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         }
 
         let detail = {
-            fieldName: this.fieldName,
+            fieldName: this.name,
             property: 'defaultValue',
             value: value
         }
@@ -212,7 +212,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleOnBlurCustomLabel(event) {
         let detail = {
-            fieldName: this.fieldName,
+            fieldName: this.name,
             property: 'customLabel',
             value: event.target.value
         }
@@ -227,7 +227,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleFormFieldDelete(event) {
         this.stopPropagation(event);
-        let detail = {id: this.field.id, fieldName: this.fieldName};
+        let detail = {id: this.field.id, fieldName: this.name};
         dispatch(this, 'deleteformfield', detail);
     }
 
@@ -239,7 +239,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleFormFieldUp(event) {
         this.stopPropagation(event);
-        dispatch(this, 'formfieldup', this.fieldName);
+        dispatch(this, 'formfieldup', this.name);
     }
 
     /*******************************************************************************
@@ -250,7 +250,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleFormFieldDown(event) {
         this.stopPropagation(event);
-        dispatch(this, 'formfielddown', this.fieldName);
+        dispatch(this, 'formfielddown', this.name);
     }
 
     /*******************************************************************************
@@ -279,7 +279,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         field.displayRule = undefined;
         field.validationRule = undefined;
         field.customLabel = customLabel;
-        field.dataImportFieldMappingDevNames = [this.fieldName];
+        field.dataImportFieldMappingDevNames = [this.name];
 
         return field;
     }

@@ -50,7 +50,6 @@ public with sharing class FORM_Element {
     @AuraEnabled public String sectionId;
     @AuraEnabled public String defaultValue;
     @AuraEnabled public String dataType;
-    @AuraEnabled public List<Map<String, String>> picklistOptions;
 
     //Constructor for form field
     public FORM_Element(String elementType,
