@@ -212,7 +212,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     private void synchronizeSchedulesAfterRDUpdate(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
 
-        Map<Id, npe03__Recurring_Donation__c> mapOldRecurringDonationsByIds = new Map<Id, npe03__Recurring_Donation__c>();
+        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>();
         mapOldRecurringDonationsByIds.putAll(oldRds);
 
         Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = new Map<Id, npe03__Recurring_Donation__c>();
