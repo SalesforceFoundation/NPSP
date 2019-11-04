@@ -1,8 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
-//import getFieldMappingSets from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingSetNames';
-import getFieldAndObjectMappingsByFieldMappingSetName
-    from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldAndObjectMappingsByFieldMappingSetName';
 import { findIndexByProperty, mutable, generateId, dispatch } from 'c/utilTemplateBuilder';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 
 export default class geTemplateBuilderSelectFields extends LightningElement {
     @track isLoading = true;
@@ -44,7 +42,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     }
 
     init = async () => {
-        this.objectMappings = await this.handleGetFieldAndObjectMappings(this.selectedFieldMappingSet);
+        this.objectMappings = await this.buildObjectMappingsList();
         this.addInWidgetsPlaceholder();
         this.handleSortFieldMappings();
         this.loadObjectAndFieldMappingSets();
@@ -52,11 +50,26 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Intermediary async method for getting the object and field mappings
-    * based on the selected field mapping set.
+    * @description Intermediary async method for pulling the object and field mappings
+    * stored in the TemplateBuilderService component and build an iterable list for
+    * the UI.
     */
-    handleGetFieldAndObjectMappings = async (selectedFieldMappingSet) => {
-        return getFieldAndObjectMappingsByFieldMappingSetName({ fieldMappingSetName: selectedFieldMappingSet });
+    buildObjectMappingsList = async () => {
+        let objectMappings = [];
+        for (const objMappingDevName in TemplateBuilderService.fieldMappingsByObjMappingDevName) {
+            if (TemplateBuilderService.fieldMappingsByObjMappingDevName[objMappingDevName]) {
+
+                let fieldMappings = TemplateBuilderService.fieldMappingsByObjMappingDevName[objMappingDevName];
+                let objectMapping = {
+                    ...TemplateBuilderService.objectMappingByDevName[objMappingDevName],
+                    Field_Mappings: fieldMappings
+                }
+
+                objectMappings.push(objectMapping)
+            }
+        }
+
+        return objectMappings;
     }
 
     /*******************************************************************************

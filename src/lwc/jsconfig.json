@@ -76,6 +76,9 @@
             ],
             "c/geTemplateBuilderSelectFields": [
                 "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
+            ],
+            "c/geTemplateBuilderService": [
+                "geTemplateBuilderService/geTemplateBuilderService.js"
             ]
         },
         "experimentalDecorators": true

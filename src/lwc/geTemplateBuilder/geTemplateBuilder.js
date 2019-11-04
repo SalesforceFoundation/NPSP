@@ -3,6 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import storeFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.storeFormTemplate';
 import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormTemplate';
 import getFieldMappingMethod from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingMethod';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { mutable, findIndexByProperty, shiftToIndex, dispatch, getQueryParameters, handleError } from 'c/utilTemplateBuilder';
 
 const FORMAT_VERSION = '1.0';
@@ -50,7 +51,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     connectedCallback() {
-        console.log('connectedCallback');
         this.init();
     }
 
@@ -63,6 +63,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.isLoading = false;
 
             } else if (fieldMappingMethod === ADVANCED_MAPPING) {
+                await TemplateBuilderService.init('Migated_Custom_Field_Mapping_Set');
+
                 // Check if there's a record id in the url
                 this.formTemplateRecordId = getQueryParameters().c__recordId;
 
@@ -465,23 +467,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     handleGoToTab(event) {
         this.activeTab = event.target.getAttribute('data-tab-value');
-
-        // TODO: Explore writing to global step on every tab change
-        const tabInfo = this.template.querySelector('c-ge-template-builder-template-info').getTabData();
-        if (tabInfo) {
-            this.formTemplate.name = tabInfo.name;
-            this.formTemplate.description = tabInfo.description;
-        }
-
-        const batchHeaderFields = this.template.querySelector('c-ge-template-builder-batch-header').getTabData();
-        if (batchHeaderFields) {
-            this.batchHeaderFields = batchHeaderFields;
-        }
-
-        const formLayout = this.template.querySelector('c-ge-template-builder-select-fields').getTabData();
-        if (formLayout) {
-            this.formTemplate.layout = formLayout;
-        }
     }
 
     /*******************************************************************************

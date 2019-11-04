@@ -132,40 +132,33 @@ public with sharing class GE_TemplateBuilderCtrl {
     }
 
     /*******************************************************************************************************
-    * @description Method that retrieves all Field Mapping Sets in an org. Used in the Gift Fields tab's
-    * Field Mapping Sets combobox in the Form Template Builder. Field Mapping Set selection determines
-    * which Object Groups and Field Mappings are available to the Form Builder.
-    */
-    @AuraEnabled(cacheable=true)
-    public static Data_Import_Field_Mapping_Set__mdt[] getFieldMappingSetNames() {
-        return [SELECT Id, DeveloperName, MasterLabel FROM Data_Import_Field_Mapping_Set__mdt];
-    }
-
-    /*******************************************************************************************************
-    * @description Method collects object mappings and field mappings using BDI_MappingServiceAdvanced
-    * based on a field mapping set developer name. Creates ObjectMappingWrappers and CheckboxWrappers out
-    * of the object mapping and field mappings respectively. These wrappers are easier to use in the UI. No
-    * need to worry about namespaces in the fields.
-    */
-    @AuraEnabled
-    public static BDI_ObjectMapping[] getFieldAndObjectMappingsByFieldMappingSetName(String fieldMappingSetName) {
-        bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(fieldMappingSetName);
-        BDI_ObjectMapping[] objectMappings = new BDI_ObjectMapping[]{};
-
-        for (BDI_ObjectMapping objectMapping : bdiMSAdv.objectMappingByDevName.values()) {
-            objectMapping.Field_Mappings =
-                bdiMSAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
-            objectMappings.add(objectMapping);
-        }
-
-        return objectMappings;
-    }
-
-    /*******************************************************************************************************
     * @description Returns the currently active field mapping method
     */
     @AuraEnabled
     public static string getFieldMappingMethod() {
         return UTIL_CustomSettingsFacade.getDataImportSettings().Field_Mapping_Method__c;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns an instance of the Maps wrapper class that contains the various field and
+    * object maps from BDI_MappingServiceAdvanced.
+    */
+    @AuraEnabled
+    public static Maps getMappingService(String fieldMappingSetName) {
+        Maps maps = new Maps();
+        if (bdiMSAdv == null) {
+            bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(fieldMappingSetName);
+        }
+        maps.objectMappingByDevName = bdiMSAdv.objectMappingByDevName;
+        maps.fieldMappingByDevName = bdiMSAdv.fieldMappingByDevName;
+        maps.fieldMappingsByObjMappingDevName = bdiMSAdv.fieldMappingsByObjMappingDevName;
+
+        return maps;
+    }
+
+    public class Maps {
+        @AuraEnabled public Map<String,BDI_ObjectMapping> objectMappingByDevName = new Map<String,BDI_ObjectMapping>();
+        @AuraEnabled public Map<String,BDI_FieldMapping> fieldMappingByDevName = new Map<String,BDI_FieldMapping>();
+        @AuraEnabled public Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingDevName = new Map<String,BDI_FieldMapping[]>();
     }
 }
