@@ -63,7 +63,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.isLoading = false;
 
             } else if (fieldMappingMethod === ADVANCED_MAPPING) {
-                await TemplateBuilderService.init('Migated_Custom_Field_Mapping_Set');
+                await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
 
                 // Check if there's a record id in the url
                 this.formTemplateRecordId = getQueryParameters().c__recordId;

@@ -3039,11 +3039,10 @@
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
-        <members>geTemplateBuilderFormLayout</members>
         <members>geTemplateBuilderFormSection</members>
-        <members>geTemplateBuilderGiftFields</members>
         <members>geTemplateBuilderSectionModalBody</members>
         <members>geTemplateBuilderSelectFields</members>
+        <members>geTemplateBuilderService</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>geTemplates</members>
         <members>pubsubNoPageRef</members>
