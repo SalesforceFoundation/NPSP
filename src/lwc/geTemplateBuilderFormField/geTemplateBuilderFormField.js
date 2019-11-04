@@ -212,10 +212,8 @@ export default class geTemplateBuilderFormField extends LightningElement {
     * @param {object} event: Event object from lightning-button-icon onclick event handler
     */
     handleFormFieldDelete(event) {
-        console.log('handleFormFieldDelete');
         this.stopPropagation(event);
-        const detail = {id: this.field.id, fieldName: this.fieldName};
-        console.log('OUTPUT : ',detail);
+        let detail = {id: this.field.id, fieldName: this.fieldName};
         dispatch(this, 'deleteformfield', detail);
     }
 
