@@ -48,10 +48,11 @@ public with sharing class RD2_EnablementService_TEST {
 
     /****
     * @description Verifies a new Opportunity is created on Recurring Donations insert
-    * when enhanced Recurring Donations are not enabled
+    * when Enhanced Recurring Donations are not enabled and that no RD Schedule Records are
+    * created which ensures that the RD2 trigger is not executing.
     */
     @isTest
-    private static void shouldCreateNewOppOnInsertWhenEnhancementIsNotEnabledWhenRD2TriggerIsDisabled() {
+    private static void shouldCreateNewOppOnInsertWhenEnhancementIsNotEnabled() {
         setRecurringDonations2Disabled();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
@@ -59,14 +60,15 @@ public with sharing class RD2_EnablementService_TEST {
             .withAmount(100)
             .build();
 
-        disableRD2Trigger();
-
         Test.startTest();
         insert rd;
         Test.stopTest();
 
         List<Opportunity> opps = getOpportunities(rd.Id);
         System.assertEquals(1, opps.size(), 'An Opp should be created on RD insert: ' + opps);
+
+        System.assertEquals(0, [SELECT Count() FROM RecurringDonationSchedule__c],
+            'There should be no RD Schedule Records Created');
     }
 
     /****
@@ -75,7 +77,7 @@ public with sharing class RD2_EnablementService_TEST {
     * This verifies that RD2 functionality is isolated from RD1 functionality.
     */
     @isTest
-    private static void shouldNotCreateNewOppOnInsertWhenEnhancementIsEnabledIfRD2TriggerIsDisabled() {
+    private static void shouldNotCreateNewOppOnInsertIfRD2TriggerIsDisabledWhenEnhancedRDIsEnabled() {
         setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
