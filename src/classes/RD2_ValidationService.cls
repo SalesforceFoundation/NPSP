@@ -54,7 +54,7 @@ public with sharing class RD2_ValidationService {
         accountIds.remove(null);
         contactIds.remove(null);
 
-        Map<id,Account> accountsById = new Map<Id,Account>([
+        Map<Id,Account> accountsById = new Map<Id,Account>([
             SELECT Id, npe01__SYSTEMIsIndividual__c,
             (
                 SELECT Id
@@ -107,5 +107,3 @@ public with sharing class RD2_ValidationService {
     }
 
 }
-
-

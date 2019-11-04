@@ -85,14 +85,28 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
         }
+        if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.RD)) {
+            return null;
+        }
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+        }
 
         autogenerateNames(rds, oldRds, triggerAction);
         validate(rds, triggerAction);
+        handleRDSchedules(rds, oldRds, triggerAction);
+
+        // Insert/Update any pending RecurringDonationSchedule records before the
+        // evaluation service is called so that the full schedule is available to the
+        // service to determine what Opportunities to insert or modify
+        TDTM_TriggerHandler.processDML(dmlActions);
+        dmlActions = null;
+
+        evaluateRelatedOpportunities(rds, oldRds, triggerAction);
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
-        handleRDSchedules(rds, oldRds, triggerAction);
-
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return dmlActions;
     }
 
@@ -122,6 +136,33 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
            new RD2_ValidationService().validate(rds);
 
+        }
+    }
+
+    /***
+    * @description Determine if Installment Opportunities need to be created or updated (asynchronously)
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    public void evaluateRelatedOpportunities(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
+
+        Set<Id> rdIdsToProcess = new Set<Id>();
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            rdIdsToProcess = new Map<Id, npe03__Recurring_Donation__c>(rds).keySet();
+
+        } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            rdIdsToProcess = getChangedRecurringDonationsForOppEvaluation(rds, oldRds);
+        }
+
+        if (!rdIdsToProcess.isEmpty()) {
+            RD2_QueueableService.EvaluateInstallmentOpportunities evalSvc
+                = new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIdsToProcess);
+            if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+                System.enqueueJob(evalSvc);
+            } else {
+                evalSvc.executeOppEvaluationService();
+            }
         }
     }
 
@@ -181,6 +222,44 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
     }
 
+
+    /**
+     * @description Get the Id's of recurring donations that need to have their related Opportunities
+     * re-evaluated after a change to a key schedule/opp field on the recurring donation record
+     * @param rds New RDs
+     * @param oldRds Old RDs
+     * @return Set<Id> Id's of Recurring Donation records that have had a key opp related field changed
+     */
+    private Set<Id> getChangedRecurringDonationsForOppEvaluation(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
+
+        Set<Id> changedRds = new Set<Id>();
+        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (hasKeyRdFieldChanged(rd, oldRdsById.get(rd.Id))) {
+                changedRds .add(rd.Id);
+            }
+        }
+
+        return changedRds;
+    }
+
+    /**
+     * @description Returns true if any of the key fields used to create or manage installment
+     * opportunities has been changed.
+     * @param newRd
+     * @param oldRd
+     * @return True or False
+     */
+    private Boolean hasKeyRdFieldChanged(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
+        return (newRd.npe03__Contact__c != oldRd.npe03__Contact__c ||
+            newRd.npe03__Organization__c != oldRd.npe03__Organization__c ||
+            newRd.npe03__Amount__c != oldRd.npe03__Amount__c ||
+            newRd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+            newRd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
+            newRd.StartDate__c != oldRd.StartDate__c ||
+            newRd.Day_of_Month__c != oldRd.Day_of_Month__c ||
+            newRd.Status__c != oldRd.Status__c);
+    }
     /***
     * @description Handles setting next donation date for updated recurring donations
     * @param rds Trigger.new records

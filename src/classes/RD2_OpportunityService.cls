@@ -36,7 +36,7 @@
 */
 public with sharing class RD2_OpportunityService {
 
-    npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+    private static npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
     /***
     * @description return the oppStageName from the custom settings rdsettings if it exists or
@@ -52,11 +52,16 @@ public with sharing class RD2_OpportunityService {
             return oppStageName;
         } set;
     }
+
     /***
     * @description inserts one or more Opportunity records for a specified set of Recurring Donations
     * @param rdsWithCloseDates the Map of Recurring Donations with close dates
     */
     public void createInstallmentOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates) {
+
+        if (rdsWithCloseDates.isEmpty()) {
+            return;
+        }
 
         List<Opportunity> oppsToInsert;
         Set<Id> createdOppIds = new Set<Id>();
@@ -65,11 +70,11 @@ public with sharing class RD2_OpportunityService {
         List<Database.SaveResult> badSRs = new List<Database.SaveResult>();
         List<Opportunity> badOpps = new List<Opportunity>();
 
-        for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keyset()) {
+        for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keySet()) {
             rdPaymentMethods.put(r.Id,r.PaymentMethod__c);
         }
 
-        oppsToInsert = getInstallmentOpportunities(rdsWithCloseDates);
+        oppsToInsert = createOpportunitiesForRecurringDonation(rdsWithCloseDates);
 
         if (oppsToInsert.size() > 0) {
             for (Database.SaveResult s : insertOpportunities(oppsToInsert)) {
@@ -89,7 +94,7 @@ public with sharing class RD2_OpportunityService {
                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD.name());
             }
         }
-        updatePaymentRecordOnCreatedOpp(createdOppIds, rdPaymentMethods);
+        updatePaymentRecords(createdOppIds, rdPaymentMethods);
     }
 
     /***
@@ -97,13 +102,13 @@ public with sharing class RD2_OpportunityService {
     * @param rdsWithCloseDates the Map of Recurring Donations with close dates
     * @return the list of Opportunities to be created.
     */
-    private List<Opportunity> getInstallmentOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates) {
+    private List<Opportunity> createOpportunitiesForRecurringDonation(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates) {
 
         List<Opportunity> oppsToInsert = new List<Opportunity>();
 
         for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keySet()) {
             for(Integer i = 0;i< rdsWithCloseDates.get(r).size();i++) {
-                oppsToInsert.add(buildOppForRd(r, rdsWithCloseDates.get(r)[i]));
+                oppsToInsert.add(buildOpportunity(r, rdsWithCloseDates.get(r)[i]));
 
             }
           }
@@ -116,7 +121,7 @@ public with sharing class RD2_OpportunityService {
     * @param closeDate is the next donation date on the recurring donation.
     * @return the opportunity record
     */
-    private Opportunity buildOppForRd(npe03__Recurring_Donation__c rd, Date closeDate) {
+    private Opportunity buildOpportunity(npe03__Recurring_Donation__c rd, Date closeDate) {
 
         Opportunity opp = new Opportunity(
             AccountId = rd.npe03__Organization__c,
@@ -154,7 +159,7 @@ public with sharing class RD2_OpportunityService {
     * @param oppIds set of opportnity Ids
     * @param rdPaymentMethods is the map of Recurrding donation Ids with Payment method.
     */
-    private void updatePaymentRecordOnCreatedOpp(Set<Id> oppIds, Map<Id,String> rdPaymentMethods) {
+    private void updatePaymentRecords(Set<Id> oppIds, Map<Id,String> rdPaymentMethods) {
 
         List<npe01__OppPayment__c> paymentForUpdates = new List <npe01__OppPayment__c> ();
 
@@ -168,7 +173,7 @@ public with sharing class RD2_OpportunityService {
         for (npe01__OppPayment__c payment : paymentRecords) {
             String rdPaymentMethod = rdPaymentMethods.get(payment.npe01__Opportunity__r.npe03__Recurring_Donation__c);
 
-            if (String.IsBlank(rdPaymentMethod)) {
+            if (String.isBlank(rdPaymentMethod)) {
                 continue;
             }
             payment.npe01__Payment_Method__c = rdPaymentMethod;
