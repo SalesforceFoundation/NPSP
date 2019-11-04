@@ -223,6 +223,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
     }
 
+    /***
+    * @description Filters recurring donations to determine which need schedule updates
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    */
     private Map<Id, npe03__Recurring_Donation__c> getRecurringDonationsNeedingScheduleUpdates(
         List<npe03__Recurring_Donation__c> rds,
         List<npe03__Recurring_Donation__c> oldRds)
