@@ -51,13 +51,15 @@ public with sharing class RD2_EnablementService_TEST {
     * when enhanced Recurring Donations are not enabled
     */
     @isTest
-    private static void shouldCreateNewOppOnInsertWhenEnhancementIsNotEnabled() {
+    private static void shouldCreateNewOppOnInsertWhenEnhancementIsNotEnabledWhenRD2TriggerIsDisabled() {
         setRecurringDonations2Disabled();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(getContact().Id)
             .withAmount(100)
             .build();
+
+        disableRD2Trigger();
 
         Test.startTest();
         insert rd;
@@ -69,16 +71,19 @@ public with sharing class RD2_EnablementService_TEST {
 
     /****
     * @description Verifies a new Opportunity is not created on Recurring Donations insert
-    * when enhanced Recurring Donations are enabled
+    * when enhanced Recurring Donations are enabled and the RD2 Trigger has been disabled.
+    * This verifies that RD2 functionality is isolated from RD1 functionality.
     */
     @isTest
-    private static void shouldNotCreateNewOppOnInsertWhenEnhancementIsEnabled() {
+    private static void shouldNotCreateNewOppOnInsertWhenEnhancementIsEnabledIfRD2TriggerIsDisabled() {
         setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(getContact().Id)
             .withAmount(100)
             .build();
+
+        disableRD2Trigger();
 
         Test.startTest();
         insert rd;
@@ -382,6 +387,14 @@ public with sharing class RD2_EnablementService_TEST {
         RD2_EnablementService.enablementService = (RD2_EnablementService) Test.createStub(
             RD2_EnablementService.class, new Stub()
         );
+    }
+
+    /***
+    * @description Stubs enhanced Recurring Donations as not enabled
+    * @return none
+    */
+    private static void disableRD2Trigger() {
+        TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', false);
     }
 
     /***
