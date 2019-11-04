@@ -194,11 +194,36 @@ public class RD2_DataMigrationMapper {
     private void setDayOfMonth(npe03__Recurring_Donation__c rd) {
         Set<String> lastDaysOfMonth = new Set<String>{ '29', '30', '31' };
 
+        if (rd.Always_Use_Last_Day_Of_Month__c == false
+            && String.isEmpty(rd.Day_of_Month__c)
+        ) {
+            rd.Day_of_Month__c = calculateDayOfMonth(rd);
+        }
+
         if (rd.Always_Use_Last_Day_Of_Month__c == true
             || lastDaysOfMonth.contains(rd.Day_of_Month__c)
         ) {
             rd.Day_of_Month__c = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
         }
+    }
+
+    /**
+    * @description If the Day_Of_Month__c field is blank on the Recurring Donation record, use the
+    * NextPaymentDate (if there is one) or the DateEstablished to determine the DayOfMonth to
+    * start the logic with.
+    * @param rd RecurringDonation
+    * @return String representation of the DayOfMonth (1-31)
+    */
+    private String calculateDayOfMonth(npe03__Recurring_Donation__c rd) {
+
+        Date installmentDate;
+        if (rd.npe03__Next_Payment_Date__c != null) {
+            installmentDate = rd.npe03__Next_Payment_Date__c;
+        } else if (rd.npe03__Date_Established__c != null) {
+            installmentDate = rd.npe03__Date_Established__c;
+        }
+
+        return installmentDate.day().format();
     }
 
     /**
