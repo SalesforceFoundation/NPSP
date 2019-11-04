@@ -18,7 +18,7 @@
                     const modalBody = components[0];
 
                     component.find('overlayLib').showCustomModal({
-                        header: 'Edit Section',
+                        header: 'Section Settings',
                         body: modalBody,
                         showCloseButton: true,
                         cssClass: component.getName() + ' customModal',

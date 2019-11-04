@@ -1,30 +1,62 @@
 <template>
     <div class="slds-grid slds-wrap slds-p-around_small">
         <div class="slds-size_1-of-1 slds-p-bottom_small">
-            <lightning-input type="text"
-                             value={sectionBeingEdited.label}
-                             label="Section Label"
-                             data-name="customLabel">
-            </lightning-input>
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small"
+                          title="Rename Section">
+                        Rename Section
+                    </span>
+                </h3>
+                <div aria-hidden="false"
+                     class="slds-section__content">
+                    <lightning-input type="text"
+                                     value={sectionBeingEdited.label}
+                                     label="Section Label"
+                                     data-name="customLabel">
+                    </lightning-input>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-p-bottom_small">
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small"
+                          title="Delete Section">
+                        Delete Section
+                    </span>
+                </h3>
+                <div aria-hidden="false"
+                     class="slds-section__content">
+                    <p class="slds-text-body_regular">
+                        Deleting a section will also remove any fields within it.
+                        If there are any required fields in this section, they
+                        will need to be added back into another section.
+                    </p>
+                    <lightning-button label="Delete Sections and Fields"
+                                      title="Delete Sections and Fields"
+                                      variant="neutral"
+                                      alternative-text="Delete Sections and Fields"
+                                      onclick={handleDelete}>
+                    </lightning-button>
+                </div>
+            </div>
         </div>
     </div>
-    <footer class="slds-modal__footer">
-        <lightning-button-icon icon-name="utility:delete"
-                               alternative-text="Delete section"
-                               onclick={handleDelete}
-                               class="slds-m-right_small">
-        </lightning-button-icon>
-        <lightning-button label="Save"
-                          title="Modal"
-                          variant="brand"
-                          class="slds-float_right"
-                          onclick={handleSave}>
-        </lightning-button>
-        <lightning-button label="Cancel"
-                          title="Modal"
-                          variant="neutral"
-                          class="slds-float_right slds-m-right_small"
-                          onclick={handleCancel}>
-        </lightning-button>
+
+    <footer class="slds-modal__footer slds-clearfix">
+        <div class="slds-float_right">
+            <lightning-button label="Cancel"
+                              title="Modal"
+                              variant="neutral"
+                              class="slds-m-right_small"
+                              onclick={handleCancel}>
+            </lightning-button>
+            <lightning-button label="Save"
+                              title="Modal"
+                              variant="brand"
+                              onclick={handleSave}>
+            </lightning-button>
+        </div>
     </footer>
 </template>
