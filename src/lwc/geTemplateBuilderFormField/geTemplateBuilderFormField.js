@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { mutable, inputTypeByDescribeType, lightningInputTypeByDataType, showToast, dispatch } from 'c/utilTemplateBuilder';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 
 export default class geTemplateBuilderFormField extends LightningElement {
     @api isFirst;
@@ -17,15 +18,28 @@ export default class geTemplateBuilderFormField extends LightningElement {
             return this.field.componentName;
         }
 
-        if (this.field.apiName) {
-            return this.field.apiName;
-        }
-
         if (this.field.dataImportFieldMappingDevNames && this.field.dataImportFieldMappingDevNames[0]) {
             return this.field.dataImportFieldMappingDevNames[0];
         }
 
+        // TODO: Not needed? Delete later
+        if (this.field.apiName) {
+            return this.field.apiName;
+        }
+
         return null;
+    }
+
+    get fieldMapping() {
+        return TemplateBuilderService.fieldMappingByDevName[this.fieldName] ? TemplateBuilderService.fieldMappingByDevName[this.fieldName] : null;
+    }
+
+    get targetFieldApiName() {
+        return this.fieldMapping.Target_Field_API_Name ? this.fieldMapping.Target_Field_API_Name : null;
+    }
+
+    get objectApiName() {
+        return this.fieldMapping.Target_Object_API_Name ? this.fieldMapping.Target_Object_API_Name : null;
     }
 
     wiredAdapterArgs;

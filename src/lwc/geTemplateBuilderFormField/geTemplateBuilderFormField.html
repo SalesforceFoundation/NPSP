@@ -56,13 +56,12 @@
                         </template>
 
                         <template if:true={isLightningCombobox}>
-                            <lightning-combobox data-name="defaultValue"
-                                                class="slds-m-around_none"
-                                                options={field.picklistOptions}
-                                                value={field.defaultValue}
-                                                variant="label-stacked"
-                                                onchange={handleChangeCombobox}>
-                            </lightning-combobox>
+                            <c-ge-form-field-picklist field-name={targetFieldApiName}
+                                                      object-name={objectApiName}
+                                                      onchange={handleChangeCombobox}
+                                                      value={field.defaultValue}
+                                                      variant="label-stacked">
+                            </c-ge-form-field-picklist>
                         </template>
 
                         <template if:true={isLightningCheckbox}>

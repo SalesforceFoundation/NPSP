@@ -73,6 +73,9 @@
             ],
             "c/geTemplateBuilderService": [
                 "geTemplateBuilderService/geTemplateBuilderService.js"
+            ],
+            "c/geFormFieldPicklist": [
+                "geFormFieldPicklist/geFormFieldPicklist.js"
             ]
         },
         "experimentalDecorators": true
