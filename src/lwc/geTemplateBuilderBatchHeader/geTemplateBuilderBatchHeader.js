@@ -103,26 +103,6 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Public method that collects form field values from all instances
-    * of child component geTemplateBuilderFormField.
-    *
-    * @return {list} batchHeaderFields: List of utilTemplateBuiilder.BatchHeaderField
-    * instances.
-    */
-    @api
-    getTabData() {
-        const selectedBatchFieldValues = this.template.querySelectorAll('c-ge-template-builder-form-field');
-
-        let batchHeaderFields = [];
-        for (let i = 0; i < selectedBatchFieldValues.length; i++) {
-            let batchField = selectedBatchFieldValues[i].getFormFieldValues();
-            batchHeaderFields.push(batchField);
-        }
-
-        return batchHeaderFields;
-    }
-
-    /*******************************************************************************
     * @description Receives event from child component and dispatches event to
     * parent to update a batch header field's details.
     *

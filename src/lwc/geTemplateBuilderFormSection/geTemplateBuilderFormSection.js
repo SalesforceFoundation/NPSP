@@ -1,8 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
-import { mutable, dispatch } from 'c/utilTemplateBuilder';
+import { dispatch } from 'c/utilTemplateBuilder';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
-const inActiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
+const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
 
 export default class GeTemplateBuilderFormSection extends LightningElement {
     @api activeFormSectionId;
@@ -21,41 +21,11 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     }
 
     get sectionClass() {
-        return this.isActive ? activeSectionClass : inActiveSectionClass;
+        return this.isActive ? activeSectionClass : inactiveSectionClass;
     }
 
     get isEmptySection() {
         return this.formSection.elements.length === 0 ? true : false;
-    }
-
-    /*******************************************************************************
-    * @description Public method that collects the current values of all the relevant
-    * input fields for this FormSection and return an instance of FormSection.
-    *
-    * @return {object} formSection: Instance of the FormSection class
-    */
-    @api
-    getFormSectionValues() {
-        let formSection = mutable(this.formSection);
-        formSection.elements = this.getSectionFormFields();
-        return formSection;
-    }
-
-    /*******************************************************************************
-    * @description Method that collects all relevant input fields and returns a list
-    * of FormFields.
-    *
-    * @return {list} sectionFormFields: List of FormFields
-    */
-    getSectionFormFields() {
-        let sectionFormFieldComponents = this.template.querySelectorAll('c-ge-template-builder-form-field');
-        let sectionFormFields = [];
-        for (let i = 0; i < sectionFormFieldComponents.length; i++) {
-            let formField = sectionFormFieldComponents[i].getFormFieldValues();
-            sectionFormFields.push(formField);
-        }
-
-        return sectionFormFields;
     }
 
     /*******************************************************************************

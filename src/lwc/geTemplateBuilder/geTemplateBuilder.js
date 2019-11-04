@@ -393,7 +393,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
         let index = section.elements.findIndex((element) => {
-            return element.dataImportFieldMappingDevNames[0] === fieldName;
+            const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+            return name === fieldName;
         });
 
         if (index > 0) {
@@ -414,7 +415,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
         let index = section.elements.findIndex((element) => {
-            return element.dataImportFieldMappingDevNames[0] === fieldName;
+            const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+            return name === fieldName;
         });
         if (index < section.elements.length - 1) {
             section = shiftToIndex(section.elements, index, index + 1);

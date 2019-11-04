@@ -1,5 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import { mutable, inputTypeByDescribeType, lightningInputTypeByDataType, showToast, dispatch } from 'c/utilTemplateBuilder';
+import { mutable, inputTypeByDescribeType, showToast, dispatch } from 'c/utilTemplateBuilder';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 
@@ -251,36 +251,5 @@ export default class geTemplateBuilderFormField extends LightningElement {
     handleFormFieldDown(event) {
         this.stopPropagation(event);
         dispatch(this, 'formfielddown', this.name);
-    }
-
-    /*******************************************************************************
-    * @description Public method that collects the current values of all the relevant
-    * input fields for this FormField and return an instance of FormField. 
-    *
-    * @return {object} field: Instance of the FormField class
-    */
-    @api
-    getFormFieldValues() {
-        const inputType = lightningInputTypeByDataType[this.lightningInputType] ? lightningInputTypeByDataType[this.lightningInputType] : 'lightning-input';
-        const required = this.template.querySelector('lightning-input[data-name="required"]').checked;
-        const customLabel = this.template.querySelector('lightning-input[data-name="customLabel"]').value;
-        let defaultValue = this.template.querySelector(`${inputType}[data-name="defaultValue"]`).value;
-
-        // TODO: Clean up way of getting default value if checkbox
-        if (this.field.dataType && this.field.dataType.toLowerCase() === 'boolean') {
-            defaultValue = this.template.querySelector(`${inputType}[data-name="defaultValue"]`).checked;
-        }
-
-        let field = mutable(this.field);
-        field.required = required;
-        field.defaultValue = defaultValue;
-        // TODO: tbd on this prop's possible values (single/widget)
-        //field.elementType = elementType;
-        field.displayRule = undefined;
-        field.validationRule = undefined;
-        field.customLabel = customLabel;
-        field.dataImportFieldMappingDevNames = [this.name];
-
-        return field;
     }
 }

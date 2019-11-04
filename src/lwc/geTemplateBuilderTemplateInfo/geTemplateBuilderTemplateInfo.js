@@ -28,18 +28,4 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     handleChangeTemplateInfoDescription(event) {
         dispatch(this, 'changetemplateinfodescription', event.target.value);
     }
-
-    /*******************************************************************************
-    * @description Public method that returns the templateInfo object. Called when
-    * saving a form template.
-    *
-    * @return {object} templateInfo: Object containing the template name and description
-    */
-    @api
-    getTabData() {
-        return {
-            name: this.template.querySelector('lightning-input').value,
-            description: this.template.querySelector('lightning-textarea').value
-        }
-    }
 }

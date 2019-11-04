@@ -21,18 +21,6 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     objectMappingNames = [];
     @track isAllSectionsExpanded = false;
 
-    @api
-    getSections() {
-        const formSectionComponents = this.template.querySelectorAll('c-ge-template-builder-form-section');
-        let formSections = [];
-        for (let i = 0; i < formSectionComponents.length; i++) {
-            let formSection = formSectionComponents[i].getFormSectionValues();
-            formSections.push(formSection);
-        }
-
-        return formSections;
-    }
-
     toggleModal(event) {
         dispatch(this, 'togglemodal', event.detail);
     }
