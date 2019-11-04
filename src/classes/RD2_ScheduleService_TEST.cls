@@ -812,7 +812,7 @@ private with sharing class RD2_ScheduleService_TEST {
         rd.Status__c = RD2_Constants.STATUS_CLOSED;
 
         TDTM_Runnable.DMLWrapper changes = service.getUpdatedSchedules(rd, schedules);
-        System.assertEquals(Date.today().addDays(-1), changes.objectsToUpdate[0].get('EndDate__c'), 'End Date should be set to yesterday.');
+        System.assertEquals(Date.today(), changes.objectsToUpdate[0].get('EndDate__c'), 'End Date should be set to today.');
         System.assertEquals(0, changes.objectsToInsert.size(), 'There should be no objects to insert.');
 
     }

@@ -106,7 +106,7 @@ public without sharing class RD2_ScheduleService {
                 if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
                     schedule.EndDate__c = newStartDate.addDays(-1);
                 } else {
-                    schedule.EndDate__c = currentDate.addDays(-1);
+                    schedule.EndDate__c = currentDate;
                 }
                 scheduleChanges.objectsToUpdate.add(schedule);
             }
