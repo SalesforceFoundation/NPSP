@@ -12,7 +12,6 @@
         <label>Enhanced Recurring Donations</label>
     </compactLayouts>
     <fields>
-        <description>The amount for each installment Opportunity.</description>
         <fullName>npe03__Amount__c</fullName>
         <description>The amount for each installment Opportunity.</description>
         <externalId>false</externalId>
@@ -26,7 +25,6 @@
         <type>Currency</type>
     </fields>
     <fields>
-        <description>The initial inception date for this Recurring Donation. The default is the current date.</description>
         <fullName>npe03__Date_Established__c</fullName>
         <defaultValue>Today()</defaultValue>
         <description>The initial inception date for this Recurring Donation. The default is the current date.</description>
