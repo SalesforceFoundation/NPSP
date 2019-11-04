@@ -207,7 +207,7 @@ public class ALLO_AllocationsUtil {
          ********************************************************************************************************/
         @testVisible private Boolean isOpportunityWithParentAndNoAllocations(Opportunity opp) {
             List<Allocation__c> oppAllocations = this.oppsAllocations.get(opp.Id);
-            return (opp.Amount != null && opp.Amount != 0 && (opp.npe03__Recurring_Donation__c != null || opp.CampaignId != null) &&
+            return (opp.Amount != null && (opp.npe03__Recurring_Donation__c != null || opp.CampaignId != null) &&
                     (oppAllocations == null || oppAllocations.size() == 0));
         }
 
