@@ -1,6 +1,39 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
+const inputTypeByDescribeType = {
+    'address': 'text',
+    'base64': 'text',
+    'boolean': 'checkbox',
+    'combobox': 'combobox',
+    'currency': 'number',
+    'datacategorygroupreference': 'text',
+    'date': 'date',
+    'datetime': 'datetime',
+    'double': 'number',
+    'email': 'email',
+    'encryptedstring': 'password',
+    'id': 'id',
+    'integer': 'number',
+    'long': 'textarea',
+    'multipicklist': 'select',
+    'percent': 'number',
+    'phone': 'tel',
+    'picklist': 'combobox',
+    'reference': 'search',
+    'string': 'text',
+    'textarea': 'textarea',
+    'time': 'time',
+    'url': 'url',
+    'richtext': 'richtext'
+}
+
+const lightningInputTypeByDataType = {
+    'richtext': 'lightning-input-rich-text',
+    'textarea': 'lightning-textarea',
+    'combobox': 'lightning-combobox'
+}
+
 const removeByProperty = (array, property, value) => {
     const index = array.findIndex(element => element[property] === value);
     array.splice(index, 1);
@@ -152,39 +185,6 @@ const generateId = () => {
         '-' + random4() +
         '-' + random4() + random4() + random4();
 };
-
-const inputTypeByDescribeType = {
-    'address': 'text',
-    'base64': 'text',
-    'boolean': 'checkbox',
-    'combobox': 'combobox',
-    'currency': 'number',
-    'datacategorygroupreference': 'text',
-    'date': 'date',
-    'datetime': 'datetime',
-    'double': 'number',
-    'email': 'email',
-    'encryptedstring': 'password',
-    'id': 'id',
-    'integer': 'number',
-    'long': 'textarea',
-    'multipicklist': 'select',
-    'percent': 'number',
-    'phone': 'tel',
-    'picklist': 'combobox',
-    'reference': 'search',
-    'string': 'text',
-    'textarea': 'textarea',
-    'time': 'time',
-    'url': 'url',
-    'richtext': 'richtext'
-}
-
-const lightningInputTypeByDataType = {
-    'richtext': 'lightning-input-rich-text',
-    'textarea': 'lightning-textarea',
-    'combobox': 'lightning-combobox'
-}
 
 export {
     removeByProperty,
