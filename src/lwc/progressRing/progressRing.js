@@ -8,8 +8,9 @@ import textWarning from '@salesforce/label/c.AssistiveTextWarning';
 export default class ProgressRing extends LightningElement {
 
     @api ringContent = '';
+    @api ringSize;
 
-    @track ringClass = 'slds-progress-ring slds-progress-ring_large ';
+    @track ringClass;
     @track arcValue;
     @track isContentVisible = false;
     @track isComplete = false;
@@ -47,7 +48,11 @@ export default class ProgressRing extends LightningElement {
     * @param value Progress status: active, complete, warning, error, or any other value
     */
     set status(value) {
-        this.ringClass = 'slds-progress-ring slds-progress-ring_large';
+        if (this.ringSize === undefined || this.ringSize === null) {
+            this.ringSize = 'slds-progress-ring_large';
+        }
+
+        this.ringClass = 'slds-progress-ring ' + this.ringSize;
         this.isComplete = false;
         this.iconName = '';
         this.assistiveText = value;
@@ -74,7 +79,6 @@ export default class ProgressRing extends LightningElement {
                 this.assistiveText = `${textComplete}`;
                 break;
             default:
-                this.ringClass = 'slds-progress-ring slds-progress-ring_large';
         }
 
         this.isContentVisible = this.iconName === '';
