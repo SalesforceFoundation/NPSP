@@ -455,7 +455,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const { sectionId, fieldName, property, value } = event.detail;
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
-        let element = section.elements.find((e) => { return e.dataImportFieldMappingDevNames[0] === fieldName });
+        let element = section.elements.find((e) => {
+            const name = e.componentName ? e.componentName : e.dataImportFieldMappingDevNames[0];
+            return name === fieldName
+        });
 
         if (element) {
             element[property] = value;
