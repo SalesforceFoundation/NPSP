@@ -1,11 +1,13 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 
-const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'PERCENT', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
+const LIGHTNING_INPUT_TYPES = ['BOOLEAN', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'PERCENT', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
 const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
 const TEXT_AREA_TYPE = 'TEXTAREA';
+const BOOLEAN_TYPE = 'BOOLEAN';
+const CHECKBOX_TYPE = 'CHECKBOX';
 const DELAY = 300;
 
 export default class GeFormField extends LightningElement {
@@ -40,6 +42,10 @@ export default class GeFormField extends LightningElement {
     }
 
     get inputType() {
+        // the field type is boolean, not checkbox
+        if (this.fieldType === BOOLEAN_TYPE) {
+            return CHECKBOX_TYPE;
+        }
         return GeFormService.getInputTypeFromDataType(this.fieldType);
     }
 
