@@ -48,7 +48,8 @@ public with sharing class RD2_EnablementService_TEST {
 
     /****
     * @description Verifies a new Opportunity is created on Recurring Donations insert
-    * when enhanced Recurring Donations are not enabled
+    * when Enhanced Recurring Donations are not enabled and that no RD Schedule Records are
+    * created which ensures that the RD2 trigger is not executing.
     */
     @isTest
     private static void shouldCreateNewOppOnInsertWhenEnhancementIsNotEnabled() {
@@ -65,20 +66,26 @@ public with sharing class RD2_EnablementService_TEST {
 
         List<Opportunity> opps = getOpportunities(rd.Id);
         System.assertEquals(1, opps.size(), 'An Opp should be created on RD insert: ' + opps);
+
+        System.assertEquals(0, [SELECT Count() FROM RecurringDonationSchedule__c],
+            'There should be no RD Schedule Records Created');
     }
 
     /****
     * @description Verifies a new Opportunity is not created on Recurring Donations insert
-    * when enhanced Recurring Donations are enabled
+    * when enhanced Recurring Donations are enabled and the RD2 Trigger has been disabled.
+    * This verifies that RD2 functionality is isolated from RD1 functionality.
     */
     @isTest
-    private static void shouldNotCreateNewOppOnInsertWhenEnhancementIsEnabled() {
+    private static void shouldNotCreateNewOppOnInsertIfRD2TriggerIsDisabledWhenEnhancedRDIsEnabled() {
         setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(getContact().Id)
             .withAmount(100)
             .build();
+
+        disableRD2Trigger();
 
         Test.startTest();
         insert rd;
@@ -382,6 +389,14 @@ public with sharing class RD2_EnablementService_TEST {
         RD2_EnablementService.enablementService = (RD2_EnablementService) Test.createStub(
             RD2_EnablementService.class, new Stub()
         );
+    }
+
+    /***
+    * @description Disable the Enhanced Recurring Donations trigger in TDTM
+    * @return none
+    */
+    private static void disableRD2Trigger() {
+        TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', false);
     }
 
     /***

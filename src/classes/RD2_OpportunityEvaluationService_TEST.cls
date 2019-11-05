@@ -37,6 +37,8 @@
 @IsTest(IsParallel=true)
 private class RD2_OpportunityEvaluationService_TEST {
 
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+
     /****
     * @description Creates data required for unit tests
     */
@@ -64,12 +66,11 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withCalculateNextDonationDate()
             .build();
 
-        // TODO Remove this after the logic is in place to automatically calculate NextDonationDate
-        rd.npe03__Next_Payment_Date__c = Date.newInstance(2019, 9, 20);
-
         Test.startTest();
         insert rd;
         Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
 
         Opportunity opp = [SELECT Id, Amount, AccountId, Primary_Contact__c, StageName, CloseDate
             FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id];
@@ -98,12 +99,11 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withCalculateNextDonationDate()
             .build();
 
-        // TODO Remove this after the logic is in place to automatically calculate NextDonationDate
-        rd.npe03__Next_Payment_Date__c = Date.newInstance(2019, 9, 20);
-
         Test.startTest();
         insert rd;
         Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
 
         List<Opportunity> opps = [SELECT Id, Amount, AccountId, Primary_Contact__c, StageName, CloseDate
             FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id];
@@ -127,8 +127,6 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
-        // TODO Remove this after the logic is in place to automatically calculate NextDonationDate
-        rd1.npe03__Next_Payment_Date__c = Date.newInstance(2019, 9, 20);
         rd1 = mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.getNewSchedules(rd1));
 
         npe03__Recurring_Donation__c rd2 = getRecurringDonationBuilder()
@@ -139,8 +137,6 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
-        // TODO Remove this after the logic is in place to automatically calculate NextDonationDate
-        rd2.npe03__Next_Payment_Date__c = Date.newInstance(2019, 9, 15);
         rd2 = mockRecurringDonationFullQueryResult(rd2, new List<Opportunity>(), scheduleService.getNewSchedules(rd2));
 
         npe03__Recurring_Donation__c rd3 = getRecurringDonationBuilder()
@@ -151,8 +147,6 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withStartDate(Date.newInstance(2019, 6, 1))
             .withCalculateNextDonationDate()
             .build();
-        // TODO Remove this after the logic is in place to automatically calculate NextDonationDate
-        rd3.npe03__Next_Payment_Date__c = Date.newInstance(2019, 6, 1);
         rd3 = mockRecurringDonationFullQueryResult(rd3, new List<Opportunity>(), scheduleService.getNewSchedules(rd3));
 
         RD2_OpportunityEvaluationService oppEvalSvc = new RD2_OpportunityEvaluationService();
@@ -182,8 +176,6 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
-        // TODO Remove this after the logic is in place to automatically calculate NextDonationDate
-        rd1.npe03__Next_Payment_Date__c = Date.newInstance(2019, 9, 20);
         rd1 = mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.getNewSchedules(rd1));
 
         // Recurring Donation with no Schedule records
@@ -195,8 +187,6 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
-        // TODO Remove this after the logic is in place to automatically calculate NextDonationDate
-        rd2.npe03__Next_Payment_Date__c = Date.newInstance(2019, 9, 15);
         rd2 = mockRecurringDonationFullQueryResult(rd2, new List<Opportunity>(), new List<RecurringDonationSchedule__c>());
 
         // Recurring Donation with an empty NextDonationDate
@@ -238,8 +228,6 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
-        // TODO Remove this after the logic is in place to automatically calculate NextDonationDate
-        rdNew.npe03__Next_Payment_Date__c = Date.newInstance(2019, 9, 20);
         rdNew = mockRecurringDonationFullQueryResult(rdNew, new List<Opportunity>(), scheduleService.getNewSchedules(rdNew));
 
         // Old Opportunity (has related Opps) - Not New RD
@@ -251,8 +239,6 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
-        // TODO Remove this after the logic is in place to automatically calculate NextDonationDate
-        rdOld.npe03__Next_Payment_Date__c = Date.newInstance(2019, 9, 15);
 
         List<Opportunity> opps = new List<Opportunity>{
             new TEST_OpportunityBuilder()
