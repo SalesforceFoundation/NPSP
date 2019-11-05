@@ -1,5 +1,5 @@
 import { LightningElement, track, api } from 'lwc';
-import { findIndexByProperty, mutable, generateId, dispatch } from 'c/utilTemplateBuilder';
+import { findIndexByProperty, mutable, generateId, dispatch, showToast } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 
 // Import source field names for required Field Mappings
@@ -96,7 +96,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 DONATION_DATE_INFO.fieldApiName
             ];
 
-            let sectionId = this.handleAddSection('Gift Entry Form');
+            let sectionId = this.addSection('Gift Entry Form');
 
             for (let fieldMappingDevName in TemplateBuilderService.fieldMappingByDevName) {
                 if (TemplateBuilderService.fieldMappingByDevName[fieldMappingDevName]) {
@@ -104,19 +104,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                     const objectMapping = TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
 
                     if (REQUIRED_FIELDS.includes(fieldMapping.Source_Field_API_Name)) {
-                        let formField = {
-                            id: generateId(),
-                            label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
-                            required: false,
-                            sectionId: sectionId,
-                            defaultValue: null,
-                            dataType: fieldMapping.Target_Field_Data_Type,
-                            picklistOptions: fieldMapping.Target_Field_Picklist_Options,
-                            dataImportFieldMappingDevNames: [fieldMapping.DeveloperName],
-                            elementType: fieldMapping.Element_Type
-                        }
-
-                        this.handleAddFieldToSection(sectionId, formField);
+                        let formField = this.constructFormField(objectMapping, fieldMapping, sectionId);
+                        this.addFieldToSection(sectionId, formField);
                         this.catalogSelectedField(fieldMapping.DeveloperName, sectionId);
                     }
                 }
@@ -199,62 +188,101 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
 
     /*******************************************************************************
     * @description Handles onchange event of the gift fields checkboxes. Adds/removes
-    * gift fields from their respective sections.
+    * gift fields from sections.
     *
     * @param {object} event: Onchange event object from lightning-input checkbox
     */
     handleToggleFieldMapping(event) {
-        const removeField = !event.target.checked;
-        const fieldMappingDeveloperName = event.target.value;
+        const name = event.target.value;
         let sectionId = this.activeFormSectionId;
+        const isAddField = event.target.checked;
 
-        if (removeField) {
-            sectionId = this._sectionIdsByFieldMappingDeveloperNames[fieldMappingDeveloperName];
-            dispatch(this, 'removefieldfromsection', {
-                sectionId: sectionId,
-                fieldName: fieldMappingDeveloperName
-            });
-        } else {
-            if (!this.formSections || this.formSections.length === 0) {
-                sectionId = this.handleAddSection();
-            } else if (this.formSections.length === 1) {
+        if (isAddField) {
+            const hasNoSection = !this.formSections || this.formSections.length === 0;
+            const hasOneSection = this.formSections.length === 1;
+            const hasManySections = this.formSections.length > 1;
+            const hasNoActiveSection = this.activeFormSectionId === undefined;
+
+            if (hasNoSection) {
+                sectionId = this.addSection();
+            } else if (hasOneSection) {
                 sectionId = this.formSections[0].id;
                 this.activeFormSectionId = sectionId;
-            } else if (this.activeFormSectionId === undefined && this.formSections.length > 1) {
+            } else if (hasManySections && hasNoActiveSection) {
                 event.target.checked = false;
+                showToast(this, 'Please select a section', '', 'warning');
                 return;
             }
 
-            const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDeveloperName];
+            const fieldMapping = TemplateBuilderService.fieldMappingByDevName[name];
             const objectMapping = TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
 
-            let formField;
-
+            let formElement;
             if (fieldMapping.Element_Type === 'field') {
-                formField = {
-                    id: generateId(),
-                    label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
-                    required: false,
-                    sectionId: sectionId,
-                    defaultValue: null,
-                    dataType: fieldMapping.Target_Field_Data_Type,
-                    picklistOptions: fieldMapping.Target_Field_Picklist_Options,
-                    dataImportFieldMappingDevNames: [fieldMapping.DeveloperName],
-                    elementType: fieldMapping.Element_Type
-                }
+                formElement = this.constructFormField(objectMapping, fieldMapping, sectionId);
             } else if (fieldMapping.Element_Type === 'widget') {
-                formField = {
-                    id: generateId(),
-                    componentName: fieldMapping.DeveloperName,
-                    label: fieldMapping.MasterLabel,
-                    required: false,
-                    sectionId: sectionId,
-                    elementType: fieldMapping.Element_Type
-                }
+                formElement = this.constructFormWidget(fieldMapping, sectionId);
             }
 
-            this.catalogSelectedField(fieldMappingDeveloperName, sectionId);
-            this.formSections = this.handleAddFieldToSection(sectionId, formField);
+            this.catalogSelectedField(name, sectionId);
+            this.formSections = this.addFieldToSection(sectionId, formElement);
+        } else {
+            this.handleRemoveFormElement(name);
+        }
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event up notifying parent component geTemplateBuilder
+    * that an element needs to be removed with the given name and section id.
+    *
+    * @param {string} name: Name of the element to be removed, field mapping developer
+    * name or widget component name.
+    */
+    handleRemoveFormElement(name) {
+        const sectionId = this._sectionIdsByFieldMappingDeveloperNames[name];
+        dispatch(this, 'removefieldfromsection', {
+            sectionId: sectionId,
+            fieldName: name
+        });
+    }
+
+    /*******************************************************************************
+    * @description Constructs a form field object.
+    *
+    * @param {object} objectMapping: Instance of BDI_ObjectMapping wrapper class.
+    * @param {object} fieldMapping: Instance of BDI_FieldMapping wrapper class.
+    * @param {string} sectionId: Id of form section this form field will be under.
+    */
+    constructFormField(objectMapping, fieldMapping, sectionId) {
+        return {
+            id: generateId(),
+            label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
+            required: false,
+            sectionId: sectionId,
+            defaultValue: null,
+            dataType: fieldMapping.Target_Field_Data_Type,
+            picklistOptions: fieldMapping.Target_Field_Picklist_Options,
+            dataImportFieldMappingDevNames: [fieldMapping.DeveloperName],
+            elementType: fieldMapping.Element_Type
+        }
+    }
+
+    /*******************************************************************************
+    * @description Constructs a form widget object.
+    *
+    * @param {object} widget: Currently an instance of BDI_FieldMapping wrapper class
+    * made to look like a widget.
+    * @param {object} fieldMapping: Instance of BDI_FieldMapping wrapper class
+    * @param {string} sectionId: Id of form section this form field will be in.
+    */
+    constructFormWidget(widget, sectionId) {
+        return {
+            id: generateId(),
+            componentName: widget.DeveloperName,
+            label: widget.MasterLabel,
+            required: false,
+            sectionId: sectionId,
+            elementType: widget.Element_Type
         }
     }
 
@@ -263,7 +291,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * Used to later find and remove gift fields from their sections.
     *
     * @param {string} fieldMappingDeveloperName: Developer name of a Field Mapping
-    * @param {string} sectionId: Id for a FormSection
+    * @param {string} sectionId: Id of form section this form widget will be in.
     */
     catalogSelectedField(fieldMappingDeveloperName, sectionId) {
         this._sectionIdsByFieldMappingDeveloperNames[fieldMappingDeveloperName] = sectionId;
@@ -275,7 +303,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     *
     * @return {string} id: Generated id of the new section.
     */
-    handleAddSection(label) {
+    addSection(label) {
         label = typeof label === 'string' ? label : 'New Section';
         let newSection = {
             id: generateId(),
@@ -298,7 +326,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @param {string} sectionId: Id of the parent FormSection
     * @param {object} field: Instance of FormField to be added to FormSection
     */
-    handleAddFieldToSection(sectionId, field) {
+    addFieldToSection(sectionId, field) {
         const detail = {
             sectionId: sectionId,
             field: field
