@@ -34,7 +34,7 @@
 * @description Test for Create Opportunities from Recurring Donations
 *
 */
-@isTest(IsParallel=true)
+@isTest
 private with sharing class RD2_OpportunityService_TEST {
 
     private static final String AFFILIATION_OCR_ROLE_SOLICITOR = 'Solicitor';
@@ -101,12 +101,12 @@ private with sharing class RD2_OpportunityService_TEST {
         oppCreated = getOpps();
         paymentForOpps = getPaymentRecForOpps(oppCreated);
 
-        System.assertEquals(OppCreated[0].npe01__Contact_Id_For_Role__c, primaryContacts[0].id);
+        System.assertEquals(OppCreated[0].npe01__Contact_Id_for_Role__c, primaryContacts[0].id);
         System.assertEquals(OppCreated[0].Amount, rd.npe03__Amount__c);
         System.assertEquals(OppCreated[0].Primary_Contact__c, rd.npe03__Contact__c);
         System.assertEquals(OppCreated[0].Name, oppNameFormat);
-        System.assertEquals(OppCreated[0].closedate, CloseDate[0]);
-        System.assertEquals(OppCreated[0].campaignid, rd.npe03__Recurring_Donation_Campaign__c);
+        System.assertEquals(OppCreated[0].CloseDate, CloseDate[0]);
+        System.assertEquals(OppCreated[0].CampaignId, rd.npe03__Recurring_Donation_Campaign__c);
         System.assertEquals(OppCreated[0].StageName, PLEDGED_STAGENAME);
         System.assertEquals(paymentForOpps[0].npe01__Payment_Method__c, CREDITCARD);
 
@@ -160,7 +160,7 @@ private with sharing class RD2_OpportunityService_TEST {
             .withPaymentMethod(CREDITCARD)
             .withDateEstablished(Date.newInstance(2019, 11, 15))
             .withAmount(415)
-            .withCampaign(campaign.id)
+            .withCampaign(campaign.Id)
             .build();
 
         insert rd;
@@ -187,13 +187,13 @@ private with sharing class RD2_OpportunityService_TEST {
 
         System.assertEquals(OppCreated[0].Amount, rd.npe03__Amount__c);
         System.assertEquals(OppCreated[0].Name, oppNameFormat);
-        System.assertEquals(OppCreated[0].closedate, CloseDate[0]);
-        System.assertEquals(OppCreated[0].campaignid, rd.npe03__Recurring_Donation_Campaign__c);
+        System.assertEquals(OppCreated[0].CloseDate, CloseDate[0]);
+        System.assertEquals(OppCreated[0].CampaignId, rd.npe03__Recurring_Donation_Campaign__c);
         System.assertEquals(OppCreated[0].StageName, PROMISED_STAGENAME);
         System.assertEquals(paymentForOpps[0].npe01__Payment_Method__c, CREDITCARD);
         System.assertEquals(OppCreated[0].Id, ocr.OpportunityId, 'OCR Opportunity should match: ' + ocr);
         System.assertEquals(AFFILIATION_OCR_ROLE_SOLICITOR, ocr.Role, 'OCR Contact Role should match: ' + ocr);
-        System.assertEquals(OppCreated[0].closedate, CloseDate[0]);
+        System.assertEquals(OppCreated[0].CloseDate, CloseDate[0]);
 
     }
 
@@ -217,7 +217,7 @@ private with sharing class RD2_OpportunityService_TEST {
     */
     private static List<OpportunityContactRole> getOppContactRoles(Set<Id> oppIds) {
         return [
-            SELECT OpportunityId, Opportunity.AccountId, ContactId, Contact.Name, isPrimary, Role
+            SELECT OpportunityId, Opportunity.AccountId, ContactId, Contact.Name, IsPrimary, Role
             FROM OpportunityContactRole
             WHERE OpportunityId IN :oppIds
         ];
@@ -256,10 +256,10 @@ private with sharing class RD2_OpportunityService_TEST {
     */
     private static List<Opportunity> getOpps() {
         return [
-            SELECT id, name, npe03__Recurring_Donation__c, amount, campaignid, StageName,
-            closedate, accountid, npe01__Contact_Id_For_Role__c, Primary_Contact__c
+            SELECT Id, Name, npe03__Recurring_Donation__c, Amount, CampaignId, StageName,
+            CloseDate, AccountId, npe01__Contact_Id_for_Role__c, Primary_Contact__c
             FROM Opportunity
-            WHERE createddate = Today and campaignid != null
+            WHERE CreatedDate = Today AND CampaignId != null
         ];
     }
 

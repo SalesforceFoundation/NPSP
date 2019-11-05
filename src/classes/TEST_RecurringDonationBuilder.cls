@@ -509,8 +509,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         if (calculateNextDonationDate) {
             RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-            // TODO Uncomment this after the method has been merged
-            // rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate();
+             rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
         }
 
         return rd;

@@ -6,14 +6,13 @@
         var action = component.get("c.loadState");
 
         action.setCallback(this, function (response) {
-            let state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === "SUCCESS") {
-                var enablementState = JSON.parse(response.getReturnValue());
+                const enablementState = JSON.parse(response.getReturnValue());
 
                 if (!enablementState.isReady && !enablementState.isEnabled) {
                     this.displayElement(component, "enablement-disabled");
@@ -21,6 +20,7 @@
                 }
 
                 this.displayElement(component, "enabler");
+                enablementState.isMigrationInProgress = false;
                 component.set('v.state', enablementState);
 
                 this.refreshEnable(component);
@@ -45,11 +45,10 @@
         var action = component.get('c.confirmEnablement');
 
         action.setCallback(this, function (response) {
-            var state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isConfirmed', true);
@@ -76,11 +75,10 @@
         var action = component.get('c.enableEnhancement');
 
         action.setCallback(this, function (response) {
-            var state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isEnabled', true);
@@ -96,6 +94,29 @@
         $A.enqueueAction(action);
     },
     /****
+    * @description Loads the enablement state and enables/disables page elements based on it
+    */
+    getDeployURL: function (component) {
+        var action = component.get("c.getMetaDeployURL");
+
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            let state = response.getState();
+
+            if (state === "SUCCESS") {
+                const metaDeployURL = response.getReturnValue();
+                component.set('v.metaDeployURL', metaDeployURL);
+
+            } else if (state === "ERROR") {
+                component.set('v.metaDeployURL', 'https://install.salesforce.org/products/npsp/npsp-rd2-pilot');
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
     * @description Confirms MetaDeploy has been launched
     */
     launchDeploy: function (component) {
@@ -104,11 +125,10 @@
         var action = component.get('c.launchMetaDeploy');
 
         action.setCallback(this, function (response) {
-            var state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isMetaDeployLaunched', true);
@@ -135,11 +155,10 @@
         var action = component.get('c.confirmMetaDeploy');
 
         action.setCallback(this, function (response) {
-            var state = response.getState();
-
             if (!component.isValid()) {
                 return;
             }
+            const state = response.getState();
 
             if (state === 'SUCCESS') {
                 component.set('v.state.isMetaDeployConfirmed', true);
@@ -154,13 +173,116 @@
         $A.enqueueAction(action);
     },
     /****
+    * @description Starts data migration batch
+    */
+    runMigration: function (component) {
+        component.set('v.state.isMigrationInProgress', true);
+
+        this.clearError(component);
+
+        var action = component.get('c.runMigration');
+
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            const state = response.getState();
+
+            if (state === 'SUCCESS') {
+                component.find('rdMigrationBatchJob').handleLoadBatchJob();
+
+            } else if (state === 'ERROR') {
+                component.set('v.state.isMigrationInProgress', false);
+                this.handleError(component, response.getError(), '3');
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
+    * @description Updates page and settings based on the migration batch job status change
+    */
+    processMigrationStatusChange: function (component, event) {
+        if (!component.isValid()) {
+            return;
+        }
+
+        const batchProgress = event.getParam('batchProgress');
+        if (batchProgress === undefined
+            || batchProgress === null
+            || batchProgress.className !== 'RD2_DataMigration_BATCH'
+        ) {
+            return;
+        }
+
+        if (batchProgress.isInProgress) {
+            component.set('v.state.isMigrationInProgress', true);
+
+        } else if (batchProgress.isSuccess) {
+            this.confirmMigration(component);
+
+        } else {
+            component.set('v.state.isMigrationInProgress', false);
+        }
+    },
+    /****
+    * @description Displays an unexpected error generated during data migration batch execution
+    */
+    processMigrationError: function (component, event) {
+        if (!component.isValid()) {
+            return;
+        }
+
+        const errorDetail = event.getParam('errorDetail');
+        if (errorDetail === undefined
+            || errorDetail === null
+            || errorDetail.className !== 'RD2_DataMigration_BATCH'
+        ) {
+            return;
+        }
+
+        this.clearError(component);
+        this.handleError(component, errorDetail, '3');
+    },
+    /****
+    * @description Starts data migration batch
+    */
+    confirmMigration: function (component) {
+        let enablementState = component.get("v.state");
+
+        if (enablementState.isMigrationCompleted) {
+            return;
+        }
+
+        component.set('v.state.isMigrationCompleted', true);
+
+        this.clearError(component);
+
+        var action = component.get('c.completeMigration');
+
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            const state = response.getState();
+
+            if (state === 'SUCCESS') {
+                component.set('v.state.isMigrationInProgress', false);
+
+            } else if (state === 'ERROR') {
+                component.set('v.state.isMigrationCompleted', false);
+                this.handleError(component, response.getError(), '3');
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
     * @description Disables page elements and reloads the enablement state
     */
     refreshView: function (component) {
         this.hideElement(component, "enablement-disabled");
         this.hideElement(component, "enabler");
-
-        this.clearError(component);
 
         this.loadState(component);
     },
@@ -250,12 +372,15 @@
         let message;
         if (errors && errors[0] && errors[0].message) {
             message = errors[0].message;
+
+        } else if (errors && errors.message) {
+            message = errors.message;
+
         } else {
             message = $A.get('$Label.c.stgUnknownError');
         }
 
         component.set('v.errorSection', section);
         component.set('v.errorMessage', message);
-        console.log('Unexpected Error: ' + component.get('v.errorMessage'));
     }
 })

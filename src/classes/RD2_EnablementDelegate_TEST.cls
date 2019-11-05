@@ -120,6 +120,22 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /****
+    * @description Verifies MetaDeploy URL is returned
+    */
+    @isTest
+    private static void shouldReturnMetaDeployURL() {
+        if (UTIL_Namespace.isCustomerOrg()) {
+            return;
+        }
+
+        String url = RD2_EnablementDelegate_CTRL.getMetaDeployURL();
+
+        String expectedUrl = 'https://install.salesforce.org/products/npsp/npsp-rd2-pilot';
+
+        System.assertEquals(expectedURL, url, 'URL should match');
+    }
+
+    /****
     * @description Verifies user action to launch MetaDeploy is saved
     */
     @isTest
@@ -252,7 +268,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match');
         System.assertEquals(expectedState.isMetaDeployLaunched, state.isMetaDeployLaunched, 'isMetaDeployLaunched should match');
         System.assertEquals(expectedState.isMetaDeployConfirmed, state.isMetaDeployConfirmed, 'isMetaDeployConfirmed should match');
-        System.assertEquals(expectedState.isMigrationRun, state.isMigrationRun, 'isMigrationRun should match');
+        System.assertEquals(expectedState.isMigrationCompleted, state.isMigrationCompleted, 'isMigrationCompleted should match');
     }
 
 
