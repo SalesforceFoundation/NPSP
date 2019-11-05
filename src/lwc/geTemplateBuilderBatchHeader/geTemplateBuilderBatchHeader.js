@@ -212,7 +212,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * component chain: geTemplateBuilderFormField -> here
     */
     handleDeleteBatchHeaderField(event) {
-        const fieldName = event.detail;
+        const fieldName = event.detail.fieldName;
         const index = findIndexByProperty(this.selectedBatchFields, API_NAME, fieldName);
         this.removeField(index, fieldName);
     }
