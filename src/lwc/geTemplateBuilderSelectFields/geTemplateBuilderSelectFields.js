@@ -377,8 +377,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @param {object} event: Event object from child component.
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
     */
-    handleUpdateFormField(event) {
-        dispatch(this, 'updateformfield', event.detail);
+    handleUpdateFormElement(event) {
+        dispatch(this, 'updateformelement', event.detail);
     }
 
     /*******************************************************************************

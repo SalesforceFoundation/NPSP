@@ -39,7 +39,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
                     value: picklistOptions
                 }
 
-                dispatch(this, 'updateformfield', detail);
+                dispatch(this, 'updateformelement', detail);
             }
         }
     }
@@ -160,7 +160,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
             value: event.target.checked
         }
 
-        dispatch(this, 'updateformfield', detail);
+        dispatch(this, 'updateformelement', detail);
     }
 
     /*******************************************************************************
@@ -176,7 +176,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
             value: event.target.value
         }
 
-        dispatch(this, 'updateformfield', detail);
+        dispatch(this, 'updateformelement', detail);
     }
 
     /*******************************************************************************
@@ -201,7 +201,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
             value: value
         }
 
-        dispatch(this, 'updateformfield', detail);
+        dispatch(this, 'updateformelement', detail);
     }
 
     /*******************************************************************************
@@ -216,7 +216,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
             property: 'customLabel',
             value: event.target.value
         }
-        dispatch(this, 'updateformfield', detail);
+        dispatch(this, 'updateformelement', detail);
     }
 
     /*******************************************************************************

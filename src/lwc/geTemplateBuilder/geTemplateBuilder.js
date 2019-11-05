@@ -451,7 +451,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection ->
     * geTemplateBuilderSelectFields -> here
     */
-    handleUpdateFormField(event) {
+    handleUpdateFormElement(event) {
         const { sectionId, fieldName, property, value } = event.detail;
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
