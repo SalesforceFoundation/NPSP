@@ -388,7 +388,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection ->
     * geTemplateBuilderSelectFields -> here
     */
-    handleFormFieldUp(event) {
+    handleFormElementUp(event) {
         const { sectionId, fieldName } = event.detail;
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
@@ -410,7 +410,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection ->
     * geTemplateBuilderSelectFields -> here
     */
-    handleFormFieldDown(event) {
+    handleFormElementDown(event) {
         const { sectionId, fieldName } = event.detail;
 
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
@@ -433,7 +433,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * OR
     * geTemplateBuilderSelectFields -> here
     */
-    handleDeleteFormField(event) {
+    handleDeleteFormElement(event) {
         const { sectionId, id } = event.detail;
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
         let index = section.elements.findIndex((element) => {

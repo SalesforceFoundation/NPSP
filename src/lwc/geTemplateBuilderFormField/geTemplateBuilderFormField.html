@@ -119,20 +119,20 @@
                                                    icon-name="utility:delete"
                                                    alternative-text="Delete"
                                                    size="x-small"
-                                                   onclick={handleFormFieldDelete}>
+                                                   onclick={handleDeleteFormElement}>
                             </lightning-button-icon>
                         </template>
                         <lightning-button-icon class="slds-m-right_xxx-small "
                                                icon-name="utility:chevronup"
                                                alternative-text="Move up"
                                                size="x-small"
-                                               onclick={handleFormFieldUp}
+                                               onclick={handleFormElementUp}
                                                disabled={isFirst}>
                         </lightning-button-icon>
                         <lightning-button-icon icon-name="utility:chevrondown"
                                                alternative-text="Move down"
                                                size="x-small"
-                                               onclick={handleFormFieldDown}
+                                               onclick={handleFormElementDown}
                                                disabled={isLast}>
                         </lightning-button-icon>
                     </div>

@@ -225,10 +225,10 @@ export default class geTemplateBuilderFormField extends LightningElement {
     *
     * @param {object} event: Event object from lightning-button-icon onclick event handler
     */
-    handleFormFieldDelete(event) {
+    handleDeleteFormElement(event) {
         this.stopPropagation(event);
         let detail = {id: this.field.id, fieldName: this.name};
-        dispatch(this, 'deleteformfield', detail);
+        dispatch(this, 'deleteformelement', detail);
     }
 
     /*******************************************************************************
@@ -237,9 +237,9 @@ export default class geTemplateBuilderFormField extends LightningElement {
     *
     * @param {object} event: Event object from lightning-button-icon onclick event handler
     */
-    handleFormFieldUp(event) {
+    handleFormElementUp(event) {
         this.stopPropagation(event);
-        dispatch(this, 'formfieldup', this.name);
+        dispatch(this, 'formelementup', this.name);
     }
 
     /*******************************************************************************
@@ -248,8 +248,8 @@ export default class geTemplateBuilderFormField extends LightningElement {
     *
     * @param {object} event: Event object from lightning-button-icon onclick event handler
     */
-    handleFormFieldDown(event) {
+    handleFormElementDown(event) {
         this.stopPropagation(event);
-        dispatch(this, 'formfielddown', this.name);
+        dispatch(this, 'formelementdown', this.name);
     }
 }

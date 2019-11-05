@@ -77,13 +77,13 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * @param {object} event: Event received from child component.
     * component chain: geTemplateBuilderFormField -> here
     */
-    handleFormFieldUp(event) {
+    handleFormElementUp(event) {
         event.stopPropagation();
         const detail = {
             sectionId: this.formSection.id,
             fieldName: event.detail
         }
-        dispatch(this, 'formfieldup', detail);
+        dispatch(this, 'formelementup', detail);
     }
 
     /*******************************************************************************
@@ -93,13 +93,13 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * @param {object} event: Event received from child component.
     * component chain: geTemplateBuilderFormField -> here
     */
-    handleFormFieldDown(event) {
+    handleFormElementDown(event) {
         event.stopPropagation();
         const detail = {
             sectionId: this.formSection.id,
             fieldName: event.detail
         }
-        dispatch(this, 'formfielddown', detail);
+        dispatch(this, 'formelementdown', detail);
     }
 
     /*******************************************************************************
@@ -122,13 +122,13 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * @param {object} event: Event received from child component.
     * component chain: geTemplateBuilderFormField -> here
     */
-    handleDeleteFormField(event) {
+    handleDeleteFormElement(event) {
         event.stopPropagation();
         const detail = {
             sectionId: this.formSection.id,
             fieldName: event.detail.fieldName,
             id: event.detail.id
         }
-        dispatch(this, 'deleteformfield', detail);
+        dispatch(this, 'deleteformelement', detail);
     }
 }

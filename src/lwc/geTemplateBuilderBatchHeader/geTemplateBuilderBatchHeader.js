@@ -120,7 +120,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Event received from child component.
     * component chain: geTemplateBuilderFormField -> here
     */
-    handleFormFieldUp(event) {
+    handleFormElementUp(event) {
         dispatch(this, 'batchheaderfieldup', event.detail);
     }
 
@@ -131,7 +131,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     * @param {object} event: Event received from child component.
     * component chain: geTemplateBuilderFormField -> here
     */
-    handleFormFieldDown(event) {
+    handleFormElementDown(event) {
         dispatch(this, 'batchheaderfielddown', event.detail);
     }
 

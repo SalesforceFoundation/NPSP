@@ -341,8 +341,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @param {object} event: Event object from child component.
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
     */
-    handleFormFieldUp(event) {
-        dispatch(this, 'formfieldup', event.detail);
+    handleFormElementUp(event) {
+        dispatch(this, 'formelementup', event.detail);
     }
 
     /*******************************************************************************
@@ -352,8 +352,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @param {object} event: Event object from child component.
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
     */
-    handleFormFieldDown(event) {
-        dispatch(this, 'formfielddown', event.detail);
+    handleFormElementDown(event) {
+        dispatch(this, 'formelementdown', event.detail);
     }
 
     /*******************************************************************************
@@ -363,11 +363,11 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @param {object} event: Event object from child component.
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
     */
-    handleDeleteFormField(event) {
+    handleDeleteFormElement(event) {
         const element = this.template.querySelector(`lightning-input[data-field-mapping="${event.detail.fieldName}"]`);
         element.checked = false;
 
-        dispatch(this, 'deleteformfield', event.detail);
+        dispatch(this, 'deleteformelement', event.detail);
     }
 
     /*******************************************************************************
