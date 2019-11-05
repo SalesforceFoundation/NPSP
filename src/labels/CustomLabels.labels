@@ -317,6 +317,70 @@
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>BatchProgressCompletedDate</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressCompletedDate</shortDescription>
+        <value>Completed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressExtendedStatus</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressExtendedStatus</shortDescription>
+        <value>Extended Status:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressJobItemsProcessed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressJobItemsProcessed</shortDescription>
+        <value>Batches Processed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatus</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatus</shortDescription>
+        <value>Status:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTimeElapsed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTimeElapsed</shortDescription>
+        <value>Time Elapsed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTimeElapsedDays</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTimeElapsedDays</shortDescription>
+        <value>day(s)</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTitleRD2DataMigration</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTitleRD2DataMigration</shortDescription>
+        <value>Data migration batch details</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalJobItems</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalJobItems</shortDescription>
+        <value>Total Batches:</value>
+    </labels>
+    <labels>
         <fullName>CONV_Accept_Risk</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -1453,6 +1517,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>RD2_EnablementMigrationButton</shortDescription>
         <value>Run Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationCompleteMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMigrationCompleteMessage</shortDescription>
+        <value>&lt;b&gt;&lt;i&gt;All done! You’re now running the Enhanced Recurring Donations experience!&lt;/i&gt;&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationTitle</fullName>
@@ -9156,7 +9228,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <fullName>stgNavRD2Enablement</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgNavRD2Enablement</shortDescription>
         <value>Enable Enhanced Recurring Donations</value>
     </labels>

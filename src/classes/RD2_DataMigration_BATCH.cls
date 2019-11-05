@@ -41,7 +41,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @description The default batch size for the migration job if it's not specified
     * in custom settings
     */
-    private static final Integer DEFAULT_MIGRATION_JOB_BATCH_SIZE = 200;
+    private static final Integer DEFAULT_MIGRATION_JOB_BATCH_SIZE = 25;
 
 
     private Boolean isDryRunMode = false;
@@ -50,7 +50,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     private List<RecurringDonationSchedule__c> rdSchedules = new List<RecurringDonationSchedule__c>();
 
     /**
-    * @description Batch size for Apex Job. Uses default of 200 if Custom Setting is not provided.
+    * @description Batch size for Apex Job. Uses default if the Custom Setting batch size is not provided.
     */
     public Integer batchSize {
         get {

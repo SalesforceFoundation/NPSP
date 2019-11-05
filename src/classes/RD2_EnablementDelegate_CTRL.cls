@@ -108,11 +108,11 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 state.isConfirmed = false;
                 state.isMetaDeployLaunched = false;
                 state.isMetaDeployConfirmed = false;
-                state.isMigrationRun = false;
+                state.isMigrationCompleted = false;
             } else {
                 state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
                 state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched && hasMetaDeployCompleted();
-                state.isMigrationRun = state.isMigrationRun && state.isMetaDeployConfirmed;
+                state.isMigrationCompleted = state.isMigrationCompleted && state.isMetaDeployConfirmed;
             }
 
         } catch (Exception e) {
@@ -150,6 +150,30 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
+    }
+
+    /***
+    * @description Returns metadata deploy link
+    * @return String MetaDeploy URL
+    */
+    @AuraEnabled(cacheable=false)
+    public static String getMetaDeployURL() {
+        String urlFormat = 'https://install.salesforce.org/products/npsp/{0}npsp-rd2-pilot';
+        String version;
+
+        if (UTIL_Namespace.isCustomerOrg()) {
+            UTIL_Version_API versionAPI = new UTIL_Version_API();
+            
+            //Note: the exception cannot be caught in Apex
+            version = String.valueOf(versionAPI.requestVersion()); 
+        }
+
+        version = String.isBlank(version) ? '' : (version + '/');
+        
+        return String.format(
+            urlFormat,
+            new String[]{ version }
+        );
     }
 
     /***
@@ -201,6 +225,32 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Starts the data migration batch
+    * @return void
+    */
+    @AuraEnabled
+    public static void runMigration() {
+        try {
+            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+            Database.executeBatch(batch, batch.batchSize);
+
+        } catch (Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
+    }
+    /***
+    * @description Saves data migration successful completion state
+    * @return void
+    */
+    @AuraEnabled
+    public static void completeMigration() {        
+        EnablementState state = getEnablementState();
+        state.isMigrationCompleted = true;
+
+        saveEnablementState(state);
+    }
+
+    /***
     * @description Saves the current enablement state
     * @param state Enablement state
     * @return void
@@ -243,7 +293,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         public Boolean isEnabled = false;
         public Boolean isMetaDeployLaunched = false;
         public Boolean isMetaDeployConfirmed = false;
-        public Boolean isMigrationRun = false;
+        public Boolean isMigrationCompleted = false;
     }
 
     /**
