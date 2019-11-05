@@ -4,10 +4,8 @@
              onclick={handleSelectActiveSection}
              data-section-id={formSection.id}>
 
-        <header role="header"
-                class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-vertical_small slds-p-left_small slds-p-right_x-large">
-            <div role="body"
-                 class="slds-media__body">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-vertical_small slds-p-left_small slds-p-right_x-large">
+            <div class="slds-media__body">
                 <h2 class="slds-card__header-title">
                     {formSection.label}
                 </h2>
@@ -36,8 +34,7 @@
             </div>
 
             <template if:true={isActive}>
-                <span role="icon"
-                      class="slds-icon_container slds-icon_container_extension slds-visual-picker__text-check slds-p-top_xxx-small">
+                <span class="slds-icon_container slds-icon_container_extension slds-visual-picker__text-check slds-p-top_xxx-small">
                     <lightning-icon alternative-text="Active Section"
                                     icon-name="utility:check"
                                     variant="inverse"
@@ -48,8 +45,7 @@
 
         </header>
 
-        <div role="card body"
-             class="slds-card__body slds-card__body_inner slds-p-around_small">
+        <div class="slds-card__body slds-card__body_inner slds-p-around_small">
 
             <template if:true={isEmptySection}>
                 <c-util-illustration title="No fields yet"
@@ -60,8 +56,7 @@
             </template>
 
             <template if:false={isEmptySection}>
-                <div role="grid"
-                     class="slds-grid slds-grid_vertical-align-center">
+                <div class="slds-grid slds-grid_vertical-align-center">
                     <div class="slds-size_5-of-12">
                         Field Label
                     </div>

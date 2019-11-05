@@ -4,8 +4,7 @@
     </template>
 
     <template if:true={isAccessible}>
-        <div role="container"
-             class="main-container">
+        <div role="main" class="main-container">
 
             <c-util-page-header>
                 <h1 slot="title">
@@ -15,8 +14,7 @@
                     </span>
                 </h1>
                 <div slot="actions"
-                     class="slds-button-group"
-                     role="group">
+                     class="slds-button-group">
                     <lightning-button label="Cancel"
                                       title="Cancel"
                                       variant="neutral"
@@ -32,8 +30,7 @@
                 </div>
             </c-util-page-header>
 
-            <div role="card"
-                 class="slds-card slds-card_extension">
+            <div class="slds-card slds-card_extension">
                 <lightning-tabset active-tab-value={activeTab}
                                   class="extension_test">
 
@@ -163,8 +160,7 @@
     </template>
 
     <template if:false={isAccessible}>
-        <div role="card"
-             class="slds-card slds-card_extension slds-p-around_large">
+        <div class="slds-card slds-card_extension slds-p-around_large">
             <c-util-illustration title='You do not have access to this page'
                                  message='Template Builder requires Advanced Mapping. Please go to NPSP Settings and turn on Advanced Mapping.'
                                  size="large">

@@ -12,46 +12,49 @@
                 </template>
                 <template if:false={isWidget}>
                     <div class="slds-size_5-of-12 slds-p-right_small">
-                        <lightning-input type="text"
-                                         class="slds-truncate"
-                                         label={field.label}
-                                         field-level-help={field.label}
-                                         value={field.customLabel}
+                        <lightning-input class="slds-truncate"
                                          data-name="customLabel"
+                                         field-level-help={field.label}
+                                         label={field.label}
+                                         onblur={handleOnBlurCustomLabel}
                                          onclick={stopPropagation}
-                                         onblur={handleOnBlurCustomLabel}>
+                                         type="text"
+                                         value={field.customLabel}>
                         </lightning-input>
                     </div>
 
                     <div class="slds-size_1-of-12 slds-p-left_medium slds-p-top_small">
-                        <lightning-input type="checkbox"
+                        <lightning-input aria-label="Required"
                                          checked={isRequired}
-                                         variant="label-stacked"
-                                         disabled={field.isRequiredFieldDisabled}
                                          data-name="required"
+                                         disabled={field.isRequiredFieldDisabled}
+                                         onchange={handleOnChangeRequiredField}
                                          onclick={stopPropagation}
-                                         onchange={handleOnChangeRequiredField}>
+                                         type="checkbox"
+                                         variant="label-stacked">
                         </lightning-input>
                     </div>
 
                     <div class="slds-size_5-of-12 slds-p-right_small">
 
                         <template if:true={isLightningRichText}>
-                            <lightning-input-rich-text data-name="defaultValue"
+                            <lightning-input-rich-text aria-label="default value"
                                                        class="slds-m-around_none"
+                                                       data-name="defaultValue"
+                                                       onclick={stopPropagation}
                                                        value={field.defaultValue}
-                                                       variant="label-stacked"
-                                                       onclick={stopPropagation}>
+                                                       variant="label-stacked">
                             </lightning-input-rich-text>
                         </template>
 
                         <template if:true={isLightningTextarea}>
-                            <lightning-textarea data-name="defaultValue"
+                            <lightning-textarea aria-label="default value"
                                                 class="slds-m-around_none"
-                                                value={field.defaultValue}
-                                                variant="label-stacked"
+                                                data-name="defaultValue"
+                                                onblur={handleOnBlur}
                                                 onclick={stopPropagation}
-                                                onblur={handleOnBlur}>
+                                                value={field.defaultValue}
+                                                variant="label-stacked">
                             </lightning-textarea>
                         </template>
 
@@ -65,47 +68,51 @@
                         </template>
 
                         <template if:true={isLightningCheckbox}>
-                            <lightning-input data-name="defaultValue"
-                                             class="slds-m-top_small"
-                                             type="checkbox"
+                            <lightning-input aria-label="default value"
                                              checked={defaultValueForCheckbox}
-                                             variant="label-stacked"
+                                             class="slds-m-top_small"
+                                             data-name="defaultValue"
+                                             onchange={handleOnBlur}
                                              onclick={stopPropagation}
-                                             onchange={handleOnBlur}>
+                                             type="checkbox"
+                                             variant="label-stacked">
                             </lightning-input>
                         </template>
 
                         <template if:true={isLightningSearch}>
-                            <lightning-input data-name="defaultValue"
+                            <lightning-input aria-label="default value"
                                              class="slds-m-around_none"
+                                             data-name="defaultValue"
+                                             onblur={handleOnBlur}
+                                             onclick={stopPropagation}
+                                             onkeyup={handleSearch}
                                              type="search"
                                              value={field.defaultValue}
-                                             variant="label-stacked"
-                                             onkeyup={handleSearch}
-                                             onclick={stopPropagation}
-                                             onblur={handleOnBlur}>
+                                             variant="label-stacked">
                             </lightning-input>
                         </template>
 
                         <template if:true={isLightningDateOrDatetime}>
-                            <lightning-input data-name="defaultValue"
+                            <lightning-input aria-label="default value"
                                              class="slds-m-around_none"
+                                             data-name="defaultValue"
+                                             onchange={handleOnBlur}
+                                             onclick={stopPropagation}
                                              type={lightningInputType}
                                              value={field.defaultValue}
-                                             variant="label-stacked"
-                                             onclick={stopPropagation}
-                                             onchange={handleOnBlur}>
+                                             variant="label-stacked">
                             </lightning-input>
                         </template>
 
                         <template if:true={isLightningInput}>
-                            <lightning-input data-name="defaultValue"
+                            <lightning-input aria-label="default value"
                                              class="slds-m-around_none"
+                                             data-name="defaultValue"
+                                             onblur={handleOnBlur}
+                                             onclick={stopPropagation}
                                              type={lightningInputType}
                                              value={field.defaultValue}
-                                             variant="label-stacked"
-                                             onclick={stopPropagation}
-                                             onblur={handleOnBlur}>
+                                             variant="label-stacked">
                             </lightning-input>
                         </template>
 
