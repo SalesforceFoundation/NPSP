@@ -276,12 +276,13 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @return {string} id: Generated id of the new section.
     */
     handleAddSection(label) {
+        label = typeof label === 'string' ? label : 'New Section';
         let newSection = {
             id: generateId(),
             displayType: 'accordion',
             defaultDisplayMode: 'expanded',
             displayRule: 'displayRule',
-            label: label || 'New Section',
+            label: label,
             elements: []
         }
         dispatch(this, 'addformsection', newSection);
