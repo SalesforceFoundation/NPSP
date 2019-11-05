@@ -277,7 +277,8 @@ public without sharing class RD2_ScheduleService {
 
         Boolean updateNeeded = false;
 
-        if (newRd.Status__c == RD2_Constants.STATUS_LAPSED) {
+        if (newRd.Status__c == RD2_Constants.STATUS_LAPSED ||
+            oldRd.Status__c == RD2_Constants.STATUS_LAPSED && newRd.Status__c == RD2_Constants.STATUS_ACTIVE) {
             return updateNeeded;
 
         } else if (
