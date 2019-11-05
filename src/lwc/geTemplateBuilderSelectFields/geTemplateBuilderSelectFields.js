@@ -2,6 +2,10 @@ import { LightningElement, track, api } from 'lwc';
 import { findIndexByProperty, mutable, generateId, dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 
+// Import source field names for required Field Mappings
+import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
+
 export default class geTemplateBuilderSelectFields extends LightningElement {
     @track isLoading = true;
     @track selectedFieldMappingSet;
@@ -17,7 +21,6 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     @track _sectionIdsByFieldMappingDeveloperNames = {};
     @track fieldMappingSetComboboxOptions;
     @track objectMappings;
-    _fieldMappingsForSelectedSet = [];
     objectMappingNames = [];
     @track isAllSectionsExpanded = false;
 
@@ -31,8 +34,9 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
 
     init = async () => {
         this.objectMappings = await this.buildObjectMappingsList();
-        this.addInWidgetsPlaceholder();
+
         this.handleSortFieldMappings();
+        this.handleRequiredFields();
         this.loadObjectAndFieldMappingSets();
         this.isLoading = false;
     }
@@ -82,35 +86,44 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         this.objectMappings = objectMappings;
     }
 
-    // TODO: Update when widgets concept is more complete
     /*******************************************************************************
-    * @description Temporary placeholder for adding widgets into the available
-    * selections.
+    * @description Creates a default section and adds required fields.
     */
-    addInWidgetsPlaceholder() {
-        const widgets = {
-            MasterLabel: 'Widgets',
-            Field_Mappings: [
-                {
-                    DeveloperName: 'geCreditCardWidget',
-                    MasterLabel: 'Credit Card',
-                    Target_Field_Label: 'Credit Card',
-                    Required: 'No',
-                    Element_Type: 'widget',
-                    Widget_Fields: ['Card_Holder_Name__c', 'Card_Number__c', 'Expiration_Month__c', 'Expiration_Year__c', 'Security_Code__c']
-                },
-                {
-                    DeveloperName: 'geSomeOtherWidget',
-                    MasterLabel: 'Some Other Widget',
-                    Target_Field_Label: 'Some Other Widget',
-                    Required: 'No',
-                    Element_Type: 'widget',
-                    Widget_Fields: ['Some_Other_Field__c', 'Maybe_Another__c']
-                }
-            ]
-        };
+    handleRequiredFields() {
+        if (this.formSections && this.formSections.length === 0) {
+            const REQUIRED_FIELDS = [
+                DONATION_AMOUNT_INFO.fieldApiName,
+                DONATION_DATE_INFO.fieldApiName
+            ];
 
-        this.objectMappings = [...this.objectMappings, widgets];
+            let sectionId = this.handleAddSection('Gift Entry Form');
+
+            for (let fieldMappingDevName in TemplateBuilderService.fieldMappingByDevName) {
+                if (TemplateBuilderService.fieldMappingByDevName[fieldMappingDevName]) {
+                    const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDevName];
+                    const objectMapping = TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
+
+                    if (REQUIRED_FIELDS.includes(fieldMapping.Source_Field_API_Name)) {
+                        let formField = {
+                            id: generateId(),
+                            label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
+                            required: false,
+                            sectionId: sectionId,
+                            defaultValue: null,
+                            dataType: fieldMapping.Target_Field_Data_Type,
+                            picklistOptions: fieldMapping.Target_Field_Picklist_Options,
+                            dataImportFieldMappingDevNames: [fieldMapping.DeveloperName],
+                            elementType: fieldMapping.Element_Type
+                        }
+
+                        this.handleAddFieldToSection(sectionId, formField);
+                        this.catalogSelectedField(fieldMapping.DeveloperName, sectionId);
+                    }
+                }
+            }
+
+            this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
+        }
     }
 
     /*******************************************************************************
@@ -121,41 +134,18 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     loadObjectAndFieldMappingSets() {
         const isExistingTemplate = this.selectedFieldMappingSet;
 
-        if (isExistingTemplate) {
-            this.setObjectAndFieldMappings(this.objectMappings);
-
-            if (this.formSections) {
-                if (this.formSections.length === 1) {
-                    this.handleChangeActiveSection({ detail: this.formSections[0].id });
-                }
-                for (let i = 0; i < this.formSections.length; i++) {
-                    const formSection = this.formSections[i];
-                    formSection.elements.forEach(element => {
-                        const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
-                        this.catalogSelectedField(name, formSection.id)
-                    });
-                }
-                this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
+        if (isExistingTemplate && this.formSections) {
+            if (this.formSections.length === 1) {
+                this.handleChangeActiveSection({ detail: this.formSections[0].id });
             }
-        } else {
-            this.setObjectAndFieldMappings(this.objectMappings);
-        }
-    }
-
-    /*******************************************************************************
-    * @description Takes object mapping wrappers and sets them to a mutable property.
-    * Sets a flat array of field mapping checkboxes from each object mapping wrapper's
-    * field mapping checkboxes. Planning on using this later to easily grab field related
-    * data like type. Also considering just populating a data attribute in the
-    * checkbox element itself and forego having another property to this component.
-    *
-    * @param {list} objectMappings: List of Object Mapping Wrappers
-    */
-    setObjectAndFieldMappings(objectMappings) {
-        this.objectMappings = mutable(objectMappings);
-        for (const objectMapping of this.objectMappings) {
-            this.objectMappingNames.push(objectMapping.DeveloperName);
-            this._fieldMappingsForSelectedSet.push(...objectMapping.Field_Mappings);
+            for (let i = 0; i < this.formSections.length; i++) {
+                const formSection = this.formSections[i];
+                formSection.elements.forEach(element => {
+                    const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+                    this.catalogSelectedField(name, formSection.id)
+                });
+            }
+            this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
         }
     }
 
@@ -235,10 +225,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 return;
             }
 
-            const fieldMapping =
-                this._fieldMappingsForSelectedSet.find(fm => fm.DeveloperName === fieldMappingDeveloperName);
-            const objectMapping =
-                this.objectMappings.find(om => om.DeveloperName === fieldMapping.Target_Object_Mapping_Dev_Name);
+            const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDeveloperName];
+            const objectMapping = TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
 
             let formField;
 
@@ -261,7 +249,6 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                     label: fieldMapping.MasterLabel,
                     required: false,
                     sectionId: sectionId,
-                    dataImportFieldMappingDevNames: [...fieldMapping.Widget_Fields],
                     elementType: fieldMapping.Element_Type
                 }
             }
@@ -288,13 +275,13 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     *
     * @return {string} id: Generated id of the new section.
     */
-    handleAddSection() {
+    handleAddSection(label) {
         let newSection = {
             id: generateId(),
             displayType: 'accordion',
             defaultDisplayMode: 'expanded',
             displayRule: 'displayRule',
-            label: 'New Section',
+            label: label || 'New Section',
             elements: []
         }
         dispatch(this, 'addformsection', newSection);

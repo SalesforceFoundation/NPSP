@@ -153,6 +153,9 @@ public with sharing class GE_TemplateBuilderCtrl {
         maps.fieldMappingByDevName = bdiMSAdv.fieldMappingByDevName;
         maps.fieldMappingsByObjMappingDevName = bdiMSAdv.fieldMappingsByObjMappingDevName;
 
+        // TODO: Clean up hardcoded widgets placeholders when real widgets are available
+        addWidgetPlaceholders(maps);
+
         return maps;
     }
 
@@ -160,5 +163,28 @@ public with sharing class GE_TemplateBuilderCtrl {
         @AuraEnabled public Map<String,BDI_ObjectMapping> objectMappingByDevName = new Map<String,BDI_ObjectMapping>();
         @AuraEnabled public Map<String,BDI_FieldMapping> fieldMappingByDevName = new Map<String,BDI_FieldMapping>();
         @AuraEnabled public Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingDevName = new Map<String,BDI_FieldMapping[]>();
+    }
+
+    private static void addWidgetPlaceholders(Maps maps) {
+        BDI_FieldMapping creditCardWidget = new BDI_FieldMapping();
+        creditCardWidget.DeveloperName = 'geCreditCardWidget';
+        creditCardWidget.MasterLabel = 'Credit Card';
+        creditCardWidget.Target_Object_Mapping_Dev_Name = 'Widgets';
+        creditCardWidget.Target_Field_Label = 'Credit Card';
+        creditCardWidget.Required = 'No';
+        creditCardWidget.Element_Type = 'widget';
+
+        BDI_ObjectMapping widgetContainer = new BDI_ObjectMapping();
+        widgetContainer.DeveloperName = 'Widgets';
+        widgetContainer.MasterLabel = 'Widgets';
+
+        maps.objectMappingByDevName.put(widgetContainer.DeveloperName, widgetContainer);
+        maps.fieldMappingByDevName.put(creditCardWidget.DeveloperName, creditCardWidget);
+
+        BDI_ObjectMapping widgetContainer2 = new BDI_ObjectMapping();
+        widgetContainer2.DeveloperName = 'Widgets';
+        widgetContainer2.MasterLabel = 'Widgets';
+        widgetContainer2.Field_Mappings = new BDI_FieldMapping[]{creditCardWidget};
+        maps.fieldMappingsByObjMappingDevName.put(widgetContainer2.DeveloperName, widgetContainer2.Field_Mappings);
     }
 }
