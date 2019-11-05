@@ -1,6 +1,7 @@
 <template>
-    <p>{element.componentName}</p>
     <template if:true={isPaymentScheduler}>
-        <p>Payment Widget Component Goes here</p>
-    </template>    
+        <!-- TODO: A real widget should be loaded here -->
+        <c-ge-form-field data-id='widgetComponent' element={element}></c-ge-form-field>
+    </template>
+    <lightning-button label="Check if Valid" onclick={checkValid}></lightning-button>
 </template>

@@ -22,15 +22,30 @@ export default class GeFormField extends LightningElement {
         }, DELAY);
     }
 
+    get isPaymentScheduler() {
+        return this.element.componentName === PAYMENT_WIDGET;
+    }
+
     @api
     get fieldAndValue() {
+        // TODO: Will need to update this when we decide how to store Widget data
         let fieldAndValue = {};
         fieldAndValue[this.element.value] = this.value;
         return fieldAndValue;
     }
 
-    get isPaymentScheduler() {
-        return this.element.componentName === PAYMENT_WIDGET;
+    isValid() {
+        const thisWidget = this.template.querySelector('[data-id="widgetComponent"]');
+        let isValid = true;
+        if(thisWidget !== null && typeof thisWidget !== 'undefined'
+            && typeof thisWidget.isValid == 'function') {
+                isValid = thisWidget.isValid();
+        }
+        return isValid;
+    }
+
+    checkValid() {
+        // console.log(this.isValid()); 
     }
 
 }
