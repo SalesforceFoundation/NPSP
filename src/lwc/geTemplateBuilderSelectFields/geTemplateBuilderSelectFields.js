@@ -48,8 +48,12 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     */
     buildObjectMappingsList = async () => {
         let objectMappings = [];
-        for (const objMappingDevName in TemplateBuilderService.fieldMappingsByObjMappingDevName) {
-            if (TemplateBuilderService.fieldMappingsByObjMappingDevName[objMappingDevName]) {
+
+        const fieldMappingsByObjMappingDevName = TemplateBuilderService.fieldMappingsByObjMappingDevName;
+        for (const objMappingDevName in fieldMappingsByObjMappingDevName) {
+
+            if (Object.prototype.hasOwnProperty.call(fieldMappingsByObjMappingDevName, objMappingDevName)) {
+                this.objectMappingNames = [...this.objectMappingNames, objMappingDevName];
 
                 let fieldMappings = TemplateBuilderService.fieldMappingsByObjMappingDevName[objMappingDevName];
                 let objectMapping = {
@@ -470,7 +474,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * @param {object} event: Event object from lightning-button onclick
     * event handler.
     */
-    handleMinimizeAllSections() {
+    handleCollapseAllSections() {
         const lightningAccordion = this.template.querySelector(
             'lightning-accordion'
         );
