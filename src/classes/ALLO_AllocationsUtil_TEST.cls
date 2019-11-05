@@ -161,9 +161,8 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals (4, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '4 Errors are present for ' + UserInfo.getUserId());
 
         System.assertEquals (false, allocResults.errorsByRecordId.containsKey(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
-
-
     }
+
     /*******************************************************************************************************
      * RecordsForReview Inner Class Tests
      ********************************************************************************************************/
@@ -207,7 +206,6 @@ public class ALLO_AllocationsUtil_TEST {
 
         List<npe01__OppPayment__c> pmts = [select Id from npe01__OppPayment__c where npe01__Opportunity__c = :opps[1].Id];
 
-
         List<Allocation__c> allosForInsert = new list<Allocation__c>();
         // Recurring Donation Allocations
         Allocation__c percentAlloRd = new Allocation__c(Recurring_Donation__c = rd.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
@@ -247,6 +245,8 @@ public class ALLO_AllocationsUtil_TEST {
         recsForRev.addAllocationByType(allosForInsert[1]);
         assertRecsForReviewAllocations(recsForRev, 'After adding 2nd Recurring Donation allocation', 0, 0, 1, 0);
         System.assertEquals(2, recsForRev.recurringDonationAllocations.get(rd.Id).size(), 'Recurring Donations Allocation List Size after Second Add');
+        System.assertEquals (allosForInsert[0].Id, recsForRev.recurringDonationAllocations.get(rd.Id)[0].Id, 'Recurring Donations Allocation 0');
+        System.assertEquals (allosForInsert[1].Id, recsForRev.recurringDonationAllocations.get(rd.Id)[1].Id, 'Recurring Donations Allocation 1');
 
         // Opportunity Allocation Tests
         recsForRev.addAllocationByType(allosForInsert[2]);
@@ -255,6 +255,8 @@ public class ALLO_AllocationsUtil_TEST {
         recsForRev.addAllocationByType(allosForInsert[3]);
         assertRecsForReviewAllocations(recsForRev, 'After adding 2nd Opportunity allocation', 1, 0, 1, 0);
         System.assertEquals(2, recsForRev.oppsAllocations.get(opps[0].Id).size(), 'Opportunity Allocation List Size after Second Add');
+        System.assertEquals (allosForInsert[2].Id, recsForRev.oppsAllocations.get(opps[0].Id)[0].Id, 'Opportunity Allocation 0');
+        System.assertEquals (allosForInsert[3].Id, recsForRev.oppsAllocations.get(opps[0].Id)[1].Id, 'Opportunity Allocation 1');
 
         // Payment Allocation Tests
         recsForRev.addAllocationByType(allosForInsert[4]);
@@ -263,6 +265,8 @@ public class ALLO_AllocationsUtil_TEST {
         recsForRev.addAllocationByType(allosForInsert[5]);
         assertRecsForReviewAllocations(recsForRev, 'After adding 2nd Payment allocation', 1, 1, 1, 0);
         System.assertEquals(2, recsForRev.paymentAllocations.get(pmts[0].Id).size(), 'Payment Allocation List Size after Second Add');
+        System.assertEquals (allosForInsert[4].Id, recsForRev.paymentAllocations.get(pmts[0].Id)[0].Id, 'Payment Allocation 0');
+        System.assertEquals (allosForInsert[5].Id, recsForRev.paymentAllocations.get(pmts[0].Id)[1].Id, 'Payment Allocation 1');
 
         // Campaign Allocation Tests
         recsForRev.addAllocationByType(allosForInsert[6]);
@@ -271,20 +275,149 @@ public class ALLO_AllocationsUtil_TEST {
         recsForRev.addAllocationByType(allosForInsert[7]);
         assertRecsForReviewAllocations(recsForRev, 'After adding 2nd Campaign allocation', 1, 1, 1, 1);
         System.assertEquals(2, recsForRev.campaignAllocations.get(cam.Id).size(), 'Campaign Allocation List Size after Second Add');
+        System.assertEquals (allosForInsert[6].Id, recsForRev.campaignAllocations.get(cam.Id)[0].Id, 'Campaign Allocation 0');
+        System.assertEquals (allosForInsert[7].Id, recsForRev.campaignAllocations.get(cam.Id)[1].Id, 'Campaign Allocation 1');
 
     }
 
-    private static void assertRecsForReviewAllocations(ALLO_AllocationsUtil.RecordsForReview recsForRev, String addtlMsg, Integer oppsAllocSize, Integer pmtAllocSize, Integer rdAllocSize, Integer campAllocSize) {
-        System.assertEquals (oppsAllocSize, recsForRev.oppsAllocations.size(), addtlMsg + ': Opportunity Allocations List Size');
-        System.assertEquals (pmtAllocSize, recsForRev.paymentAllocations.size(), addtlMsg + ': Payment Allocations List Size');
-        System.assertEquals (rdAllocSize, recsForRev.recurringDonationAllocations.size(), addtlMsg + ': Recurring Donation Allocations List Size');
-        System.assertEquals (campAllocSize, recsForRev.campaignAllocations.size(), addtlMsg + ': Campaign Allocations List Size');
+    /*******************************************************************************************************
+    * @description Asserts the list sizes for each of the allocations list in the RecordsForReview
+    *              class
+    * @param recsForRev A populated Record For Review Structure
+    * @param addtlMsg Text that will be displayed in addition to the list type if an assert fails
+    * @param oppsAllocSize The exepected size of the Opportunity Allocations Map
+    * @param pmtAllocSize The expected size of the Payment Allocations Map
+    * @param rdAllocSize The expected size of the Recurring Donations Allocations Map
+    * @param campAllocSize The expected size of the Campaign Allocations Map
+    ********************************************************************************************************/
+     private static void assertRecsForReviewAllocations(ALLO_AllocationsUtil.RecordsForReview recsForRev, String addtlMsg, Integer oppsAllocSize, Integer pmtAllocSize, Integer rdAllocSize, Integer campAllocSize) {
+        System.assertEquals (oppsAllocSize, recsForRev.oppsAllocations.size(), addtlMsg + ': Opportunity Allocations Map Size');
+        System.assertEquals (pmtAllocSize, recsForRev.paymentAllocations.size(), addtlMsg + ': Payment Allocations Map Size');
+        System.assertEquals (rdAllocSize, recsForRev.recurringDonationAllocations.size(), addtlMsg + ': Recurring Donation Allocations Map Size');
+        System.assertEquals (campAllocSize, recsForRev.campaignAllocations.size(), addtlMsg + ': Campaign Allocations Map Size');
     }
 
-    //TODO: Test 2 - Test method to identify Opportunities require Review [ALLO_AllocationsUtil.RecordsForReview.isOpportunityRequiresReview]
-    //TODO: Test 3 - Test initialize Errors [ALLO_AllocationsUtil.RecordsForReview.initializeErrors]
+   /* @Description Test 2 - Test method to identify Opportunities require Review
+                   [ALLO_AllocationsUtil.RecordsForReview.isOpportunityRequiresReview] */
+    @isTest private static void confirmReturnsTrueWhenOpportunityRequiresReviewAndFalseOtherwise() {
+
+        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        insert accs;
+
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
+        gaus[2].Name = 'Default GAU';
+        General_Accounting_Unit__c defaultGau = gaus[2];
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(1984,01,29))
+            .withAccount(accs[0].Id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
+        insert rd;
+
+        Campaign cam = new Campaign(Name='Test Campaign: ' + UTIL_UnitTestData_TEST.getUniqueString(), IsActive=true);
+        insert cam;
+
+
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
+        insert ctcs;
+
+        // Turn Off Allocation Triggers
+        ALLO_AllocationsUtil.disableAllocationTriggers();
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 1000, null, null);
+        opps[0].npe03__Recurring_Donation__c = rd.Id;
+        opps[1].npe03__Recurring_Donation__c = rd.Id;
+        insert opps;
+
+        List<Allocation__c> allosForInsert = new list<Allocation__c>();
+        // Recurring Donation Allocations
+        Allocation__c percentAlloRd = new Allocation__c(Recurring_Donation__c = rd.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
+        allosForInsert.add(percentAlloRd);
+
+        Allocation__c amountAlloRd = new Allocation__c(Recurring_Donation__c = rd.id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloRd);
+
+        // Opportunity Allocations
+        Allocation__c percentAlloOpp = new Allocation__c(Opportunity__c = opps[0].Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id);
+        allosForInsert.add(percentAlloOpp);
+
+        Allocation__c amountAlloOpp = new Allocation__c(Opportunity__c = opps[0].Id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloOpp);
+
+        insert allosForInsert;
+
+        for (Allocation__c alloc : allosForInsert) {
+            recsForRev.addAllocationByType(alloc);
+        }
+
+        System.assertEquals (false, recsForRev.isOpportunityWithParentAndNoAllocations(opps[0]), '1st Opportunity should have parent and Amount and allocations');
+        System.assertEquals (true, recsForRev.isOpportunityWithParentAndNoAllocations(opps[1]), '2nd Opportunity should have parent and Amount and no allocations');
+        System.assertEquals (false, recsForRev.isOpportunityWithParentAndNoAllocations(opps[2]), '3rd Opportunity should have no parent And Amount and no allocations');
+
+    }
+
+    /* @description Test 3 - Test initialize Errors [ALLO_AllocationsUtil.RecordsForReview.initializeErrors]
         // Should test both passing in an existing ERR_RecordErrors instance, and initializing from the Opportunities
-        // in the RecordsForReview variable oppsById
+        // in the RecordsForReview variable oppsById */
+    @isTest private static void initializeErrorsStructureSuccessfully() {
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
+        gaus[2].Name = 'Default GAU';
+        General_Accounting_Unit__c defaultGau = gaus[2];
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
+        insert ctcs;
+
+        // Turn Off Allocation Triggers
+        ALLO_AllocationsUtil.disableAllocationTriggers();
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 1000, null, null);
+        insert opps;
+
+        ERR_RecordError recErrs = new ERR_RecordError('Test');
+        recErrs.addError(opps[0].Id, 'Test Error', opps[0]);
+        recErrs.processErrors();
+
+        Test.startTest();
+
+        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
+
+        // First Initialize with existing recErrs
+        recsForRev.initializeErrors('Test', recErrs);
+
+        System.assertNotEquals(null, recsForRev.recErrs.get(opps[0].Id), 'Error For First Opportunity should be present');
+
+        // Next Initialize and tell it to retrieve recErrs from scratch
+        ALLO_AllocationsUtil.RecordsForReview recsForRev2 = new ALLO_AllocationsUtil.RecordsForReview();
+        for (Opportunity opp : opps) {
+            recsForRev2.opps.add (opp);
+            recsForRev2.oppsById.put(opp.Id, opp);
+        }
+
+        // This time, it will initialize the errors from scratch and query the Error__c object
+        recsForRev2.initializeErrors('Test', null);
+
+        System.assertNotEquals(null, recsForRev2.recErrs.get(opps[0].Id), 'Error For First Opportunity should be present (retrieved from Error__c object)');
+
+    }
 
     /*******************************************************************************************************
      * Main Class Tests [Critical Path is covering as many as possible in this section]
