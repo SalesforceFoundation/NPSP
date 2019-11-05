@@ -55,7 +55,7 @@ public without sharing class RD2_ScheduleService {
 
         List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED || rd.Status__c == RD2_Constants.STATUS_LAPSED) {
+        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return newSchedules;
         }
 
