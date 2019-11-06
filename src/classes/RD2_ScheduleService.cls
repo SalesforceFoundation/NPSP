@@ -46,6 +46,7 @@ public without sharing class RD2_ScheduleService {
             return currentDate;
         } set;
     }
+
     /***
     * @description Builds new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
@@ -119,6 +120,41 @@ public without sharing class RD2_ScheduleService {
         scheduleChanges.objectsToInsert.addAll(newSchedules);
 
         return scheduleChanges;
+    }
+
+    /***
+    * @description Determines whether changes to recurring donation should trigger creation of new schedule(s)
+    * @param rd Trigger.new record
+    * @param oldRd Trigger.old record
+    * @return Boolean
+    */
+    public Boolean isScheduleOrNextDonationDateUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd, Boolean isAfter) {
+
+        Boolean isNeeded = false;
+
+        if (newRd == null || (isAfter && newRd.Status__c == RD2_Constants.STATUS_CLOSED) ||
+            (oldRd != null &&
+            ((newRd.Status__c == RD2_Constants.STATUS_LAPSED && oldRd.Status__c == RD2_Constants.STATUS_ACTIVE) ||
+            (newRd.Status__c == RD2_Constants.STATUS_ACTIVE && oldRd.Status__c == RD2_Constants.STATUS_LAPSED))
+            ))
+        {
+            return isNeeded;
+
+        } else if (
+            oldRd == null ||
+            newRd.StartDate__c != oldRd.StartDate__c ||
+            newRd.npe03__Amount__c != oldRd.npe03__Amount__c ||
+            newRd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+            newRd.Day_of_Month__c != oldRd.Day_of_Month__c ||
+            newRd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
+            newRd.PaymentMethod__c != oldRd.PaymentMethod__c ||
+            newRd.Status__c != oldRd.Status__c ||
+            newRd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c)
+        {
+            isNeeded = true;
+        }
+
+        return isNeeded;
     }
 
     /***
@@ -265,35 +301,6 @@ public without sharing class RD2_ScheduleService {
     */
     private Boolean isFirstAndFifteenth(npe03__Recurring_Donation__c rd) {
         return rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
-    }
-
-    /***
-    * @description Determines whether changes to recurring donation should trigger creation of new schedule(s)
-    * @param rd Trigger.new record
-    * @param oldRd Trigger.old record
-    * @return Boolean
-    */
-    public Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
-
-        Boolean updateNeeded = false;
-
-        if (oldRd.Status__c == RD2_Constants.STATUS_LAPSED && newRd.Status__c == RD2_Constants.STATUS_ACTIVE) {
-            return updateNeeded;
-
-        } else if (
-            newRd.StartDate__c != oldRd.StartDate__c ||
-            newRd.npe03__Amount__c != oldRd.npe03__Amount__c ||
-            newRd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
-            newRd.Day_of_Month__c != oldRd.Day_of_Month__c ||
-            newRd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
-            newRd.PaymentMethod__c != oldRd.PaymentMethod__c ||
-            newRd.Status__c != oldRd.Status__c ||
-            newRd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c
-        ) {
-            updateNeeded = true;
-        }
-
-        return updateNeeded;
     }
 
 }
