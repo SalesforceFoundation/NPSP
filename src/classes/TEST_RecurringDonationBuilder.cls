@@ -50,32 +50,38 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Contains record field values 
+    * @description Contains record field values
     */
     private Map<String, Object> valuesByFieldName = new Map<String, Object>();
 
     /***
-    * @description Recurring Donation builder mode 
+    * @description Recurring Donation builder mode
     */
-    private Mode recordMode;    
+    private Mode recordMode;
 
     /***
-    * @description Constructor 
+    * @description Set to true to automatically calculate the NextPaymentDate field value when building the RD
+    * For enhanced mode only
+    */
+    private Boolean calculateNextDonationDate = false;
+
+    /***
+    * @description Constructor
     */
     public TEST_RecurringDonationBuilder() {
         this.recordMode = RD2_EnablementService.isRecurringDonations2Enabled
             ? Mode.Enhanced
             : Mode.Legacy;
-        
+
         this.withName();
     }
 
     /***
-    * @description Constructor 
+    * @description Constructor
     */
     private TEST_RecurringDonationBuilder(Mode recordMode) {
         this.recordMode = recordMode;
-        
+
         this.withName();
     }
 
@@ -119,7 +125,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     public TEST_RecurringDonationBuilder withMockId() {
         valuesByFieldName.put('Id', UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType));
         return this;
-    }    
+    }
 
     /***
     * @description Sets the Owner to the current user Id
@@ -189,6 +195,18 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Amount
+    * @param amount Amount
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withPaymentMethod(String payMethod) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('PaymentMethod__c', payMethod);
+        return this;
+    }
+
+    /***
     * @description Sets CurrencyIsoCode
     * @param ccyIsoCode CurrencyIsoCode value
     * @return TEST_RecurringDonationBuilder Builder instance
@@ -197,7 +215,7 @@ public without sharing class TEST_RecurringDonationBuilder {
         if (UserInfo.isMultiCurrencyOrganization()) {
             valuesByFieldName.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, ccyIsoCode);
         }
-        
+
         return this;
     }
 
@@ -222,14 +240,14 @@ public without sharing class TEST_RecurringDonationBuilder {
     /***
     * @description Sets Next Payment Date
     * @param dt Date
-    * @return TEST_RecurringDonationBuilder Builder instance    
+    * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withNextPaymentDate(Date dt) {
         validateMode(Mode.Legacy);
 
         valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
         return this;
-    }    
+    }
 
     /***
     * @description Sets if the last day of month should be used
@@ -241,7 +259,7 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         valuesByFieldName.put('Always_Use_Last_Day_Of_Month__c', shouldUse);
         return this;
-    }    
+    }
 
     /***
     * @description Sets Day of Month
@@ -251,7 +269,19 @@ public without sharing class TEST_RecurringDonationBuilder {
     public TEST_RecurringDonationBuilder withDayOfMonth(String dayOfMonth) {
         valuesByFieldName.put('Day_Of_Month__c', dayOfMonth);
         return this;
-    }    
+    }
+
+    /***
+    * @description Sets Start Date
+    * @param startDate Start Date
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStartDate(Date startDate) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('StartDate__c', startDate);
+        return this;
+    }
 
     /***
     * @description Sets number of Installments
@@ -262,6 +292,18 @@ public without sharing class TEST_RecurringDonationBuilder {
         validateMode(Mode.Legacy);
 
         valuesByFieldName.put('npe03__Installments__c', numberOfInstallments);
+        return this;
+    }
+
+    /***
+    * @description Sets Installment Frequency
+    * @param frequency Installment Frequency
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withInstallmentFrequency(Integer frequency) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('InstallmentFrequency__c', frequency);
         return this;
     }
 
@@ -314,9 +356,18 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withScheduleTypeMultiplyValue() {
+        return withScheduleType(System.Label.npe03.RecurringDonationMultiplyValue);
+    }
+
+    /***
+    * @description Sets Schedule Type
+    * @param scheduleType Recurrig Donation schedule type
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withScheduleType(String scheduleType) {
         validateMode(Mode.Legacy);
 
-        valuesByFieldName.put('npe03__Schedule_Type__c', System.Label.npe03.RecurringDonationMultiplyValue);
+        valuesByFieldName.put('npe03__Schedule_Type__c', scheduleType);
         return this;
     }
 
@@ -355,7 +406,95 @@ public without sharing class TEST_RecurringDonationBuilder {
         valuesByFieldName.put('npe03__Open_Ended_Status__c', status);
         return this;
     }
-    
+
+    /***
+    * @description Sets Recurring Donation Status to Active
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatusActive() {
+        return withStatus(RD2_Constants.STATUS_ACTIVE);
+    }
+
+
+    /***
+    * @description Sets Recurring Donation Status to Closed
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatusClosed() {
+        return withStatus(RD2_Constants.STATUS_CLOSED);
+    }
+
+    /***
+    * @description Sets Status field
+    * @param status Status value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatus(String status) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('Status__c', status);
+        return this;
+    }
+
+    /***
+    * @description Sets Recurring Type field
+    * @param recurringType Recurring Type value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withRecurringTypeOpen() {
+        return withRecurringType(RD2_Constants.RECURRING_TYPE_OPEN);
+    }
+
+    /***
+    * @description Sets Recurring Type field
+    * @param recurringType Recurring Type value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withRecurringType(String recurringType) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('RecurringType__c', recurringType);
+        return this;
+    }
+
+    /***
+    * @description Sets Next Donation Date. It's the same field as NextPaymentDate, but in RD2 this field is generally
+    * calculated automatically during insert.
+    * @param dt Date
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withNextDonationDate(Date dt) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
+        return this;
+    }
+
+    /***
+    * @description Tell the build process to call the getNextDonationDate() method in the ScheduleService
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCalculateNextDonationDate() {
+        validateMode(Mode.Enhanced);
+        this.calculateNextDonationDate = true;
+        return this;
+    }
+
+    /**
+    * @description Configure the RD with the appropriate default values based on the mode
+    */
+    public TEST_RecurringDonationBuilder withDefaultValues() {
+
+        if (recordMode == Mode.Enhanced) {
+            this.withStatusActive()
+                .withRecurringTypeOpen()
+                .withInstallmentPeriodMonthly()
+                .withInstallmentFrequency(1);
+        }
+
+        return this;
+    }
+
 
     /***
     * @description Builds Recurring Donation sObject based on the provided values
@@ -366,6 +505,11 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         for (String fieldName : valuesByFieldName.keySet()) {
             rd.put(fieldName, valuesByFieldName.get(fieldName));
+        }
+
+        if (calculateNextDonationDate) {
+            RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+             rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
         }
 
         return rd;
@@ -427,4 +571,42 @@ public without sharing class TEST_RecurringDonationBuilder {
         return rds;
     }
 
+    /**
+    * @description Adds a child relationship to the Recurring Donation instance
+    * @param rd RecuringDonation instance
+    * @param relationshipName Name of the relationship to add
+    * @param records List of SObjects to include for the relationship
+    * @return Updated npe03__Recurring_Donation__c record
+    */
+    public static npe03__Recurring_Donation__c addRelatedList(npe03__Recurring_Donation__c rd, String relationshipName, List<SObject> records) {
+        String rdRecord = JSON.serialize(rd);
+        rdRecord = rdRecord.left(rdRecord.length()-1);
+
+        String objJson = JSON.serialize(records);
+        rdRecord += ',"' + relationshipName + '":{"totalSize":' + records.size() + ',"done":true,"records":' + objJson + '}';
+
+        rdRecord += '}';
+
+        return (npe03__Recurring_Donation__c)JSON.deserialize(rdRecord, npe03__Recurring_Donation__c.class);
+    }
+
+
+    /**
+    * @description Adds a foreign key relationship to the Recurring Donation instance, such as Contact__r.AccountId
+    * @param rd RecuringDonation instance
+    * @param relationshipName Name of the relationship to add
+    * @param foreignObject The SObject for the relationship
+    * @return Updated npe03__Recurring_Donation__c record
+    */
+    public static npe03__Recurring_Donation__c addForeignKey(npe03__Recurring_Donation__c rd, String relationshipName, SObject foreignObject) {
+        String rdRecord = JSON.serialize(rd);
+        rdRecord = rdRecord.left(rdRecord.length()-1);
+
+        String objJson = JSON.serialize(foreignObject);
+        rdRecord += ',"' + relationshipName + '":' + objJson + '';
+
+        rdRecord += '}';
+
+        return (npe03__Recurring_Donation__c)JSON.deserialize(rdRecord, npe03__Recurring_Donation__c.class);
+    }
 }
