@@ -102,8 +102,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     */
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
         if(Test.isRunningTest() && contactsSettings == null) {
-        	contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
-        	configContactsSettings(contactsSettings);
+            contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
+            configContactsSettings(contactsSettings);
         } else if (contactsSettings == null) {
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
             if(contactsSettings.Id == null)
@@ -139,8 +139,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
 
         if (Test.isRunningTest() && recurringDonationsSettings == null) {
-        	recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
-        	configRecurringDonationsSettings(recurringDonationsSettings);
+            recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
+            configRecurringDonationsSettings(recurringDonationsSettings);
 
         } else if (recurringDonationsSettings == null) {
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
@@ -584,6 +584,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.npe03__Enable_Update_Check__c = true;
             settings.npe03__Maximum_Donations__c = 50;
             settings.Recurring_Donation_Batch_Size__c = 50;
+            settings.DataMigrationBatchSize__c = 25;
             settings.npe03__Opportunity_Forecast_Months__c = 12;
             settings.npe03__Update_Check_Interval__c = 90;
             settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
@@ -843,6 +844,8 @@ public without sharing class UTIL_CustomSettingsFacade {
 
         recurringDonationsSettings.EnableAutomaticNaming__c = settings.EnableAutomaticNaming__c;
         recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
+        recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
+        recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 

@@ -71,16 +71,63 @@ public class TEST_SObjectGateway {
         */
         public List<npe03__Recurring_Donation__c> getRecords(Set<Id> rdIds) {
             return [
-                SELECT 
-                    Name, 
+                SELECT
+                    Name,
                     npe03__Organization__c,
                     npe03__Contact__c,
                     npe03__Amount__c,
                     npe03__Paid_Amount__c,
                     npe03__Next_Payment_Date__c, 
-                    npe03__Last_Payment_Date__c
+                    npe03__Last_Payment_Date__c,
+                    npe03__Date_Established__c,
+                    StartDate__c,
+                    Day_of_Month__c,
+                    InstallmentFrequency__c,
+                    npe03__Installment_Period__c,
+                    RecurringType__c,
+                    Status__c
                 FROM npe03__Recurring_Donation__c 
                 WHERE Id IN :rdIds
+            ];
+        }
+    }
+
+    /***
+    * @description Retrieves Recurring Donation Schedule record(s)
+    */
+    public class RecurringDonationScheduleGateway {
+
+        /***
+        * @description Retrieves Recurring Donation Schedule records for the specified RD record
+        * @param npe03__Recurring_Donation__c Recurring donation
+        * @return List<RecurringDonationSchedule__c>
+        */
+        public List<RecurringDonationSchedule__c> getRecords(npe03__Recurring_Donation__c rd) {
+            return getRecords(new List<npe03__Recurring_Donation__c>{rd});
+        }
+
+        /***
+        * @description Retrieves Recurring Donation Schedule records for the specified RD records
+        * @param List<npe03__Recurring_Donation__c> Recurring donations
+        * @return List<RecurringDonationSchedule__c>
+        */
+        public List<RecurringDonationSchedule__c> getRecords(List<npe03__Recurring_Donation__c> rds) {
+            if (rds == null || rds.isEmpty()) {
+                return new List<RecurringDonationSchedule__c>();
+            }
+
+            return [
+                    SELECT
+                            Campaign__c,
+                            DayOfMonth__c,
+                            EndDate__c,
+                            InstallmentAmount__c,
+                            InstallmentFrequency__c,
+                            InstallmentPeriod__c,
+                            RecurringDonation__c,
+                            StartDate__c
+                    FROM RecurringDonationSchedule__c
+                    WHERE RecurringDonation__c IN :rds
             ];
         }
     }
