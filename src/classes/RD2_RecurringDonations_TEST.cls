@@ -266,7 +266,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies next donation date is calculated when recurring donation is inserted
+    * @description Verifies next donation date is calculated when recurring donation is updated
     */
     @isTest
     private static void shouldCalculateNextDonationDateOnUpdate() {
@@ -296,7 +296,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies next donation date is calculated when recurring donation is inserted
+    * @description Verifies next donation date is calculated on update from closed to lapsed
     */
     @isTest
     private static void shouldCalculateNextDonationDateOnUpdateFromClosedToLapsed() {

@@ -128,12 +128,11 @@ public without sharing class RD2_ScheduleService {
     * @param oldRd Trigger.old record
     * @return Boolean
     */
-    public Boolean isScheduleOrNextDonationDateUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd, Boolean isAfter) {
+    public Boolean isScheduleOrNextDonationDateUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
 
         Boolean isNeeded = false;
 
-        if (newRd == null || (isAfter && newRd.Status__c == RD2_Constants.STATUS_CLOSED) ||
-            (oldRd != null &&
+        if (newRd == null || (oldRd != null &&
             ((newRd.Status__c == RD2_Constants.STATUS_LAPSED && oldRd.Status__c == RD2_Constants.STATUS_ACTIVE) ||
             (newRd.Status__c == RD2_Constants.STATUS_ACTIVE && oldRd.Status__c == RD2_Constants.STATUS_LAPSED))
             ))
