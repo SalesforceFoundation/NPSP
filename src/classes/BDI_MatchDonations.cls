@@ -167,8 +167,11 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                             }
                         } // end matching an opp with >= 1 payment
 
-                        // if no payments, or we failed to match with a single payment, use Opp matching rules
-                        if (opp.npe01__Number_of_Payments__c <= 1 && matchInfo.matchType == MATCHTYPE.NO_MATCH) {
+                        // If the Opportunity has no payments, or we failed to match with a
+                        // single payment, or if the User selected the Opp for updated in the
+                        // BGE UI, use Opp matching rules
+                        if (opp.npe01__Number_of_Payments__c <= 1 && matchInfo.matchType == MATCHTYPE.NO_MATCH
+                                || isUserSelectedMatch(di)) {
                             matchInfo = getMatchInfoByOppRules(di, opp);
                         }
 
@@ -264,6 +267,18 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 }
             }
         }
+    }
+
+    /*****************************************************************************************
+    * @description Checks if the Data Import record has a Donation in the
+    * DonationImported field that was selected or set by a User.
+    * @param di The Data Import record to analyze.
+    * @return True if the Data Import record has a User-selected Donation.
+    */
+    private Boolean isUserSelectedMatch(DataImport__c di) {
+        Boolean isUserSelectedMatch = di.DonationImported__c != null
+                && di.DonationImportStatus__c == Label.bdiMatchedByUser;
+        return isUserSelectedMatch;
     }
 
     /*******************************************************************************************************
@@ -409,7 +424,9 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     }
 
     /*******************************************************************************************************
-    * @description queries for all potential Donation Opportunities & Payments based off matching criteria
+    * @description queries for all potential Donation Opportunities & Payments based off
+    * matching criteria. This method does not return written-off Payments to ensure that they
+    * cannot be matched and/or updated in the data import process.
     * @param listDI The DataImport records we are trying to match
     * @return list<Opportunity> The list of potential matching Opps.  null if none.
     */
