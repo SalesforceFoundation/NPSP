@@ -112,7 +112,7 @@ tasks:
             record_type_label: NPSP Default
             record_type_developer_name: NPSP_Default
             sobject: Opportunity
-    
+
     is_rd2_enabled:
         description: This preflight check ensures that Enhanced Recurring Donations is enabled
         class_path: tasks.is_rd2_enabled
@@ -405,6 +405,23 @@ flows:
                     path: unpackaged/config/crlp_testing
             2:
                 task: update_admin_profile
+
+    deploy_rd2_testing:
+        description: 'Configure everything for enhanced recurring donations testing in a scratch org'
+        steps:
+            1:
+                task: enable_customizable_rollups
+            2:
+                task: enable_pilot_in_scratch_org
+            3:
+                task: execute_anon
+                options:
+                    apex: >
+                        npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+                        rdSettings.%%%NAMESPACE%%%isRecurringDonations2Enabled__c = true;
+                        upsert rdSettings;
+            4:
+                task: deploy_rd2_config
 
     config_managed:
         steps:
