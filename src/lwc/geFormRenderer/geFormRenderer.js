@@ -12,6 +12,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track version = '';
     @api showSpinner = false;
     @api isBatchMode = false;
+    @api submissions = [];
 
     connectedCallback() {
         GeFormService.getFormTemplate().then(response => {
@@ -45,10 +46,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // TODO: Pass the actual Data Import record, and navigate to the new Opportunity
         // const OpportunityId = GeFormService.createOpportunityFromDataImport(dataImport);
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        
-        GeFormService.handleSave(sectionsList).then(opportunityId => {
-            this.navigateToRecordPage(opportunityId);
-        });
+
+        if (this.isBatchMode) {
+            this.submissions = [...this.submissions, sectionsList];
+            this.dispatchEvent(new CustomEvent('submit'));
+            this.toggleSpinner();
+        } else {
+            GeFormService.handleSave(sectionsList).then(opportunityId => {
+                this.navigateToRecordPage(opportunityId);
+            });
+        }
     }
 
     navigateToRecordPage(recordId) {
