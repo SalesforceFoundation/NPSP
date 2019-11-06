@@ -1,3 +1,4 @@
+import {api} from 'lwc';
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormRenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 
@@ -99,7 +100,12 @@ class GeFormService {
     }
 
     handleSave(sectionList) {
-        
+        let diRecord = this.getDataImportRecord(sectionList);
+        const opportunityID = this.createOpportunityFromDataImport(diRecord);
+        return opportunityID;
+    }
+
+    getDataImportRecord(sectionList){
         // Gather all the data from the input
         let fieldData = {};
 
@@ -120,10 +126,8 @@ class GeFormService {
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
             }
         }
-
-        const opportunityID =this.createOpportunityFromDataImport(diRecord);
-        
-        return opportunityID;
+        diRecord.Donation_Donor__c = 'Account1'; //temporary to allow save of the form
+        return diRecord;
     }
 }
 
