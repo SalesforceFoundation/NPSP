@@ -3,15 +3,13 @@ import GeFormService from 'c/geFormService';
 
 export default class GeFormApp extends LightningElement {
     @api isBatchMode = false;
-    dataImportRecords = [];
+    submissionId = 0;
 
     handleSubmit(event) {
         const submissions = event.target.submissions;
-        console.log('submissions (in GeFormAPP: ', submissions);
-        const newDataImportRecord = GeFormService.getDataImportRecord(submissions.pop());
-        console.log('newDataImportRecord: ', newDataImportRecord);
-        this.dataImportRecords = [...this.dataImportRecords, newDataImportRecord];
-        console.log('this.dataImportRecords: ', this.dataImportRecords);
+        const dataImportRecord = GeFormService.getDataImportRecord(submissions.pop());
         const table = this.template.querySelector('c-ge-form-table');
+        table.upsertRow(this.submissionId, dataImportRecord);
+        this.submissionId = this.submissionId + 1;
     }
 }
