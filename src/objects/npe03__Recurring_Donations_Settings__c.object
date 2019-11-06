@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
+        <fullName>DataMigrationBatchSize__c</fullName>
+        <defaultValue>25</defaultValue>
+        <description>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</inlineHelpText>
+        <label>Enhanced RD Data Migration Batch Size</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>EnableAutomaticNaming__c</fullName>
         <defaultValue>false</defaultValue>
         <description>If enabled, Salesforce automatically populates the Recurring Donation Name.</description>
@@ -33,6 +47,18 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>RecurringDonations2EnablementState__c</fullName>
+        <description>Contains Enhanced Recurring Donation enablement confirmations and state.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Contains Enhanced Recurring Donation enablement confirmations and state.</inlineHelpText>
+        <label>Recurring Donations Enablement State</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Recurring_Donation_Batch_Size__c</fullName>
         <defaultValue>50</defaultValue>
         <description>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits.</description>
@@ -45,5 +71,5 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
-    </fields>   
+    </fields>
 </CustomObject>
