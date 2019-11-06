@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2011, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this List of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -36,11 +36,11 @@
 */
 
 @isTest
-public class UTIL_UnitTestData_TEST { 
+public class UTIL_UnitTestData_TEST {
 
     /** @description A mock Account Id .*/
     public static final String MOCK_ACCOUNT_ID = Account.SObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
-    
+
     public static final String PROFILE_STANDARD_USER = 'Standard User';
     public static final String PROFILE_READONLY_USER = 'Read Only';
 
@@ -65,14 +65,14 @@ public class UTIL_UnitTestData_TEST {
                 WHERE IsActive = TRUE
                 AND IsWon = TRUE
             ];
-            
+
             if (closedWonStages.size()>0) {
                 closedWonStage = closedWonStages[0].MasterLabel;
             } else {
                 closedWonStage = '';
             }
         }
-        
+
         return closedWonStage;
     }
 
@@ -95,7 +95,7 @@ public class UTIL_UnitTestData_TEST {
                 closedLostStage = '';
             }
         }
-        
+
         return closedLostStage;
     }
 
@@ -117,7 +117,7 @@ public class UTIL_UnitTestData_TEST {
                 openStage = '';
             }
         }
-        
+
         return openStage;
     }
 
@@ -127,14 +127,14 @@ public class UTIL_UnitTestData_TEST {
     public static String getClosedTaskStatus() {
         if (closedTaskStatus == null) {
             List<TaskStatus> closedTaskStatuses = [SELECT MasterLabel FROM TaskStatus WHERE IsClosed = true];
-            
+
             if (closedTaskStatuses.size()>0) {
                 closedTaskStatus = closedTaskStatuses[0].MasterLabel;
             } else {
                 closedTaskStatus = '';
             }
         }
-        
+
         return closedTaskStatus;
     }
 
@@ -144,14 +144,14 @@ public class UTIL_UnitTestData_TEST {
     public static String getOpenTaskStatus() {
         if (openTaskStatus == null) {
             List<TaskStatus> openTaskStatuses = [SELECT MasterLabel FROM TaskStatus WHERE IsClosed = false];
-            
+
             if (openTaskStatuses.size()>0) {
                 openTaskStatus = openTaskStatuses[0].MasterLabel;
             } else {
                 openTaskStatus = '';
             }
         }
-        
+
         return openTaskStatus;
     }
 
@@ -182,7 +182,7 @@ public class UTIL_UnitTestData_TEST {
      * @return List<Contact>
      */
     public static List<Contact> createMultipleTestContacts(Integer n) {
-        
+
         List<Contact> contactsToAdd = new List<Contact> ();
 
         for (Integer i=0; i<n; i++) {
@@ -231,7 +231,7 @@ public class UTIL_UnitTestData_TEST {
     public static List<Opportunity> oppsForContactListByRecTypeId(List<Contact> contacts, Id campaignId,
         String stage, Date closeDate, Double amt, Id rtId, String oppType
     ) {
-     
+
         List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
         for ( Contact thisCon : contacts ) {
@@ -284,7 +284,7 @@ public class UTIL_UnitTestData_TEST {
     public static List<Opportunity> oppsForContactWithAccountListByRecTypeId (List<Contact> contacts, Id campaignId,
             String stage, Date closeDate, Double amt, Id rtId, String oppType
     ) {
-     
+
         List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
         for (Contact thisCon : contacts) {
@@ -337,7 +337,7 @@ public class UTIL_UnitTestData_TEST {
     public static List<Opportunity> oppsForAccountListByRecTypeId (List<Account> accounts, Id campaignId,
             String stage, Date closeDate, Double amt, Id rtId, String oppType
     ) {
-     
+
         List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
         for (Account acc : accounts) {
@@ -365,9 +365,9 @@ public class UTIL_UnitTestData_TEST {
      * @return List<Account>
      */
     public static List<Account> createMultipleTestAccounts (Integer n, String strType) {
-        
+
         List<Account> accountsToAdd = new List<Account> ();
-        
+
         for (Integer i=0; i<n; i++) {
             Account newAcct = new Account (
                 Name = 'Test Account ' + getUniqueString(),
@@ -381,7 +381,7 @@ public class UTIL_UnitTestData_TEST {
             }
             accountsToAdd.add (newAcct);
         }
-        
+
         return accountsToAdd;
     }
 
@@ -420,17 +420,28 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+     * @description Returns Organization Account
+     * @return Account
+     */
+    public static Account getOrgAccount() {
+        return new Account(
+            Name = UTIL_UnitTestData_TEST.getUniqueString(),
+            npe01__SYSTEMIsIndividual__c = false
+        );
+    }
+
+    /**
      * @description Create Engagement Plan Templates for unit testing.
      * @param n The number of Engagement Plan Templates to be created
      * @return List of Engagement Plan Templates
      */
     public static List<Engagement_Plan_Template__c> createEPTemplates (Integer n) {
         List<Engagement_Plan_Template__c> EPTemplatesToAdd = new List<Engagement_Plan_Template__c>();
-        
+
         for (Integer i=0 ;i<n; i++) {
             EPTemplatesToAdd.add(new Engagement_Plan_Template__c(Name = 'Test ' + getUniqueString()));
         }
-        
+
         return EPTemplatesToAdd;
     }
 
@@ -442,7 +453,7 @@ public class UTIL_UnitTestData_TEST {
      */
     public static List<Engagement_Plan_Task__c> createEPTasksForTemplates (Integer n, List<Engagement_Plan_Template__c> listEPTemplates) {
         List<Engagement_Plan_Task__c> EPTasksToAdd = new List<Engagement_Plan_Task__c>();
-        
+
         for (Engagement_Plan_Template__c epTemplate : listEPTemplates) {
             for (Integer i=0 ;i<n; i++) {
                 EPTasksToAdd.add(
@@ -453,7 +464,7 @@ public class UTIL_UnitTestData_TEST {
                 );
             }
         }
-        
+
         return EPTasksToAdd;
     }
 
@@ -561,8 +572,8 @@ public class UTIL_UnitTestData_TEST {
         //create the user
         System.runAs(u) {}
 
-        return u;      
-    } 
+        return u;
+    }
 
     /**
      * @description Build a User having specified profile assigned, but do not insert
@@ -602,13 +613,13 @@ public class UTIL_UnitTestData_TEST {
         String email = lastName.left(70) + '@email.npsp';
 
         return new User(
-            LastName = lastName, 
-            Email = email, 
+            LastName = lastName,
+            Email = email,
             ProfileId = p.Id,
             Username = email,
-            Alias = alias, 
+            Alias = alias,
             TimeZoneSidKey = 'America/Los_Angeles',
-            LocaleSidKey = 'en_US', 
+            LocaleSidKey = 'en_US',
             LanguageLocaleKey = 'en_US',
             EmailEncodingKey = 'ISO-8859-1'
         );
@@ -666,7 +677,7 @@ public class UTIL_UnitTestData_TEST {
     * @return Household_Naming_Settings__c
     **********************************************************************************************************/
     public static Household_Naming_Settings__c setupHHNamingSettings() {
-        return setupHHNamingSettings(            
+        return setupHHNamingSettings(
             '{!{!FirstName} {!LastName}} Household',
             '{!{!Title} {!FirstName}} {!LastName}',
             '{!{!FirstName}}'
@@ -674,7 +685,7 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Configures Household Naming Settings 
+    * @description Configures Household Naming Settings
     * @param hhNameFormat Household Naming Format
     * @param formalGreetingFormat Formal Greeting Format
     * @param informalGreetingFormat Informal Greeting Format

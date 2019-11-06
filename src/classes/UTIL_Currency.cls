@@ -34,7 +34,7 @@
 * @description Utilities for working with currencies
 */
 public without sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
-
+    
     public static final String CURRENCY_ISO_CODE_FIELD = 'CurrencyIsoCode';
 
     /**
