@@ -130,14 +130,14 @@ public without sharing class RD2_ScheduleService {
     */
     public Boolean isScheduleOrNextDonationDateUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
 
-        Boolean isNeeded = false;
+        Boolean isNeeded;
 
         if (newRd == null || (oldRd != null &&
             ((newRd.Status__c == RD2_Constants.STATUS_LAPSED && oldRd.Status__c == RD2_Constants.STATUS_ACTIVE) ||
             (newRd.Status__c == RD2_Constants.STATUS_ACTIVE && oldRd.Status__c == RD2_Constants.STATUS_LAPSED))
             ))
         {
-            return isNeeded;
+            isNeeded = false;
 
         } else if (
             oldRd == null ||
