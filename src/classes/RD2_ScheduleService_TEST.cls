@@ -499,7 +499,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changedRd.Status__c = RD2_Constants.STATUS_ACTIVE;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changedRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changedRd, rd);
 
         System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
@@ -528,7 +528,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changedRd.Status__c = RD2_Constants.STATUS_LAPSED;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changedRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changedRd, rd);
 
         System.assertEquals(false, updateNeeded, 'isScheduleUpdateNeeded should return false.');
 
@@ -556,7 +556,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changeRd.StartDate__c = Date.today();
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changeRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
         System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
@@ -584,7 +584,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changeRd.npe03__Amount__c = 200;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changeRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
         System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
@@ -614,7 +614,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changeRd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_DAILY;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changeRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
         System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
@@ -642,7 +642,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changeRd.Day_of_Month__c = '23';
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changeRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
         System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
@@ -670,7 +670,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changeRd.InstallmentFrequency__c = 5;
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changeRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
         System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
@@ -698,7 +698,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changeRd.PaymentMethod__c = 'Credit Card';
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changeRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
         System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
@@ -726,7 +726,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changeRd.npe03__Recurring_Donation_Campaign__c = UTIL_UnitTestData_TEST.mockId(Campaign.getSObjectType());
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changeRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
         System.assertEquals(true, updateNeeded, 'isScheduleUpdateNeeded should return true.');
 
@@ -754,7 +754,7 @@ private with sharing class RD2_ScheduleService_TEST {
         changeRd.npe03__Contact__c = UTIL_UnitTestData_TEST.mockId(Contact.getSObjectType());
 
         RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleOrNextDonationDateUpdateNeeded(changeRd, rd);
+        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
 
         System.assertEquals(false, updateNeeded, 'isScheduleUpdateNeeded should return false.');
 

@@ -128,19 +128,27 @@ public without sharing class RD2_ScheduleService {
     * @param oldRd Trigger.old record
     * @return Boolean
     */
-    public Boolean isScheduleOrNextDonationDateUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
+    public Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
 
-        Boolean isNeeded;
+        Boolean isNeeded = false;
 
-        if (newRd == null || (oldRd != null &&
-            ((newRd.Status__c == RD2_Constants.STATUS_LAPSED && oldRd.Status__c == RD2_Constants.STATUS_ACTIVE) ||
-            (newRd.Status__c == RD2_Constants.STATUS_ACTIVE && oldRd.Status__c == RD2_Constants.STATUS_LAPSED))
-            ))
+        // newRD should never be null.  This is a fail safe measure only.
+        if (newRd == null) {
+            isNeeded = false;
+
+        // oldRd will be null on insert.  This method is unnecessary on inserts, so it should also always be null.  Defensive again.
+        } else if (oldRd == null) {
+            isNeeded = true;
+
+        // These two special conditions should never result in a schedule update.
+        } else if
+                ((newRd.Status__c == RD2_Constants.STATUS_LAPSED && oldRd.Status__c == RD2_Constants.STATUS_ACTIVE) ||
+                (newRd.Status__c == RD2_Constants.STATUS_ACTIVE && oldRd.Status__c == RD2_Constants.STATUS_LAPSED))
         {
             isNeeded = false;
 
+        // Schedules should only be updated if relevant data is updated.
         } else if (
-            oldRd == null ||
             newRd.StartDate__c != oldRd.StartDate__c ||
             newRd.npe03__Amount__c != oldRd.npe03__Amount__c ||
             newRd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
