@@ -140,7 +140,7 @@ public class CRLP_RollupCMT {
         * changes in name or label or description are not considered different
         * filter rules are hashed because the sort order of the list is not guaranteed
         * @param other FilterGroup to compare against
-        * @return boolean to indicate of the filter group is different 
+        * @return boolean to indicate of the filter group is different
         **************************************************************************************************************/
         public Boolean isDifferent(FilterGroup other) {
             if (this.rules.size() != other.rules.size()) {
@@ -161,7 +161,7 @@ public class CRLP_RollupCMT {
                 }
             }
 
-            
+
             return false;
         }
     }
@@ -295,9 +295,9 @@ public class CRLP_RollupCMT {
      *****************************************************************************************************************/
         private String generateHash() {
             return this.isDeleted + '__' +
-                + this.objectName + '__' 
-                + this.fieldName + '__' + 
-                + this.operationName + '__' + 
+                + this.objectName + '__'
+                + this.fieldName + '__' +
+                + this.operationName + '__' +
                 + this.value;
         }
 
@@ -457,7 +457,11 @@ public class CRLP_RollupCMT {
                     fldValues.put('Date_Field__c', null);
                 }
             } else {
-                fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted , 'Active__c' => isActive };
+                fldValues = new Map<String, Object>{
+                    'Is_Deleted__c' => isDeleted,
+                    'Active__c' => isActive,
+                    'Description__c' => this.description
+                };
             }
             md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
@@ -468,7 +472,7 @@ public class CRLP_RollupCMT {
         * @description Determines if a Rollup is computationally different from another Rollup
         * changes in name or label or description are not considered different
         * @param otherRollupMdt Rollup Mdt to compare against
-        * @return boolean to indicate of the rollup is different 
+        * @return boolean to indicate of the rollup is different
         **************************************************************************************************************/
         public Boolean isDifferent(Rollup__mdt otherRollupMdt) {
             CRLP_RollupCMT.Rollup otherRollup = new CRLP_RollupCMT.Rollup(otherRollupMdt);
@@ -480,13 +484,13 @@ public class CRLP_RollupCMT {
         * @description Determines if a Rollup is computationally different from another Rollup
         * changes in name or label or description are not considered different
         * @param other Rollup to compare against
-        * @return boolean to indicate of the rollup is different 
+        * @return boolean to indicate of the rollup is different
         **************************************************************************************************************/
         public Boolean isDifferent(CRLP_RollupCMT.Rollup other) {
 
             return other.filterGroupRecordName != this.filterGroupRecordName
             || other.operation != this.operation
-            || ( (String.isBlank(other.timeBoundOperationType) ? null : other.timeBoundOperationType) != 
+            || ( (String.isBlank(other.timeBoundOperationType) ? null : other.timeBoundOperationType) !=
                  (String.isBlank(this.timeBoundOperationType) ? null : this.timeBoundOperationType) )
             || other.summaryObject != this.summaryObject
             || other.summaryField != this.summaryField
@@ -498,9 +502,9 @@ public class CRLP_RollupCMT {
             || other.dateField != this.dateField
             || other.isActive != this.isActive
             || other.isDeleted != this.isDeleted
-            || other.useFiscalYear != this.useFiscalYear 
+            || other.useFiscalYear != this.useFiscalYear
             || other.intValue != this.intValue;
-        
+
         }
 
 

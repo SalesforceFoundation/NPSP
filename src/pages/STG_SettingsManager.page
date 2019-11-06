@@ -36,6 +36,9 @@
         margin-left: -16px;
         margin-right: -16px;
     }
+    .hide {
+        display: none;
+    }
 </style>
 
 <script>
@@ -55,15 +58,25 @@
     function ShowPanel(idPanel) {
         var node;
         node = document.getElementById(idPanelCurrent);
-        if (node != null) node.style.display =  'none';
+        if (node != null) {
+            node.style.display =  'none';
+        }
+
         node = document.getElementById(idPanelCurrent + 'Nav');
-        if (node != null) node.classList.remove('slds-is-selected');
+        if (node != null) {
+            node.classList.remove('slds-is-selected');
+        }
 
         node = document.getElementById(idPanel);
-        if (node != null) node.style.display =  'block';
+        if (node != null) {
+            node.style.display =  'block';
+        }
+
         idPanelCurrent = idPanel;
         node = document.getElementById(idPanelCurrent + 'Nav');
-        if (node != null) node.classList.add('slds-is-selected');
+        if (node != null) {
+            node.classList.add('slds-is-selected');
+        }
 
         if (node != null) {
             var headerNode = node.parentElement.previousElementSibling;
@@ -85,8 +98,9 @@
         // the correct tab when a validation error was hit on Save,
         // but for some reason the page reloads with {idPanelCurrent} empty,
         // even though it has been set by this actionFunction before editing the panel.
-        if (idPanelCurrent != '{!idPanelCurrent}')
+        if (idPanelCurrent != '{!idPanelCurrent}') {
             setPanelCurrent(idPanelCurrent);
+        }
     }
 
 </script>
@@ -162,6 +176,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCustomizableRollupNav"><a href="#" onclick="ShowPanel('idPanelCustomizableRollup');return false;" class="slds-grow slds-m-left_large">{!$Label.CRLP_RollupSummary}</a></li>
                             </ul>
                             <!-- Recurring Donations -->
+
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
                                     <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
@@ -172,10 +187,27 @@
                                 <a id="tree3-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRecurringDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree3-node0-link">
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDNav"><a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRecurringDonations}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDInstPdNav"><a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDInstallmentPeriods}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"><a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDFieldMap}</a></li>
+                                <li role="treeitem" aria-level="2" id="idPanelRD2EnablementNav"
+                                    class="{!IF(isRD2PilotEnabled, 'slds-tree__item', 'hide')}" 
+                                    style="{!IF(isRD2PilotEnabled, 'display: block', 'display: none')}">
+
+                                    <a href="#" onclick="ShowPanel('idPanelRD2Enablement'); fireRefreshViewEvent(); return false;" 
+                                        class="slds-grow slds-m-left_large" 
+                                        style="{!IF(isRD2PilotEnabled, 'display: block', 'display: none')}">
+                                        {!$Label.stgNavRD2Enablement}
+                                    </a>
+                                </li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDNav">
+                                    <a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRecurringDonations}</a>
+                                </li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDInstPdNav">
+                                    <a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDInstallmentPeriods}</a>
+                                </li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDFieldMapNav">
+                                    <a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDFieldMap}</a>
+                                </li>
                             </ul>
+
                             <!-- Bulk Data Processes -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelBulkProcesses">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
@@ -316,6 +348,10 @@
                 </div>
 
                 <!-- Recurring Donations -->
+                <div class="panel noborder" id="idPanelRD2Enablement" style="display:none">
+                    <apex:include pageName="STG_PanelRD2Enablement" />
+                </div>
+
                 <div class="panel noborder" id="idPanelRD" style="display:none" >
                     <apex:include pageName="STG_PanelRD" />
                 </div>
@@ -396,4 +432,11 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">        
+        function fireRefreshViewEvent() {
+            var refresheEvent = $A.get("e.force:refreshView");
+            refresheEvent.fire();
+        }
+    </script>
 </apex:page>
