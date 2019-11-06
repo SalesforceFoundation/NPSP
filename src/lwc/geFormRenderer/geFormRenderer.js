@@ -11,6 +11,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track mappingSet = '';
     @track version = '';
     @api showSpinner = false;
+    @api isBatchMode = false;
 
     connectedCallback() {
         GeFormService.getFormTemplate().then(response => {
