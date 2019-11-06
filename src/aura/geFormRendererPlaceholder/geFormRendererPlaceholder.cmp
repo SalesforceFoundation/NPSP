@@ -1,4 +1,5 @@
 <aura:component implements="lightning:isUrlAddressable">
     <!-- TODO: Delete aura component later. Only used during dev for easy viewing -->
-    <c:geFormRenderer isBatchMode="true"></c:geFormRenderer>
-</aura:component>	
+<!--    Top-level LWC component for Gift Entry Form functionality.-->
+    <c:geFormApp isBatchMode="true"></c:geFormApp>
+</aura:component>
