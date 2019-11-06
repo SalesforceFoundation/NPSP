@@ -295,6 +295,39 @@ private with sharing class RD2_RecurringDonations_TEST {
 
     }
 
+    /***
+    * @description Verifies next donation date is calculated when recurring donation is inserted
+    */
+    @isTest
+    private static void shouldCalculateNextDonationDateOnUpdateFromClosedToLapsed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(contact.Id)
+            .withAmount(10)
+            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_DAILY)
+            .withInstallmentFrequency(1)
+            .withStatus(RD2_Constants.STATUS_CLOSED)
+            .withDateEstablished(Date.newInstance(2018, 9, 15))
+            .withStartDate(Date.newInstance(2018, 9, 15))
+            .build();
+
+        Test.startTest();
+        insert rd;
+        rd.Status__c = RD2_Constants.STATUS_LAPSED;
+        update rd;
+        Test.stopTest();
+
+        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
+        System.assertEquals(Date.today(), rd2.npe03__Next_Payment_Date__c, 'Next donation date should be today()');
+
+        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
+        System.assertEquals(1, rdSchedules.size(), 'Should be 1 schedule');
+
+    }
+
 
     // Helpers
     ///////////////////

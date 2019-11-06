@@ -732,34 +732,6 @@ private with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
-    * @description Verifies update is NOT needed when status on updated recurring donation is closed.
-    */
-    @isTest
-    private static void shouldDetermineNoUpdateNeededWhenStatusLapsed() {
-
-        npe03__Recurring_Donation__c rd =
-            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                .withMockId()
-                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-                .withAmount(400)
-                .withPaymentMethod('Check')
-                .withInstallmentPeriodWeekly()
-                .withInstallmentFrequency(1)
-                .withDateEstablished(Date.newInstance(2019, 9, 15))
-                .withStartDate(Date.newInstance(2018, 3, 17))
-                .build();
-
-        npe03__Recurring_Donation__c changeRd = rd.clone();
-        changeRd.Status__c = RD2_Constants.STATUS_LAPSED;
-
-        RD2_ScheduleService schedule = new RD2_ScheduleService();
-        Boolean updateNeeded = schedule.isScheduleUpdateNeeded(changeRd, rd);
-
-        System.assertEquals(false, updateNeeded, 'isScheduleUpdateNeeded should return false.');
-
-    }
-
-    /***
     * @description Verifies updated schedule is created when day of month is changed.
     */
     @isTest
@@ -845,6 +817,61 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_WEEKLY, changes.objectsToInsert[0].get('InstallmentPeriod__c'), 'Installment period should be set to weekly.');
 
     }
+
+    /***
+    * @description Verifies new weekly schedule is created on change from 1st and 15th
+    */
+    @isTest
+    private static void shouldCreateNewScheduleWhenNewRDIsLapsed() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY)
+                .withDayOfMonth('5')
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .withStatus(RD2_Constants.STATUS_LAPSED)
+                .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.getNewSchedules(rd);
+
+        System.assertEquals(1, schedules.size(), '1 new schedule should be created.');
+        System.assertEquals(schedules[0].StartDate__c, Date.newInstance(2018, 3, 17), 'Start date on new schedule should be 3/17/2018.');
+
+    }
+
+    /***
+    * @description Verifies new weekly schedule is created on change from 1st and 15th
+    */
+    @isTest
+    private static void shouldGenerateNextDonationDateWhenNewRDIsLapsed() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_DAILY)
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2018, 3, 17))
+                .withStatus(RD2_Constants.STATUS_LAPSED)
+                .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        Date nextDonation = service.getNextDonationDate(rd);
+
+        System.assertEquals(Date.today(), nextDonation, 'Next donation date should equal today.');
+
+    }
+
 
     //// Helpers
 
