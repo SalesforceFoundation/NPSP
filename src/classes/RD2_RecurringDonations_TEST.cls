@@ -173,28 +173,68 @@ private with sharing class RD2_RecurringDonations_TEST {
         Contact contact = getContact();
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                        .withContact(contact.Id)
-                        .withAmount(10)
-                        .withInstallmentPeriodMonthly()
-                        .withInstallmentFrequency(1)
-                        .withDayOfMonth('20')
-                        .withDateEstablished(Date.newInstance(2019, 9, 15))
-                        .withStartDate(Date.newInstance(2019, 9, 15))
-                        .build()
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withContact(contact.Id)
+                .withAmount(10)
+                .withInstallmentPeriodMonthly()
+                .withInstallmentFrequency(1)
+                .withDayOfMonth('20')
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2019, 9, 15))
+                .build()
         };
 
         Test.startTest();
         insert rds;
         Test.stopTest();
 
-        Map<Id, npe03__Recurring_Donation__c> actualRdById = new Map<Id, npe03__Recurring_Donation__c>(
-                rdGateway.getRecords(rds)
-        );
+        Map<Id, npe03__Recurring_Donation__c> actualRdById = new Map<Id, npe03__Recurring_Donation__c>(rdGateway.getRecords(rds));
         System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rds);
         System.assertEquals(rds.size(), rdSchedules.size(), 'Number of RD schedule records should equal the number of RD records');
+
+    }
+
+    /***
+    * @description Verifies new schedule is created when recurring donation is updated
+    */
+    @isTest
+    private static void shouldCreateNewRDScheduleOnUpdate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(contact.Id)
+            .withAmount(10)
+            .withInstallmentPeriodMonthly()
+            .withInstallmentFrequency(1)
+            .withDayOfMonth('20')
+            .withDateEstablished(Date.newInstance(2019, 9, 15))
+            .withStartDate(Date.newInstance(2019, 9, 15))
+            .build();
+
+        Test.startTest();
+        insert rd;
+        rd.InstallmentFrequency__c = 3;
+        update rd;
+        Test.stopTest();
+
+        Integer endedCount = 0;
+        Integer frequency3Count = 0;
+        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
+
+        for (RecurringDonationSchedule__c schedule: rdSchedules) {
+            if (schedule.EndDate__c != null) {
+                endedCount++;
+                System.assertEquals(1, schedule.InstallmentFrequency__c, 'Installment frequency should be 1');
+            } else {
+                System.assertEquals(3, schedule.InstallmentFrequency__c, 'Installment frequency should be 3');
+            }
+        }
+        System.assertEquals(1, endedCount, 'End Date should be populated in 1 record');
+        System.assertEquals(2, rdSchedules.size(), 'Number of RD schedule records should be 2');
 
     }
 
@@ -222,6 +262,69 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
         System.assertEquals(Date.today(), rd2.npe03__Next_Payment_Date__c, 'Next Donation date should equal today');
+
+    }
+
+    /***
+    * @description Verifies next donation date is calculated when recurring donation is updated
+    */
+    @isTest
+    private static void shouldCalculateNextDonationDateOnUpdate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(contact.Id)
+            .withAmount(10)
+            .withInstallmentPeriodWeekly()
+            .withInstallmentFrequency(1)
+            .withDateEstablished(Date.newInstance(2019, 9, 15))
+            .withStartDate(Date.newInstance(2019, 9, 15))
+            .build();
+
+        Test.startTest();
+        insert rd;
+        rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
+        rd.Day_of_Month__c = '20';
+        update rd;
+        Test.stopTest();
+
+        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd2.npe03__Next_Payment_Date__c.day(), 20, 'Next Donation day should equal 20');
+
+    }
+
+    /***
+    * @description Verifies next donation date is calculated on update from closed to lapsed
+    */
+    @isTest
+    private static void shouldCalculateNextDonationDateOnUpdateFromClosedToLapsed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(contact.Id)
+            .withAmount(10)
+            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_DAILY)
+            .withInstallmentFrequency(1)
+            .withStatus(RD2_Constants.STATUS_CLOSED)
+            .withDateEstablished(Date.newInstance(2018, 9, 15))
+            .withStartDate(Date.newInstance(2018, 9, 15))
+            .build();
+
+        Test.startTest();
+        insert rd;
+        rd.Status__c = RD2_Constants.STATUS_LAPSED;
+        update rd;
+        Test.stopTest();
+
+        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
+        System.assertEquals(Date.today(), rd2.npe03__Next_Payment_Date__c, 'Next donation date should be today()');
+
+        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
+        System.assertEquals(1, rdSchedules.size(), 'Should be 1 schedule');
 
     }
 

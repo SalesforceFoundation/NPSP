@@ -46,6 +46,7 @@ public without sharing class RD2_ScheduleService {
             return currentDate;
         } set;
     }
+
     /***
     * @description Builds new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
@@ -91,12 +92,85 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
+    * @description Synchronizes the schedule records to match an updated recurring donation
+    * @param rd Recurring Donation record
+    * @param schedules Recurring Donation Schedule record
+    * @return TDTM_Runnable.DMLWrapper
+    */
+    public TDTM_Runnable.DMLWrapper getUpdatedSchedules(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> schedules) {
+
+        Date newStartDate = rd.StartDate__c;
+        TDTM_Runnable.DMLWrapper scheduleChanges = new TDTM_Runnable.DMLWrapper();
+
+        if (schedules != null) {
+            for (RecurringDonationSchedule__c schedule : schedules) {
+                if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+                    schedule.EndDate__c = newStartDate.addDays(-1);
+                } else {
+                    schedule.EndDate__c = currentDate;
+                }
+                scheduleChanges.objectsToUpdate.add(schedule);
+            }
+        }
+
+        List<RecurringDonationSchedule__c> newSchedules = getNewSchedules(rd);
+        for (RecurringDonationSchedule__c newSchedule : newSchedules) {
+            newSchedule.StartDate__c = newStartDate;
+        }
+        scheduleChanges.objectsToInsert.addAll(newSchedules);
+
+        return scheduleChanges;
+    }
+
+    /***
+    * @description Determines whether changes to recurring donation should trigger creation of new schedule(s)
+    * @param rd Trigger.new record
+    * @param oldRd Trigger.old record
+    * @return Boolean
+    */
+    public Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
+
+        Boolean isNeeded = false;
+
+        // newRD should never be null.  This is a fail safe measure only.
+        if (newRd == null) {
+            isNeeded = false;
+
+        // oldRd will be null on insert.  This method is unnecessary on inserts, so it should also always be null.  Defensive again.
+        } else if (oldRd == null) {
+            isNeeded = true;
+
+        // These two special conditions should never result in a schedule update.
+        } else if
+                ((newRd.Status__c == RD2_Constants.STATUS_LAPSED && oldRd.Status__c == RD2_Constants.STATUS_ACTIVE) ||
+                (newRd.Status__c == RD2_Constants.STATUS_ACTIVE && oldRd.Status__c == RD2_Constants.STATUS_LAPSED))
+        {
+            isNeeded = false;
+
+        // Schedules should only be updated if relevant data is updated.
+        } else if (
+            newRd.StartDate__c != oldRd.StartDate__c ||
+            newRd.npe03__Amount__c != oldRd.npe03__Amount__c ||
+            newRd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+            newRd.Day_of_Month__c != oldRd.Day_of_Month__c ||
+            newRd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
+            newRd.PaymentMethod__c != oldRd.PaymentMethod__c ||
+            newRd.Status__c != oldRd.Status__c ||
+            newRd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c)
+        {
+            isNeeded = true;
+        }
+
+        return isNeeded;
+    }
+
+    /***
     * @description Calculates the date of the next donation
     * @param rd Recurring Donation record
     * @return Date
     */
     public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED || rd.Status__c == RD2_Constants.STATUS_LAPSED) {
+        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return null;
         }
 
@@ -178,9 +252,8 @@ public without sharing class RD2_ScheduleService {
             }
         }
 
-        else if (
-                schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ||
-                schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
+        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ||
+                 schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
 
             if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
                 frequency *= 7;
