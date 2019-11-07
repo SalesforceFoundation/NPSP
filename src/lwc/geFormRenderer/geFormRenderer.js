@@ -18,7 +18,6 @@ export default class GeFormRenderer extends LightningElement {
                 this.name = formTemplate.name;
                 this.description = formTemplate.description;
                 this.version = formTemplate.layout.version;
-
                 if (typeof formTemplate.layout !== 'undefined'
                         && Array.isArray(formTemplate.layout.sections)) {
                     this.sections = formTemplate.layout.sections;

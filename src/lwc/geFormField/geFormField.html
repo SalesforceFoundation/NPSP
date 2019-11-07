@@ -10,11 +10,11 @@
         </lightning-input>
     </template>
     <template if:true={isLookup}>
-        <c-ge-form-field-lookup field-api-name='AccountId' object-api-name='Opportunity' onchange={handleValueChange}></c-ge-form-field-lookup>
-        <lightning-record-edit-form object-api-name={objectApiName}>
-            <label class="slds-form-element__label">{element.label}</label>
-            <lightning-input-field field-name={fieldApiName} variant='label-hidden'></lightning-input-field>
-        </lightning-record-edit-form>
+        <c-ge-form-field-lookup field-api-name={fieldApiName}
+                                object-api-name={objectApiName}
+                                onchange={handleValueChange}
+                                label={element.label}>
+        </c-ge-form-field-lookup>
     </template>
     <template if:true={isRichText}>
         <lightning-input-rich-text value={value} onblur={handleValueChange} label={element.label}></lightning-input-rich-text>

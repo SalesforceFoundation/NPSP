@@ -1,9 +1,10 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api} from 'lwc';
 
 export default class GeAutocomplete extends LightningElement {
     @api displayValue;
     @api options;
     @api iconName;
+    @api label;
 
     handleChange(event) {
         this.dispatchEvent(new CustomEvent('change', event));

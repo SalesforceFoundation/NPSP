@@ -8,6 +8,7 @@ export default class GeFormFieldLookup extends LightningElement {
     @api fieldApiName;
     @api objectApiName;
     @api displayValue;
+    @api label;
 
     @track options = [];
     @track objectInfo;
@@ -42,26 +43,28 @@ export default class GeFormFieldLookup extends LightningElement {
     }
 
     get fieldInfo() {
-        if(this.objectInfo.data) {
+        if(this.objectInfo && this.objectInfo.data) {
             return this.objectInfo.data.fields[this.fieldApiName];
         }
     }
 
+    get fieldLabel() {
+        return this.fieldInfo ? this.fieldInfo.label : null;
+    }
+
     get targetObjectIconName() {
-        if(this.targetObjectInfo.data) {
-            const { iconUrl } = this.targetObjectInfo.data.themeInfo;
-            const re = /\/(standard|custom)\/([a-zA-Z]+)/;
-            const result = re.exec(iconUrl);
-            return 'standard:' + result[2];
+        if(this.targetObjectInfo && this.targetObjectInfo.data) {
+            if(this.targetObjectInfo.data.themeInfo) {
+                const {iconUrl} = this.targetObjectInfo.data.themeInfo;
+                const re = /\/(standard|custom)\/([a-zA-Z]+)/;
+                const result = re.exec(iconUrl);
+                return 'standard:' + result[2];
+            }
         }
     }
 
     retrieveLookupOptions = async (searchValue, sObjectType) => {
         this.options = await doSearch({searchValue, sObjectType});
     };
-
-    get infoJSON() {
-        return JSON.stringify(this.objectInfo, null, 2);
-    }
 
 }

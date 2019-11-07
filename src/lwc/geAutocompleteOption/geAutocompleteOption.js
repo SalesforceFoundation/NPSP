@@ -5,7 +5,7 @@ export default class GeAutocompleteOption extends LightningElement {
     @api displayValue;
     @api iconName;
 
-    select() {
+    handleClick() {
         const detail = {
             value: this.value,
             displayValue: this.displayValue
