@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>custom_acc_text</label>
+    <label>CO3 Currency2</label>
     <protected>false</protected>
     <values>
-        <field>npsp__Data_Import_Field_Mapping_Set__c</field>npsp__
+        <field>npsp__Data_Import_Field_Mapping_Set__c</field>
         <value xsi:type="xsd:string">Migrated_Custom_Field_Mapping_Set</value>
     </values>
     <values>
-        <field>npsp__Is_Deleted__c</field>npsp__
+        <field>npsp__Is_Deleted__c</field>
         <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
-        <field>npsp__Required__c</field>npsp__
+        <field>npsp__Required__c</field>
         <value xsi:type="xsd:string">No</value>
     </values>
     <values>
-        <field>npsp__Source_Field_API_Name__c</field>npsp__
-        <value xsi:type="xsd:string">npsp__custom_acc_text__c</value>
+        <field>npsp__Source_Field_API_Name__c</field>
+        <value xsi:type="xsd:string">CO3_Currency__c</value>
     </values>
     <values>
-        <field>npsp__Target_Field_API_Name__c</field>npsp__
-        <value xsi:type="xsd:string">npsp__custom_acc_text__c</value>
+        <field>npsp__Target_Field_API_Name__c</field>
+        <value xsi:type="xsd:string">C3_currency__c</value>
     </values>
     <values>
-        <field>npsp__Target_Object_Mapping__c</field>npsp__
-        <value xsi:type="xsd:string">Account1_121e01054</value>
+        <field>npsp__Target_Object_Mapping__c</field>
+        <value xsi:type="xsd:string">CustomObject3_f3f9b20ad_94c048a58</value>
     </values>
 </CustomMetadata>

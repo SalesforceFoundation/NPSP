@@ -3,27 +3,27 @@
     <label>Home City</label>
     <protected>false</protected>
     <values>
-        <field>npsp__Data_Import_Field_Mapping_Set__c</field>npsp__
+        <field>npsp__Data_Import_Field_Mapping_Set__c</field>
         <value xsi:type="xsd:string">Migrated_Custom_Field_Mapping_Set</value>
     </values>
     <values>
-        <field>npsp__Is_Deleted__c</field>npsp__
+        <field>npsp__Is_Deleted__c</field>
         <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
-        <field>npsp__Required__c</field>npsp__
+        <field>npsp__Required__c</field>
         <value xsi:type="xsd:string">No</value>
     </values>
     <values>
-        <field>npsp__Source_Field_API_Name__c</field>npsp__
+        <field>npsp__Source_Field_API_Name__c</field>
         <value xsi:type="xsd:string">npsp__Home_City__c</value>
     </values>
     <values>
-        <field>npsp__Target_Field_API_Name__c</field>npsp__
+        <field>npsp__Target_Field_API_Name__c</field>
         <value xsi:type="xsd:string">npsp__MailingCity__c</value>
     </values>
     <values>
-        <field>npsp__Target_Object_Mapping__c</field>npsp__
+        <field>npsp__Target_Object_Mapping__c</field>
         <value xsi:type="xsd:string">Address_e3b26a73f</value>
     </values>
 </CustomMetadata>

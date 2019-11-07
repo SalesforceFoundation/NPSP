@@ -3,27 +3,27 @@
     <label>Contact2 Birthdate</label>
     <protected>false</protected>
     <values>
-        <field>npsp__Data_Import_Field_Mapping_Set__c</field>npsp__
+        <field>npsp__Data_Import_Field_Mapping_Set__c</field>
         <value xsi:type="xsd:string">Migrated_Custom_Field_Mapping_Set</value>
     </values>
     <values>
-        <field>npsp__Is_Deleted__c</field>npsp__
+        <field>npsp__Is_Deleted__c</field>
         <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
-        <field>npsp__Required__c</field>npsp__
+        <field>npsp__Required__c</field>
         <value xsi:type="xsd:string">No</value>
     </values>
     <values>
-        <field>npsp__Source_Field_API_Name__c</field>npsp__
+        <field>npsp__Source_Field_API_Name__c</field>
         <value xsi:type="xsd:string">npsp__Contact2_Birthdate__c</value>
     </values>
     <values>
-        <field>npsp__Target_Field_API_Name__c</field>npsp__
+        <field>npsp__Target_Field_API_Name__c</field>
         <value xsi:type="xsd:string">Birthdate</value>
     </values>
     <values>
-        <field>npsp__Target_Object_Mapping__c</field>npsp__
+        <field>npsp__Target_Object_Mapping__c</field>
         <value xsi:type="xsd:string">Contact2_466b47e38</value>
     </values>
 </CustomMetadata>

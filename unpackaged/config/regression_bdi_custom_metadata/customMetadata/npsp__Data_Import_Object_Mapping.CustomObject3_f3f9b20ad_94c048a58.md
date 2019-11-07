@@ -3,43 +3,43 @@
     <label>CustomObject3</label>
     <protected>false</protected>
     <values>
-        <field>npsp__Custom_Mapping_Logic_Class__c</field>npsp__
+        <field>npsp__Custom_Mapping_Logic_Class__c</field>
         <value xsi:nil="true"/>
     </values>
     <values>
-        <field>npsp__Data_Import_Object_Mapping_Set__c</field>npsp__
+        <field>npsp__Data_Import_Object_Mapping_Set__c</field>
         <value xsi:type="xsd:string">Migrated_Custom_Object_Mapping_Set</value>
     </values>
     <values>
-        <field>npsp__Imported_Record_Field_Name__c</field>npsp__
-        <value xsi:type="xsd:string">npsp__CustomObject3Imported__c</value>
+        <field>npsp__Imported_Record_Field_Name__c</field>
+        <value xsi:type="xsd:string">CustomObject3Imported__c</value>
     </values>
     <values>
-        <field>npsp__Imported_Record_Status_Field_Name__c</field>npsp__
-        <value xsi:type="xsd:string">npsp__CustomObject3ImportStatus__c</value>
+        <field>npsp__Imported_Record_Status_Field_Name__c</field>
+        <value xsi:type="xsd:string">CustomObject3ImportStatus__c</value>
     </values>
     <values>
-        <field>npsp__Is_Deleted__c</field>npsp__
+        <field>npsp__Is_Deleted__c</field>
         <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
-        <field>npsp__Legacy_Data_Import_Object_Name__c</field>npsp__
+        <field>npsp__Legacy_Data_Import_Object_Name__c</field>
         <value xsi:type="xsd:string">CustomObject3_f3f9b20ad</value>
     </values>
     <values>
-        <field>npsp__Object_API_Name__c</field>npsp__
-        <value xsi:type="xsd:string">npsp__CustomObject3__c</value>
+        <field>npsp__Object_API_Name__c</field>
+        <value xsi:type="xsd:string">CustomObject3__c</value>
     </values>
     <values>
-        <field>npsp__Predecessor__c</field>npsp__
+        <field>npsp__Predecessor__c</field>
         <value xsi:type="xsd:string">Payment_c68b6eb2a</value>
     </values>
     <values>
-        <field>npsp__Relationship_Field__c</field>npsp__
-        <value xsi:type="xsd:string">npsp__CustomObject3__c</value>
+        <field>npsp__Relationship_Field__c</field>
+        <value xsi:type="xsd:string">CustomObject3__c</value>
     </values>
     <values>
-        <field>npsp__Relationship_To_Predecessor__c</field>npsp__
+        <field>npsp__Relationship_To_Predecessor__c</field>
         <value xsi:type="xsd:string">Parent</value>
     </values>
 </CustomMetadata>

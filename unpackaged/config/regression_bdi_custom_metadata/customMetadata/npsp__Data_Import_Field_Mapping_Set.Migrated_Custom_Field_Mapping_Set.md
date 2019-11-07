@@ -3,7 +3,7 @@
     <label>Migrated_Custom_Field_Mapping_Set</label>
     <protected>false</protected>
     <values>
-        <field>npsp__Data_Import_Object_Mapping_Set__c</field>npsp__
+        <field>npsp__Data_Import_Object_Mapping_Set__c</field>
         <value xsi:type="xsd:string">Migrated_Custom_Object_Mapping_Set</value>
     </values>
 </CustomMetadata>
