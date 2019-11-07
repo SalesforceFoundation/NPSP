@@ -1,0 +1,71 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "c/batchProgress": [
+                "batchProgress/batchProgress.js"
+            ],
+            "c/bdiFieldMappingModal": [
+                "bdiFieldMappingModal/bdiFieldMappingModal.js"
+            ],
+            "c/bdiFieldMappings": [
+                "bdiFieldMappings/bdiFieldMappings.js"
+            ],
+            "c/bdiObjectMappingModal": [
+                "bdiObjectMappingModal/bdiObjectMappingModal.js"
+            ],
+            "c/bdiObjectMappings": [
+                "bdiObjectMappings/bdiObjectMappings.js"
+            ],
+            "c/geTemplateBuilder": [
+                "geTemplateBuilder/geTemplateBuilder.js"
+            ],
+            "c/geTemplateBuilderBatchHeader": [
+                "geTemplateBuilderBatchHeader/geTemplateBuilderBatchHeader.js"
+            ],
+            "c/geTemplateBuilderFormField": [
+                "geTemplateBuilderFormField/geTemplateBuilderFormField.js"
+            ],
+            "c/geTemplateBuilderGiftFields": [
+                "geTemplateBuilderGiftFields/geTemplateBuilderGiftFields.js"
+            ],
+            "c/geTemplateBuilderTemplateInfo": [
+                "geTemplateBuilderTemplateInfo/geTemplateBuilderTemplateInfo.js"
+            ],
+            "c/progressRing": [
+                "progressRing/progressRing.js"
+            ],
+            "c/pubsubNoPageRef": [
+                "pubsubNoPageRef/pubsubNoPageRef.js"
+            ],
+            "c/utilPlatformEventListener": [
+                "utilPlatformEventListener/utilPlatformEventListener.js"
+            ],
+            "c/utilSearchableCombobox": [
+                "utilSearchableCombobox/utilSearchableCombobox.js"
+            ],
+            "c/utilStencil": [
+                "utilStencil/utilStencil.js"
+            ],
+            "c/geTemplateBuilderFormLayout": [
+                "geTemplateBuilderFormLayout/geTemplateBuilderFormLayout.js"
+            ],
+            "c/utilTemplateBuilder": [
+                "utilTemplateBuilder/utilTemplateBuilder.js"
+            ],
+            "c/geTemplateBuilderFormSection": [
+                "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
+            ]
+        },
+        "experimentalDecorators": true
+    },
+    "include": [
+        "**/*",
+        "../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}

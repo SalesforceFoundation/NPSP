@@ -154,6 +154,18 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
+        <fullName>Active__c</fullName>
+        <description>Establishes whether the Recurring Donation Schedule is active or inactive. Read only</description>
+        <externalId>false</externalId>
+        <formula>OR( ISBLANK( EndDate__c ), EndDate__c >= TODAY() )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Establishes whether the Recurring Donation Schedule is active or inactive based on End Date. Read only.</inlineHelpText>
+        <label>Active</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Campaign__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>The Campaign associated with the Recurring Donation when this schedule record was created.</description>
