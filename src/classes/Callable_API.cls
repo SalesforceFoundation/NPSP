@@ -97,9 +97,9 @@ global with sharing class Callable_API implements System.Callable {
 
             } when 'allo.processoppsandpmts' {
                 Set<Id> opportunityIds = paramService.getSetId(CallableApiParameters.PARAM_OPPORTUNITY_IDS);
-                String contextType = paramService.getString(CallableApiParameters.CONTEXT_TYPE);
-                Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PROCESSING_BOUNDARY);
-                Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(CallableApiParameters.DISABLE_ALLOCATION_TRIGGERS);
+                String contextType = paramService.getString(CallableApiParameters.PARAM_CONTEXT_TYPE);
+                Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PARAM_PROCESSING_BOUNDARY);
+                Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(CallableApiParameters.PARAM_DISABLE_ALLOCATION_TRIGGERS);
 
                 return ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true);  
 
