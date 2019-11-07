@@ -108,7 +108,7 @@ global with sharing class Callable_API implements System.Callable {
 
             } when else {
                 throw new MalformedMethodInvocationException(
-                    String.format(System.Label.ApiMethodNotImplemented, new List<String> { action })
+                    String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
                 );
             }
         }
