@@ -2,11 +2,8 @@ import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 
 export default class GeFormTable extends LightningElement {
-    @track data = [{uid: -1, Donation_Amount__c: 0}]; //sample starter data
-    columns = [
-        {label: 'Submission ID', fieldName: 'uid', type: 'number'},
-        {label: 'Donation Amount', fieldName: 'Donation_Amount__c', type: 'number'}
-    ];
+    @track data = [];
+    @api columns = [];
 
     connectedCallback() {
         GeFormService.getFormTemplate();
