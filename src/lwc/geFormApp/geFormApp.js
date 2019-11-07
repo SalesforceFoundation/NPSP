@@ -11,7 +11,17 @@ export default class GeFormApp extends LightningElement {
         const dataImportRecord = GeFormService.getDataImportRecord(submissions.pop());
         const table = this.template.querySelector('c-ge-form-table');
         table.upsertRow(this.submissionId, dataImportRecord);
-        this.submissionId = this.submissionId + 1;
+        // this.submissionId = this.submissionId + 1;
+        // while (this.submissionId < 2) {
+        //     this.submissionId = this.submissionId + 1;
+        // }
+
+        if (this.submissionId < 3) {
+            this.submissionId = this.submissionId + 1;
+        } else if (this.submissionId == 3) {
+            this.submissionId = 1;
+        }
+
     }
 
     handleSectionsRetrieved(event) {
