@@ -43,7 +43,7 @@ class DataImportPage(ListingPage):
         
         
 @pageobject("Details", "DataImport__c")
-class DataImportDetailPage(ListingPage): 
+class DataImportDetailPage(DetailPage): 
     
     
     @property
