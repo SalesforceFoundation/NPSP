@@ -129,6 +129,37 @@ class GeFormService {
         diRecord.Donation_Donor__c = 'Account1'; //temporary to allow save of the form
         return diRecord;
     }
+
+    buildColumns(sections) {
+        console.log('*** ' + 'in service.buildcolumns' + ' ***');
+        const columns = [];
+        // {
+        //     label: 'label',
+        //     fieldName: 'fieldName',
+        //     type: 'type'
+        // }
+        sections.forEach(
+            (section) => {
+                console.log(JSON.parse(JSON.stringify(section)));
+                section.elements.forEach(
+                    element => {
+                        console.log('this.fieldMappings: ', this.fieldMappings);
+                        const fmw = this.getFieldMappingWrapper(element.value);
+                        console.log('fmw: ', fmw);
+                        console.log(JSON.parse(JSON.stringify(element)));
+                        const column = {
+                            label: element.label,
+                            fieldName: this.getFieldMappingWrapper(element.value).Source_Field_API_Name,
+                            type: this.getInputTypeFromDataType(element.dataType)
+                        };
+                        console.log('column: ', column);
+                        columns.push(column);
+                    }
+                );
+            }
+        );
+        return columns;
+    }
 }
 
 const geFormServiceInstance = new GeFormService();

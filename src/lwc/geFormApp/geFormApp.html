@@ -1,5 +1,9 @@
 <template>
     geFormApp -- isBatchMode = {isBatchMode}
-    <c-ge-form-renderer is-batch-mode={isBatchMode} onsubmit={handleSubmit}></c-ge-form-renderer>
+    <c-ge-form-renderer
+            is-batch-mode={isBatchMode}
+            onsubmit={handleSubmit}
+            onsectionsretrieved={handleSectionsRetrieved}>
+    </c-ge-form-renderer>
     <c-ge-form-table></c-ge-form-table>
 </template>

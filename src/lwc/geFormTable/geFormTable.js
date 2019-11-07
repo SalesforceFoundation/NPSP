@@ -1,4 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
+import GeFormService from 'c/geFormService';
 
 export default class GeFormTable extends LightningElement {
     @track data = [{uid: -1, Donation_Amount__c: 0}]; //sample starter data
@@ -6,6 +7,11 @@ export default class GeFormTable extends LightningElement {
         {label: 'Submission ID', fieldName: 'uid', type: 'number'},
         {label: 'Donation Amount', fieldName: 'Donation_Amount__c', type: 'number'}
     ];
+
+    connectedCallback() {
+        GeFormService.getFormTemplate();
+        console.log('GeFormService.fieldMappings: ', GeFormService.fieldMappings);
+    }
 
     @api
     upsertRow(uid, dataImport){

@@ -4,7 +4,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
-    @track sections = [];
+    @api sections = [];
     @track ready = false;
     @track name = '';
     @track description = '';
@@ -27,6 +27,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 if (typeof formTemplate.layout !== 'undefined'
                         && Array.isArray(formTemplate.layout.sections)) {
                     this.sections = formTemplate.layout.sections;
+                    this.dispatchEvent(new CustomEvent('sectionsretrieved'));
                 }
             }
 
