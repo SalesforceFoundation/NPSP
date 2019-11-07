@@ -37,6 +37,66 @@
 public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
+    * @description Method for retrieving all existing form templates.
+    */
+    public static FORM_Template[] getAllFormTemplates() {
+        FORM_Template[] formTemplates = new FORM_Template[]{};
+
+        for (Form_Template__c formTemplate : [SELECT Id, Name, Template_JSON__c, Description__c, Format_Version__c FROM Form_Template__c]) {
+            FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
+            deserializedFormTemplate.id = formTemplate.id;
+
+            formTemplates.add(deserializedFormTemplate);
+        }
+
+        return formTemplates;
+    }
+
+    /*******************************************************************************************************
+    * @description Method clones a Form_Template__c record by id.
+    * @param id: Form_Template__c record id
+    * @return string: A Form_Template__c record id
+    */
+    @AuraEnabled
+    public static FORM_Template cloneFormTemplate(String id) {
+        Form_Template__c formTemplate = [SELECT Id,
+                Name,
+                Template_JSON__c,
+                Description__c,
+                Format_Version__c
+            FROM Form_Template__c
+            WHERE Id = :id];
+
+        if (formTemplate != null) {
+            Form_Template__c clonedFormTemplate = formTemplate.clone();
+            FORM_Template deserializedTemplate = deserializeFormTemplateFromObj(clonedFormTemplate);
+            clonedFormTemplate.Name += ' [CLONED ' + Date.today().format() + ']';
+            deserializedTemplate.name = clonedFormTemplate.Name;
+            clonedFormTemplate.Template_JSON__c = JSON.serialize(deserializedTemplate);
+
+            clonedFormTemplate.Id = storeFormTemplate(clonedFormTemplate);
+
+            return deserializeFormTemplateFromObj(clonedFormTemplate);
+        }
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Method deletes a Form_Template__c record by id.
+    * @param id: Form_Template__c record id
+    */
+    @AuraEnabled
+    public static void deleteFormTemplates(String[] ids) {
+        Form_Template__c[] templates = [SELECT Id FROM Form_Template__c WHERE Id IN :ids];
+        try {
+            delete templates;
+        } catch (DmlException e) {
+            throw new DMLException(e.getMessage());
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Method for retrieving an existing template that you already have the Id for.
     * @param templateId - the Id of an existing form template record for retrieval.
     */
@@ -95,6 +155,19 @@ public with sharing class FORM_ServiceGiftEntry {
     }
 
     /*******************************************************************************************************
+    * @description Stores the template JSON.
+    * @param formTemplate - Form_Template__c record to store
+    */
+    public static String storeFormTemplate(Form_Template__c formTemplate) {
+        Form_Template__c templateObj = new Form_Template__c(Name = formTemplate.name,
+                                                        Description__c = formTemplate.Description__c,
+                                                        Template_JSON__c = formTemplate.Template_JSON__c,
+                                                        Format_Version__c = formTemplate.Format_Version__c);
+        insert templateObj;
+        return templateObj.id;
+    }
+
+    /*******************************************************************************************************
     * @description Private helper method for deserializing the JSON stored in a form template record.
     * @param templateObj - The Form_Template__c object with the Template JSON.
     */
@@ -102,6 +175,7 @@ public with sharing class FORM_ServiceGiftEntry {
         FORM_Template template;
         if (templateObj != null && templateObj.Template_JSON__c != null) {
             template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
+            template.id = templateObj.Id;
         }
         return template;
     }

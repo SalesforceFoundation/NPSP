@@ -48,13 +48,13 @@ public with sharing class GE_TemplateBuilderCtrl {
     private static final String TEMPLATE_VERSION = '1.0';
 
     /*******************************************************************************************************
-    * @description Queries all Form_Template__c records.
+    * @description Method for retrieving all existing form templates.
     *
-    * @return Form_Template__c[]: List of all Form_Template__c records
+    * @return FORM_Template[]: List of all Form_Template__c records
     */
     @AuraEnabled
-    public static Form_Template__c[] getAllFormTemplates() {
-        return [SELECT Id, Name, Template_JSON__c, Description__c, Format_Version__c FROM Form_Template__c];
+    public static FORM_Template[] getAllFormTemplates() {
+        return FORM_ServiceGiftEntry.getAllFormTemplates();
     }
 
     /*******************************************************************************************************
@@ -65,24 +65,8 @@ public with sharing class GE_TemplateBuilderCtrl {
     * @return clonedFormTemplate: A Form_Template__c record
     */
     @AuraEnabled
-    public static Form_Template__c cloneFormTemplate(String id) {
-        Form_Template__c[] templates = [SELECT Id,
-                Name,
-                Template_JSON__c,
-                Description__c,
-                Format_Version__c
-            FROM Form_Template__c
-            WHERE Id = :id];
-
-        if (templates.size() > 0) {
-            Form_Template__c clonedFormTemplate = templates[0].clone();
-            clonedFormTemplate.Name += ' [CLONED ' + Date.today().format() + ']';
-            insert clonedFormTemplate;
-
-            return clonedFormTemplate;
-        }
-
-        return null;
+    public static FORM_Template cloneFormTemplate(String id) {
+        return FORM_ServiceGiftEntry.cloneFormTemplate(id);
     }
 
     /*******************************************************************************************************
@@ -91,9 +75,8 @@ public with sharing class GE_TemplateBuilderCtrl {
     * @param id: Form_Template__c record id
     */
     @AuraEnabled
-    public static void deleteFormTemplate(String id) {
-        Form_Template__c[] templates = [SELECT Id FROM Form_Template__c WHERE Id = :id];
-        delete templates;
+    public static void deleteFormTemplates(String[] ids) {
+        FORM_ServiceGiftEntry.deleteFormTemplates(ids);
     }
 
     /*******************************************************************************************************

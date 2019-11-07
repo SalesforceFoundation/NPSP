@@ -1,9 +1,9 @@
 import { LightningElement, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getAllFormTemplates from '@salesforce/apex/GE_TemplateBuilderCtrl.getAllFormTemplates';
-import deleteFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.deleteFormTemplate';
+import deleteFormTemplates from '@salesforce/apex/GE_TemplateBuilderCtrl.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.cloneFormTemplate';
-import { findIndexByProperty } from 'c/utilTemplateBuilder';
+import { findIndexByProperty, mutable } from 'c/utilTemplateBuilder';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
@@ -12,8 +12,8 @@ const actions = [
 ];
 
 const columns = [
-    { label: 'Template Name', fieldName: 'Name' },
-    { label: 'Template Description', fieldName: 'npsp__Description__c' },
+    { label: 'Template Name', fieldName: 'name' },
+    { label: 'Template Description', fieldName: 'description' },
     {
         type: 'action',
         typeAttributes: { rowActions: actions },
@@ -31,27 +31,29 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     init = async () => {
         this.templates = await getAllFormTemplates();
+        console.log('templates: ', mutable(this.templates));
         this.isLoading = false;
     }
 
     handleRowAction(event) {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
+        console.log('row: ', mutable(row));
         this.isLoading = true;
 
         switch (actionName) {
             case 'edit':
-                this.navigateToTemplateBuilder(row.Id);
+                this.navigateToTemplateBuilder(row.id);
                 break;
             case 'clone':
-                cloneFormTemplate({ id: row.Id }).then((clonedTemplate) => {
+                cloneFormTemplate({ id: row.id }).then((clonedTemplate) => {
                     this.templates = [...this.templates, clonedTemplate];
                     this.isLoading = false;
                 });
                 break;
             case 'delete':
-                deleteFormTemplate({ id: row.Id }).then(() => {
-                    const index = findIndexByProperty(this.templates, 'Id', row.Id);
+                deleteFormTemplates({ ids: [row.id] }).then(() => {
+                    const index = findIndexByProperty(this.templates, 'id', row.id);
                     this.templates.splice(index, 1);
                     this.templates = [...this.templates];
                     this.isLoading = false;
