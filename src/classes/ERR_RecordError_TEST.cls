@@ -492,7 +492,7 @@ private class ERR_RecordError_TEST {
         }
     }
 
-    /*******************************************************************************************************
+   /*******************************************************************************************************
     * @description Unit Tests for setting Retry Pending? to false, and adding a message for individual
     * records
     */
@@ -668,7 +668,6 @@ private class ERR_RecordError_TEST {
             System.assertEquals (true, err.Full_Message__c.contains('Error Resolved for record'), 'Full Message [Error Resolved for record]');
         }
     }
-
 
     /*******************************************************************************************************
     * @description Unit Tests to confirm exception behavior when an unsupported DML Type is passed to the Record

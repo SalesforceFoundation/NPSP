@@ -51,7 +51,10 @@ public with sharing class ALLO_UpdPaymentAllocations_SCHED implements Schedulabl
             batchSize = Integer.valueOf(allocationSettings.Payment_Allocations_Batch_Size__c);
         }
 
+        ALLO_UpdPaymentAllocations_BATCH aub = new ALLO_UpdPaymentAllocations_BATCH();
+        aub.setBatchSize(batchSize);
+
         //Execute the batch
-        Database.executeBatch(new ALLO_UpdPaymentAllocations_BATCH(batchSize), batchSize);
+        Database.executeBatch(aub, batchSize);
     }
 }

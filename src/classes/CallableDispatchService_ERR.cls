@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2019, Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -33,7 +30,11 @@
 * @group API
 * @group-content ../../ApexDocContent/API.htm
 * @description Dispatches calls from the Callable API to the NPSP Error and RecordError APIs,
-*              depending on the ActionType that is set
+*              depending on the ActionType that is set.
+*             This method is to be used only by Salesforce.org apps and is subject to change at
+*             any time. Do NOT call this method.  If you do so, your functionality can break
+*             without any warning or liability from Salesforce.
+*             If you have any questions, please inquire on the Power of Us Hub.
 */
 public with sharing class CallableDispatchService_ERR {
     /*******************************************************************************************************
@@ -46,53 +47,80 @@ public with sharing class CallableDispatchService_ERR {
 
     public static final String PARAM_CONTEXT_NAME = 'Context';
     public static final String PARAM_ERR_MSGS_BY_RECORDID = 'ErrorMsgsByRecordId';
-    public static final String PARAM_DML_RESULTS = 'DmlResultsByRecordId';
+    public static final String PARAM_DML_RESULTS = 'DmlResults';
     public static final String PARAM_MESSAGE = 'Message';
     public static final String PARAM_EXCEPTION = 'Exception';
+
+    private CallableApiParameters paramService;
+
+    /**
+     * @description private no argument constructor
+     * @param CallableApiParameters paramService Parameteters passed to the Callable API as part of it's invocation
+     */
+    private CallableDispatchService_ERR(CallableApiParameters paramService) {
+        this.paramService = paramService;
+    }
+
+    /**
+     * @description Returns an instance of the CallableDispatchService_ERR class, initialized with the
+     * parameters passed to it.
+     *            This method is to be used only by Salesforce.org apps and is subject to change at
+     *            any time. Do NOT call this method.  If you do so, your functionality can break
+     *            without any warning or liability from Salesforce.
+     *            If you have any questions, please inquire on the Power of Us Hub.
+     * @param CallableApiParameters paramService Parameteters passed to the Callable API as part of it's invocation
+     * @return CallableDispatchService_ERR instance ready to use
+     */
+    public static CallableDispatchService_ERR getInstanceOf(CallableApiParameters paramService) {
+        return new CallableDispatchService_ERR(paramService);
+    }
 
     /**
      * @description Dispatches invocations to the Error (ERR) Handling functionality from the Callable API to different methods
      * based on an "ActionType" parameter
-     * @param CallableApiParameters paramService Parameteters passed to the Callable API as part of it's invocation
+     *            This method is to be used only by Salesforce.org apps and is subject to change at
+     *            any time. Do NOT call this method.  If you do so, your functionality can break
+     *            without any warning or liability from Salesforce.
+     *            If you have any questions, please inquire on the Power of Us Hub.
      * @return Object The result of the dispatch action's invocation
      */
-    public static Object dispatch(CallableApiParameters paramService) {
+    public Object dispatch() {
 
-        String dispatchAction = paramService.getString(PARAM_DISPATCH_ACTION_TYPE);
+        String dispatchAction = this.paramService.getString(PARAM_DISPATCH_ACTION_TYPE);
 
         String cleanDispatchAction = (String.isBlank(dispatchAction) ? '' : dispatchAction.toLowerCase());
 
         // Pulling Context out of switch since all the dispatch actions need the Context parameter
-        String context = paramService.getString(PARAM_CONTEXT_NAME);
+        String context = this.paramService.getString(PARAM_CONTEXT_NAME);
 
         switch on (cleanDispatchAction) {
             when 'adderror' { // Add Error
-                return  addError(   context,
-                                    paramService.getString(PARAM_MESSAGE)
-                        );
+                addError(   context,
+                            this.paramService.getString(PARAM_MESSAGE)
+                );
 
             } when 'addexception' { // Add Exception
-                return  addException(   context,
-                                        paramService.getException(PARAM_EXCEPTION)
-                        );
+                addException(   context,
+                                this.paramService.getException(PARAM_EXCEPTION)
+                );
 
             } when 'addrecorderrors' { // Add Record Errors
-                return  addRecordErrors(    context,
-                                            paramService.getSObjects(PARAM_SOBJECTS),
-                                            paramService.getStringsById(PARAM_ERR_MSGS_BY_RECORDID)
-                        );
+                addRecordErrors(    context,
+                                    this.paramService.getSObjects(PARAM_SOBJECTS),
+                                    this.paramService.getStringsById(PARAM_ERR_MSGS_BY_RECORDID)
+                );
 
             } when 'addrecorddmlerrors' { // Add Record Dml Errors
-                return  addRecordDmlErrors( context,
-                                            paramService.getSObjects(PARAM_SOBJECTS),
-                                            paramService.getObjects(PARAM_DML_RESULTS)
-                        );
+                addRecordDmlErrors( context,
+                                    this.paramService.getSObjects(PARAM_SOBJECTS),
+                                    this.paramService.getObjects(PARAM_DML_RESULTS)
+                );
 
             } when 'clearrecorderrors' { // Clear Record Errors
-                return  clearRecordErrors(  context,
-                                            paramService.getSObjects(PARAM_SOBJECTS),
-                                            paramService.getString(PARAM_MESSAGE)
-                        );
+                clearRecordErrors(  context,
+                                    this.paramService.getSObjects(PARAM_SOBJECTS),
+                                    this.paramService.getString(PARAM_MESSAGE)
+                );
 
             } when else { // Invalid Action Type / Action Type Not implemented
                 throw new MalformedErrorDispatchMethodApiException(
@@ -100,6 +128,9 @@ public with sharing class CallableDispatchService_ERR {
                 );
             }
         }
+
+        // if the action does not return a value then return success
+        return true;
     }
 
     /**
@@ -107,12 +138,9 @@ public with sharing class CallableDispatchService_ERR {
      *              @see ERR_Handler.processError
      * @param context The context the exception should be logged under
      * @param errorMessage The Error to Log
-     * @return Boolean true
      */
-    private static Boolean addError(String context, String errorMessage) {
+    private void addError(String context, String errorMessage) {
         ERR_Handler.processError(errorMessage, context);
-
-        return true;
     }
 
     /**
@@ -120,12 +148,9 @@ public with sharing class CallableDispatchService_ERR {
      *              @see ERR_Handler.processError
      * @param context The context the exception should be logged under
      * @param anException The exception to log
-     * @return Boolean true
      */
-    private static Boolean addException(String context, Exception anException) {
+    private void addException(String context, Exception anException) {
         ERR_Handler.processError(anException, context);
-
-        return true;
     }
 
     /**
@@ -136,7 +161,7 @@ public with sharing class CallableDispatchService_ERR {
      * @param errorMessagesByRecordId Map of Errors Messages to add, keyed by Record Id
      * @return Boolean true
      */
-    private static Boolean addRecordErrors(String context, List<SObject> sObjects, Map<Id, String> errorMessagesByRecordId) {
+    private void addRecordErrors(String context, List<SObject> sObjects, Map<Id, String> errorMessagesByRecordId) {
         Map<Id, SObject> sObjectsById = (sObjects != null) ? new Map<Id, SObject>(sObjects) : new Map<Id, SObject>();
 
         ERR_RecordError recordError = new ERR_RecordError(context);
@@ -144,8 +169,6 @@ public with sharing class CallableDispatchService_ERR {
 
         recordError.addErrors(errorMessagesByRecordId, sObjectsById);
         recordError.processErrors();
-
-        return true;
     }
 
     /**
@@ -154,9 +177,8 @@ public with sharing class CallableDispatchService_ERR {
      * @param context The context the errors should be logged under
      * @param sObjects The list of SObjects to process
      * @param dmlResults List of dmlResults associated with the SObjects to process
-     * @return Boolean true
      */
-    private static Boolean addRecordDmlErrors(String context, List<SObject> sObjects, List<Object> dmlResults) {
+    private void addRecordDmlErrors(String context, List<SObject> sObjects, List<Object> dmlResults) {
         // Need to be in same order as SObjects List, so cannot construct map and use keyset()
         List<Id> idsForSObjects = buildListOfIdsForSObjects(sObjects);
 
@@ -165,8 +187,6 @@ public with sharing class CallableDispatchService_ERR {
 
         recordError.addErrors(dmlResults, idsForSObjects, sObjects);
         recordError.processErrors();
-
-        return true;
     }
 
     /**
@@ -176,9 +196,8 @@ public with sharing class CallableDispatchService_ERR {
      * @param sObjects The list of SObjects to process
      * @param message The message to update the Record Error with When clearing
      *                them
-     * @return Boolean true
      */
-    private static Boolean clearRecordErrors(String context, List<SObject> sObjects, String message) {
+    private void clearRecordErrors(String context, List<SObject> sObjects, String message) {
         Map<Id, SObject> sObjectsById = (sObjects != null) ? new Map<Id, SObject>(sObjects) : new Map<Id, SObject>();
 
         ERR_RecordError recordError = new ERR_RecordError(context);
@@ -186,8 +205,6 @@ public with sharing class CallableDispatchService_ERR {
 
         recordError.clearErrors(sObjectsById.keySet(), message);
         recordError.processErrors();
-
-        return true;
     }
 
     /**
@@ -196,7 +213,7 @@ public with sharing class CallableDispatchService_ERR {
      * @param sObjects List of SObjects to extract ids from
      * @return List<Id> List of Ids in same order as SObject List
      */
-     private static List<Id> buildListOfIdsForSObjects(List<SObject> sObjects) {
+     private List<Id> buildListOfIdsForSObjects(List<SObject> sObjects) {
         List<Id> idsForSObjects = new List<Id>();
 
         if (sObjects != null) {

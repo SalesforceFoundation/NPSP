@@ -14,6 +14,16 @@
                 this.setModel(component, response);
                 this.createEntryForm(component, response);
                 component.find('forceRecordCmp').reloadRecord(true);
+                if (response.notices) {
+                    response.notices.forEach(function(notice){
+                        component.find('notifLib').showNotice({
+                            "variant": notice.variant,
+                            "header": notice.header,
+                            "title": notice.title,
+                            "message": notice.message,
+                        });
+                    });
+                }
             } else {
                 this.handleApexErrors(component, response.getError());
                 this.hideFormSpinner(component);

@@ -49,6 +49,30 @@ public class UTIL_Describe {
     private static Map<Schema.SObjectType, Schema.DescribeSObjectResult> objectDescribesByType = new Map<Schema.SObjectType, Schema.DescribeSObjectResult>();
     private static Map<String, Map<String, Schema.SObjectField>> fieldTokens = new Map<String,Map<String, Schema.SObjectField>>();
     private static Map<String, Map<String, Schema.DescribeFieldResult>> fieldDescribes = new Map<String,Map<String, Schema.DescribeFieldResult>>();
+    private static UTIL_Describe utilDescribeInstance;
+
+    /**
+    * @description Returns static instance of this class.  Primarily used to facilitate
+    * dependency injection in tests.
+    * @return Instance of UTIL_Describe class.
+    */
+    public static UTIL_Describe getInstance(){
+        if (utilDescribeInstance == null) {
+            utilDescribeInstance = new UTIL_Describe();
+        }
+        return utilDescribeInstance;
+    }
+
+    /**
+    * @description Sets instance member variable holding instance of this class.  Primarily
+    * used to facilitate dependency injection in tests.
+    * @param utilDescribe An instance of the UTIL_Describe
+    * class.
+    */
+    @TestVisible
+    private static void setInstance(UTIL_Describe utilDescribe){
+        utilDescribeInstance = utilDescribe;
+    }
 
     /*******************************************
     * Gets describe maps for a new object
@@ -315,6 +339,15 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description Instance method that returns the inline help text for a field.
+    * @param field SObjectField token of the field to analyze.
+    * @return Help text configured within the fields metadata.
+    */
+    public String getHelpText(SObjectField field) {
+        return field.getDescribe().getInlineHelpText();
+    }
+
+    /*******************************************************************************************************
     * @description returns friendly label for standard User lookups when we need to display them in custom UI.
     * This is necessary because these labels do not exist in any schema describe available.
     * @return string, translatable & friendly label without 'Id'
@@ -346,6 +379,19 @@ public class UTIL_Describe {
             Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
             return dfr != null;
         } catch (exception ex) {
+            return false;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Determines whether a field is a Master-Detail field.
+    * @param field The field to analyze.
+    * @return True if the field is a Master-Detail field, otherwise false.
+    */
+    public Boolean isMasterDetailField(SObjectField field) {
+        if (field.getDescribe().getRelationshipOrder() != null) {
+            return true;
+        } else {
             return false;
         }
     }
