@@ -31,14 +31,12 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     init = async () => {
         this.templates = await getAllFormTemplates();
-        console.log('templates: ', mutable(this.templates));
         this.isLoading = false;
     }
 
     handleRowAction(event) {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
-        console.log('row: ', mutable(row));
         this.isLoading = true;
 
         switch (actionName) {

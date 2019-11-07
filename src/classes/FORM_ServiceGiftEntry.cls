@@ -74,9 +74,11 @@ public with sharing class FORM_ServiceGiftEntry {
             deserializedTemplate.name = clonedFormTemplate.Name;
             clonedFormTemplate.Template_JSON__c = JSON.serialize(deserializedTemplate);
 
-            clonedFormTemplate.Id = storeFormTemplate(clonedFormTemplate);
+            String newId = storeFormTemplate(clonedFormTemplate);
+            FORM_Template deserializedClonedTemplate = deserializeFormTemplateFromObj(clonedFormTemplate);
+            deserializedClonedTemplate.id = newId;
 
-            return deserializeFormTemplateFromObj(clonedFormTemplate);
+            return deserializedClonedTemplate;
         }
 
         return null;
@@ -175,7 +177,6 @@ public with sharing class FORM_ServiceGiftEntry {
         FORM_Template template;
         if (templateObj != null && templateObj.Template_JSON__c != null) {
             template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
-            template.id = templateObj.Id;
         }
         return template;
     }
