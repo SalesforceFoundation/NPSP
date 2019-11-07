@@ -1,0 +1,20 @@
+<template>
+    <lightning-input type="search"
+                     value={displayValue}
+                     onchange={handleChange}
+                     label={label}
+                     ></lightning-input>
+    <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox" if:true={hasOptions}>
+        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+            <template for:each={options} for:item="option">
+                <c-ge-autocomplete-option
+                        onselect={handleSelect}
+                        value={option.value}
+                        display-value={option.displayValue}
+                        icon-name={iconName}
+                        key={option.value}>
+                </c-ge-autocomplete-option>
+            </template>
+        </ul>
+    </div>
+</template>

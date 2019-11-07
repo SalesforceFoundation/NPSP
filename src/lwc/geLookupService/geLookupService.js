@@ -1,0 +1,5 @@
+class GeLookupService {
+
+}
+
+export { GeLookupService }

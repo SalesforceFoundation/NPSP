@@ -267,6 +267,7 @@
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_FormRendererService</members>
+        <members>GE_LookupController</members>
         <members>GE_TemplateBuilderCtrl</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -706,6 +707,7 @@
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
         <members>geFormRendererPlaceholder</members>
+        <members>geLookupPlaceholder</members>
         <members>geTemplateBuilderPlaceholder</members>
         <members>modalFooter</members>
         <members>modalHeader</members>
@@ -3029,10 +3031,14 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>geAutocomplete</members>
+        <members>geAutocompleteOption</members>
         <members>geFormField</members>
+        <members>geFormFieldLookup</members>
         <members>geFormRenderer</members>
         <members>geFormSection</members>
         <members>geFormService</members>
+        <members>geLookupService</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
