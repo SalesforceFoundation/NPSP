@@ -35,7 +35,7 @@
 * @description Global API class that exposes a System. interface for external
 * applications and customers to leverage for future NPSP api's
 */
-global with sharing class _API implements System. {
+global with sharing class Callable_API implements System.Callable {
 
     /*******************************************************************************************************
     * @description Exception class for Malformed Method Invocations
@@ -52,18 +52,18 @@ global with sharing class _API implements System. {
     global Object call(String action, Map<String, Object> params) {
         String cleanActionText = (String.isBlank(action) ? '' : action.toLowerCase());
 
-        ApiParameters paramService = new ApiParameters(params);
+        CallableApiParameters paramService = new CallableApiParameters(params);
 
         switch on (cleanActionText) { 
             when 'tdtm.disablealltriggers' {
                 TDTM_Config_API.disableAllTriggers();
 
             } when 'opp.mapstagetostate' {
-                String oppStage = paramService.getString(ApiParameters.PARAM_OPPORTUNITY_STAGE);
+                String oppStage = paramService.getString(CallableApiParameters.PARAM_OPPORTUNITY_STAGE);
                 return OPP_StageMappingUtil.determineOppStateFromOppStage(oppStage);
 
             } when 'crlp.getdefinitionsforrolluptype' {
-                String rollupType = paramService.getString(ApiParameters.PARAM_ROLLUP_TYPE);
+                String rollupType = paramService.getString(CallableApiParameters.PARAM_ROLLUP_TYPE);
 
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
                 List<CRLP_Rollup> response = crlpApiSvc.getRollupDefinitions(rollupType);
@@ -71,11 +71,11 @@ global with sharing class _API implements System. {
                 return JSON.serialize(response, true);
 
             } when 'crlp.executerollups' {
-                Id parentId = paramService.getString(ApiParameters.PARAM_ROLLUP_PARENTID);
-                String rollupType = paramService.getString(ApiParameters.PARAM_ROLLUP_TYPE);
-                List<CRLP_Rollup> rollupDefs = paramService.getRollupDefinitions(ApiParameters.PARAM_ROLLUP_DEFS);
-                Boolean commitToDb = paramService.getBoolean(ApiParameters.PARAM_ROLLUP_COMMIT, false);
-                Map<Id, Map<SObjectType, List<SObject>>> rollupData = paramService.getRollupDataMap(ApiParameters.PARAM_ROLLUP_DATA);
+                Id parentId = paramService.getString(CallableApiParameters.PARAM_ROLLUP_PARENTID);
+                String rollupType = paramService.getString(CallableApiParameters.PARAM_ROLLUP_TYPE);
+                List<CRLP_Rollup> rollupDefs = paramService.getRollupDefinitions(CallableApiParameters.PARAM_ROLLUP_DEFS);
+                Boolean commitToDb = paramService.getBoolean(CallableApiParameters.PARAM_ROLLUP_COMMIT, false);
+                Map<Id, Map<SObjectType, List<SObject>>> rollupData = paramService.getRollupDataMap(CallableApiParameters.PARAM_ROLLUP_DATA);
 
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
                 rollupDefs = crlpApiSvc.executeRollups(parentId, rollupType, rollupDefs, rollupData, commitToDb);
@@ -96,17 +96,15 @@ global with sharing class _API implements System. {
                 return CallableDispatchService_ERR.getInstanceOf(paramService).dispatch();
 
             } when 'allo.processoppsandpmts' {
-                Set<Id> opportunityIds = paramService.getSetId(ApiParameters.PARAM_OPPORTUNITY_IDS);
-                String contextType = paramService.getString(ApiParameters.CONTEXT_TYPE);
-                Datetime processingBoundary = paramService.getDatetime(ApiParameters.PROCESSING_BOUNDARY);
-                Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(ApiParameters.DISABLE_ALLOCATION_TRIGGERS);
+                Set<Id> opportunityIds = paramService.getSetId(CallableApiParameters.PARAM_OPPORTUNITY_IDS);
+                String contextType = paramService.getString(CallableApiParameters.CONTEXT_TYPE);
+                Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PROCESSING_BOUNDARY);
+                Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(CallableApiParameters.DISABLE_ALLOCATION_TRIGGERS);
 
-                return Set<Id> successfullyProcessedOppIds = ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, false);
-                return successfullyProcessedOppIds;  
+                return ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true);  
 
             } when 'allo.validatepmtallocationconfig' { 
-                List<String> configProblems = ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();
-                return configProblems;      
+                return ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();    
 
             } when else {
                 throw new MalformedMethodInvocationException(

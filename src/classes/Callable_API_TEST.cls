@@ -91,7 +91,6 @@ private with sharing class Callable_API_TEST {
     }
 
 
-
     /*******************************************************************************************************
     * @description Call the API with an invalid action text and make sure an exception is thrown
     ********************************************************************************************************/
