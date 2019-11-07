@@ -44,7 +44,9 @@ public with sharing class FORM_ServiceGiftEntry {
 
         for (Form_Template__c formTemplate : [SELECT Id, Name, Template_JSON__c, Description__c, Format_Version__c FROM Form_Template__c]) {
             FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
-            deserializedFormTemplate.id = formTemplate.id;
+            if (formTemplate.id != null) {
+                deserializedFormTemplate.id = formTemplate.id;
+            }
 
             formTemplates.add(deserializedFormTemplate);
         }
@@ -91,11 +93,7 @@ public with sharing class FORM_ServiceGiftEntry {
     @AuraEnabled
     public static void deleteFormTemplates(String[] ids) {
         Form_Template__c[] templates = [SELECT Id FROM Form_Template__c WHERE Id IN :ids];
-        try {
-            delete templates;
-        } catch (DmlException e) {
-            throw new DMLException(e.getMessage());
-        }
+        delete templates;
     }
 
     /*******************************************************************************************************

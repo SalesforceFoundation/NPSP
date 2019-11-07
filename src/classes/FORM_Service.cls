@@ -48,8 +48,7 @@ public virtual with sharing class FORM_Service {
     * @param id: Form_Template__c record id
     * @return string: A Form_Template__c record id
     */
-    @AuraEnabled
-    public static FORM_Template cloneFormTemplate(String id) {
+    public virtual FORM_Template cloneFormTemplate(String id) {
         return FORM_ServiceGiftEntry.cloneFormTemplate(id);
     }
 
@@ -57,8 +56,7 @@ public virtual with sharing class FORM_Service {
     * @description Method deletes a Form_Template__c record by id.
     * @param id: Form_Template__c record id
     */
-    @AuraEnabled
-    public static void deleteFormTemplates(String[] ids) {
+    public virtual void deleteFormTemplates(String[] ids) {
         FORM_ServiceGiftEntry.deleteFormTemplates(ids);
     }
 
