@@ -43,13 +43,13 @@ public without sharing class TEST_OpportunityBuilder {
     */
     public TEST_OpportunityBuilder() {
         valuesByFieldName = new Map<String, Object>();
-        
+
         this.withName();
     }
 
     /***
     * @description Sets Opportunity Id
-    * @param oppId Opportunity or mock Id 
+    * @param oppId Opportunity or mock Id
     * @return TEST_OpportunityBuilder Builder instance
     */
     public TEST_OpportunityBuilder withId(Id oppId) {
@@ -64,7 +64,7 @@ public without sharing class TEST_OpportunityBuilder {
     public TEST_OpportunityBuilder withMockId() {
         valuesByFieldName.put('Id', UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType));
         return this;
-    }    
+    }
 
     /***
     * @description Sets Name
@@ -114,6 +114,26 @@ public without sharing class TEST_OpportunityBuilder {
     }
 
     /***
+    * @description Sets PrimaryContact
+    * @param con Existing or mock Contact record
+    * @return TEST_OpportunityBuilder Builder instance
+    */
+    public TEST_OpportunityBuilder withContact(Contact con) {
+        valuesByFieldName.put('Primary_Contact__c', con.Id);
+        return withContact(con.Id);
+    }
+
+    /***
+    * @description Sets PrimaryCotact
+    * @param contactId Existing or mock Contact Id
+    * @return TEST_OpportunityBuilder Builder instance
+    */
+    public TEST_OpportunityBuilder withContact(Id contactId) {
+        valuesByFieldName.put('Primary_Contact__c', contactId);
+        return this;
+    }
+
+    /***
     * @description Sets Campaign
     * @param campaignId Existing or mock Campaign Id
     * @return TEST_OpportunityBuilder Builder instance
@@ -147,7 +167,7 @@ public without sharing class TEST_OpportunityBuilder {
     * @description Determines the Closed Won stage value and sets StageName to it
     * @return TEST_OpportunityBuilder Builder instance
     */
-    public TEST_OpportunityBuilder withClosedWonStage() {        
+    public TEST_OpportunityBuilder withClosedWonStage() {
         valuesByFieldName.put('StageName', UTIL_UnitTestData_TEST.getClosedWonStage());
         return this;
     }
@@ -156,7 +176,7 @@ public without sharing class TEST_OpportunityBuilder {
     * @description Determines the Closed Lost stage value and sets StageName to it
     * @return TEST_OpportunityBuilder Builder instance
     */
-    public TEST_OpportunityBuilder withClosedLostStage() {        
+    public TEST_OpportunityBuilder withClosedLostStage() {
         valuesByFieldName.put('StageName', UTIL_UnitTestData_TEST.getClosedLostStage());
         return this;
     }
@@ -165,7 +185,7 @@ public without sharing class TEST_OpportunityBuilder {
     * @description Determines the open stage value and sets StageName to it
     * @return TEST_OpportunityBuilder Builder instance
     */
-    public TEST_OpportunityBuilder withOpenStage() {        
+    public TEST_OpportunityBuilder withOpenStage() {
         valuesByFieldName.put('StageName', UTIL_UnitTestData_TEST.getOpenStage());
         return this;
     }
@@ -175,7 +195,7 @@ public without sharing class TEST_OpportunityBuilder {
     * @param rdId Recurring Donation Id
     * @return TEST_OpportunityBuilder Builder instance
     */
-    public TEST_OpportunityBuilder withRecurringDonation(Id rdId) {        
+    public TEST_OpportunityBuilder withRecurringDonation(Id rdId) {
         valuesByFieldName.put('npe03__Recurring_Donation__c', rdId);
         return this;
     }
@@ -196,12 +216,12 @@ public without sharing class TEST_OpportunityBuilder {
     * @param childRecords Child record on the Opportunity
     * @return Map<String, Object> Related list map values
     */
-    private Map<String, Object> makeArray(List<sObject> childRecords) {
+    private Map<String, Object> makeArray(List<SObject> childRecords) {
         Map<String, Object> result = new Map<String, Object>();
         result.put('records', childRecords);
         result.put('totalSize', childRecords.size());
         result.put('done', true);
-        
+
         return result;
     }
 
