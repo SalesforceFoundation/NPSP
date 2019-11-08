@@ -1,7 +1,7 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 
-const LIGHTNING_INPUT_TYPES = ['CHECKBOX', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'PERCENT', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
+const LIGHTNING_INPUT_TYPES = ['BOOLEAN', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'PERCENT', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
 const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -25,6 +25,20 @@ export default class GeFormField extends LightningElement {
         }, DELAY);
     }
 
+    @api
+    get fieldAndValue() {
+        let fieldAndValue = {};
+
+        // KIET TBD: This is where we are keeping the field mapping
+        // CMT record name at, element.value. 
+        // However, it may change to the array dataImportFieldMappingDevNames
+        // If so, we need to update this to reflect that.
+        // In the Execute Anonymous code, both fields are populated. 
+        fieldAndValue[this.element.value] = this.value;
+        
+        return fieldAndValue;
+    }
+
     get inputType() {
         return GeFormService.getInputTypeFromDataType(this.fieldType);
     }
@@ -34,11 +48,11 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldInfo() {
-        return GeFormService.getFieldInfo(this.element.value);
+        return GeFormService.getFieldMappingWrapper(this.element.value);
     }
 
     get objectInfo() {
-        return GeFormService.getObjectInfo(this.objectDevName);
+        return GeFormService.getObjectMappingWrapper(this.objectDevName);
     }
 
     get fieldType() {

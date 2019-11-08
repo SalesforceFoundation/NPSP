@@ -69,6 +69,14 @@ public virtual with sharing class FORM_Service {
     }
 
     /*******************************************************************************************************
+    * @description Method for retrieving an existing template that you already have the name for.
+    * @param templateName - the name of an existing form template for retrieval.
+    */
+    public virtual FORM_Template retrieveFormTemplate(String templateName) {
+        return FORM_ServiceGiftEntry.retrieveFormTemplate(templateName);
+    }
+
+    /*******************************************************************************************************
     * @description Method for retrieving the current default template.
     * @param templateId - the Id of an existing form template record for retrieval.
     */

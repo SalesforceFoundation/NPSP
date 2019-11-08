@@ -88,6 +88,16 @@ public with sharing class GE_TemplateBuilderCtrl {
     }
 
     /**
+     * @description Retrieves the render wrapper for gift entry by template name. If the template is not found, it returns the wrapper for the Default template
+     * @return      A render wrapper containing a template and information about the object/field mappings.
+     * @param String template name
+     */
+    @AuraEnabled(cacheable=true)
+    public static FORM_RenderWrapper retrieveFormRenderWrapper(String templateName) {
+        return GE_FormRendererService.getRenderWrapper(templateName);
+    }
+
+    /**
      * @description Retrieve the default form render wrapper for gift entry. Placeholder, uses the first record found.
      * @return      A render wrapper containing a template and information about the object/field mappings.
      */

@@ -35,7 +35,7 @@
 * @description Unit tests to cover methods in FORM_ServiceGiftEntryTest.
 */
 @isTest
-private with sharing class FORM_ServiceGiftEntryTest {
+public with sharing class FORM_ServiceGiftEntryTest {
 
     /*******************************************************************************************************
     * @description Confirming that method returns the correct number of records
@@ -122,7 +122,7 @@ private with sharing class FORM_ServiceGiftEntryTest {
     }
 
     //Utility method for creating a sample template.
-    private static FORM_Template createSampleTemplate () {
+    public static FORM_Template createSampleTemplate () {
         
         FORM_Element field = new FORM_Element('FormField',
                                         'True',

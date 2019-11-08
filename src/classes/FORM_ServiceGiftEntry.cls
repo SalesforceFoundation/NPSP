@@ -114,6 +114,21 @@ public with sharing class FORM_ServiceGiftEntry {
     }
 
     /*******************************************************************************************************
+    * @description Method for retrieving the template by name
+    * @param templateName - the name of an existing form template 
+    */
+    public static FORM_Template retrieveFormTemplate(String templateName) {
+        FORM_Template template;
+
+        List<Form_Template__c> templateList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
+                                FROM Form_Template__c 
+                                WHERE Name = :templateName
+                                LIMIT 1];
+
+        return !templateList.isEmpty() ? deserializeFormTemplateFromObj(templateList[0]) : retrieveDefaultFormTemplate();           
+    }
+
+    /*******************************************************************************************************
     * @description Method for retrieving the current default template.
     */
     public static FORM_Template retrieveDefaultFormTemplate() {
