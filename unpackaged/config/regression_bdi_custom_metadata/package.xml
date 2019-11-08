@@ -2,7 +2,7 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
-        <members>npsp__Data_Import_Field_Mapping.ASC_Amount_a196cb161.md</members>
+        <members>npsp__Data_Import_Field_Mapping.ASC_Amount_a196cb161</members>
         <members>npsp__Data_Import_Field_Mapping.ASC_Opportunity_3ec4ed8e5</members>
         <members>npsp__Data_Import_Field_Mapping.ASC_Role_62549c395</members>
         <members>npsp__Data_Import_Field_Mapping.Account1_City_afba8fca8</members>
