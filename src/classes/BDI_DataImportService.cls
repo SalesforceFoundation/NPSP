@@ -1404,11 +1404,7 @@ global with sharing class BDI_DataImportService {
         }
 
         BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Accounts', BDI_PerfLogger.QUERY);
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + strSoql);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ strSoql ^^^^^^');
         List<Account> listAcc = Database.query(strSoql);
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + listAcc);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ listAcc ^^^^^^');
         pl.stop();
 
         // put all Accounts into our map

@@ -240,18 +240,17 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     @AuraEnabled
     public static String runSingleDryRun(Id dataImportId, Id batchId) {
         try {
-            System.debug(LoggingLevel.ERROR, '*** ##### BGE_DataImportBatchEntry_CTRL.runSingleDryRun ######');
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
             List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(
                 getDataImportRecordsByIds(batchId, new List<Id>{dataImportId}));
-                System.debug(LoggingLevel.ERROR, '*** ##### 0 ######');
+
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
-System.debug(LoggingLevel.ERROR, '*** ##### 1 ######');
+
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
-System.debug(LoggingLevel.ERROR, '*** ##### 2 ######');
+
             DataImport__c dataImport = getDataImportRecordsByIds(batchId, new List<Id>{dataImportId})[0];
             DataImportRow processedDataImportRow = new DataImportRow(dataImport);
-System.debug(LoggingLevel.ERROR, '*** ##### 3 ######');
+
             dataImportModel.dataImportRows = new List<DataImportRow>{processedDataImportRow};
 
             return JSON.serialize(dataImportModel);
