@@ -15,7 +15,9 @@ export default class GeFormTable extends LightningElement {
         console.log('*** ' + 'upserting row in table' + ' ***');
         console.log('dataImport: ', dataImport);
         console.log('uid: ', uid);
-        dataImport.uid = uid;
+        if (dataImport && !dataImport.hasOwnProperty('uid')) {
+            dataImport.uid = uid;
+        }
         let indexToReplace;
         if (this.data.some(item => item.uid === uid)) {
             console.log('*** ' + 'this di is already in the table!' + ' ***');
@@ -28,6 +30,8 @@ export default class GeFormTable extends LightningElement {
             }
             this.data[indexToReplace] = dataImport; //replace it
         } else {
+    //todo: if the record is new then it should be added to the top and the table should
+            // be ordered desc by created date
             console.log('*** ' + 'this di is new' + ' ***');
             this.data.push(dataImport);
         }

@@ -1,6 +1,6 @@
-import {api} from 'lwc';
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormRenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
+import saveAndDryRunRow from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 
 const inputTypeByDescribeType = {
     'CHECKBOX': 'checkbox',
@@ -16,6 +16,7 @@ const inputTypeByDescribeType = {
     'TIME': 'time',
     'URL': 'url'
 };
+//todo: add text area
 
 const numberFormatterByDescribeType = {
   'PERCENT': 'percent-fixed'
@@ -105,6 +106,18 @@ class GeFormService {
         return opportunityID;
     }
 
+    saveAndDryRun(batchId, dataImport) {
+        return new Promise((resolve, reject) => {
+            saveAndDryRunRow({batchId: batchId, dataImport: dataImport})
+                .then((result) => {
+                    resolve(result);
+                })
+                .catch(error => {
+                    console.error(JSON.stringify(error));
+                });
+        });
+    }
+
     getDataImportRecord(sectionList){
         // Gather all the data from the input
         let fieldData = {};
@@ -133,11 +146,6 @@ class GeFormService {
     buildColumns(sections) {
         console.log('*** ' + 'in service.buildcolumns' + ' ***');
         const columns = [];
-        // {
-        //     label: 'label',
-        //     fieldName: 'fieldName',
-        //     type: 'type'
-        // }
         sections.forEach(
             (section) => {
                 console.log(JSON.parse(JSON.stringify(section)));

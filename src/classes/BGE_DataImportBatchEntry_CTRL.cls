@@ -240,17 +240,18 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     @AuraEnabled
     public static String runSingleDryRun(Id dataImportId, Id batchId) {
         try {
+            System.debug(LoggingLevel.ERROR, '*** ##### BGE_DataImportBatchEntry_CTRL.runSingleDryRun ######');
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
             List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(
                 getDataImportRecordsByIds(batchId, new List<Id>{dataImportId}));
-                
+                System.debug(LoggingLevel.ERROR, '*** ##### 0 ######');
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
-
+System.debug(LoggingLevel.ERROR, '*** ##### 1 ######');
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
-
+System.debug(LoggingLevel.ERROR, '*** ##### 2 ######');
             DataImport__c dataImport = getDataImportRecordsByIds(batchId, new List<Id>{dataImportId})[0];
             DataImportRow processedDataImportRow = new DataImportRow(dataImport);
-
+System.debug(LoggingLevel.ERROR, '*** ##### 3 ######');
             dataImportModel.dataImportRows = new List<DataImportRow>{processedDataImportRow};
 
             return JSON.serialize(dataImportModel);
@@ -317,6 +318,23 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             String saveErrorMessage = String.format(Label.CRLP_SaveError, 
                 new List<String>{Schema.SObjectType.DataImport__c.getName()});
             throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static String saveAndDryRunRow(Id batchId, DataImport__c dataImport) {
+        try {
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + batchId);
+            System.debug(LoggingLevel.ERROR, '^^^^^^ batchId ^^^^^^');
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + dataImport);
+            System.debug(LoggingLevel.ERROR, '^^^^^^ dataImport ^^^^^^');
+            Database.insert(dataImport);
+            System.debug(LoggingLevel.ERROR, '*** ##### inserted! ######');
+            List<DataImport__c> dataImports = [SELECT Id, NPSP_Data_Import_Batch__c FROM DataImport__c];
+            System.debug(loggingLevel.Error, '*** dataImports: ' + dataImports);
+            return runSingleDryRun(dataImport.Id, batchId);
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
         }
     }
 
@@ -461,7 +479,14 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return DataImport__c
     */
     private static List<DataImport__c> getDataImportRecordsByIds(Id batchId, List<Id> dataImportIds) {
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + batchId);
+        System.debug(LoggingLevel.ERROR, '^^^^^^ batchId ^^^^^^');
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + dataImportIds);
+        System.debug(LoggingLevel.ERROR, '^^^^^^ dataImportIds ^^^^^^');
         String query = getDataImportQuery(batchId, dataImportIds, null, null);
+        System.debug(LoggingLevel.ERROR, '*** query: ' + query);
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + Database.query(query));
+        System.debug(LoggingLevel.ERROR, '^^^^^^ Database.query(query) ^^^^^^');
         return Database.query(query);
     }
 
