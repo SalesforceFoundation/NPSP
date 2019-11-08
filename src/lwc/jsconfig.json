@@ -2,6 +2,9 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
+            "c/batchProgress": [
+                "batchProgress/batchProgress.js"
+            ],
             "c/bdiFieldMappingModal": [
                 "bdiFieldMappingModal/bdiFieldMappingModal.js"
             ],
@@ -28,6 +31,9 @@
             ],
             "c/geTemplateBuilderTemplateInfo": [
                 "geTemplateBuilderTemplateInfo/geTemplateBuilderTemplateInfo.js"
+            ],
+            "c/progressRing": [
+                "progressRing/progressRing.js"
             ],
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
