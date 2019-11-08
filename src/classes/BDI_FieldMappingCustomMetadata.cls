@@ -133,7 +133,9 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
         if (diFieldMappings != null) {
             for (Data_Import_Field_Mapping__mdt difm : diFieldMappings) {
 
-                targetFieldByDataImportField.put(difm.Source_Field_API_Name__c,difm.Target_Field_API_Name__c);
+                targetFieldByDataImportField.put(
+                    difm.Source_Field_API_Name__c.toLowerCase(),
+                    difm.Target_Field_API_Name__c);
             }
         }
 
