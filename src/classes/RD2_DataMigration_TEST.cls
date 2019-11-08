@@ -689,6 +689,8 @@ private class RD2_DataMigration_TEST {
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
         batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
         Test.stopTest();
+        
+        rdSchedules = rdScheduleGateway.getRecords(rd);
 
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
     }
