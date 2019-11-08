@@ -140,6 +140,7 @@ class GeFormService {
             }
         }
         diRecord.Donation_Donor__c = 'Account1'; //temporary to allow save of the form
+        diRecord.Account1Imported__c = '0018A00000L8yYtQAJ'; //temporary to allow save of the form
         return diRecord;
     }
 
