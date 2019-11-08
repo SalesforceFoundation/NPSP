@@ -47,7 +47,6 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     private Boolean isDryRunMode = false;
 
     private List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
-    private List<RecurringDonationSchedule__c> rdSchedules = new List<RecurringDonationSchedule__c>();
 
     /**
     * @description Batch size for Apex Job. Uses default if the Custom Setting batch size is not provided.
@@ -130,8 +129,6 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
 
         convertedRDs.add(mapper.convertToEnhancedRD());
 
-        rdSchedules.addAll(mapper.getScheduleRecords());
-
         // TODO Opportunity Updates
 
         // TODO Retrieve any validation errors that blocked the conversion
@@ -145,10 +142,6 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         // TODO Rewrite this to capture and log dml exceptions in a new logging service
         //Database.update(convertedRDs, false);
         update convertedRDs;
-
-        // TODO If there is an error updating an RD, do not insert the schedule or update Opps for that RD
-        //Database.insert(rdSchedules, false);
-        insert rdSchedules;
 
         if (this.isDryRunMode) {
             Database.rollback(sp);
