@@ -57,7 +57,7 @@
                                                 html-name="checkbox-toggle-2"
                                                 value="{!isAdvancedMappingEnabled}"
                                                 html-aria-describedby="checkbox-toggle-2"
-                                                disabled="{!hasDeploymentInProgress}"/>
+                                                disabled="{!OR(hasDeploymentInProgress, isPolling)}"/>
                             <span class="slds-checkbox_faux_container" aria-live="assertive">
                                 <span class="slds-checkbox_faux"></span>
                                 <span class="slds-checkbox_on">Enabled</span>
