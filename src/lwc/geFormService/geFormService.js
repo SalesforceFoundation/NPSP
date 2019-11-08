@@ -98,6 +98,11 @@ class GeFormService {
         });
     }
 
+    /**
+     * Takes a list of sections, reads the fields and values, creates a di record, and creates an opportunity from the di record
+     * @param sectionList
+     * @returns opportunityId
+     */
     handleSave(sectionList) {
         
         // Gather all the data from the input
