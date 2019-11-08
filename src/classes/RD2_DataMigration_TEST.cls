@@ -40,6 +40,8 @@ private class RD2_DataMigration_TEST {
     private static final Date DATE_ESTABLISHED = Date.newInstance(2010, 12, 23);
     private static final Decimal AMOUNT_VALUE = 100;
 
+    private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
+
     /**
      * @description Verifies that the job should run with zero records processed when
      * Enhanced Recurring Donations is not enabled
@@ -631,44 +633,70 @@ private class RD2_DataMigration_TEST {
     }
 
      /**
-     * @description Verifies that a schedule record is created for Enhanced Recurring Donation record.
+     * @description Verifies a schedule record is created for Enhanced Recurring Donation record.
      */
     @IsTest
     private static void shouldCreateScheduleForActiveEnhancedRDs() {
-        List<RecurringDonationSchedule__c> rdSchedules  = new List<RecurringDonationSchedule__c>();
-        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
-        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contactId).build();
 
-        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
-        mapper.convertToEnhancedRD();
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
 
-        rdSchedules = mapper.getScheduleRecords();
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contact.Id).withId(null).build();
+        insert rd;
 
-        System.assertEquals(1, rdSchedules.size(), 'Number of Schedules should be 1');
-        System.assertEquals(100, rdSchedules[0].InstallmentAmount__c, 'Installment Amount should be 100');
-        System.assertEquals('1', rdSchedules[0].DayOfMonth__c,  'Day of Month should be 1');
+        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
+        System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
+        
+        List<Opportunity> opps = getOpportunities(rd.Id);
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
+        Test.stopTest();
+
+        rdSchedules = rdScheduleGateway.getRecords(rd);
+
+        System.assertEquals(1, rdSchedules.size(), 'Number of Schedules should match');
+        System.assertEquals(rd.Id, rdSchedules[0].RecurringDonation__c, 'Schedule Recurring Donation should be set');
+        System.assertEquals(rd.npe03__Amount__c, rdSchedules[0].InstallmentAmount__c, 'RD and Schedule Amounts should match');
+        System.assertEquals('1', rdSchedules[0].DayOfMonth__c,  'Day of Month should match');
+
+        System.assertEquals(opps.size(), getOpportunities(rd.Id).size(),  'No new Opportunity should be created during data migration');
     }
 
     /**
-     * @description Verifies that a schedule record is not created for Closed Enhanced Recurring Donation record.
+     * @description Verifies a schedule record is not created for Closed Enhanced Recurring Donation record.
      */
     @IsTest
     private static void shouldNotCreateScheduleForClosedEnhancedRDs() {
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
 
-        List<RecurringDonationSchedule__c> rdSchedules  = new List<RecurringDonationSchedule__c>();
-        Id contactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
-
-        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contactId)
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contact.Id)
+            .withId(null)
             .withOpenEndedStatusClosed()
             .build();
+        insert rd;
 
-        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
-        mapper.convertToEnhancedRD();
+        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
+        System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
 
-        rdSchedules = mapper.getScheduleRecords();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        System.assertEquals(0, rdSchedules.size(), 'Number of Schedules should be 0');
+        Test.startTest();
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
+        Test.stopTest();
+        
+        rdSchedules = rdScheduleGateway.getRecords(rd);
+
+        System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
     }
+
+
+
 
     // HELPER METHODS
 
@@ -766,5 +794,28 @@ private class RD2_DataMigration_TEST {
         insert installment;
         return installment;
     }
+
+    /****
+    * @description Returns Opportunities associated with the specified Recurring Donation
+    * @param rdId Recurring Donation Id
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> getOpportunities(Id rdId) {
+        return getOpportunities(new Set<Id>{ rdId });
+    }
+
+    /****
+    * @description Returns Opportunities associated with specified Recurring Donations
+    * @param rdIds Recurring Donation Ids
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> getOpportunities(Set<Id> rdIds) {
+        return [
+            SELECT Amount, npe03__Recurring_Donation__c
+            FROM Opportunity
+            WHERE npe03__Recurring_Donation__c IN :rdIds
+        ];
+    }
+
 
 }
