@@ -36,4 +36,16 @@ export default class GeFormSection extends LightningElement {
         event.preventDefault();
         this.expanded = !this.expanded;
     }
+
+    @api
+    get values() {
+        const fields = this.template.querySelectorAll('c-ge-form-field');
+        let dataImportFieldAndValues = {};
+        if(fields !== null && typeof fields !== 'undefined') {
+            fields.forEach(field => {
+                dataImportFieldAndValues = { ...dataImportFieldAndValues, ...(field.fieldAndValue) };
+            });
+        }
+        return dataImportFieldAndValues;
+    }
 }
