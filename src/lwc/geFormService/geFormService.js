@@ -2,7 +2,7 @@ import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFo
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 
 const inputTypeByDescribeType = {
-    'CHECKBOX': 'checkbox',
+    'BOOLEAN': 'checkbox',
     'CURRENCY': 'number',
     'DATE': 'date',
     'DATETIME': 'datetime-local',
