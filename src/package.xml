@@ -269,6 +269,7 @@
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_FormRendererService</members>
+        <members>GE_FormRendererService_TEST</members>
         <members>GE_TemplateBuilderCtrl</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -1970,6 +1971,8 @@
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
         <members>isARequiredField</members>
+        <members>labelGeCancel</members>
+        <members>labelGeSave</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>
