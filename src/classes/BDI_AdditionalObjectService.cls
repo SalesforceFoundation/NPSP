@@ -355,14 +355,13 @@ public with sharing class BDI_AdditionalObjectService {
         if(dynamicSourceGroupByNameByDataImportId.get(di.Id) != null) {
             dynamicSourceGroupByName = dynamicSourceGroupByNameByDataImportId.get(di.Id);
             if (dynamicSourceGroupByName.get(dynamicSourceField) != null) {
-                System.debug('returning existing dsg: ' + dsg);
                 return dynamicSourceGroupByName.get(dynamicSourceField);
             }
         }
 
         //Attempt to deserialize the target field, and store in the map if there was data.
         dsg = deserializeDynamicSourceGroup(di, dynamicSourceField);
-        System.debug('DSG after deserialize: ' +  dsg);
+
         if (dsg != null) {
             dynamicSourceGroupByName.put(dsg.name,dsg);
             dynamicSourceGroupByNameByDataImportId.put(di.Id,dynamicSourceGroupByName);
@@ -382,11 +381,10 @@ public with sharing class BDI_AdditionalObjectService {
         //Create temporary object and field mappings for the dynamic additional objects based on the
         //template provided if not already created.
         for (String objMappingDevName : dsg.dynamicSourceByObjMappingDevName.keySet()) {
-            System.debug('ObjectMappingDevName is: ' + objMappingDevName);
+
             if (mappingServiceAdvanced.objectMappingByDevName.get(objMappingDevName) == null) {
                 BDI_DynamicSource ds = dsg.dynamicSourceByObjMappingDevName.get(objMappingDevName);
 
-                System.debug('Dynamic Source is: ' + ds);
                 BDI_ObjectMapping templateObjMapping = 
                     mappingServiceAdvanced.objectMappingByDevName.get(ds.objectMappingTemplateDevName);
 

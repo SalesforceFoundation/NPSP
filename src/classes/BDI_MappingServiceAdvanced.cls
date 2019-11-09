@@ -228,6 +228,11 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
             }
 
             if (diom.Imported_Record_Field_Name__c != null) {
+                if (UTIL_Namespace.shouldAlignNamespace) {
+                    diom.Imported_Record_Field_Name__c = 
+                        UTIL_Namespace.alignSchemaNSWithEnvironment(diom.Imported_Record_Field_Name__c);
+                }
+                
                 importedRecordFieldNames.add(diom.Imported_Record_Field_Name__c.toLowerCase());
             }
             
