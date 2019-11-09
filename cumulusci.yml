@@ -84,6 +84,13 @@ tasks:
             path: unpackaged/config/qa_bdi_custom_metadata
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_regression_bdi_metadata_config:
+        description: Deploys Custom Metadata for BDI Regression
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/regression_bdi_custom_metadata
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_rd2_config:
         description: Deploys updates to fully enable Enhanced Recurring Donations
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -449,6 +456,8 @@ flows:
                 options:
                     unmanaged: False
             3:
+                task: deploy_regression_bdi_metadata_config
+            4:
                 task: update_admin_profile
                 options:
                     managed: true
