@@ -113,7 +113,7 @@ class GeFormService {
                     resolve(result);
                 })
                 .catch(error => {
-                    console.error(JSON.stringify(error));
+                    reject(error);
                 });
         });
     }

@@ -23,8 +23,8 @@ export default class GeFormApp extends LightningElement {
         console.log('dataImportRecord: ', dataImportRecord);
         GeFormService.saveAndDryRun(this.batchId = 'a0R8A000000WB12UAG', dataImportRecord)
             .then(
-                model => {
-                    console.log('returned modelObj after dry run: ', modelObj);
+                dataImportModel => {
+                    const modelObj = JSON.parse(dataImportModel);
                     const dataImport = modelObj.dataImportRows[0].record;
                     dataImport.donorName = modelObj.dataImportRows[0].donorName;
                     dataImport.donorLink = modelObj.dataImportRows[0].donorLink;
