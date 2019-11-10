@@ -8,7 +8,7 @@ export default class GeFormApp extends LightningElement {
         {label: 'Status', fieldName: 'Status__c', type: 'text'},
         {label: 'UID', fieldName: 'uid', type: 'number'},
         {label: 'Donor', fieldName: 'donorName', type: 'text'},
-        {label: 'Donor Link', fieldName: 'donorLink', type: 'text'}
+        {label: 'Donor Link', fieldName: 'donorLink', type: 'url'}
     ];
 
     handleSubmit(event) {
