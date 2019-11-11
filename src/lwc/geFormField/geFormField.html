@@ -4,7 +4,7 @@
             value={value}
             type={inputType}
             formatter={formatter}
-            required={element.required} 
+            required={element.required}
             onchange={handleValueChange} 
             label={element.label}>
         </lightning-input>
@@ -20,7 +20,7 @@
         <lightning-input-rich-text value={value} onblur={handleValueChange} label={element.label}></lightning-input-rich-text>
     </template>
     <template if:true={isPicklist}>
-        <lightning-combobox value={value} onchange={handleValueChange} label={element.label}></lightning-combobox>
+        <c-ge-form-field-picklist value={value} field-name={fieldApiName} object-name={objectApiName} onchange={handleValueChange} label={element.label}></c-ge-form-field-picklist>
     </template>
     <template if:true={isTextArea}>
         <lightning-textarea value={value} onchange={handleValueChange} label={element.label}></lightning-textarea>
