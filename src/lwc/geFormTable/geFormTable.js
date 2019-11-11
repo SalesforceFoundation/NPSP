@@ -2,12 +2,23 @@ import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 
 export default class GeFormTable extends LightningElement {
+    @api ready = false;
     @track data = [];
-    @api columns = [];
+    @api columns = [
+        {label: 'Status', fieldName: 'Status__c', type: 'text'},
+        {label: 'UID', fieldName: 'uid', type: 'number'},
+        {label: 'Donor', fieldName: 'donorName', type: 'text'},
+        {label: 'Donor Link', fieldName: 'donorLink', type: 'url'}
+    ];
+    @track columnsLoaded = false;
 
     connectedCallback() {
         GeFormService.getFormTemplate();
-        console.log('GeFormService.fieldMappings: ', GeFormService.fieldMappings);
+    }
+
+    @api
+    addColumns(columns) {
+        this.columns = [...this.columns, ...columns];
     }
 
     @api

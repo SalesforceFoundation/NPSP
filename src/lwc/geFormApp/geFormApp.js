@@ -3,12 +3,6 @@ import GeFormService from 'c/geFormService';
 
 export default class GeFormApp extends LightningElement {
     @api isBatchMode = false;
-    columns = [
-        {label: 'Status', fieldName: 'Status__c', type: 'text'},
-        {label: 'UID', fieldName: 'uid', type: 'number'},
-        {label: 'Donor', fieldName: 'donorName', type: 'text'},
-        {label: 'Donor Link', fieldName: 'donorLink', type: 'url'}
-    ];
 
     handleSubmit(event) {
         const latestSubmission =
@@ -37,11 +31,8 @@ export default class GeFormApp extends LightningElement {
     }
 
     handleSectionsRetrieved(event) {
-        let form = this.template.querySelector('c-ge-form-renderer');
-        let sections = form.sections;
-        const columnsToAdd = GeFormService.buildColumns(sections);
-        this.columns = [...this.columns, ...columnsToAdd];
         const table = this.template.querySelector('c-ge-form-table');
-        table.columns = this.columns;
+        table.addColumns(GeFormService.buildColumns(event.target.sections));
+        table.ready = true;
     }
 }

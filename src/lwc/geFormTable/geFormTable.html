@@ -1,9 +1,11 @@
 <template>
 
-    <lightning-datatable
-            key-field="id"
-            data={data}
-            columns={columns}>
-    </lightning-datatable>
+    <div if:true={ready}>
+        <lightning-datatable
+                key-field="id"
+                data={data}
+                columns={columns}>
+        </lightning-datatable>
+    </div>
 
 </template>
