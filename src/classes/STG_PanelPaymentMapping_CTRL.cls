@@ -145,6 +145,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             //loop through the map, only get the describe information for fields we don't
             //already recognize, including our own and non-custom fields, we'll add those in a moment
             for (string fieldName : oppFieldTokenList.keyset()) {
+                System.debug(LoggingLevel.Info, 'Opportunity - fieldName = ' + fieldName);
                 if ((fieldname.contains('__c') || knownopptyFields.contains(fieldName)) && UTIL_Describe.isValidField('Opportunity', fieldname)) {
                     Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('Opportunity', fieldname);                         
                     Schema.Displaytype dt = f.getType();
