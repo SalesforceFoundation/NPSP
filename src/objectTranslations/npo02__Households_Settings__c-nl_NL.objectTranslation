@@ -1,13 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>Matched_Donor_Role__c</name>
-    <help>De Contactpersoonrol die u wilt gebruiken voor overeenkomende donors. We raden aan 'Overeenkomende Donor' te gebruiken.</help>
-    <label>Overeenkomende Donorrol</label>
-  </fields>
-  <fields>
-    <name>Use_Dated_Conversion_Rates__c</name>
-    <help>Vink aan om Omrekeningskoersen met Datum te gebruiken wanneer Geavanceerd valutabeheer ingeschakeld is in deze Organisatie. Indien niet aangevinkt en indien ACM ingeschakeld is, gebruiken alle NPSP-totaliseringen de standaardwisselkoers voor de valuta.</help>
-    <label>Gebruik Omrekeningskoersen met Datum</label>
-  </fields>
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Households Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Households Settings --></value>
+    </caseValues>
+    <fields>
+        <help>De Contactpersoonrol die u wilt gebruiken voor overeenkomende donors. We raden aan &apos;Overeenkomende Donor&apos; te gebruiken.</help>
+        <label>Overeenkomende Donorrol</label>
+        <name>Matched_Donor_Role__c</name>
+    </fields>
+    <fields>
+        <help><!-- Number of records per batch to process when setting seasonal address as the mailing address. --></help>
+        <label><!-- Seasonal Address Batch Size --></label>
+        <name>Seasonal_Addresses_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>Vink aan om Omrekeningskoersen met Datum te gebruiken wanneer Geavanceerd valutabeheer ingeschakeld is in deze Organisatie. Indien niet aangevinkt en indien ACM ingeschakeld is, gebruiken alle NPSP-totaliseringen de standaardwisselkoers voor de valuta.</help>
+        <label>Gebruik Omrekeningskoersen met Datum</label>
+        <name>Use_Dated_Conversion_Rates__c</name>
+    </fields>
+    <fields>
+        <help>Wanneer aangevinkt, zal het systeem automatisch namen geven aan Huishoudens. Ook worden de Informele en Formele Begroetingen aangemaakt.</help>
+        <label><!-- Automatic Household Naming --></label>
+        <name>npo02__Advanced_Household_Naming__c</name>
+    </fields>
+    <fields>
+        <help>Wanneer geselecteerd wordt Donatie data altijd opgerold naar de Primaire Contactpersoon van een Opportunity en de bijbehorende Account record, ook als de Opportunity niet een persoon is.</help>
+        <label><!-- Always Rollup to Primary Contact Role --></label>
+        <name>npo02__Always_Rollup_to_Primary_Contact__c</name>
+    </fields>
+    <fields>
+        <help>Dit is een verborgen instelling om een asynchronische versie te gebruiken voor de huishouden naamgeving code i.p.v. de standaardversie.</help>
+        <label><!-- Async Household Naming --></label>
+        <name>npo02__Async_Household_Naming__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal records dat tegelijkertijd wordt verwerkt bij het berekenen van Donatiestatistieken. Het standaardaantal is 200. Verminder dit aantal wanneer de Rollup velden niet meer werken door systeemlimieten.</help>
+        <label><!-- Rollup Batch Size --></label>
+        <name>npo02__Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Disable_HHAfter_trigger --></label>
+        <name>npo02__DISABLE_HouseholdAfter_trigger__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Disable_HHBefore_trigger --></label>
+        <name>npo02__DISABLE_HouseholdBefore_trigger__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Disable_Household_Opp_trigger --></label>
+        <name>npo02__DISABLE_Household_Opportunity_trigger__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Disable_Households_trigger --></label>
+        <name>npo02__DISABLE_Households_trigger__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Disable_OppRollup_trigger --></label>
+        <name>npo02__DISABLE_OpportunityRollup_trigger__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Enable_Opp_Rollup_Triggers --></label>
+        <name>npo02__Enable_Opp_Rollup_Triggers__c</name>
+    </fields>
+    <fields>
+        <help>Oprollen van Gesloten/Gewonnen Opportunity Totalen naar Contactpersonen gebaseerd op Opportunity Contactpersoon Rol. Soft Credit wordt alleen &apos;s nachts bijgewerkt, maar kunnen ook handmatig aangezet worden in Rollup Donatie Batch instellingen.</help>
+        <label><!-- Enable Soft Credit Rollups --></label>
+        <name>npo02__Enable_Soft_Credit_Rollups__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npo02__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>Namen van Opportunity Recordtypen die uitgesloten moeten worden van Account Opportunity Rollups.</help>
+        <label><!-- Opp RecTypes Excluded for Account Rollup --></label>
+        <name>npo02__Excluded_Account_Opp_Rectypes__c</name>
+    </fields>
+    <fields>
+        <help>Opportunities met deze waarde in de Type keuzelijst worden niet meegenomen in de Rollups naar Account.</help>
+        <label><!-- Opp Types Excluded for Account Rollup --></label>
+        <name>npo02__Excluded_Account_Opp_Types__c</name>
+    </fields>
+    <fields>
+        <help>Namen van Opportunity Recordtypen die uitgesloten moeten worden van Contactpersoon Opportunity Rollups.</help>
+        <label><!-- Opp RecTypes Excluded for Contact Rollup --></label>
+        <name>npo02__Excluded_Contact_Opp_Rectypes__c</name>
+    </fields>
+    <fields>
+        <help>Opportunities met deze waarde in de Type keuzelijst worden niet meegenomen in de Rollups naar Contactpersoon.</help>
+        <label><!-- Opp Types Excluded for Contact Rollup --></label>
+        <name>npo02__Excluded_Contact_Opp_Types__c</name>
+    </fields>
+    <fields>
+        <help>NPSP checkt automatisch of aangepast fiscaal jaar aan staat, en schakelt Fiscaal Jaar instellingen uit om fouten te voorkomen. Deze instelling overschrijft de veiligheidscontrole voor gebruikers die per ongeluk aangepast fiscaal jaar hebben ingeschakeld.</help>
+        <label><!-- Force Fiscal Year --></label>
+        <name>npo02__Force_Fiscal_Year__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Has Package Update --></label>
+        <name>npo02__Has_Package_Update__c</name>
+    </fields>
+    <fields>
+        <help>Vink dit veld aan om automatisch Contactpersoon Rollen voor leden van het huishouden van het Primaire Contactpersoon te maken.</help>
+        <label><!-- Household Contact Roles On --></label>
+        <name>npo02__Household_Contact_Roles_On__c</name>
+    </fields>
+    <fields>
+        <help>Contactpersoon Recordtypen uitgesloten van het maken van een Huishouden. Deze instelling wordt genegeerd bij gebruik van het Huishouden Account Model.</help>
+        <label><!-- Household Creation Excluded Record Types --></label>
+        <name>npo02__Household_Creation_Excluded_Recordtypes__c</name>
+    </fields>
+    <fields>
+        <help>Het rapport-ID van het Huishouden Verzendlijst Rapport wordt gebruikt voor Huishouden-gededupliceerde Campagne verzendlijsten. Het Rapport moet een Campage met Contactpersonen zijn, met een Lidstatus die niet &apos;Duplicaat&apos; bevat.</help>
+        <label><!-- Household Mailing List Report --></label>
+        <name>npo02__Household_Mailing_List_ID__c</name>
+    </fields>
+    <fields>
+        <help>De Contactpersoon Rol die gebruikt wordt voor leden van een Huishouden.</help>
+        <label><!-- Household Member Contact Role --></label>
+        <name>npo02__Household_Member_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>De Contactpersoon Recordtypen die worden uitgesloten van het maken van een Lid Huishouden Contactpersoon Rol.</help>
+        <label><!-- Household OCR Excluded Record Types --></label>
+        <name>npo02__Household_OCR_Excluded_Recordtypes__c</name>
+    </fields>
+    <fields>
+        <help>Bepaalt bij welke Contactpersonen automatisch een Huishouden wordt aangemaakt. Dit geldt alleen voor Contactpersonen die gebruik maken van het Een-op-Een of Individu Account Model.</help>
+        <label><!-- Household Object Rules --></label>
+        <name>npo02__Household_Rules__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Last Update Check --></label>
+        <name>npo02__Last_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Max Package Version --></label>
+        <name>npo02__Max_Package_Version__c</name>
+    </fields>
+    <fields>
+        <help>De lengte van de respijtperiode (in dagen) nadat een lidmaatschap is verlopen (laatste einddatum) voordat de status wijzigt in &apos;Verlopen&apos;. Standaard is 30 dagen.</help>
+        <label><!-- Membership Grace Period --></label>
+        <name>npo02__Membership_Grace_Period__c</name>
+    </fields>
+    <fields>
+        <help>Namen van Opportunity Recordtypen, zoals Lidmaatschap, die apart van opgerold kunnen worden van andere Opportunity Recordtypen.</help>
+        <label><!-- Membership Record Type Names --></label>
+        <name>npo02__Membership_Record_Types__c</name>
+    </fields>
+    <fields>
+        <help>Id voor de huidige geplande Opportunity Rollup Opdracht</help>
+        <label><!-- Opp Rollup Scheduled Job Id --></label>
+        <name>npo02__Opp_Rollup_Scheduled_Job_Id__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Package Update URL --></label>
+        <name>npo02__Package_Update_URL__c</name>
+    </fields>
+    <fields>
+        <help>Verschaft een waarde van &apos;N dagen&apos; rollups, waar &apos;N&apos; het aantal dagen is van vandaag naar het verleden. De waarde is standaard 365 dagen.</help>
+        <label><!-- Rollup N Day Value --></label>
+        <name>npo02__Rollup_N_Day_Value__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal actieve geplande Apex opdrachten waarnaar gekeken moet worden bij het inplannen van nieuwe opdrachten.</help>
+        <label><!-- Schedule Job Limit --></label>
+        <name>npo02__Schedule_Job_Limit__c</name>
+    </fields>
+    <fields>
+        <help>Opportunity Contactpersoon Rollen rollen die gebruikt worden in Soft Credit Rollups. Control of Command klik om meerdere rollen te selecteren.</help>
+        <label><!-- Soft Credit Roles --></label>
+        <name>npo02__Soft_Credit_Roles__c</name>
+    </fields>
+    <fields>
+        <help>VEROUDERD. Nieuwe versies van het Nonprofit Success Pack worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npo02__Update_Check_Interval__c</name>
+    </fields>
+    <fields>
+        <help>Wanneer aangevinkt, zorgt ervoor dat dat Opportunity Rollup totalen het Fiscale Jaar gebruikt en niet het kalenderjaar. Om Fiscale Jaar info in te stellen, ga naar Setup-&gt;Bedrijfsprofiel-&gt;Fiscaal Jaar.</help>
+        <label><!-- Use Fiscal Year for Rollups --></label>
+        <name>npo02__Use_Fiscal_Year_for_Rollups__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
 </CustomObjectTranslation>

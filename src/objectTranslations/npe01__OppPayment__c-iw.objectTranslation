@@ -20,6 +20,10 @@
         <plural>true</plural>
         <value><!-- הPayment --></value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Payment Wizard FS --></label>
+        <name>Payment_WizardFS</name>
+    </fieldSets>
     <fields>
         <help>תאריך אישור</help>
         <label>תאריך אישור תשלום</label>
@@ -42,10 +46,74 @@
             <translation>לאישור</translation>
         </picklistValues>
     </fields>
+    <fields>
+        <label><!-- Check/Reference Number --></label>
+        <name>npe01__Check_Reference_Number__c</name>
+    </fields>
+    <fields>
+        <label><!-- Custom Payment Field --></label>
+        <name>npe01__Custom_Payment_Field__c</name>
+    </fields>
+    <fields>
+        <label><!-- Opportunity --></label>
+        <name>npe01__Opportunity__c</name>
+        <relationshipLabel><!-- Payments --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Paid --></label>
+        <name>npe01__Paid__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Amount --></label>
+        <name>npe01__Payment_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Date --></label>
+        <name>npe01__Payment_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Method --></label>
+        <name>npe01__Payment_Method__c</name>
+        <picklistValues>
+            <masterLabel>Cash</masterLabel>
+            <translation>מזומן</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Check</masterLabel>
+            <translation>המחאה</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Credit Card</masterLabel>
+            <translation>כרטיס אשראי</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Scheduled Date --></label>
+        <name>npe01__Scheduled_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Written Off --></label>
+        <name>npe01__Written_Off__c</name>
+    </fields>
     <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Payment Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
     <nameFieldLabel><!-- Payment Number --></nameFieldLabel>
     <quickActions>
         <label>עדכון מהיר</label>
         <name>Quick_Update</name>
     </quickActions>
+    <webLinks>
+        <label><!-- Schedule_Payments --></label>
+        <name>npe01__Schedule_Payments</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Writeoff_Payments --></label>
+        <name>npe01__Writeoff_Payments</name>
+    </webLinks>
 </CustomObjectTranslation>

@@ -41,6 +41,16 @@
         <name>Campaign_Member_Responded_Status__c</name>
     </fields>
     <fields>
+        <help><!-- The default Contact Role automatically assigned to the Opportunity&apos;s Primary Contact when the Opportunity&apos;s Account is NOT a Household, One-to-One, or Individual Account. --></help>
+        <label><!-- Contact Role for Organizational Opps --></label>
+        <name>Contact_Role_for_Organizational_Opps__c</name>
+    </fields>
+    <fields>
+        <help><!-- Enables multiple rules and automations on payments and opportunities to ensure that accounting data is complete and consistent. --></help>
+        <label><!-- Enforce Accounting Data Consistency --></label>
+        <name>Enforce_Accounting_Data_Consistency__c</name>
+    </fields>
+    <fields>
         <help>מילוי הגדרה זו יביא ליצירה אוטומטית של תפקיד איש קשר עבור הזדמנויות עם איש קשר המקבל הוקרה. השאר שדה זה ריק כדי להשבית יצירה אוטומטית של תפקיד איש קשר עבור מקבל ההוקרה.</help>
         <label>תפקיד איש קשר בתרומה של מקבל הוקרה</label>
         <name>Honoree_Opportunity_Contact_Role__c</name>
@@ -84,6 +94,96 @@
         <help>אם אפשרות זו מסומנת, שינויים בשדה הכתובת של איש קשר או חשבון יחיד מעדכנים את הכתובת הקיימת, במקום ליצור כתובת חדשה.</help>
         <label>שינוי כתובת פשוט מטופל כעדכון</label>
         <name>Simple_Address_Change_Treated_as_Update__c</name>
+    </fields>
+    <fields>
+        <help>הגדרה עבור מודל החשבון. צריך להיות &apos;חשבון משק בית&apos;, &apos;אחד לאחד&apos; או &apos;אישי&apos;. מחליף את השדה המותאם אישית Contact.SystemAccountProcessor__c.  המודל המומלץ הוא &apos;חשבון משק בית&apos;.</help>
+        <label><!-- Account Model --></label>
+        <name>npe01__Account_Processor__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_IndividualAcc_trigger --></label>
+        <name>npe01__DISABLE_IndividualAccounts_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_OppAccount_trigger --></label>
+        <name>npe01__DISABLE_OpportunityAccount_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_OCR_trigger --></label>
+        <name>npe01__DISABLE_OpportunityContactRoles_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_OppPayments_trigger --></label>
+        <name>npe01__DISABLE_OpportunityPayments_trigger__c</name>
+    </fields>
+    <fields>
+        <help>מציין אם ליצור הזדמנות במהלך המרת הפניה.</help>
+        <label><!-- Create Opportunity on Lead Convert --></label>
+        <name>npe01__Default_Opp_on_Convert__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable Account Model Trigger --></label>
+        <name>npe01__Disable_Account_Model_Trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Enable OppContactRole Trigger --></label>
+        <name>npe01__Enable_Opportunity_Contact_Role_Trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npe01__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>מזהה סוג רשומת החשבון שישמש עבור חשבונות של משקי בית. אם לא נבחר ערך, החשבון יוגדר לפי ברירת המחדל לסוג רשומת החשבון של המשתמש.</help>
+        <label><!-- Household Account Record Type --></label>
+        <name>npe01__HH_Account_RecordTypeID__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Has Package Update --></label>
+        <name>npe01__Has_Package_Update__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Last Update Check --></label>
+        <name>npe01__Last_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Max Package Version --></label>
+        <name>npe01__Max_Package_Version__c</name>
+    </fields>
+    <fields>
+        <help>מזהה סוג רשומת החשבון שישמש עבור חשבונות מסוג &apos;אחד לאחד&apos;.  אם לא נבחר ערך, החשבון יוגדר לפי ברירת המחדל לסוג רשומת החשבון של המשתמש.</help>
+        <label><!-- One-to-One Record Type --></label>
+        <name>npe01__One_to_One_RecordTypeID__c</name>
+    </fields>
+    <fields>
+        <help>ברירת המחדל לתפקיד של איש הקשר הראשי בהזדמנות, הנוצר באופן אוטומטי.</help>
+        <label><!-- Contact Role for Individual Opps --></label>
+        <name>npe01__Opportunity_Contact_Role_Default_role__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Package Update URL --></label>
+        <name>npe01__Package_Update_URL__c</name>
+    </fields>
+    <fields>
+        <help>מאפשר יצירת תשלומים אוטומטית עבור הזדמנויות/תרומות חדשות.</help>
+        <label><!-- Automatic Payment Creation --></label>
+        <name>npe01__Payments_Enabled__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npe01__Update_Check_Interval__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
 </CustomObjectTranslation>

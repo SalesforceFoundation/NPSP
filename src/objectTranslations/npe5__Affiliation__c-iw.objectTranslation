@@ -33,6 +33,56 @@
             <translation><!-- Solicitor --></translation>
         </picklistValues>
     </fields>
+    <fields>
+        <label><!-- Contact --></label>
+        <name>npe5__Contact__c</name>
+        <relationshipLabel><!-- Organization Affiliations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>npe5__Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- End Date --></label>
+        <name>npe5__EndDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Organization --></label>
+        <name>npe5__Organization__c</name>
+        <relationshipLabel><!-- Affiliated Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>אם אפשרות זו מסומנת, הארגון של הגורם המשתייך יישמר ברשומה של איש הקשר.</help>
+        <label><!-- Primary --></label>
+        <name>npe5__Primary__c</name>
+    </fields>
+    <fields>
+        <label><!-- Role --></label>
+        <name>npe5__Role__c</name>
+    </fields>
+    <fields>
+        <label><!-- Start Date --></label>
+        <name>npe5__StartDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>npe5__Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation>נוכחי</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation>קודם</translation>
+        </picklistValues>
+    </fields>
     <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Affiliation Layout</layout>
+        <sections>
+            <label>פרטי השתייכות</label>
+            <section>Affiliation Information</section>
+        </sections>
+    </layouts>
     <nameFieldLabel><!-- Affiliation Name --></nameFieldLabel>
 </CustomObjectTranslation>

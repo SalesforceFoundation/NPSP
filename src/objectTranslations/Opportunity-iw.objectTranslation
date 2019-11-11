@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS v2 --></label>
+        <name>BDE_Entry_FS_v2</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- New BDE List v2 --></label>
+        <name>BDE_List_FS_v2</name>
+    </fieldSets>
     <fields>
         <help>תאריך אישור</help>
         <label>תאריך אישור</label>
@@ -44,6 +52,31 @@
         <help>הערות המסבירות מדוע בקשת התרומה לא הניבה הצלחה.</help>
         <label>סיבה לסגירה ללא זכייה</label>
         <name>Closed_Lost_Reason__c</name>
+    </fields>
+    <fields>
+        <label><!-- Current Generator(s) --></label>
+        <name>CurrentGenerators__c</name>
+    </fields>
+    <fields>
+        <label><!-- Delivery/Installation Status --></label>
+        <name>DeliveryInstallationStatus__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In progress</masterLabel>
+            <translation><!-- In progress --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yet to begin</masterLabel>
+            <translation><!-- Yet to begin --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- When selected, this field disables several aspects of NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate data. Refer to the product documentation for more details. --></help>
+        <label><!-- Disable Contact Role Automation --></label>
+        <name>DisableContactRoleAutomation__c</name>
     </fields>
     <fields>
         <help>ערך השוק ההוגן של תרומה שוות-ערך.</help>
@@ -135,18 +168,22 @@
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
-        <help><!-- The account of the company who will match this gift. --></help>
+        <label><!-- Main Competitor(s) --></label>
+        <name>MainCompetitors__c</name>
+    </fields>
+    <fields>
+        <help><!-- Lookup to the Account record of the company that will match this Donation. --></help>
         <label>חשבון השוואת תרומות</label>
         <name>Matching_Gift_Account__c</name>
         <relationshipLabel>תרומות שוות</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The name of the company who will match this gift. --></help>
+        <help><!-- The name of the company that will match this Donation. --></help>
         <label>מעסיק משווה תרומה</label>
         <name>Matching_Gift_Employer__c</name>
     </fields>
     <fields>
-        <help><!-- The status of this gift being matched. --></help>
+        <help><!-- The status of the Matching Gift for this Donation, for example, Submitted or Received. --></help>
         <label>מצב השוואת תרומה</label>
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
@@ -163,7 +200,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The employer&apos;s matching gift for this employee&apos;s gift. --></help>
+        <help><!-- Lookup to the Opportunity record for the Matching Gift for this Donation. --></help>
         <label>השוואת תרומה</label>
         <name>Matching_Gift__c</name>
         <relationshipLabel>תרומות שוות</relationshipLabel>
@@ -216,6 +253,10 @@
         <name>Notification_Recipient_Name__c</name>
     </fields>
     <fields>
+        <label><!-- Order Number --></label>
+        <name>OrderNumber__c</name>
+    </fields>
+    <fields>
         <help>אם מענק זה הוא חידוש של מענק קודם, השתמש בשדה זה לקישור בין רשומה זו והרשומה הקודמת.</help>
         <label>מענק/תרומה קודמת</label>
         <name>Previous_Grant_Opportunity__c</name>
@@ -253,6 +294,10 @@
         <name>Requested_Amount__c</name>
     </fields>
     <fields>
+        <label><!-- Tracking Number --></label>
+        <name>TrackingNumber__c</name>
+    </fields>
+    <fields>
         <help>מציין אם התרומה היא בהוקרה או לזכרו של אדם.</help>
         <label>סוג הוקרה</label>
         <name>Tribute_Type__c</name>
@@ -263,6 +308,108 @@
         <picklistValues>
             <masterLabel>Memorial</masterLabel>
             <translation>זיכרון</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>נוסחה: הסכום של הזדמנות זו פחות סכום מחיקת התשלום וסכום התשלום שהתקבל.</help>
+        <label><!-- Remaining Balance --></label>
+        <name>npe01__Amount_Outstanding__c</name>
+    </fields>
+    <fields>
+        <help>הערך הכולל של תשלומים שסומנו כמחוקים או בלתי ניתנים לגבייה עבור הזדמנות זו.</help>
+        <label><!-- Payment Writeoff Amount --></label>
+        <name>npe01__Amount_Written_Off__c</name>
+    </fields>
+    <fields>
+        <help>שדה מוסתר המשמש להעברת מזהה איש קשר לצורך יצירת תפקיד איש קשר.</help>
+        <label><!-- Contact Id for Role --></label>
+        <name>npe01__Contact_Id_for_Role__c</name>
+    </fields>
+    <fields>
+        <help>אם התשלומים פעילים, ואם אפשרות זו מסומנת, תשלום חדש לא ייווצר באופן אוטומטי עבור הזדמנות זו.</help>
+        <label><!-- Do Not Automatically Create Payment --></label>
+        <name>npe01__Do_Not_Automatically_Create_Payment__c</name>
+    </fields>
+    <fields>
+        <help>נוסחה: האם החשבון הקשור מוגדר כאישי (SYSTEMIsIndividual__c)</help>
+        <label><!-- Is Opp From Individual --></label>
+        <name>npe01__Is_Opp_From_Individual__c</name>
+    </fields>
+    <fields>
+        <help>קובעת את הערך של איש הקשר או החשבון בשדה &apos;רמת חברות אחרונה&apos;.</help>
+        <label><!-- Member Level --></label>
+        <name>npe01__Member_Level__c</name>
+        <picklistValues>
+            <masterLabel>Bronze</masterLabel>
+            <translation><!-- Bronze --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Gold</masterLabel>
+            <translation><!-- Gold --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Silver</masterLabel>
+            <translation><!-- Silver --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>תאריך סיום תקופת החברות.</help>
+        <label><!-- Membership End Date --></label>
+        <name>npe01__Membership_End_Date__c</name>
+    </fields>
+    <fields>
+        <help>אם מדובר בחידוש, חברות חדשה או חברות של מישהו שעזב או חזר.</help>
+        <label><!-- Membership Origin --></label>
+        <name>npe01__Membership_Origin__c</name>
+        <picklistValues>
+            <masterLabel>New</masterLabel>
+            <translation>חדש</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Reacquire</masterLabel>
+            <translation>רכוש מחדש</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Renewal</masterLabel>
+            <translation>חידוש</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>תאריך ההתחלה של תקופת החברות</help>
+        <label><!-- Membership Start Date --></label>
+        <name>npe01__Membership_Start_Date__c</name>
+    </fields>
+    <fields>
+        <help>מספר התשלומים הכולל עבור הזדמנות (תרומה) זו</help>
+        <label><!-- Number of Payments --></label>
+        <name>npe01__Number_of_Payments__c</name>
+    </fields>
+    <fields>
+        <help>הערך הכולל של התשלומים המסומנים כתשלומים ששולמו עבור הזדמנות זו.</help>
+        <label><!-- Payment Amount Received --></label>
+        <name>npe01__Payments_Made__c</name>
+    </fields>
+    <fields>
+        <label><!-- Recurring Donation --></label>
+        <name>npe03__Recurring_Donation__c</name>
+        <relationshipLabel><!-- Donations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>שדות משורשרים המשמשים במהלך סיכומים לאיתור ההזדמנות האחרונה.</help>
+        <label><!-- Combined Rollup Fieldset --></label>
+        <name>npo02__CombinedRollupFieldset__c</name>
+    </fields>
+    <fields>
+        <help><!-- Controls if Household contact roles are created for Opportunities.  DEPRECATED.  Replaced by custom settings. --></help>
+        <label><!-- _SYSTEM: HOUSEHOLD CONTACT ROLEPROCESSOR --></label>
+        <name>npo02__systemHouseholdContactRoleProcessor__c</name>
+        <picklistValues>
+            <masterLabel>All Opportunities</masterLabel>
+            <translation>כל ההזדמנויות</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Opportunities</masterLabel>
+            <translation>אין הזדמנויות</translation>
         </picklistValues>
     </fields>
     <layouts>
@@ -379,6 +526,14 @@
         <label>עדכון מהיר</label>
         <name>Quick_Update</name>
     </quickActions>
+    <recordTypes>
+        <label><!-- NPSP Default --></label>
+        <name>NPSP_Default</name>
+    </recordTypes>
+    <webLinks>
+        <label><!-- DeliveryStatus --></label>
+        <name>DeliveryStatus</name>
+    </webLinks>
     <webLinks>
         <label>שלח אישור בדואר אלקטרוני</label>
         <name>Email_Acknowledgment</name>
@@ -398,5 +553,13 @@
     <webLinks>
         <label>רענן שם</label>
         <name>Refresh_Name</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- New_Contact_Donation --></label>
+        <name>npe01__New_Contact_Donation</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- New_Organization_Donation --></label>
+        <name>npe01__New_Organization_Donation</name>
     </webLinks>
 </CustomObjectTranslation>

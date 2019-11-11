@@ -1,199 +1,494 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>Batch__c</name>
-    <help>Der Batch, in dem dieser Account erstellt wurde.</help>
-    <relationshipLabel>Accounts</relationshipLabel>
-    <label>Batch</label>
-  </fields>
-  <fields>
-    <name>Funding_Focus__c</name>
-    <help>Die allgemeinen Programmbereiche, die diese Organisation finanziert.</help>
-    <label>Finanzierungsfokus</label>
-    <picklistValues>
-      <masterLabel>Animal Welfare</masterLabel>
-      <translation>Tierhilfe</translation>
-    </picklistValues>
-    <picklistValues>
-      <masterLabel>Arts and Culture</masterLabel>
-      <translation>Kunst und Kultur</translation>
-    </picklistValues>
-    <picklistValues>
-      <masterLabel>Capacity Building</masterLabel>
-      <translation>Kapazitätsaufbau</translation>
-    </picklistValues>
-    <picklistValues>
-      <masterLabel>Education</masterLabel>
-      <translation>Bildung</translation>
-    </picklistValues>
-    <picklistValues>
-      <masterLabel>Environmental</masterLabel>
-      <translation>Umwelt</translation>
-    </picklistValues>
-    <picklistValues>
-      <masterLabel>Health Services</masterLabel>
-      <translation>Gesundheitswesen</translation>
-    </picklistValues>
-    <picklistValues>
-      <masterLabel>Human Services</masterLabel>
-      <translation>Humandienstleistungen</translation>
-    </picklistValues>
-  </fields>
-  <fields>
-    <name>Grantmaker__c</name>
-    <help>Gibt an, dass diese Organisation eine Geldgeberorganisation ist. </help>
-    <label>Geldgeber</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Administrator_Name__c</name>
-    <help>Der Name des Verwalters von zugewiesenen Spenden des Unternehmens</help>
-    <label>Name d. Verwalters von zugew. Spenden</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Amount_Max__c</name>
-    <help>Der maximale Betrag, den das Unternehmen jedem einzelnen Geschenk zuweist.</help>
-    <label>Zugewiesener Spendenbetrag maximal</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Amount_Min__c</name>
-    <help>Der kleinste Betrag, den das Unternehmen in einer einzelnen Spende zuweist.</help>
-    <label>Zugewiesener Spendenbetrag minimal</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Annual_Employee_Max__c</name>
-    <help>Der maximale Betrag, den das Unternehmen pro Jahr einem Mitarbeiter zuweist</help>
-    <label>Zugew. Jahresspende f. Mitarb. max.</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Comments__c</name>
-    <help>Weitere Hinweise zum Verwalter von zugewiesenen Geschenken im Unternehmen</help>
-    <label>Kommentare zu zugewiesenen Spenden</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Company__c</name>
-    <help>Gibt an, dass dies ein Unternehmen ist, das zugewiesene Geschenke anbietet.</help>
-    <label>Unternehmen mit zugewiesenen Geschenken</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Email__c</name>
-    <help>Die E-Mail-Adresse des Verwalters von zugewiesenen Geschenken im Unternehmen</help>
-    <label>E-Mail zu zugewiesenen Spenden</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Info_Updated__c</name>
-    <help>Das Datum, an dem die Informationen über zugewiesene Geschenke zuletzt aktualisiert wurden</help>
-    <label>Aktualis. Info über zugewies. Geschenke.</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Percent__c</name>
-    <help>Der Anteil eines Geschenks, den das Unternehmen zuweist</help>
-    <label>Prozentsatz von zugewiesenen Geschenken</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Phone__c</name>
-    <help>Die Telefonnummer des Büros des Verwalters von zugewiesenen Geschenken</help>
-    <label>Telefonnummer der zugewiesenen Spende.</label>
-  </fields>
-  <fields>
-    <name>Matching_Gift_Request_Deadline__c</name>
-    <help>Verwenden Sie dieses Feld, um etwaige Altersbeschränkungen dieses Unternehmens für die Zuweisung von Geschenken zu vermerken.</help>
-    <label>Letzter Termin f. Anfr. n. zugew. Spende</label>
-  </fields>
-  <fields>
-    <name>Membership_Span__c</name>
-    <help>Die Anzahl der Jahre, für die ein Mitglied dieses Haushalts eine Mitgliedschaft hatte (schreibgeschützt).</help>
-    <label>Zeitraum der Mitgliedschaft</label>
-  </fields>
-  <fields>
-    <name>Membership_Status__c</name>
-    <help>Der Mitgliedsch‘status dieses Haush., z. B. "Aktuell", "Abgelaufen" o. "Kulanzzeitraum". Der Wert basiert a. d. Ende der Mitgliedsch. u. der Kulanzzeit. Die Stand‘kulanzzeit wird i. d. NPSP-Einst‘en i. d. Haush.-Einstell‘en festgelegt. Schreibgesch. Feld.</help>
-    <label>Mitgliedschaftsstatus</label>
-  </fields>
-  <fields>
-    <name>Number_of_Household_Members__c</name>
-    <help>Die Anzahl der Kontakte, die Mitglieder in diesem Haushalt sind.</help>
-    <label>Anzahl der Haushalt-Mitglieder</label>
-  </fields>
-  <webLinks>
-    <name>Manage_Household</name>
-    <label>Haushalt verwalten</label>
-  </webLinks>
-  <webLinks>
-    <name>Recalculate_Rollups</name>
-    <label>Rollups neu berechnen</label>
-  </webLinks>
-  <layouts>
-    <layout>Organization Layout</layout>
-    <sections>
-      <label>Felder</label>
-      <section>Fields</section>
-    </sections>
-    <sections>
-      <label>Adresse</label>
-      <section>Address</section>
-    </sections>
-    <sections>
-      <label>Beschreibung</label>
-      <section>Description</section>
-    </sections>
-    <sections>
-      <label>Spendeninformationen</label>
-      <section>Donation Information</section>
-    </sections>
-    <sections>
-      <label>Spendenbeträge gesamt</label>
-      <section>Donation Totals</section>
-    </sections>
-    <sections>
-      <label>Mitgliedschaftsinformationen</label>
-      <section>Membership Information</section>
-    </sections>
-    <sections>
-      <label>Geldgeberinformationen</label>
-      <section>Grantmaking Information</section>
-    </sections>
-    <sections>
-      <label>Zugewiesenes Geschenk Details</label>
-      <section>Matching Gift Information</section>
-    </sections>
-    <sections>
-      <label>Kommentare zu zugewiesenem Geschenk</label>
-      <section>Matching Gift Comments</section>
-    </sections>
-    <sections>
-      <label>Benutzerdefinierte Links</label>
-      <section>Custom Links</section>
-    </sections>
-  </layouts>
-  <layouts>
-    <layout>Household Layout</layout>
-    <sections>
-      <label>Felder</label>
-      <section>Fields</section>
-    </sections>
-    <sections>
-      <label>Adresse</label>
-      <section>Address</section>
-    </sections>
-    <sections>
-      <label>Beschreibung</label>
-      <section>Description</section>
-    </sections>
-    <sections>
-      <label>Spendeninformationen</label>
-      <section>Donation Information</section>
-    </sections>
-    <sections>
-      <label>Spendenbeträge gesamt</label>
-      <section>Donation Totals</section>
-    </sections>
-    <sections>
-      <label>Mitgliedschaftsinformationen</label>
-      <section>Membership Information</section>
-    </sections>
-    <sections>
-      <label>Benutzerdefinierte Links</label>
-      <section>Custom Links</section>
-    </sections>
-  </layouts>
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Manage Household Custom --></label>
+        <name>Manage_Household_Custom</name>
+    </fieldSets>
+    <fields>
+        <label><!-- Active --></label>
+        <name>Active__c</name>
+        <picklistValues>
+            <masterLabel>No</masterLabel>
+            <translation><!-- No --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yes</masterLabel>
+            <translation><!-- Yes --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Der Batch, in dem dieser Account erstellt wurde.</help>
+        <label>Batch</label>
+        <name>Batch__c</name>
+        <relationshipLabel>Accounts</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Customer Priority --></label>
+        <name>CustomerPriority__c</name>
+        <picklistValues>
+            <masterLabel>High</masterLabel>
+            <translation><!-- High --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Low</masterLabel>
+            <translation><!-- Low --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Medium</masterLabel>
+            <translation><!-- Medium --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Die allgemeinen Programmbereiche, die diese Organisation finanziert.</help>
+        <label>Finanzierungsfokus</label>
+        <name>Funding_Focus__c</name>
+        <picklistValues>
+            <masterLabel>Animal Welfare</masterLabel>
+            <translation>Tierhilfe</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Arts and Culture</masterLabel>
+            <translation>Kunst und Kultur</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Capacity Building</masterLabel>
+            <translation>Kapazitätsaufbau</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Education</masterLabel>
+            <translation>Bildung</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Environmental</masterLabel>
+            <translation>Umwelt</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Health Services</masterLabel>
+            <translation>Gesundheitswesen</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Human Services</masterLabel>
+            <translation>Humandienstleistungen</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Gibt an, dass diese Organisation eine Geldgeberorganisation ist. </help>
+        <label>Geldgeber</label>
+        <name>Grantmaker__c</name>
+    </fields>
+    <fields>
+        <help>Der Name des Verwalters von zugewiesenen Spenden des Unternehmens</help>
+        <label>Name d. Verwalters von zugew. Spenden</label>
+        <name>Matching_Gift_Administrator_Name__c</name>
+    </fields>
+    <fields>
+        <help>Der maximale Betrag, den das Unternehmen jedem einzelnen Geschenk zuweist.</help>
+        <label>Zugewiesener Spendenbetrag maximal</label>
+        <name>Matching_Gift_Amount_Max__c</name>
+    </fields>
+    <fields>
+        <help>Der kleinste Betrag, den das Unternehmen in einer einzelnen Spende zuweist.</help>
+        <label>Zugewiesener Spendenbetrag minimal</label>
+        <name>Matching_Gift_Amount_Min__c</name>
+    </fields>
+    <fields>
+        <help>Der maximale Betrag, den das Unternehmen pro Jahr einem Mitarbeiter zuweist</help>
+        <label>Zugew. Jahresspende f. Mitarb. max.</label>
+        <name>Matching_Gift_Annual_Employee_Max__c</name>
+    </fields>
+    <fields>
+        <help>Weitere Hinweise zum Verwalter von zugewiesenen Geschenken im Unternehmen</help>
+        <label>Kommentare zu zugewiesenen Spenden</label>
+        <name>Matching_Gift_Comments__c</name>
+    </fields>
+    <fields>
+        <help>Gibt an, dass dies ein Unternehmen ist, das zugewiesene Geschenke anbietet.</help>
+        <label>Unternehmen mit zugewiesenen Geschenken</label>
+        <name>Matching_Gift_Company__c</name>
+    </fields>
+    <fields>
+        <help>Die E-Mail-Adresse des Verwalters von zugewiesenen Geschenken im Unternehmen</help>
+        <label>E-Mail zu zugewiesenen Spenden</label>
+        <name>Matching_Gift_Email__c</name>
+    </fields>
+    <fields>
+        <help>Das Datum, an dem die Informationen über zugewiesene Geschenke zuletzt aktualisiert wurden</help>
+        <label>Aktualis. Info über zugewies. Geschenke.</label>
+        <name>Matching_Gift_Info_Updated__c</name>
+    </fields>
+    <fields>
+        <help>Der Anteil eines Geschenks, den das Unternehmen zuweist</help>
+        <label>Prozentsatz von zugewiesenen Geschenken</label>
+        <name>Matching_Gift_Percent__c</name>
+    </fields>
+    <fields>
+        <help>Die Telefonnummer des Büros des Verwalters von zugewiesenen Geschenken</help>
+        <label>Telefonnummer der zugewiesenen Spende.</label>
+        <name>Matching_Gift_Phone__c</name>
+    </fields>
+    <fields>
+        <help>Verwenden Sie dieses Feld, um etwaige Altersbeschränkungen dieses Unternehmens für die Zuweisung von Geschenken zu vermerken.</help>
+        <label>Letzter Termin f. Anfr. n. zugew. Spende</label>
+        <name>Matching_Gift_Request_Deadline__c</name>
+    </fields>
+    <fields>
+        <help>Die Anzahl der Jahre, für die ein Mitglied dieses Haushalts eine Mitgliedschaft hatte (schreibgeschützt).</help>
+        <label>Zeitraum der Mitgliedschaft</label>
+        <name>Membership_Span__c</name>
+    </fields>
+    <fields>
+        <help>Der Mitgliedsch‘status dieses Haush., z. B. &quot;Aktuell&quot;, &quot;Abgelaufen&quot; o. &quot;Kulanzzeitraum&quot;. Der Wert basiert a. d. Ende der Mitgliedsch. u. der Kulanzzeit. Die Stand‘kulanzzeit wird i. d. NPSP-Einst‘en i. d. Haush.-Einstell‘en festgelegt. Schreibgesch. Feld.</help>
+        <label>Mitgliedschaftsstatus</label>
+        <name>Membership_Status__c</name>
+    </fields>
+    <fields>
+        <help>Die Anzahl der Kontakte, die Mitglieder in diesem Haushalt sind.</help>
+        <label>Anzahl der Haushalt-Mitglieder</label>
+        <name>Number_of_Household_Members__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Locations --></label>
+        <name>NumberofLocations__c</name>
+    </fields>
+    <fields>
+        <label><!-- SLA Expiration Date --></label>
+        <name>SLAExpirationDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- SLA Serial Number --></label>
+        <name>SLASerialNumber__c</name>
+    </fields>
+    <fields>
+        <label><!-- SLA --></label>
+        <name>SLA__c</name>
+        <picklistValues>
+            <masterLabel>Bronze</masterLabel>
+            <translation><!-- Bronze --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Gold</masterLabel>
+            <translation><!-- Gold --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Platinum</masterLabel>
+            <translation><!-- Platinum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Silver</masterLabel>
+            <translation><!-- Silver --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Upsell Opportunity --></label>
+        <name>UpsellOpportunity__c</name>
+        <picklistValues>
+            <masterLabel>Maybe</masterLabel>
+            <translation><!-- Maybe --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No</masterLabel>
+            <translation><!-- No --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yes</masterLabel>
+            <translation><!-- Yes --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Der Hauptansprechpartner für einen Haushalt-Account, oder der Eins-zu-Eins-Kontakt für einen Eins-zu-Eins-Account</help>
+        <label><!-- Primary Contact --></label>
+        <name>npe01__One2OneContact__c</name>
+        <relationshipLabel><!-- Account --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Gibt an, ob dieser Account eine Einzelperson (wahr) oder eine Organisation (falsch) ist</help>
+        <label><!-- _SYSTEM: IsIndividual --></label>
+        <name>npe01__SYSTEMIsIndividual__c</name>
+    </fields>
+    <fields>
+        <help>Gibt an, welches Modell für das Verhalten der Kontaktbeziehung maßgeblich ist: Einzelperson (Bucket) oder Eins-zu-Eins</help>
+        <label><!-- _SYSTEM: AccountType --></label>
+        <name>npe01__SYSTEM_AccountType__c</name>
+    </fields>
+    <fields>
+        <help><!-- Average won Opportunity amount related to this Account.  Updated automatically. --></help>
+        <label><!-- Average Gift --></label>
+        <name>npo02__AverageAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The sum of won Opportunity amounts in the Best Gift Year for this Account. --></help>
+        <label><!-- Best Gift Year Total --></label>
+        <name>npo02__Best_Gift_Year_Total__c</name>
+    </fields>
+    <fields>
+        <help><!-- The year in which the largest total amount of won Opportunities related to this Account occurred.  See also Best Gift Year Total. --></help>
+        <label><!-- Best Gift Year --></label>
+        <name>npo02__Best_Gift_Year__c</name>
+    </fields>
+    <fields>
+        <help><!-- The earliest won Opportunity (by Close Date) with amount greater than zero related to this Account. --></help>
+        <label><!-- First Gift Date --></label>
+        <name>npo02__FirstCloseDate__c</name>
+    </fields>
+    <fields>
+        <help>Verwendet bei Haushalt-Accounts Felder nicht ausgeschlossener beauftragter zugehöriger Kontakte Automatisch generiert</help>
+        <label><!-- Formal Greeting --></label>
+        <name>npo02__Formal_Greeting__c</name>
+    </fields>
+    <fields>
+        <label><!-- Household Phone --></label>
+        <name>npo02__HouseholdPhone__c</name>
+    </fields>
+    <fields>
+        <help>Verwendet bei Haushalt-Accounts Felder nicht ausgeschlossener beauftragter zugehöriger Kontakte. Automatisch generiert.</help>
+        <label><!-- Informal Greeting --></label>
+        <name>npo02__Informal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help><!-- The largest amount of a won Opportunity related to this Account. --></help>
+        <label><!-- Largest Gift --></label>
+        <name>npo02__LargestAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The most recent Close Date of a won Opportunity related to this Account with amount greater than zero. --></help>
+        <label><!-- Last Gift Date --></label>
+        <name>npo02__LastCloseDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount of the most recent (by Close Date) won Membership Opportunity (by Record Type) for this Account. --></help>
+        <label><!-- Last Membership Amount --></label>
+        <name>npo02__LastMembershipAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The most recent Close Date of a won Membership Opportunity (by Record Type) related to this Account. --></help>
+        <label><!-- Last Membership Date --></label>
+        <name>npo02__LastMembershipDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Membership level from most recent (by Close Date) won Membership Opportunity (by Record Type) related to this Account.&quot; --></help>
+        <label><!-- Last Membership Level --></label>
+        <name>npo02__LastMembershipLevel__c</name>
+    </fields>
+    <fields>
+        <help><!-- Membership &quot;origin&quot; (new, renew...) from most recent (by Close Date) won Membership Opportunity (by Record Type) related to this Account. --></help>
+        <label><!-- Last Membership Origin --></label>
+        <name>npo02__LastMembershipOrigin__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount of the most recent won Opportunity (by Close Date) with amount greater than zero related to this Account. --></help>
+        <label><!-- Last Gift Amount --></label>
+        <name>npo02__LastOppAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- Membership end date from most recent (by Close Date) won Membership Opportunity (by Record Type) related to this Account. --></help>
+        <label><!-- Membership End Date --></label>
+        <name>npo02__MembershipEndDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Membership start date from most recent (by Close Date) won Membership Opportunity (by Record Type) related to this Account. --></help>
+        <label><!-- Membership Join Date --></label>
+        <name>npo02__MembershipJoinDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Opportunities  related to this Account. --></help>
+        <label><!-- Total Number of Gifts --></label>
+        <name>npo02__NumberOfClosedOpps__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Membership Opportunities (Record Type) related to this Account. --></help>
+        <label><!-- Number of Memberships --></label>
+        <name>npo02__NumberOfMembershipOpps__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Opportunities related to this Account, closed within the year or fiscal year preceding last year (see Household Settings). --></help>
+        <label><!-- Total Gifts Two Years Ago --></label>
+        <name>npo02__OppAmount2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Opportunities related to this Account, closed in the last number of days defined in Household Settings. --></help>
+        <label><!-- Total Gifts Last N Days --></label>
+        <name>npo02__OppAmountLastNDays__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Opportunities related to this Account, closed in the current year or fiscal year. --></help>
+        <label><!-- Total Gifts Last Year --></label>
+        <name>npo02__OppAmountLastYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Opportunities related to this Account, closed in the current year or fiscal year. --></help>
+        <label><!-- Total Gifts This Year --></label>
+        <name>npo02__OppAmountThisYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Opportunities with amount greater than zero related to this Account, closed within the year or fiscal year preceding last year. --></help>
+        <label><!-- Number of Gifts Two Years Ago --></label>
+        <name>npo02__OppsClosed2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Opportunities related to this Account, closed in the last number of days defined in Household Settings. --></help>
+        <label><!-- Number of Gifts Last N Days --></label>
+        <name>npo02__OppsClosedLastNDays__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Opportunities with amount greater than zero related to this Account, closed in the previous year or fiscal year (see Household Settings). --></help>
+        <label><!-- Number of Gifts Last Year --></label>
+        <name>npo02__OppsClosedLastYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Opportunities with amount greater than zero related to this Account, closed in the current year or fiscal year (see Household Settings). --></help>
+        <label><!-- Number of Gifts This Year --></label>
+        <name>npo02__OppsClosedThisYear__c</name>
+    </fields>
+    <fields>
+        <help>Gibt bei Haushalt-Accounts an, in welche namensbezogenen Felder der Haushalt-Code nicht automatisch eingetragen werden soll</help>
+        <label><!-- _SYSTEM: CUSTOM NAMING --></label>
+        <name>npo02__SYSTEM_CUSTOM_NAMING__c</name>
+        <picklistValues>
+            <masterLabel>Formal_Greeting__c</masterLabel>
+            <translation><!-- Formal_Greeting__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Informal_Greeting__c</masterLabel>
+            <translation><!-- Informal_Greeting__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Name</masterLabel>
+            <translation><!-- Name --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The smallest non-zero amount of a won Opportunity related to this Account. --></help>
+        <label><!-- Smallest Gift --></label>
+        <name>npo02__SmallestAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Membership Opportunities (Record Type) related to this Account. --></help>
+        <label><!-- Total Membership Amount --></label>
+        <name>npo02__TotalMembershipOppAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The sum of amounts of all won Opportunities related to this Account. --></help>
+        <label><!-- Total Gifts --></label>
+        <name>npo02__TotalOppAmount__c</name>
+    </fields>
+    <layouts>
+        <layout>Household Layout</layout>
+        <sections>
+            <label>Adresse</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Beschreibung</label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label>Spendeninformationen</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Spendenbeträge gesamt</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Felder</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Mitgliedschaftsinformationen</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Organization Layout</layout>
+        <sections>
+            <label>Adresse</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Beschreibung</label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label>Spendeninformationen</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Spendenbeträge gesamt</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Felder</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Geldgeberinformationen</label>
+            <section>Grantmaking Information</section>
+        </sections>
+        <sections>
+            <label>Kommentare zu zugewiesenem Geschenk</label>
+            <section>Matching Gift Comments</section>
+        </sections>
+        <sections>
+            <label>Zugewiesenes Geschenk Details</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Mitgliedschaftsinformationen</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>Neue Adresse</label>
+        <name>New_Address</name>
+    </quickActions>
+    <quickActions>
+        <label>Neue Zugehörigkeit</label>
+        <name>New_Affiliation</name>
+    </quickActions>
+    <quickActions>
+        <label>Schnelle Aktualisierung</label>
+        <name>Quick_Household_Update</name>
+    </quickActions>
+    <quickActions>
+        <label>Schnelle Aktualisierung</label>
+        <name>Quick_Organization_Update</name>
+    </quickActions>
+    <recordTypes>
+        <description><!-- An Account representing a Household containing one or more individuals --></description>
+        <label><!-- Household Account --></label>
+        <name>HH_Account</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- An Account representing an organization --></description>
+        <label><!-- Organization --></label>
+        <name>Organization</name>
+    </recordTypes>
+    <webLinks>
+        <label><!-- Billing --></label>
+        <name>Billing</name>
+    </webLinks>
+    <webLinks>
+        <label>Haushalt verwalten</label>
+        <name>Manage_Household</name>
+    </webLinks>
+    <webLinks>
+        <label>Rollups neu berechnen</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
 </CustomObjectTranslation>

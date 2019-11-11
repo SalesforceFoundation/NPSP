@@ -1,29 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>Batch__c</name>
-    <help>このリードが作成されたバッチ。</help>
-    <relationshipLabel>リード</relationshipLabel>
-    <label>一括処理</label>
-  </fields>
-  <fields>
-    <name>CompanyCity__c</name>
-    <label>市区郡(会社)</label>
-  </fields>
-  <fields>
-    <name>CompanyCountry__c</name>
-    <label>国(会社)</label>
-  </fields>
-  <fields>
-    <name>CompanyPostalCode__c</name>
-    <label>郵便番号(会社)</label>
-  </fields>
-  <fields>
-    <name>CompanyState__c</name>
-    <label>都道府県(会社)</label>
-  </fields>
-  <fields>
-    <name>CompanyStreet__c</name>
-    <label>町名・番地(会社)</label>
-  </fields>
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fields>
+        <help>このリードが作成されたバッチ。</help>
+        <label>一括処理</label>
+        <name>Batch__c</name>
+        <relationshipLabel>リード</relationshipLabel>
+    </fields>
+    <fields>
+        <label>市区郡(会社)</label>
+        <name>CompanyCity__c</name>
+    </fields>
+    <fields>
+        <label>国(会社)</label>
+        <name>CompanyCountry__c</name>
+    </fields>
+    <fields>
+        <label>郵便番号(会社)</label>
+        <name>CompanyPostalCode__c</name>
+    </fields>
+    <fields>
+        <label>都道府県(会社)</label>
+        <name>CompanyState__c</name>
+    </fields>
+    <fields>
+        <label>町名・番地(会社)</label>
+        <name>CompanyStreet__c</name>
+    </fields>
+    <fields>
+        <label><!-- Current Generator(s) --></label>
+        <name>CurrentGenerators__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Locations --></label>
+        <name>NumberofLocations__c</name>
+    </fields>
+    <fields>
+        <label><!-- Primary --></label>
+        <name>Primary__c</name>
+        <picklistValues>
+            <masterLabel>No</masterLabel>
+            <translation><!-- No --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yes</masterLabel>
+            <translation><!-- Yes --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Product Interest --></label>
+        <name>ProductInterest__c</name>
+        <picklistValues>
+            <masterLabel>GC1000 series</masterLabel>
+            <translation><!-- GC1000 series --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GC3000 series</masterLabel>
+            <translation><!-- GC3000 series --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GC5000 series</masterLabel>
+            <translation><!-- GC5000 series --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- SIC Code --></label>
+        <name>SICCode__c</name>
+    </fields>
+    <fields>
+        <label><!-- Preferred Email --></label>
+        <name>npe01__Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>その他</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>個人</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Preferred Phone --></label>
+        <name>npe01__Preferred_Phone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>自宅</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>携帯</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>その他</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
 </CustomObjectTranslation>

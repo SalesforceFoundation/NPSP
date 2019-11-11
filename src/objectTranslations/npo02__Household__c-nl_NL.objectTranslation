@@ -1,8 +1,269 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>Number_of_Household_Members__c</name>
-    <help>het aantal Contactpersonen in het Huishouden.</help>
-    <label>Aantal leden van het huishouden</label>
-  </fields>
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Household --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Household --></value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Manage_Household_Custom --></label>
+        <name>npo02__Manage_Household_Custom</name>
+    </fieldSets>
+    <fields>
+        <help>het aantal Contactpersonen in het Huishouden.</help>
+        <label>Aantal leden van het huishouden</label>
+        <name>Number_of_Household_Members__c</name>
+    </fields>
+    <fields>
+        <label><!-- Addressee --></label>
+        <name>npo02__Addressee__c</name>
+    </fields>
+    <fields>
+        <help>Wordt gebruikt om het Huishouden een naam te geven met anonieme informatie.</help>
+        <label><!-- Always Anonymous --></label>
+        <name>npo02__Always_Anonymous__c</name>
+    </fields>
+    <fields>
+        <help>Gemiddeld bedrag van Gewonnen Opportunities op het Huishouden door een gerelateerde Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Average Gift --></label>
+        <name>npo02__AverageAmount__c</name>
+    </fields>
+    <fields>
+        <help>Het totaalbedrag van Gewonnen Opportunities op het Huishouden in het Beste Gift Jaar via een Contactpersoon met een Primair Opportunity Contactpersoon Rol. Zie ook Beste Gift Jaar.</help>
+        <label><!-- Best Gift Year Total --></label>
+        <name>npo02__Best_Gift_Year_Total__c</name>
+    </fields>
+    <fields>
+        <help>Het jaar waarin het grootste totaalbedrag van Gewonnen Opportunities op het Huishouden is binnengekomen via een Contactpersoon met een Primair Opportunity Contactpersoon Rol. Zie ook Beste Gift Jaar Totaal.</help>
+        <label><!-- Best Gift Year --></label>
+        <name>npo02__Best_Gift_Year__c</name>
+    </fields>
+    <fields>
+        <help>De Eerste Gift Datum van een Gewonnen Opportunity op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- First Gift Date --></label>
+        <name>npo02__FirstCloseDate__c</name>
+    </fields>
+    <fields>
+        <help>Gebruikt velden van niet uitgeloten gesorteerde gerelateerde Contactpersonen. Automatisch gegenereerd.</help>
+        <label><!-- Formal Greeting --></label>
+        <name>npo02__Formal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>Formule: Samenvoeging van Postvelden voor dit Huishouden. Kan worden bijgewerkt via de Bijwerken Huishouden Pagina, maar werkt het Contactpersoon niet bij tenzij er geklikt wordt op &quot;Kopieer Huishouden Adres naar Contactpersonen&quot;.</help>
+        <label><!-- Mailing Address --></label>
+        <name>npo02__Formula_MailingAddress__c</name>
+    </fields>
+    <fields>
+        <help>Overgenomen van de Contactpersoon die dit Huishouden heeft gecreëerd. Kan gewijzigd worden in het Huishouden, maar wordt niet bijgewerkt in de Contactpersoon.</help>
+        <label><!-- Household Email --></label>
+        <name>npo02__HouseholdEmail__c</name>
+    </fields>
+    <fields>
+        <help>Overgenomen van de Contactpersoon die dit Huishouden heeft gecreëerd. Kan gewijzigd worden in het Huishouden, maar wordt niet bijgewerkt in de Contactpersoon.</help>
+        <label><!-- Household Phone --></label>
+        <name>npo02__HouseholdPhone__c</name>
+    </fields>
+    <fields>
+        <label><!-- Household ID --></label>
+        <name>npo02__Household_ID__c</name>
+    </fields>
+    <fields>
+        <help>Gebruikt velden van niet uitgeloten gesorteerde gerelateerde Contactpersonen. Automatisch gegenereerd.</help>
+        <label><!-- Informal Greeting --></label>
+        <name>npo02__Informal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>Het grootste Gewonnen Opportunity Bedrag op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Largest Gift --></label>
+        <name>npo02__LargestAmount__c</name>
+    </fields>
+    <fields>
+        <help>Meest recente Sluitingsdatum van een Gewonnen Opportunity op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Last Gift Date --></label>
+        <name>npo02__LastCloseDate__c</name>
+    </fields>
+    <fields>
+        <help>Meest recente Gewonnen Lidmaatschap Opportunity (Recordtype) Bedrag op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Last Membership Amount --></label>
+        <name>npo02__LastMembershipAmount__c</name>
+    </fields>
+    <fields>
+        <help>Meest recente Sluitingsdatum van een Gewonnen Lidmaatschap Opportunity op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Last Membership Date --></label>
+        <name>npo02__LastMembershipDate__c</name>
+    </fields>
+    <fields>
+        <help>Het Lidmaatschap Niveau van de meest recent Gewonnen Lidmaatschap Opportunity op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Last Membership Level --></label>
+        <name>npo02__LastMembershipLevel__c</name>
+    </fields>
+    <fields>
+        <help>De Herkomst van de meest recent Gewonnen Lidmaatschap Opportunity op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Last Membership Origin --></label>
+        <name>npo02__LastMembershipOrigin__c</name>
+    </fields>
+    <fields>
+        <help>Meest recente Gewonnen Opportunity Bedrag op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Last Gift Amount --></label>
+        <name>npo02__LastOppAmount__c</name>
+    </fields>
+    <fields>
+        <help>Overgenomen van de Contactpersoon die dit Huishouden heeft gecreëerd. Kan worden bijgewerkt via de Bijwerken Huishouden Pagina, maar werkt het Contactpersoon niet bij tenzij er geklikt wordt op &quot;Kopieer Huishouden Adres naar Contactpersonen&quot;.</help>
+        <label><!-- Mailing City --></label>
+        <name>npo02__MailingCity__c</name>
+    </fields>
+    <fields>
+        <help>Overgenomen van de Contactpersoon die dit Huishouden heeft gecreëerd. Kan worden bijgewerkt via de Bijwerken Huishouden Pagina, maar werkt het Contactpersoon niet bij tenzij er geklikt wordt op &quot;Kopieer Huishouden Adres naar Contactpersonen&quot;.</help>
+        <label><!-- Mailing Country --></label>
+        <name>npo02__MailingCountry__c</name>
+    </fields>
+    <fields>
+        <help>Overgenomen van de Contactpersoon die dit Huishouden heeft gecreëerd. Kan worden bijgewerkt via de Bijwerken Huishouden Pagina, maar werkt het Contactpersoon niet bij tenzij er geklikt wordt op &quot;Kopieer Huishouden Adres naar Contactpersonen&quot;.</help>
+        <label><!-- Mailing Zip/Postal Code --></label>
+        <name>npo02__MailingPostalCode__c</name>
+    </fields>
+    <fields>
+        <help>Overgenomen van de Contactpersoon die dit Huishouden heeft gecreëerd. Kan worden bijgewerkt via de Bijwerken Huishouden Pagina, maar werkt het Contactpersoon niet bij tenzij er geklikt wordt op &quot;Kopieer Huishouden Adres naar Contactpersonen&quot;.</help>
+        <label><!-- Mailing State/Province --></label>
+        <name>npo02__MailingState__c</name>
+    </fields>
+    <fields>
+        <help>Overgenomen van de Contactpersoon die dit Huishouden heeft gecreëerd. Kan worden bijgewerkt via de Bijwerken Huishouden Pagina, maar werkt het Contactpersoon niet bij tenzij er geklikt wordt op &quot;Kopieer Huishouden Adres naar Contactpersonen&quot;.</help>
+        <label><!-- Mailing Street --></label>
+        <name>npo02__MailingStreet__c</name>
+    </fields>
+    <fields>
+        <help>Meest recente Einddatum van een Gewonnen Lidmaatschap Opportunity op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Membership End Date --></label>
+        <name>npo02__MembershipEndDate__c</name>
+    </fields>
+    <fields>
+        <help>De eerste Lidmaatschap Begindatum van de oudste Lidmaatschap Opportunity (Sluitingsdatum, Recordtype) op dit Huishouden via een Contactpersoon met een Primair Opportunity Contactpersoon Rol.</help>
+        <label><!-- Membership Join Date --></label>
+        <name>npo02__MembershipJoinDate__c</name>
+    </fields>
+    <fields>
+        <help>Formule: Het aantal jaar dat dit Huishouden een Lidmaatschap heeft gehad.</help>
+        <label><!-- Membership Span --></label>
+        <name>npo02__Membership_Span__c</name>
+    </fields>
+    <fields>
+        <help>Formule: Huidig, verlopen, of respijtperiode. De Respijtperiode kan worden ingesteld in de Huishouden Instellingen.</help>
+        <label><!-- Membership Status --></label>
+        <name>npo02__Membership_Status__c</name>
+    </fields>
+    <fields>
+        <help>Het totaal aantal giften gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Total Number of Gifts --></label>
+        <name>npo02__NumberOfClosedOpps__c</name>
+    </fields>
+    <fields>
+        <help>Het totaalbedrag aan Gewonnen Lidmaatschap Opportunities (Recordtype) gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Number of Memberships --></label>
+        <name>npo02__NumberOfMembershipOpps__c</name>
+    </fields>
+    <fields>
+        <help>Totaal Giften Twee Jaar Geleden gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Total Gifts Two Years Ago --></label>
+        <name>npo02__OppAmount2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <help>Het totaalbedrag aan Gewonnen Opportunities in de laatste N dagen, zoals gedefinieerd in de Huishouden Instellingen, gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Total Gifts Last N Days --></label>
+        <name>npo02__OppAmountLastNDays__c</name>
+    </fields>
+    <fields>
+        <help>Totaal Giften Vorig Jaar gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Total Gifts Last Year --></label>
+        <name>npo02__OppAmountLastYear__c</name>
+    </fields>
+    <fields>
+        <help>Totaal Giften Huidig Jaar gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Total Gifts This Year --></label>
+        <name>npo02__OppAmountThisYear__c</name>
+    </fields>
+    <fields>
+        <help>Het totaal aantal giften van Gewonnen Opportunities van twee jaar geleden gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Number of Gifts Two Years Ago --></label>
+        <name>npo02__OppsClosed2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <help>Het totaal aantal giften van Gewonnen Opportunities in de laatste N dagen, zoals gedefinieerd in de Huishouden Instellingen, gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Number of Gifts Last N Days --></label>
+        <name>npo02__OppsClosedLastNDays__c</name>
+    </fields>
+    <fields>
+        <help>Het totaal aantal giften van Gewonnen Opportunities van vorig jaar gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Number of Gifts Last Year --></label>
+        <name>npo02__OppsClosedLastYear__c</name>
+    </fields>
+    <fields>
+        <help>Het totaal aantal giften van Gewonnen Opportunities van het huidige jaar gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Number of Gifts This Year --></label>
+        <name>npo02__OppsClosedThisYear__c</name>
+    </fields>
+    <fields>
+        <help>Naam, Formele Begroeting of Informele Begroeting</help>
+        <label><!-- _SYSTEM: CUSTOM NAMING --></label>
+        <name>npo02__SYSTEM_CUSTOM_NAMING__c</name>
+        <picklistValues>
+            <masterLabel>Formal_Greeting__c</masterLabel>
+            <translation>Formele_Begroeting__c</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Informal_Greeting__c</masterLabel>
+            <translation>Informele_Begroeting__c</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Name</masterLabel>
+            <translation><!-- Name --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Het Kleinste Bedrag van een Gewonnen Opportunity gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Smallest Gift --></label>
+        <name>npo02__SmallestAmount__c</name>
+    </fields>
+    <fields>
+        <help>Het totaalbedrag van Gewonnen Lidmaatschap Opportunities (Recordtype) gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Total Membership Amount --></label>
+        <name>npo02__TotalMembershipOppAmount__c</name>
+    </fields>
+    <fields>
+        <help>De som van Gewonnen Opportunity Bedragen gerelateerd aan dit Huishouden via Contactpersonen en Primaire Opportunity Contactpersoon Rollen.</help>
+        <label><!-- Total Gifts --></label>
+        <name>npo02__TotalOppAmount__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Household Layout</layout>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Donatie Informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Donatie Totalen</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Huishouden Informatie</label>
+            <section>Household Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Household Name --></nameFieldLabel>
+    <quickActions>
+        <label>Huishouden bijwerken</label>
+        <name>Update_Household</name>
+    </quickActions>
+    <webLinks>
+        <label><!-- Copy_Household_Address_to_Contacts --></label>
+        <name>npo02__Copy_Household_Address_to_Contacts</name>
+    </webLinks>
 </CustomObjectTranslation>

@@ -1,169 +1,586 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>Address_Verification_Status__c</name>
-    <help>この住所を検証する必要がある場合は、住所ページの上部にある [住所を検証] ボタンをクリックします。詳細は、Power of Us Hub のヘルプドキュメントを参照してください。</help>
-    <label>住所検証状況</label>
-  </fields>
-  <fields>
-    <name>Batch__c</name>
-    <help>この個人が作成されたバッチを参照します。</help>
-    <relationshipLabel>個人</relationshipLabel>
-    <label>一括処理</label>
-  </fields>
-  <fields>
-    <name>Current_Address__c</name>
-    <help>個人の郵送先項目が入力された現在の住所。</help>
-    <relationshipLabel>個人 (現在の住所)</relationshipLabel>
-    <label>現在の住所</label>
-  </fields>
-  <fields>
-    <name>Deceased__c</name>
-    <help>このオプションを選択すると、個人が死亡とマークされ、世帯命名、メールの送信、および電話の発信から除外されます。</help>
-    <label>死亡</label>
-  </fields>
-  <fields>
-    <name>Do_Not_Contact__c</name>
-    <help>このオプションを選択すると、個人がメールの送信および電話の発信から除外されます。</help>
-    <label>連絡不可</label>
-  </fields>
-  <fields>
-    <name>Exclude_from_Household_Formal_Greeting__c</name>
-    <help>このボックスをオンにすると、この個人が世帯の公式の挨拶から除外されます。</help>
-    <label>世帯の公式の挨拶から除外</label>
-  </fields>
-  <fields>
-    <name>Exclude_from_Household_Informal_Greeting__c</name>
-    <help>このボックスをオンにすると、この個人が世帯の非公式の挨拶から除外されます。</help>
-    <label>世帯の非公式の挨拶から除外</label>
-  </fields>
-  <fields>
-    <name>Exclude_from_Household_Name__c</name>
-    <help>このボックスをオンにすると、この個人が世帯名から除外されます。</help>
-    <label>世帯名から除外</label>
-  </fields>
-  <fields>
-    <name>First_Soft_Credit_Amount__c</name>
-    <help>最初のソフトクレジットの金額。</help>
-    <label>最初のソフトクレジット額</label>
-  </fields>
-  <fields>
-    <name>First_Soft_Credit_Date__c</name>
-    <help>最初のソフトクレジットの日付。</help>
-    <label>最初のソフトクレジット日</label>
-  </fields>
-  <fields>
-    <name>HHId__c</name>
-    <help>世帯団体または世帯オブジェクトの現在の世帯の ID を保持します。</help>
-    <label>HHId</label>
-  </fields>
-  <fields>
-    <name>Largest_Soft_Credit_Amount__c</name>
-    <help>最大ソフトクレジットの金額。</help>
-    <label>最大ソフトクレジット額</label>
-  </fields>
-  <fields>
-    <name>Largest_Soft_Credit_Date__c</name>
-    <help>最大ソフトクレジットの日付。</help>
-    <label>最大ソフトクレジット日</label>
-  </fields>
-  <fields>
-    <name>Last_Soft_Credit_Amount__c</name>
-    <help>最新のソフトクレジットの金額。</help>
-    <label>前回のソフトクレジット額</label>
-  </fields>
-  <fields>
-    <name>Last_Soft_Credit_Date__c</name>
-    <help>最新のソフトクレジットの日付。</help>
-    <label>前回のソフトクレジット日</label>
-  </fields>
-  <fields>
-    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
-    <help>[NPSP 設定] で定義された過去の日数の間に完了したソフトクレジットの数。</help>
-    <label>過去 N 日間のソフトクレジット数</label>
-  </fields>
-  <fields>
-    <name>Number_of_Soft_Credits_Last_Year__c</name>
-    <help>昨年のソフトクレジットの数。</help>
-    <label>昨年のソフトクレジット数</label>
-  </fields>
-  <fields>
-    <name>Number_of_Soft_Credits_This_Year__c</name>
-    <help>今年のソフトクレジットの数。</help>
-    <label>今年のソフトクレジット数</label>
-  </fields>
-  <fields>
-    <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
-    <help>2 年前のソフトクレジットの数。</help>
-    <label>2 年前のソフトクレジット数</label>
-  </fields>
-  <fields>
-    <name>Number_of_Soft_Credits__c</name>
-    <help>ソフトクレジットの数。</help>
-    <label>ソフトクレジット数</label>
-  </fields>
-  <fields>
-    <name>Primary_Affiliation__c</name>
-    <help>「主」とマークされた個人の関係する団体レコードの団体を追跡するために使用します。</help>
-    <relationshipLabel>使用しないでください。[団体アフィリエーション] を使用します。</relationshipLabel>
-    <label>主アフィリエーション</label>
-  </fields>
-  <fields>
-    <name>Primary_Contact__c</name>
-    <help>ユーザがユーザの団体の主個人である場合にオンにします。[団体] で [主個人] を編集できます。</help>
-    <label>主個人</label>
-  </fields>
-  <fields>
-    <name>Soft_Credit_Last_N_Days__c</name>
-    <help>[世帯設定] で定義された過去の日数の間に完了したソフトクレジットの総額。</help>
-    <label>過去 N 日間のソフトクレジット</label>
-  </fields>
-  <fields>
-    <name>is_Address_Override__c</name>
-    <help>オンの場合、個人の現在の住所の検索で世帯のデフォルトが上書きされます。</help>
-    <label>住所の上書き</label>
-  </fields>
-  <webLinks>
-    <name>Merge_Contacts</name>
-    <label>個人のマージ</label>
-  </webLinks>
-  <webLinks>
-    <name>Recalculate_Rollups</name>
-    <label>積み上げ集計の再計算</label>
-  </webLinks>
-  <layouts>
-    <layout>Contact Layout</layout>
-    <sections>
-      <label>個人の詳細</label>
-      <section>Contact Details</section>
-    </sections>
-    <sections>
-      <label>世帯の住所</label>
-      <section>Household Address</section>
-    </sections>
-    <sections>
-      <label>支援情報</label>
-      <section>Donation Information</section>
-    </sections>
-    <sections>
-      <label>支援総額</label>
-      <section>Donation Totals</section>
-    </sections>
-    <sections>
-      <label>ソフトクレジット合計</label>
-      <section>Soft Credit Totals</section>
-    </sections>
-    <sections>
-      <label>世帯の支援情報</label>
-      <section>Household Donation Info</section>
-    </sections>
-    <sections>
-      <label>会員情報</label>
-      <section>Membership Information</section>
-    </sections>
-    <sections>
-      <label>その他</label>
-      <section>Misc</section>
-    </sections>
-  </layouts>
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Contact Merge Found FS --></label>
+        <name>ContactMergeFoundFS</name>
+    </fieldSets>
+    <fields>
+        <help>この住所を検証する必要がある場合は、住所ページの上部にある [住所を検証] ボタンをクリックします。詳細は、Power of Us Hub のヘルプドキュメントを参照してください。</help>
+        <label>住所検証状況</label>
+        <name>Address_Verification_Status__c</name>
+    </fields>
+    <fields>
+        <help>この個人が作成されたバッチを参照します。</help>
+        <label>一括処理</label>
+        <name>Batch__c</name>
+        <relationshipLabel>個人</relationshipLabel>
+    </fields>
+    <fields>
+        <help>個人の郵送先項目が入力された現在の住所。</help>
+        <label>現在の住所</label>
+        <name>Current_Address__c</name>
+        <relationshipLabel>個人 (現在の住所)</relationshipLabel>
+    </fields>
+    <fields>
+        <help>このオプションを選択すると、個人が死亡とマークされ、世帯命名、メールの送信、および電話の発信から除外されます。</help>
+        <label>死亡</label>
+        <name>Deceased__c</name>
+    </fields>
+    <fields>
+        <help>このオプションを選択すると、個人がメールの送信および電話の発信から除外されます。</help>
+        <label>連絡不可</label>
+        <name>Do_Not_Contact__c</name>
+    </fields>
+    <fields>
+        <help>このボックスをオンにすると、この個人が世帯の公式の挨拶から除外されます。</help>
+        <label>世帯の公式の挨拶から除外</label>
+        <name>Exclude_from_Household_Formal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>このボックスをオンにすると、この個人が世帯の非公式の挨拶から除外されます。</help>
+        <label>世帯の非公式の挨拶から除外</label>
+        <name>Exclude_from_Household_Informal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>このボックスをオンにすると、この個人が世帯名から除外されます。</help>
+        <label>世帯名から除外</label>
+        <name>Exclude_from_Household_Name__c</name>
+    </fields>
+    <fields>
+        <help>最初のソフトクレジットの金額。</help>
+        <label>最初のソフトクレジット額</label>
+        <name>First_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>最初のソフトクレジットの日付。</help>
+        <label>最初のソフトクレジット日</label>
+        <name>First_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>世帯団体または世帯オブジェクトの現在の世帯の ID を保持します。</help>
+        <label>HHId</label>
+        <name>HHId__c</name>
+    </fields>
+    <fields>
+        <label><!-- Languages --></label>
+        <name>Languages__c</name>
+    </fields>
+    <fields>
+        <help>最大ソフトクレジットの金額。</help>
+        <label>最大ソフトクレジット額</label>
+        <name>Largest_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>最大ソフトクレジットの日付。</help>
+        <label>最大ソフトクレジット日</label>
+        <name>Largest_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>最新のソフトクレジットの金額。</help>
+        <label>前回のソフトクレジット額</label>
+        <name>Last_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>最新のソフトクレジットの日付。</help>
+        <label>前回のソフトクレジット日</label>
+        <name>Last_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Level --></label>
+        <name>Level__c</name>
+        <picklistValues>
+            <masterLabel>Primary</masterLabel>
+            <translation><!-- Primary --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Secondary</masterLabel>
+            <translation><!-- Secondary --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tertiary</masterLabel>
+            <translation><!-- Tertiary --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>[NPSP 設定] で定義された過去の日数の間に完了したソフトクレジットの数。</help>
+        <label>過去 N 日間のソフトクレジット数</label>
+        <name>Number_of_Soft_Credits_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>昨年のソフトクレジットの数。</help>
+        <label>昨年のソフトクレジット数</label>
+        <name>Number_of_Soft_Credits_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>今年のソフトクレジットの数。</help>
+        <label>今年のソフトクレジット数</label>
+        <name>Number_of_Soft_Credits_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>2 年前のソフトクレジットの数。</help>
+        <label>2 年前のソフトクレジット数</label>
+        <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>ソフトクレジットの数。</help>
+        <label>ソフトクレジット数</label>
+        <name>Number_of_Soft_Credits__c</name>
+    </fields>
+    <fields>
+        <help>「主」とマークされた個人の関係する団体レコードの団体を追跡するために使用します。</help>
+        <label>主アフィリエーション</label>
+        <name>Primary_Affiliation__c</name>
+        <relationshipLabel>使用しないでください。[団体アフィリエーション] を使用します。</relationshipLabel>
+    </fields>
+    <fields>
+        <help>ユーザがユーザの団体の主個人である場合にオンにします。[団体] で [主個人] を編集できます。</help>
+        <label>主個人</label>
+        <name>Primary_Contact__c</name>
+    </fields>
+    <fields>
+        <help>[世帯設定] で定義された過去の日数の間に完了したソフトクレジットの総額。</help>
+        <label>過去 N 日間のソフトクレジット</label>
+        <name>Soft_Credit_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>オンの場合、個人の現在の住所の検索で世帯のデフォルトが上書きされます。</help>
+        <label>住所の上書き</label>
+        <name>is_Address_Override__c</name>
+    </fields>
+    <fields>
+        <help>[その他のメール] は、個人メール、メール連絡先、勤務先メールに続く 4 番目の任意のメールです。</help>
+        <label><!-- Alternate Email --></label>
+        <name>npe01__AlternateEmail__c</name>
+    </fields>
+    <fields>
+        <help>[メール連絡先] 項目を参照してください。</help>
+        <label><!-- Personal Email --></label>
+        <name>npe01__HomeEmail__c</name>
+    </fields>
+    <fields>
+        <help>数式: [連絡先] 項目を使用して、[住所(郵送先)] または [住所(その他)] から自宅住所を決定します。</help>
+        <label><!-- Home Address --></label>
+        <name>npe01__Home_Address__c</name>
+    </fields>
+    <fields>
+        <help>数式: 設定の順序、[SYSTEM_AccountType] 項目、[団体種別] 項目、および「団体」。</help>
+        <label><!-- Organization Type --></label>
+        <name>npe01__Organization_Type__c</name>
+    </fields>
+    <fields>
+        <help>数式: [連絡先] が [その他] の場合は [住所(郵送先)]。数式: [連絡先(その他)] が [その他] の場合は [住所(その他)]。</help>
+        <label><!-- Other Address --></label>
+        <name>npe01__Other_Address__c</name>
+    </fields>
+    <fields>
+        <help>この個人に関連するほとんどのコミュニケーションで使用する電話番号は?</help>
+        <label><!-- Preferred Phone --></label>
+        <name>npe01__PreferredPhone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>自宅</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>携帯</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>その他</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>この個人に関連するほとんどのコミュニケーションで使用するメールは?</help>
+        <label><!-- Preferred Email --></label>
+        <name>npe01__Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>その他</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>個人</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>郵送先住所の住所種別。</help>
+        <label><!-- Primary Address Type --></label>
+        <name>npe01__Primary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>自宅</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>その他</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>1 対 1 またはバケット団体の処理から個人を除外します。</help>
+        <label><!-- Private --></label>
+        <name>npe01__Private__c</name>
+    </fields>
+    <fields>
+        <help>その他住所の住所種別は?</help>
+        <label><!-- Secondary Address Type --></label>
+        <name>npe01__Secondary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>自宅</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>その他</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>個人 (バケット) モデルと 1 対 1 モデルのどちらで団体リレーションが動作するかを示します</help>
+        <label><!-- DEPRECATED - _SYSTEM: ACCOUNT PROCESSOR --></label>
+        <name>npe01__SystemAccountProcessor__c</name>
+        <picklistValues>
+            <masterLabel>Individual</masterLabel>
+            <translation>個人</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>One-to-One</masterLabel>
+            <translation><!-- One-to-One --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>この個人とつながっている「団体」の種類を示します。</help>
+        <label><!-- Type of Account --></label>
+        <name>npe01__Type_of_Account__c</name>
+    </fields>
+    <fields>
+        <help>[メール連絡先] 項目を参照してください。</help>
+        <label><!-- Work Email --></label>
+        <name>npe01__WorkEmail__c</name>
+    </fields>
+    <fields>
+        <help>[電話連絡先] 項目を参照してください。</help>
+        <label><!-- Work Phone --></label>
+        <name>npe01__WorkPhone__c</name>
+    </fields>
+    <fields>
+        <help>数式: [第 1 住所] の [種別] が [勤務先] の場合は [住所(郵送先)]。[第 2 住所] の [種別] が [勤務先] の場合は [住所(その他)]。</help>
+        <label><!-- Work Address --></label>
+        <name>npe01__Work_Address__c</name>
+    </fields>
+    <fields>
+        <help><!-- The average amount of all won Opportunities related to this Contact by a primary Opportunity Contact Role. --></help>
+        <label><!-- Average Gift --></label>
+        <name>npo02__AverageAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The sum of won Opportunity amounts in the Best Gift Year. --></help>
+        <label><!-- Best Gift Year Total --></label>
+        <name>npo02__Best_Gift_Year_Total__c</name>
+    </fields>
+    <fields>
+        <help><!-- The year of the largest total amount of won Opportunities related to this Contact by primary Contact Role.  See also Best Gift Year Total. --></help>
+        <label><!-- Best Gift Year --></label>
+        <name>npo02__Best_Gift_Year__c</name>
+    </fields>
+    <fields>
+        <help><!-- The oldest Close Date of a won Opportunity with amount greater than zero related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- First Gift Date --></label>
+        <name>npo02__FirstCloseDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Formula: Clone of the Household Mailing address (also a Formula) --></help>
+        <label><!-- Household Mailing Address --></label>
+        <name>npo02__Formula_HouseholdMailingAddress__c</name>
+    </fields>
+    <fields>
+        <help><!-- Formula: Simple formula of Household Phone field. --></help>
+        <label><!-- Household Phone --></label>
+        <name>npo02__Formula_HouseholdPhone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines the order in which Contact names are used to generate Household name. --></help>
+        <label><!-- Household Naming Order --></label>
+        <name>npo02__Household_Naming_Order__c</name>
+    </fields>
+    <fields>
+        <label><!-- Household --></label>
+        <name>npo02__Household__c</name>
+        <relationshipLabel><!-- Household Members --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The largest amount of a won Opportunity related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Largest Gift --></label>
+        <name>npo02__LargestAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Household Gift Date --></label>
+        <name>npo02__LastCloseDateHH__c</name>
+    </fields>
+    <fields>
+        <help><!-- The close date of the most recent won Opportunity related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Last Gift Date --></label>
+        <name>npo02__LastCloseDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount of the most recent (by Close Date) won Membership (Record Type) Opportunity related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Last Membership Amount --></label>
+        <name>npo02__LastMembershipAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The most recent Close Date of a won Membership (Record Type) Opportunity related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Last Membership Date --></label>
+        <name>npo02__LastMembershipDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The level of the most recent (by Close Date) won Membership (Record Type) Opportunity related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Last Membership Level --></label>
+        <name>npo02__LastMembershipLevel__c</name>
+    </fields>
+    <fields>
+        <help><!-- The origin (new, renewal, reacquire...) of the most recent (Close Date) won Membership (Record Type) Opportunity related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Last Membership Origin --></label>
+        <name>npo02__LastMembershipOrigin__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount of the most recent won Opportunity by Close Date related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Last Gift Amount --></label>
+        <name>npo02__LastOppAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Membership End Date of the most recent (Close Date) Membership Opportunity (Record Type) related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Membership End Date --></label>
+        <name>npo02__MembershipEndDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Join Date of the oldest (Close Date) Membership Opportunity (Record Type) related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Membership Join Date --></label>
+        <name>npo02__MembershipJoinDate__c</name>
+    </fields>
+    <fields>
+        <help>この個人が含まれない世帯名を決定します。</help>
+        <label><!-- Naming Exclusions --></label>
+        <name>npo02__Naming_Exclusions__c</name>
+        <picklistValues>
+            <masterLabel>Household__c.Formal_Greeting__c</masterLabel>
+            <translation><!-- Household__c.Formal_Greeting__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household__c.Informal_Greeting__c</masterLabel>
+            <translation><!-- Household__c.Informal_Greeting__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household__c.Name</masterLabel>
+            <translation><!-- Household__c.Name --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Opportunities with amount greater than zero related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Total Number of Gifts --></label>
+        <name>npo02__NumberOfClosedOpps__c</name>
+    </fields>
+    <fields>
+        <help><!-- The number of won Membership Opportunities (Record Type) related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Number of Memberships --></label>
+        <name>npo02__NumberOfMembershipOpps__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Opportunities related to this Contact by primary Opportunity Contact Role, closed two years ago. --></help>
+        <label><!-- Total Gifts Two Years Ago --></label>
+        <name>npo02__OppAmount2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Opportunities related to this Contact by primary Opportunity Contact Role, closed in the last number of days defined in Household Settings. --></help>
+        <label><!-- Total Gifts Last N Days --></label>
+        <name>npo02__OppAmountLastNDays__c</name>
+    </fields>
+    <fields>
+        <help><!-- Formula:  Total Gifts Last Year on related Household. --></help>
+        <label><!-- Total Household Gifts Last Year --></label>
+        <name>npo02__OppAmountLastYearHH__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Opportunities related to this Contact by primary Opportunity Contact Role, closed last year. --></help>
+        <label><!-- Total Gifts Last Year --></label>
+        <name>npo02__OppAmountLastYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- Formula:  Total Gifts This Year on related Household. --></help>
+        <label><!-- Total Household Gifts This Year --></label>
+        <name>npo02__OppAmountThisYearHH__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Opportunities related to this Contact by primary Opportunity Contact Role, closed this year. --></help>
+        <label><!-- Total Gifts This Year --></label>
+        <name>npo02__OppAmountThisYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Opportunities with amount greater than zero related to this Contact by primary Opportunity Contact Role, closed two years ago. --></help>
+        <label><!-- Number of Gifts Two Years Ago --></label>
+        <name>npo02__OppsClosed2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Opportunities with amount greater than zero related to this Contact by primary Opportunity Contact Role, closed in the last number of days defined in Household Settings. --></help>
+        <label><!-- Number of Gifts Last N Days --></label>
+        <name>npo02__OppsClosedLastNDays__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Opportunities with amount greater than zero related to this Contact by primary Opportunity Contact Role, closed last year. --></help>
+        <label><!-- Number of Gifts Last Year --></label>
+        <name>npo02__OppsClosedLastYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of won Opportunities with amount greater than zero related to this Contact by primary Opportunity Contact Role, closed this year. --></help>
+        <label><!-- Number of Gifts This Year --></label>
+        <name>npo02__OppsClosedThisYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- The smallest amount of a won Opportunity related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Smallest Gift --></label>
+        <name>npo02__SmallestAmount__c</name>
+    </fields>
+    <fields>
+        <help>昨年のソフトクレジットの総額。</help>
+        <label><!-- Soft Credit Last Year --></label>
+        <name>npo02__Soft_Credit_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>今年のソフトクレジットの総額。</help>
+        <label><!-- Soft Credit This Year --></label>
+        <name>npo02__Soft_Credit_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>この個人の全期間のソフトクレジットの総額。[世帯設定] タブで定義します。</help>
+        <label><!-- Soft Credit Total --></label>
+        <name>npo02__Soft_Credit_Total__c</name>
+    </fields>
+    <fields>
+        <help>2 年前のソフトクレジットの総額。</help>
+        <label><!-- Soft Credit Two Years Ago --></label>
+        <name>npo02__Soft_Credit_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: HOUSEHOLD PROCESSOR-DEPRECATED --></label>
+        <name>npo02__SystemHouseholdProcessor__c</name>
+        <picklistValues>
+            <masterLabel>All Individual Contacts</masterLabel>
+            <translation><!-- All Individual Contacts --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>All New or Edited Contacts</masterLabel>
+            <translation><!-- All New or Edited Contacts --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Contacts</masterLabel>
+            <translation><!-- No Contacts --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The total amount of won Membership Opportunities (Record Type) related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Total Membership Amount --></label>
+        <name>npo02__TotalMembershipOppAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The sum of won Opportunity Amounts related to this Contact by primary Opportunity Contact Role. --></help>
+        <label><!-- Total Gifts --></label>
+        <name>npo02__TotalOppAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- Formula:  Total Gifts on related Household. --></help>
+        <label><!-- Total Household Gifts --></label>
+        <name>npo02__Total_Household_Gifts__c</name>
+    </fields>
+    <layouts>
+        <layout>Contact Layout</layout>
+        <sections>
+            <label>個人の詳細</label>
+            <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label>支援情報</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>支援総額</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>世帯の住所</label>
+            <section>Household Address</section>
+        </sections>
+        <sections>
+            <label>世帯の支援情報</label>
+            <section>Household Donation Info</section>
+        </sections>
+        <sections>
+            <label>会員情報</label>
+            <section>Membership Information</section>
+        </sections>
+        <sections>
+            <label>その他</label>
+            <section>Misc</section>
+        </sections>
+        <sections>
+            <label>ソフトクレジット合計</label>
+            <section>Soft Credit Totals</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>新規アフィリエーション</label>
+        <name>New_Affiliation</name>
+    </quickActions>
+    <quickActions>
+        <label>新規継続支援</label>
+        <name>New_Recurring_Donation</name>
+    </quickActions>
+    <quickActions>
+        <label>新規リレーション</label>
+        <name>New_Relationship</name>
+    </quickActions>
+    <quickActions>
+        <label>クイック更新</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>個人のマージ</label>
+        <name>Merge_Contacts</name>
+    </webLinks>
+    <webLinks>
+        <label>積み上げ集計の再計算</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Relationships_Viewer --></label>
+        <name>npe4__Relationships_Viewer</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Copy_Address_to_Household --></label>
+        <name>npo02__Copy_Address_to_Household</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Household --></label>
+        <name>npo02__Household</name>
+    </webLinks>
 </CustomObjectTranslation>

@@ -25,5 +25,50 @@
         <label><!-- Enable Custom Field Sync --></label>
         <name>Enable_Custom_Field_Sync__c</name>
     </fields>
+    <fields>
+        <help>קשרים הנוצרים אוטומטית עוברים הסרת ערכים כפולים באופן אוטומטי, למניעת יצירה של רשומות קשר כפולות בין שני אנשי קשר.  סמן תיבה זו כדי להשבית התנהגות זו ולאפשר יצירה של קשרים מרובים מאותו סוג בין שני אנשי קשר</help>
+        <label><!-- Allow Auto-Created Duplicate Relations --></label>
+        <name>npe4__Allow_AutoCreated_Duplicates__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_RelCM_trigger --></label>
+        <name>npe4__DISABLE_RelationshipCM_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_RelContacts_trigger --></label>
+        <name>npe4__DISABLE_RelationshipContacts_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_Relationships_trigger --></label>
+        <name>npe4__DISABLE_Relationships_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  This setting is not used. --></help>
+        <label><!-- DEPRECATED-Force Synchronous Auto Create --></label>
+        <name>npe4__Force_Synchronous_Auto_Create__c</name>
+    </fields>
+    <fields>
+        <help>השדה המותאם אישית המשמש להגדרת המגדר של איש קשר, לקביעת קשרים הדדיים</help>
+        <label><!-- Gender Field --></label>
+        <name>npe4__Gender_Field__c</name>
+    </fields>
+    <fields>
+        <help>השיטה המשמשת ליצירת הקשר ההדדי.  הערכים האפשריים הם &apos;הגדרת רשימה&apos;, אשר משתמש בהגדרות מותאמות אישית לפי מגדר (ראה את הכרטיסייה &apos;קשרים הדדיים&apos;) או &apos;היפוך ערכים&apos;, אשר הופך את הסוג לפי הצורך (&apos;הורה-צאצא&apos; ל&apos;צאצא-הורה&apos;)</help>
+        <label><!-- Reciprocal Method --></label>
+        <name>npe4__Reciprocal_Method__c</name>
+    </fields>
+    <fields>
+        <help>ציון ערך זה יאפשר מילוי מראש של השדה בעת יצירה של קשרים חדשים מתוך מציג הקשרים (ראה תיאור לפרטים נוספים)</help>
+        <label><!-- Relationship Name Field Id --></label>
+        <name>npe4__Relationship_Name_Field_Id__c</name>
+    </fields>
+    <fields>
+        <help>ציון ערך זה יאפשר מילוי מראש של השדה בעת יצירה של קשרים חדשים מתוך מציג הקשרים (ראה תיאור לפרטים נוספים)</help>
+        <label><!-- Relationship Name Id Field Id --></label>
+        <name>npe4__Relationship_Name_Id_Field_Id__c</name>
+    </fields>
     <gender><!-- Masculine --></gender>
 </CustomObjectTranslation>

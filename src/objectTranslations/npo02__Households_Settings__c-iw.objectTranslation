@@ -26,9 +26,189 @@
         <name>Matched_Donor_Role__c</name>
     </fields>
     <fields>
+        <help><!-- Number of records per batch to process when setting seasonal address as the mailing address. --></help>
+        <label><!-- Seasonal Address Batch Size --></label>
+        <name>Seasonal_Addresses_Batch_Size__c</name>
+    </fields>
+    <fields>
         <help><!-- Check this box to use Dated Conversion Rates when Advanced Currency Management is enabled in this Organization. If unchecked and ACM is enabled, all NPSP roll-ups will use the default exchange rate for by currency. --></help>
         <label><!-- Use Dated Conversion Rates if available --></label>
         <name>Use_Dated_Conversion_Rates__c</name>
+    </fields>
+    <fields>
+        <help>אם אפשרות זו מסומנת, המערכת תספק שמות אוטומטיים למשקי בית, ברכות רשמיות ולא רשמיות.</help>
+        <label><!-- Automatic Household Naming --></label>
+        <name>npo02__Advanced_Household_Naming__c</name>
+    </fields>
+    <fields>
+        <help>הנתונים הסטטיסטיים של התורם יסוכמו תמיד אל תפקיד איש הקשר הראשי, ומשק הבית המתאים, בהזדמנות, גם אם ההזדמנות אינה מאדם פרטי (כלומר, מחברה, מוסד וכדומה)</help>
+        <label><!-- Always Rollup to Primary Contact Role --></label>
+        <name>npo02__Always_Rollup_to_Primary_Contact__c</name>
+    </fields>
+    <fields>
+        <help>הגדרה זו אינה גלויה, והיא מאפשרת לעבור בין מצבי הקוד של מתן השמות, ולהשתמש בגרסה אסינכרונית במקום בגרסה הסטנדרטית.</help>
+        <label><!-- Async Household Naming --></label>
+        <name>npo02__Async_Household_Naming__c</name>
+    </fields>
+    <fields>
+        <help>מספר הרשומות שיעובדו בבת-אחת בעת חישוב נתונים סטטיסטיים של תורם.  גודל ברירת המחדל הוא 200.  אם סיכומי ההזדמנויות נכשלים כתוצאה ממגבלות המערכת, בחר מספר קטן יותר.</help>
+        <label><!-- Rollup Batch Size --></label>
+        <name>npo02__Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_HHAfter_trigger --></label>
+        <name>npo02__DISABLE_HouseholdAfter_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_HHBefore_trigger --></label>
+        <name>npo02__DISABLE_HouseholdBefore_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_Household_Opp_trigger --></label>
+        <name>npo02__DISABLE_Household_Opportunity_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_Households_trigger --></label>
+        <name>npo02__DISABLE_Households_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_OppRollup_trigger --></label>
+        <name>npo02__DISABLE_OpportunityRollup_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Enable_Opp_Rollup_Triggers --></label>
+        <name>npo02__Enable_Opp_Rollup_Triggers__c</name>
+    </fields>
+    <fields>
+        <help>מאפשר לסכם סכומים כוללים של הזדמנויות שנסגרו, על בסיס תפקידי אנשי הקשר בהזדמנות.  סיכומי קרדיט מתבצעים רק במשימת האצווה הלילית, ולא עבור גורמים מפעילים.  ניתן להפעיל אותם באופן ידני מהכרטיסייה של אצוות סיכום התרומות.</help>
+        <label><!-- Enable Soft Credit Rollups --></label>
+        <name>npo02__Enable_Soft_Credit_Rollups__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npo02__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>שמות של סוגי רשומות הזדמנות שאין לכלול בנתונים הסטטיסטיים בעת סיכום הזדמנויות חשבון.</help>
+        <label><!-- Opp RecTypes Excluded for Account Rollup --></label>
+        <name>npo02__Excluded_Account_Opp_Rectypes__c</name>
+    </fields>
+    <fields>
+        <help>ערכים בשדה סוג ההזדמנות שאין לכלול בנתונים הסטטיסטיים בעת סיכום הזדמנויות חשבון.</help>
+        <label><!-- Opp Types Excluded for Account Rollup --></label>
+        <name>npo02__Excluded_Account_Opp_Types__c</name>
+    </fields>
+    <fields>
+        <help>שמות של סוגי רשומות הזדמנות שאין לכלול בנתונים הסטטיסטיים בעת סיכום הזדמנויות איש קשר.</help>
+        <label><!-- Opp RecTypes Excluded for Contact Rollup --></label>
+        <name>npo02__Excluded_Contact_Opp_Rectypes__c</name>
+    </fields>
+    <fields>
+        <help>ערכים בשדה סוג ההזדמנות שאין לכלול בנתונים הסטטיסטיים בעת סיכום הזדמנויות איש קשר.</help>
+        <label><!-- Opp Types Excluded for Contact Rollup --></label>
+        <name>npo02__Excluded_Contact_Opp_Types__c</name>
+    </fields>
+    <fields>
+        <help>NPSP בודקת באופן אוטומטי אם קיימות שנות כספים מותאמות אישית, ומשביתה הגדרות של שנות כספים שנמצאו כדי למנוע שגיאות.   הגדרה זו מבטלת את הבדיקה האוטומטית עבור משתמשים שהפעילו שנות כספים מותאמות אישית בטעות.</help>
+        <label><!-- Force Fiscal Year --></label>
+        <name>npo02__Force_Fiscal_Year__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Has Package Update --></label>
+        <name>npo02__Has_Package_Update__c</name>
+    </fields>
+    <fields>
+        <help>סמן שדה זה כדי ליצור תפקידי איש קשר אוטומטיים עבור החברים במשק הבית של איש הקשר הראשי</help>
+        <label><!-- Household Contact Roles On --></label>
+        <name>npo02__Household_Contact_Roles_On__c</name>
+    </fields>
+    <fields>
+        <help>סוגי רשומות איש קשר שאינם נכללים ביצירת משק בית.  המערכת מתעלמת מהגדרה זו בעת שימוש במודל &apos;חשבון משק בית&apos;.</help>
+        <label><!-- Household Creation Excluded Record Types --></label>
+        <name>npo02__Household_Creation_Excluded_Recordtypes__c</name>
+    </fields>
+    <fields>
+        <help>המזהה של דוח רשימת הדיוור של משקי בית, המשמש עבור רשימות דיוור של מבצעים שבהן בוצעה מחיקה של משקי בית כפולים.  הדוח צריך להכיל מבצעים עם אנשי קשר, שבהם מצב החבר אינו מכיל את הערך &apos;כפול&apos;</help>
+        <label><!-- Household Mailing List Report --></label>
+        <name>npo02__Household_Mailing_List_ID__c</name>
+    </fields>
+    <fields>
+        <help>התפקיד המשמש בעת יצירה אוטומטית של תפקידי איש קשר בהזדמנות עבור חברים במשק בית.</help>
+        <label><!-- Household Member Contact Role --></label>
+        <name>npo02__Household_Member_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>סוגי רשומות איש קשר שאינם נכללים ביצירת תפקיד איש קשר בהזדמנות (OCR) של משק בית</help>
+        <label><!-- Household OCR Excluded Record Types --></label>
+        <name>npo02__Household_OCR_Excluded_Recordtypes__c</name>
+    </fields>
+    <fields>
+        <help>מציין עבור אילו אנשי קשר ייווצרו אובייקטים של משק בית באופן אוטומטי.  שים לב שהגדרה זו משמשת רק עבור אנשי קשר עם המודל &apos;אחד לאחד&apos; או &apos;חשבון אישי&apos;.  המערכת מתעלמת מהגדרה זו עבור אנשי קשר עם המודל &apos;חשבון משק בית&apos;.</help>
+        <label><!-- Household Object Rules --></label>
+        <name>npo02__Household_Rules__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Last Update Check --></label>
+        <name>npo02__Last_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Max Package Version --></label>
+        <name>npo02__Max_Package_Version__c</name>
+    </fields>
+    <fields>
+        <help>משך תקופת החסד (בימים) לאחר סיום החברות (תאריך הסיום האחרון), לפני שהמצב יהפוך מ&apos;תקופת חסד&apos; ל&apos;הסתיים&apos;.  ערך ברירת המחדל הוא 30 יום.</help>
+        <label><!-- Membership Grace Period --></label>
+        <name>npo02__Membership_Grace_Period__c</name>
+    </fields>
+    <fields>
+        <help>שמות של סוגי רשומת הזדמנות, כגון &apos;חברות&apos;, שברצונך לסכם בנפרד מסוגי רשומת הזדמנות אחרים.</help>
+        <label><!-- Membership Record Type Names --></label>
+        <name>npo02__Membership_Record_Types__c</name>
+    </fields>
+    <fields>
+        <help>המזהה של משימת תזמון ההזדמנויות המתוזמנת כעת</help>
+        <label><!-- Opp Rollup Scheduled Job Id --></label>
+        <name>npo02__Opp_Rollup_Scheduled_Job_Id__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Package Update URL --></label>
+        <name>npo02__Package_Update_URL__c</name>
+    </fields>
+    <fields>
+        <help>ציין ערך עבור סיכומי &apos;N יום&apos;, כאשר N הוא מספר הימים שלפני היום הנוכחי.  ערך ברירת המחדל הוא סיכום של 365 הימים האחרונים.</help>
+        <label><!-- Rollup N Day Value --></label>
+        <name>npo02__Rollup_N_Day_Value__c</name>
+    </fields>
+    <fields>
+        <help>המספר של משימות Apex מתוזמנות פעילות שיש להביא בחשבון בעת תזמון של משימות חדשות.</help>
+        <label><!-- Schedule Job Limit --></label>
+        <name>npo02__Schedule_Job_Limit__c</name>
+    </fields>
+    <fields>
+        <help>רשימת תפקידי איש קשר בהזדמנות שיש לכלול בסיכומי קרדיט.</help>
+        <label><!-- Soft Credit Roles --></label>
+        <name>npo02__Soft_Credit_Roles__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npo02__Update_Check_Interval__c</name>
+    </fields>
+    <fields>
+        <help>סימון תיבה זו יגרום לסכומים הכוללים של סיכומי הזדמנויות להתבסס על שנת הכספים, במקום על הגדרות השנה הקלנדרית. כדי להגדיר פרטי שנת כספים, עבור אל &apos;הגדרה-&gt;פרופיל חברה-&gt;שנת כספים&apos;.  הערה: הגדרות שנת כספים מותאמת אישית אינן נתמכות.</help>
+        <label><!-- Use Fiscal Year for Rollups --></label>
+        <name>npo02__Use_Fiscal_Year_for_Rollups__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
 </CustomObjectTranslation>
