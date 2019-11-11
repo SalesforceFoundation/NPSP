@@ -10,11 +10,6 @@ export default class GeFormTable extends LightningElement {
         {label: 'Donor', fieldName: 'donorName', type: 'text'},
         {label: 'Donor Link', fieldName: 'donorLink', type: 'url'}
     ];
-    @track columnsLoaded = false;
-
-    connectedCallback() {
-        GeFormService.getFormTemplate();
-    }
 
     @api
     addColumns(columns) {
@@ -22,10 +17,7 @@ export default class GeFormTable extends LightningElement {
     }
 
     @api
-    upsertRow(uid, dataImport){
-        console.log('*** ' + 'upserting row in table' + ' ***');
-        console.log('dataImport: ', dataImport);
-        console.log('uid: ', uid);
+    upsertRow(uid, dataImport) {
         if (dataImport && !dataImport.hasOwnProperty('uid')) {
             dataImport.uid = uid;
         }
