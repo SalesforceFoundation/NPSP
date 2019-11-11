@@ -3,8 +3,6 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/DataImportPageObject.py
-...             robot/Cumulus/resources/NPSPSettingsPageObject.py
-...             robot/Cumulus/resources/AdvancedMappingPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Variables
@@ -20,55 +18,69 @@ Setup Variables
     Set suite variable    ${ns}
     
 Create Data Import Record  
-    ${first_name1} =      Generate Random String 
-    ${last_name1} =       Generate Random String
+    ${account} =      Generate Random String 
     ${gau} =          Generate Random String 
     ${check} =            Generate Random String
     &{gau} =  API Create GAU
     &{data_import} =  API Create DataImport     
-    ...        ${ns}Contact1_Firstname__c=${first_name1}
-    ...        ${ns}Contact1_Lastname__c=${last_name1}
+    ...        ${ns}Account1_Name__c=${account}
     ...        ${ns}Donation_Amount__c=100
     ...        ${ns}Donation_Date__c=${date}
-    ...        ${ns}Donation_Donor__c=Account1
-    ...        ${ns}GAU_Allocation_1_GAU__c=&{gau}[Id]
-    ...        ${ns}GAU_Allocation_1_percent__c=50
+    ...        ${ns}Donation_Donor__c=Contact1
+    ...        ${org_ns}CO2_currency__c=500
     [return]   &{data_import}
 
     
 *** Test Cases ***
 Verify Donation Creation Fails on Incorrect Data and Reprocess
     [Documentation]        
-    ...                    Delete the Currency1 field mapping on object 'CustomObject1' 
-    ...                    and create and process a DI record with a value in Currency1 field.
-    ...                    Verify that Currency1 value is not mapped over to currency1 field on object 'CustomObject1' 
-    ...                    and verify that all other records(Account, contact, Opportunity and payment) are created correctly 
+    ...                    Create a DI record with Account, CustomObject2 and Donation details but select Donation Donor as Contact.
+    ...                    Verify that DI processing fails but account is created. Edit DI and change Donor to Account and reprocess DI record. 
+    ...                    DI completes and account matches to previous and Donation and Custom Object records are created 
     [tags]                 W-035913    feature:BDI
+    
+    #Create DI record and process batch
     &{data_import} =                 Create Data Import Record
     Process Data Import Batch        Errors
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
+    Log Many       &{data_import_upd}
     Open Data Import Record          &{data_import_upd}[Name]    
-    #Verify Contact Details
-    Verify Expected Values                     nonns    Contact            &{data_import_upd}[${ns}Contact1Imported__c]
-    ...    FirstName=&{data_import}[${ns}Contact1_Firstname__c]
-    ...    LastName=&{data_import}[${ns}Contact1_Lastname__c]
+    Confirm Value                    Failure Information        Invalid Donation Donor    Y
+    Confirm Value                    Donation Import Status     Invalid Donation Donor    Y
     
+    # Verify Account Details
+    Verify Expected Values                     nonns    Account            &{data_import_upd}[${ns}Account1Imported__c]
+    ...    Name=&{data_import}[${ns}Account1_Name__c]
+    
+    #Update DI record and reprocess batch
+    Edit Record
+    Click Dropdown                   Donation Donor
+    Click Link                       Account1
+    Click Modal Button               Save
+    Wait Until Modal Is Closed
+    Process Data Import Batch        Completed
+    &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
+    Log Many       &{data_import_upd}
+    Open Data Import Record          &{data_import_upd}[Name]    
+    Confirm Value                    Account1 Import Status     Matched    Y
+    Confirm Value                    Donation Import Status     Created    Y
+   
     #Verify Opportunity is created as closed won with given date and amount
     Verify Expected Values                     nonns    Opportunity        &{data_import_upd}[${ns}DonationImported__c]
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    
-   
-    
+    ...    AccountId=&{data_import_upd}[${ns}Account1Imported__c]
+        
     #Verify Payment record is created and linked to opportunity with correct details
     Verify Expected Values                     nonns    npe01__OppPayment__c        &{data_import_upd}[${ns}PaymentImported__c]
-    ...    npe01__Check_Reference_Number__c=&{data_import2}[${ns}Payment_Check_Reference_Number__c]
     ...    npe01__Paid__c=True
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
-    ...    npe01__Payment_Method__c=Check
     ...    npe01__Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     ...    Payment_Status__c=Paid
 
-    
+    #Verify CustomObject2 record is created and linked to opportunity with correct details
+    Verify Expected Values                     nonns       CustomObject2__c      &{data_import_upd}[${org_ns}CustomObject2Imported__c]
+    ...    ${org_ns}C2_currency_2__c=500.0
+    ...    ${org_ns}Account__c=&{data_import_upd}[${ns}Account1Imported__c]
