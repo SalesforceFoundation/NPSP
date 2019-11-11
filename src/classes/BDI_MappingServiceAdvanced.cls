@@ -48,6 +48,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     public Map<String,BDI_FieldMapping> fieldMappingByDevName = new Map<String,BDI_FieldMapping>();
     public Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingDevName = new Map<String,BDI_FieldMapping[]>();
     public Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingLegacyName = new Map<String,BDI_FieldMapping[]>();
+    public Set<String> importedRecordFieldNames = new Set<String>();
 
     public BDI_FieldMappingSet fieldMappingSet;
 
@@ -226,6 +227,15 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
                 fieldMappings.addAll(diom.Data_Import_Field_Mappings__r);
             }
 
+            if (diom.Imported_Record_Field_Name__c != null) {
+                if (UTIL_Namespace.shouldAlignNamespace) {
+                    diom.Imported_Record_Field_Name__c = 
+                        UTIL_Namespace.alignSchemaNSWithEnvironment(diom.Imported_Record_Field_Name__c);
+                }
+                
+                importedRecordFieldNames.add(diom.Imported_Record_Field_Name__c.toLowerCase());
+            }
+            
             BDI_ObjectMapping objectMapping = new BDI_ObjectMapping(diom);
             this.objectMappingByDevName.put(objectMapping.DeveloperName,objectMapping);
         }

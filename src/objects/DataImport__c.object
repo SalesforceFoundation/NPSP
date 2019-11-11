@@ -259,6 +259,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Additional_Object_JSON__c</fullName>
+        <description>This field allows for additional objects to be specified in a JSON format so that dynamic numbers of records can be created from a single Data Import record.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This field allows for additional objects to be specified in a JSON format so that dynamic numbers of records can be created from a single Data Import record.</inlineHelpText>
+        <label>Additional Object JSON</label>
+        <length>131072</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
         <fullName>ApexJobId__c</fullName>
         <description>The ApexJobID of the Batch Job that processed the record.</description>
         <externalId>false</externalId>

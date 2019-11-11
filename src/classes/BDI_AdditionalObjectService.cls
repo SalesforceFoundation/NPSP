@@ -44,8 +44,13 @@ public with sharing class BDI_AdditionalObjectService {
     private BDI_MappingServiceAdvanced mappingServiceAdvanced;
 
     private Map<Integer,Map<String,BDI_ObjectMapping>> objMappingsByTier = new Map<Integer,Map<String,BDI_ObjectMapping>>();
-    private Map<String,Map<String,BDI_ObjectMapping>> successorObjMappingsByPredecessorName = new Map<String,Map<String,BDI_ObjectMapping>>();
+    private Map<String,Map<String,BDI_ObjectMapping>> successorObjMappingsByPredecessorName = 
+        new Map<String,Map<String,BDI_ObjectMapping>>();
     private Set<String> importedRecordFieldNames = new Set<String>();
+    public Set<String> dynamicSourceFields = new Set<String>{DataImport__c.Additional_Object_JSON__c.getDescribe().getName()};
+
+    private Map<Id,Map<String,BDI_DynamicSourceGroup>> dynamicSourceGroupByNameByDataImportId = 
+        new Map<Id,Map<String,BDI_DynamicSourceGroup>>();
 
     public Set<String> objMappingDevNames = new Set<String>();
 
@@ -64,8 +69,8 @@ public with sharing class BDI_AdditionalObjectService {
     */
     public void importAdditionalObjects(){
 
+        prepareDynamicSourceDataForAllDIs();
         generateTiersOfObjectMappings();
-        createSetOfImportedRecordFieldNames(mappingServiceAdvanced.objectMappingByDevName.values());
 
         //Iterate through the map of tiers, starting with the first tier that actually has a predecessor 
         //(ie 2nd tier), and validate and create each object as appropriate.
@@ -92,6 +97,8 @@ public with sharing class BDI_AdditionalObjectService {
                 importObjectWrappers(objAPINameToObjWraps);
             }
         }
+
+        updateDIwithDynamicSourceGroups();
     }
 
     /*******************************************************************************************************
@@ -123,15 +130,25 @@ public with sharing class BDI_AdditionalObjectService {
                     BDI_ObjectWrapper[] objWrapsForProcessing = new BDI_ObjectWrapper[]{};
                     for (DataImport__c dataImport : dataImportRecords) {
 
-                        BDI_ObjectWrapper objWrap = new BDI_ObjectWrapper(
-                            dataImport,objMapping,fieldMappings,predecessor);
+                        BDI_DynamicSourceGroup dsg;
+                        BDI_DynamicSource ds;
 
-                        //null out any existing value in the status field for this object mapping
-                        dataImport.put(objMapping.Imported_Record_Status_Field_Name,'');
+                        if (objMapping.dynamicSourceField != null && objMapping.dynamicSourceField.length() > 0) {
+                            dsg = retrieveDynamicSourceDataForDI(dataImport,objMapping.dynamicSourceField);
+                            if (dsg != null) {
+                               ds = dsg.dynamicSourceByObjMappingDevName.get(objMapping.DeveloperName);
+                            }
+                        }
+
+                        BDI_ObjectWrapper objWrap = new BDI_ObjectWrapper(
+                            dataImport,objMapping,fieldMappings,predecessor,ds);
+
+                        //blank out any existing value in the status field for this object mapping
+                        objWrap.setImportedRecordStatus('');
 
                         //If the imported record field for the object is not populated then create a new SObject, 
                         //otherwise update existing.
-                        if (dataImport.get(objMapping.Imported_Record_Field_Name) == null) {
+                        if (objWrap.getImportedRecordId() == null) {
 
                             //If there are no fields populated or required fields are not populated for this object 
                             //mapping then ignore this dataImport and continue.
@@ -149,7 +166,7 @@ public with sharing class BDI_AdditionalObjectService {
 
                             //If there is an existing record then we don't need to perform the normal validation 
                             // and can proceed to populating the record with any non-null values.
-                            objWrap.existingSObjectId = (Id)dataImport.get(objMapping.Imported_Record_Field_Name);
+                            objWrap.existingSObjectId = objWrap.getImportedRecordId();
 
                         }
 
@@ -263,8 +280,7 @@ public with sharing class BDI_AdditionalObjectService {
                         BDI_ObjectWrapper objWrap = objWrapsForUpdate[t];
 
                         if (result.isSuccess()) {
-                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name,
-                                System.label.bdiUpdated);
+                            objWrap.setImportedRecordStatus(System.label.bdiUpdated);
                         } else {
                             logError(objWrap, result.getErrors()[0].getMessage());
                         }
@@ -289,10 +305,8 @@ public with sharing class BDI_AdditionalObjectService {
                         BDI_ObjectWrapper objWrap = objWrapsForInsert[t];
 
                         if (result.isSuccess()) {
-                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Status_Field_Name,
-                                System.Label.bdiCreated);
-                            objWrap.dataImport.put(objWrap.objMapping.Imported_Record_Field_Name,
-                                objWrap.sObj.Id);
+                            objWrap.setImportedRecordStatus(System.Label.bdiCreated);
+                            objWrap.setImportedRecordId(objWrap.sObj.Id);
 
                             // If the newly created sobject is a parent to its predecesssor, then
                             // add it to a list for updating child predcessors.
@@ -311,6 +325,117 @@ public with sharing class BDI_AdditionalObjectService {
             }
         }
     }
+
+
+    /*******************************************************************************************************
+    * @description Iterates through the in context list of Data Import records and calls a method to extract
+    * the Dynamic Source info for each Data Import record and dynamic source field combination.
+    */
+    private void prepareDynamicSourceDataForAllDIs() {
+
+        for (DataImport__c dataImport : dataImportService.listDI) {
+            for (String dynamicSourceField : dynamicSourceFields) {
+                retrieveDynamicSourceDataForDI(dataImport, dynamicSourceField);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description For a given data import record and dynamic source field, this method extracts the 
+    * dynamic source group and calls a method to create temporary dynamic mappings as needed.
+    * @param di The DataImport__c record to extract Dynamic sources from.
+    * @param dynamicSourceField the field on the DI to look into for the JSON string.
+    */
+    private BDI_DynamicSourceGroup retrieveDynamicSourceDataForDI(DataImport__c di, String dynamicSourceField) {
+
+        BDI_DynamicSourceGroup dsg;
+        Map<String,BDI_DynamicSourceGroup> dynamicSourceGroupByName = new Map<String,BDI_DynamicSourceGroup>();
+
+        //Retrieve and return an existing DynamicSourceGroup if already present in the map.
+        if(dynamicSourceGroupByNameByDataImportId.get(di.Id) != null) {
+            dynamicSourceGroupByName = dynamicSourceGroupByNameByDataImportId.get(di.Id);
+            if (dynamicSourceGroupByName.get(dynamicSourceField) != null) {
+                return dynamicSourceGroupByName.get(dynamicSourceField);
+            }
+        }
+
+        //Attempt to deserialize the target field, and store in the map if there was data.
+        dsg = deserializeDynamicSourceGroup(di, dynamicSourceField);
+
+        if (dsg != null) {
+            dynamicSourceGroupByName.put(dsg.name,dsg);
+            dynamicSourceGroupByNameByDataImportId.put(di.Id,dynamicSourceGroupByName);
+            createTemporaryDynamicMappings(dsg);
+        }
+
+        return dsg;
+    }
+
+    /*******************************************************************************************************
+    * @description Inspects the dynamic sources included in the DynamicSourceGroup and creates temporary
+    * copies of Object mappings for each based on the defined template object mapping and stores them in 
+    * maps in the current instance of the BDI_MappingServiceAdvanced.
+    * @param dsg The dynamic source group that should be examined to create temporary mappings for.
+    */
+    private void createTemporaryDynamicMappings(BDI_DynamicSourceGroup dsg) {
+        //Create temporary object and field mappings for the dynamic additional objects based on the
+        //template provided if not already created.
+        for (String objMappingDevName : dsg.dynamicSourceByObjMappingDevName.keySet()) {
+
+            if (mappingServiceAdvanced.objectMappingByDevName.get(objMappingDevName) == null) {
+                BDI_DynamicSource ds = dsg.dynamicSourceByObjMappingDevName.get(objMappingDevName);
+
+                BDI_ObjectMapping templateObjMapping = 
+                    mappingServiceAdvanced.objectMappingByDevName.get(ds.objectMappingTemplateDevName);
+
+                BDI_ObjectMapping newObjMapping = new BDI_ObjectMapping(templateObjMapping,objMappingDevName);
+                newObjMapping.dynamicSourceField = dsg.name;
+
+                BDI_FieldMapping[] fms = 
+                    mappingServiceAdvanced.fieldMappingsByObjMappingDevName.get(ds.objectMappingTemplateDevName);
+
+                mappingServiceAdvanced.objectMappingByDevName.put(objMappingDevName,newObjMapping);
+                mappingServiceAdvanced.fieldMappingsByObjMappingDevName.put(objMappingDevName,fms);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Method that handles the deserialization of the dynamic source field.
+    * @param di The DataImport__c record to extract Dynamic Source Groups from.
+    * @param dynamicSourceField the field on the DI to look into for the JSON string to deserialize.
+    */
+    private BDI_DynamicSourceGroup deserializeDynamicSourceGroup(DataImport__c di, String dynamicSourceField) {
+        BDI_DynamicSourceGroup dsg;
+        String dynamicSourceString = (String)di.get(dynamicSourceField);
+        
+        if (dynamicSourceString != null && dynamicSourceString.length() > 0) {
+            dsg = 
+                (BDI_DynamicSourceGroup)JSON.deserialize(dynamicSourceString, BDI_DynamicSourceGroup.class);
+        }
+
+        return dsg;
+    }
+
+    /*******************************************************************************************************
+    * @description updates the Dynamic source fields on the Data Import object with the updated DynamicSourceGroup
+    * values.
+    */
+    private void updateDIwithDynamicSourceGroups(){
+
+        for (DataImport__c dataImport : dataImportService.listDI) {
+
+            if (dynamicSourceGroupByNameByDataImportId.get(dataImport.Id) != null) {
+                Map<String,BDI_DynamicSourceGroup> dynamicSourceGroupByName = 
+                    dynamicSourceGroupByNameByDataImportId.get(dataImport.Id);
+
+                for (String dynamicSourceFieldName : dynamicSourceGroupByName.keySet()){
+                    dataImport.put(dynamicSourceFieldName,JSON.serialize(dynamicSourceGroupByName.get(dynamicSourceFieldName)));
+                }
+            }
+        }
+    }
+
 
     /*******************************************************************************************************
     * @description Determines if there is a custom mapping logic class and constructs it if there is, 
@@ -439,6 +564,7 @@ public with sharing class BDI_AdditionalObjectService {
     */
     private Boolean predecessorExists(BDI_ObjectWrapper objWrap, BDI_ObjectMapping predecessor){
         Boolean result = true;
+
         if (objWrap.dataImport.get(predecessor.Imported_Record_Field_Name) == null) {
             result = false;
             String error = String.format(
@@ -446,6 +572,7 @@ public with sharing class BDI_AdditionalObjectService {
                 new List<String>{predecessor.MasterLabel});
             logError(objWrap, error);
         }
+
         return result;
     }
 
@@ -468,9 +595,13 @@ public with sharing class BDI_AdditionalObjectService {
         // the import of another object. This is done to ensure that the user actually intended to attempt 
         // the creation of this object.
         for (BDI_FieldMapping fieldMapping : objWrap.fieldMappings) {
+            if (objWrap.dynamicSource == null) {
 
-            if (!importedRecordFieldNames.contains(fieldMapping.Source_Field_API_Name.toLowerCase())
-                && objWrap.dataImport.get(fieldMapping.Source_Field_API_Name) != null) {        
+                if (!mappingServiceAdvanced.importedRecordFieldNames.contains(fieldMapping.Source_Field_API_Name.toLowerCase())
+                    && objWrap.getSourceFieldValue(fieldMapping.Source_Field_API_Name) != null) {        
+                    anyNonImportedRecordFieldsPopulated = true;
+                }
+            } else {
                 anyNonImportedRecordFieldsPopulated = true;
             }
         }
@@ -481,7 +612,7 @@ public with sharing class BDI_AdditionalObjectService {
 
             for (BDI_FieldMapping fieldMapping : objWrap.fieldMappings) {
 
-                if (objWrap.dataImport.get(fieldMapping.Source_Field_API_Name) == null) {
+                if (objWrap.getSourceFieldValue(fieldMapping.Source_Field_API_Name) == null) {
 
                     if (fieldMapping.Required == 'Yes') {
 
@@ -570,29 +701,10 @@ public with sharing class BDI_AdditionalObjectService {
         }
     }
 
-
-    /*******************************************************************************************************
-    * @description creates a set of the imported record field names for all the object mappings it is passed 
-    *  for use in field validation.
-    * @param objMappings the Data Import Object Mappings that the set should be built from.
-    */
-    private Set<String> createSetOfImportedRecordFieldNames(BDI_ObjectMapping[] objMappings) {
-        importedRecordFieldNames = new Set<String>();
-
-        for (BDI_ObjectMapping objMapping : objMappings) {
-
-            if (objMapping.Imported_Record_Field_Name != null) {
-                importedRecordFieldNames.add(objMapping.Imported_Record_Field_Name.toLowerCase());
-            }
-            
-        }
-        return importedRecordFieldNames;
-    }
-
     private void logError(BDI_ObjectWrapper objectWrapper, String errorMessage) {
         objectWrapper.setDataImportStatus(BDI_DataImport_API.bdiFailed);
 
-        objectWrapper.setImportedRecordStatusError(errorMessage);
+        objectWrapper.setImportedRecordStatus(errorMessage);
 
         logCombinedFailureInformation(objectWrapper, errorMessage);
 

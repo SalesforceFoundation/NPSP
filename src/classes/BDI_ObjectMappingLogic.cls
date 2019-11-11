@@ -97,7 +97,7 @@ public with sharing virtual class BDI_ObjectMappingLogic {
                                         String targetFieldName, 
                                         Schema.DescribeFieldResult targetFieldDescribe) {
 
-        Object value = objWrap.dataImport.get(sourceFieldName);
+        Object value = objWrap.getSourceFieldValue(sourceFieldName);
 
         //only copy values that are not null to avoid overwriting data when updating existing SObjects.
         if (value != null) {

@@ -13,6 +13,23 @@ public with sharing class GE_FormRendererService {
         return renderWrapper;
     }
 
+
+    /**
+     * This method creates a wrapper which contains the  template selected by name and a field mapping set.
+     * If the template is not found, it returns a wrapper for the default template
+     * @param String templateName
+     * @return  A FORM_RenderWrapper containing the default template JSON.
+     */
+    public static FORM_RenderWrapper getRenderWrapper(String templateName) {
+        FORM_Service formService = new FORM_Service();
+
+        FORM_Template template = formService.retrieveFormTemplate(templateName);
+
+        FORM_RenderWrapper renderWrapper = wrapTemplate(template);
+
+        return renderWrapper;
+    }
+
     /**
      * This method creates a wrapper which contains the default template and a field mapping set.
      *

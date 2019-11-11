@@ -255,7 +255,6 @@ private class BDI_AdditionalObjectService_TEST {
                                         PaymentImportStatus__c,
                                         PaymentImported__c
                                     FROM DataImport__c]) {
-            System.debug('DataimportResult is: ' + di);
             if (di.Contact1_Lastname__c == 'TestGroupA01') {
                 testDataImportAResult = di;
             } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
@@ -576,9 +575,6 @@ private class BDI_AdditionalObjectService_TEST {
 
         }
 
-        System.debug('Test Data Import Result A is: ' + testDataImportAResult);
-
-        System.debug('Test Data Import Result B is: ' + testDataImportBResult);
         System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
         System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
@@ -637,8 +633,6 @@ private class BDI_AdditionalObjectService_TEST {
         testDataImportBResult.GAU_Allocation_2_Percent__c = 35;
         testDataImportBResult.Opportunity_Contact_Role_2_Role__c = 'Other';
 
-        System.debug('GAU ALLOCATION BEFORE UPDATE IS: ' + testDataImportAResult.GAU_Allocation_1_Imported__c);
-
         update new DataImport__c[]{testDataImportAResult, testDataImportBResult};
 
 
@@ -680,7 +674,6 @@ private class BDI_AdditionalObjectService_TEST {
                                         PaymentImportStatus__c,
                                         PaymentImported__c
                                     FROM DataImport__c]) {
-            System.debug('Found DI: ' + di);
             if (di.Contact1_Lastname__c == 'TestGroupA01') {
                 testDataImportAResult2 = di;
             } else if (di.Contact1_Lastname__c == 'TestGroupB01'){
@@ -706,7 +699,6 @@ private class BDI_AdditionalObjectService_TEST {
 
         for (OpportunityContactRole ocr : [SELECT Id, ContactId, OpportunityId, Role 
                                             FROM OpportunityContactRole]){
-            System.debug('OCR at end: ' + ocr);
             ocrAll.add(ocr);
             if (ocr.Id == testDataImportAResult.Opportunity_Contact_Role_1_Imported__c ) {
                 ocrA1 = ocr;
@@ -1277,4 +1269,233 @@ private class BDI_AdditionalObjectService_TEST {
                 'The Batch should have been dry run-validated without errors.');
     }
 
+    @isTest
+    static void dynamicParentAdditionalObjectsShouldBeCreated() {
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = 
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
+
+        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultMappingService());
+        
+        BDI_MappingServiceAdvanced bdiMsAdv = BDI_MappingServiceAdvanced.getInstance();
+
+        String[] objMappingNames = new List<String>(bdiMsAdv.objectMappingByDevName.keySet());
+        BDI_ObjectMapping predecessorObjMapping = bdiMsAdv.objectMappingByDevName.get('Opportunity');
+        BDI_FieldMapping[] opptFieldMappings = bdiMsAdv.fieldMappingsByObjMappingDevName.get('Opportunity'); 
+
+        String additionalObjJSONFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Additional_Object_JSON__c');
+
+        Data_Import_Object_Mapping__mdt diom = 
+            new Data_Import_Object_Mapping__mdt(DeveloperName = 'TestTestHonoree324',
+                            MasterLabel = 'Honoree',
+                            Data_Import_Object_Mapping_Set__c = predecessorObjMapping.Data_Import_Object_Mapping_Set,
+                            Object_API_Name__c = 'Contact',
+                            Predecessor__c = predecessorObjMapping.DeveloperName,
+                            Imported_Record_Field_Name__c = 'Contact1_Title__c',
+                            Imported_Record_Status_Field_Name__c = 'Contact1ImportStatus__c',
+                            Relationship_Field__c = 'Honoree_Contact__c',
+                            Relationship_To_Predecessor__c = 'Parent');
+
+        BDI_ObjectMapping testObjMapping = new BDI_ObjectMapping(diom);
+
+        BDI_FieldMapping testFM1 = new BDI_FieldMapping();
+        testFM1.MasterLabel = 'fakeHonoreeLastNameSFDOTest';
+        testFM1.DeveloperName = 'fakeHonoreeLastNameSFDOTest';
+        testFM1.Target_Object_API_Name = 'Contact';
+        testFM1.Data_Import_Field_Mapping_Set = opptFieldMappings[0].Data_Import_Field_Mapping_Set;
+        testFM1.Required = 'Yes';
+        testFM1.Source_Field_API_Name = DataImport__c.Contact1_Alternate_Email__c.getDescribe().getName();
+        testFM1.Target_Field_API_Name = 'LastName';
+
+        BDI_FieldMapping testFM2 = new BDI_FieldMapping();
+        testFM2.MasterLabel = 'fakeHonoreeAcctSFDOTest';
+        testFM2.DeveloperName = 'fakeHonoreeAcctSFDOTest';
+        testFM2.Target_Object_API_Name = 'Contact';
+        testFM2.Data_Import_Field_Mapping_Set = opptFieldMappings[0].Data_Import_Field_Mapping_Set;
+        testFM2.Required = 'No';
+        testFM2.Source_Field_API_Name = DataImport__c.Account1Imported__c.getDescribe().getName();
+        testFM2.Target_Field_API_Name = 'AccountId';
+
+        BDI_FieldMapping[] honoreeFieldMappings = 
+            new BDI_FieldMapping[]{testFM1,testFM2};
+
+        bdiMsAdv.objectMappingByDevName.put(testObjMapping.DeveloperName,testObjMapping);
+        bdiMsAdv.fieldMappingsByObjMappingDevName.put(testObjMapping.DeveloperName,honoreeFieldMappings);
+
+        SObject sourceObjA1 = UTIL_Describe.getPrototypeObject(SObjectType.DataImport__c.getName());
+        sourceObjA1.put(DataImport__c.Contact1_Alternate_Email__c.getDescribe().getName(),
+                    'testgroupAcontact01DSAlternate@fakedata.com');    
+        SObject sourceObjA2 = UTIL_Describe.getPrototypeObject(SObjectType.DataImport__c.getName());
+        sourceObjA2.put(DataImport__c.Contact1_Alternate_Email__c.getDescribe().getName(),
+                    'testgroupAcontact02DSAlternate@fakedata.com');   
+
+        SObject sourceObjB1 = UTIL_Describe.getPrototypeObject(SObjectType.DataImport__c.getName());
+        sourceObjB1.put(DataImport__c.Contact1_Alternate_Email__c.getDescribe().getName(),
+                    'testgroupBcontact01DSAlternate@fakedata.com');    
+
+        BDI_DynamicSource dynSourceA1 = new BDI_DynamicSource();
+        dynSourceA1.objectMappingDevName = testObjMapping.DeveloperName + '01';
+        dynSourceA1.objectMappingTemplateDevName = testObjMapping.DeveloperName;
+        dynSourceA1.fieldMappingSetDevName = opptFieldMappings[0].Data_Import_Field_Mapping_Set;
+        dynSourceA1.sourceObj = sourceObjA1;
+
+        BDI_DynamicSource dynSourceA2 = new BDI_DynamicSource();
+        dynSourceA2.objectMappingDevName = testObjMapping.DeveloperName + '02';
+        dynSourceA2.objectMappingTemplateDevName = testObjMapping.DeveloperName;
+        dynSourceA2.fieldMappingSetDevName = opptFieldMappings[0].Data_Import_Field_Mapping_Set;
+        dynSourceA2.sourceObj = sourceObjA2;   
+
+        Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevNameA = new Map<String,BDI_DynamicSource>();
+        dynamicSourceByObjMappingDevNameA.put(dynSourceA1.objectMappingDevName,dynSourceA1);
+        dynamicSourceByObjMappingDevNameA.put(dynSourceA2.objectMappingDevName,dynSourceA2);
+
+        BDI_DynamicSourceGroup dynSourceGroupA = new BDI_DynamicSourceGroup();
+        dynSourceGroupA.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevNameA;
+        dynSourceGroupA.name = additionalObjJSONFieldName;
+
+        BDI_DynamicSource dynSourceB1 = new BDI_DynamicSource();
+        dynSourceB1.objectMappingDevName = testObjMapping.DeveloperName + '01';
+        dynSourceB1.objectMappingTemplateDevName = testObjMapping.DeveloperName;
+        dynSourceB1.fieldMappingSetDevName = opptFieldMappings[0].Data_Import_Field_Mapping_Set;
+        dynSourceB1.sourceObj = sourceObjB1;
+        
+        Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevNameB = new Map<String,BDI_DynamicSource>();
+        dynamicSourceByObjMappingDevNameB.put(dynSourceB1.objectMappingDevName,dynSourceB1);
+
+        BDI_DynamicSourceGroup dynSourceGroupB = new BDI_DynamicSourceGroup();
+        dynSourceGroupB.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevNameB;
+        dynSourceGroupB.name = additionalObjJSONFieldName;
+
+        String dynSourceGroupStringA = JSON.serialize(dynSourceGroupA);
+        String dynSourceGroupStringB = JSON.serialize(dynSourceGroupB);
+
+        for (DataImport__c di : diRecords) {
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                di.Additional_Object_JSON__c = dynSourceGroupStringA;
+                di.Contact1_Alternate_Email__c = null; 
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01'){
+                di.Additional_Object_JSON__c = dynSourceGroupStringB;
+                di.Contact1_Alternate_Email__c = null; 
+            }
+        }
+
+        bdiDIS.process(null, dis, diRecords);
+        
+        DataImport__c testDataImportAResult;
+        DataImport__c testDataImportBResult;
+
+
+        for (DataImport__c di : [SELECT Id,
+                                        Status__c,
+                                        FailureInformation__c,
+                                        Additional_Object_JSON__c,
+                                        Contact1_Title__c,
+                                        GAU_Allocation_1_Import_Status__c,
+                                        GAU_Allocation_1_Imported__c,
+                                        GAU_Allocation_2_Import_Status__c,
+                                        GAU_Allocation_2_Imported__c,
+                                        Opportunity_Contact_Role_1_Imported__c,
+                                        Opportunity_Contact_Role_1_ImportStatus__c,
+                                        Opportunity_Contact_Role_2_Imported__c,
+                                        Opportunity_Contact_Role_2_ImportStatus__c,
+                                        Contact1_Lastname__c,
+                                        Account1ImportStatus__c,
+                                        Account1Imported__c, 
+                                        Account2ImportStatus__c,
+                                        Account2Imported__c,
+                                        Contact1ImportStatus__c,
+                                        Contact1Imported__c,
+                                        Contact2ImportStatus__c,
+                                        Contact2Imported__c,
+                                        DonationCampaignImportStatus__c,
+                                        DonationCampaignImported__c,
+                                        DonationImportStatus__c,
+                                        DonationImported__c,
+                                        HomeAddressImportStatus__c,
+                                        HomeAddressImported__c,
+                                        HouseholdAccountImported__c,
+                                        PaymentImportStatus__c,
+                                        PaymentImported__c
+                                    FROM DataImport__c]) {
+
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                testDataImportAResult = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01'){
+                testDataImportBResult = di;
+            }
+        }
+
+        BDI_DynamicSourceGroup dsgA = 
+            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportAResult.Additional_Object_JSON__c,BDI_DynamicSourceGroup.class);
+        BDI_DynamicSourceGroup dsgB = 
+            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportBResult.Additional_Object_JSON__c,BDI_DynamicSourceGroup.class);
+
+        BDI_DynamicSource dsA1 = dsgA.dynamicSourceByObjMappingDevName.get(dynSourceA1.objectMappingDevName);
+        BDI_DynamicSource dsA2 = dsgA.dynamicSourceByObjMappingDevName.get(dynSourceA2.objectMappingDevName);
+        BDI_DynamicSource dsB1 = dsgB.dynamicSourceByObjMappingDevName.get(dynSourceB1.objectMappingDevName);
+
+        System.assert(dsA1 != null);
+        System.assert(dsA2 != null);
+        System.assert(dsB1 != null);
+        System.assert(dsA1.importedRecordId != null);
+        System.assert(dsA2.importedRecordId != null);
+        System.assert(dsB1.importedRecordId != null);
+        System.assert(dsA1.importedRecordStatus != null);
+        System.assert(dsA2.importedRecordStatus != null);
+        System.assert(dsB1.importedRecordStatus != null);
+        
+        //Making sure the created contact record info was not updated on the DI field itself.
+        System.assertEquals(null,testDataImportAResult.Contact1_Title__c);
+        System.assertEquals(null,testDataImportBResult.Contact1_Title__c);
+
+        Contact honoreeContA1;
+        Contact honoreeContA2;
+        Contact honoreeContB;
+
+        Contact[] createdConts = [SELECT Id, LastName FROM Contact];
+        System.assertEquals(7,createdConts.size());
+
+        for (Contact cont : createdConts) {
+            if (cont.LastName == 'testgroupAcontact01DSAlternate@fakedata.com') {
+                honoreeContA1 = cont;
+            } else if (cont.LastName == 'testgroupAcontact02DSAlternate@fakedata.com') {
+                honoreeContA2 = cont;
+            } else if (cont.LastName == 'testgroupBcontact01DSAlternate@fakedata.com') {
+                honoreeContB = cont;
+            }
+        }
+
+        // Checking to make sure that the honoree contacts were created.
+        System.assert(honoreeContA1 != null);
+        System.assert(honoreeContA2 != null);
+        System.assert(honoreeContB != null);
+
+        System.assert(testDataImportAResult.Additional_Object_JSON__c != null);
+        System.assert(testDataImportBResult.Additional_Object_JSON__c != null);
+
+        
+        Opportunity opptA;
+        Opportunity opptB;
+
+        Opportunity[] updatedOppts = [SELECT Id, Honoree_Contact__c FROM Opportunity];
+        System.assertEquals(2,updatedOppts.size());
+
+        for (Opportunity oppt : updatedOppts) {
+            if (oppt.Id == testDataImportAResult.DonationImported__c) {
+                opptA = oppt;
+            } else if (oppt.Id == testDataImportBResult.DonationImported__c) {
+                opptB = oppt;
+            }
+        }
+
+        Set<Id> honoreeContsA = new Set<Id>{honoreeContA1.Id,honoreeContA2.Id};
+        //Since only one of the honoree contacts for oppt A could be on the the oppt, this will look
+        //for either
+        System.assert(honoreeContsA.contains(opptA.Honoree_Contact__c));
+        System.assertEquals(opptB.Honoree_Contact__c, dsB1.importedRecordId);
+    }
 }
