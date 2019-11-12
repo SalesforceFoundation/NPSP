@@ -1,7 +1,13 @@
 <template>
+    <template if:true={widgetNotFound}>
+        <p>{element.componentName} component was not found</p>
+    </template>
     <template if:true={isPaymentScheduler}>
-        <!-- TODO: A real widget should be loaded here -->
+        <!-- TODO: Add Payment Widget here -->
         <c-ge-form-field data-id='widgetComponent' element={element}></c-ge-form-field>
+    </template>
+    <template if:true={isAllocation}>
+        <c-ge-form-widget-allocation data-id='widgetComponent' element={element}></c-ge-form-widget-allocation>
     </template>
     <lightning-button label="Check if Valid" onclick={checkValid}></lightning-button>
 </template>
