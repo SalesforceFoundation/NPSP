@@ -207,72 +207,73 @@ public without sharing class RD2_ScheduleService {
     */
     private Date getNextDonationDateGreaterThanToday(RecurringDonationSchedule__c schedule) {
 
-        Integer frequency = Integer.valueOf(schedule.InstallmentFrequency__c);
         Date firstValid = getFirstPossibleDonationDateFromStart(schedule);
 
         if (firstValid >= currentDate) {
             return firstValid;
         }
 
-        Integer unitsBetween;
-        Integer remains;
-        Date adjusted;
+        Integer adjustedFrequency =
+            (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ? 7 : 1) * Integer.valueOf(schedule.InstallmentFrequency__c);
 
-        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+        Integer unitsBetween = getDateUnitsBetweenFirstValidAndCurrentDate(firstValid, schedule.InstallmentPeriod__c);
 
-            unitsBetween = firstValid.monthsBetween(currentDate);
-            remains = Math.mod(unitsBetween, frequency);
-            adjusted = firstValid.addMonths((unitsBetween / frequency) * frequency);
+        Date adjusted = addDateUnits(firstValid, (unitsBetween / adjustedFrequency) * adjustedFrequency, schedule.InstallmentPeriod__c);
 
-            if (remains > 0) {
-                adjusted = adjusted.addMonths(frequency);
-            }
-
-            if (adjusted < currentDate) {
-                adjusted = adjusted.addMonths(frequency);
-            }
-
-            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
-                adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
-            }
+        if (adjusted < currentDate) {
+            adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
         }
 
-        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
-
-            unitsBetween = firstValid.monthsBetween(currentDate);
-            remains = Math.mod(unitsBetween, frequency*12);
-            adjusted = firstValid.addYears(unitsBetween / (12));
-
-            if (remains > 0) {
-                adjusted = adjusted.addYears(frequency);
-            }
-
-            if (adjusted < currentDate) {
-                adjusted = adjusted.addYears(frequency);
-            }
-        }
-
-        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ||
-                 schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
-
-            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
-                frequency *= 7;
-            }
-
-            unitsBetween = firstValid.daysBetween(currentDate);
-            remains = Math.mod(unitsBetween, frequency);
-            adjusted = firstValid.addDays((unitsBetween / (frequency)) * (frequency));
-
-            if (remains > 0) {
-                adjusted = adjusted.addDays(frequency);
-            }
-
-            if (adjusted < currentDate) {
-                adjusted = adjusted.addDays(frequency);
-            }
+        if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY && schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
         }
 
         return adjusted;
+    }
+
+    /***
+    * @description Returns the date units between an input date and current date based on installment period
+    * @param firstValid Date
+    * @param period String
+    * @return Integer
+    */
+    private Integer getDateUnitsBetweenFirstValidAndCurrentDate(Date firstValid, String period) {
+        Integer unitsBetween = 0;
+
+        if (period == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || period == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+            unitsBetween = firstValid.monthsBetween(currentDate);
+
+        } else if (period == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY || period == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
+            unitsBetween = firstValid.daysBetween(currentDate);
+
+        } else if (period == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
+            unitsBetween = Math.abs(firstValid.year() - currentDate.year());
+        }
+
+        return unitsBetween;
+    }
+
+    /***
+    * @description Adds date units to an input date based on installment period
+    * @param dateIn Date
+    * @param addUnits Integer
+    * @param period String
+    * @return Date
+    */
+    private Date addDateUnits(Date dateIn, Integer addUnits, String period) {
+        Date adjustedDate = dateIn;
+
+        if (period == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || period == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+            adjustedDate = dateIn.addMonths(addUnits);
+
+        } else if (period == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY || period == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
+            adjustedDate = dateIn.addDays(addUnits);
+
+        } else if (period == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
+            adjustedDate = dateIn.addYears(addUnits);
+        }
+
+        return adjustedDate;
     }
 
     /***

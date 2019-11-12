@@ -242,6 +242,60 @@ private with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
+    * @description Verifies next donation date for monthly donation when donation falls in next month.
+    */
+    @isTest
+    private static void shouldCreateNextDonationDateLastDayInFebruary() {
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withMockId()
+                        .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                        .withAmount(400)
+                        .withPaymentMethod('Check')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 9, 15))
+                        .withStartDate(Date.newInstance(2019, 11, 30))
+                        .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2020, 2, 1));
+
+        System.assertEquals(Date.newInstance(2020, 2, 29),
+                service.getNextDonationDate(rd),
+                'Next Donation Date should equal 2/29/2019');
+
+    }
+
+    /***
+    * @description Verifies next donation date for monthly donation when donation falls in next month.
+    */
+    @isTest
+    private static void shouldCreateNextDonationDateLastDayInMarch() {
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withMockId()
+                        .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                        .withAmount(400)
+                        .withPaymentMethod('Check')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 9, 15))
+                        .withStartDate(Date.newInstance(2019, 1, 30))
+                        .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 3, 1));
+
+        System.assertEquals(Date.newInstance(2019, 3, 31),
+                service.getNextDonationDate(rd),
+                'Next Donation Date should equal 3/31/2019');
+
+    }
+
+    /***
     * @description Verifies next donation date for monthly donation when donation falls in current month.
     */
     @isTest
