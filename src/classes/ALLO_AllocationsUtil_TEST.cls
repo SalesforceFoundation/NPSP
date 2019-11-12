@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2019, Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -34,32 +31,390 @@
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Tests for ALLO_AllocationsUTIL class
 */
-@IsTest
+@IsTest(isParallel=true)
 public class ALLO_AllocationsUtil_TEST {
 
     /*******************************************************************************************************
      * RecordExclusions Inner Class Tests
      ********************************************************************************************************/
 
-    //TODO: Test 1 - Add Exclusion (Add and Confirm Individal Exlusion [ALLO_AllocationsUtil.RecordExclusions.addExclusion]
-    //TODO: Test 2 - Add Set of Exclusions) (Add Set of Exclusions and Confirm) [ALLO_AllocationsUtil.RecordExclusions.addExclusions]
-    //TODO: Test 3 - Verify Exclusion via "Has Exclusion" [ALLO_AllocationsUtil.RecordExclusions.hasExclusion]
-    //TODO: Test 4 - Verify Has No Exclusions call [ALLO_AllocationsUtil.RecordExclusions.hasNoExclusions]
+    /* @description Test 1 - Add Exclusion (Add and Confirm Individal Exlusions
+                    [ALLO_AllocationsUtil.RecordExclusions.addExclusion] */
+    @isTest private static void addIndividualRecordExclusions() {
+        ALLO_AllocationsUTIL.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        recExcl.addExclusion (UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD);
+
+        System.assertEquals (true, recExcl.exclusionsByRecordId.containsKey(UserInfo.getUserId()), 'User Id is present in the Exclusions By Record Id Map');
+        Set<ALLO_AllocationsUtil.PROCESS_DEF> excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(1, excls.size(), '# of Exclusions Present after adding first exclusion');
+
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD + ' should be present');
+
+        // Add additional Exclusion
+        recExcl.addExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD);
+
+        System.assertEquals (true, recExcl.exclusionsByRecordId.containsKey(UserInfo.getUserId()), 'User Id is present in the Exclusions By Record Id Map');
+        excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(2, excls.size(), '# of Exclusions Present after adding second exclusion');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD + ' should be present');
+
+        // Test Adding Same Exclusion
+        recExcl.addExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD);
+        excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(2, excls.size(), '# of Exclusions Present after adding same exclusion again');
+    }
+
+    /* @description Test 2 - Add Set of Exclusions) (Add Set of Exclusions and Confirm)
+                    [ALLO_AllocationsUtil.RecordExclusions.addExclusions] */
+    @isTest private static void addSetOfRecordExclusions() {
+        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        recExcl.addExclusions (UserInfo.getUserId(), new Set<ALLO_AllocationsUtil.PROCESS_DEF> { ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD, ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD});
+        System.assertEquals (true, recExcl.exclusionsByRecordId.containsKey(UserInfo.getUserId()), 'User Id is present in the Exclusions By Record Id Map');
+        Set<ALLO_AllocationsUtil.PROCESS_DEF> excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(2, excls.size(), '# of Exclusions Present after adding exclusion set');
+
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD + ' should be present');
+
+        recExcl.addExclusions(UserInfo.getUserId(), new Set<ALLO_AllocationsUtil.PROCESS_DEF> {ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC, ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE});
+        excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
+        System.assertEquals(4, excls.size(), '# of Exclusions Present after adding additional set of exclusions');
+
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC + ' should be present');
+        System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE + ' should be present');
+    }
+
+     /* @description Test 3 - Verify Exclusion via "Has Exclusion"
+                     [ALLO_AllocationsUtil.RecordExclusions.hasExclusion] */
+    @isTest private static void addExclusionsAndConfirmHasExclusions() {
+        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        recExcl.addExclusions (UserInfo.getUserId(), new Set<ALLO_AllocationsUtil.PROCESS_DEF> { ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD, ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD});
+        System.assertEquals(true, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion should be present for' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD);
+        System.assertEquals(true, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion should be present for' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD);
+        System.assertEquals(false, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.ALL), 'Exclusion should not be present for' + ALLO_AllocationsUtil.PROCESS_DEF.ALL);
+    }
+
+    /* @description Test 4 - Verify Has No Exclusions is true when no exclusions are present. call
+                    [ALLO_AllocationsUtil.RecordExclusions.hasNoExclusions] */
+    @isTest private static void confirmHasNoExclusionsIsTrueWhenExclusionsAreNotPresentAndIsFalseWhenPresent() {
+        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        System.assertEquals(true, recExcl.hasNoExclusions(UserInfo.getUserId()), 'Should be no exclusions initially');
+
+        recExcl.addExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.ALL);
+        System.assertEquals(false, recExcl.hasNoExclusions(UserInfo.getUserId()), 'Should be exclusions present after adding on for current user');
+        System.assertEquals(true, recExcl.hasNoExclusions(UserInfo.getOrganizationId()), 'Should be no exclusions for Organization Id');
+    }
 
     /*******************************************************************************************************
      * AllocationResults Inner Class Tests
      ********************************************************************************************************/
-    //TODO: Test 1 - Test Add an Error [ALLO_AllocationsUtil.AllocationResults.addError]
-    //TODO: Test 2 - Test Add Errors [ALLO_AllocationsUtil.AllocationResults.addAllErrors]
+    /* @description Test 1 - Test Add an Error
+                    [ALLO_AllocationsUtil.AllocationResults.addError] */
+    @isTest private static void addErrorsIndividuallyToTheAllocationsResultsAndConfirmResult() {
+
+        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        allocResults.addError(UserInfo.getUserId(), 'Test Error');
+
+        System.assertEquals (true, allocResults.errorsByRecordId.containsKey(UserInfo.getUserId()), 'Errors are present for ' + UserInfo.getUserId());
+        System.assertEquals (1, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '1 Error is present for ' + UserInfo.getUserId());
+
+        allocResults.addError(UserInfo.getUserId(), 'Test Error 2');
+        System.assertEquals (2, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '2 Errors are present for ' + UserInfo.getUserId());
+
+        System.assertEquals (false, allocResults.errorsByRecordId.containsKey(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
+    }
+
+    /* @description Test 2 - Test Add Errors
+                    [ALLO_AllocationsUtil.AllocationResults.addAllErrors] */
+    @isTest private static void addMultipleErrorsToTheAllocationsResultsAndConfirmResult() {
+        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
+
+        // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
+        // is not a core part of this test
+        allocResults.addAllErrors(UserInfo.getUserId(), new List<String> {'Test 1 Error', 'Test 2 Error'});
+
+        System.assertEquals (true, allocResults.errorsByRecordId.containsKey(UserInfo.getUserId()), 'Errors are present for ' + UserInfo.getUserId());
+        System.assertEquals (2, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '# of Errors present for ' + UserInfo.getUserId());
+
+        allocResults.addAllErrors(UserInfo.getUserId(), new List<String> {'Test 3 Error', 'Test 4 Error'});
+        System.assertEquals (4, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '4 Errors are present for ' + UserInfo.getUserId());
+
+        System.assertEquals (false, allocResults.errorsByRecordId.containsKey(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
+    }
 
     /*******************************************************************************************************
      * RecordsForReview Inner Class Tests
      ********************************************************************************************************/
-    //TODO: Test 1 - Test adding different types of Allocations [ALLO_AllocationsUtil.RecordsForReview.addAllocationByType]
-    //TODO: Test 2 - Test method to identify Opportunities require Review [ALLO_AllocationsUtil.RecordsForReview.isOpportunityRequiresReview]
-    //TODO: Test 3 - Test initialize Errors [ALLO_AllocationsUtil.RecordsForReview.initializeErrors]
+
+    /* @description Test 1 - Test adding different types of Allocations
+                    [ALLO_AllocationsUtil.RecordsForReview.addAllocationByType] */
+    @isTest private static void addAllocationByTypeToRecordsForReviewAndConfirmAddedToCorrectList() {
+        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        insert accs;
+
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
+        gaus[2].Name = 'Default GAU';
+        General_Accounting_Unit__c defaultGau = gaus[2];
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(1984,01,29))
+            .withAccount(accs[0].Id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
+        insert rd;
+
+        Campaign cam = new Campaign(Name='Test Campaign: ' + UTIL_UnitTestData_TEST.getUniqueString(), IsActive=true);
+        insert cam;
+
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
+        insert ctcs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 1000, null, null);
+        insert opps;
+
+        List<npe01__OppPayment__c> pmts = [select Id from npe01__OppPayment__c where npe01__Opportunity__c = :opps[1].Id];
+
+        List<Allocation__c> allosForInsert = new list<Allocation__c>();
+        // Recurring Donation Allocations
+        Allocation__c percentAlloRd = new Allocation__c(Recurring_Donation__c = rd.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
+        allosForInsert.add(percentAlloRd);
+
+        Allocation__c amountAlloRd = new Allocation__c(Recurring_Donation__c = rd.id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloRd);
+
+        // Opportunity Allocations
+        Allocation__c percentAlloOpp = new Allocation__c(Opportunity__c = opps[0].Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id);
+        allosForInsert.add(percentAlloOpp);
+
+        Allocation__c amountAlloOpp = new Allocation__c(Opportunity__c = opps[0].Id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloOpp);
+
+        // Payment Allocations
+        Allocation__c percentAlloPmt = new Allocation__c(Payment__c = pmts[0].Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id);
+        allosForInsert.add(percentAlloPmt);
+
+        Allocation__c amountAlloPmt = new Allocation__c(Payment__c = pmts[0].Id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloPmt);
+
+        // Campaign Allocations
+        Allocation__c percentAlloCam = new Allocation__c(Campaign__c = cam.Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id);
+        allosForInsert.add(percentAlloCam);
+
+        Allocation__c amountAlloCam = new Allocation__c(Campaign__c = cam.Id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloCam);
+
+        insert allosForInsert;
+
+        // Recurring Donation Allocation Tests
+        assertRecsForReviewAllocations(recsForRev, 'Before adding allocations', 0, 0, 0, 0);
+        recsForRev.addAllocationByType(allosForInsert[0]);
+        assertRecsForReviewAllocations(recsForRev, 'After adding Recurring Donation allocation', 0, 0, 1, 0);
+        System.assertEquals(1, recsForRev.recurringDonationAllocations.get(rd.Id).size(), 'Recurring Donations Allocation List Size after First Add');
+        recsForRev.addAllocationByType(allosForInsert[1]);
+        assertRecsForReviewAllocations(recsForRev, 'After adding 2nd Recurring Donation allocation', 0, 0, 1, 0);
+        System.assertEquals(2, recsForRev.recurringDonationAllocations.get(rd.Id).size(), 'Recurring Donations Allocation List Size after Second Add');
+        System.assertEquals (allosForInsert[0].Id, recsForRev.recurringDonationAllocations.get(rd.Id)[0].Id, 'Recurring Donations Allocation 0');
+        System.assertEquals (allosForInsert[1].Id, recsForRev.recurringDonationAllocations.get(rd.Id)[1].Id, 'Recurring Donations Allocation 1');
+
+        // Opportunity Allocation Tests
+        recsForRev.addAllocationByType(allosForInsert[2]);
+        assertRecsForReviewAllocations(recsForRev, 'After adding 1st Opportunity allocation', 1, 0, 1, 0);
+        System.assertEquals(1, recsForRev.oppsAllocations.get(opps[0].Id).size(), 'Opportunity Allocation List Size after First Add');
+        recsForRev.addAllocationByType(allosForInsert[3]);
+        assertRecsForReviewAllocations(recsForRev, 'After adding 2nd Opportunity allocation', 1, 0, 1, 0);
+        System.assertEquals(2, recsForRev.oppsAllocations.get(opps[0].Id).size(), 'Opportunity Allocation List Size after Second Add');
+        System.assertEquals (allosForInsert[2].Id, recsForRev.oppsAllocations.get(opps[0].Id)[0].Id, 'Opportunity Allocation 0');
+        System.assertEquals (allosForInsert[3].Id, recsForRev.oppsAllocations.get(opps[0].Id)[1].Id, 'Opportunity Allocation 1');
+
+        // Payment Allocation Tests
+        recsForRev.addAllocationByType(allosForInsert[4]);
+        assertRecsForReviewAllocations(recsForRev, 'After adding 1st Payment allocation', 1, 1, 1, 0);
+        System.assertEquals(1, recsForRev.paymentAllocations.get(pmts[0].Id).size(), 'Payment Allocation List Size after First Add');
+        recsForRev.addAllocationByType(allosForInsert[5]);
+        assertRecsForReviewAllocations(recsForRev, 'After adding 2nd Payment allocation', 1, 1, 1, 0);
+        System.assertEquals(2, recsForRev.paymentAllocations.get(pmts[0].Id).size(), 'Payment Allocation List Size after Second Add');
+        System.assertEquals (allosForInsert[4].Id, recsForRev.paymentAllocations.get(pmts[0].Id)[0].Id, 'Payment Allocation 0');
+        System.assertEquals (allosForInsert[5].Id, recsForRev.paymentAllocations.get(pmts[0].Id)[1].Id, 'Payment Allocation 1');
+
+        // Campaign Allocation Tests
+        recsForRev.addAllocationByType(allosForInsert[6]);
+        assertRecsForReviewAllocations(recsForRev, 'After adding 1st Campaign allocation', 1, 1, 1, 1);
+        System.assertEquals(1, recsForRev.campaignAllocations.get(cam.Id).size(), 'Campaign Allocation List Size after First Add');
+        recsForRev.addAllocationByType(allosForInsert[7]);
+        assertRecsForReviewAllocations(recsForRev, 'After adding 2nd Campaign allocation', 1, 1, 1, 1);
+        System.assertEquals(2, recsForRev.campaignAllocations.get(cam.Id).size(), 'Campaign Allocation List Size after Second Add');
+        System.assertEquals (allosForInsert[6].Id, recsForRev.campaignAllocations.get(cam.Id)[0].Id, 'Campaign Allocation 0');
+        System.assertEquals (allosForInsert[7].Id, recsForRev.campaignAllocations.get(cam.Id)[1].Id, 'Campaign Allocation 1');
+
+    }
+
+    /*******************************************************************************************************
+    * @description Asserts the list sizes for each of the allocations list in the RecordsForReview
+    *              class
+    * @param recsForRev A populated Record For Review Structure
+    * @param addtlMsg Text that will be displayed in addition to the list type if an assert fails
+    * @param oppsAllocSize The exepected size of the Opportunity Allocations Map
+    * @param pmtAllocSize The expected size of the Payment Allocations Map
+    * @param rdAllocSize The expected size of the Recurring Donations Allocations Map
+    * @param campAllocSize The expected size of the Campaign Allocations Map
+    ********************************************************************************************************/
+     private static void assertRecsForReviewAllocations(ALLO_AllocationsUtil.RecordsForReview recsForRev, String addtlMsg, Integer oppsAllocSize, Integer pmtAllocSize, Integer rdAllocSize, Integer campAllocSize) {
+        System.assertEquals (oppsAllocSize, recsForRev.oppsAllocations.size(), addtlMsg + ': Opportunity Allocations Map Size');
+        System.assertEquals (pmtAllocSize, recsForRev.paymentAllocations.size(), addtlMsg + ': Payment Allocations Map Size');
+        System.assertEquals (rdAllocSize, recsForRev.recurringDonationAllocations.size(), addtlMsg + ': Recurring Donation Allocations Map Size');
+        System.assertEquals (campAllocSize, recsForRev.campaignAllocations.size(), addtlMsg + ': Campaign Allocations Map Size');
+    }
+
+   /* @Description Test 2 - Test method to identify Opportunities require Review
+                   [ALLO_AllocationsUtil.RecordsForReview.isOpportunityRequiresReview] */
+    @isTest private static void confirmReturnsTrueWhenOpportunityRequiresReviewAndFalseOtherwise() {
+
+        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        insert accs;
+
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
+        gaus[2].Name = 'Default GAU';
+        General_Accounting_Unit__c defaultGau = gaus[2];
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(1984,01,29))
+            .withAccount(accs[0].Id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
+        insert rd;
+
+        Campaign cam = new Campaign(Name='Test Campaign: ' + UTIL_UnitTestData_TEST.getUniqueString(), IsActive=true);
+        insert cam;
+
+
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
+        insert ctcs;
+
+        // Turn Off Allocation Triggers
+        ALLO_AllocationsUtil.disableAllocationTriggers();
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 1000, null, null);
+        opps[0].npe03__Recurring_Donation__c = rd.Id;
+        opps[1].npe03__Recurring_Donation__c = rd.Id;
+        insert opps;
+
+        List<Allocation__c> allosForInsert = new list<Allocation__c>();
+        // Recurring Donation Allocations
+        Allocation__c percentAlloRd = new Allocation__c(Recurring_Donation__c = rd.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
+        allosForInsert.add(percentAlloRd);
+
+        Allocation__c amountAlloRd = new Allocation__c(Recurring_Donation__c = rd.id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloRd);
+
+        // Opportunity Allocations
+        Allocation__c percentAlloOpp = new Allocation__c(Opportunity__c = opps[0].Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id);
+        allosForInsert.add(percentAlloOpp);
+
+        Allocation__c amountAlloOpp = new Allocation__c(Opportunity__c = opps[0].Id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloOpp);
+
+        insert allosForInsert;
+
+        for (Allocation__c alloc : allosForInsert) {
+            recsForRev.addAllocationByType(alloc);
+        }
+
+        System.assertEquals (false, recsForRev.isOpportunityWithParentAndNoAllocations(opps[0]), '1st Opportunity should have parent and Amount and allocations');
+        System.assertEquals (true, recsForRev.isOpportunityWithParentAndNoAllocations(opps[1]), '2nd Opportunity should have parent and Amount and no allocations');
+        System.assertEquals (false, recsForRev.isOpportunityWithParentAndNoAllocations(opps[2]), '3rd Opportunity should have no parent And Amount and no allocations');
+
+    }
+
+    /* @description Test 3 - Test initialize Errors [ALLO_AllocationsUtil.RecordsForReview.initializeErrors]
         // Should test both passing in an existing ERR_RecordErrors instance, and initializing from the Opportunities
-        // in the RecordsForReview variable oppsById
+        // in the RecordsForReview variable oppsById */
+    @isTest private static void initializeErrorsStructureSuccessfully() {
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
+        gaus[2].Name = 'Default GAU';
+        General_Accounting_Unit__c defaultGau = gaus[2];
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
+        insert ctcs;
+
+        // Turn Off Allocation Triggers
+        ALLO_AllocationsUtil.disableAllocationTriggers();
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 1000, null, null);
+        insert opps;
+
+        ERR_RecordError recErrs = new ERR_RecordError('Test');
+        recErrs.addError(opps[0].Id, 'Test Error', opps[0]);
+        recErrs.processErrors();
+
+        Test.startTest();
+
+        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
+
+        // First Initialize with existing recErrs
+        recsForRev.initializeErrors('Test', recErrs);
+
+        System.assertNotEquals(null, recsForRev.recErrs.get(opps[0].Id), 'Error For First Opportunity should be present');
+
+        // Next Initialize and tell it to retrieve recErrs from scratch
+        ALLO_AllocationsUtil.RecordsForReview recsForRev2 = new ALLO_AllocationsUtil.RecordsForReview();
+        for (Opportunity opp : opps) {
+            recsForRev2.opps.add (opp);
+            recsForRev2.oppsById.put(opp.Id, opp);
+        }
+
+        // This time, it will initialize the errors from scratch and query the Error__c object
+        recsForRev2.initializeErrors('Test', null);
+
+        System.assertNotEquals(null, recsForRev2.recErrs.get(opps[0].Id), 'Error For First Opportunity should be present (retrieved from Error__c object)');
+
+    }
 
     /*******************************************************************************************************
      * Main Class Tests [Critical Path is covering as many as possible in this section]
@@ -243,4 +598,22 @@ public class ALLO_AllocationsUtil_TEST {
     // Confirm it returns the Allocation Object Label
     // Note: Describe call is only done once
 
+    /*******************************************************************************************************
+    * @description Setup of allocations settings.
+    * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
+    * parameter uses default settings.
+    * @return void Modifies settings, returns nothing.
+    ********************************************************************************************************/
+    private static void setupSettings (Allocations_Settings__c alloset) {
+        //set running user to avoid dml issue
+        System.runAs(new User(id = UserInfo.getUserId())){
+            if (alloset!=null)
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
+            else
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c());
+
+        }
     }
+
+
+}

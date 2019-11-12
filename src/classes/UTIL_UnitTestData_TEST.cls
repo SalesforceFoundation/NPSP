@@ -420,6 +420,24 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+     * @description Create General Accounting Units (GAUs) for unit testing.
+     * @param n The number of General Accounting Units to be created
+     * @return List of General Accounting Units
+     */
+    public static List<General_Accounting_Unit__c> createGAUs (Integer n) {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        for (Integer i=0; i < n; i++) {
+            gaus.add(
+                new General_Accounting_Unit__c(
+                    Name = 'Test ' + getUniqueString()
+                )
+            );
+        }
+        return gaus;
+    }
+
+    /**
      * @description Create Engagement Plan Templates for unit testing.
      * @param n The number of Engagement Plan Templates to be created
      * @return List of Engagement Plan Templates

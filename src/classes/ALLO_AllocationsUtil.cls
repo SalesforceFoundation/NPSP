@@ -71,7 +71,7 @@ public class ALLO_AllocationsUtil {
      * process as much as possible while skipping what it has to
      ********************************************************************************************************/
     public class RecordExclusions {
-        private Map<Id, Set<PROCESS_DEF>> exclusionsByRecordId = new Map<Id, Set<PROCESS_DEF>>();
+       @testVisible private Map<Id, Set<PROCESS_DEF>> exclusionsByRecordId = new Map<Id, Set<PROCESS_DEF>>();
 
         /*******************************************************************************************************
          * @description Adds an exclusion for the specified record.
@@ -207,8 +207,12 @@ public class ALLO_AllocationsUtil {
          ********************************************************************************************************/
         @testVisible private Boolean isOpportunityWithParentAndNoAllocations(Opportunity opp) {
             List<Allocation__c> oppAllocations = this.oppsAllocations.get(opp.Id);
-            return (opp.Amount != null && opp.Amount != 0 && (opp.npe03__Recurring_Donation__c != null || opp.CampaignId != null) &&
-                    (oppAllocations == null || oppAllocations.size() == 0));
+
+            Boolean oppHasAmount = opp.Amount != null;
+            Boolean oppHasParent = opp.npe03__Recurring_Donation__c != null || opp.CampaignId != null;
+            Boolean oppHasNoAllocations = oppAllocations == null || oppAllocations.size() == 0;
+
+            return (oppHasAmount && oppHasParent && oppHasNoAllocations);
         }
 
         /*******************************************************************************************************
@@ -247,6 +251,7 @@ public class ALLO_AllocationsUtil {
             //TODO: Add checks for circumstances where Campaign Allocations and/or Recurring Donation Allocations differ from Opportunity Allocations, and thus need to update the Opportunity Allocations.
             // These checks will likely be fairly complex, and involve complex comparisons between the campaign or recurring donation allocations and the Opportunity.
             // Believe this to be out of scope for GA, but will confirm.
+            // Requirement:  If there are differences, and the Opportunity is Open, recopy the Allocations from the Parent.
 
             return false;
         }
