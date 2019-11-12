@@ -283,7 +283,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
         for (RecurringDonationSchedule__c oldSchedule : [
-                SELECT RecurringDonation__c, EndDate__c FROM RecurringDonationSchedule__c
+                SELECT RecurringDonation__c, StartDate__c, EndDate__c FROM RecurringDonationSchedule__c
                 WHERE RecurringDonation__c IN :filteredRecurringDonations.keySet()
                 AND Active__c = true]) {
             if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {

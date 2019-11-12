@@ -104,11 +104,17 @@ public without sharing class RD2_ScheduleService {
 
         if (schedules != null) {
             for (RecurringDonationSchedule__c schedule : schedules) {
-                if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+
+                if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c <= currentDate) {
                     schedule.EndDate__c = newStartDate.addDays(-1);
+
+                } else if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c > currentDate) {
+                    schedule.EndDate__c = schedule.StartDate__c.addDays(-1);
+
                 } else {
                     schedule.EndDate__c = currentDate;
                 }
+
                 scheduleChanges.objectsToUpdate.add(schedule);
             }
         }
@@ -117,6 +123,7 @@ public without sharing class RD2_ScheduleService {
         for (RecurringDonationSchedule__c newSchedule : newSchedules) {
             newSchedule.StartDate__c = newStartDate;
         }
+
         scheduleChanges.objectsToInsert.addAll(newSchedules);
 
         return scheduleChanges;
