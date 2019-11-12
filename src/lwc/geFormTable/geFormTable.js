@@ -6,9 +6,10 @@ export default class GeFormTable extends LightningElement {
     @track data = [];
     @api columns = [
         {label: 'Status', fieldName: 'Status__c', type: 'text'},
-        {label: 'UID', fieldName: 'uid', type: 'number'},
-        {label: 'Donor', fieldName: 'donorName', type: 'text'},
-        {label: 'Donor Link', fieldName: 'donorLink', type: 'url'}
+        {
+            label: 'Donor', fieldName: 'donorLink', type: 'url',
+            typeAttributes: {label: {fieldName: 'donorName'}}
+        }
     ];
 
     @api
@@ -32,8 +33,8 @@ export default class GeFormTable extends LightningElement {
             }
             this.data[indexToReplace] = dataImport; //replace it
         } else {
-    //todo: if the record is new then it should be added to the top and the table should
-            // be ordered desc by created date
+            //todo: if the record is new then it should be added to the top and the table should
+            // be ordered desc by created date (when we turn on ordering by column)
             this.data.push(dataImport);
         }
         this.data = [...this.data]; //re-assign the table, to rerender it
