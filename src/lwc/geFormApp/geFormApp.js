@@ -16,7 +16,8 @@ export default class GeFormApp extends LightningElement {
         //todo: for prod going to want to pass in the batch Id
         dataImportRecord.NPSP_Data_Import_Batch__c = 'a0R8A000000WB12UAG';
 
-        GeFormService.saveAndDryRun(this.batchId = 'a0R8A000000WB12UAG', dataImportRecord)
+        GeFormService.saveAndDryRun(
+            this.batchId = 'a0R8A000000WB12UAG', dataImportRecord)
             .then(
                 model => {
                     const dataImport = model.dataImportRows[0].record;
