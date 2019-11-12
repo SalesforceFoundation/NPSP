@@ -185,7 +185,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 handleNonEnglishLanguageCount();
                 handleLongestRunningBatchLast7Days();
                 handleCountTimedOutBatchJobsLast7Days();
-                
             }
 
             when Data_MaxNumRelatedOpps {
@@ -235,7 +234,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private void handleNPSPSettings() {
         STG_SettingsService stgSvc = new STG_SettingsService();
         Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        Allocations_Settings__c allocationCustomSetting = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
                 stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
@@ -252,8 +250,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_RecurringDonations2.name(),
                 (stgSvc.stgRD.IsRecurringDonations2Enabled__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocations.name(), 
-                (allocationCustomSetting.Payment_Allocations_Enabled__c == true));
-        
+                (stgSvc.stgAllo.Payment_Allocations_Enabled__c == true));
+    
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
