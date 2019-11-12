@@ -251,7 +251,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 (stgSvc.stgRD.IsRecurringDonations2Enabled__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocations.name(), 
                 (stgSvc.stgAllo.Payment_Allocations_Enabled__c == true));
-    
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
