@@ -55,6 +55,16 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
         return fieldMappingInstance;
     }
 
+    /**
+    * @description Sets instance member variable holding instance of this class.  Primarily
+    * used to facilitate dependency injection in tests.
+    * @param bdiFieldMappingInstance An instance of the BDI_FieldMappingHelpText class.
+    */
+    @TestVisible
+    private static void setInstance(BDI_FieldMappingHelpText bdiFieldMappingInstance){
+        fieldMappingInstance = bdiFieldMappingInstance;
+    }
+
     /*******************************************************************************************************
     * @description Manually add a mapping
     *
