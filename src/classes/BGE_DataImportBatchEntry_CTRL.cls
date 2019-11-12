@@ -314,24 +314,17 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             Database.update(dataImport);
             return runSingleDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
-            String saveErrorMessage = String.format(Label.CRLP_SaveError, 
-                new List<String>{Schema.SObjectType.DataImport__c.getName()});
-            throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
+            throw new AuraHandledException(ex.getMessage());
         }
     }
 
     @AuraEnabled
     public static String saveAndDryRunRow(Id batchId, DataImport__c dataImport) {
         try {
-            System.debug(LoggingLevel.ERROR, '*** variable value: ' + batchId);
-            System.debug(LoggingLevel.ERROR, '^^^^^^ batchId ^^^^^^');
-            System.debug(LoggingLevel.ERROR, '*** variable value: ' + dataImport);
-            System.debug(LoggingLevel.ERROR, '^^^^^^ dataImport ^^^^^^');
-            Database.insert(dataImport);
-            System.debug(LoggingLevel.ERROR, '*** ##### inserted! ######');
-            List<DataImport__c> dataImports = [SELECT Id, NPSP_Data_Import_Batch__c FROM DataImport__c];
-            System.debug(loggingLevel.Error, '*** dataImports: ' + dataImports);
-            return runSingleDryRun(dataImport.Id, batchId);
+            Database.insert(dataImport); //Here the record has the fields we passed it
+            return runSingleDryRun(dataImport.Id, batchId); // but here we pass the id of
+            // the record (not the object itself), so the method that we are calling
+            // re-queries the record, undoubtedly with different fields specified
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }

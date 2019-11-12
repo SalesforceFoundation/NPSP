@@ -22,16 +22,16 @@ export default class GeFormTable extends LightningElement {
         if (dataImport && !dataImport.hasOwnProperty('uid')) {
             dataImport.uid = uid;
         }
-        let indexToReplace;
         if (this.data.some(item => item.uid === uid)) {
             for (let i = 0; i < this.data.length; i++) {
                 let row = this.data[i];
                 if (row.uid === uid) {
-                    indexToReplace = i;
+                    row.Status__c = dataImport.Status__c;
+                    row.donorName = dataImport.donorName;
+                    row.donorLink = dataImport.donorLink;
                     break;
                 }
             }
-            this.data[indexToReplace] = dataImport; //replace it
         } else {
             //todo: if the record is new then it should be added to the top and the table should
             // be ordered desc by created date (when we turn on ordering by column)
