@@ -73,7 +73,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_BDICMT,
         IsEnabled_CustomizableRollups,
         IsEnabled_DefaultGAU,
-        IsEnabled_PaymentAllocation,
+        IsEnabled_PaymentAllocations,
         IsEnabled_RecurringDonations2,
         Data_CountErrorLog,
         Data_CountOppsWithMultiplePayments,
@@ -185,7 +185,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 handleNonEnglishLanguageCount();
                 handleLongestRunningBatchLast7Days();
                 handleCountTimedOutBatchJobsLast7Days();
-                handleIsPaymentAllocationEnabled();
+                
             }
 
             when Data_MaxNumRelatedOpps {
@@ -235,6 +235,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private void handleNPSPSettings() {
         STG_SettingsService stgSvc = new STG_SettingsService();
         Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
+        Allocations_Settings__c allocationCustomSetting = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
                 stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
@@ -250,6 +251,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 (stgSvc.stgDI.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_RecurringDonations2.name(),
                 (stgSvc.stgRD.IsRecurringDonations2Enabled__c == true));
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocations.name(), 
+                (allocationCustomSetting.Payment_Allocations_Enabled__c == true));
+        
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
@@ -289,15 +293,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             } catch (Exception e) { }
         }
         featureManager.setPackageBooleanValue(TelemetryParameterName.Org_IsEnabled_AdvancedMultiCurrency.name(), isEnabled);
-    }
-
-    /**
-     * @description Checks the Allocation Settings Custom Setting to determine if the Payment Allocation option is enabled. 
-     */
-    private void handleIsPaymentAllocationEnabled() {
-        Allocations_Settings__c allocationCustomSetting = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        
-        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocation.name(), allocationCustomSetting.Payment_Allocations_Enabled__c == true);
     }
 
     /**
