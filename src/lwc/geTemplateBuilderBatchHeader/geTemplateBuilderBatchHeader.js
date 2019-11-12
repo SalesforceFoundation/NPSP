@@ -31,7 +31,10 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track batchFields = [];
     @api selectedBatchFields;
     dataImportBatchInfo;
-    wireAdapterArg;
+
+    get dataImportBatchName() {
+        return this.dataImportBatchInfo ? this.dataImportBatchInfo.apiName : null;
+    }
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_BATCH_OBJECT })
     wiredBatchDataImportObject({ error, data }) {

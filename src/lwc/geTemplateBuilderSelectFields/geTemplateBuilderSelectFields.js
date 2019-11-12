@@ -265,7 +265,6 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             sectionId: sectionId,
             defaultValue: null,
             dataType: fieldMapping.Target_Field_Data_Type,
-            picklistOptions: fieldMapping.Target_Field_Picklist_Options,
             dataImportFieldMappingDevNames: [fieldMapping.DeveloperName],
             elementType: fieldMapping.Element_Type
         }

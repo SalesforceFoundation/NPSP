@@ -6,42 +6,12 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 export default class geTemplateBuilderFormField extends LightningElement {
     @api isFirst;
     @api isLast;
+    @api objectApiName;
     @track field;
 
     @api
     set field(field) {
         this.field = field;
-    }
-
-    wiredAdapterArgs;
-
-    renderedCallback() {
-        if (!this.wiredAdapterArgs && this.field && this.field.fieldInfo) {
-            this.wiredAdapterArgs = this.field.fieldInfo;
-        }
-    }
-
-    @wire(getPicklistValues, {
-        recordTypeId: '$wiredAdapterArgs.defaultRecordTypeId',
-        fieldApiName: '$wiredAdapterArgs'
-    })
-    wiredPicklistOptions({ error, data }) {
-        if (data) {
-            const picklistOptions = data.values;
-
-            if (picklistOptions) {
-                let field = mutable(this.field);
-                field.picklistOptions = picklistOptions;
-                this.field = field;
-                let detail = {
-                    fieldName: this.name,
-                    property: 'picklistOptions',
-                    value: picklistOptions
-                }
-
-                dispatch(this, 'updateformelement', detail);
-            }
-        }
     }
 
     get name() {
@@ -67,11 +37,27 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get targetFieldApiName() {
-        return this.fieldMapping.Target_Field_API_Name ? this.fieldMapping.Target_Field_API_Name : null;
+        if (this.fieldMapping && this.fieldMapping.Target_Field_API_Name) {
+            return this.fieldMapping.Target_Field_API_Name;
+        }
+
+        if (this.field && this.field.apiName) {
+            return this.field.apiName;
+        }
+
+        return null;
     }
 
-    get objectApiName() {
-        return this.fieldMapping.Target_Object_API_Name ? this.fieldMapping.Target_Object_API_Name : null;
+    get targetObjectApiName() {
+        if (this.fieldMapping && this.fieldMapping.Target_Object_API_Name) {
+            return this.fieldMapping.Target_Object_API_Name;
+        }
+
+        if (this.objectApiName) {
+            return this.objectApiName;
+        }
+
+        return null;
     }
 
     get isRequired() {

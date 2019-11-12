@@ -50,7 +50,6 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public Boolean Is_Deleted;
     @AuraEnabled public String Source_Field_Display_Type_Label;
     @AuraEnabled public String Target_Field_Display_Type_Label;
-    @AuraEnabled public List<Map<String, String>> Target_Field_Picklist_Options = new List<Map<String, String>>();
     // TODO: Clean up later, need to figure out what constitutes an actual required field for the template
     @AuraEnabled public Boolean Is_Required;
     @AuraEnabled public Boolean Is_Source_Field_Required;
@@ -113,12 +112,6 @@ public virtual with sharing class BDI_FieldMapping {
             // Create a mapping of active picklist entry value to label 
             if (picklistEntry.isActive()) {
                 Target_Field_Picklist_Values.put(picklistEntry.getValue(), picklistEntry.getLabel());
-            }
-
-            if (picklistEntry.isActive()) {
-                Target_Field_Picklist_Options.add(new Map<String, String> {
-                    'label' => picklistEntry.getLabel(),
-                    'value' => picklistEntry.getValue()});
             }
         }
 
