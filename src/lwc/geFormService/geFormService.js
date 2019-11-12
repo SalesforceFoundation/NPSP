@@ -1,7 +1,8 @@
-import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultFormRenderWrapper';
+import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormRenderWrapper';
+import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 
 const inputTypeByDescribeType = {
-    'CHECKBOX': 'checkbox',
+    'BOOLEAN': 'checkbox',
     'CURRENCY': 'number',
     'DATE': 'date',
     'DATETIME': 'datetime-local',
@@ -19,6 +20,9 @@ const numberFormatterByDescribeType = {
   'PERCENT': 'percent-fixed'
 };
 
+// TODO: remove once we retrieve the template name from custom settings
+const sgeTemplate = 'Single Gift Entry Template';
+
 class GeFormService {
 
     fieldMappings;
@@ -30,7 +34,7 @@ class GeFormService {
      */
     getFormTemplate() {
         return new Promise((resolve, reject) => {
-            getRenderWrapper()
+            getRenderWrapper({templateName: sgeTemplate})
                 .then((result) => {
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
@@ -65,7 +69,7 @@ class GeFormService {
      * @param fieldDevName  Dev name of the object to retrieve
      * @returns {BDI_FieldMapping}
      */
-    getFieldInfo(fieldDevName) {
+    getFieldMappingWrapper(fieldDevName) {
         return this.fieldMappings[fieldDevName];
     }
 
@@ -74,8 +78,57 @@ class GeFormService {
      * @param objectDevName
      * @returns {BDI_ObjectMapping}
      */
-    getObjectInfo(objectDevName) {
+    getObjectMappingWrapper(objectDevName) {
         return this.objectMappings[objectDevName];
+    }
+
+    /**
+     * Takes a Data Import record, processes it, and returns the new Opportunity created from it.
+     * @returns {Promise<Id>}
+     */
+    createOpportunityFromDataImport(createdDIRecord) {
+        return new Promise((resolve, reject) => {
+            saveAndProcessGift({diRecord: createdDIRecord})
+                .then((result) => {
+                    resolve(result);
+                })
+                .catch(error => {
+                    console.error(JSON.stringify(error));
+                });
+        });
+    }
+
+    /**
+     * Takes a list of sections, reads the fields and values, creates a di record, and creates an opportunity from the di record
+     * @param sectionList
+     * @returns opportunityId
+     */
+    handleSave(sectionList) {
+        
+        // Gather all the data from the input
+        let fieldData = {};
+
+        sectionList.forEach(section => {
+            fieldData = { ...fieldData, ...(section.values)};
+        });
+
+        // Build the DI Record
+        let diRecord = {};
+
+        for (let key in fieldData) {
+            if (fieldData.hasOwnProperty(key)) {
+                let value = fieldData[key];
+
+                // Get the field mapping wrapper with the CMT record name (this is the key variable). 
+                let fieldWrapper = this.getFieldMappingWrapper(key);
+
+                diRecord[fieldWrapper.Source_Field_API_Name] = value;
+            }
+        }
+
+        const opportunityID =this.createOpportunityFromDataImport(diRecord);
+        
+        return opportunityID;
     }
 }
 
