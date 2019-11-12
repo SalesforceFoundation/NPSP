@@ -2,7 +2,7 @@
     /*******************************************************************************
     * @description Receives an event from lightning web component geTemplateBuilder
     * to open a modal using the aura overlay library. We're opting to use this library
-    * to get out-of-the-box acccessibility modal features like focus trapping,
+    * to get out-of-the-box accessibility modal features like focus trapping,
     * input focus, and tabbing.
     *
     * In the then() method of the showCustomModal promise, we register
