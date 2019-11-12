@@ -50,10 +50,11 @@ export default class GeFormField extends LightningElement {
      */
     checkFieldValidity() {
         // TODO: Handle other input types, if needed
-        const inputField = this.template.querySelector('lightning-input');
-        if(inputField !== null && inputField !== undefined){
-            inputField.reportValidity();
-            return inputField.checkValidity();
+        const inputField = this.template.querySelector('[data-id="inputComponent"]');
+        if(inputField !== null && typeof inputField !== 'undefined'
+            && typeof inputField.reportValidity == 'function') {
+                inputField.reportValidity();
+                return inputField.checkValidity();
         }
         return true;
     }
