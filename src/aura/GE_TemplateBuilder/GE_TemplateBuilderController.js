@@ -17,30 +17,14 @@
                 if (status === "SUCCESS") {
                     const modalBody = components[0];
 
-                    component.find('overlayLib').showCustomModal({
+                    let modalReference = component.find('overlayLib').showCustomModal({
                         header: 'Section Settings',
                         body: modalBody,
                         showCloseButton: true,
-                        cssClass: component.getName() + ' customModal',
-                        closeCallback: function () {
-                        }
-                    }).then((overlay) => {
-                        /* We're adding an event listener here because we need
-                        * the 'overlay' reference returned by the then() method
-                        * in order to close the modal. Reference is lost otherwise.
-                        */
-
-                        const eventListener = function(event) {
-                            window.removeEventListener('geTemplateBuilderSectionModalBodyEvent', eventListener);
-                            const modalData = event.detail;
-                            if (modalData.action === 'save' || modalData.action === 'delete') {
-                                component.find('templateBuilder').notify(modalData);
-                            }
-                            overlay.close();
-                        }
-
-                        window.addEventListener('geTemplateBuilderSectionModalBodyEvent', eventListener);
+                        cssClass: component.getName() + ' customModal'
                     });
+
+                    component.set('v.modal', modalReference);
                 }
             }
         );
@@ -52,10 +36,14 @@
     * geTemplateBuilder and passes that change down to be handled there.
     */
     handleSectionModalEvent: function (component, event, helper) {
-        const sectionBeingEdited = component.get('v.sectionBeingEdited');
+        const details = event.getParams();
 
-        if (sectionBeingEdited.action === 'delete' || sectionBeingEdited.action === 'save') {
-            component.find('templateBuilder').notify(component.get('v.sectionBeingEdited'));
+        if (details.action === 'delete' || details.action === 'save') {
+            component.find('templateBuilder').notify(details);
         }
+
+        component.get('v.modal').then(modal => {
+            modal.close();
+        });
     }
 })

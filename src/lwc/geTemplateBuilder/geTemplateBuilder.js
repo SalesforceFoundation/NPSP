@@ -129,12 +129,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     /*******************************************************************************
     * @description Public method for receiving modal related events. Used in the
-    * utilModal, GE_modalProxy, GE_TemplateBuilder component's event chain. Handles
-    * the section save and section delete actions from the modal.
+    * geTemplateBuilderSectionModalBody, GE_modalProxy, GE_TemplateBuilder component's
+    * event chain. Handles the section save and section delete actions from the modal.
     *
     * @param {object} modalData: Event object containing the action and section
     * information.
-    * component chain: utilModal -> GE_ModalProxy -> GE_TemplateBuilder -> here
+    * component chain: geTemplateBuilderSectionModalBody -> utilDedicatedListener -> GE_TemplateBuilder -> here
     */
     @api
     notify(modalData) {

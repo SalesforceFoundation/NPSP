@@ -1,5 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import { mutable, dispatch } from 'c/utilTemplateBuilder';
+import { fireEvent} from 'c/pubsubNoPageRef';
 
 export default class GeTemplateBuilderSectionModalBody extends LightningElement {
     @track modalData;
@@ -14,32 +15,32 @@ export default class GeTemplateBuilderSectionModalBody extends LightningElement 
     }
 
     /*******************************************************************************
-    * @description Dispatches an event to notify parent aura component GE_ModalProxy
-    * that the given section needs to be removed.
+    * @description Fires an event to utilDedicatedListener to notify parent aura
+    * component GE_ModalProxy that the given section needs to be removed.
     */
     handleDelete() {
         const detail = { action: 'delete', section: this.modalData.section };
-        dispatch(this, 'geTemplateBuilderSectionModalBodyEvent', detail, true);
+        fireEvent(this.pageRef, 'geTemplateBuilderSectionModalBodyEvent', detail);
     }
 
     /*******************************************************************************
-    * @description Dispatches an event to notify parent aura component GE_ModalProxy
-    * that the modal needs to be updated.
+    * @description Fires an event to utilDedicatedListener to notify parent aura
+    * component GE_ModalProxy that the modal needs to be updated.
     */
     handleSave() {
         let section = mutable(this.modalData.section);
         section.label = this.template.querySelector('lightning-input[data-name="customLabel"]').value;
 
         const detail = { action: 'save', section: section };
-        dispatch(this, 'geTemplateBuilderSectionModalBodyEvent', detail, true);
+        fireEvent(this.pageRef, 'geTemplateBuilderSectionModalBodyEvent', detail);
     }
 
     /*******************************************************************************
-    * @description Dispatches an event to notify parent aura component GE_ModalProxy
-    * that the modal needs to be closed.
+    * @description Fires an event to utilDedicatedListener to notify parent aura
+    * component GE_ModalProxy that the modal needs to be closed.
     */
     handleCancel() {
         const detail = { action: 'cancel' };
-        dispatch(this, 'geTemplateBuilderSectionModalBodyEvent', detail , true);
+        fireEvent(this.pageRef, 'geTemplateBuilderSectionModalBodyEvent', detail);
     }
 }
