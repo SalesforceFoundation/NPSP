@@ -6,22 +6,22 @@
             formatter={formatter}
             required={element.required}
             onchange={handleValueChange} 
-            label={element.label}>
+            label={fieldLabel}>
         </lightning-input>
     </template>
     <template if:true={isLookup}>
         <lightning-record-edit-form object-api-name={objectApiName}>
-            <label class="slds-form-element__label">{element.label}</label>
+            <label class="slds-form-element__label">{fieldLabel}</label>
             <lightning-input-field field-name={fieldApiName} variant='label-hidden'></lightning-input-field>
         </lightning-record-edit-form>
     </template>
     <template if:true={isRichText}>
-        <lightning-input-rich-text value={value} onblur={handleValueChange} label={element.label}></lightning-input-rich-text>
+        <lightning-input-rich-text value={value} onblur={handleValueChange} label={fieldLabel}></lightning-input-rich-text>
     </template>
     <template if:true={isPicklist}>
-        <c-ge-form-field-picklist value={value} field-name={fieldApiName} object-name={objectApiName} onchange={handleValueChange} label={element.label}></c-ge-form-field-picklist>
+        <c-ge-form-field-picklist value={value} field-name={fieldApiName} object-name={objectApiName} onchange={handleValueChange} label={fieldLabel}></c-ge-form-field-picklist>
     </template>
     <template if:true={isTextArea}>
-        <lightning-textarea value={value} onchange={handleValueChange} label={element.label}></lightning-textarea>
+        <lightning-textarea value={value} onchange={handleValueChange} label={fieldLabel}></lightning-textarea>
     </template>
 </template>
