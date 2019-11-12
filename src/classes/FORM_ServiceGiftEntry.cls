@@ -41,8 +41,14 @@ public with sharing class FORM_ServiceGiftEntry {
     */
     public static FORM_Template[] getAllFormTemplates() {
         FORM_Template[] formTemplates = new FORM_Template[]{};
+        Form_Template__c[] allTemplates = [SELECT Id,
+            Name,
+            Template_JSON__c,
+            Description__c,
+            Format_Version__c
+            FROM Form_Template__c];
 
-        for (Form_Template__c formTemplate : [SELECT Id, Name, Template_JSON__c, Description__c, Format_Version__c FROM Form_Template__c]) {
+        for (Form_Template__c formTemplate : allTemplates) {
             FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
             if (formTemplate.id != null) {
                 deserializedFormTemplate.id = formTemplate.id;
