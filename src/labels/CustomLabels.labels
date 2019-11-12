@@ -3131,6 +3131,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Modifying this Object Group is taking longer than expected.</value>
     </labels>
     <labels>
+        <fullName>bdiMigrationLongDeployment</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error message for long deployment</shortDescription>
+        <value>Converting Help Text mappings to Advanced Mapping is taking longer than expected.</value>
+    </labels>
+    <labels>
         <fullName>bdiOMUIGroupNameHelp</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>

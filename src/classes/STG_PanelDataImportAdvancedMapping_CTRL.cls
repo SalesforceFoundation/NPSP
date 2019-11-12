@@ -281,7 +281,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             isPolling = false;
             addPageMessage(ApexPages.Severity.WARNING,
                 Label.stgDeploymentTimedOut + ' ' +
-                Label.bdiDeploymentInProgress + ' ' +
+                Label.bdiMigrationLongDeployment + ' ' +
                 deploymentStatusUrl());
         }
 
