@@ -42,7 +42,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             this.dataImportBatchInfo = data;
             this.init();
         } else if (error) {
-            console.log(error);
+            handleError(this, error);
         }
     }
 
@@ -93,7 +93,6 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             this.toggleCheckboxForSelectedBatchFields();
             this.isLoading = false;
         } catch (error) {
-            console.log(error);
             handleError(this, error);
             this.isLoading = false;
         }

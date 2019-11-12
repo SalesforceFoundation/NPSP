@@ -50,7 +50,6 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public Boolean Is_Deleted;
     @AuraEnabled public String Source_Field_Display_Type_Label;
     @AuraEnabled public String Target_Field_Display_Type_Label;
-    // TODO: Clean up later, need to figure out what constitutes an actual required field for the template
     @AuraEnabled public Boolean Is_Required;
     @AuraEnabled public Boolean Is_Source_Field_Required;
     // Used for the Form Template Builder and Renderer
@@ -115,9 +114,7 @@ public virtual with sharing class BDI_FieldMapping {
             }
         }
 
-        // TODO: Clean up later
+        // TODO: Complete when Template-level validation work item is in play
         this.Is_Required = (this.Required == 'Yes' || !sourceFieldDescribe.isNillable() || !targetFieldDescribe.isNillable()) ? true : false;
-        //this.Is_Source_Field_Required = (!sourceFieldDescribe.isNillable()) ? true : false;
-        //this.Is_Target_Field_Required = (!targetFieldDescribe.isNillable()) ? true : false;
     }
 }

@@ -56,7 +56,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     init = async () => {
         try {
-            const fieldMappingMethod = await this.handleGetFieldMappingMethod();
+            const fieldMappingMethod = await getFieldMappingMethod();
 
             if (fieldMappingMethod !== ADVANCED_MAPPING) {
                 this.isAccessible = false;
@@ -69,7 +69,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.formTemplateRecordId = getQueryParameters().c__recordId;
 
                 if (this.formTemplateRecordId) {
-                    let formTemplate = await this.handleGetFormTemplate(this.formTemplateRecordId);
+                    let formTemplate = await retrieveFormTemplate({ templateId: this.formTemplateRecordId });
 
                     this.formTemplate = formTemplate;
                     this.batchHeaderFields = formTemplate.batchHeaderFields;
@@ -83,24 +83,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         } catch (error) {
             handleError(error);
         }
-    }
-
-    /*******************************************************************************
-    * @description Async intermediary method for getting the currently active
-    * field mapping method so we can use async/await in the init method.
-    */
-    handleGetFieldMappingMethod = async () => {
-        return getFieldMappingMethod();
-    }
-
-    /*******************************************************************************
-    * @description Async intermediary method for retrieving a form template so
-    * we can use async/await in the init method.
-    *
-    * @param {string} formTemplateId: Record id of the Form_Template__c to retrieve
-    */
-    handleGetFormTemplate = async (formTemplateId) => {
-        return retrieveFormTemplate({ templateId: formTemplateId });
     }
 
     /*******************************************************************************
@@ -499,7 +481,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         const formTemplateRecordId = await storeFormTemplate(preppedFormTemplate);
 
-        //this.navigateToRecordViewPage(formTemplateRecordId);
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
@@ -544,7 +525,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.formSections = this.formLayout.sections;
             })
             .catch(error => {
-                console.log('Error: ', error);
+                handleError(this, error);
             })
     }
 }

@@ -141,6 +141,7 @@ const showToast = (context, title, message, variant, mode, messageData) => {
     context.dispatchEvent(event);
 }
 
+// TODO: Need to make this error handle more robust
 /*******************************************************************************
 * @description Creates and dispatches an error toast
 *
