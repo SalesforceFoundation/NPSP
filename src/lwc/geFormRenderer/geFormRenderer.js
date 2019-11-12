@@ -2,6 +2,8 @@ import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
+import geSave from '@salesforce/label/c.labelGeSave';
+import geCancel from '@salesforce/label/c.labelGeCancel';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api sections = [];
@@ -13,6 +15,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api showSpinner = false;
     @api isBatchMode = false;
     @api submissions = [];
+    label = { messageLoading, geSave, geCancel };
 
     connectedCallback() {
         GeFormService.getFormTemplate().then(response => {
@@ -83,7 +86,4 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     toggleSpinner() {
         this.showSpinner = !this.showSpinner;
     }
-
-    // Expose the labels to use in the template
-    label = { messageLoading };
 }

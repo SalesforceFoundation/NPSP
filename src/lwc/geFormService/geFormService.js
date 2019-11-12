@@ -3,7 +3,7 @@ import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndP
 import saveAndDryRunRow from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 
 const inputTypeByDescribeType = {
-    'CHECKBOX': 'checkbox',
+    'BOOLEAN': 'checkbox',
     'CURRENCY': 'number',
     'DATE': 'date',
     'DATETIME': 'datetime-local',
@@ -100,6 +100,11 @@ class GeFormService {
         });
     }
 
+    /**
+     * Takes a list of sections, reads the fields and values, creates a di record, and creates an opportunity from the di record
+     * @param sectionList
+     * @returns opportunityId
+     */
     handleSave(sectionList) {
         let diRecord = this.getDataImportRecord(sectionList);
         const opportunityID = this.createOpportunityFromDataImport(diRecord);
