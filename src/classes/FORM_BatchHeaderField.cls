@@ -47,7 +47,6 @@ public with sharing class FORM_BatchHeaderField {
     @AuraEnabled public Boolean allowDefaultValue;
     @AuraEnabled public String defaultValue;
     @AuraEnabled public String dataType;
-    @AuraEnabled public FieldInfo fieldInfo;
 
     public FORM_BatchHeaderField(String elementType,
                         String displayRule,
@@ -57,11 +56,5 @@ public with sharing class FORM_BatchHeaderField {
         this.displayRule = displayRule;
         this.validationRule = validationRule;
         this.customLabel = customLabel;
-    }
-
-    public class FieldInfo {
-        @AuraEnabled public String fieldApiName;
-        @AuraEnabled public String objectApiName;
-        @AuraEnabled public String defaultRecordTypeId;
     }
 }

@@ -71,12 +71,6 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
                     field.isPicklist = false;
                 }
 
-                field.fieldInfo = {
-                    fieldApiName: field.apiName || field.value,
-                    objectApiName: this.dataImportBatchInfo.apiName,
-                    defaultRecordTypeId: this.dataImportBatchInfo.defaultRecordTypeId
-                }
-
                 if (ADDITIONAL_REQUIRED_FIELDS.includes(field.apiName)) {
                     field.required = true;
                 }
@@ -175,8 +169,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             isRequiredFieldDisabled: batchField.isRequiredFieldDisabled,
             allowDefaultValue: true,
             defaultValue: null,
-            dataType: batchField.dataType,
-            fieldInfo: batchField.fieldInfo
+            dataType: batchField.dataType
         }
 
         dispatch(this, 'addbatchheaderfield', field);
