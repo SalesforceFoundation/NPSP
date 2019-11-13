@@ -82,11 +82,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 // Start the Recurring Donations job one hour before the Rollup jobs to avoid any conflict with
                 // the Opps that may be created/modified by the RD job.
                 if (RD2_EnablementService.isRecurringDonations2Enabled) {
-                    defaultScheduledJobs.put('NPSP 06 - Recurring Donation Updates',
-                        new List<String>{'0 0 22 ? * *', 'RD_RecurringDonations_BATCH'} );
-                } else {
                     defaultScheduledJobs.put('NPSP 06 - Enhanced Recurring Donation Updates',
                         new List<String>{'0 0 22 ? * *', 'RD2_OpportunityEvaluation_BATCH'} );
+                } else {
+                    defaultScheduledJobs.put('NPSP 06 - Recurring Donation Updates',
+                        new List<String>{'0 0 22 ? * *', 'RD_RecurringDonations_BATCH'} );
                 }
 
                 if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
