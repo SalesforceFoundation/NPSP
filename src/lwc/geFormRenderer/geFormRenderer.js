@@ -52,17 +52,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         if (this.isBatchMode) {
-            console.log('this.submissions.length: ', this.submissions.length);
             const submission = {
                 sectionsList: sectionsList,
                 submissionId: this.submissions.length
             };
-            // this.submissions = [...this.submissions, sectionsList];
-            // sectionsList.submissionId = this.submissions.length;//First one should be zero
-            // console.log('sectionsList: ', sectionsList);
-            // console.log(JSON.parse(JSON.stringify(sectionsList)));
             this.submissions.push(submission);
-            console.log('this.submissions: ', this.submissions);
             this.dispatchEvent(new CustomEvent('submit'));
             this.toggleSpinner();
         } else {
