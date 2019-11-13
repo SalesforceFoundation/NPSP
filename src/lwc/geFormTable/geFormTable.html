@@ -2,9 +2,11 @@
 
     <div if:true={ready}>
         <lightning-datatable
-                key-field="id"
+                key-field="uid"
                 data={data}
-                columns={columns}>
+                columns={columns}
+                errors={rowErrors}
+                show-row-number-column="true">
         </lightning-datatable>
     </div>
 

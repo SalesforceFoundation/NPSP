@@ -148,27 +148,6 @@ class GeFormService {
         diRecord.Account1Imported__c = '0018A00000L8yYtQAJ'; //temporary to allow save of the form
         return diRecord;
     }
-
-    buildColumns(sections) {
-        const columns = [];
-        sections.forEach(
-            (section) => {
-                console.log(JSON.parse(JSON.stringify(section)));
-                section.elements.forEach(
-                    element => {
-                        const fmw = this.getFieldMappingWrapper(element.value);
-                        const column = {
-                            label: element.label,
-                            fieldName: this.getFieldMappingWrapper(element.value).Source_Field_API_Name,
-                            type: this.getInputTypeFromDataType(element.dataType)
-                        };
-                        columns.push(column);
-                    }
-                );
-            }
-        );
-        return columns;
-    }
 }
 
 const geFormServiceInstance = new GeFormService();
