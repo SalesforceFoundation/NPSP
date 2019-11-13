@@ -5,7 +5,7 @@ export default class GeFormApp extends LightningElement {
     @api isBatchMode = false;
     
     connectedCallback() {
-        this.isBatchMode = this.batchId !== undefined;
+        this.isBatchMode = this.batchId;
     }
 
     handleSubmit(event) {

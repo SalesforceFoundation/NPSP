@@ -16,7 +16,6 @@ const inputTypeByDescribeType = {
     'TIME': 'time',
     'URL': 'url'
 };
-//todo: add text area
 
 const numberFormatterByDescribeType = {
   'PERCENT': 'percent-fixed'
@@ -144,8 +143,14 @@ class GeFormService {
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
             }
         }
-        diRecord.Donation_Donor__c = 'Account1'; //temporary to allow save of the form
-        diRecord.Account1Imported__c = '0018A00000L8yYtQAJ'; //temporary to allow save of the form
+
+        //todo: proper setting of the Donation Donor field
+        if (diRecord['Account1_Name__c']) {
+            diRecord.Donation_Donor__c = 'Account1';
+        } else {
+            diRecord.Donation_Donor__c = 'Contact1';
+        }
+
         return diRecord;
     }
 }

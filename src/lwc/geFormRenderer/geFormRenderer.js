@@ -30,7 +30,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 if (typeof formTemplate.layout !== 'undefined'
                         && Array.isArray(formTemplate.layout.sections)) {
                     this.sections = formTemplate.layout.sections;
-                    this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+                    if (this.isBatchMode) {
+                        this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+                    }
                 }
             }
 
