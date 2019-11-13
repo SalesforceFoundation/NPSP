@@ -260,7 +260,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description runs BDI Dry Run against all Data Import records based on the processing settings of a 
+    * @description runs BDI Dry Run against all Data Import records based on the processing settings of a
     *  given batch
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return DataImportModel with updated data import record row and updated totals for the batch
@@ -279,7 +279,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             }
 
             if (rawDataImportsToPrepareForDryRun.size() > 0) {
-                List<DataImport__c> dataImportListToRun = 
+                List<DataImport__c> dataImportListToRun =
                     prepareDataImportsForDryRun(rawDataImportsToPrepareForDryRun);
                 BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
             }
@@ -287,7 +287,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
 
             List<DataImportRow> rows = new List<DataImportRow>();
-            List<DataImport__c> dataImportsToReturn = 
+            List<DataImport__c> dataImportsToReturn =
                 getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
             for (DataImport__c di : dataImportsToReturn) {
                 DataImportRow processedDataImportRow = new DataImportRow(di);
@@ -315,7 +315,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             return runSingleDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
             String saveErrorMessage = String.format(Label.CRLP_SaveError,
-                    new List<String>{Schema.SObjectType.DataImport__c.getName()});
+                new List<String>{Schema.SObjectType.DataImport__c.getName()});
             throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
         }
     }
