@@ -15,6 +15,35 @@ export default class GeFormTable extends LightningElement {
         }
     ];
 
+    connectedCallback() {
+        if (this.batchId) {
+            this.loadBatch();
+        }
+    }
+
+    loadBatch() {
+        getDataImportModel({batchId: this.batchId})
+            .then(
+                response => {
+                    const dataImportModel = JSON.parse(response);
+                    dataImportModel.dataImportRows.forEach(
+                        row => {
+                            const record = row.record;
+                            record.donorLink = row.donorLink;
+                            record.donorName = row.donorName;
+                            record.errors = row.errors.join(', ');
+                            this.data.push(record);
+                        }
+                    )
+                }
+            )
+            .catch(
+                error => {
+                    console.error(JSON.stringify(error));
+                }
+            );
+    }
+
     @api
     addColumns(columns) {
         this.columns = [...this.columns, ...columns];
