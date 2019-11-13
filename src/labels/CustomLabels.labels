@@ -1540,7 +1540,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementMigrationWarning</shortDescription>
-        <value>WARNING: This process will rearrange existing data, insert new records, and delete records that don't match the Enhanced Recurring Donations model. This process may take some time. You can leave this page during migration and return later to check the progress.</value>
+        <value>&lt;b&gt;WARNING: This process will rearrange existing data, insert new records, and delete records that don't match the Enhanced Recurring Donations model. This process may take some time. You can leave this page during migration and return later to check the progress.&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementPrepIntro</fullName>

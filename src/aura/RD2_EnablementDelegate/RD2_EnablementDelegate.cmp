@@ -84,7 +84,7 @@
 
                 <aura:set attribute="title">
                     <c:progressRing ringContent="1" valueNow="{!v.state.enableProgress}"
-                        status="{!if(v.state.isEnabled, 'complete', '')}" class="slds-m-right_small" />
+                        status="{!if(v.state.isEnabled, 'complete', 'active')}" class="slds-m-right_small" />
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementEnableTitle}" />
                 </aura:set>
 
@@ -106,19 +106,18 @@
                                     isNextComplete="{!v.state.isEnabled}" />
 
                                 <div class="slds-progress__item_content">
-                                    <lightning:layout>
-                                        <lightning:layoutItem size="9"
-                                            class="slds-p-right_medium slds-media slds-media_center">
+                                    <lightning:layout verticalAlign="center">
+                                        <lightning:layoutItem size="9" class="slds-p-right_medium">
                                             <label for="enable-confirm">
                                                 <lightning:formattedText
                                                     value="{!$Label.c.RD2_EnablementEnableConfirm}" />
                                             </label>
                                         </lightning:layoutItem>
                                         <lightning:layoutItem size="3"
-                                            class="slds-grid slds-grid_align-end slds-p-right_medium">
-                                            <lightning:input type="checkbox-button"
-                                                label="{!$Label.c.RD2_EnablementEnableConfirm}" aura:id="enable-confirm"
-                                                name="enable-confirm" checked="{!v.state.isConfirmed}"
+                                            class="slds-grid slds-grid_align-end slds-p-right_small">
+                                            <lightning:input type="checkbox" aura:id="enable-confirm"
+                                                name="enable-confirm" label="{!$Label.c.RD2_EnablementEnableConfirm}"
+                                                variant="label-hidden" checked="{!v.state.isConfirmed}"
                                                 onchange="{!c.handleEnableConfirm}" disabled="{!v.state.isConfirmed}" />
                                         </lightning:layoutItem>
                                     </lightning:layout>
@@ -133,12 +132,19 @@
                                     isNextComplete="{!v.state.isMetaDeployLaunched}" />
 
                                 <div class="slds-progress__item_content">
-                                    <lightning:layout>
-                                        <lightning:layoutItem size="9"
-                                            class="slds-p-right_medium slds-media slds-media_center">
+                                    <lightning:layout verticalAlign="center">
+                                        <lightning:layoutItem size="9" class="slds-p-right_medium">
                                             <label for="enable-toggle">
-                                                <lightning:formattedText
-                                                    value="{!$Label.c.RD2_EnablementEnableMessage}" />
+                                                <span>
+                                                    <lightning:formattedText
+                                                        value="{!$Label.c.RD2_EnablementEnableMessage}" />
+                                                    <lightning:icon iconName="utility:warning"
+                                                        alternativeText="{!$Label.c.AssistiveTextWarning}"
+                                                        size="x-small" variant="warning"
+                                                        class="slds-p-horizontal_x-small" />
+                                                    <lightning:formattedRichText
+                                                        value="{!$Label.c.RD2_EnablementEnableWarning}" />
+                                                </span>
                                             </label>
                                         </lightning:layoutItem>
                                         <lightning:layoutItem size="3"
@@ -160,17 +166,11 @@
                             <span class="slds-assistive-text">{!$Label.c.ProgressMarkerAssistiveTextProgress + ' ' +
                                 v.state.enableProgress + '%'}</span>
                         </div>
-                        <lightning:layout>
-                            <lightning:layoutItem size="9">
-                                <c:pageNotification severity="warning" size="small"
-                                    message="{!$Label.c.RD2_EnablementEnableWarning}" />
-                            </lightning:layoutItem>
-                        </lightning:layout>
                     </div>
 
                     <aura:if isTrue="{!equals(v.errorSection, '1')}">
                         <lightning:layout>
-                            <lightning:layoutItem size="9">
+                            <lightning:layoutItem size="9" class="slds-p-left_medium">
                                 <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </lightning:layoutItem>
                         </lightning:layout>
@@ -186,7 +186,8 @@
 
                 <aura:set attribute="title">
                     <c:progressRing ringContent="2" valueNow="{!v.state.metaDeployProgress}"
-                        status="{!if(v.state.isMetaDeployConfirmed, 'complete', '')}" class="slds-m-right_small" />
+                        status="{!if(v.state.isMetaDeployConfirmed, 'complete', if(v.state.isEnabled, 'active', ''))}"
+                        class="slds-m-right_small" />
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementMetaDeployTitle}" />
                 </aura:set>
 
@@ -209,15 +210,14 @@
                                     isNextComplete="{!v.state.isMetaDeployConfirmed}" />
 
                                 <div class="slds-progress__item_content">
-                                    <lightning:layout>
-                                        <lightning:layoutItem size="9" class="slds-media slds-media_center">
+                                    <lightning:layout horizontalAlign="spread" verticalAlign="center">
+                                        <lightning:layoutItem size="9">
                                             <lightning:formattedText
                                                 value="{!$Label.c.RD2_EnablementMetaDeployLaunch}" />
                                         </lightning:layoutItem>
 
-                                        <lightning:layoutItem size="3"
-                                            class="slds-grid slds-grid_align-end slds-p-right_medium">
-
+                                        <lightning:layoutItem flexibility="auto, no-shrink"
+                                            class="slds-grid slds-grid_align-end slds-p-right_medium slds-m-left_small">
                                             <a href="{!v.metaDeployURL}" aura:id="metadeploy-link"
                                                 onclick="{!c.handleMetaDeployLaunch}" target="_blank">
                                                 <lightning:formattedText
@@ -227,7 +227,6 @@
                                                     class="slds-button__icon_right"
                                                     alternativeText="{!$Label.c.AssistiveTextNewWindow}" />
                                             </a>
-
                                         </lightning:layoutItem>
                                     </lightning:layout>
                                 </div>
@@ -241,19 +240,19 @@
                                     isNextComplete="{!v.state.isMigrationCompleted}" />
 
                                 <div class="slds-progress__item_content">
-                                    <lightning:layout>
-                                        <lightning:layoutItem size="9" class="slds-media slds-media_center">
+                                    <lightning:layout verticalAlign="center">
+                                        <lightning:layoutItem size="9">
                                             <label for="metadeploy-confirm">
                                                 <lightning:formattedText
                                                     value="{!$Label.c.RD2_EnablementMetaDeployConfirm}" />
                                             </label>
                                         </lightning:layoutItem>
                                         <lightning:layoutItem size="3"
-                                            class="slds-grid slds-grid_align-end slds-p-right_medium">
-                                            <lightning:input type="checkbox-button"
+                                            class="slds-grid slds-grid_align-end slds-p-right_small">
+                                            <lightning:input type="checkbox"
                                                 label="{!$Label.c.RD2_EnablementMetaDeployConfirm}"
-                                                aura:id="metadeploy-confirm" name="metadeploy-confirm"
-                                                checked="{!v.state.isMetaDeployConfirmed}"
+                                                variant="label-hidden" aura:id="metadeploy-confirm"
+                                                name="metadeploy-confirm" checked="{!v.state.isMetaDeployConfirmed}"
                                                 onchange="{!c.handleMetaDeployConfirm}"
                                                 disabled="{!or(not(v.state.isMetaDeployLaunched), v.state.isMetaDeployConfirmed)}" />
                                         </lightning:layoutItem>
@@ -271,11 +270,13 @@
 
                     <aura:if isTrue="{!equals(v.errorSection, '2')}">
                         <lightning:layout>
-                            <lightning:layoutItem size="9">
+                            <lightning:layoutItem size="9" class="slds-p-left_medium">
                                 <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </lightning:layoutItem>
                         </lightning:layout>
                     </aura:if>
+
+                    <div class="slds-p-bottom_small" />
 
                 </div>
             </lightning:card>
@@ -293,23 +294,32 @@
                 <div class="slds-setup-assistant__step-detail slds-m-left_medium">
                     <lightning:layout multipleRows="true">
 
-                        <lightning:layoutItem size="9">
-                            <lightning:formattedText value="{!$Label.c.RD2_EnablementMigrationIntro}" />
-                        </lightning:layoutItem>
+                        <lightning:layoutItem size="12">
+                            <lightning:layout horizontalAlign="spread" multipleRows="false">
+                                <lightning:layoutItem size="9">
+                                    <lightning:formattedText value="{!$Label.c.RD2_EnablementMigrationIntro}" />
+                                </lightning:layoutItem>
 
-                        <lightning:layoutItem size="3" class="slds-grid slds-grid_align-end slds-p-right_medium">
-
-                            <aura:if isTrue="{!and(!v.state.isMigrationCompleted, !v.state.isMigrationInProgress)}">
-                                <lightning:button class="slds-m-left_x-small styleButton"
-                                    label="{!$Label.c.RD2_EnablementMigrationButton}" variant="neutral"
-                                    onclick="{!c.handleRunMigration}" disabled="{! !v.state.isMetaDeployConfirmed }" />
-                            </aura:if>
-
+                                <lightning:layoutItem flexibility="auto, no-shrink"
+                                    class="slds-grid slds-grid_align-end slds-p-right_medium slds-m-left_small">
+                                    <aura:if
+                                        isTrue="{!and(!v.state.isMigrationCompleted, !v.state.isMigrationInProgress)}">
+                                        <lightning:button class="styleButton"
+                                            label="{!$Label.c.RD2_EnablementMigrationButton}" variant="neutral"
+                                            onclick="{!c.handleRunMigration}"
+                                            disabled="{! !v.state.isMetaDeployConfirmed }" />
+                                    </aura:if>
+                                </lightning:layoutItem>
+                            </lightning:layout>
                         </lightning:layoutItem>
 
                         <lightning:layoutItem size="9" class="slds-p-top_medium">
-                            <c:pageNotification severity="warning" size="xx-small"
-                                message="{!$Label.c.RD2_EnablementMigrationWarning}" />
+                            <span>
+                                <lightning:icon iconName="utility:warning"
+                                    alternativeText="{!$Label.c.AssistiveTextWarning}" size="x-small" variant="warning"
+                                    class="slds-p-right_x-small" />
+                                <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationWarning}" />
+                            </span>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="3" />
 
@@ -333,7 +343,7 @@
 
                     <aura:if isTrue="{!equals(v.errorSection, '3')}">
                         <lightning:layout>
-                            <lightning:layoutItem size="9">
+                            <lightning:layoutItem size="9" class="slds-p-left_medium">
                                 <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </lightning:layoutItem>
                         </lightning:layout>
