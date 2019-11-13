@@ -318,13 +318,18 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Saves the data import record, dry runs the record, and returns updated
+    * totals with the new row.
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @param dataImport: the NPSP_Data_Import__c record to update
+    * @return String serialized DataImportModel
+    */
     @AuraEnabled
     public static String saveAndDryRunRow(Id batchId, DataImport__c dataImport) {
         try {
-            Database.insert(dataImport); //Here the record has the fields we passed it
-            return runSingleDryRun(dataImport.Id, batchId); // but here we pass the id of
-            // the record (not the object itself), so the method that we are calling
-            // re-queries the record, undoubtedly with different fields specified
+            Database.insert(dataImport);
+            return runSingleDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -471,14 +476,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return DataImport__c
     */
     private static List<DataImport__c> getDataImportRecordsByIds(Id batchId, List<Id> dataImportIds) {
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + batchId);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ batchId ^^^^^^');
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + dataImportIds);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ dataImportIds ^^^^^^');
         String query = getDataImportQuery(batchId, dataImportIds, null, null);
-        System.debug(LoggingLevel.ERROR, '*** query: ' + query);
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + Database.query(query));
-        System.debug(LoggingLevel.ERROR, '^^^^^^ Database.query(query) ^^^^^^');
         return Database.query(query);
     }
 
