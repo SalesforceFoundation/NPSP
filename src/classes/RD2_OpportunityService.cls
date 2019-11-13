@@ -149,9 +149,10 @@ public with sharing class RD2_OpportunityService {
     */
     private String buildOpportunityName(npe03__Recurring_Donation__c rd, Date closeDate) {
         return rd.npe03__Donor_Name__c + ' ' +
-            (rd.npe03__Amount__c != null ? rd.npe03__Amount__c.format() : '0') + ' ' +
-            (closeDate != null ? closeDate.format() : '') + ' ' +
-            UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c');
+            System.Label.npe03.RecurringDonationPrefix + ' (' +
+            (rd.npe03__Total_Paid_Installments__c != null ?
+            rd.npe03__Total_Paid_Installments__c + 1 : 1) + ') ' +
+            (closeDate != null ? closeDate.format() : '');
     }
 
     /***
