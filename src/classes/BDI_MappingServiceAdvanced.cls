@@ -253,4 +253,18 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
 
         fieldMappingSet = new BDI_FieldMappingSet(diFieldMappingSet,objectMappingByDevName,fieldMappingByDevName);
     }
+
+    /*******************************************************************************************************
+    * @description Method instantiates an instance of BDI_MappingServiceAdvanced by a given field mapping
+    * set name and returns an instance of BDI_FieldMappingSet.
+    *
+    * @param fieldMappingSetName: Developer name of a Data_Import_Field_Mapping_Set__mdt record.
+    *
+    * @return fieldMappingSet: Instance of BDI_FieldMappingSet.
+    */
+    @AuraEnabled
+    public static BDI_FieldMappingSet getFieldMappingSet(String fieldMappingSetName) {
+        getInstance(fieldMappingSetName);
+        return fieldMappingInstance.fieldMappingSet;
+    }
 }
