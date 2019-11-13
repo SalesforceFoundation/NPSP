@@ -1,5 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
-import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
+import getDataImportModel
+    from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import GeFormService from 'c/geFormService';
 
 export default class GeFormTable extends LightningElement {
@@ -14,6 +15,7 @@ export default class GeFormTable extends LightningElement {
             typeAttributes: {label: {fieldName: 'donorName'}}
         }
     ];
+    accountId;
 
     connectedCallback() {
         if (this.batchId) {
@@ -21,8 +23,18 @@ export default class GeFormTable extends LightningElement {
         }
     }
 
-    loadBatch() {
-        getDataImportModel({batchId: this.batchId})
+    @api
+    setAccountId(id) {
+        this.accountId = id;
+    }
+
+    @api
+    loadBatch(batchId = this.batchId) {
+        if (this.batchId !== batchId) {
+            this.batchId = batchId;
+        }
+        this.data = []; //clear out table
+        getDataImportModel({batchId: batchId})
             .then(
                 response => {
                     const dataImportModel = JSON.parse(response);
@@ -35,6 +47,7 @@ export default class GeFormTable extends LightningElement {
                             this.data.push(record);
                         }
                     )
+                    this.data = [...this.data];
                 }
             )
             .catch(
@@ -53,6 +66,8 @@ export default class GeFormTable extends LightningElement {
     handleFormSubmission(submission) {
         const dataImportRecord =
             GeFormService.getDataImportRecord(submission.sectionsList);
+        dataImportRecord.Account1Imported__c = this.accountId;
+        dataImportRecord.Donation_Donor__c = "Account1";
         this.upsertRow(submission.submissionId, dataImportRecord);
 
         //todo: for prod going to want to pass in the batch Id

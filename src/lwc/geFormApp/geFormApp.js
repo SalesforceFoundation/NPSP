@@ -3,7 +3,22 @@ import {LightningElement, api} from 'lwc';
 export default class GeFormApp extends LightningElement {
     @api batchId;
     @api isBatchMode = false;
-    
+
+    //method used for testing until form is ready to be loaded with a Batch id
+    handleBatchId(event) {
+        const table = this.template.querySelector('c-ge-form-table');
+        table.loadBatch(event.target.value);
+
+    }
+
+    //method used for testing until form has Account/Contact Lookups or is ready to be loaded
+    // with an Account Id
+    handleAccountId(event) {
+        this.accountId = event.target.value;
+        const table = this.template.querySelector('c-ge-form-table');
+        table.setAccountId(event.target.value);
+    }
+
     connectedCallback() {
         this.isBatchMode = this.batchId !== undefined;
     }

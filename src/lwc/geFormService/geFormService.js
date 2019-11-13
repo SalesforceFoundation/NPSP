@@ -144,13 +144,6 @@ class GeFormService {
             }
         }
 
-        //todo: proper setting of the Donation Donor field
-        if (diRecord['Account1_Name__c']) {
-            diRecord.Donation_Donor__c = 'Account1';
-        } else {
-            diRecord.Donation_Donor__c = 'Contact1';
-        }
-
         return diRecord;
     }
 }
