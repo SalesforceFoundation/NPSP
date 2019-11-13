@@ -214,7 +214,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 this.activeFormSectionId = sectionId;
             } else if (hasManySections && hasNoActiveSection) {
                 event.target.checked = false;
-                showToast(this, 'Please select a section', '', 'warning');
+                showToast('Please select a section', '', 'warning');
                 return;
             }
 

@@ -123,7 +123,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         console.log('handle search');
         const isEnterKey = event.keyCode === 13;
         if (isEnterKey) {
-            showToast(this, 'Search Test', event.target.value, 'warning');
+            showToast('Search Test', event.target.value, 'warning');
         }
     }
 

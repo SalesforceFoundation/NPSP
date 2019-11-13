@@ -120,7 +120,6 @@ const sort = (list, property, sortDirection) => {
 /*******************************************************************************
 * @description Creates and dispatches a ShowToastEvent
 *
-* @param {object} context: context/'this' from which dispatchEvent is called 
 * @param {string} title: Title of the toast, dispalyed as a heading.
 * @param {string} message: Message of the toast. It can contain placeholders in
 * the form of {0} ... {N}. The placeholders are replaced with the links from
@@ -129,7 +128,7 @@ const sort = (list, property, sortDirection) => {
 * @param {array} messageData: List of values that replace the {index} placeholders
 * in the message param
 */
-const showToast = (context, title, message, variant, mode, messageData) => {
+const showToast = (title, message, variant, mode, messageData) => {
     const event = new ShowToastEvent({
         title: title,
         message: message,
@@ -137,25 +136,36 @@ const showToast = (context, title, message, variant, mode, messageData) => {
         mode: mode,
         messageData: messageData
     });
-
-    context.dispatchEvent(event);
+    dispatchEvent(event);
 }
 
-// TODO: Need to make this error handle more robust
 /*******************************************************************************
-* @description Creates and dispatches an error toast
+* @description Creates and dispatches an error toast.
 *
 * @param {object} error: Event holding error details
 */
-const handleError = (context, error) => {
-    if (error && error.status && error.body) {
-        showToast(context, `${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
-    } else if (error && error.name && error.message) {
-        showToast(context, `${error.name}`, error.message, 'error', 'sticky');
-    } else {
-        showToast(context, stgUnknownError, '', 'error', 'sticky');
+const handleError = (error) => {
+    let message = 'Unknown error';
+
+    // error.body is the error from apex calls
+    // error.detail.output.errors is the error from record-edit-forms
+    if (typeof error === 'string' || error instanceof String) {
+        message = error;
+    } else if (error) {
+        if (Array.isArray(error.body)) {
+            message = error.body.map(e => e.message).join(', ');
+        } else if (error.body && typeof error.body.message === 'string') {
+            message = error.body.message;
+        } else if (error.detail &&
+            error.detail.output &&
+            Array.isArray(error.detail.output.errors)) {
+
+            message = error.detail.output.errors.map(e => e.message).join(', ');
+        }
     }
-}
+
+    showToast('Error', message, 'error', 'sticky');
+};
 
 const getQueryParameters = () => {
     let params = {};
