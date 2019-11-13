@@ -1,0 +1,12 @@
+.horizontalRadioGroup .slds-form-element__control .slds-radio {
+    display : inline-block !important;
+}
+.label-hidden > label {
+    display: none;
+}
+.slds-modal__content {
+    overflow: visible;
+}
+.modal-content {
+    min-height: 350px;
+}

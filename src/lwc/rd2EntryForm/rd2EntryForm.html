@@ -1,0 +1,157 @@
+<template>
+    <c-modal header={title}>
+        <lightning-record-edit-form object-api-name={objectApiName} record-id={recordId} onload={handleOnLoad}>
+
+            <div class="slds-card">
+                <div class="slds-card__header slds-theme_shade">
+                    <h2 class="slds-text-heading_small">Donor Information</h2>
+                </div>
+                <div class="slds-card__body slds-text-body_small slds-p-around_small">
+
+                    <lightning-layout horizontal-align="spread" multiple-rows="true">
+
+                        <lightning-layout-item size="6" class="slds-p-around_x-small">
+                            <fieldset class="slds-form-element horizontalRadioGroup">
+                                <legend class="slds-form-element__legend slds-form-element__label">Donor Type</legend>
+
+                                <div class="slds-form-element__control">
+                                    <template for:each={donorTypes} for:item="donorType">
+                                        <span class="slds-radio slds-p-right_medium" key={donorType.value}>
+                                            <input type="radio" id={donorType.value} value={donorType.value}
+                                                name="radiogroup" checked={donorType.isSelected}
+                                                onchange={handleDonorTypeChange} />
+
+                                            <label class="slds-radio__label" for={donorType.value}>
+                                                <span class="slds-radio_faux"></span>
+                                                <span class="slds-form-element__label">{donorType.label}</span>
+                                            </label>
+                                        </span>
+                                    </template>
+                                </div>
+                            </fieldset>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="6" class="slds-p-around_x-small">
+                            <template if:true={isDonorContact}>
+                                <lightning-input-field field-name={fields.FIELD_CONTACT.fieldApiName} value={contactId}>
+                                </lightning-input-field>
+                            </template>
+                            <template if:true={isDonorAccount}>
+                                <lightning-input-field field-name={fields.FIELD_ACCOUNT.fieldApiName} value={accountId}>
+                                </lightning-input-field>
+                            </template>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="6" class="slds-p-around_x-small">
+                            <lightning-input-field field-name={fields.FIELD_DATE_ESTABLISHED.fieldApiName}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="6" class="slds-p-around_x-small">
+                            <lightning-input-field field-name={fields.FIELD_STATUS.fieldApiName}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+
+                    </lightning-layout>
+                </div>
+            </div>
+
+            <div class="slds-card">
+                <div class="slds-card__header slds-theme_shade">
+                    <h2 class="slds-text-heading_small">Donation Information</h2>
+                </div>
+                <div class="slds-card__body slds-text-body_small slds-p-around_small">
+                    <lightning-layout horizontal-align="spread" multiple-rows="true">
+
+                        <lightning-layout-item size="6" class="slds-p-around_x-small">
+                            <lightning-input-field field-name={fields.FIELD_AMOUNT.fieldApiName}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="6" class="slds-p-around_x-small">
+                            <lightning-input-field field-name={fields.FIELD_PAYMENT_METHOD.fieldApiName}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="12">
+
+                            <lightning-layout horizontal-align="space" vertical-align="center" multiple-rows="false">
+                                <lightning-layout-item size="2" padding="horizontal-small" class="slds-grid">
+                                    <div class="slds-size_1-of-3 slds-media slds-media_center">
+                                        <lightning-formatted-text value="Every">
+                                        </lightning-formatted-text>
+                                    </div>
+
+                                    <div class="slds-size_2-of-3">
+                                        <lightning-input-field
+                                            field-name={fields.FIELD_INSTALLMENT_FREQUENCY.fieldApiName}
+                                            variant="label-hidden">
+                                        </lightning-input-field>
+                                    </div>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size="2" class="slds-p-left_small">
+                                    <lightning-input-field field-name={fields.FIELD_INSTALLMENT_PERIOD.fieldApiName}
+                                        variant="label-hidden">
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size="3"
+                                    class="slds-grid slds-media slds-media_center slds-p-right_x-small">
+                                    <div class="slds-size_1-of-3 slds-text-align_center">
+                                        <lightning-formatted-text value="on the">
+                                        </lightning-formatted-text>
+                                    </div>
+
+                                    <div class="slds-size_2-of-3">
+                                        <lightning-input-field field-name={fields.FIELD_DAY_OF_MONTH.fieldApiName}
+                                            variant="label-hidden">
+                                        </lightning-input-field>
+                                    </div>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size="1"
+                                    class="slds-media slds-media_center slds-text-align_center">
+                                    <lightning-formatted-text value="day, starting on"></lightning-formatted-text>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item size="4" class="slds-p-left_x-small slds-p-right_small">
+                                    <lightning-input-field field-name={fields.FIELD_START_DATE.fieldApiName}
+                                        variant="label-hidden">
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+                            </lightning-layout>
+
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </div>
+            <div class="slds-card">
+                <div class="slds-card__header slds-theme_shade">
+                    <h2 class="slds-text-heading_small">Other Information</h2>
+                </div>
+                <div class="slds-card__body slds-text-body_small slds-p-around_small">
+
+                    <lightning-layout horizontal-align="spread" multiple-rows="true">
+
+                        <lightning-layout-item size="6" class="slds-p-around_x-small">
+                            <lightning-input-field field-name={fields.FIELD_CAMPAIGN.fieldApiName}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="6" class="slds-p-around_x-small">
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </div>
+
+        </lightning-record-edit-form>
+
+        <div slot="footer">
+            <lightning-button label={labels.cancel} variant="neutral" onclick={handleCancel}></lightning-button>
+            <lightning-button label={labels.save} variant="brand" onclick={handleSubmit} class="slds-p-left_medium">
+            </lightning-button>
+        </div>
+
+    </c-modal>
+</template>

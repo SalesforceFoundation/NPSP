@@ -1,0 +1,6 @@
+.THIS .slds-form-element__icon {/* Removes HelpText: When input-field variant is label-hidden, thenlabel is hidden but HelpText icon is displayed */
+    display: none !important;
+}
+.THIS .slds-modal__container{
+    min-width: 80vw;
+}

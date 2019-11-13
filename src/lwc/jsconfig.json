@@ -31,6 +31,12 @@
             ],
             "c/utilStencil": [
                 "utilStencil/utilStencil.js"
+            ],
+            "c/rd2EntryForm": [
+                "rd2EntryForm/rd2EntryForm.js"
+            ],
+            "c/modal": [
+                "modal/modal.js"
             ]
         },
         "experimentalDecorators": true

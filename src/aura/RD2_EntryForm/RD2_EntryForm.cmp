@@ -1,0 +1,4 @@
+<aura:component implements="force:hasRecordId,force:hasSObjectName,lightning:actionOverride,lightning:isUrlAddressable">
+    <c:rd2EntryForm recordId="{!v.recordId}" objectApiName="npe03__Recurring_Donation__c"></c:rd2EntryForm>
+
+</aura:component>
