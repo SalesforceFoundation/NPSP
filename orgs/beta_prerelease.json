@@ -5,10 +5,16 @@
   "hasSampleData": "true",
   "settings": {
     "orgPreferenceSettings": {
-      "chatterEnabled": true,
-      "disableParallelApexTesting": true,
+      "chatterSettings": {
+        "enableChatter": true
+      },
+      "apexSettings": {
+        "enableDisableParallelApexTesting": true
+      },
       "notesReservedPref01": true,
-      "s1DesktopEnabled": true
+      "lightningExperienceSettings": {
+        "enableS1DesktopEnabled": true
+      }
     }
   }
 }
