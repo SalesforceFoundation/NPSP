@@ -141,10 +141,12 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     @AuraEnabled
     public static void enableEnhancement() {
         try {
-            STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c = true;
+            STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
 
             if (!Test.isRunningTest()) {
                 upsert STG_Panel.stgService.stgRD;
+                UTIL_MasterSchedulableHelper.setScheduledJobs();
+                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
             }
 
         } catch (Exception e) {
@@ -163,13 +165,13 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         if (UTIL_Namespace.isCustomerOrg()) {
             UTIL_Version_API versionAPI = new UTIL_Version_API();
-            
+
             //Note: the exception cannot be caught in Apex
-            version = String.valueOf(versionAPI.requestVersion()); 
+            version = String.valueOf(versionAPI.requestVersion());
         }
 
         version = String.isBlank(version) ? '' : (version + '/');
-        
+
         return String.format(
             urlFormat,
             new String[]{ version }
@@ -243,7 +245,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @return void
     */
     @AuraEnabled
-    public static void completeMigration() {        
+    public static void completeMigration() {
         EnablementState state = getEnablementState();
         state.isMigrationCompleted = true;
 

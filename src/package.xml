@@ -344,6 +344,8 @@
         <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
+        <members>RD2_OpportunityEvaluation_BATCH</members>
+        <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>
         <members>RD2_OpportunityEvaluationService_TEST</members>
         <members>RD2_OpportunityService</members>
@@ -1476,6 +1478,7 @@
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
+        <members>RD2_ErrorRD1BatchJobCannotBeRun</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -1483,6 +1486,7 @@
         <members>RD_ErrorAddDonationPermissionDenied</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
         <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
+        <members>RD_ErrorRD2BatchJobCannotBeRun</members>
         <members>REL_Create_New_Relationship</members>
         <members>REL_Former</members>
         <members>REL_No_Relationships</members>
