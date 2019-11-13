@@ -314,7 +314,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             Database.update(dataImport);
             return runSingleDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+            String saveErrorMessage = String.format(Label.CRLP_SaveError,
+                    new List<String>{Schema.SObjectType.DataImport__c.getName()});
+            throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
         }
     }
 
