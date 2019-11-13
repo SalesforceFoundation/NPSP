@@ -33,6 +33,9 @@
 */
 @IsTest(isParallel=true)
 public class ALLO_AllocationsUtil_TEST {
+    
+    private static final String ALLO_VALIDATE_CONFIG_ACTION = 'ALLO.ValidatePmtAllocationConfig';
+    private static final String ALLO_PROCESS_OPPS_PMTS_ACTION = 'ALLO.ProcessOppsAndPmts';
 
     /*******************************************************************************************************
      * RecordExclusions Inner Class Tests
@@ -414,6 +417,54 @@ public class ALLO_AllocationsUtil_TEST {
 
         System.assertNotEquals(null, recsForRev2.recErrs.get(opps[0].Id), 'Error For First Opportunity should be present (retrieved from Error__c object)');
 
+    }
+
+    @isTest private static void processOppsAndPaymentAllocationsViaCallableApi() {
+
+        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        insert accs;
+
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
+        gaus[2].Name = 'Default GAU';
+        General_Accounting_Unit__c defaultGau = gaus[2];
+        insert gaus;
+
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
+        insert ctcs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 1000, null, null);
+        insert opps;
+
+        List<npe01__OppPayment__c> pmts = [select Id from npe01__OppPayment__c where npe01__Opportunity__c = :opps[1].Id];
+
+        List<Allocation__c> allosForInsert = new list<Allocation__c>();
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> npspApiParams = new Map<String, Object>();
+        Object callResult = npspApi.call(ALLO_PROCESS_OPPS_PMTS_ACTION, npspApiParams);
+
+    }
+
+    @isTest private static void validatePaymentAllocationConfigurationViaCallableApi() {
+        
+        Test.startTest();
+
+        Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> npspApiParams = new Map<String, Object>();
+        String configProblemsString = (String)npspApi.call(ALLO_VALIDATE_CONFIG_ACTION, npspApiParams);
+        List<String> configProblems = (List<String>)JSON.deserialize(configProblemsString,
+            List<String>.class);
+
+        Test.stopTest();
+
+        System.assertEquals(true, configProblems.isEmpty(), 'Payment Allocation config varified');
     }
 
     /*******************************************************************************************************
