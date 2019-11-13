@@ -5,6 +5,7 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 // Import source field names for required Field Mappings
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
+import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
 
 export default class geTemplateBuilderSelectFields extends LightningElement {
     @track isLoading = true;
@@ -97,7 +98,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         if (this.formSections && this.formSections.length === 0) {
             const REQUIRED_FIELDS = [
                 DONATION_AMOUNT_INFO.fieldApiName,
-                DONATION_DATE_INFO.fieldApiName
+                DONATION_DATE_INFO.fieldApiName,
+                PAYMENT_CHECK_REF_NUM_INFO.fieldApiName
             ];
 
             let sectionId = this.addSection('Gift Entry Form');
