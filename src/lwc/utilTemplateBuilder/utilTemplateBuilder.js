@@ -1,6 +1,9 @@
+/* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
+/*******************************************************************************
+* @description Map of lightning-input types by data type.
+*/
 const inputTypeByDescribeType = {
     'address': 'text',
     'base64': 'text',
@@ -28,21 +31,46 @@ const inputTypeByDescribeType = {
     'richtext': 'richtext'
 }
 
+/*******************************************************************************
+* @description Map of base lightning components by data type excluding
+* lightning-input.
+*/
 const lightningInputTypeByDataType = {
     'richtext': 'lightning-input-rich-text',
     'textarea': 'lightning-textarea',
     'combobox': 'lightning-combobox'
 }
 
+/*******************************************************************************
+* @description Removes an item in an array by a property.
+*
+* @param {list} array: List of items.
+* @param {string} property: Property to find by.
+* @param {string} value: Value of property to check against.
+*/
 const removeByProperty = (array, property, value) => {
     const index = array.findIndex(element => element[property] === value);
     array.splice(index, 1);
 }
 
+/*******************************************************************************
+* @description Finds an item in an array by a property.
+*
+* @param {list} array: List of items.
+* @param {string} property: Property to find by.
+* @param {string} value: Value of property to check against.
+*/
 const findIndexByProperty = (array, property, value) => {
     return array.findIndex(element => element[property] === value);
 }
 
+/*******************************************************************************
+* @description Shifts an item in the array to a given index.
+*
+* @param {list} array: List of items.
+* @param {integer} oldIndex: Current index of the item to be moved.
+* @param {integer} newIndex: Index to move the item to.
+*/
 const shiftToIndex = (array, oldIndex, newIndex) => {
     [array[oldIndex], array[newIndex]] = [array[newIndex], array[oldIndex]];
     return array;
@@ -54,6 +82,12 @@ const mutable = (obj) => {
     return JSON.parse(JSON.stringify(obj));
 }
 
+/*******************************************************************************
+* @description Checks to see if the passed parameter is of type 'Object' or
+* 'function'.
+*
+* @param {any} obj: Thing to check
+*/
 const isObject = (obj) => {
     const type = typeof obj;
     return type === 'function' || type === 'object' && !!obj;
@@ -88,6 +122,16 @@ const deepClone = (src) => {
     return clone;
 }
 
+/*******************************************************************************
+* @description Dispatches a CustomEvent.
+*
+* @param {object} context: 'this' context from which to dispatch this event from.
+* @param {string} name: Name of the CustomEvent.
+* @param {object} detail: Detail object to pass in the event.
+* @param {boolean} bubbles: Boolean flagging whether to bubble the event.
+* @param {boolean} composed: Boolean flagging whether the event will trigger
+* listeners outside of the shadow root.
+*/
 const dispatch = (context, name, detail, bubbles = false, composed = false) => {
     context.dispatchEvent(new CustomEvent(name, {
         detail: detail,
@@ -167,6 +211,32 @@ const handleError = (error) => {
     showToast('Error', message, 'error', 'sticky');
 };
 
+/*******************************************************************************
+* @description 'Debouncifies' any function.
+*
+* @param {object} anyFunction: Function to be debounced.
+* @param {integer} wait: Time to wait by in milliseconds.
+*/
+const debouncify = (anyFunction, wait) => {
+    let timeoutId;
+
+    return (...argsFromLastCall) => {
+        window.clearTimeout(timeoutId);
+
+        return new Promise(resolve => {
+            timeoutId = window.setTimeout(() => {
+                resolve(anyFunction(...argsFromLastCall));
+            }, wait);
+        });
+    };
+};
+
+/*******************************************************************************
+* @description Collects all query parameters in the URL and returns them as a
+* map.
+*
+* @return {object} params: Map of query parameters.
+*/
 const getQueryParameters = () => {
     let params = {};
     let search = location.search.substring(1);
@@ -181,6 +251,11 @@ const getQueryParameters = () => {
     return params;
 }
 
+/*******************************************************************************
+* @description Creates a 'unique' id made to look like a UUID.
+*
+* @return {string} params: String acting like a UUID.
+*/
 const generateId = () => {
     // NOTE: This format of 8 chars, followed by 3 groups of 4 chars, followed by 12 chars
     //       is known as a UUID and is defined in RFC4122 and is a standard for generating unique IDs.
@@ -210,5 +285,6 @@ export {
     generateId,
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
-    deepClone
+    deepClone,
+    debouncify
 }
