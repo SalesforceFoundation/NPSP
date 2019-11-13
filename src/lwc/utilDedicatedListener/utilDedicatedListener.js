@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import { registerListener, unregisterAllListeners } from 'c/pubsubNoPageRef';
+import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import { dispatch } from 'c/utilTemplateBuilder';
 
 const RECEIVE_EVENT = 'receiveevent';
@@ -12,7 +12,7 @@ export default class utilDedicatedListener extends LightningElement {
     }
 
     disconnectedCallback() {
-        unregisterAllListeners();
+        unregisterListener(this.eventName, this.handleEvent, this);
     }
 
     handleEvent(event) {

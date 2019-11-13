@@ -3,7 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import getAllFormTemplates from '@salesforce/apex/GE_TemplateBuilderCtrl.getAllFormTemplates';
 import deleteFormTemplates from '@salesforce/apex/GE_TemplateBuilderCtrl.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.cloneFormTemplate';
-import { findIndexByProperty, mutable } from 'c/utilTemplateBuilder';
+import { findIndexByProperty } from 'c/utilTemplateBuilder';
 
 const actions = [
     { label: 'Edit', name: 'edit' },

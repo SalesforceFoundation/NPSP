@@ -1,4 +1,4 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import { dispatch } from 'c/utilTemplateBuilder';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
@@ -8,13 +8,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     @api activeFormSectionId;
     @api isFirst;
     @api isLast;
-    @track isEditMode;
 
-    @track formSection;
-    @api
-    set formSection(formSection) {
-        this.formSection = formSection;
-    }
+    @api formSection;
 
     get isActive() {
         return this.activeFormSectionId === this.formSection.id ? true : false;

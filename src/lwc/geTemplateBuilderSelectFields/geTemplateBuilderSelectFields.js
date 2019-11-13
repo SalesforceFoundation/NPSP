@@ -9,12 +9,7 @@ import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment
 
 export default class geTemplateBuilderSelectFields extends LightningElement {
     @track isLoading = true;
-    @track selectedFieldMappingSet;
-
-    @api
-    set selectedFieldMappingSet(selectedFieldMappingSet) {
-        this.selectedFieldMappingSet = selectedFieldMappingSet;
-    }
+    @api selectedFieldMappingSet;
 
     @api formSections;
 

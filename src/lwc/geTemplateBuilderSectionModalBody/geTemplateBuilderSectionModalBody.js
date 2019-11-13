@@ -1,14 +1,9 @@
-import { LightningElement, track, api } from 'lwc';
-import { mutable, dispatch } from 'c/utilTemplateBuilder';
-import { fireEvent} from 'c/pubsubNoPageRef';
+import { LightningElement, api } from 'lwc';
+import { mutable } from 'c/utilTemplateBuilder';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 export default class GeTemplateBuilderSectionModalBody extends LightningElement {
-    @track modalData;
-
-    @api
-    set modalData(modalData) {
-        this.modalData = modalData;
-    }
+    @api modalData;
 
     get sectionBeingEdited() {
         return this.modalData ? this.modalData.section : {};

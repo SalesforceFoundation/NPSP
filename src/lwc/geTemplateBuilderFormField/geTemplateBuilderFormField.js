@@ -1,18 +1,12 @@
-import { LightningElement, api, track, wire } from 'lwc';
-import { mutable, inputTypeByDescribeType, showToast, dispatch } from 'c/utilTemplateBuilder';
-import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { LightningElement, api } from 'lwc';
+import { inputTypeByDescribeType, dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 
 export default class geTemplateBuilderFormField extends LightningElement {
     @api isFirst;
     @api isLast;
     @api objectApiName;
-    @track field;
-
-    @api
-    set field(field) {
-        this.field = field;
-    }
+    @api field;
 
     get name() {
         if (this.field.elementType === 'widget') {
@@ -115,16 +109,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
     get defaultValueForCheckbox() {
         return (this.field.defaultValue === 'true' || this.field.defaultValue === true) ? true : false;
-    }
-
-    // TODO: Needs to be completed for lookup fields
-    handleSearch(event) {
-        event.stopPropagation();
-        console.log('handle search');
-        const isEnterKey = event.keyCode === 13;
-        if (isEnterKey) {
-            showToast('Search Test', event.target.value, 'warning');
-        }
     }
 
     stopPropagation(event) {
