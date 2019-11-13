@@ -2,6 +2,7 @@ import { LightningElement, api } from 'lwc';
 import { dispatch } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
+    @api isLoading;
     @api templateName;
     @api templateDescription;
 
