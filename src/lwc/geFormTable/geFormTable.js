@@ -3,9 +3,12 @@ import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.g
 import GeFormService from 'c/geFormService';
 
 export default class GeFormTable extends LightningElement {
+    @api ready = false;
     @api batchId;
+    @track data = [];
     @track columns = [
         {label: 'Status', fieldName: 'Status__c', type: 'text'},
+        {label: 'Errors', fieldName: 'errors', type: 'text'},
         {
             label: 'Donor', fieldName: 'donorLink', type: 'url',
             typeAttributes: {label: {fieldName: 'donorName'}}
@@ -33,27 +36,27 @@ export default class GeFormTable extends LightningElement {
                     const dataImport = model.dataImportRows[0].record;
                     dataImport.donorName = model.dataImportRows[0].donorName;
                     dataImport.donorLink = model.dataImportRows[0].donorLink;
-                    dataImport.Id =
+                    dataImport.errors = model.dataImportRows[0].errors;
                     this.upsertRow(submission.submissionId, dataImport);
 
-                    model.dataImportRows.forEach(
-                        row => {
-                            if (row.errors) {
-                                row.errors.forEach(
-                                  error => {
-                                      //todo: investigate how to get these errors to show
-                                      // on table
-                                      this.rowErrors[submission.submissionId] = {
-                                          title: 'Error',
-                                          messages: ['There was a problem during dry run.'],
-                                          fieldNames: ['Status__c'],
-                                          size: 1
-                                      };
-                                  }
-                                );
-                            }
-                        }
-                    );
+                    // model.dataImportRows.forEach(
+                    //     row => {
+                    //         if (row.errors) {
+                    //             row.errors.forEach(
+                    //               error => {
+                    //                   //todo: investigate how to get these errors to show
+                    //                   // on table
+                    //                   this.rowErrors[submission.submissionId] = {
+                    //                       title: 'Error',
+                    //                       messages: ['There was a problem during dry run.'],
+                    //                       fieldNames: ['Status__c'],
+                    //                       size: 1
+                    //                   };
+                    //               }
+                    //             );
+                    //         }
+                    //     }
+                    // );
                 }
             )
             .catch(error => {
@@ -98,7 +101,7 @@ export default class GeFormTable extends LightningElement {
                     row.Status__c = dataImport.Status__c;
                     row.donorName = dataImport.donorName;
                     row.donorLink = dataImport.donorLink;
-                    row.Id = dataImport.Id;
+                    row.errors = dataImport.errors.join(', ');
                     break;
                 }
             }
