@@ -3121,6 +3121,7 @@
         <members>geTemplates</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>utilDedicatedListener</members>
         <members>utilIllustration</members>
         <members>utilPageHeader</members>
         <members>utilPlatformEventListener</members>
