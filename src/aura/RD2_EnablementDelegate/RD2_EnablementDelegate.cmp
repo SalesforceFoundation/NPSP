@@ -112,6 +112,7 @@
                                     <div class="slds-grid slds-grid_align-end slds-size_1-of-4">
                                         <lightning:input type="checkbox" aura:id="enable-confirm" name="enable-confirm"
                                             label="{!$Label.c.RD2_EnablementEnableConfirm}" variant="label-hidden"
+                                            title="{!$Label.c.RD2_EnablementEnableConfirm}"
                                             checked="{!v.state.isConfirmed}" onchange="{!c.handleEnableConfirm}"
                                             disabled="{!v.state.isConfirmed}" />
                                     </div>
@@ -139,8 +140,9 @@
                                     </div>
                                     <div class="slds-grid slds-grid_align-end slds-size_1-of-4 slds-p-right_x-small">
                                         <lightning:input type="toggle" label="{!$Label.c.RD2_EnablementEnableMessage}"
-                                            variant="label-hidden" aura:id="enable-toggle" name="enable-toggle"
-                                            checked="{!v.state.isEnabled}" onchange="{!c.handleEnable}"
+                                            variant="label-hidden" title="{!$Label.c.RD2_EnablementEnableMessage}"
+                                            aura:id="enable-toggle" name="enable-toggle" checked="{!v.state.isEnabled}"
+                                            onchange="{!c.handleEnable}"
                                             messageToggleActive="{!$Label.c.stgStatusEnabled}"
                                             messageToggleInactive="{!$Label.c.stgStatusDisabled}">
                                         </lightning:input>
@@ -203,7 +205,8 @@
                                     <div class="slds-grid slds-grid_align-end slds-size_1-of-4 slds-p-right_x-small">
                                         <div class="slds-col slds-no-flex slds-truncate">
                                             <a href="{!v.metaDeployURL}" aura:id="metadeploy-link"
-                                                onclick="{!c.handleMetaDeployLaunch}" target="_blank">
+                                                onclick="{!c.handleMetaDeployLaunch}" target="_blank"
+                                                title="{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}">
                                                 <lightning:formattedText
                                                     value="{!$Label.c.RD2_EnablementMetaDeployLaunchLinkLabel}" />
                                                 <lightning:icon iconName="utility:new_window"
@@ -230,6 +233,7 @@
                                     <div class="slds-grid slds-grid_align-end slds-size_1-of-4">
                                         <lightning:input type="checkbox"
                                             label="{!$Label.c.RD2_EnablementMetaDeployConfirm}" variant="label-hidden"
+                                            title="{!$Label.c.RD2_EnablementMetaDeployConfirm}"
                                             aura:id="metadeploy-confirm" name="metadeploy-confirm"
                                             checked="{!v.state.isMetaDeployConfirmed}"
                                             onchange="{!c.handleMetaDeployConfirm}"
@@ -282,6 +286,7 @@
                                         isTrue="{!and(!v.state.isMigrationCompleted, !v.state.isMigrationInProgress)}">
                                         <lightning:button class="slds-no-flex styleButton"
                                             label="{!$Label.c.RD2_EnablementMigrationButton}" variant="neutral"
+                                            title="{!$Label.c.RD2_EnablementMigrationButton}"
                                             onclick="{!c.handleRunMigration}"
                                             disabled="{! !v.state.isMetaDeployConfirmed }" />
                                     </aura:if>
