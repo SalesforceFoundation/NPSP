@@ -65,21 +65,37 @@ public with sharing class FORM_ServiceGiftEntry {
                                 WHERE Name = :templateName
                                 LIMIT 1];
 
-        return !templateList.isEmpty() ? deserializeFormTemplateFromObj(templateList[0]) : retrieveDefaultFormTemplate();           
+        return !templateList.isEmpty() ? deserializeFormTemplateFromObj(templateList[0]) : null;
     }
 
     /*******************************************************************************************************
     * @description Method for retrieving the current default template.
     */
-    public static FORM_Template retrieveDefaultFormTemplate() {
+    public static FORM_Template retrieveDefaultBGEFormTemplate() {
+        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
         FORM_Template template;
-        // TBD: determine how default templates will be tracked for SGE.
+
         Form_Template__c templateObj = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
                                 FROM Form_Template__c 
-                                LIMIT 1];
+                                WHERE Name =: giftEntrySettings.Default_Batch_Gift_Entry_Template__c];
 
         template = deserializeFormTemplateFromObj(templateObj);
 
+        return template;
+    }
+
+    /*******************************************************************************************************
+    * @description Method for retrieving the current default template.
+    */
+    public static FORM_Template retrieveDefaultSGEFormTemplate() {
+        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        FORM_Template template;
+        Form_Template__c templateObj = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
+                                FROM Form_Template__c 
+                                WHERE Name =: giftEntrySettings.Default_Single_Gift_Entry_Template__c];
+        
+        template = deserializeFormTemplateFromObj(templateObj);
+        
         return template;
     }
 

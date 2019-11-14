@@ -82,12 +82,21 @@ public with sharing class GE_TemplateBuilderCtrl {
     }
 
     /**
-     * @description Retrieve the default form render wrapper for gift entry. Placeholder, uses the first record found.
+     * @description Retrieves the default SGE render wrapper for gift entry.
      * @return      A render wrapper containing a template and information about the object/field mappings.
      */
     @AuraEnabled(cacheable=true)
-    public static FORM_RenderWrapper retrieveDefaultFormRenderWrapper() {
-        return GE_FormRendererService.getDefaultRenderWrapper();
+    public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper() {
+        return GE_FormRendererService.getDefaultSGERenderWrapper();
+    }
+
+    /**
+     * @description Retrieves the default BGE render wrapper for gift entry. 
+     * @return      A render wrapper containing a template and information about the object/field mappings.
+     */
+    @AuraEnabled(cacheable=true)
+    public static FORM_RenderWrapper retrieveDefaultBGERenderWrapper() {
+        return GE_FormRendererService.getDefaultBGERenderWrapper();
     }
 
     /*******************************************************************************************************

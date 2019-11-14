@@ -31,14 +31,29 @@ public with sharing class GE_FormRendererService {
     }
 
     /**
-     * This method creates a wrapper which contains the default template and a field mapping set.
+     * This method creates a wrapper which contains the default SGE template and a field mapping set.
      *
      * @return  A FORM_RenderWrapper containing the default template JSON.
      */
-    public static FORM_RenderWrapper getDefaultRenderWrapper() {
+    public static FORM_RenderWrapper getDefaultSGERenderWrapper() {
         FORM_Service formService = new FORM_Service();
 
-        FORM_Template defaultTemplate = formService.retrieveDefaultFormTemplate();
+        FORM_Template defaultTemplate = formService.retrieveDefaultSGEFormTemplate();
+
+        FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
+
+        return renderWrapper;
+    }
+
+    /**
+     * This method creates a wrapper which contains the default BGE template and a field mapping set.
+     *
+     * @return  A FORM_RenderWrapper containing the default template JSON.
+     */
+    public static FORM_RenderWrapper getDefaultBGERenderWrapper() {
+        FORM_Service formService = new FORM_Service();
+
+        FORM_Template defaultTemplate = formService.retrieveDefaultBGEFormTemplate();
 
         FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
 

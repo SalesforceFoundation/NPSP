@@ -1,4 +1,4 @@
-import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormRenderWrapper';
+import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 
 const inputTypeByDescribeType = {
@@ -20,9 +20,6 @@ const numberFormatterByDescribeType = {
   'PERCENT': 'percent-fixed'
 };
 
-// TODO: remove once we retrieve the template name from custom settings
-const sgeTemplate = 'Single Gift Entry Template';
-
 class GeFormService {
 
     fieldMappings;
@@ -34,7 +31,7 @@ class GeFormService {
      */
     getFormTemplate() {
         return new Promise((resolve, reject) => {
-            getRenderWrapper({templateName: sgeTemplate})
+            getRenderWrapper({})
                 .then((result) => {
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
