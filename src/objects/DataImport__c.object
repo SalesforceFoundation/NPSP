@@ -260,7 +260,7 @@
     </fields>
     <fields>
         <fullName>Additional_Object_JSON__c</fullName>
-        <description>This field allows for additional objects to be specified in a JSON format so that dynamic numbers of records can be created from a single Data Import record.</description>
+        <description>This field allows a dynamic number of records for a dynamic number of objects to be created from a single Data Import record. Additional object information is stored here in JSON format.</description>
         <externalId>false</externalId>
         <inlineHelpText>This field allows for additional objects to be specified in a JSON format so that dynamic numbers of records can be created from a single Data Import record.</inlineHelpText>
         <label>Additional Object JSON</label>
