@@ -46,9 +46,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private Boolean disableRollupsBeforeDml {
         get {
             if (disableRollupsBeforeDml == null) {
-                Boolean disableRollupsBeforeDml = false;
                 // TODO rdSettings.DisableRollupsInBatchJob__c;
-
                 if (disableRollupsBeforeDml == null) {
                     disableRollupsBeforeDml = false;
                 }
