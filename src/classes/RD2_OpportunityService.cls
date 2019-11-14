@@ -123,16 +123,19 @@ public with sharing class RD2_OpportunityService {
     */
     private Opportunity buildOpportunity(npe03__Recurring_Donation__c rd, Date closeDate) {
 
+        Integer installmentNumber = Integer.valueOf((rd.npe03__Total_Paid_Installments__c != null ?
+            rd.npe03__Total_Paid_Installments__c + 1 : 1));
+
         Opportunity opp = new Opportunity(
             AccountId = rd.npe03__Organization__c,
             Primary_Contact__c = rd.npe03__Contact__c,
             CloseDate = closeDate,
             StageName = oppStageName,
             Amount = rd.npe03__Amount__c,
-            Name = buildOpportunityName(rd, closeDate),
-            npe03__Recurring_Donation__c = rd.Id,
-            Recurring_Donation_Installment_Number__c = (rd.npe03__Total_Paid_Installments__c != null ?
-                rd.npe03__Total_Paid_Installments__c + 1 : 1)
+            Recurring_Donation_Installment_Number__c = installmentNumber,
+            Name = buildOpportunityName(rd, closeDate, installmentNumber),
+            npe03__Recurring_Donation__c = rd.Id
+
         );
 
         if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c ) {
@@ -145,13 +148,14 @@ public with sharing class RD2_OpportunityService {
     * @description build the opportunity name in specific format.
     * @param rd is the Recurring donation record
     * @param closeDate is the next donation date on the recurring donation.
+    * @param installmentNumber is the total paid installment on the recurring donation.
     * @return the opportunity name
     */
-    private String buildOpportunityName(npe03__Recurring_Donation__c rd, Date closeDate) {
-        return rd.npe03__Donor_Name__c + ' ' +
+    private String buildOpportunityName(npe03__Recurring_Donation__c rd, Date closeDate, Integer installmentNumber) {
+        return
+            rd.npe03__Donor_Name__c + ' ' +
             System.Label.npe03.RecurringDonationPrefix + ' (' +
-            (rd.npe03__Total_Paid_Installments__c != null ?
-            rd.npe03__Total_Paid_Installments__c + 1 : 1) + ') ' +
+            installmentNumber +  ') ' +
             (closeDate != null ? closeDate.format() : '');
     }
 
