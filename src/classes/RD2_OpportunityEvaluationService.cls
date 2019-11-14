@@ -39,6 +39,27 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
     /**
+    * @description Flag to allow customers to optionally disable Rollups before inserting/updating Opps
+    * to address issues with performance in larger organizatios
+    */
+    @TestVisible
+    private Boolean disableRollupsBeforeDml {
+        get {
+            if (disableRollupsBeforeDml == null) {
+                Boolean disableRollupsBeforeDml = false;
+                // TODO rdSettings.DisableRollupsInBatchJob__c;
+
+                if (disableRollupsBeforeDml == null) {
+                    disableRollupsBeforeDml = false;
+                }
+            }
+            return disableRollupsBeforeDml;
+        }
+        private set;
+    }
+
+
+    /**
      * @description Recurring Donation Id's to be processed
      */
     public Set<Id> rdIds {
@@ -83,19 +104,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         } set;
     }
 
-    private Boolean disableCrlpBeforeDml = false;
-
     /**
      * @description Pass the set of Recurring Donation Id's to be processed
      * @param rdIds
      */
     public RD2_OpportunityEvaluationService withRds(Set<Id> rdIds) {
         this.rdIds = rdIds;
-        return this;
-    }
-
-    public RD2_OpportunityEvaluationService withDisableRollupsOnDml() {
-        this.disableCrlpBeforeDml = true;
         return this;
     }
 
@@ -133,13 +147,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         }
 
-        if (disableCrlpBeforeDml) {
+        if (disableRollupsBeforeDml) {
             TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
             TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
             TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
         }
 
         // Create the next installment opportunity where needed
+        // TODO Refactor this to return a set of Opps to be inserted as opposed to having it do the DML in the service
         oppService.createInstallmentOpportunities(rdsWithCloseDates);
 
         return this;
