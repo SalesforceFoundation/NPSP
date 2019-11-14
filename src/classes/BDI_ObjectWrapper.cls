@@ -153,4 +153,44 @@ public with sharing class BDI_ObjectWrapper {
         return value;
     }
 
+    /*******************************************************************************************************
+    * @description Builds the appropriate error message with the status field label name to append to the 
+    * Failure Information field based on whether a dynamic source is being used.
+    * @param errorMessage The error message that needs to have the correct field label/objMapping prefixed 
+    */
+    public String getFailureInformationErrorMessage(String errorMessage) {
+
+        String errorMessageToAppend;
+        String errorPrefix;
+
+        if (dynamicSource == null && objMapping.Imported_Record_Status_Field_Name != null) {
+
+            String importedRecordStatusField = objMapping.Imported_Record_Status_Field_Name;
+
+            errorPrefix = UTIL_Describe.getFieldDescribe(
+                    DataImport__c.SObjectType.getDescribe().getName(),
+                    importedRecordStatusField).getLabel();
+
+
+        } else if (dynamicSource != null && objMapping.dynamicSourceField != null) {
+            
+            String dynFieldLabel = UTIL_Describe.getFieldDescribe(
+                    DataImport__c.SObjectType.getDescribe().getName(),
+                    objMapping.dynamicSourceField).getLabel();
+
+            errorPrefix = dynFieldLabel + ' - ' + dynamicSource.objectMappingDevName;
+        }
+
+        if (errorPrefix != null) {
+            errorMessageToAppend = String.join(
+                    new List<String>{
+                            errorPrefix, errorMessage
+                    }, ':\n');
+        } else {
+            errorMessageToAppend = errorMessage;
+        }
+
+        return errorMessageToAppend;
+    }
+
 }

@@ -595,10 +595,12 @@ public with sharing class BDI_AdditionalObjectService {
         // the import of another object. This is done to ensure that the user actually intended to attempt 
         // the creation of this object.
         for (BDI_FieldMapping fieldMapping : objWrap.fieldMappings) {
+
             if (objWrap.dynamicSource == null) {
 
                 if (!mappingServiceAdvanced.importedRecordFieldNames.contains(fieldMapping.Source_Field_API_Name.toLowerCase())
-                    && objWrap.getSourceFieldValue(fieldMapping.Source_Field_API_Name) != null) {        
+                    && objWrap.getSourceFieldValue(fieldMapping.Source_Field_API_Name) != null) {
+                    
                     anyNonImportedRecordFieldsPopulated = true;
                 }
             } else {
@@ -702,6 +704,7 @@ public with sharing class BDI_AdditionalObjectService {
     }
 
     private void logError(BDI_ObjectWrapper objectWrapper, String errorMessage) {
+
         objectWrapper.setDataImportStatus(BDI_DataImport_API.bdiFailed);
 
         objectWrapper.setImportedRecordStatus(errorMessage);
@@ -720,8 +723,7 @@ public with sharing class BDI_AdditionalObjectService {
             String errorMessage) {
 
         DataImport__c dataImport = objectWrapper.dataImport;
-        String errorMessageToAppend =
-                getFailureInformationErrorMessage(objectWrapper, errorMessage);
+        String errorMessageToAppend = objectWrapper.getFailureInformationErrorMessage(errorMessage);
 
         if (failureInformationByDataImportId == null) {
             failureInformationByDataImportId = new Map<Id, String>();
@@ -739,28 +741,5 @@ public with sharing class BDI_AdditionalObjectService {
                                     combinedErrorMessage, errorMessageToAppend
                             }, '\n\n'));
         }
-    }
-
-    private String getFailureInformationErrorMessage(
-            BDI_ObjectWrapper objectWrapper,
-            String errorMessage) {
-
-        String errorMessageToAppend;
-        if (objectWrapper.objMapping.Imported_Record_Status_Field_Name != null) {
-
-            String importedRecordStatusField = objectWrapper.objMapping.Imported_Record_Status_Field_Name;
-
-            String importedRecordStatusFieldLabel = UTIL_Describe.getFieldDescribe(
-                    DataImport__c.SObjectType.getDescribe().getName(),
-                    importedRecordStatusField).getLabel();
-
-            errorMessageToAppend = String.join(
-                    new List<String>{
-                            importedRecordStatusFieldLabel, errorMessage
-                    }, ':\n');
-        } else {
-            errorMessageToAppend = errorMessage;
-        }
-        return errorMessageToAppend;
     }
 }
