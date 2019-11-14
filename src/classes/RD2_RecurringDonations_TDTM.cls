@@ -193,7 +193,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             buildNewSchedules(rds);
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            setNextDonationDateBeforeUpdate(rds);
+            setScheduleDependentRecurringDonationFields(rds, oldRds);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             synchronizeSchedulesAfterRDUpdate(rds, oldRds);
@@ -265,7 +265,32 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     */
-    private void setNextDonationDateBeforeUpdate(List<npe03__Recurring_Donation__c> rds) {
+    private void setScheduleDependentRecurringDonationFields(List<npe03__Recurring_Donation__c> rds,List<npe03__Recurring_Donation__c> oldRds) {
+
+        /*
+            TODO: The current version of this method is incorrect.  It should review ALL active schedules as well
+                    as the new one(s) being created.  It is not at all clear which one will drive the next donation date.
+
+                    * DONE refactor to make method name a more general name
+                    * calculateNextDonationDate during update should remain unconditional
+                    * gather all active schedule records
+                        - needed for calculation of next donation date
+                        - next donation date could be associated with any active schedule
+                        - this code has NEVER been correct / we need all schedules
+                        - create separate method to gather schedules (will be used in both before and after update)
+                        - modify synchronizeSchedulesAfterRDUpdate() to use method to gather schedules
+                    * set start date to current date under the following conditions
+                        - start date has not changed
+                        - status is not closed
+                        - end date for new rd is not in the past
+                        - update qualifies for creation of new schedule
+                    * DONE write tests first
+                        - shouldOverrideStartDateWithCurrentDate
+                        - shouldUseInputStartDateForFutureStartDate
+                        - shouldUseInputStartDateForPastStartDate
+                        - shouldNotCreateNewRDScheduleOnUpdate
+
+         */
 
         for (npe03__Recurring_Donation__c rd : rds) {
             rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
