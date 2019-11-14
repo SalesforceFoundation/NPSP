@@ -48,4 +48,17 @@ export default class GeFormSection extends LightningElement {
         }
         return dataImportFieldAndValues;
     }
+
+    @api
+    get widgetValues() {
+        const widgets = this.template.querySelectorAll('c-ge-form-widget');
+        let widgetValues = {};
+        if(widgets !== null && typeof widgets !== 'undefined') {
+            widgets.forEach(widget => {
+                widgetValues = { ...widgetValues, ...(widget.fieldAndValue) };
+            });
+        }
+        return widgetValues;
+    }
+
 }

@@ -61,7 +61,14 @@ public with sharing class GE_FormRendererService {
     * @return The Id of the new Opportunity record, created from the Data Import
     */
     @AuraEnabled
-    public static Id saveAndProcessSingleGift(DataImport__c diRecord) {
+    public static Id saveAndProcessSingleGift(DataImport__c diRecord, String widgetData) {
+
+        // Check for widget data and convert it to the correct format for processing
+        String widgetJSON = convertWidgetDataToObjectJSON(widgetData);
+        System.debug('widgetJSON: '); 
+        System.debug(widgetJSON); 
+        diRecord.Additional_Object_JSON__c = widgetJSON;
+
         // Save the Data Import record to the Database
         diRecord = saveDataImport(diRecord);
 
@@ -73,6 +80,19 @@ public with sharing class GE_FormRendererService {
 
         return oppId;
 
+    }
+
+    private static String convertWidgetDataToObjectJSON(String widgetData) {
+        System.debug('widgetData: '); 
+        System.debug(widgetData); 
+
+        // See BDI_AdditionalObjectService_TEST.dynamicParentAdditionalObjectsShouldBeCreated for an example of this process
+        // String additionalObjJSONFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Additional_Object_JSON__c');
+        // Create BDI_DynamicSourceGroup
+        // Map of <String,BDI_DynamicSource>
+        // JSON.serialize(dynSourceGroupA);
+
+        return null;
     }
 
     /*******************************************************************************************************

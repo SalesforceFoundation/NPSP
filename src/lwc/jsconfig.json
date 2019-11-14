@@ -55,6 +55,21 @@
             ],
             "c/geTemplateBuilderFormSection": [
                 "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
+            ],
+            "c/geFormField": [
+                "geFormField/geFormField.js"
+            ],
+            "c/geFormWidget": [
+                "geFormWidget/geFormWidget.js"
+            ],
+            "c/geFormWidgetAllocation": [
+                "geFormWidgetAllocation/geFormWidgetAllocation.js"
+            ],
+            "c/geFormService": [
+                "geFormService/geFormService.js"
+            ],
+            "c/geFormSection": [
+                "geFormSection/geFormSection.js"
             ]
         },
         "experimentalDecorators": true

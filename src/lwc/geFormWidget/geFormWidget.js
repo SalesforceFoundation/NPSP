@@ -9,7 +9,7 @@ const DELAY = 300;
 
 export default class GeFormWidget extends LightningElement {
     // TODO: Could value be an array that matches the field mappings list passed to the widget?
-    @track value;
+    @track value = [];
     @api element;
 
     changeTimeout;
@@ -26,9 +26,10 @@ export default class GeFormWidget extends LightningElement {
 
     @api
     get fieldAndValue() {
-        // TODO: Will need to update this when we decide how to store Widget data
         let fieldAndValue = {};
-        fieldAndValue[this.element.value] = this.value;
+        // TODO: Should this contain a list of all records maintained by this widget?
+        this.value = [{'testKey':'testValue'}];
+        fieldAndValue[this.element.componentName] = this.value;
         return fieldAndValue;
     }
 
