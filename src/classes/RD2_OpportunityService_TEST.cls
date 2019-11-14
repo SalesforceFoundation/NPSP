@@ -311,8 +311,7 @@ private with sharing class RD2_OpportunityService_TEST {
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
             Opportunity_Name_Format__c = '{!Contact.Name} {!RecordType.Name} {!CloseDate}',
-            Attribution__c = Label.oppNamingBoth,
-            Opportunity_Record_Types__c = System.Label.npe03.RecurringDonationPrefix
+            Attribution__c = Label.oppNamingBoth
         );
         insert ons;
 
@@ -400,10 +399,11 @@ private with sharing class RD2_OpportunityService_TEST {
         String dateFormatString = 'yyyy.MM.dd';
         Datetime dt = Datetime.newInstance(closeDate.year(), closeDate.month(),closeDate.day());
         String formatDate = dt.format(dateFormatString);
+        String RecordTypeName = UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType);
 
         return
             rd.npe03__Donor_Name__c +  ' ' +
-            System.Label.npe03.RecurringDonationPrefix + ' ' +
+            RecordTypeName + ' ' +
             formatDate;
 
     }
