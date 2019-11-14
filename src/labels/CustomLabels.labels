@@ -1582,7 +1582,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The legacy RD Batch job cannot be executed when Enhanced RD is enabled</shortDescription>
-        <value>The older Recurring Donations batch job cannot be execute because Enhanced Recurring Donations is enabled in this org.</value>
+        <value>The legacy Recurring Donations batch job cannot be executed because Enhanced Recurring Donations is enabled in this org.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
