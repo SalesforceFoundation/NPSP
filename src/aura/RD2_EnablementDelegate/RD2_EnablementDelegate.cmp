@@ -84,7 +84,7 @@
 
                 <aura:set attribute="title">
                     <c:progressRing ringContent="1" valueNow="{!v.state.enableProgress}"
-                        status="{!if(v.state.isEnabled, 'complete', '')}" class="slds-m-right_small" />
+                        status="{!if(v.state.isEnabled, 'complete', 'active')}" class="slds-m-right_small" />
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementEnableTitle}" />
                 </aura:set>
 
@@ -173,7 +173,8 @@
 
                 <aura:set attribute="title">
                     <c:progressRing ringContent="2" valueNow="{!v.state.metaDeployProgress}"
-                        status="{!if(v.state.isMetaDeployConfirmed, 'complete', '')}" class="slds-m-right_small" />
+                        status="{!if(v.state.isMetaDeployConfirmed, 'complete', if(v.state.isEnabled, 'active', ''))}"
+                        class="slds-m-right_small" />
                     <lightning:formattedText value="{!$Label.c.RD2_EnablementMetaDeployTitle}" />
                 </aura:set>
 
