@@ -86,7 +86,8 @@ public class RD2_OpportunityEvaluationService {
 
     /**
      * @description Pass the set of Recurring Donation Id's to be processed
-     * @param rdIds
+     * @param rdIds Recurring Donation Ids
+     * @return RD2_OpportunityEvaluationService The service instance
      */
     public RD2_OpportunityEvaluationService withRds(Set<Id> rdIds) {
         this.rdIds = rdIds;
@@ -94,7 +95,27 @@ public class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Returns true if any of the key fields used to create or manage installment
+     * Opportunities has been changed.
+     * @param rd Changed Recurring Donation
+     * @param oldRd Old Recurring Donation
+     * @return Boolean
+     */
+    public Boolean hasKeyFieldChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        return 
+            rd.npe03__Contact__c != oldRd.npe03__Contact__c ||
+            rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
+            rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
+            rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+            rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
+            rd.StartDate__c != oldRd.StartDate__c ||
+            rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
+            rd.Status__c != oldRd.Status__c;
+    }
+
+    /**
      * @description Primary processor
+     * @return RD2_OpportunityEvaluationService The service instance
      */
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
 
@@ -121,31 +142,30 @@ public class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Is this Recurring Donation eligible to have an Installment Opportunity created
-     * for it?
-     * @param rd
-     * @return True if the NextDonationDate is not null and the Rd.Status is Active And there are
-     * Active Schedule records.
+     * @description Is this Recurring Donation eligible to have an Installment Opportunity created for it?
+     * @param rd Recurring Donation
+     * @return Boolean 
      */
     @TestVisible
     private Boolean isCandidate(npe03__Recurring_Donation__c rd) {
-        return (rd.npe03__Next_Payment_Date__c != null &&
-            rd.Status__c == RD2_Constants.STATUS_ACTIVE &&
-            !rd.RecurringDonationSchedules__r.isEmpty());
+        return
+            rd.npe03__Next_Payment_Date__c != null
+            && rd.Status__c == RD2_Constants.STATUS_ACTIVE 
+            && !rd.RecurringDonationSchedules__r.isEmpty();
     }
 
     /**
      * @description Is this a new Recurring Donation that was just inserted and has not yet had
      * an Installment Opportunity created?
-     * @param rd
-     * @return True if the RD.Status is Active and there is an Active schedule and there are no
-     * current installment opps attached.
+     * @param rd Recurring Donation
+     * @return Boolean
      */
     @TestVisible
     private Boolean isNewRecurringDonation(npe03__Recurring_Donation__c rd) {
-        return (rd.Status__c == RD2_Constants.STATUS_ACTIVE &&
-                rd.npe03__Donations__r.isEmpty() &&
-                !rd.RecurringDonationSchedules__r.isEmpty());
+        return 
+            rd.Status__c == RD2_Constants.STATUS_ACTIVE 
+            && rd.npe03__Donations__r.isEmpty()
+            && !rd.RecurringDonationSchedules__r.isEmpty();
     }
 
     /**
@@ -162,12 +182,13 @@ public class RD2_OpportunityEvaluationService {
 
     /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
-     * with the related Installment Opportunities and Active Schedule Records
-     * @return List<RecurringDonation>
+     * with the related installment Opportunities and active Schedules
+     * @param rdIds Recurring Donation Ids
+     * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
     @TestVisible
     private List<npe03__Recurring_Donation__c> getRecurringDonationRecords(Set<Id> rdIds) {
-        String PARENT_ACCOUNT_ID = 'npe03__Contact__r.AccountId';
+        final String parentAccountField = 'npe03__Contact__r.AccountId';
 
         Map<String, Schema.DescribeFieldResult> allRdFields =
             UTIL_Describe.getAllFieldsDescribe(npe03__Recurring_Donation__c.SObjectType.getDescribe().name);
@@ -180,28 +201,31 @@ public class RD2_OpportunityEvaluationService {
             }
         }
 
-        String oppSubquery = '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
-                        'npe03__Recurring_Donation__c, ' +
-                        'Amount, CloseDate, ' +
-                        'StageName, IsClosed, IsWon, ' +
-                        'CampaignId ' +
-                        'FROM npe03__Donations__r ' +
-                        'WHERE IsClosed = False OR CloseDate >= TODAY ' +
-                        'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
-        String scheduleSubQuery = '(SELECT Id, InstallmentAmount__c, ' +
-                        'Campaign__c, ' +
-                        'InstallmentFrequency__c, ' +
-                        'InstallmentPeriod__c, ' +
-                        'DayOfMonth__c, ' +
-                        'PaymentMethod__c, ' +
-                        'StartDate__c, ' +
-                        'EndDate__c ' +
-                        'FROM RecurringDonationSchedules__r ' +
-                        'WHERE Active__c = True)';
+        String oppSubquery = 
+            '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
+            'npe03__Recurring_Donation__c, ' +
+            'Amount, CloseDate, ' +
+            'StageName, IsClosed, IsWon, ' +
+            'CampaignId ' +
+            'FROM npe03__Donations__r ' +
+            'WHERE IsClosed = False OR CloseDate >= TODAY ' +
+            'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
-        queryFields.add(PARENT_ACCOUNT_ID);
+        String scheduleSubquery = 
+            '(SELECT Id, InstallmentAmount__c, ' +
+            'Campaign__c, ' +
+            'InstallmentFrequency__c, ' +
+            'InstallmentPeriod__c, ' +
+            'DayOfMonth__c, ' +
+            'PaymentMethod__c, ' +
+            'StartDate__c, ' +
+            'EndDate__c ' +
+            'FROM RecurringDonationSchedules__r ' +
+            'WHERE Active__c = True)';
+
+        queryFields.add(parentAccountField);
         queryFields.add(oppSubquery);
-        queryFields.add(scheduleSubQuery);
+        queryFields.add(scheduleSubquery);
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -211,4 +235,5 @@ public class RD2_OpportunityEvaluationService {
 
         return Database.query(soql);
     }
+
 }
