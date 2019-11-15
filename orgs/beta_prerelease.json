@@ -4,17 +4,17 @@
   "edition": "Developer",
   "hasSampleData": "true",
   "settings": {
-    "orgPreferenceSettings": {
-      "chatterSettings": {
-        "enableChatter": true
-      },
-      "apexSettings": {
-        "enableDisableParallelApexTesting": true
-      },
-      "notesReservedPref01": true,
-      "lightningExperienceSettings": {
-        "enableS1DesktopEnabled": true
-      }
+    "chatterSettings": {
+      "enableChatter": true
+    },
+    "apexSettings": {
+      "enableDisableParallelApexTesting": true
+    },
+    "enhancedNotesSettings": {
+      "enableEnhancedNotes": true
+    },
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
     }
   }
 }
