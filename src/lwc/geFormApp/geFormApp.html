@@ -1,0 +1,22 @@
+<template>
+    <lightning-input
+            label="Batch Id for Testing (to simulate loading form from a Batch record)"
+            onchange={handleBatchId}></lightning-input>
+
+    <lightning-input
+            label="Account Id For Testing (to simulate populating lookup field or loading from an Account record.)"
+            onchange={handleAccountId}></lightning-input>
+
+    <br/>
+
+    <!--    is-batch-mode manually set to true for simulated testing of batch mode-->
+    <c-ge-form-renderer
+            is-batch-mode={isBatchMode}
+            onsubmit={handleSubmit}
+            onsectionsretrieved={handleSectionsRetrieved}>
+    </c-ge-form-renderer>
+
+    <br/>
+
+    <c-ge-form-table></c-ge-form-table>
+</template>

@@ -1,0 +1,12 @@
+<template>
+
+    <div if:true={batchId}>
+        <lightning-datatable
+                key-field="uid"
+                data={data}
+                columns={columns}
+                show-row-number-column="true">
+        </lightning-datatable>
+    </div>
+
+</template>

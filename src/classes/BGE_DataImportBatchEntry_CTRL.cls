@@ -321,6 +321,23 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Saves the data import record, dry runs the record, and returns updated
+    * totals with the new row.
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @param dataImport: the NPSP_Data_Import__c record to update
+    * @return String serialized DataImportModel
+    */
+    @AuraEnabled
+    public static String saveAndDryRunRow(Id batchId, DataImport__c dataImport) {
+        try {
+            Database.insert(dataImport);
+            return runSingleDryRun(dataImport.Id, batchId);
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    /*******************************************************************************************************
     * @description gets updated amount total and row count for the batch
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return DataImportModel updated model with total amount and number of rows
