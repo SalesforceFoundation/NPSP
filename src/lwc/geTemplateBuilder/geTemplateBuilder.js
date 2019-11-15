@@ -2,9 +2,10 @@ import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import storeFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.storeFormTemplate';
 import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormTemplate';
-import getFieldMappingMethod from '@salesforce/apex/GE_TemplateBuilderCtrl.getFieldMappingMethod';
+import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { mutable, findIndexByProperty, shiftToIndex, dispatch, getQueryParameters, handleError } from 'c/utilTemplateBuilder';
+import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -61,13 +62,13 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     init = async () => {
         try {
-            const fieldMappingMethod = await getFieldMappingMethod();
+            const dataImportSettings = await getDataImportSettings();
 
-            if (fieldMappingMethod !== ADVANCED_MAPPING) {
+            if (dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] !== ADVANCED_MAPPING) {
                 this.isAccessible = false;
                 this.isLoading = false;
 
-            } else if (fieldMappingMethod === ADVANCED_MAPPING) {
+            } else if (dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING) {
                 await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
                 this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
