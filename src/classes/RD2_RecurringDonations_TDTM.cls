@@ -272,17 +272,16 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                     as the new one(s) being created.  It is not at all clear which one will drive the next donation date.
 
                     * DONE refactor to make method name a more general name
-                    * calculateNextDonationDate during update should remain unconditional
-                    * gather all active schedule records
+                    * DONE calculateNextDonationDate during update should remain unconditional
+                    * DONE gather all active schedule records
                         - needed for calculation of next donation date
                         - next donation date could be associated with any active schedule
                         - this code has NEVER been correct / we need all schedules
                         - create separate method to gather schedules (will be used in both before and after update)
                         - modify synchronizeSchedulesAfterRDUpdate() to use method to gather schedules
-                    * set start date to current date under the following conditions
+                    * DONE set start date to current date under the following conditions
                         - start date has not changed
                         - status is not closed
-                        - end date for new rd is not in the past
                         - update qualifies for creation of new schedule
                     * DONE write tests first
                         - shouldOverrideStartDateWithCurrentDate
@@ -292,9 +291,63 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
          */
 
-        for (npe03__Recurring_Donation__c rd : rds) {
-            rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
+        // We need ALL existing schedules to update next donation date, not just those qualifying for schedule updates
+        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = getExistingSchedules(rds);
+
+        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = getRecurringDonationsNeedingScheduleUpdates(rds, oldRds);
+
+        // Get updated schedules and the schedules to the appropriate collections
+        DmlWrapper revisedSchedules;
+        for (npe03__Recurring_Donation__c rd : filteredRecurringDonations.values()) {
+
+            revisedSchedules = scheduleService.getUpdatedSchedules(rd, oldSchedules.get(rd.Id));
+
+            for (SObject sobj : revisedSchedules.objectsToUpdate) {
+
+                if (sobj.getSObjectType() == RecurringDonationSchedule__c.SObjectType && sobj.get('Active__c') == true) {
+
+                    // TODO: add to map and unconditionally remove list and key from collection of all schedules.
+
+                }
+            }
+
+            for (SObject sobj : revisedSchedules.objectsToInsert) {
+
+                if (sobj.getSObjectType() == RecurringDonationSchedule__c.SObjectType && sobj.get('Active__c') == true) {
+
+                    // TODO: add to map
+
+                }
+            }
         }
+
+        // Merge the schedules from RDs NOT needing schedule updates with the updated schedules
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = new Map<Id, List<RecurringDonationSchedule__c>>();
+        for (SObject updatedRecord : revisedSchedules.objectsToUpdate) {
+
+
+        }
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(schedulesByRdId.get(rd.Id));
+        }
+    }
+
+    private Map<Id, List<RecurringDonationSchedule__c>> getExistingSchedules(List<npe03__Recurring_Donation__c> rds) {
+
+        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
+
+        for (RecurringDonationSchedule__c oldSchedule : [
+                SELECT RecurringDonation__c, EndDate__c FROM RecurringDonationSchedule__c
+                WHERE RecurringDonation__c IN :rds
+                AND Active__c = true]) {
+            if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
+                oldSchedules.put(oldSchedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
+            }
+            oldSchedules.get(oldSchedule.RecurringDonation__c).add(oldSchedule);
+        }
+
+        return oldSchedules;
     }
 
     /***
@@ -306,16 +359,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = getRecurringDonationsNeedingScheduleUpdates(rds, oldRds);
 
-        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
-        for (RecurringDonationSchedule__c oldSchedule : [
-                SELECT RecurringDonation__c, EndDate__c FROM RecurringDonationSchedule__c
-                WHERE RecurringDonation__c IN :filteredRecurringDonations.keySet()
-                AND Active__c = true]) {
-            if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
-                oldSchedules.put(oldSchedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
-            }
-            oldSchedules.get(oldSchedule.RecurringDonation__c).add(oldSchedule);
-        }
+        // We only need schedules for RDs that qualify for schedule updates in order to sync schedules
+        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = getExistingSchedules(filteredRecurringDonations.values());
 
         DmlWrapper revisedSchedules;
         for (npe03__Recurring_Donation__c rd : filteredRecurringDonations.values()) {
@@ -343,6 +388,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
 
             if (scheduleService.isScheduleUpdateNeeded(rd, oldRd)) {
+
+                if (rd.StartDate__c == oldRd.StartDate__c && rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+                    rd.StartDate__c = Date.today();
+                }
+
                 filteredRecurringDonations.put(rd.Id, rd);
             }
         }
