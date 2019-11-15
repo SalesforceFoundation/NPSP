@@ -145,7 +145,7 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description build the opportunity name in specific format.
     * @param rd is the Recurring donation record
-    * @param opportunity is the new opportunity on the recurring donation.
+    * @param opp is the new opportunity on the recurring donation.
     * @return the opportunity name
     */
     private String buildOpportunityName(npe03__Recurring_Donation__c rd, Opportunity opp) {
