@@ -37,6 +37,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     @track batchHeaderFields = [];
     @track formSections = [];
     @track activeFormSectionId;
+    currentNamespace;
 
     get inTemplateInfoTab() {
         return this.activeTab === this.TabEnums.INFO_TAB ? true : false;
@@ -48,6 +49,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     get inSelectFieldsTab() {
         return this.activeTab === this.TabEnums.SELECT_FIELDS_TAB ? true : false;
+    }
+
+    get listViewCustomTabApiName() {
+        return this.currentNamespace ? `${this.currentNamespace}__GE_Templates` : 'GE_Templates';
     }
 
     connectedCallback() {
@@ -64,6 +69,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             } else if (fieldMappingMethod === ADVANCED_MAPPING) {
                 await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
+                this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
                 // Check if there's a record id in the url
                 this.formTemplateRecordId = getQueryParameters().c__recordId;
@@ -484,7 +490,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
-                apiName: 'npsp__GE_Templates'
+                apiName: this.listViewCustomTabApiName
             }
         });
     }
@@ -496,7 +502,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
-                apiName: 'npsp__GE_Templates'
+                apiName: this.listViewCustomTabApiName
             }
         });
     }

@@ -1,9 +1,25 @@
 import getFieldMappingSet from '@salesforce/apex/BDI_MappingServiceAdvanced.getFieldMappingSet';
+import getNamespaceWrapper from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
+import { handleError } from 'c/utilTemplateBuilder';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
     fieldMappingsByObjMappingDevName = null;
     objectMappingByDevName = null;
+    namespaceWrapper = null;
+
+    init = async (fieldMappingSetName, refresh) => {
+        if (this.fieldMappingByDevName === null ||
+            this.fieldMappingsByObjMappingDevName === null ||
+            this.objectMappingByDevName === null ||
+            refresh === true) {
+            await this.handleGetFieldMappingSet(fieldMappingSetName);
+        }
+
+        if (this.namespaceWrapper === null || refresh === true) {
+            await this.handleGetNamespaceWrapper();
+        }
+    }
 
     /*******************************************************************************
     * @description Method makes an imperative apex call and populates various
@@ -15,7 +31,7 @@ class GeTemplateBuilderService {
     * @return {object} promise: Promise from the imperative apex call
     * getFieldMappingSet.
     */
-    init = (fieldMappingSetName) => {
+    handleGetFieldMappingSet = (fieldMappingSetName) => {
         return new Promise((resolve, reject) => {
             getFieldMappingSet({ fieldMappingSetName: fieldMappingSetName })
                 .then(data => {
@@ -27,13 +43,33 @@ class GeTemplateBuilderService {
                         this.populateFieldMappingsByObjMappingDevName(
                             this.fieldMappingByDevName,
                             this.objectMappingByDevName);
-
                     resolve(data);
                 })
                 .catch(error => {
-                    console.log(error);
+                    handleError(error);
                     reject(error);
                 });
+        });
+    }
+
+    /*******************************************************************************
+    * @description Method makes an imperative apex call and populates the
+    * namespaceWrapper property.
+    *
+    * @return {object} promise: Promise from the imperative apex call
+    * getNamespaceWrapper.
+    */
+    handleGetNamespaceWrapper = () => {
+        return new Promise((resolve, reject) => {
+            getNamespaceWrapper()
+                .then(data => {
+                    this.namespaceWrapper = data;
+                    resolve(data);
+                })
+                .catch(error => {
+                    handleError(error);
+                    reject(error);
+                })
         });
     }
 

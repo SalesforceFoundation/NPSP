@@ -3,6 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import getAllFormTemplates from '@salesforce/apex/GE_TemplateBuilderCtrl.getAllFormTemplates';
 import deleteFormTemplates from '@salesforce/apex/GE_TemplateBuilderCtrl.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.cloneFormTemplate';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { findIndexByProperty } from 'c/utilTemplateBuilder';
 
 const actions = [
@@ -24,12 +25,19 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     @track templates;
     @track columns = columns;
     @track isLoading = true;
+    currentNamespace;
+
+    get templateBuilderCustomTabApiName() {
+        return this.currentNamespace ? `${this.currentNamespace}__GE_Template_Builder` : 'GE_Template_Builder';
+    }
 
     connectedCallback() {
         this.init();
     }
 
     init = async () => {
+        await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
+        this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
         this.templates = await getAllFormTemplates();
         this.isLoading = false;
     }
@@ -73,7 +81,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
-                apiName: 'npsp__GE_Template_Builder'
+                apiName: this.templateBuilderCustomTabApiName
             },
             state: queryParameter
         });
