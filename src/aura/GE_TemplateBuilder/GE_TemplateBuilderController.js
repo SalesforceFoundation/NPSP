@@ -4,10 +4,6 @@
     * to open a modal using the aura overlay library. We're opting to use this library
     * to get out-of-the-box accessibility modal features like focus trapping,
     * input focus, and tabbing.
-    *
-    * In the then() method of the showCustomModal promise, we register
-    * an event listener for custom event 'geTemplateBuilderSectionModalBodyEvent' which gets
-    * dispatched from the modal's body lightning web component 'geTemplateBuilderSectionModalBody'.
     */
     handleShowModal: function (component, event, helper) {
         $A.createComponents([
