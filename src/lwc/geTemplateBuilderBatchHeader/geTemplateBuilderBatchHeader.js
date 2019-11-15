@@ -243,9 +243,8 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         });
     }
 
-    // TODO: Need to finish or scrap the incomplete function below
     /*******************************************************************************
-    * @description WIP. Function toggles the checkboxes for any existing/selected batch
+    * @description Method toggles the checkboxes for any existing/selected batch
     * header fields. Used when retrieving an existing form template.
     */
     toggleCheckboxForSelectedBatchFields() {
