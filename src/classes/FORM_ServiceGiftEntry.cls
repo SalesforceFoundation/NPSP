@@ -49,6 +49,8 @@ public with sharing class FORM_ServiceGiftEntry {
                                 LIMIT 1];
         
         template = deserializeFormTemplateFromObj(templateObj);
+
+        updateTemplateWithRequired(template);
     
         return template;
     }
@@ -121,4 +123,15 @@ public with sharing class FORM_ServiceGiftEntry {
         return template;
     }
 
+    private static FORM_Template prepareFormTemplate(Form_Template__c templateObj) {
+        FORM_Template template = deserializeFormTemplateFromObj(templateObj);
+        
+        updateTemplateWithRequired(template);
+
+        return template;
+    }
+
+    private static void updateTemplateWithRequired(FORM_Template template) {
+
+    }
 }
