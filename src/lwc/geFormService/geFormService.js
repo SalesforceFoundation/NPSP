@@ -1,5 +1,7 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormRenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
+import saveAndDryRunRow from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
+import {api} from "lwc";
 
 const inputTypeByDescribeType = {
     'BOOLEAN': 'checkbox',
@@ -98,13 +100,46 @@ class GeFormService {
         });
     }
 
+    //temporary storage of Account Id to use for testing
+    accountId;
+    @api
+    setAccountId(id) {
+        this.accountId = id;
+    }
+    //END temporary storage of Account Id to use for testing
+
     /**
      * Takes a list of sections, reads the fields and values, creates a di record, and creates an opportunity from the di record
      * @param sectionList
      * @returns opportunityId
      */
     handleSave(sectionList) {
-        
+        let diRecord = this.getDataImportRecord(sectionList);
+
+        //temporary assignment of Account Id and Donation Donor for testing
+        if (this.accountId) {
+            diRecord.Account1Imported__c = this.accountId;
+            diRecord.Donation_Donor__c = "Account1";
+        }
+        //END temporary assignment of Account Id and Donation Donor for testing
+
+        const opportunityID = this.createOpportunityFromDataImport(diRecord);
+        return opportunityID;
+    }
+
+    saveAndDryRun(batchId, dataImport) {
+        return new Promise((resolve, reject) => {
+            saveAndDryRunRow({batchId: batchId, dataImport: dataImport})
+                .then((result) => {
+                    resolve(JSON.parse(result));
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
+
+    getDataImportRecord(sectionList){
         // Gather all the data from the input
         let fieldData = {};
 
@@ -126,9 +161,7 @@ class GeFormService {
             }
         }
 
-        const opportunityID =this.createOpportunityFromDataImport(diRecord);
-        
-        return opportunityID;
+        return diRecord;
     }
 }
 
