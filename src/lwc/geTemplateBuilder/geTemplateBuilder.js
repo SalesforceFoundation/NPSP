@@ -157,11 +157,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * template name.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains template name string.
     * component chain: geTemplateBuilderTemplateInfo -> here
     */
     handleChangeTemplateInfoName(event) {
-        const name = event.detail;
-        this.formTemplate.name = name;
+        this.formTemplate.name = event.detail;
     }
 
     /*******************************************************************************
@@ -169,11 +169,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * template description.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains template description string.
     * component chain: geTemplateBuilderTemplateInfo -> here
     */
     handleChangeTemplateInfoDescription(event) {
-        const description = event.detail;
-        this.formTemplate.description = description;
+        this.formTemplate.description = event.detail;
     }
 
     /*******************************************************************************
@@ -181,11 +181,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * field to batch headers.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains batch header fields array.
     * component chain: geTemplateBuilderbatchHeader -> here
     */
     handleAddBatchHeaderField(event) {
-        let batchHeaderField = event.detail;
-        this.batchHeaderFields = [...this.batchHeaderFields, batchHeaderField];
+        this.batchHeaderFields = [...this.batchHeaderFields, event.detail];
     }
 
     /*******************************************************************************
@@ -193,17 +193,16 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * details on a batch header field.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains batch header field object.
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleUpdateBatchHeaderField(event) {
-        const detail = event.detail;
-
         let batchHeaderField = this.batchHeaderFields.find((bf) => {
-            return bf.apiName === detail.fieldName
+            return bf.apiName === event.detail.fieldName
         });
 
         if (batchHeaderField) {
-            batchHeaderField[detail.property] = detail.value;
+            batchHeaderField[event.detail.property] = event.detail.value;
         }
     }
 
@@ -212,12 +211,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * header field up.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains batch header field api name.
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldUp(event) {
-        const fieldName = event.detail;
-
-        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', fieldName);
+        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', event.detail);
         if (index > 0) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index - 1);
@@ -229,12 +227,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * header field down.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains batch header field api name.
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldDown(event) {
-        const fieldName = event.detail;
-
-        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', fieldName);
+        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', event.detail);
         if (index < this.batchHeaderFields.length - 1) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index + 1);
@@ -246,13 +243,13 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * header field.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains batch header field array index.
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     * OR
     * geTemplateBuilderbatchHeader -> here
     */
     handleRemoveBatchHeaderField(event) {
-        const batchHeaderFieldIndex = event.detail;
-        this.batchHeaderFields.splice(batchHeaderFieldIndex, 1);
+        this.batchHeaderFields.splice(event.detail, 1);
     }
 
     /*******************************************************************************
@@ -261,11 +258,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * Event is dispatched from geTemplateBuilderSelectFields.handleDeleteFormSection()
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains a list of form sections.
     * component chain: geTemplateBuilderSelectFields -> here
     */
     handleRefreshFormSections(event) {
-        const formSections = event.detail;
-        this.formSections = formSections;
+        this.formSections = event.detail;
     }
 
     /*******************************************************************************
@@ -273,11 +270,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * currently active section based on id.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains sectionId.
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     handleChangeActiveSection(event) {
-        const sectionId = event.detail;
-        this.activeFormSectionId = sectionId;
+        this.activeFormSectionId = event.detail;
     }
 
     /*******************************************************************************
@@ -285,11 +282,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * form section.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains a form section object.
     * component chain: geTemplateBuilderSelectFields -> here
     */
     handleAddFormSection(event) {
-        let formSection = event.detail;
-        this.formSections = [...this.formSections, formSection];
+        this.formSections = [...this.formSections, event.detail];
         this.activeFormSectionId = event.detail.id;
     }
 
@@ -298,12 +295,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * section up.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains sectionId.
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     handleFormSectionUp(event) {
-        const sectionId = event.detail;
-
-        let index = findIndexByProperty(this.formSections, 'id', sectionId);
+        let index = findIndexByProperty(this.formSections, 'id', event.detail);
         if (index > 0) {
             this.formSections = shiftToIndex(this.formSections, index, index - 1);
         }
@@ -314,12 +310,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * section down.
     *
     * @param {object} event: Event received from child component.
+    * Detail property contains form section id.
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     handleFormSectionDown(event) {
-        const sectionId = event.detail;
-
-        let index = findIndexByProperty(this.formSections, 'id', sectionId);
+        let index = findIndexByProperty(this.formSections, 'id', event.detail);
         if (index < this.formSections.length - 1) {
             this.formSections = shiftToIndex(this.formSections, index, index + 1);
         }
@@ -424,6 +419,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     handleDeleteFormElement(event) {
         const { sectionId, id } = event.detail;
+
         let section = this.formSections.find((fs) => { return fs.id === sectionId });
         let index = section.elements.findIndex((element) => {
             return element.id === id;
@@ -486,7 +482,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             formatVersion: FORMAT_VERSION
         };
 
-        const formTemplateRecordId = await storeFormTemplate(preppedFormTemplate);
+        await storeFormTemplate(preppedFormTemplate);
 
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',

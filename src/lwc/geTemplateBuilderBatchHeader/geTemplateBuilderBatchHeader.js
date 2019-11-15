@@ -8,7 +8,7 @@ const ADDITIONAL_REQUIRED_FIELDS = [
 ];
 Object.freeze(ADDITIONAL_REQUIRED_FIELDS);
 
-const BLACKLISTED_FIELDS = [
+const EXCLUDED_FIELDS = [
     'Batch_Process_Size__c',
     'Run_Opportunity_Rollups_while_Processing__c',
     'Donation_Matching_Behavior__c',
@@ -18,7 +18,7 @@ const BLACKLISTED_FIELDS = [
     'Post_Process_Implementing_Class__c',
     'OwnerId',
 ];
-Object.freeze(BLACKLISTED_FIELDS);
+Object.freeze(EXCLUDED_FIELDS);
 
 const SORTED_BY = 'required';
 const SORT_ORDER = 'desc';
@@ -61,7 +61,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             Object.getOwnPropertyNames(batchFields).forEach((key) => {
                 let field = batchFields[key];
 
-                if (BLACKLISTED_FIELDS.includes(field.apiName.replace(NAMESPACE, ''))) {
+                if (EXCLUDED_FIELDS.includes(field.apiName.replace(NAMESPACE, ''))) {
                     return;
                 }
 
