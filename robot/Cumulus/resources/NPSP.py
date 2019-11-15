@@ -846,9 +846,9 @@ class NPSP(SalesforceRobotLibraryBase):
         return main_loc   
 
     def wait_for_locator(self, path, *args, **kwargs):
-        """Waits for 60 sec for the specified locator"""
+        """Waits for 120 sec for the specified locator"""
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
-        self.selenium.wait_until_element_is_visible(main_loc, timeout=90)
+        self.selenium.wait_until_element_is_visible(main_loc, timeout=120)
         
         
     def wait_for_batch_to_complete(self, path, *args, **kwargs):
@@ -858,7 +858,7 @@ class NPSP(SalesforceRobotLibraryBase):
         locator = self.get_npsp_locator(path,*args, **kwargs)
         while True:
             i += 1
-            if i > 14:
+            if i > 20:
                 self.selenium.capture_page_screenshot()
                 raise AssertionError(
                     "Timed out waiting for batch with locator {} to load.".format(locator)
@@ -868,7 +868,7 @@ class NPSP(SalesforceRobotLibraryBase):
                     self.selenium.wait_until_element_is_visible(locator)
                     break
                 except Exception:
-                    time.sleep(15)    
+                    time.sleep(20)
 
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
