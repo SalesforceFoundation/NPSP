@@ -1,7 +1,7 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import storeFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.storeFormTemplate';
-import retrieveFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormTemplate';
+import storeFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.storeFormTemplate';
+import retrieveFormTemplateById from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveFormTemplateById';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { mutable, findIndexByProperty, shiftToIndex, dispatch, getQueryParameters, handleError } from 'c/utilTemplateBuilder';
@@ -76,7 +76,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.formTemplateRecordId = getQueryParameters().c__recordId;
 
                 if (this.formTemplateRecordId) {
-                    let formTemplate = await retrieveFormTemplate({ templateId: this.formTemplateRecordId });
+                    let formTemplate = await retrieveFormTemplateById({ templateId: this.formTemplateRecordId });
 
                     this.formTemplate = formTemplate;
                     this.batchHeaderFields = formTemplate.batchHeaderFields;
@@ -519,20 +519,5 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 actionName: 'view'
             }
         });
-    }
-
-    /* TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template */
-    getFormTemplate() {
-        const templateId = this.template.querySelector('lightning-input[data-name="templateId"]').value;
-        retrieveFormTemplate({ templateId: templateId })
-            .then(formTemplate => {
-                this.formTemplate = formTemplate;
-                this.batchHeaderFields = formTemplate.batchHeaderFields;
-                this.formLayout = formTemplate.layout;
-                this.formSections = this.formLayout.sections;
-            })
-            .catch(error => {
-                handleError(this, error);
-            })
     }
 }

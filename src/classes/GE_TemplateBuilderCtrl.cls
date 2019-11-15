@@ -37,56 +37,6 @@
 
 public with sharing class GE_TemplateBuilderCtrl {
 
-    /*******************************************************************************************************
-    * @description Instance of BDI_MappingServiceAdvanced
-    */
-    private static BDI_MappingServiceAdvanced bdiMSAdv;
-
-    /*******************************************************************************************************
-    * @description Template version
-    */
-    private static final String TEMPLATE_VERSION = '1.0';
-
-    /*******************************************************************************************************
-    * @description Method for retrieving all existing form templates.
-    *
-    * @return FORM_Template[]: List of all Form_Template__c records
-    */
-    @AuraEnabled
-    public static FORM_Template[] getAllFormTemplates() {
-        return FORM_ServiceGiftEntry.getAllFormTemplates();
-    }
-
-    /*******************************************************************************************************
-    * @description Method clones a Form_Template__c record by id.
-    *
-    * @param id: Form_Template__c record id
-    *
-    * @return clonedFormTemplate: A Form_Template__c record
-    */
-    @AuraEnabled
-    public static FORM_Template cloneFormTemplate(String id) {
-        return FORM_ServiceGiftEntry.cloneFormTemplate(id);
-    }
-
-    /*******************************************************************************************************
-    * @description Method deletes a Form_Template__c record by id.
-    *
-    * @param id: Form_Template__c record id
-    */
-    @AuraEnabled
-    public static void deleteFormTemplates(String[] ids) {
-        FORM_ServiceGiftEntry.deleteFormTemplates(ids);
-    }
-
-    /*******************************************************************************************************
-    * @description Just an intermediary method. Can just import this method directly in the lwc.
-    */
-    @AuraEnabled
-    public static FORM_Template retrieveFormTemplate(String templateId) {
-        return FORM_ServiceGiftEntry.retrieveFormTemplate(Id.valueOf(templateId));
-    }
-
     /**
      * @description Retrieves the render wrapper for gift entry by template name. If the template is not found, it returns the wrapper for the Default template
      * @return      A render wrapper containing a template and information about the object/field mappings.
@@ -104,31 +54,5 @@ public with sharing class GE_TemplateBuilderCtrl {
     @AuraEnabled(cacheable=true)
     public static FORM_RenderWrapper retrieveDefaultFormRenderWrapper() {
         return GE_FormRendererService.getDefaultRenderWrapper();
-    }
-
-    /*******************************************************************************************************
-    * @description Stores the template JSON.
-    *
-    * @param id - the Id of an existing form template record if this is an update of an existing template
-    * @param name - The name that should be applied to template storage record.
-    * @param description - the description of the template.
-    * @param formatVersion - the version id/number of the template format
-    * @param templateJSON - The JSON for the FormTemplate class that is being stored.
-    *
-    * @return newRecordId - Form_Template__c record id
-    */
-    @AuraEnabled
-    public static String storeFormTemplate(String id, String name, String description, String formatVersion, String templateJSON) {
-        String newRecordId =
-            FORM_ServiceGiftEntry.storeFormTemplate(id, name, description, formatVersion, templateJSON);
-        return newRecordId;
-    }
-
-    /*******************************************************************************************************
-    * @description Returns the currently active field mapping method
-    */
-    @AuraEnabled
-    public static string getFieldMappingMethod() {
-        return UTIL_CustomSettingsFacade.getDataImportSettings().Field_Mapping_Method__c;
     }
 }

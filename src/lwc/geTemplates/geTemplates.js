@@ -1,8 +1,8 @@
 import { LightningElement, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import getAllFormTemplates from '@salesforce/apex/GE_TemplateBuilderCtrl.getAllFormTemplates';
-import deleteFormTemplates from '@salesforce/apex/GE_TemplateBuilderCtrl.deleteFormTemplates';
-import cloneFormTemplate from '@salesforce/apex/GE_TemplateBuilderCtrl.cloneFormTemplate';
+import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
+import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFormTemplates';
+import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { findIndexByProperty } from 'c/utilTemplateBuilder';
 

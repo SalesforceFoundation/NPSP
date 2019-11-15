@@ -39,6 +39,7 @@ public with sharing class FORM_ServiceGiftEntry {
     /*******************************************************************************************************
     * @description Method for retrieving all existing form templates.
     */
+    @AuraEnabled
     public static FORM_Template[] getAllFormTemplates() {
         FORM_Template[] formTemplates = new FORM_Template[]{};
         Form_Template__c[] allTemplates = [SELECT Id,
@@ -82,7 +83,12 @@ public with sharing class FORM_ServiceGiftEntry {
             deserializedTemplate.name = clonedFormTemplate.Name;
             clonedFormTemplate.Template_JSON__c = JSON.serialize(deserializedTemplate);
 
-            String newId = storeFormTemplate(clonedFormTemplate);
+            String newId = storeFormTemplate(null,
+                clonedFormTemplate.Name,
+                clonedFormTemplate.Description__c,
+                clonedFormTemplate.Format_Version__c,
+                clonedFormTemplate.Template_JSON__c);
+
             FORM_Template deserializedClonedTemplate = deserializeFormTemplateFromObj(clonedFormTemplate);
             deserializedClonedTemplate.id = newId;
 
@@ -106,7 +112,8 @@ public with sharing class FORM_ServiceGiftEntry {
     * @description Method for retrieving an existing template that you already have the Id for.
     * @param templateId - the Id of an existing form template record for retrieval.
     */
-    public static FORM_Template retrieveFormTemplate(Id templateId) {
+    @AuraEnabled
+    public static FORM_Template retrieveFormTemplateById(Id templateId) {
         FORM_Template template;
 
         Form_Template__c templateObj = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
@@ -157,6 +164,7 @@ public with sharing class FORM_ServiceGiftEntry {
     * @param formatVersion - the version id/number of the template format
     * @param templateJSON - The JSON for the FormTemplate class that is being stored.
     */
+    @AuraEnabled
     public static String storeFormTemplate(String id, 
                                             String name, 
                                             String description,
@@ -173,19 +181,6 @@ public with sharing class FORM_ServiceGiftEntry {
             return templateObj.id;
         }
         return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Stores the template JSON.
-    * @param formTemplate - Form_Template__c record to store
-    */
-    public static String storeFormTemplate(Form_Template__c formTemplate) {
-        Form_Template__c templateObj = new Form_Template__c(Name = formTemplate.name,
-                                                        Description__c = formTemplate.Description__c,
-                                                        Template_JSON__c = formTemplate.Template_JSON__c,
-                                                        Format_Version__c = formTemplate.Format_Version__c);
-        insert templateObj;
-        return templateObj.id;
     }
 
     /*******************************************************************************************************
