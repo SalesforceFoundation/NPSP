@@ -3106,11 +3106,13 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>geFormApp</members>
         <members>geFormField</members>
         <members>geFormFieldPicklist</members>
         <members>geFormRenderer</members>
         <members>geFormSection</members>
         <members>geFormService</members>
+        <members>geFormTable</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
