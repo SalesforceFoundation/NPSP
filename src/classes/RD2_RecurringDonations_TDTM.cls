@@ -260,6 +260,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             newRd.Day_of_Month__c != oldRd.Day_of_Month__c ||
             newRd.Status__c != oldRd.Status__c);
     }
+
     /***
     * @description Handles setting next donation date for updated recurring donations
     * @param rds Trigger.new records
@@ -267,65 +268,29 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     private void setScheduleDependentRecurringDonationFields(List<npe03__Recurring_Donation__c> rds,List<npe03__Recurring_Donation__c> oldRds) {
 
-        /*
-            TODO: The current version of this method is incorrect.  It should review ALL active schedules as well
-                    as the new one(s) being created.  It is not at all clear which one will drive the next donation date.
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = getExistingSchedules(rds);
 
-                    * DONE refactor to make method name a more general name
-                    * DONE calculateNextDonationDate during update should remain unconditional
-                    * DONE gather all active schedule records
-                        - needed for calculation of next donation date
-                        - next donation date could be associated with any active schedule
-                        - this code has NEVER been correct / we need all schedules
-                        - create separate method to gather schedules (will be used in both before and after update)
-                        - modify synchronizeSchedulesAfterRDUpdate() to use method to gather schedules
-                    * DONE set start date to current date under the following conditions
-                        - start date has not changed
-                        - status is not closed
-                        - update qualifies for creation of new schedule
-                    * DONE write tests first
-                        - shouldOverrideStartDateWithCurrentDate
-                        - shouldUseInputStartDateForFutureStartDate
-                        - shouldUseInputStartDateForPastStartDate
-                        - shouldNotCreateNewRDScheduleOnUpdate
+        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = getRecurringDonationsNeedingScheduleUpdates(rds, oldRds, TDTM_Runnable.Action.BeforeUpdate);
 
-         */
-
-        // We need ALL existing schedules to update next donation date, not just those qualifying for schedule updates
-        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = getExistingSchedules(rds);
-
-        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = getRecurringDonationsNeedingScheduleUpdates(rds, oldRds);
-
-        // Get updated schedules and the schedules to the appropriate collections
         DmlWrapper revisedSchedules;
+        Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId = new  Map<Id, List<RecurringDonationSchedule__c>>();
+
         for (npe03__Recurring_Donation__c rd : filteredRecurringDonations.values()) {
 
-            revisedSchedules = scheduleService.getUpdatedSchedules(rd, oldSchedules.get(rd.Id));
+            revisedSchedules = scheduleService.getUpdatedSchedules(rd, schedulesByRdId.get(rd.Id));
 
             for (SObject sobj : revisedSchedules.objectsToUpdate) {
-
-                if (sobj.getSObjectType() == RecurringDonationSchedule__c.SObjectType && sobj.get('Active__c') == true) {
-
-                    // TODO: add to map and unconditionally remove list and key from collection of all schedules.
-
-                }
+                addUpdatedSchedules(sobj, newSchedulesByRdId);
             }
 
             for (SObject sobj : revisedSchedules.objectsToInsert) {
-
-                if (sobj.getSObjectType() == RecurringDonationSchedule__c.SObjectType && sobj.get('Active__c') == true) {
-
-                    // TODO: add to map
-
-                }
+                addUpdatedSchedules(sobj, newSchedulesByRdId);
             }
         }
 
         // Merge the schedules from RDs NOT needing schedule updates with the updated schedules
-        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = new Map<Id, List<RecurringDonationSchedule__c>>();
-        for (SObject updatedRecord : revisedSchedules.objectsToUpdate) {
-
-
+        for (Id rdId : newSchedulesByRdId.keySet()) {
+            schedulesByRdId.put(rdId, newSchedulesByRdId.get(rdId));
         }
 
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -333,12 +298,16 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
     }
 
+    /***
+    * @description Retrieves recurring donation schedules associated with recurring donation list
+    * @param rds List<npe03__Recurring_Donation__c>
+    */
     private Map<Id, List<RecurringDonationSchedule__c>> getExistingSchedules(List<npe03__Recurring_Donation__c> rds) {
 
         Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
 
         for (RecurringDonationSchedule__c oldSchedule : [
-                SELECT RecurringDonation__c, EndDate__c FROM RecurringDonationSchedule__c
+                SELECT RecurringDonation__c, StartDate__c, EndDate__c, InstallmentFrequency__c, InstallmentPeriod__c, DayOfMonth__c FROM RecurringDonationSchedule__c
                 WHERE RecurringDonation__c IN :rds
                 AND Active__c = true]) {
             if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
@@ -351,13 +320,37 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
+    * @description Adds recurring donation schedules to map by recurring donation Id
+    * @param sobj SObject
+    * @param newSchedulesByRdId Map<Id, List<RecurringDonationSchedule__c>>
+    */
+    private void addUpdatedSchedules(SObject sobj, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
+
+        if (sobj.getSObjectType() == RecurringDonationSchedule__c.SObjectType) {
+
+            Date endDate = (Date)sobj.get('EndDate__c');
+            Date startDate = (Date)sobj.get('StartDate__c');
+
+            if (endDate == null || (endDate >= Date.today() && startDate < endDate)) {
+
+                RecurringDonationSchedule__c schedule = (RecurringDonationSchedule__c)sobj;
+
+                if (!newSchedulesByRdId.containsKey(schedule.RecurringDonation__c)) {
+                    newSchedulesByRdId.put(schedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
+                }
+                newSchedulesByRdId.get(schedule.RecurringDonation__c).add(schedule);
+            }
+        }
+    }
+
+    /***
     * @description Handles schedule modification/creation after modification of recurring donation
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     */
     private void synchronizeSchedulesAfterRDUpdate(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
 
-        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = getRecurringDonationsNeedingScheduleUpdates(rds, oldRds);
+        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = getRecurringDonationsNeedingScheduleUpdates(rds, oldRds, TDTM_Runnable.Action.AfterUpdate);
 
         // We only need schedules for RDs that qualify for schedule updates in order to sync schedules
         Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = getExistingSchedules(filteredRecurringDonations.values());
@@ -377,7 +370,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     private Map<Id, npe03__Recurring_Donation__c> getRecurringDonationsNeedingScheduleUpdates(
         List<npe03__Recurring_Donation__c> rds,
-        List<npe03__Recurring_Donation__c> oldRds)
+        List<npe03__Recurring_Donation__c> oldRds,
+        TDTM_Runnable.Action triggerAction)
     {
 
         Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>();
@@ -389,8 +383,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
             if (scheduleService.isScheduleUpdateNeeded(rd, oldRd)) {
 
-                if (rd.StartDate__c == oldRd.StartDate__c && rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-                    rd.StartDate__c = Date.today();
+                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
+                    rd.StartDate__c == oldRd.StartDate__c &&
+                    rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+                        rd.StartDate__c = Date.today();
                 }
 
                 filteredRecurringDonations.put(rd.Id, rd);
