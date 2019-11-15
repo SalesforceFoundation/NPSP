@@ -8,6 +8,11 @@ const ADDITIONAL_REQUIRED_FIELDS = [
 ];
 Object.freeze(ADDITIONAL_REQUIRED_FIELDS);
 
+// We've opted to exclude the following batch fields related to
+// matching logic as we're removing the matching options page
+// from this flow.
+// We're considering putting matching options in a 'global
+// batch settings' area. Potentially in NPSP Settings.
 const EXCLUDED_FIELDS = [
     'Batch_Process_Size__c',
     'Run_Opportunity_Rollups_while_Processing__c',
