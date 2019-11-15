@@ -37,6 +37,7 @@ class DataImportPage(ListingPage):
         
     def open_data_import_record(self,di_name): 
         """Clicks on the specified data import record to open the record""" 
+        self.pageobjects.current_page_should_be("Listing","DataImport__c")
         self.npsp.click_link_with_text(di_name)
         self.pageobjects.current_page_should_be("Details","DataImport__c")
         
@@ -52,10 +53,20 @@ class DataImportDetailPage(DetailPage):
            
         
     def edit_record(self):
-        """"""
+        """From the actions dropdown select edit action and wait for modal to open"""
         locator=npsp_lex_locators['link-contains'].format("more actions")
         self.selenium.click_link(locator)
         dd=npsp_lex_locators['data_imports']['actions_dd']
         self.selenium.wait_until_page_contains_element(dd, error="Show more actions dropdown didn't open in 30 sec")
         self.selenium.click_link("Edit")
-        self.salesforce.wait_until_modal_is_open()      
+        self.salesforce.wait_until_modal_is_open()
+        
+    def select_value_from_dropdown(self,dropdown,value): 
+        """Select given value in the dropdown field"""
+        self.npsp.click_dropdown(dropdown)     
+        self.selenium.click_link(value)    
+
+    def save_record(self):
+        """clicks the save button on the modal and waits till modal is closed"""
+        self.salesforce.click_modal_button("Save")
+        self.salesforce.wait_until_modal_is_closed()

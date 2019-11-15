@@ -51,11 +51,10 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     ...                    DI completes and account matches to previous and Donation and Custom Object records are created 
     [tags]                 W-035913    feature:BDI
     
-    #Create DI record and process batch
+    #Create DI record and process batch and verify failure messages
     &{data_import} =                 Create Data Import Record
     Process Data Import Batch        Errors
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Log Many       &{data_import_upd}
     Open Data Import Record          &{data_import_upd}[Name]    
     Confirm Value                    Failure Information        Invalid Donation Donor    Y
     Confirm Value                    Donation Import Status     Invalid Donation Donor    Y
@@ -64,15 +63,12 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     Verify Expected Values                     nonns    Account            &{data_import_upd}[${ns}Account1Imported__c]
     ...    Name=&{data_import}[${ns}Account1_Name__c]
     
-    #Update DI record and reprocess batch
+    #Update DI record and reprocess batch and verify status messages
     Edit Record
-    Click Dropdown                   Donation Donor
-    Click Link                       Account1
-    Click Modal Button               Save
-    Wait Until Modal Is Closed
+    Select Value From Dropdown       Donation Donor    Account1                 
+    Save Record
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Log Many       &{data_import_upd}
     Open Data Import Record          &{data_import_upd}[Name]    
     Confirm Value                    Account1 Import Status     Matched    Y
     Confirm Value                    Donation Import Status     Created    Y
@@ -94,33 +90,31 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
 
     #Verify CustomObject2 record is created and linked to opportunity with correct details
     Verify Expected Values                     nonns       CustomObject2__c      &{data_import_upd}[${org_ns}CustomObject2Imported__c]
-    ...    ${org_ns}C2_currency_2__c=500.0
+    ...    ${org_ns}C2_currency__c=500.0
     ...    ${org_ns}Account__c=&{data_import_upd}[${ns}Account1Imported__c]
 
 Verify GAU Allocation Fails on Incorrect Data and Reprocess
     [Documentation]        
-    ...                    Create a DI record with Account, CustomObject2 and Donation details but select Donation Donor as Contact.
-    ...                    Verify that DI processing fails but account is created. Edit DI and change Donor to Account and reprocess DI record. 
-    ...                    DI completes and account matches to previous and Donation and Custom Object records are created 
+    ...                    Create a DI record with Contact, correct Donation details and GAU Allocation percent but without GAU ID.
+    ...                    Verify that DI processing fails but Contact, Donation and Payment are created. Update DI with GAU ID and reprocess DI record. 
+    ...                    DI completes and Contact matches to previous and Donation and GAU allocation records are created 
     [tags]                 W-035913    feature:BDI
     
-    #Create DI record and process batch
+    #Create DI record, process batch and confirm failure message
     &{data_import} =                 Create Data Import with GAU Details
     Process Data Import Batch        Errors
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Log Many       &{data_import_upd}
     Open Data Import Record          &{data_import_upd}[Name]    
     Confirm Value                    Failure Information                 GAU Allocation 1: Import Status:\n Error: record not created, missing required fields:GAU_Allocation_1_GAU__c    Y
-    Confirm Value                    GAU Allocation 1: Import Status     Error: record not created, missing required fields:GAU_Allocation_1_GAU__c                                    Y
     
     # Verify Contact Details
     Verify Expected Values                     nonns    Contact            &{data_import_upd}[${ns}Contact1Imported__c]
     ...    FirstName=${first_name}
     ...    LastName=${last_name}
     
-    &{contact} =     Salesforce Get  Contact  &{data_import_upd}[${ns}Contact1Imported__c]
-    
     #Verify Opportunity is created as closed won with given date and amount
+    &{contact} =     Salesforce Get  Contact  &{data_import_upd}[${ns}Contact1Imported__c]
     Verify Expected Values                     nonns    Opportunity        &{data_import_upd}[${ns}DonationImported__c]
     ...    Amount=100.0
     ...    CloseDate=${date}
@@ -135,14 +129,11 @@ Verify GAU Allocation Fails on Incorrect Data and Reprocess
     ...    npe01__Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
     ...    Payment_Status__c=Paid
     
-    #Update DI record and reprocess batch
-    Edit Record
-    Populate Lookup Field            GAU Allocation 1: GAU     &{gau}[Name]
-    Click Modal Button               Save
-    Wait Until Modal Is Closed
+    #Update DI record, reprocess batch and verify status messages and allocations
+    Salesforce Update                ${ns}DataImport__c    &{data_import}[Id]
+    ...                              ${ns}GAU_Allocation_1_GAU__c=&{gau}[Id]
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Log Many       &{data_import_upd}
     Open Data Import Record          &{data_import_upd}[Name]    
     Confirm Value                    Contact1 Import Status     Matched    Y
     Confirm Value                    Donation Import Status     Created    Y
