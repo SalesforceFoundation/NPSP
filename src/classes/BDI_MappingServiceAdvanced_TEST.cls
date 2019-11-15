@@ -111,5 +111,25 @@ private class BDI_MappingServiceAdvanced_TEST {
         System.assert(bdiMSAdv.fieldMappingSet.objectMappingByDevName.size() > 0);
         System.assert(bdiMSAdv.fieldMappingSet.fieldMappingByDevName.size() > 0);
     }
-    
+
+    /*******************************************************************************************************
+    * @description Tests that the BDI_FieldMappingSet is properly constructed when getting an instance 
+    * of BDI_FieldMappingSet through the AuraEnabled method getFieldMappingSet().
+    */
+    @isTest static void shouldReturnPopulatedBDIFieldMappingSetIncludingFieldMappingsByObjMappingDevName() {
+        //Set the custom setting for Data import to use Data Import Field Mappings (eg Custom Metadata Type Mapping)
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        //Retrieve a mapping service instance
+        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME);
+        BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME);
+
+        System.assert(fms != null);
+        System.assert(fms.objectMappingByDevName.size() > 0);
+        System.assert(fms.fieldMappingByDevName.size() > 0);
+        System.assert(fms.fieldMappingsByObjMappingDevName.size() > 0);
+    }
 }
