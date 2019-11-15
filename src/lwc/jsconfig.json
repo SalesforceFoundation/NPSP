@@ -70,6 +70,9 @@
             ],
             "c/geFormSection": [
                 "geFormSection/geFormSection.js"
+            ],
+            "c/geFormRenderer": [
+                "geFormRenderer/geFormRenderer.js"
             ]
         },
         "experimentalDecorators": true

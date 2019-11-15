@@ -26,21 +26,30 @@ export default class GeFormWidget extends LightningElement {
 
     @api
     get fieldAndValue() {
-        let fieldAndValue = {};
         // TODO: Should this contain a list of all records maintained by this widget?
-        this.value = [{'testKey':'testValue'}];
-        fieldAndValue[this.element.componentName] = this.value;
+        let fieldAndValue = {};
+        const thisWidget = this.widgetComponent;
+        // Need to make sure all widget components support returnValue()
+        if(this.isValid && typeof thisWidget.returnValue === 'function'){
+            this.value = thisWidget.returnValue();
+            fieldAndValue[this.element.componentName] = this.value;
+        }
         return fieldAndValue;
     }
 
-    widgetIsValid() {
-        const thisWidget = this.template.querySelector('[data-id="widgetComponent"]');
-        let isValid = true;
+    get isValid() {
+        const thisWidget = this.widgetComponent;
+        let isValid = false;
         if(thisWidget !== null && typeof thisWidget !== 'undefined'
-            && typeof thisWidget.isValid == 'function') {
+            && typeof thisWidget.isValid === 'function'
+            && typeof thisWidget.returnValue === 'function') {
                 isValid = thisWidget.isValid();
         }
         return isValid;
+    }
+
+    get widgetComponent(){
+        return this.template.querySelector('[data-id="widgetComponent"]');
     }
 
     get isPaymentScheduler() {
@@ -56,7 +65,7 @@ export default class GeFormWidget extends LightningElement {
     }
 
     checkValid() {
-        console.log('Is Widget valid?: ' + this.widgetIsValid()); 
+        console.log('Is Widget valid?: ' + this.isValid); 
     }
 
 }

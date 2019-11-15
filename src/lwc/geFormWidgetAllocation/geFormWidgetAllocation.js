@@ -1,6 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
-import GeFormWidget from 'c/geFormWidget';
-import GeFormField from 'c/geFormField';
+import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 
 const DELAY = 300;
 
@@ -8,7 +7,15 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track value;
     @api element;
 
+    singleRecord;
     changeTimeout;
+
+    /***
+    * @description Initializes the component
+    */
+    connectedCallback() {
+        this.singleRecord = { apiName: ALLOCATION_OBJECT.objectApiName };
+    }
 
     // TODO: Move this to a service component
     handleValueChange(event) {
@@ -21,6 +28,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }, DELAY);
     }
 
+    /**
+     * Expected to return true if widget fields are valid, false otherwise
+     * @return Boolean
+     */
     @api
     isValid() {
         // TODO: Check that input value is valid for this field type
@@ -33,6 +44,18 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 && fieldIsValid;
         }
         return fieldIsValid;
+    }
+
+    /**
+     * Expected to return an array of sobject records
+     * @return [record1, record2, ...]
+     */
+    @api
+    returnValue() {
+        const testField = 'Name';
+        let returnVal = this.singleRecord;
+        returnVal[testField] = 'Test Name';
+        return [returnVal];
     }
 
 }

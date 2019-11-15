@@ -130,6 +130,8 @@ class GeFormService {
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
             }
         }
+        
+        console.log(widgetValues); 
         const opportunityID =this.createOpportunityFromDataImport(diRecord, widgetValues);
         
         return opportunityID;
