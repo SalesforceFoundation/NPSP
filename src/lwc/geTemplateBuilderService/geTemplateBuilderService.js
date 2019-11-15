@@ -37,12 +37,12 @@ class GeTemplateBuilderService {
                 .then(data => {
                     this.fieldMappingByDevName = data.fieldMappingByDevName;
                     this.objectMappingByDevName = data.objectMappingByDevName;
+                    this.fieldMappingsByObjMappingDevName = data.fieldMappingsByObjMappingDevName;
 
-                    this.addWidgetsPlaceholder(this.fieldMappingByDevName, this.objectMappingByDevName);
-                    this.fieldMappingsByObjMappingDevName =
-                        this.populateFieldMappingsByObjMappingDevName(
-                            this.fieldMappingByDevName,
-                            this.objectMappingByDevName);
+                    this.addWidgetsPlaceholder(this.fieldMappingByDevName,
+                        this.objectMappingByDevName,
+                        this.fieldMappingsByObjMappingDevName);
+
                     resolve(data);
                 })
                 .catch(error => {
@@ -80,8 +80,11 @@ class GeTemplateBuilderService {
     * @param {object} fieldMappingByDevName: Map of field mappings.
     * @param {object} objectMappingByDevName: Map of object mappings.
     */
-    addWidgetsPlaceholder = (fieldMappingByDevName, objectMappingByDevName) => {
-        fieldMappingByDevName['geCreditCardWidget'] = {
+    addWidgetsPlaceholder = (fieldMappingByDevName,
+        objectMappingByDevName,
+        fieldMappingsByObjMappingDevName) => {
+
+        fieldMappingByDevName.geCreditCardWidget = {
             DeveloperName: 'geCreditCardWidget',
             MasterLabel: 'Credit Card',
             Target_Object_Mapping_Dev_Name: 'Widgets',
@@ -90,37 +93,14 @@ class GeTemplateBuilderService {
             Element_Type: 'widget',
         }
 
-        objectMappingByDevName['Widgets'] = {
+        objectMappingByDevName.Widgets = {
             DeveloperName: 'Widgets',
             MasterLabel: 'Widgets'
         }
-    }
 
-    /*******************************************************************************
-    * @description Method takes in a map of field mappings and object mappings and
-    * returns a map of field mappings by object mapping developer names.
-    *
-    * @param {object} fieldMappingByDevName: Map of field mappings.
-    * @param {object} objectMappingByDevName: Map of object mappings.
-    *
-    * @return {object} fieldMappingsByObjMappingDevName: Map of field mappings by
-    * object mapping developer names.
-    */
-    populateFieldMappingsByObjMappingDevName = (fieldMappingByDevName, objectMappingByDevName) => {
-        let fieldMappingsByObjMappingDevName = {};
-        let fieldMappings = Object.values(fieldMappingByDevName);
-
-        for (let objectName in objectMappingByDevName) {
-            if (objectMappingByDevName.hasOwnProperty(objectName)) {
-                let fieldMappingChildren = fieldMappings.filter(mapping => {
-                    return mapping.Target_Object_Mapping_Dev_Name === objectName
-                });
-
-                fieldMappingsByObjMappingDevName[objectName] = fieldMappingChildren;
-            }
-        }
-
-        return fieldMappingsByObjMappingDevName;
+        fieldMappingsByObjMappingDevName.Widgets = [
+            fieldMappingByDevName.geCreditCardWidget
+        ]
     }
 }
 

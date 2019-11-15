@@ -251,7 +251,10 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
             }
         }
 
-        fieldMappingSet = new BDI_FieldMappingSet(diFieldMappingSet,objectMappingByDevName,fieldMappingByDevName);
+        fieldMappingSet = new BDI_FieldMappingSet(diFieldMappingSet,
+            objectMappingByDevName,
+            fieldMappingByDevName,
+            fieldMappingsByObjMappingDevName);
     }
 
     /*******************************************************************************************************
