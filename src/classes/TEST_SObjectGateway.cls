@@ -154,7 +154,7 @@ public class TEST_SObjectGateway {
         /***
         * @description Retrieves Opportunities for related Recurring Donations
         * @param rds Recurring donations
-        * @return List<RecurringDonationSchedule__c>
+        * @return List<Opportunity>
         */
         public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
             return [

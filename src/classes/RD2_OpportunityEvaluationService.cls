@@ -40,10 +40,10 @@ public class RD2_OpportunityEvaluationService {
     * @description Enum to specify behavior of how to handle open opportunities when related RD is closed
     */ 
     public enum CloseActions { 
-		Delete_Open_Opportunities, 
-		Mark_Opportunities_Closed_Lost, 
-		No_Action 
-	}
+        Delete_Open_Opportunities, 
+        Mark_Opportunities_Closed_Lost, 
+        No_Action 
+    }
 
     private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
