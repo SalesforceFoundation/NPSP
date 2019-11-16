@@ -264,17 +264,18 @@ private class RD2_OpportunityEvaluationService_TEST {
         insert rd;
         
         TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
-            .withName()
             .withContact(rd.npe03__Contact__c)
             .withRecurringDonation(rd.Id)
             .withAmount(rd.npe03__Amount__c);
 
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
+                .withName()
                 .withCloseDate(rd.npe03__Next_Payment_Date__c.addMonths(-1))
                 .withClosedWonStage()
                 .build(),
             oppBuilder
+                .withName()
                 .withCloseDate(rd.npe03__Next_Payment_Date__c)
                 .withOpenStage()
                 .build()
