@@ -73,8 +73,10 @@ public class TEST_SObjectGateway {
             return [
                 SELECT
                     Name,
+                    npe03__Recurring_Donation_Campaign__c,
                     npe03__Organization__c,
                     npe03__Contact__c,
+                    npe03__Donor_Name__c,
                     npe03__Amount__c,
                     npe03__Paid_Amount__c,
                     npe03__Next_Payment_Date__c, 
@@ -84,6 +86,8 @@ public class TEST_SObjectGateway {
                     Day_of_Month__c,
                     InstallmentFrequency__c,
                     npe03__Installment_Period__c,
+                    npe03__Total_Paid_Installments__c,
+                    PaymentMethod__c,
                     RecurringType__c,
                     Status__c
                 FROM npe03__Recurring_Donation__c 
@@ -91,6 +95,7 @@ public class TEST_SObjectGateway {
             ];
         }
     }
+
 
     /***
     * @description Retrieves Recurring Donation Schedule record(s)
