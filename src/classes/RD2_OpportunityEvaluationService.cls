@@ -35,6 +35,15 @@
 *
 */
 public class RD2_OpportunityEvaluationService {
+  
+    /***
+    * @description Enum to specify behavior of how to handle open opportunities when related RD is closed
+    */ 
+    public enum CloseActions { 
+		Delete_Open_Opportunities, 
+		Mark_Opportunities_Closed_Lost, 
+		No_Action 
+	}
 
     private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
@@ -119,51 +128,39 @@ public class RD2_OpportunityEvaluationService {
      */
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
 
-        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
+        Map<npe03__Recurring_Donation__c, List<Date>> newRDsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
+        List<Opportunity> existingOpenOpps = new List<Opportunity>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (!isCandidate(rd)) {
-                continue;
-            }
 
             if (isNewRecurringDonation(rd)) {
-                rdsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
+                newRDsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
                 continue;
             }
-            // TODO Update the Future Installment Opportunity if needed
+            
+            if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+                existingOpenOpps.addAll(extractOpenInstallmentOpps(rd));
+            }
         }
 
-        // TODO Recalculate NextDonationDate
-        // Date nextDonationDate = scheduleService.calculateNextDonationDate(rd);
+        oppService.createInstallmentOpportunities(newRDsWithCloseDates);
 
-        oppService.createInstallmentOpportunities(rdsWithCloseDates);
+        handleClosedRecurringDonationOpps(existingOpenOpps);
 
         return this;
     }
 
     /**
-     * @description Is this Recurring Donation eligible to have an Installment Opportunity created for it?
+     * @description Is this a new Recurring Donation that was just inserted and 
+     * has not yet had an Installment Opportunity created?
      * @param rd Recurring Donation
      * @return Boolean 
      */
     @TestVisible
-    private Boolean isCandidate(npe03__Recurring_Donation__c rd) {
+    private Boolean isNewRecurringDonation(npe03__Recurring_Donation__c rd) {
         return
             rd.npe03__Next_Payment_Date__c != null
             && rd.Status__c == RD2_Constants.STATUS_ACTIVE 
-            && !rd.RecurringDonationSchedules__r.isEmpty();
-    }
-
-    /**
-     * @description Is this a new Recurring Donation that was just inserted and has not yet had
-     * an Installment Opportunity created?
-     * @param rd Recurring Donation
-     * @return Boolean
-     */
-    @TestVisible
-    private Boolean isNewRecurringDonation(npe03__Recurring_Donation__c rd) {
-        return 
-            rd.Status__c == RD2_Constants.STATUS_ACTIVE 
             && rd.npe03__Donations__r.isEmpty()
             && !rd.RecurringDonationSchedules__r.isEmpty();
     }
@@ -178,6 +175,45 @@ public class RD2_OpportunityEvaluationService {
     @TestVisible
     private List<Date> getInstallmentOppCloseDates(npe03__Recurring_Donation__c rd) {
         return new List<Date>{ rd.npe03__Next_Payment_Date__c != null ? rd.npe03__Next_Payment_Date__c : Date.Today() };
+    }
+
+    /**
+     * @description Extracts open installment Opportunities for the specified Recurring Donation
+     * @param rd Recurring donation containing list of all related Opportunities
+     * @return List<Opportunity> Open Opportunities
+     */
+    private List<Opportunity> extractOpenInstallmentOpps(npe03__Recurring_Donation__c rd) {
+        List<Opportunity> opps = new List<Opportunity>();
+
+        for (Opportunity opp : rd.npe03__Donations__r) {
+            if (opp.IsClosed == false) {
+                opps.add(opp);
+            }
+        }
+
+        return opps;
+    }
+
+    /**
+     * @description Updates, deletes or keep unchanged closed RD open Installment Opportunities based on the settings
+     * @param opps Opportunities
+     * @return void
+     */
+    private void handleClosedRecurringDonationOpps(List<Opportunity> opps) {
+        if (opps.isEmpty()) {
+            return;
+        }
+
+        if (rdSettings.npe03__Open_Opportunity_Behavior__c == CloseActions.Delete_Open_Opportunities.name()) {
+            delete opps;
+
+        } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == CloseActions.Mark_Opportunities_Closed_Lost.name()) {
+            for (Opportunity opp : opps) {
+                opp.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
+            }  
+
+            update opps;
+        }
     }
 
     /**
@@ -208,7 +244,8 @@ public class RD2_OpportunityEvaluationService {
             'StageName, IsClosed, IsWon, ' +
             'CampaignId ' +
             'FROM npe03__Donations__r ' +
-            'WHERE IsClosed = False OR CloseDate >= TODAY ' +
+            'WHERE IsClosed = false ' +
+            'OR CloseDate >= TODAY ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
         String scheduleSubquery = 
@@ -221,7 +258,7 @@ public class RD2_OpportunityEvaluationService {
             'StartDate__c, ' +
             'EndDate__c ' +
             'FROM RecurringDonationSchedules__r ' +
-            'WHERE Active__c = True)';
+            'WHERE Active__c = true)';
 
         queryFields.add(parentAccountField);
         queryFields.add(oppSubquery);

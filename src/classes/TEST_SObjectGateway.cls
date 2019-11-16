@@ -131,4 +131,36 @@ public class TEST_SObjectGateway {
             ];
         }
     }
+
+    /***
+    * @description Retrieves Opportunities
+    */
+    public class OpportunityGateway {
+
+        /***
+        * @description Retrieves Opportunities for the related Recurring Donation
+        * @param rd Recurring donation
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecords(npe03__Recurring_Donation__c rd) {
+            return getRecords(new List<npe03__Recurring_Donation__c>{ rd });
+        }
+
+        /***
+        * @description Retrieves Opportunities for related Recurring Donations
+        * @param rds Recurring donations
+        * @return List<RecurringDonationSchedule__c>
+        */
+        public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
+            return [
+                SELECT 
+                    Name, Amount, 
+                    AccountId, Primary_Contact__c, 
+                    StageName, CloseDate,
+                    isClosed, isWon
+                FROM Opportunity 
+                WHERE npe03__Recurring_Donation__c IN :rds
+            ];
+        }        
+    }
 }

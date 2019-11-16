@@ -65,7 +65,7 @@ public with sharing class RD2_OpportunityService {
         }
 
         Set<Id> createdOppIds = createOpportunities(rdsWithCloseDates);   
-        
+
         updatePaymentRecords(createdOppIds, rdsWithCloseDates.keySet());
     }
 
@@ -150,7 +150,7 @@ public with sharing class RD2_OpportunityService {
             Recurring_Donation_Installment_Number__c = installmentNumber
         );
 
-        if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c ) {
+        if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
             opp.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
         }
 
