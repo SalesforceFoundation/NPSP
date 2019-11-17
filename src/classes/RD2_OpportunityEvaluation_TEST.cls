@@ -39,32 +39,11 @@ private class RD2_OpportunityEvaluation_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
     /**
-     * @description Verify that when RD2 is enabled in an org, attempting to execute the older RD1 batch
+     * @description Verify that when Enhanced RD is NOT enabled in an org, attempting to execute the new RD2 batch
      * job throws an exception
      */
     @IsTest
-    private static void shouldThrowExceptionForRD1JobIfRD2IsEnabled() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Exception actuaException;
-        try {
-            Test.startTest();
-            Database.executeBatch(new RD_RecurringDonations_BATCH());
-            Test.stopTest();
-        } catch (Exception ex) {
-            actuaException = ex;
-        }
-        System.assert(actuaException != null, 'An exception should have been thrown because RD2 is enabled');
-        System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorRD1BatchJobCannotBeRun),
-            'The exception should have indicated that the job cannot be executed because RD2 is enabled ' + actuaException.getMessage());
-    }
-
-    /**
-     * @description Verify that when RD2 is NOT enabled in an org, attempting to execute the new RD2 batch
-     * job throws an exception
-     */
-    @IsTest
-    private static void shouldThrowExceptionForRD2JobIfRD2IsNotEnabled() {
+    private static void shouldThrowExceptionForEnhancedRDJobIfEnhancedRDIsNotEnabled() {
 
         Exception actuaException;
         try {
@@ -74,17 +53,17 @@ private class RD2_OpportunityEvaluation_TEST {
         } catch (Exception ex) {
             actuaException = ex;
         }
-        System.assert(actuaException != null, 'An exception should have been thrown because RD2 is not enabled');
-        System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD_ErrorRD2BatchJobCannotBeRun),
-            'The exception should have indicated that the job cannot be executed because RD2 is not enabled ' + actuaException.getMessage());
+        System.assert(actuaException != null, 'An exception should have been thrown because Enhanced RD is not enabled');
+        System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD_ErrorEnhancedRDBatchJobCannotBeRun),
+            'The exception should have indicated that the job cannot be executed because Enhanced RD is not enabled ' + actuaException.getMessage());
     }
 
     /**
-     * @description Verify that when RD2 is enabled in an org, executing the new RD2 batch job does not
+     * @description Verify that when RD2 is enabled in an org, executing the new Enhanced RD batch job does not
      * throw an exception
      */
     @IsTest
-    private static void shouldNotThrowExceptionForRD2JobIfRD2IsEnabled() {
+    private static void shouldNotThrowExceptionForEnhancedRDJobIfEnhancedRDIsEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Exception actuaException;
@@ -95,15 +74,15 @@ private class RD2_OpportunityEvaluation_TEST {
         } catch (Exception ex) {
             actuaException = ex;
         }
-        System.assert(actuaException == null, 'An exception should not have been thrown because RD2 is enabled');
+        System.assert(actuaException == null, 'An exception should not have been thrown because Enhanced RD is enabled');
     }
 
     /**
-     * @description Verify that when RD2 is NOT enabled in an org, executing the new RD1 batch job does not
-     * throw an exception
+     * @description Verify that when Enhanced RD is NOT enabled in an org, executing the new Legacy RD
+     * batch job does not throw an exception
      */
     @IsTest
-    private static void shouldNotThrowExceptionForRD1JobIfRD2IsNotEnabled() {
+    private static void shouldNotThrowExceptionForLegacyRDJobIfEnhancedRDIsNotEnabled() {
 
         Exception actuaException;
         try {
@@ -113,7 +92,7 @@ private class RD2_OpportunityEvaluation_TEST {
         } catch (Exception ex) {
             actuaException = ex;
         }
-        System.assert(actuaException == null, 'An exception should not have been thrown because RD2 is not enabled');
+        System.assert(actuaException == null, 'An exception should not have been thrown because Enhanced RD is not enabled');
     }
 
 }

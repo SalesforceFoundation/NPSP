@@ -1577,7 +1577,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations Data Migration job.</value>
     </labels>
     <labels>
-        <fullName>RD2_ErrorRD1BatchJobCannotBeRun</fullName>
+        <fullName>RD2_ErrorLegacyBatchJobCannotBeRun</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -1649,7 +1649,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>The combined Amount of all related Closed Won and Pledged Opportunities must match the Amount of a Fixed Length Recurring Donation.</value>
     </labels>
     <labels>
-        <fullName>RD_ErrorRD2BatchJobCannotBeRun</fullName>
+        <fullName>RD_ErrorEnhancedRDBatchJobCannotBeRun</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>

@@ -146,9 +146,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         if (disableRollupsBeforeDml) {
-            TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
-            TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
-            TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
+            disableRollups();
         }
 
         // Create the next installment opportunity where needed
@@ -198,6 +196,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
         }
         return false;
+    }
+
+    /**
+     * @description Disable Customizable Rollups before DML to reduce performance implications.
+     */
+    private void disableRollups() {
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
     }
 
     /**

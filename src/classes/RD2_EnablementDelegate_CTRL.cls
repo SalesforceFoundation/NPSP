@@ -145,9 +145,9 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
             if (!Test.isRunningTest()) {
                 upsert STG_Panel.stgService.stgRD;
-                UTIL_MasterSchedulableHelper.setScheduledJobs();
                 UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
             }
+            System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
@@ -189,7 +189,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         saveEnablementState(state);
 
-        System.enqueueJob(new EnablementQueueable());
+        System.enqueueJob(new EnablementQueueable(QueueableMode.DisableRollup));
     }
 
     /***
@@ -299,12 +299,46 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /**
-     * @description Queueable to disable a legacy CRLP rollup for Recurring Donations. Queueable
-     * needed to avoid a Mixed DML Operation error.
+    * @description Defines the modes that the Queueable enablement job runs in
+    */
+    public enum QueueableMode {
+        ScheduleJobs,
+        DisableRollup
+    }
+
+    /**
+     * @description Queueable to schedule the new RD Job OR to disable a legacy CRLP
+     * rollup for Recurring Donations. Queueable needed to avoid a Mixed DML Operation error.
      */
     private class EnablementQueueable implements Queueable {
+
+        private QueueableMode mode;
+
+        /**
+        * @description Constructor
+        * @param mode Job Mode
+        */
+        public EnablementQueueable(QueueableMode mode) {
+            this.mode = mode;
+        }
+
+        /**
+        * @description Execute for the queueable. Delegates processing to the appropriate service
+        */
         public void execute(QueueableContext context) {
-            disableNextPaymentDateRollup();
+
+            switch on (mode) {
+                when ScheduleJobs {
+                    if (!Test.isRunningTest()) {
+                        UTIL_MasterSchedulableHelper.setScheduledJobs();
+                    }
+                }
+
+                when DisableRollup {
+                    disableNextPaymentDateRollup();
+                }
+            }
+
         }
 
         /**

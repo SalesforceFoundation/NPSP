@@ -591,6 +591,27 @@ private with sharing class RD_RecurringDonations_TEST2 {
         System.assertEquals(true, records.isEmpty(), 'No record should be returned from the start() method: ' + records);
     }
 
+    /**
+     * @description Verify that when Enhanced RD is enabled in an org, attempting to execute the older RD1 batch
+     * job throws an exception
+     */
+    @IsTest
+    private static void shouldThrowExceptionForLegacyJobIfEnhancedRDIsEnabled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Exception actuaException;
+        try {
+            Test.startTest();
+            Database.executeBatch(new RD_RecurringDonations_BATCH());
+            Test.stopTest();
+        } catch (Exception ex) {
+            actuaException = ex;
+        }
+        System.assert(actuaException != null, 'An exception should have been thrown because Enhanced RD is enabled');
+        System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorLegacyBatchJobCannotBeRun),
+            'The exception should have indicated that the job cannot be executed because Enhanced RD is enabled ' + actuaException.getMessage());
+    }
+
     /***
      * @description Executes RD_RecurringDonations_BATCH "start()" method and returns Recurring Donations for verification
      */

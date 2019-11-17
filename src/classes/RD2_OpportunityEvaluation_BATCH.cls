@@ -83,7 +83,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             return Database.getQueryLocator(getRDBatchQuery());
         } else {
-            throw new RecurringDonationsBatchException(System.Label.RD_ErrorRD2BatchJobCannotBeRun);
+            throw new BatchException(System.Label.RD_ErrorEnhancedRDBatchJobCannotBeRun);
         }
     }
 
@@ -121,11 +121,10 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Finish Method
     */
     public void finish(Database.BatchableContext context) {
-        AsyncApexJob job = [SELECT CompletedDate FROM AsyncApexJob
-            WHERE Id = :context.getJobId() LIMIT 1];
+        UTIL_BatchJobService.BatchJob job = new UTIL_BatchJobService().getBatchJob(context.getJobId());
 
         npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        rdSettings.npe03__Last_Batch_Run__c = job.CompletedDate;
+        rdSettings.npe03__Last_Batch_Run__c = job.completedDate;
         rdSettings.npe03__Number_of_Successes__c = numberRDsProcessed - numberOfFailures;
         rdSettings.npe03__Number_of_Failures__c = numberOfFailures;
         if (!Test.isRunningTest()) {
@@ -133,5 +132,5 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         }
     }
 
-    private class RecurringDonationsBatchException extends Exception { }
+    private class BatchException extends Exception { }
 }
