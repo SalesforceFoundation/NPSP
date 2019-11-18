@@ -37,6 +37,11 @@
 
 public without sharing class RD2_ScheduleService {
 
+    /**
+    * @description Date unit conversion factor for Recurring Donation weekly period
+    */
+    private final Integer DAYS_IN_WEEK = 7;
+
     @TestVisible
     private Date currentDate {
         get {
@@ -259,7 +264,7 @@ public without sharing class RD2_ScheduleService {
                  schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
 
             if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
-                frequency *= 7;
+                frequency *= DAYS_IN_WEEK;
             }
 
             unitsBetween = firstValid.daysBetween(currentDate);
