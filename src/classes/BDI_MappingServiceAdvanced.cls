@@ -154,7 +154,9 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
 
         if (fieldMappings != null) {
             for (BDI_FieldMapping fieldMapping : fieldMappings) {
-                targetFieldByDataImportField.put(fieldMapping.Source_Field_API_Name,fieldMapping.Target_Field_API_Name);
+                targetFieldByDataImportField.put(
+                    fieldMapping.Source_Field_API_Name,
+                    fieldMapping.Target_Field_API_Name);
             }
         }
 
