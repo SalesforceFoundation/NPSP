@@ -54,7 +54,7 @@ private class RD2_OpportunityEvaluation_TEST {
             actuaException = ex;
         }
         System.assert(actuaException != null, 'An exception should have been thrown because Enhanced RD is not enabled');
-        System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD_ErrorEnhancedRDBatchJobCannotBeRun),
+        System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun),
             'The exception should have indicated that the job cannot be executed because Enhanced RD is not enabled ' + actuaException.getMessage());
     }
 

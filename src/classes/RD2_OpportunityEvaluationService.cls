@@ -39,25 +39,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
     /**
-    * @description Flag to allow customers to optionally disable Rollups before inserting/updating Opps
-    * to address issues with performance in larger organizatios
-    */
-    @TestVisible
-    private Boolean disableRollupsBeforeDml {
-        get {
-            if (disableRollupsBeforeDml == null) {
-                // TODO rdSettings.DisableRollupsInBatchJob__c;
-                if (disableRollupsBeforeDml == null) {
-                    disableRollupsBeforeDml = false;
-                }
-            }
-            return disableRollupsBeforeDml;
-        }
-        private set;
-    }
-
-
-    /**
      * @description Recurring Donation Id's to be processed
      */
     public Set<Id> rdIds {
@@ -123,7 +104,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         for (npe03__Recurring_Donation__c rd : rds) {
 
             // Ignore Closed RD's with no active schedule
-            if (!isEligibleForEval(rd)) {
+            if (!isCandidate(rd)) {
                 continue;
             }
 
@@ -135,22 +116,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 continue;
             }
 
-            if (rd.Status__c == RD2_Constants.STATUS_CLOSED && hasOpenInstallments(rd)) {
-                // TODO Handle Open Installments on Closed Opp
-            }
-
+            // TODO Handle Open Installments on Closed Opp
             // TODO Schedule Visualizer
             // TODO Update the Future Installment Opportunity if needed
             // TODO Handle Past Due Installment
 
         }
 
-        if (disableRollupsBeforeDml) {
-            disableRollups();
-        }
+        // TODO Disable Customizable Rollups before DML
 
         // Create the next installment opportunity where needed
-        // TODO Refactor this to return a set of Opps to be inserted as opposed to having it do the DML in the service
+        // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
         oppService.createInstallmentOpportunities(rdsWithCloseDates);
 
         return this;
@@ -164,7 +140,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * Active Schedule records.
      */
     @TestVisible
-    private Boolean isEligibleForEval(npe03__Recurring_Donation__c rd) {
+    private Boolean isCandidate(npe03__Recurring_Donation__c rd) {
         return (rd.npe03__Next_Payment_Date__c != null &&
             rd.Status__c == RD2_Constants.STATUS_ACTIVE &&
             !rd.RecurringDonationSchedules__r.isEmpty());
@@ -182,20 +158,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return (rd.Status__c == RD2_Constants.STATUS_ACTIVE &&
                 rd.npe03__Donations__r.isEmpty() &&
                 !rd.RecurringDonationSchedules__r.isEmpty());
-    }
-
-    /**
-     * @description Determine if the specified Opportunity has Open Installment Opportunities
-     * @param rd
-     * @return True if there are open installments attached to the RD
-     */
-    private Boolean hasOpenInstallments(npe03__Recurring_Donation__c rd) {
-        for (Opportunity opp : rd.npe03__Donations__r) {
-            if (opp.IsClosed == false) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -221,8 +183,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
-     * with the related Installment Opportunities and Active Schedule Records. Due to a KI (W-2503825)
-     * exclude Large Text Area fields greater than 4Kb. These would only be custom fields.
+     * with the related Installment Opportunities and Active Schedule Records. Due to a core KI (W-2503825)
+     * this query needs to exclude CLOB fields. Since there is no pure definition of that for a Describe, the
+     * query excludes Large Text Area fields larger than 4KB. These would only be custom fields.
      * @return List<RecurringDonation>
      */
     @TestVisible

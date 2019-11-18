@@ -105,6 +105,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                 // there are existing rollups. just save the setting and reschedule jobs, don't deploy.
                 STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
                 stgService.saveAll();
+                UTIL_MasterSchedulableHelper.setScheduledJobs();
                 UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
             }
         } catch (Exception e) {

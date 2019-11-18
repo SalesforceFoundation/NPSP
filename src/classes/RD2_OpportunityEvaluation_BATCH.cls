@@ -83,7 +83,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             return Database.getQueryLocator(getRDBatchQuery());
         } else {
-            throw new BatchException(System.Label.RD_ErrorEnhancedRDBatchJobCannotBeRun);
+            throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
         }
     }
 

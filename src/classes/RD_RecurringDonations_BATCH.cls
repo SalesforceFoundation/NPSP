@@ -90,7 +90,7 @@ Schedulable {
         // counts (see W-2443023).
 
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
-            throw new RecurringDonationsBatchException(System.Label.RD2_ErrorLegacyBatchJobCannotBeRun);
+            throw new RecurringDonationsBatchException(System.Label.RD_ErrorLegacyBatchJobCannotBeRun);
         } else {
             return Database.getQueryLocator(query);
         }

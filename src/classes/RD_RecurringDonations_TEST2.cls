@@ -567,12 +567,9 @@ private with sharing class RD_RecurringDonations_TEST2 {
      * @description Verifies Recurring Donations are returned when enhanced Recurring Donations are not enabled
      */
     @isTest
-    private static void shouldReturnRDsWhenEnhancementIsNotEnabled() {
+    private static void shouldReturnRDsWhenEnhancedRDIsNotEnabled() {
         List<npe03__Recurring_Donation__c> records = new List<npe03__Recurring_Donation__c>();
-        try {
-            records = executeBatchStart();
-        } catch (Exception ex) { }
-
+        records = executeBatchStart();
         System.assertEquals(1, records.size(), 'Recurring Donation record should be returned from the start() method');
     }
 
@@ -580,7 +577,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
      * @description Verifies Recurring Donations are not returned when enhanced Recurring Donations are enabled
      */
     @isTest
-    private static void shouldNotReturnRDsWhenEnhancementIsEnabled() {
+    private static void shouldThrowExceptionLegacyJobWhenEnhancedRDIsEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         List<npe03__Recurring_Donation__c> records = new List<npe03__Recurring_Donation__c>();
@@ -608,7 +605,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             actuaException = ex;
         }
         System.assert(actuaException != null, 'An exception should have been thrown because Enhanced RD is enabled');
-        System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorLegacyBatchJobCannotBeRun),
+        System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD_ErrorLegacyBatchJobCannotBeRun),
             'The exception should have indicated that the job cannot be executed because Enhanced RD is enabled ' + actuaException.getMessage());
     }
 
