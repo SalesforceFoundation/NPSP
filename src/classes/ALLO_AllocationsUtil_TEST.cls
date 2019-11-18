@@ -419,6 +419,11 @@ public class ALLO_AllocationsUtil_TEST {
 
     }
 
+    /*******************************************************************************************************
+    * @description - Test calling ALLO_UpdPaymentAllocations_BATCH via the Callable_Api class. Assert that a opportunity
+    * is processed when meeting the criteria and excluded when the criteria are not met. Also enure that a deafult allocation
+    * is created for any unallocated amount.
+    ********************************************************************************************************/ 
     @isTest private static void processOppsAndPaymentAllocationsViaCallableApi() {
 
         ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
@@ -431,15 +436,93 @@ public class ALLO_AllocationsUtil_TEST {
         General_Accounting_Unit__c defaultGau = gaus[2];
         insert gaus;
 
-        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(2);
         insert ctcs;
+
+        // Turn Off Allocation Triggers
+        ALLO_AllocationsUtil.disableAllocationTriggers();
 
         List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 1000, null, null);
         insert opps;
 
-        List<npe01__OppPayment__c> pmts = [select Id from npe01__OppPayment__c where npe01__Opportunity__c = :opps[1].Id];
+        List<npe01__OppPayment__c> pmtsProcess = [select Id from npe01__OppPayment__c where npe01__Opportunity__c = :opps[0].Id];
+        List<npe01__OppPayment__c> pmtsExclude = [select Id from npe01__OppPayment__c where npe01__Opportunity__c = :opps[1].Id];
 
         List<Allocation__c> allosForInsert = new list<Allocation__c>();
+
+        // Opportunity Allocations
+        Allocation__c percentAlloOppProcess = new Allocation__c(Opportunity__c = opps[0].Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id);
+        allosForInsert.add(percentAlloOppProcess);
+
+        Allocation__c amountAlloOppProcess = new Allocation__c(Opportunity__c = opps[0].Id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloOppProcess);
+
+        Allocation__c percentAlloOppExclude = new Allocation__c(Opportunity__c = opps[1].Id, Percent__c = null, General_Accounting_Unit__c = gaus[0].Id);
+        allosForInsert.add(percentAlloOppExclude);
+
+        Allocation__c amountAlloOppExclude = new Allocation__c(Opportunity__c = opps[1].Id, Amount__c = null, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloOppExclude);
+
+        // Payment Allocations
+        Allocation__c percentAlloPmtProcess = new Allocation__c(Payment__c = pmtsProcess[0].Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id);
+        allosForInsert.add(percentAlloPmtProcess);
+
+        Allocation__c amountAlloPmtProcess = new Allocation__c(Payment__c = pmtsProcess[0].Id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloPmtProcess);
+
+        Allocation__c percentAlloPmtExclude = new Allocation__c(Payment__c = pmtsExclude[0].Id, Percent__c = null, General_Accounting_Unit__c = gaus[0].Id);
+        allosForInsert.add(percentAlloPmtExclude);
+
+        Allocation__c amountAlloPmtExclude = new Allocation__c(Payment__c = pmtsExclude[0].Id, Amount__c = null, General_Accounting_Unit__c = gaus[1].id);
+        allosForInsert.add(amountAlloPmtExclude);
+
+        insert allosForInsert;
+
+        Set<Id> oppIds = new Set<Id>();
+        oppIds.add(opps[0].id);    
+
+        Test.startTest();
+
+        Map<String, Object> npspApiParams = new Map<String, Object> {
+                'OpportunityIds' => oppIds,
+                'ContextType' => 'testContext',
+                'ProcessingBoundary' => null,
+                'DisableAllocationTriggers' => true
+            };
+
+        Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
+        String sucessfullyProcessedOppsString = (String)npspApi.call(ALLO_PROCESS_OPPS_PMTS_ACTION, npspApiParams);
+        Set<Id> sucessfullyProcessedOpps = (Set<Id>)JSON.deserialize(sucessfullyProcessedOppsString,
+            Set<Id>.class);
+
+        List<Allocation__c> defaultAllocation = [
+            SELECT Id, General_Accounting_Unit__c, Amount__c, Payment__c, Percent__c, Opportunity__c 
+            FROM Allocation__c 
+            WHERE Payment__c = :pmtsProcess[0].Id and General_Accounting_Unit__c = :gaus[2].id];
+
+        Test.stopTest();
+        
+        System.debug(defaultAllocation);
+
+        System.assert(sucessfullyProcessedOpps.contains(opps[0].id), 'Opp processed sucessfully');
+        System.assertNotEquals(null, defaultAllocation[0].Amount__c, 'Payment Allocation updated amount');
+        System.assert(!sucessfullyProcessedOpps.contains(opps[1].id), 'Opp excluded from processing');
+    }
+
+    // @description Test validating the Payment Allocation Configuration via Callable_Api when the settings are configured
+    @isTest private static void validatePaymentAllocationConfigurationViaCallableApiNoProblems() {
+        
+        Test.startTest();
+
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
+        gaus[2].Name = 'Default GAU';
+        General_Accounting_Unit__c defaultGau = gaus[2];
+        insert gaus;
 
         setupSettings(new Allocations_Settings__c(
             Payment_Allocations_Enabled__c = true,
@@ -448,11 +531,17 @@ public class ALLO_AllocationsUtil_TEST {
 
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
         Map<String, Object> npspApiParams = new Map<String, Object>();
-        Object callResult = npspApi.call(ALLO_PROCESS_OPPS_PMTS_ACTION, npspApiParams);
+        String configProblemsString = (String)npspApi.call(ALLO_VALIDATE_CONFIG_ACTION, npspApiParams);
+        List<String> configProblems = (List<String>)JSON.deserialize(configProblemsString,
+            List<String>.class);
 
+        Test.stopTest();
+
+        System.assertEquals(true, configProblems.isEmpty(), 'Payment Allocation config varified');
     }
 
-    @isTest private static void validatePaymentAllocationConfigurationViaCallableApi() {
+    // @description Test validating the Payment Allocation Configuration via Callable_Api when the settings are not configured
+    @isTest private static void validatePaymentAllocationConfigurationViaCallableApiWithProblems() {
         
         Test.startTest();
 
@@ -464,7 +553,7 @@ public class ALLO_AllocationsUtil_TEST {
 
         Test.stopTest();
 
-        System.assertEquals(true, configProblems.isEmpty(), 'Payment Allocation config varified');
+        System.assertEquals(false, configProblems.isEmpty(), 'Payment Allocation config varified');
     }
 
     /*******************************************************************************************************

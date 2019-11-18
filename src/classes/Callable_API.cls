@@ -101,10 +101,13 @@ global with sharing class Callable_API implements System.Callable {
                 Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PARAM_PROCESSING_BOUNDARY);
                 Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(CallableApiParameters.PARAM_DISABLE_ALLOCATION_TRIGGERS);
 
-                return ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true);  
+                Set<Id> oppIds = ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true);
+                return JSON.serialize(oppIds, true);
+                //return ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true);  
 
             } when 'allo.validatepmtallocationconfig' { 
-                return ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();    
+                List<String> problems =  ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();
+                return JSON.serialize(problems, true);    
 
             } when else {
                 throw new MalformedMethodInvocationException(
