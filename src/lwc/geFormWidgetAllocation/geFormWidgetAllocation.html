@@ -1,9 +1,14 @@
 <template>
     <p>GAU Allocations</p>
-    <lightning-input required
-        onchange={handleValueChange} 
-        value={value}
-        type='Number'
-        label='Amount'>
-    </lightning-input>
+    <template for:each={recordList} for:item='record' for:index='index'>
+        <!-- {record.apiName} {index} -->
+
+        <!-- TODO: Make this a separate component? With a Delete button? -->
+        <template for:each={element.dataImportFieldMappingDevNames} for:item='mappingDevName'>
+            <c-ge-form-field key={element} field-map-name={mappingDevName}></c-ge-form-field>
+        </template>
+
+    </template>
+
+    <lightning-button label="Add Row" onclick={addRow}></lightning-button>
 </template>

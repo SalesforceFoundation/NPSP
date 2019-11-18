@@ -12,8 +12,19 @@ export default class GeFormField extends LightningElement {
     @track value;
     @track picklistValues = [];
     @api element;
+    @api fieldMapName;
 
     changeTimeout;
+
+    connectedCallback() {
+        if(this.element == null && this.fieldMapName != null){
+            // TODO: This is hacky, but allows the component to work with just a mapping record name
+            this.element = {
+                value: this.fieldMapName, 
+                required: false
+            };
+        }
+    }
 
     handleValueChange(event) {
         this.value = event.target.value;

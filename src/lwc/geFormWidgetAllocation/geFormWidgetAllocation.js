@@ -1,31 +1,19 @@
 import {LightningElement, api, track} from 'lwc';
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 
-const DELAY = 300;
-
 export default class GeFormWidgetAllocation extends LightningElement {
     @track value;
     @api element;
+    @track recordList = [];
 
     singleRecord;
-    changeTimeout;
 
     /***
     * @description Initializes the component
     */
     connectedCallback() {
         this.singleRecord = { apiName: ALLOCATION_OBJECT.objectApiName };
-    }
-
-    // TODO: Move this to a service component
-    handleValueChange(event) {
-        this.value = event.target.value;
-        window.clearTimeout(this.changeTimeout);
-        this.changeTimeout = setTimeout(() => {
-            // parent component (formSection) should bind to onchange event
-            const evt = new CustomEvent('change', {field: this.element, value: this.value});
-            this.dispatchEvent(evt);
-        }, DELAY);
+        this.addRow();
     }
 
     /**
@@ -34,8 +22,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     @api
     isValid() {
-        // TODO: Check that input value is valid for this field type
-        // Also move this method to the service class?
+        // TODO: Move this method to the service class?
         let fieldIsValid = true;
         if(this.element.required) {
             return this.value !== null 
@@ -47,15 +34,28 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     /**
-     * Expected to return an array of sobject records
+     * Expected to return an array of objects for each row of the widget
      * @return [record1, record2, ...]
      */
     @api
-    returnValue() {
-        const testField = 'Name';
-        let returnVal = this.singleRecord;
-        returnVal[testField] = 'Test Name';
-        return [returnVal];
+    returnValues() {
+        // TODO: Need to get this working with multiple rows of 
+        const fields = this.template.querySelectorAll('c-ge-form-field');
+        let widgetFieldAndValues = {};
+        if(fields !== null && typeof fields !== 'undefined') {
+            fields.forEach(field => {
+                widgetFieldAndValues = { ...widgetFieldAndValues, ...(field.fieldAndValue) };
+            });
+        }
+        return widgetFieldAndValues;
+    }
+
+    /**
+     * Add a new record to the list
+     */
+    addRow(){
+        let newRecord = this.singleRecord;
+        this.recordList.push(newRecord);
     }
 
 }
