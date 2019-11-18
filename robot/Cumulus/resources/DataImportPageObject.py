@@ -14,7 +14,12 @@ class DataImportPage(ListingPage):
     def pageobjects(self):
         return self.builtin.get_library_instance("cumulusci.robotframework.PageObjects")
     
-        
+    def _is_current_page(self):
+        """
+        Waits for the current page to be a Data Import list view
+        """
+        self.npsp.wait_until_url_contains("/list")
+            
     def click(self,btn_name):
         """Clicks button with specified name on Data Import Page"""
         self.npsp.click_special_object_button(btn_name)
