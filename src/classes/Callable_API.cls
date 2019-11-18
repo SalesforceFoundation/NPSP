@@ -32,7 +32,7 @@
 * @date 2019
 * @group API
 * @group-content ../../ApexDocContent/API.htm
-* @description Global API class that exposes a System. interface for external
+* @description Global API class that exposes a System.Callable interface for external
 * applications and customers to leverage for future NPSP api's
 */
 global with sharing class Callable_API implements System.Callable {
@@ -43,7 +43,7 @@ global with sharing class Callable_API implements System.Callable {
     public class MalformedMethodInvocationException extends Exception {}
 
     /*******************************************************************************************************
-    * @description call function implementation of the  Interface will dispatch to the appropriate
+    * @description call function implementation of the callable Interface will dispatch to the appropriate
     * action handler based on the action text
     * @param action string of the target action
     * @param args name value map of arguments
