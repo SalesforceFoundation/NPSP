@@ -224,18 +224,7 @@ New Contact for HouseHold
     Store Session Record      Account  ${contact_id}
     [return]                  ${contact_id} 
         
-Create Organization Foundation   
-    ${account_name} =          Generate Random String
-    Go To Object Home          Account
-    Click Object Button        New
-    Select Record Type         Organization
-    Populate Form
-    ...                        Account Name=${account_name}
-    Click Modal Button         Save    
-    Wait Until Modal Is Closed
-    ${account_id} =            Get Current Record Id
-    Store Session Record       Account  ${account_id}
-    [return]                   ${account_id}
+
     
 Create HouseHold    
     ${account_name} =         Generate Random String

@@ -13,6 +13,7 @@ from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
+from cumulusci.robotframework.utils import capture_screenshot_on_error
 from email.mime import text
 
 from cumulusci.tasks.apex.anon import AnonymousApexTask
@@ -1162,3 +1163,24 @@ class NPSP(SalesforceRobotLibraryBase):
                 time.sleep(10)
                 url=self.selenium.get_location()
                 i += 1
+
+    def save_form(self):
+        """clicks the save button on the modal and waits until the modal is closed"""
+        self.salesforce.click_modal_button("Save")
+        self.salesforce.wait_until_modal_is_closed()
+        self.wait_until_url_contains("/view")
+        
+    def store_object_record_for_deletion(self, object_name):
+        """Gets current record id and stores it for a specified object name for deleting during teardown"""
+        record_id=self.salesforce.get_current_record_id()
+        self.salesforce.store_session_record(object_name,record_id)    
+     
+    @capture_screenshot_on_error    
+    def change_object_view(self,view_name): 
+        """Selects a different view for the object records in listing page""" 
+        locator=npsp_lex_locators['object_dd']
+        view=npsp_lex_locators['link'].format(view_name)
+        self.selenium.wait_until_page_contains("List Views")
+        self.selenium.get_webelement(locator).click()  
+        self.selenium.click_element(view)
+        self.selenium.wait_until_page_contains(view_name)
