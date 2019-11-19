@@ -556,6 +556,21 @@ flows:
             3:
                 task: ensure_record_type
 
+    rd2_pilot_org:
+        steps:
+            1:
+                flow: install_prod
+            2:
+                task: enable_pilot_in_scratch_org
+                options:
+                    managed: True
+            3:
+                task: load_dataset
+                options:
+                    mapping: datasets/rd2_pilot/mapping_managed.yml
+                    sql_path: datasets/rd2_pilot/data.sql
+                    database_url: ""
+
 orgs:
     scratch:
         dev_multicurrency:
