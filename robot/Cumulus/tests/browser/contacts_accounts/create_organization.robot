@@ -22,7 +22,7 @@ Create Organization Foundation
     ${account_id} =                    Get Current Record Id
     Store Session Record               Account    ${account_id}
     &{account} =  Salesforce Get       Account    ${account_id}
-    # Should Not Be Empty                &{account}
+    Should Not Be Empty                ${account}
     
     #Verify Account is only displayed in expected views
     Go To Page                         Listing    Account
