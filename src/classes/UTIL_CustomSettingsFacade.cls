@@ -587,7 +587,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.DataMigrationBatchSize__c = 25;
             settings.npe03__Opportunity_Forecast_Months__c = 12;
             settings.npe03__Update_Check_Interval__c = 90;
-            settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
+            settings.npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
             settings.EnableAutomaticNaming__c = false;
             settings.IsRecurringDonations2Enabled__c = false;

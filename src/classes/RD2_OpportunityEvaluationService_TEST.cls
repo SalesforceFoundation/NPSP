@@ -194,7 +194,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      */
     @IsTest
     private static void shouldMarkOpenOppsAsClosedLostWhenRDIsClosed() {        
-        String closeAction = RD2_OpportunityEvaluationService.CloseActions.Mark_Opportunities_Closed_Lost.name();
+        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
         npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
         List<Opportunity> oldOpps = rd.npe03__Donations__r;
@@ -213,7 +213,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      */
     @IsTest
     private static void shouldDeleteOpenOppsWhenRDIsClosed() {
-        String closeAction = RD2_OpportunityEvaluationService.CloseActions.Delete_Open_Opportunities.name();
+        String closeAction = RD2_Constants.CloseActions.Delete_Open_Opportunities.name();
 
         npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
         List<Opportunity> oldOpps = rd.npe03__Donations__r;
@@ -231,7 +231,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      */
     @IsTest
     private static void shouldNotChangeOpenOppsWhenRDIsClosed() {        
-        String closeAction = RD2_OpportunityEvaluationService.CloseActions.No_Action.name();
+        String closeAction = RD2_Constants.CloseActions.No_Action.name();
 
         npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
         List<Opportunity> oldOpps = rd.npe03__Donations__r;
@@ -308,7 +308,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     @IsTest
     private static void shouldNotThrowExceptionWhenRDWithoutOppsIsClosed() { 
         Exception actualException;
-        String closeAction = RD2_OpportunityEvaluationService.CloseActions.Mark_Opportunities_Closed_Lost.name();
+        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(

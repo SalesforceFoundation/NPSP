@@ -36,15 +36,6 @@
 */
 public class RD2_OpportunityEvaluationService {
   
-    /***
-    * @description Enum to specify behavior of how to handle open opportunities when related RD is closed
-    */ 
-    public enum CloseActions { 
-        Delete_Open_Opportunities, 
-        Mark_Opportunities_Closed_Lost, 
-        No_Action 
-    }
-
     private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
     /**
@@ -204,10 +195,10 @@ public class RD2_OpportunityEvaluationService {
             return;
         }
 
-        if (rdSettings.npe03__Open_Opportunity_Behavior__c == CloseActions.Delete_Open_Opportunities.name()) {
+        if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Delete_Open_Opportunities.name()) {
             delete opps;
 
-        } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == CloseActions.Mark_Opportunities_Closed_Lost.name()) {
+        } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
             for (Opportunity opp : opps) {
                 opp.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
             }  

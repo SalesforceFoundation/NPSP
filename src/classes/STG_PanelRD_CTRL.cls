@@ -118,8 +118,8 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         get {
         	if (listSORDCloseOptions == null) {
 	            listSORDCloseOptions = new list<SelectOption>();
-	            list<RD_RecurringDonations.RecurringDonationCloseOptions> CloseOptionValues = RD_RecurringDonations.RecurringDonationCloseOptions.values();       
-	            for (RD_RecurringDonations.RecurringDonationCloseOptions rdco : CloseOptionValues) {
+	            list<RD2_Constants.CloseActions> CloseOptionValues = RD2_Constants.CloseActions.values();       
+	            for (RD2_Constants.CloseActions rdco : CloseOptionValues) {
 	                listSORDCloseOptions.add(new SelectOption(rdco.name(), rdco.name()));
 	            }
         	}

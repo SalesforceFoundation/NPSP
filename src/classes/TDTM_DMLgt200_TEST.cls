@@ -294,7 +294,7 @@ private class TDTM_DMLgt200_TEST {
             new npe03__Recurring_Donations_Settings__c(
                 npe03__Opportunity_Forecast_Months__c = 6,
                 npe03__Maximum_Donations__c = 2,
-                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
             ));
 
         Test.startTest();
@@ -473,7 +473,7 @@ private class TDTM_DMLgt200_TEST {
             new npe03__Recurring_Donations_Settings__c(
                 npe03__Opportunity_Forecast_Months__c = 1,
                 npe03__Maximum_Donations__c = 12,
-                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
             ));
 
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(
