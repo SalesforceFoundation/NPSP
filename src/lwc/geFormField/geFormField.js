@@ -6,6 +6,7 @@ const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
 const TEXT_AREA_TYPE = 'TEXTAREA';
+const BOOLEAN_TYPE = 'BOOLEAN';
 const DELAY = 300;
 
 export default class GeFormField extends LightningElement {
@@ -16,13 +17,23 @@ export default class GeFormField extends LightningElement {
     changeTimeout;
 
     handleValueChange(event) {
-        this.value = this.isLookup ? event.detail.value : event.target.value;
+        this.value = this.getValueFromChangeEvent(event);
         window.clearTimeout(this.changeTimeout);
         this.changeTimeout = setTimeout(() => {
             // parent component (formSection) should bind to onchange event
             const evt = new CustomEvent('change', {field: this.element, value: this.value});
             this.dispatchEvent(evt);
         }, DELAY);
+    }
+
+    getValueFromChangeEvent(event) {
+        if(this.isLookup) {
+            return event.detail.value;
+        } else if(this.fieldType === BOOLEAN_TYPE) {
+            return event.target.checked.toString();
+        }
+
+        return event.target.value;
     }
 
     @api
