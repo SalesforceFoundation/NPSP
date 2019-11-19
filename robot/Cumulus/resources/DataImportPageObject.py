@@ -33,12 +33,7 @@ class DataImportPage(ListingPage):
     def click_close_button(self):
         """Click on close button on DI processing page and waits for DI object homepage to load"""
         self.npsp.click_button_with_value("Close")
-        self.npsp.wait_until_url_contains("DataImport__c")    
-        
-    def select_import_record(self,record_name):
-        self.selenium.page_should_contain_link(record_name)
-        locator=npsp_lex_locators['data_imports']['checkbox'].format(record_name) 
-        self.selenium.click_element(locator)   
+        self.npsp.wait_until_url_contains("DataImport__c")      
         
     def open_data_import_record(self,di_name): 
         """Clicks on the specified data import record to open the record""" 
