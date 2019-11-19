@@ -312,7 +312,7 @@ class NPSP(SalesforceRobotLibraryBase):
         """ Checks for the record in the object page and returns true if found else returns false
         """
         locator=npsp_lex_locators['account_list'].format(name)
-        self.selenium.page_should_contain_element(locator)
+        self.selenium.wait_until_page_contains_element(locator)
 
             
     def select_option(self, name):  
@@ -1184,3 +1184,15 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()  
         self.selenium.click_element(view)
         self.selenium.wait_until_page_contains(view_name)
+
+    def search_field_by_value(self, fieldname, value):
+         """ Populate field with Place Holder as a locator
+             and actual value of the place holder.
+         """
+         xpath = npsp_lex_locators["placeholder"].format(fieldname)
+         field = self.selenium.get_webelement(xpath)
+         self.selenium.clear_element_text(field)
+         field.send_keys(value)
+         time.sleep(2)
+         field.send_keys(Keys.ENTER)
+

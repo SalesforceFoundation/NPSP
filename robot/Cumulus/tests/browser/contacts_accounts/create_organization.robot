@@ -30,6 +30,7 @@ Create Organization Foundation
     Change Object View                 Organization Accounts
     Verify Record   	               &{account}[Name]
     Change Object View                 My Accounts
-    
+    Search Field By Value              Search this list     &{account}[Name]
+    Verify Record   	               &{account}[Name]
     Change Object View                 Household Accounts
     Page Should Not Contain            &{account}[Name]
