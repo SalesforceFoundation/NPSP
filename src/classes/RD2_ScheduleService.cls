@@ -192,17 +192,18 @@ public without sharing class RD2_ScheduleService {
         Date nextDate;
         Date previousDate;
 
-        if (rdSchedules != null) {
+        if (rdSchedules == null) {
+            return nextDate;
+        }
 
-            for (RecurringDonationSchedule__c schedule : rdSchedules) {
-                nextDate = getNextDonationDateGreaterThanToday(schedule);
+        for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            nextDate = getNextDonationDateGreaterThanToday(schedule);
 
-                if (previousDate < nextDate) {
-                    nextDate = previousDate;
-                }
-
-                previousDate = nextDate;
+            if (previousDate < nextDate) {
+                nextDate = previousDate;
             }
+
+            previousDate = nextDate;
         }
 
         return nextDate;

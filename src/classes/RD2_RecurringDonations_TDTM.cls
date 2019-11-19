@@ -193,7 +193,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             buildNewSchedules(rds);
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            setScheduleDependentRecurringDonationFields(rds, oldRds);
+            setScheduleDependentFields(rds, oldRds);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             synchronizeSchedulesAfterRDUpdate(rds, oldRds);
@@ -262,11 +262,14 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Handles setting next donation date for updated recurring donations
+    * @description Performs a full analysis and rebuild of the Schedule records for a Recurring Donation,
+    * but does not commit the schedule records to the database.  Uses the active schedules for the RD
+    * to calculate the Next Donation Date and store onto the RD record (in a Before Update context,
+    * thus avoiding the extra DML against the object).
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     */
-    private void setScheduleDependentRecurringDonationFields(List<npe03__Recurring_Donation__c> rds,List<npe03__Recurring_Donation__c> oldRds) {
+    private void setScheduleDependentFields(List<npe03__Recurring_Donation__c> rds,List<npe03__Recurring_Donation__c> oldRds) {
 
         Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = getExistingSchedules(rds);
 
@@ -280,11 +283,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             revisedSchedules = scheduleService.getUpdatedSchedules(rd, schedulesByRdId.get(rd.Id));
 
             for (SObject sobj : revisedSchedules.objectsToUpdate) {
-                addUpdatedSchedules(sobj, newSchedulesByRdId);
+                addUpdatedSchedules((RecurringDonationSchedule__c)sobj, newSchedulesByRdId);
             }
 
             for (SObject sobj : revisedSchedules.objectsToInsert) {
-                addUpdatedSchedules(sobj, newSchedulesByRdId);
+                addUpdatedSchedules((RecurringDonationSchedule__c)sobj, newSchedulesByRdId);
             }
         }
 
@@ -307,9 +310,16 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
 
         for (RecurringDonationSchedule__c oldSchedule : [
-                SELECT RecurringDonation__c, StartDate__c, EndDate__c, InstallmentFrequency__c, InstallmentPeriod__c, DayOfMonth__c FROM RecurringDonationSchedule__c
-                WHERE RecurringDonation__c IN :rds
-                AND Active__c = true]) {
+                                SELECT RecurringDonation__c,
+                                    StartDate__c,
+                                    EndDate__c,
+                                    InstallmentFrequency__c,
+                                    InstallmentPeriod__c,
+                                    DayOfMonth__c
+                                FROM RecurringDonationSchedule__c
+                                WHERE RecurringDonation__c IN :rds
+                                AND Active__c = true
+        ]) {
             if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
                 oldSchedules.put(oldSchedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
             }
@@ -321,26 +331,18 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
     /***
     * @description Adds recurring donation schedules to map by recurring donation Id
-    * @param sobj SObject
+    * @param rds SObject
     * @param newSchedulesByRdId Map<Id, List<RecurringDonationSchedule__c>>
     */
-    private void addUpdatedSchedules(SObject sobj, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
+    private void addUpdatedSchedules(RecurringDonationSchedule__c rds, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
 
-        if (sobj.getSObjectType() == RecurringDonationSchedule__c.SObjectType) {
+            if (rds.EndDate__c == null || (rds.EndDate__c >= Date.today() && rds.StartDate__c < rds.EndDate__c)) {
 
-            Date endDate = (Date)sobj.get('EndDate__c');
-            Date startDate = (Date)sobj.get('StartDate__c');
-
-            if (endDate == null || (endDate >= Date.today() && startDate < endDate)) {
-
-                RecurringDonationSchedule__c schedule = (RecurringDonationSchedule__c)sobj;
-
-                if (!newSchedulesByRdId.containsKey(schedule.RecurringDonation__c)) {
-                    newSchedulesByRdId.put(schedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
+                if (!newSchedulesByRdId.containsKey(rds.RecurringDonation__c)) {
+                    newSchedulesByRdId.put(rds.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
                 }
-                newSchedulesByRdId.get(schedule.RecurringDonation__c).add(schedule);
+                newSchedulesByRdId.get(rds.RecurringDonation__c).add(rds);
             }
-        }
     }
 
     /***
