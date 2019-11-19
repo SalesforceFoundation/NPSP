@@ -13,6 +13,7 @@ from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
+from cumulusci.robotframework.utils import capture_screenshot_on_error
 from email.mime import text
 
 from cumulusci.tasks.apex.anon import AnonymousApexTask
@@ -850,7 +851,7 @@ class NPSP(SalesforceRobotLibraryBase):
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
         self.selenium.wait_until_element_is_visible(main_loc, timeout=90)
         
-        
+    @capture_screenshot_on_error    
     def wait_for_batch_to_complete(self, path, *args, **kwargs):
         """Checks every 15 secs for upto 3.5mins for batch with given status
         """
@@ -869,6 +870,7 @@ class NPSP(SalesforceRobotLibraryBase):
                     break
                 except Exception:
                     time.sleep(15)   
+     
                     
     def wait_for_batch_to_process(self, batch,status):
         """Checks every 30 secs for upto 7mins for batch with given status
