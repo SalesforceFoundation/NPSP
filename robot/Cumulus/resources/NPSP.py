@@ -871,7 +871,7 @@ class NPSP(SalesforceRobotLibraryBase):
                 except Exception:
                     time.sleep(15)   
      
-                    
+    @capture_screenshot_on_error                
     def wait_for_batch_to_process(self, batch,status):
         """Checks every 30 secs for upto 7mins for batch with given status
         """
