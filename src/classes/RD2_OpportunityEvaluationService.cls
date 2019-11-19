@@ -110,7 +110,9 @@ public class RD2_OpportunityEvaluationService {
             rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
             rd.StartDate__c != oldRd.StartDate__c ||
             rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
-            rd.Status__c != oldRd.Status__c;
+            rd.Status__c != oldRd.Status__c ||
+            rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
+            rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c;
     }
 
     /**
@@ -196,14 +198,19 @@ public class RD2_OpportunityEvaluationService {
         }
 
         if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Delete_Open_Opportunities.name()) {
-            delete opps;
+            UTIL_DMLService.deleteRecordsAndLogErrors(opps, ERR_Handler_API.Context.RD.name());
 
         } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
-            for (Opportunity opp : opps) {
-                opp.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
-            }  
+            List<Opportunity> oppsToUpdate = new List<Opportunity>();
 
-            update opps;
+            for (Opportunity opp : opps) {
+                oppsToUpdate.add(new Opportunity(
+                    Id = opp.Id,
+                    StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage
+                ));
+            } 
+
+            UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
         }
     }
 

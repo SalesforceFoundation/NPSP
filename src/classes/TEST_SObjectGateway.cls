@@ -79,13 +79,13 @@ public class TEST_SObjectGateway {
                     npe03__Donor_Name__c,
                     npe03__Amount__c,
                     npe03__Paid_Amount__c,
+                    npe03__Date_Established__c,
+                    Day_of_Month__c,
+                    StartDate__c,
                     npe03__Next_Payment_Date__c, 
                     npe03__Last_Payment_Date__c,
-                    npe03__Date_Established__c,
-                    StartDate__c,
-                    Day_of_Month__c,
-                    InstallmentFrequency__c,
                     npe03__Installment_Period__c,
+                    InstallmentFrequency__c,
                     npe03__Total_Paid_Installments__c,
                     PaymentMethod__c,
                     RecurringType__c,
@@ -122,17 +122,17 @@ public class TEST_SObjectGateway {
             }
 
             return [
-                    SELECT
-                            Campaign__c,
-                            DayOfMonth__c,
-                            EndDate__c,
-                            InstallmentAmount__c,
-                            InstallmentFrequency__c,
-                            InstallmentPeriod__c,
-                            RecurringDonation__c,
-                            StartDate__c
-                    FROM RecurringDonationSchedule__c
-                    WHERE RecurringDonation__c IN :rds
+                SELECT
+                    Campaign__c,
+                    DayOfMonth__c,
+                    EndDate__c,
+                    InstallmentAmount__c,
+                    InstallmentFrequency__c,
+                    InstallmentPeriod__c,
+                    RecurringDonation__c,
+                    StartDate__c
+                FROM RecurringDonationSchedule__c
+                WHERE RecurringDonation__c IN :rds
             ];
         }
     }
