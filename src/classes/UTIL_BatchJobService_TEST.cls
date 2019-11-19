@@ -164,30 +164,6 @@ public with sharing class UTIL_BatchJobService_TEST {
     }
 
 
-
-    // Helpers
-    /////////////
-
-    /***
-    * @description Builds a batch AsyncApexJob
-    * @return AsyncApexJob
-    */
-    private static AsyncApexJob buildAsyncApexJob() {
-        return new TestAsyncApexJob()
-            .withId(MOCK_BATCH_ID)
-            .withCreatedBy(getUser())
-            .build();
-    }
-
-    /***
-    * @description Retrieves the current user info
-    * @return User
-    */
-    private static User getUser() {
-        return [SELECT Id, Name FROM User WHERE Id = :UserInfo.getUserId()];
-    }
-
-
     /***
     * @description Builds an AsyncApexJob and sets attributes that are not writable otherwise
     */
@@ -255,7 +231,56 @@ public with sharing class UTIL_BatchJobService_TEST {
                 
             return (AsyncApexJob) JSON.deserialize(jsonString, AsyncApexJob.class);
         }
-
     }
+
+    /***
+    * @description Database.BatchableContext Mock class
+    */
+    public class MockBatchableContext implements Database.BatchableContext {
+        private Id jobId;
+        private Id childJobId;
+
+        public MockBatchableContext returnJobId(Id jobId) {
+            this.jobId = jobId;
+            return this;
+        }
+
+        public MockBatchableContext returnChildJobId(Id childJobId) {
+            this.childJobId = childJobId;
+            return this;
+        }
+
+        public Id getJobId() {
+            return jobId;
+        }
+
+        public Id getChildJobId() {
+            return childJobId;
+        }     
+    }
+
+
+    // Helpers
+    /////////////
+
+    /***
+    * @description Builds a batch AsyncApexJob
+    * @return AsyncApexJob
+    */
+    private static AsyncApexJob buildAsyncApexJob() {
+        return new TestAsyncApexJob()
+            .withId(MOCK_BATCH_ID)
+            .withCreatedBy(getUser())
+            .build();
+    }
+
+    /***
+    * @description Retrieves the current user info
+    * @return User
+    */
+    private static User getUser() {
+        return [SELECT Id, Name FROM User WHERE Id = :UserInfo.getUserId()];
+    }
+
 
 }

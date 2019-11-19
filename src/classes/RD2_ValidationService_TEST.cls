@@ -65,7 +65,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Account acc = getHHAccount();
+        Account acc = UTIL_UnitTestData_TEST.buildHouseholdAccount();
         insert acc;
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
@@ -90,7 +90,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Account acc = getHHAccount();
+        Account acc = UTIL_UnitTestData_TEST.buildHouseholdAccount();
         insert acc;
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -184,7 +184,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Account acc = UTIL_UnitTestData_TEST.getOrgAccount();
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert acc;
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
@@ -198,14 +198,6 @@ private with sharing class RD2_ValidationService_TEST {
             errMessage = e.getMessage();
         }
         System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
-    }
-
-    /***
-    * @description Builds an HouseHold Account
-    * @return HouseHold Account record
-    */
-    private static Account getHHAccount() {
-        return UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
     }
 
 }

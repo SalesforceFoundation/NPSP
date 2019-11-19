@@ -133,7 +133,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         createRdSettingsWithStage(PROMISED_STAGENAME);
 
-        Account acc = UTIL_UnitTestData_TEST.getOrgAccount();
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert acc;
 
         List<Contact> primaryContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);

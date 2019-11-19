@@ -64,6 +64,25 @@ public with sharing class UTIL_BatchJobService {
 
         return (Database.countQuery('SELECT Count() FROM AsyncApexJob WHERE Id = :batchId AND Status IN :IN_PROGRESS_STATUSES') > 0);
     }
+    
+    /***
+    * @description Loads the latest batch job for the specified job Id
+    * @param jobId BatchJobId
+    * @return BatchJob
+    */
+    public BatchJob getBatchJob(Id jobId) {
+        List<AsyncApexJob> apexJobs = [
+            SELECT
+                Status, ExtendedStatus, NumberOfErrors,
+                TotalJobItems, JobItemsProcessed,
+                CreatedDate, CompletedDate
+            FROM AsyncApexJob
+            WHERE Id = :jobId
+            LIMIT 1
+        ];
+
+        return apexJobs.isEmpty() ? null : new BatchJob(apexJobs[0]);
+    }
 
     /***
     * @description Loads the latest batch job for the specified batch class name
@@ -102,8 +121,7 @@ public with sharing class UTIL_BatchJobService {
         public Integer totalJobItems;
         public Integer numberOfErrors;
 
-        @TestVisible 
-        private DateTime createdDate;
+        public DateTime createdDate;
         public DateTime completedDate;
 
         public String timeElapsed;
