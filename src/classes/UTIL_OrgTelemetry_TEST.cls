@@ -183,6 +183,14 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageBooleanValue should have been called with the feature IsEnabled_RecurringDonations2'
         );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_PaymentAllocations.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_PaymentAllocations'
+        );
     }
 
     /**

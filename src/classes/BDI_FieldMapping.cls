@@ -40,9 +40,11 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public String Source_Field_Label;
     @AuraEnabled public String Source_Field_API_Name;
     @AuraEnabled public String Source_Field_Data_Type;
+    @AuraEnabled public Boolean Source_Field_Required;
     @AuraEnabled public String Target_Field_Label;
     @AuraEnabled public String Target_Field_API_Name;
     @AuraEnabled public String Target_Field_Data_Type;
+    @AuraEnabled public Boolean Target_Field_Required;
     @AuraEnabled public String Data_Import_Field_Mapping_Set;
     @AuraEnabled public String Target_Object_Mapping_Dev_Name;
     @AuraEnabled public String Target_Object_API_Name;
@@ -94,10 +96,16 @@ public virtual with sharing class BDI_FieldMapping {
         this.Source_Field_Label = sourceFieldDescribe.label;
         this.Source_Field_Data_Type = String.valueOf(sourceFieldDescribe.type);
         this.Source_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Source_Field_Data_Type);
+        
+        // If a field is nillable, it can have a null value. A non-nillable field means it is required. 
+        this.Source_Field_Required = !sourceFieldDescribe.isNillable();
 
         this.Target_Field_Label = targetFieldDescribe.label;
         this.Target_Field_Data_Type = String.valueOf(targetFieldDescribe.type);
         this.Target_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Target_Field_Data_Type);
+        
+        // If a field is nillable, it can have a null value. A non-nillable field means it is required. 
+        this.Target_Field_Required = !targetFieldDescribe.isNillable();
 
         this.Data_Import_Field_Mapping_Set = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
         this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping__r.DeveloperName;

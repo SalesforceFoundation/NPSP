@@ -122,7 +122,7 @@ public with sharing class FORM_ServiceGiftEntry {
                                 LIMIT 1];
         
         template = deserializeFormTemplateFromObj(templateObj);
-    
+
         return template;
     }
 
@@ -194,5 +194,4 @@ public with sharing class FORM_ServiceGiftEntry {
         }
         return template;
     }
-
 }
