@@ -50,8 +50,6 @@ public with sharing class FORM_ServiceGiftEntry {
         
         template = deserializeFormTemplateFromObj(templateObj);
 
-        updateTemplateWithRequired(template);
-    
         return template;
     }
 
@@ -121,17 +119,5 @@ public with sharing class FORM_ServiceGiftEntry {
             template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
         }
         return template;
-    }
-
-    private static FORM_Template prepareFormTemplate(Form_Template__c templateObj) {
-        FORM_Template template = deserializeFormTemplateFromObj(templateObj);
-        
-        updateTemplateWithRequired(template);
-
-        return template;
-    }
-
-    private static void updateTemplateWithRequired(FORM_Template template) {
-
     }
 }
