@@ -76,7 +76,8 @@ private with sharing class BDI_SettingsUI_TEST {
         Boolean containsImportedField = false;
 
         for (SelectOption option : ctrl.listSODonationFields) {
-            if (option.getValue() =='donationcampaignimported__c') {
+            if (option.getValue() == UTIL_Namespace.alignSchemaNSWithEnvironment(
+                    'npsp__donationcampaignimported__c')) {
                 containsImportedField = true;
                 break;
             }
@@ -97,7 +98,8 @@ private with sharing class BDI_SettingsUI_TEST {
         Boolean containsImportedField = false;
 
         for (SelectOption option : ctrl.listSODonationFields) {
-            if (option.getValue() =='donationcampaignimported__c') {
+            if (option.getValue() == UTIL_Namespace.alignSchemaNSWithEnvironment(
+                    'npsp__donationcampaignimported__c')) {
                 containsImportedField = true;
                 break;
             }
