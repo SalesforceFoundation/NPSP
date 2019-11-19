@@ -1,20 +1,51 @@
 <template>
-    <lightning-input type="search"
-                     value={displayValue}
-                     onchange={handleChange}
-                     label={label}
-                     ></lightning-input>
-    <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox" if:true={hasOptions}>
-        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-            <template for:each={options} for:item="option">
-                <c-ge-autocomplete-option
-                        onselect={handleSelect}
-                        value={option.value}
-                        display-value={option.displayValue}
-                        icon-name={iconName}
-                        key={option.value}>
-                </c-ge-autocomplete-option>
-            </template>
-        </ul>
+    <div class="slds-form-element">
+        <label class="slds-form-element__label" for={comboBoxId}>{label}</label>
+        <div class="slds-form-element__control">
+            <div class={comboBoxContainerClass}>
+                <div class={comboBoxClass} aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                    <div class={comboBoxFormElementClass} role="none">
+                        <span class="slds-icon_container slds-icon-standard-account slds-combobox__input-entity-icon" title={label} if:true={hasOptionSelected}>
+                            <lightning-icon icon-name={iconName} size="small"></lightning-icon>
+                            <span class="slds-assistive-text">{label}</span>
+                        </span>
+                        <input type="text"
+                               class={inputClass}
+                               id={comboBoxId}
+                               aria-autocomplete="list"
+                               aria-controls={listBoxId}
+                               auto-complete="off"
+                               role="textbox"
+                               placeholder={labels.SEARCH_PLACEHOLDER}
+                               value={displayValue}
+                               onkeyup={handleChange}>
+                        <button
+                                class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
+                                title={labels.REMOVE_SELECTED_OPTION}
+                                onclick={handleClear}
+                                if:true={hasOptionSelected}>
+                            <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+                            <span class="slds-assistive-text">{labels.REMOVE_SELECTED_OPTION}</span>
+                        </button>
+                        <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right" if:false={hasOptionSelected}>
+                            <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
+                        </span>
+                    </div>
+                    <div id={listBoxId} class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox" if:true={hasOptions}>
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                            <template for:each={options} for:item="option">
+                                <c-ge-autocomplete-option
+                                        onselect={handleSelect}
+                                        value={option.value}
+                                        display-value={option.displayValue}
+                                        icon-name={iconName}
+                                        key={option.value}>
+                                </c-ge-autocomplete-option>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>

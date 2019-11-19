@@ -16,7 +16,7 @@ export default class GeFormField extends LightningElement {
     changeTimeout;
 
     handleValueChange(event) {
-        this.value = event.target.value;
+        this.value = this.isLookup ? event.detail.value : event.target.value;
         window.clearTimeout(this.changeTimeout);
         this.changeTimeout = setTimeout(() => {
             // parent component (formSection) should bind to onchange event
