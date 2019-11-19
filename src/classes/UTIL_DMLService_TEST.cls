@@ -44,6 +44,8 @@ private with sharing class UTIL_DMLService_TEST {
     private static final Integer NUMBER_OF_RECORDS_THREE = 3;
     private static final String ERROR_STATUS_CODE_DUPLICATES_DETECTED = 'DUPLICATES_DETECTED';
 
+    private static final TEST_SobjectGateway.ErrorGateway errorGateway = new TEST_SobjectGateway.ErrorGateway();
+
 
     /***
     * @description Tests insert of a record with default DMLOption settings.
@@ -379,7 +381,67 @@ private with sharing class UTIL_DMLService_TEST {
         System.assertEquals(contacts[0].FirstName, retrieveUpdatedContacts[0].FirstName);
         System.assertEquals(contacts[1].FirstName, retrieveUpdatedContacts[1].FirstName);
     }
+    /***
+    * @description Verifies records are updated and no error is generated
+    */
+    @isTest
+    private static void shouldUpdateRecordsAndLogNoError() {
+        List<Contact> contacts = new List<Contact>{
+            UTIL_UnitTestData_TEST.getContact(),
+            UTIL_UnitTestData_TEST.getContact()
+        };
+        insert contacts;
 
+        for (Contact c : contacts) {
+            c.LastName += ' Updated';
+        }
+
+        Test.startTest();
+        UTIL_DMLService.updateRecordBatchAndLogErrors(contacts, 'TestContext');
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No Error should be generated: ' + errors);
+
+        List<Contact> actualContacts = getContacts();
+        System.assertEquals(contacts.size(), actualContacts.size(), 'Number of records should match');
+
+        for (Contact c : contacts) {
+            System.assert(c.LastName.endsWith(' Updated'), 'The record should be updated: ' + c);
+        }
+    }
+
+    /***
+    * @description Verifies error is created when the update fails
+    */
+    @isTest
+    private static void shouldLogErrorOnUpdateFailure() {
+        List<Contact> contacts = new List<Contact>{
+            UTIL_UnitTestData_TEST.getContact(),
+            UTIL_UnitTestData_TEST.getContact()
+        };
+        insert contacts;
+        contacts = getContacts();
+
+        //mock invalid record
+        contacts[0].Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+
+        for (Contact c : contacts) {
+            c.LastName += ' Updated';
+        }
+
+        Test.startTest();
+        UTIL_DMLService.updateRecordBatchAndLogErrors(contacts, 'TestContext');
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An Error should be generated: ' + errors);
+
+        Map<Id, Contact> actualContactById = new Map<Id, Contact>(getContacts());
+
+        System.assert(actualContactById.get(contacts[1].Id).LastName.endsWith(' Updated'), 
+            'Valid record should be updated: ' + actualContactById.get(contacts[1].Id));
+    }
 
     /***
     * @description Tests upsert of a record by wrapping Database.upsert(...).
@@ -495,10 +557,10 @@ private with sharing class UTIL_DMLService_TEST {
     }
 
     /***
-    * @description Verifies records are deleted
+    * @description Verifies records are deleted and no error is generated
     */
     @isTest
-    private static void shouldDeleteRecords() {
+    private static void shouldDeleteRecordsAndLogNoError() {
         List<Contact> contacts = new List<Contact>{
             UTIL_UnitTestData_TEST.getContact(),
             UTIL_UnitTestData_TEST.getContact()
@@ -506,10 +568,10 @@ private with sharing class UTIL_DMLService_TEST {
         insert contacts;
 
         Test.startTest();
-        UTIL_DMLService.deleteRecordsAndLogErrors(contacts, 'Test');
+        UTIL_DMLService.deleteRecordsAndLogErrors(contacts, 'TestContext');
         Test.stopTest();
 
-        List<Error__c> errors = getErrors();
+        List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No Error should be generated: ' + errors);
 
         System.assertEquals(0, getContacts().size(), 'Records should be deleted');
@@ -519,30 +581,29 @@ private with sharing class UTIL_DMLService_TEST {
     * @description Verifies error is created when deletion fails
     */
     @isTest
-    private static void shouldCreateErrorOnDeletionFailure() {
+    private static void shouldLogErrorOnDeletionFailure() {
         List<Contact> contacts = new List<Contact>{
             UTIL_UnitTestData_TEST.getContact(),
             UTIL_UnitTestData_TEST.getContact()
         };
         insert contacts;
+        contacts = getContacts();
 
         //mock invalid record
         Id validContactId = contacts[0].Id;
         contacts[0].Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
 
         Test.startTest();
-        UTIL_DMLService.deleteRecordsAndLogErrors(contacts, 'Test');
+        UTIL_DMLService.deleteRecordsAndLogErrors(contacts, 'TestContext');
         Test.stopTest();
 
-        List<Error__c> errors = getErrors();
+        List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'An Error should be generated: ' + errors);
 
         List<Contact> actualContacts = getContacts();
-        System.assertEquals(1, actualContacts.size(), 'A Record should be deleted');
+        System.assertEquals(1, actualContacts.size(), 'A record should be deleted');
         System.assertEquals(validContactId, actualContacts[0].Id, 'Records not being in list should not be deleted');
     }
-
-
 
     /***
     * @description Tests the NPSP Setting Respect Duplicate Rule Settings for duplicate Accounts
@@ -678,17 +739,6 @@ private with sharing class UTIL_DMLService_TEST {
         return [
             SELECT Id, Name
             FROM Account
-        ];
-    }
-
-    /***
-    * @description Retrieves Errors
-    * @return List<Error__c> 
-    */
-    public static List<Error__c> getErrors() {
-        return [
-            SELECT Id, Object_Type__c, Related_Record_ID__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
         ];
     }
 

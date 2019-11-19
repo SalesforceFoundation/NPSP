@@ -168,4 +168,67 @@ public class TEST_SObjectGateway {
             ];
         }        
     }
+
+    /***
+    * @description Retrieves Error record(s)
+    */
+    public class ErrorGateway {
+
+        /***
+        * @description Retrieves Error records
+        * @return List<Error__c>
+        */
+        public List<Error__c> getRecords() {
+            return [
+                SELECT
+                    Context_Type__c,
+                    Datetime__c,
+                    Error_Type__c,
+                    Full_Message__c,
+                    Object_Type__c,
+                    Related_Record_ID__c,
+                    Record_URL__c,
+                    Retry_Pending__c,
+                    Email_Sent__c,
+                    Posted_In_Chatter__c
+                FROM Error__c
+            ];
+        }
+        
+        /***
+        * @description Returns number of Error__c records
+        * @return Integer
+        */
+        public Integer getErrorCount() {
+            return Database.countQuery('SELECT Count() FROM Error__c');
+        }
+    }
+
+    /***
+    * @description Retrieves AsyncApexJob record(s)
+    */
+    public class AsyncApexJobGateway {
+
+        /***
+        * @description Retrieves AsyncApexJob records
+        * @return AsyncApexJob
+        */
+        public AsyncApexJob getRecord(String className) {
+            return [
+                SELECT 
+                    CompletedDate,
+                    ExtendedStatus,
+                    JobItemsProcessed,
+                    TotalJobItems,
+                    NumberOfErrors,
+                    JobType,
+                    ApexClass.NamespacePrefix,
+                    ApexClass.Name,
+                    MethodName
+                FROM AsyncApexJob
+                WHERE ApexClass.Name = :className
+                LIMIT 1
+            ];
+        }
+    }
 }
