@@ -75,11 +75,14 @@ public with sharing class FORM_ServiceGiftEntry {
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
         FORM_Template template;
 
-        Form_Template__c templateObj = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
+        List<Form_Template__c> templateObjList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
                                 FROM Form_Template__c 
                                 WHERE Name =: giftEntrySettings.Default_Batch_Gift_Entry_Template__c];
 
-        template = deserializeFormTemplateFromObj(templateObj);
+        if (!templateObjList.isEmpty()) {
+            template = deserializeFormTemplateFromObj(templateObjList[0]);
+        }
+        
 
         return template;
     }
@@ -90,12 +93,14 @@ public with sharing class FORM_ServiceGiftEntry {
     public static FORM_Template retrieveDefaultSGEFormTemplate() {
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
         FORM_Template template;
-        Form_Template__c templateObj = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
+        List<Form_Template__c> templateObjList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
                                 FROM Form_Template__c 
                                 WHERE Name =: giftEntrySettings.Default_Single_Gift_Entry_Template__c];
         
-        template = deserializeFormTemplateFromObj(templateObj);
-        
+         if (!templateObjList.isEmpty()) {
+            template = deserializeFormTemplateFromObj(templateObjList[0]);
+        }
+
         return template;
     }
 
