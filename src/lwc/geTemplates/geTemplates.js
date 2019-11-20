@@ -94,4 +94,17 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     handleNewFormTemplate() {
         this.navigateToTemplateBuilder();
     }
+
+    /*******************************************************************************
+    * @description Handles onclick event from 'New Batch' button and navigates
+    * to the Form Renderer.
+    */
+    navigateToForm() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__component',
+            attributes: {
+                componentName: 'c__geFormRendererPlaceholder'
+            }
+        });
+    }
 }
