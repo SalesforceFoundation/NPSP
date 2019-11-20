@@ -1,9 +1,10 @@
-import {LightningElement, api, track} from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
+import { showToast } from 'c/utilTemplateBuilder';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api sections = [];
@@ -57,12 +58,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     handleSave() {
         console.log('Form Save button clicked');
 
-        // show the spinner
-        this.toggleSpinner();
-
         // TODO: Pass the actual Data Import record, and navigate to the new Opportunity
         // const OpportunityId = GeFormService.createOpportunityFromDataImport(dataImport);
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+
+        if(!this.isFormValid(sectionsList)){
+            return;
+        }
+
+        // show the spinner
+        this.toggleSpinner();
 
         if (this.isBatchMode) {
             const submission = {
@@ -77,6 +82,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.navigateToRecordPage(opportunityId);
             });
         }
+    }
+
+    isFormValid(sectionsList){
+        let invalidFields = [];
+        sectionsList.forEach(section => {
+            const fields = section.getInvalidFields();
+            invalidFields.push(...fields);
+        });
+
+        if(invalidFields.length > 0){
+            let fieldListAsString = invalidFields.join(', ');
+            showToast(this, 'Invalid Form', 'The following fields are required: ' + fieldListAsString, 'error');
+        }
+
+        return invalidFields.length === 0;
     }
 
     navigateToRecordPage(recordId) {

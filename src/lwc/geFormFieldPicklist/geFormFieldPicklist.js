@@ -5,6 +5,7 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api objectName;
     @api fieldName;
     @api label;
+    @api required;
 
     @track picklistValues;
     @api value;
@@ -32,4 +33,17 @@ export default class GeFormFieldPicklist extends LightningElement {
         this.value = event.detail.value;
         this.dispatchEvent(new CustomEvent('onchange', event)); // bubble up to ge-form-field
     }
+
+    @api
+    reportValidity(){
+        const picklistField = this.template.querySelector('lightning-combobox');
+        return picklistField.reportValidity();
+    }
+
+    @api
+    checkValidity(){
+        const picklistField = this.template.querySelector('lightning-combobox');
+        return picklistField.checkValidity();
+    }
+
 }

@@ -1,5 +1,5 @@
 <template>
-    <lightning-layout multiple-rows='true'>
+    <lightning-layout multiple-rows='true' class='ge-form-container'>
         <lightning-layout-item size='12' class='slds-card'>
             <template for:each={sections} for:item='section'>
                 <c-ge-form-section key={section.id} section={section}></c-ge-form-section>
@@ -11,7 +11,7 @@
         <lightning-spinner alternative-text={label.messageLoading} variant="brand" size="large"></lightning-spinner>
     </div>
 
-    <div class="slds-docked-form-footer" style="height: 50px;">
+    <div class="slds-docked-form-footer ge-form-footer">
         <lightning-button label={label.geCancel} title={label.geCancel} onclick={handleCancel} class="slds-m-left_x-small"></lightning-button>
         <lightning-button variant="brand" label={label.geSave} title={label.geSave} onclick={handleSave} class="slds-m-left_x-small"></lightning-button>
     </div>

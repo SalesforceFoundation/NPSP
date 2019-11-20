@@ -1,4 +1,10 @@
-.spinnerContainer{
+.ge-form-container {
+    padding-bottom: 65px;
+}
+.ge-form-footer {
+    height: 50px;
+}
+.spinnerContainer {
     vertical-align: middle;
     text-align: center;
 }
