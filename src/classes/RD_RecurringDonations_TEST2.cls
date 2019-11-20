@@ -337,7 +337,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
             npe03__Opportunity_Forecast_Months__c = 6,
             npe03__Maximum_Donations__c = 2,
-            npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()        
+            npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
         ));           
         
         Account a = buildAccount();

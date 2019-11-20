@@ -259,7 +259,7 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals('Matched Donor;Soft Credit;Household Member', npo02Settings.npo02__Soft_Credit_Roles__c);
         System.assertEquals(true, npo02Settings.npo02__Household_Contact_Roles_On__c);
         
-        System.assertEquals(RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(), npe03Settings.npe03__Open_Opportunity_Behavior__c);
+        System.assertEquals(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(), npe03Settings.npe03__Open_Opportunity_Behavior__c);
         System.assertEquals(true, npe03Settings.npe03__Add_Campaign_to_All_Opportunites__c);
         System.assertEquals(true, npe03Settings.npe03__Enable_Update_Check__c);
         System.assertEquals(50, npe03Settings.npe03__Maximum_Donations__c);

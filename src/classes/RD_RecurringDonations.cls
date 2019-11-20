@@ -83,6 +83,11 @@
 *
 */
 public class RD_RecurringDonations {
+
+    /*******************************************************************************************************	
+    * @description Enum to specify behavior of what happens to open opportunities when their RD is closed.	
+    */ 	
+    public enum RecurringDonationCloseOptions { Delete_Open_Opportunities, Mark_Opportunities_Closed_Lost, No_Action }	
     
     /*******************************************************************************************************
     * @description holds the current custom field mappings used when creating opps for the RD.
@@ -1099,11 +1104,11 @@ public class RD_RecurringDonations {
         // determine the update type - 
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
-        if (!closedRDs.isEmpty() && rds.npe03__Open_Opportunity_Behavior__c != RD2_Constants.CloseActions.No_Action.name()) {
+        if (!closedRDs.isEmpty() && rds.npe03__Open_Opportunity_Behavior__c != RecurringDonationCloseOptions.No_Action.name()) {
             Map<Id, Opportunity> mapIdOpp = new Map<Id, Opportunity>([select Id, StageName, npe03__Recurring_Donation__c
                                     from Opportunity where npe03__Recurring_Donation__c IN :closedRDs and isClosed = false]);
          
-            if (rds.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Delete_Open_Opportunities.name()) {
+            if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Delete_Open_Opportunities.name()) {
                 if (dmlWrapper != null) {
                     List<SObject> oppsToDelete = new List<SObject>();
                     for (Id oppToDeleteId : mapIdOpp.keySet()) {
@@ -1115,7 +1120,7 @@ public class RD_RecurringDonations {
                     Database.delete(mapIdOpp.values());
                 }
             
-            } else if (rds.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
+            } else if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()) {
                 for (Opportunity o : mapIdOpp.values()) {
                     o.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
                 }  
