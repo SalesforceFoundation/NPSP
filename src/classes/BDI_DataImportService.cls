@@ -509,24 +509,12 @@ global with sharing class BDI_DataImportService {
         try {
             this.diSettings = dataImportSettings;
 
-            // list of populated data import fields
-            Set<String> populatedDataImportFieldSet = new Set<String>();
-
             // first set a clean state for each DI
             for (DataImport__c dataImport : dataImports) {
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
                 dataImport.FailureInformation__c = null;
-
-                // collect populated DI fields to use for later mapping
-                Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
-                populatedDataImportFieldSet.addAll(new List<String>(populatedFieldsMap.keySet()));
-            }
-
-            populatedDataImportFields = new List<String>(populatedDataImportFieldSet);
-            for(Integer i = 0; i < populatedDataImportFields.size(); i++) {
-                populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
 
             this.flsService = new BDI_DataImportFLSService(
@@ -768,11 +756,6 @@ global with sharing class BDI_DataImportService {
             dataImport.put(statusField, errorMessage.left(255));
         }
     }
-
-    /*******************************************************************************************************
-    * @description holds list of populated Data Import fields for Data Import records in current Batch
-    */
-    public List<String> populatedDataImportFields = new List<String>();
 
     /*******************************************************************************************************
     * @description list of all the fields in the Data Import object

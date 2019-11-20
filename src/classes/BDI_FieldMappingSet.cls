@@ -42,6 +42,7 @@ public with sharing class BDI_FieldMappingSet {
 
     @AuraEnabled public Map<String,BDI_ObjectMapping> objectMappingByDevName = new Map<String,BDI_ObjectMapping>();
     @AuraEnabled public Map<String,BDI_FieldMapping> fieldMappingByDevName = new Map<String,BDI_FieldMapping>();
+    @AuraEnabled public Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingDevName = new Map<String,BDI_FieldMapping[]>();
 
 
     /*******************************************************************************************************
@@ -53,7 +54,8 @@ public with sharing class BDI_FieldMappingSet {
     */
     public BDI_FieldMappingSet(Data_Import_Field_Mapping_Set__mdt fieldMappingSet, 
                                 Map<String,BDI_ObjectMapping> objectMappingByDevName,
-                                Map<String,BDI_FieldMapping>  fieldMappingByDevName) {
+                                Map<String,BDI_FieldMapping>  fieldMappingByDevName,
+                                Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingDevName) {
 
         this.DeveloperName = fieldMappingSet.DeveloperName;
         this.MasterLabel = fieldMappingSet.MasterLabel;
@@ -62,5 +64,6 @@ public with sharing class BDI_FieldMappingSet {
 
         this.objectMappingByDevName = objectMappingByDevName;
         this.fieldMappingByDevName = fieldMappingByDevName;
+        this.fieldMappingsByObjMappingDevName = fieldMappingsByObjMappingDevName;
     }
 }

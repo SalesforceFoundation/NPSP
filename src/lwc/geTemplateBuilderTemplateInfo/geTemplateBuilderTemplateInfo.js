@@ -1,43 +1,32 @@
-import { LightningElement, api, track } from 'lwc';
-import { mutable } from 'c/utilTemplateBuilder';
+import { LightningElement, api } from 'lwc';
+import { dispatch } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
-    @track templateInfo;
-
-    /* Public setter for the tracked property templateInfo */
-    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template
-    @api
-    set templateInfo(templateInfo) {
-        this.templateInfo = templateInfo;
-    }
+    @api isLoading;
+    @api templateName;
+    @api templateDescription;
 
     /*******************************************************************************
-    * @description Public method that returns the templateInfo object. Called when
-    * saving a form template.
+    * @description Handles onblur event from lightning-input and dispatches an
+    * event to notify parent component geTemplateBuilder that the form template
+    * description has changed.
     *
+    * @param {object} event: Event object from lightning-input onblur event handler
     * @return {object} templateInfo: Object containing the template name and description
     */
-    @api
-    getTabData() {
-        let templateInfo = mutable(this.templateInfo);
-        templateInfo.name = this.template.querySelector('lightning-input[data-name="templateName"]').value;
-        templateInfo.description = this.template.querySelector('lightning-textarea[data-name="description"]').value;
-
-        return templateInfo;
+    handleChangeTemplateInfoName(event) {
+        dispatch(this, 'changetemplateinfoname', event.target.value);
     }
 
     /*******************************************************************************
-    * @description Sends an event up to geTemplateBuilder for tab navigation
-    * Currently also collecting data from the page to send up with event.
-    * Likely to change this behavior later when more comprehensively look at
-    * the way to collect/pass tab data around.
+    * @description Handles onblur event from lightning-textarea and dispatches an
+    * event to notify parent component geTemplateBuilder that the form template
+    * description has changed.
     *
-    * @param {object} event: Onclick event object from lightning-button
+    * @param {object} event: Event object from lightning-textarea onblur event handler
+    * @return {object} templateInfo: Object containing the template name and description
     */
-    handleGoToTab(event) {
-        let detail = {
-            tabValue: event.target.getAttribute('data-tab-value')
-        }
-        this.dispatchEvent(new CustomEvent('gototab', { detail: detail }));
+    handleChangeTemplateInfoDescription(event) {
+        dispatch(this, 'changetemplateinfodescription', event.target.value);
     }
 }

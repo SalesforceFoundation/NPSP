@@ -37,10 +37,83 @@
 public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
+    * @description Method for retrieving all existing form templates.
+    */
+    @AuraEnabled
+    public static FORM_Template[] getAllFormTemplates() {
+        FORM_Template[] formTemplates = new FORM_Template[]{};
+        Form_Template__c[] allTemplates = [SELECT Id,
+            Name,
+            Template_JSON__c,
+            Description__c,
+            Format_Version__c
+            FROM Form_Template__c];
+
+        for (Form_Template__c formTemplate : allTemplates) {
+            FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
+            if (formTemplate.id != null) {
+                deserializedFormTemplate.id = formTemplate.id;
+            }
+
+            formTemplates.add(deserializedFormTemplate);
+        }
+
+        return formTemplates;
+    }
+
+    /*******************************************************************************************************
+    * @description Method clones a Form_Template__c record by id.
+    * @param id: Form_Template__c record id
+    * @return string: A Form_Template__c record id
+    */
+    @AuraEnabled
+    public static FORM_Template cloneFormTemplate(String id) {
+        Form_Template__c formTemplate = [SELECT Id,
+                Name,
+                Template_JSON__c,
+                Description__c,
+                Format_Version__c
+            FROM Form_Template__c
+            WHERE Id = :id];
+
+        if (formTemplate != null) {
+            Form_Template__c clonedFormTemplate = formTemplate.clone();
+            FORM_Template deserializedTemplate = deserializeFormTemplateFromObj(clonedFormTemplate);
+            clonedFormTemplate.Name += ' [CLONED ' + Date.today().format() + ']';
+            deserializedTemplate.name = clonedFormTemplate.Name;
+            clonedFormTemplate.Template_JSON__c = JSON.serialize(deserializedTemplate);
+
+            String newId = storeFormTemplate(null,
+                clonedFormTemplate.Name,
+                clonedFormTemplate.Description__c,
+                clonedFormTemplate.Format_Version__c,
+                clonedFormTemplate.Template_JSON__c);
+
+            FORM_Template deserializedClonedTemplate = deserializeFormTemplateFromObj(clonedFormTemplate);
+            deserializedClonedTemplate.id = newId;
+
+            return deserializedClonedTemplate;
+        }
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Method deletes a Form_Template__c record by id.
+    * @param id: Form_Template__c record id
+    */
+    @AuraEnabled
+    public static void deleteFormTemplates(String[] ids) {
+        Form_Template__c[] templates = [SELECT Id FROM Form_Template__c WHERE Id IN :ids];
+        delete templates;
+    }
+
+    /*******************************************************************************************************
     * @description Method for retrieving an existing template that you already have the Id for.
     * @param templateId - the Id of an existing form template record for retrieval.
     */
-    public static FORM_Template retrieveFormTemplate(Id templateId) {
+    @AuraEnabled
+    public static FORM_Template retrieveFormTemplateById(Id templateId) {
         FORM_Template template;
 
         Form_Template__c templateObj = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
@@ -91,6 +164,7 @@ public with sharing class FORM_ServiceGiftEntry {
     * @param formatVersion - the version id/number of the template format
     * @param templateJSON - The JSON for the FormTemplate class that is being stored.
     */
+    @AuraEnabled
     public static String storeFormTemplate(String id, 
                                             String name, 
                                             String description,
