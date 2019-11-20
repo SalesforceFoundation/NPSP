@@ -51,8 +51,7 @@ private with sharing class RD2_OpportunityService_TEST {
     */
     @TestSetup
     private static void setUp() {
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
+        insert UTIL_UnitTestData_TEST.getContact();
     }
 
     /***
@@ -89,8 +88,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        String oppNameFormat = rd.npe03__Donor_Name__c +  ' ' + rd.npe03__Amount__c.format();
-        oppNameFormat += ' ' + closeDates[0].format() +   ' ' + UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c');
+        String oppNameFormat = getSpecializedNameFormat(rd, closeDates[0]);
 
         rdsWithCloseDates.put(rd, closeDates);
 
@@ -155,8 +153,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        String oppNameFormat = rd.npe03__Donor_Name__c +  ' ' + rd.npe03__Amount__c.format();
-        oppNameFormat += ' ' + closeDates[0].format() +  ' ' + UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c');
+        String oppNameFormat = getSpecializedNameFormat(rd, closeDates[0]);
 
         rdsWithCloseDates.put(rd, closeDates);
 
@@ -180,13 +177,158 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(opps[0].Id, ocr.OpportunityId, 'OCR Opportunity should match: ' + ocr);
         System.assertEquals(AFFILIATION_OCR_ROLE_SOLICITOR, ocr.Role, 'OCR Contact Role should match: ' + ocr);
         System.assertEquals(opps[0].CloseDate, closeDates[0]);
-
     }
 
-    // Helpers
-    /////////////////
-
     /***
+    * @description Verifies if it creates opportunities with specialized format when
+      no opportunity naming is specified in NPSP Settings
+    */
+    @isTest
+    private static void shouldCreateOppWithSpecialFormatWhenNoOppNamingSpecified() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Map<npe03__Recurring_Donation__c,List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c,List<Date>>();
+        List<Date> CloseDate = new List<Date> ();
+        List<Opportunity> oppCreated = new List<Opportunity> ();
+        String oppNameFormat = '';
+
+        CloseDate.add(System.today()+2);
+        CloseDate.add(System.today()+5);
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+
+        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
+        insert campaign;
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(getContact().Id)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('20')
+            .withDateEstablished(Date.newInstance(2019, 9, 15))
+            .withAmount(415)
+            .withCampaign(campaign.id)
+            .build();
+
+        insert rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        oppNameFormat = getSpecializedNameFormat(rd, CloseDate[0]);
+
+        rdsWithCloseDates.put(rd, CloseDate);
+
+        Test.startTest();
+        RD2_OpportunityService rds = new RD2_OpportunityService();
+        rds.createInstallmentOpportunities(rdsWithCloseDates);
+        Test.stopTest();
+
+        oppCreated = getOpportunities();
+        System.assertEquals(OppCreated[0].Name, oppNameFormat);
+    }
+
+     /***
+    * @description Verifies if it creates opportunities with specialized format for the
+      next opportunity when no opportunity naming is specified in NPSP Settings
+    */
+    @isTest
+    private static void shouldCreateOppNameWithSpecialFormatForNextOpportunity() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Map<npe03__Recurring_Donation__c,List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c,List<Date>>();
+        List<Date> CloseDate = new List<Date> ();
+        List<Opportunity> oppCreated = new List<Opportunity> ();
+        String oppNameFormat = '';
+
+        CloseDate.add(System.today()+2);
+        CloseDate.add(System.today()+5);
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+
+        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
+        insert campaign;
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(getContact().Id)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('20')
+            .withPaidInstallments(1)
+            .withDateEstablished(Date.newInstance(2019, 9, 15))
+            .withAmount(415)
+            .withCampaign(campaign.id)
+            .build();
+
+        insert rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        oppNameFormat = getSpecializedNameFormat(rd, CloseDate[0]);
+
+        rdsWithCloseDates.put(rd, CloseDate);
+
+        Test.startTest();
+        RD2_OpportunityService rds = new RD2_OpportunityService();
+        rds.createInstallmentOpportunities(rdsWithCloseDates);
+        Test.stopTest();
+
+        oppCreated = getOpportunities();
+        System.assertEquals(OppCreated[0].Name, oppNameFormat);
+    }
+
+     /***
+    * @description Verifies if it creates opportunities with opportunity naming format
+      in NPSP Settings.
+    */
+    @isTest
+    private static void shouldCreateOppNameWithOppNamingSpecifiedInSettings() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!RecordType.Name} {!CloseDate}',
+            Attribution__c = Label.oppNamingBoth
+        );
+        insert ons;
+
+        Map<npe03__Recurring_Donation__c,List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c,List<Date>>();
+        List<Date> CloseDate = new List<Date> ();
+        List<Opportunity> oppCreated = new List<Opportunity> ();
+        String oppNameFormat = '';
+
+        CloseDate.add(System.today()+2);
+        CloseDate.add(System.today()+5);
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+
+        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
+        insert campaign;
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(getContact().Id)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('20')
+            .withDateEstablished(Date.newInstance(2019, 9, 15))
+            .withAmount(415)
+            .withCampaign(campaign.id)
+            .build();
+
+        insert rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        oppNameFormat = getOppNameFormat(rd, CloseDate[0]);
+
+        rdsWithCloseDates.put(rd, CloseDate);
+
+        Test.startTest();
+        RD2_OpportunityService rds = new RD2_OpportunityService();
+        rds.createInstallmentOpportunities(rdsWithCloseDates);
+        Test.stopTest();
+
+        oppCreated = getOpportunities();
+        System.assertEquals(OppCreated[0].Name, oppNameFormat);
+    }
+
+    /*******************************************************************************************************
     * @description Creates recurring donation settings
     * @param Installment stagename
     * @return void
@@ -200,6 +342,42 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
+    * @description Builds Specialized name format for opportunity
+    * @param Recurring Donation Record
+    * @param Date close date
+    * @return String Expected Opportunity name
+    */
+    public static String getSpecializedNameFormat(npe03__Recurring_Donation__c rd, Date closeDate) {
+        return
+            rd.npe03__Donor_Name__c +  ' ' +
+            System.Label.npe03.RecurringDonationPrefix + ' (' +
+            (rd.npe03__Total_Paid_Installments__c != null ?
+            rd.npe03__Total_Paid_Installments__c + 1 : 1) + ') ' +
+            closeDate.format();
+
+    }
+
+    /***
+    * @description Builds Opportunity name format from settings
+    * @param Recurring Donation Record
+    * @param Date close date
+    * @return String Expected Opportunity name
+    */
+    public static String getOppNameFormat(npe03__Recurring_Donation__c rd, Date closeDate) {
+
+        String dateFormatString = 'yyyy.MM.dd';
+        Datetime dt = Datetime.newInstance(closeDate.year(), closeDate.month(),closeDate.day());
+        String formatDate = dt.format(dateFormatString);
+        String RecordTypeName = UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType);
+
+        return
+            rd.npe03__Donor_Name__c +  ' ' +
+            RecordTypeName + ' ' +
+            formatDate;
+
+    }
+
+    /*******************************************************************************************************
     * @description Queries OCRs for specified Opportunities
     * @param oppIds Opportunity Ids
     * @return List<OpportunityContactRole> OCRs assigned to provided Opportunities

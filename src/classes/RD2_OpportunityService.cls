@@ -118,9 +118,10 @@ public with sharing class RD2_OpportunityService {
         List<Opportunity> opps = new List<Opportunity>();
 
         for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keySet()) {
+            List<Date> closeDates = rdsWithCloseDates.get(r);
 
-            for (Integer i = 0; i < rdsWithCloseDates.get(r).size(); i++) {
-                opps.add(buildOpportunity(r, rdsWithCloseDates.get(r)[i]));
+            for (Date closeDate : closeDates) {
+                opps.add(buildOpportunity(r, closeDate));
             }
 
         }
@@ -145,10 +146,11 @@ public with sharing class RD2_OpportunityService {
             CloseDate = closeDate,
             StageName = oppStageName,
             Amount = rd.npe03__Amount__c,
-            Name = buildOpportunityName(rd, closeDate),
-            npe03__Recurring_Donation__c = rd.Id,
-            Recurring_Donation_Installment_Number__c = installmentNumber
+            Recurring_Donation_Installment_Number__c = installmentNumber,
+            npe03__Recurring_Donation__c = rd.Id
+
         );
+        opp.Name = buildOpportunityName(rd, opp);
 
         if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
             opp.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
@@ -160,14 +162,15 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Constructs the opportunity name in a specific format.
     * @param rd Recurring donation 
-    * @param closeDate The next donation date on the recurring donation
-    * @return String
+    * @param opp The new Opportunity on the recurring donation.
+    * @return String The Opportunity Name
     */
-    private String buildOpportunityName(npe03__Recurring_Donation__c rd, Date closeDate) {
-        return rd.npe03__Donor_Name__c + ' ' +
-            (rd.npe03__Amount__c != null ? rd.npe03__Amount__c.format() : '0') + ' ' +
-            (closeDate != null ? closeDate.format() : '') + ' ' +
-            UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c');
+    private String buildOpportunityName(npe03__Recurring_Donation__c rd, Opportunity opp) {
+        return
+            rd.npe03__Donor_Name__c + ' ' +
+            System.Label.npe03.RecurringDonationPrefix + ' (' +
+            opp.Recurring_Donation_Installment_Number__c +  ') ' +
+            opp.CloseDate.format();
     }
 
     /***
