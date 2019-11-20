@@ -62,7 +62,7 @@ Create Data Import Record
     Reload Page
     
     &{data_import2} =                          Create Data Import Record
-    Process Data Import Batch
+    Process Data Import Batch                  Completed
     &{data_import_upd} =                       Salesforce Get  ${ns}DataImport__c  &{data_import2}[Id]
     
     # Verify Account Details
@@ -119,7 +119,7 @@ Create Data Import Record
     Reload Page
     
     &{data_import} =                          Create Data Import Record
-    Process Data Import Batch
+    Process Data Import Batch                 Completed
     &{data_import_upd} =                      Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     
     # Verify Account Details
@@ -177,7 +177,7 @@ Create Data Import Record
     Reload Page
     
     &{data_import1} =                          Create Data Import Record
-    Process Data Import Batch
+    Process Data Import Batch                  Completed
     &{data_import_upd} =                       Salesforce Get  ${ns}DataImport__c  &{data_import1}[Id]
     
     # Verify Account Details
