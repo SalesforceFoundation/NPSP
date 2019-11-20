@@ -45,6 +45,11 @@ private with sharing class RD2_OpportunityService_TEST {
     private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final List<Date> closeDates = new List<Date>{
+        System.today() + 2,
+        System.today() + 5
+    };
+
 
     /****
     * @description Creates data required for unit tests
@@ -61,11 +66,6 @@ private with sharing class RD2_OpportunityService_TEST {
     @isTest
     private static void shouldCreateOppWhenRDIsInsertedWithContact() {
         Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
-        List<Date> closeDates = new List<Date>{
-            System.today()+2,
-            System.today()+5
-        };
-
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         createRdSettingsWithStage(PLEDGED_STAGENAME);
@@ -116,11 +116,7 @@ private with sharing class RD2_OpportunityService_TEST {
     @isTest
     private static void shouldCreateOppWhenRDinsertedWithAccountAndAffiliation() {
         Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
-        List<Date> closeDates = new List<Date>{
-            System.today()+2,
-            System.today()+5
-        };
-
+        
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         createRdSettingsWithStage(PROMISED_STAGENAME);
@@ -188,13 +184,7 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<npe03__Recurring_Donation__c,List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c,List<Date>>();
-        List<Date> CloseDate = new List<Date> ();
-        List<Opportunity> oppCreated = new List<Opportunity> ();
-        String oppNameFormat = '';
-
-        CloseDate.add(System.today()+2);
-        CloseDate.add(System.today()+5);
-
+        
         createRdSettingsWithStage(PLEDGED_STAGENAME);
 
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
@@ -213,17 +203,17 @@ private with sharing class RD2_OpportunityService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        oppNameFormat = getSpecializedNameFormat(rd, CloseDate[0]);
+        String oppNameFormat = getSpecializedNameFormat(rd, closeDates[0]);
 
-        rdsWithCloseDates.put(rd, CloseDate);
+        rdsWithCloseDates.put(rd, closeDates);
 
         Test.startTest();
-        RD2_OpportunityService rds = new RD2_OpportunityService();
-        rds.createInstallmentOpportunities(rdsWithCloseDates);
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
         Test.stopTest();
-
-        oppCreated = getOpportunities();
-        System.assertEquals(OppCreated[0].Name, oppNameFormat);
+        
+        List<Opportunity> opps = getOpportunities();
+        System.assertEquals(opps[0].Name, oppNameFormat);
     }
 
      /***
@@ -235,13 +225,7 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<npe03__Recurring_Donation__c,List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c,List<Date>>();
-        List<Date> CloseDate = new List<Date> ();
-        List<Opportunity> oppCreated = new List<Opportunity> ();
-        String oppNameFormat = '';
-
-        CloseDate.add(System.today()+2);
-        CloseDate.add(System.today()+5);
-
+        
         createRdSettingsWithStage(PLEDGED_STAGENAME);
 
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
@@ -261,17 +245,17 @@ private with sharing class RD2_OpportunityService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        oppNameFormat = getSpecializedNameFormat(rd, CloseDate[0]);
+        String oppNameFormat = getSpecializedNameFormat(rd, closeDates[0]);
 
-        rdsWithCloseDates.put(rd, CloseDate);
+        rdsWithCloseDates.put(rd, closeDates);
 
         Test.startTest();
-        RD2_OpportunityService rds = new RD2_OpportunityService();
-        rds.createInstallmentOpportunities(rdsWithCloseDates);
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
         Test.stopTest();
 
-        oppCreated = getOpportunities();
-        System.assertEquals(OppCreated[0].Name, oppNameFormat);
+        List<Opportunity> opps = getOpportunities();
+        System.assertEquals(opps[0].Name, oppNameFormat);
     }
 
      /***
@@ -290,13 +274,7 @@ private with sharing class RD2_OpportunityService_TEST {
         insert ons;
 
         Map<npe03__Recurring_Donation__c,List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c,List<Date>>();
-        List<Date> CloseDate = new List<Date> ();
-        List<Opportunity> oppCreated = new List<Opportunity> ();
-        String oppNameFormat = '';
-
-        CloseDate.add(System.today()+2);
-        CloseDate.add(System.today()+5);
-
+        
         createRdSettingsWithStage(PLEDGED_STAGENAME);
 
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
@@ -315,18 +293,21 @@ private with sharing class RD2_OpportunityService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        oppNameFormat = getOppNameFormat(rd, CloseDate[0]);
+        String oppNameFormat = getOppNameFormat(rd, closeDates[0]);
 
-        rdsWithCloseDates.put(rd, CloseDate);
+        rdsWithCloseDates.put(rd, closeDates);
 
         Test.startTest();
-        RD2_OpportunityService rds = new RD2_OpportunityService();
-        rds.createInstallmentOpportunities(rdsWithCloseDates);
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
         Test.stopTest();
 
-        oppCreated = getOpportunities();
-        System.assertEquals(OppCreated[0].Name, oppNameFormat);
+        List<Opportunity> opps = getOpportunities();
+        System.assertEquals(opps[0].Name, oppNameFormat);
     }
+
+    // Helper Methods
+    //////////////////
 
     /*******************************************************************************************************
     * @description Creates recurring donation settings

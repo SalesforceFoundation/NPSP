@@ -136,9 +136,6 @@ public with sharing class RD2_OpportunityService {
     * @return Opportunity
     */
     private Opportunity buildOpportunity(npe03__Recurring_Donation__c rd, Date closeDate) {
-        Decimal installmentNumber = rd.npe03__Total_Paid_Installments__c == null 
-            ? 1
-            : rd.npe03__Total_Paid_Installments__c++;
 
         Opportunity opp = new Opportunity(
             AccountId = rd.npe03__Organization__c,
@@ -146,7 +143,8 @@ public with sharing class RD2_OpportunityService {
             CloseDate = closeDate,
             StageName = oppStageName,
             Amount = rd.npe03__Amount__c,
-            Recurring_Donation_Installment_Number__c = installmentNumber,
+            Recurring_Donation_Installment_Number__c = (rd.npe03__Total_Paid_Installments__c != null ?
+                rd.npe03__Total_Paid_Installments__c + 1 : 1),
             npe03__Recurring_Donation__c = rd.Id
 
         );
