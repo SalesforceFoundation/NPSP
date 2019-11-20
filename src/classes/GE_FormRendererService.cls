@@ -49,10 +49,41 @@ public with sharing class GE_FormRendererService {
         // Get the mapping service which will retrieve all the mappings
         BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
 
+        updateTemplateWithRequired(template, mappingService.fieldMappingSet);
+
         // Create the wrapper which will hold the template and field mapping set.
         FORM_RenderWrapper renderWrapper = new FORM_RenderWrapper(template, mappingService.fieldMappingSet);
 
         return renderWrapper;
+    }
+
+
+    /*******************************************************************************************************
+    * @description Takes the template and field mappings and updates the template so that the required fields are set
+    * as required. 
+    * @param template - The deserailized template that is stored. 
+    * @param fieldMappingSet The field mapping set which determines what DI field is mapped to what target field. 
+    */
+    private static void updateTemplateWithRequired(FORM_Template template, BDI_FieldMappingSet fieldMappingSet) {
+        List<FORM_Section> sectionList = template.layout.sections;
+
+        for (FORM_Section section : sectionList) {
+            
+            // Go through all the elements
+            for (FORM_Element element : section.elements) {
+                if (!element.dataImportFieldMappingDevNames.isEmpty()) {
+                    
+                    if (fieldMappingSet.fieldMappingByDevName.containsKey(element.dataImportFieldMappingDevNames[0])) {
+                        BDI_FieldMapping fieldMapping = fieldMappingSet.fieldMappingByDevName.get(element.dataImportFieldMappingDevNames[0]);
+
+                        // Update the element's required by doing an OR between the element's required, DI source field, target field
+                        // Update the element's required to make sure we are respecting the source/target/template builder's required
+                        // with the most up to date information. 
+                        element.required = element.required || fieldMapping.Source_Field_Required || fieldMapping.Target_Field_Required;
+                    }
+                }
+            }
+        }
     }
 
     /*******************************************************************************************************
