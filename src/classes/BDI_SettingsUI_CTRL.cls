@@ -92,10 +92,10 @@ public with sharing class BDI_SettingsUI_CTRL {
                 
                 set<String> setFields = new set<String>();
 
-                // this UI is specific to help text settings in current state
+                // this UI is determines the field mapping to be used based on the set default
                 BDI_Donations donationImportHandler = 
-                    new BDI_Donations(new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance()));
-
+                    new BDI_Donations(new BDI_DataImportService(true,
+                            BDI_DataImportService.getDefaultFieldMapping()));
                 setFields.addAll(donationImportHandler.dataImportFieldToOpportunityField.keySet());
                 setFields.addAll(donationImportHandler.dataImportFieldToPaymentField.keySet());
 
