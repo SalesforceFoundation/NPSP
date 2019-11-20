@@ -1,0 +1,118 @@
+<template>
+    <div class="slds-grid slds-wrap">
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="tab is loading"></lightning-spinner>
+        </template>
+
+        <div class="slds-size_3-of-12 slds-p-around_large slds-border_right">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size_1-of-1">
+                    <h2 class="slds-text-heading_small slds-p-bottom_small">Select Gift Fields</h2>
+                    <p class="slds-text-body_small slds-p-bottom_small">
+                        Select the fields to use for entering gifts in this batch template.
+                        You will only see fields that you have access to and have configured.
+                        Manage the available objects and fields in
+                        <a href="#">NPSP Batch Data Import Advanced Mapping</a> in NPSP Settings.
+                    </p>
+                </div>
+                <div class="slds-size_1-of-1">
+                    <template if:false={isAllSectionsExpanded}>
+                        <lightning-button class="slds-float_right"
+                                          variant="base"
+                                          label="Expand All"
+                                          title="Expand All"
+                                          onclick={handleExpandAllSections}>
+                        </lightning-button>
+                    </template>
+                    <template if:true={isAllSectionsExpanded}>
+                        <lightning-button class="slds-float_right"
+                                          variant="base"
+                                          label="Collapse All"
+                                          title="Collapse All"
+                                          onclick={handleCollapseAllSections}>
+                        </lightning-button>
+                    </template>
+                </div>
+                <div class="slds-size_1-of-1">
+                    <lightning-accordion allow-multiple-sections-open
+                                         onsectiontoggle={handleSectionToggle}
+                                         active-section-name={activeSections}>
+
+                        <template for:each={objectMappings}
+                                  for:item="objectMapping">
+
+                            <lightning-accordion-section key={objectMapping.DeveloperName}
+                                                         name={objectMapping.DeveloperName}
+                                                         label={objectMapping.MasterLabel}
+                                                         class="slds-truncate slds-accordion__section_extension">
+
+                                <template for:each={objectMapping.Field_Mappings}
+                                          for:item="fieldMapping">
+                                    <lightning-input type="checkbox"
+                                                     key={fieldMapping.DeveloperName}
+                                                     label={fieldMapping.Target_Field_Label}
+                                                     value={fieldMapping.DeveloperName}
+                                                     checked={fieldMapping.checked}
+                                                     onchange={handleToggleFieldMapping}
+                                                     class="slds-truncate slds-p-bottom_xxx-small"
+                                                     title={fieldMapping.DeveloperName}
+                                                     required={fieldMapping.Is_Required}
+                                                     data-field-mapping={fieldMapping.DeveloperName}
+                                                     data-object-mapping={objectMapping.DeveloperName}>
+                                    </lightning-input>
+                                </template>
+
+                            </lightning-accordion-section>
+                        </template>
+
+                    </lightning-accordion>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-size_9-of-12 slds-p-around_large slds-border_left">
+            <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
+                <div class="slds-size_1-of-1">
+                    <h2 class="slds-text-heading_small slds-p-bottom_small">Set Gift Field Values</h2>
+                    <p class="slds-text-body_small">
+                        Mark required select fields and enable default values for user input.
+                        Please note that any default values can be overwritten by the gift entry user.
+                        Create sections to organize the fields within their object groups,
+                        then use the up and down icons to reorder fields as you'd like them to appear on
+                        the batch gift entry form.
+                    </p>
+                </div>
+                <div class="slds-size_1-of-1 slds-p-vertical_large slds-m-vertical_large">
+
+                    <template iterator:it={formSections}>
+                        <c-ge-template-builder-form-section key={it.value.id}
+                                                            form-section={it.value}
+                                                            active-form-section-id={activeFormSectionId}
+                                                            is-first={it.first}
+                                                            is-last={it.last}
+                                                            onchangeactivesection={handleChangeActiveSection}
+                                                            onformsectionup={handleFormSectionUp}
+                                                            onformsectiondown={handleFormSectionDown}
+                                                            ondeleteformsection={handleDeleteFormSection}
+                                                            onformelementup={handleFormElementUp}
+                                                            onformelementdown={handleFormElementDown}
+                                                            ondeleteformelement={handleDeleteFormElement}
+                                                            onupdateformelement={handleUpdateFormElement}
+                                                            ontogglemodal={toggleModal}>
+                        </c-ge-template-builder-form-section>
+                    </template>
+
+                </div>
+                <div class="slds-size_1-of-1 slds-p-top_large slds-m-top_large">
+                    <button class="slds-button slds-button_neutral slds-button_stretch"
+                            title="Add Section"
+                            aria-label="Add Section"
+                            onclick={addSection}>
+                        Add Section
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

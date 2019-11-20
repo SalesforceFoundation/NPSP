@@ -41,15 +41,12 @@ public with sharing class FORM_BatchHeaderField {
     @AuraEnabled public String validationRule;
     @AuraEnabled public String customLabel;
     @AuraEnabled public String label;
-    @AuraEnabled public String value;
+    @AuraEnabled public String apiName;
     @AuraEnabled public Boolean required;
     @AuraEnabled public Boolean isRequiredFieldDisabled;
     @AuraEnabled public Boolean allowDefaultValue;
     @AuraEnabled public String defaultValue;
     @AuraEnabled public String dataType;
-    // TODO: Potentially include this in unified wrapper class or another solution
-    @AuraEnabled public GE_TemplateBuilderCtrl.PicklistOptionWrapper[] picklistOptions;
-    /* END */
 
     public FORM_BatchHeaderField(String elementType,
                         String displayRule,

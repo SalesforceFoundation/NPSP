@@ -37,6 +37,71 @@
 @isTest
 public with sharing class FORM_ServiceGiftEntryTest {
 
+    /*******************************************************************************************************
+    * @description Confirming that method returns the correct number of records
+    */
+    @IsTest
+    static void shouldReturnCorrectNumberOfRecords() {
+        FORM_Service fs = new FORM_Service();
+
+        FORM_Template template0 = createSampleTemplate();
+        String templateJSON0 = JSON.serialize(template0);
+        fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
+
+        FORM_Template template1 = createSampleTemplate();
+        String templateJSON1 = JSON.serialize(template1);
+        fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
+
+        System.assertEquals(2, fs.getAllFormTemplates().size());
+    }
+
+    /*******************************************************************************************************
+    * @description Confirming that method deletes Form Template records with given ids.
+    */
+    @IsTest
+    static void shouldDeleteFormTemplatesWithGivenIds() {
+        FORM_Service fs = new FORM_Service();
+
+        FORM_Template template0 = createSampleTemplate();
+        String templateJSON0 = JSON.serialize(template0);
+        fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
+
+        FORM_Template template1 = createSampleTemplate();
+        String templateJSON1 = JSON.serialize(template1);
+        fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
+
+        Form_Template__c[] formTemplates = [SELECT Id, Name FROM Form_Template__c];
+
+        System.assertEquals(2, formTemplates.size());
+        fs.deleteFormTemplates(new String[]{ formTemplates[0].id, formTemplates[1].id });
+
+        formTemplates = [SELECT Id, Name FROM Form_Template__c];
+        System.assertEquals(0, formTemplates.size());
+    }
+
+    /*******************************************************************************************************
+    * @description Confirming that method clones Form Template with given record id.
+    */
+    @IsTest
+    static void shouldCloneFormTemplateWithGivenId() {
+        FORM_Service fs = new FORM_Service();
+
+        FORM_Template template = createSampleTemplate();
+        String templateJSON = JSON.serialize(template);
+        fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
+
+        Form_Template__c[] formTemplates = [SELECT Id, Template_JSON__c FROM Form_Template__c];
+        Form_Template clonedTemplate = fs.cloneFormTemplate(formTemplates[0].id);
+
+        System.assertEquals(
+            JSON.serialize(template.layout),
+            JSON.serialize(clonedTemplate.layout),
+            'Original template and cloned template layouts are equal.');
+        System.assertNotEquals(
+            template.name,
+            clonedTemplate.name,
+            'Original template and cloned template names are not equal');
+    }
 
     /*******************************************************************************************************
     * @description Confirming that the lifecycle of storing and retrieving the template does not corrupt
