@@ -2,23 +2,26 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "c/batchProgress": [
-                "batchProgress/batchProgress.js"
-            ],
-            "c/bdiFieldMappingModal": [
-                "bdiFieldMappingModal/bdiFieldMappingModal.js"
-            ],
-            "c/bdiFieldMappings": [
-                "bdiFieldMappings/bdiFieldMappings.js"
-            ],
-            "c/bdiObjectMappingModal": [
-                "bdiObjectMappingModal/bdiObjectMappingModal.js"
-            ],
-            "c/bdiObjectMappings": [
-                "bdiObjectMappings/bdiObjectMappings.js"
-            ],
             "c/geTemplateBuilder": [
                 "geTemplateBuilder/geTemplateBuilder.js"
+            ],
+            "c/utilTemplateBuilder": [
+                "utilTemplateBuilder/utilTemplateBuilder.js"
+            ],
+            "c/geFormField": [
+                "geFormField/geFormField.js"
+            ],
+            "c/geFormFieldPicklist": [
+                "geFormFieldPicklist/geFormFieldPicklist.js"
+            ],
+            "c/geFormRenderer": [
+                "geFormRenderer/geFormRenderer.js"
+            ],
+            "c/geFormSection": [
+                "geFormSection/geFormSection.js"
+            ],
+            "c/geFormService": [
+                "geFormService/geFormService.js"
             ],
             "c/geTemplateBuilderBatchHeader": [
                 "geTemplateBuilderBatchHeader/geTemplateBuilderBatchHeader.js"
@@ -26,46 +29,36 @@
             "c/geTemplateBuilderFormField": [
                 "geTemplateBuilderFormField/geTemplateBuilderFormField.js"
             ],
-            "c/geTemplateBuilderGiftFields": [
-                "geTemplateBuilderGiftFields/geTemplateBuilderGiftFields.js"
+            "c/geTemplateBuilderFormSection": [
+                "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
+            ],
+            "c/geTemplateBuilderSectionModalBody": [
+                "geTemplateBuilderSectionModalBody/geTemplateBuilderSectionModalBody.js"
+            ],
+            "c/geTemplateBuilderSelectFields": [
+                "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
+            ],
+            "c/geTemplateBuilderService": [
+                "geTemplateBuilderService/geTemplateBuilderService.js"
             ],
             "c/geTemplateBuilderTemplateInfo": [
                 "geTemplateBuilderTemplateInfo/geTemplateBuilderTemplateInfo.js"
             ],
-            "c/progressRing": [
-                "progressRing/progressRing.js"
+            "c/geTemplates": [
+                "geTemplates/geTemplates.js"
             ],
-            "c/pubsubNoPageRef": [
-                "pubsubNoPageRef/pubsubNoPageRef.js"
+            "c/utilDedicatedListener": [
+                "utilDedicatedListener/utilDedicatedListener.js"
             ],
-            "c/utilPlatformEventListener": [
-                "utilPlatformEventListener/utilPlatformEventListener.js"
+            "c/utilIllustration": [
+                "utilIllustration/utilIllustration.js"
             ],
-            "c/utilSearchableCombobox": [
-                "utilSearchableCombobox/utilSearchableCombobox.js"
+            "c/utilPageHeader": [
+                "utilPageHeader/utilPageHeader.js"
             ],
-            "c/utilStencil": [
-                "utilStencil/utilStencil.js"
-            ],
-            "c/geTemplateBuilderFormLayout": [
-                "geTemplateBuilderFormLayout/geTemplateBuilderFormLayout.js"
-            ],
-            "c/utilTemplateBuilder": [
-                "utilTemplateBuilder/utilTemplateBuilder.js"
-            ],
-            "c/geTemplateBuilderFormSection": [
-                "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
+            "c/utilPageLevelError": [
+                "utilPageLevelError/utilPageLevelError.js"
             ]
-        },
-        "experimentalDecorators": true
-    },
-    "include": [
-        "**/*",
-        "../../.sfdx/typings/lwc/**/*.d.ts"
-    ],
-    "typeAcquisition": {
-        "include": [
-            "jest"
-        ]
+        }
     }
 }

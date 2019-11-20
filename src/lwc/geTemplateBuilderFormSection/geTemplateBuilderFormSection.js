@@ -1,142 +1,129 @@
-import { LightningElement, api, track } from 'lwc';
-import { mutable } from 'c/utilTemplateBuilder';
+import { LightningElement, api } from 'lwc';
+import { dispatch } from 'c/utilTemplateBuilder';
+
+const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
+const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
 
 export default class GeTemplateBuilderFormSection extends LightningElement {
     @api activeFormSectionId;
-    @track isEditMode;
+    @api isFirst;
+    @api isLast;
 
-    @track formSection;
-    /* Public setter for the tracked property selectedBatchFields */
-    // TODO: Needs to be revisited, WIP tied to retrieving and rendering an existing template
-    @api
-    set formSection(formSection) {
-        this.formSection = formSection;
+    @api formSection;
+
+    get isActive() {
+        return this.activeFormSectionId === this.formSection.id ? true : false;
     }
 
-    get isActiveFormSectionIcon() {
-        return this.activeFormSectionId == this.formSection.id ? 'utility:record' : 'utility:routing_offline';
+    get sectionClass() {
+        return this.isActive ? activeSectionClass : inactiveSectionClass;
+    }
+
+    get isEmptySection() {
+        return this.formSection.elements.length === 0 ? true : false;
     }
 
     /*******************************************************************************
-    * @description Public method that collects the current values of all the relevant
-    * input fields for this FormSection and return an instance of FormSection.
+    * @description Dispatches an event notifying the parent component GE_TemplateBuilder
+    * to open a modal for editing the section.
     *
-    * @return {object} formSection: Instance of the FormSection class
+    * @param {object} event: Event object from lightning-button-icon onclick event handler.
     */
-    @api
-    getFormSectionValues() {
-        let formSection = mutable(this.formSection);
-        formSection.elements = this.getSectionFormFields();
-        return formSection;
+    handleEditFormSection(event) {
+        event.stopPropagation();
+        const detail = { action: 'edit', section: this.formSection };
+        dispatch(this, 'togglemodal', detail);
     }
 
     /*******************************************************************************
-    * @description Public method that collects the current values of all the relevant
-    * input fields for this FormSection and return an instance of FormSection.
-    *
-    * @return {object} formSection: Instance of the FormSection class
-    */
-    getSectionFormFields() {
-        let sectionFormFieldComponents = this.template.querySelectorAll('c-ge-template-builder-form-field');
-        let sectionFormFields = [];
-        for (let i = 0; i < sectionFormFieldComponents.length; i++) {
-            let formField = sectionFormFieldComponents[i].getFormFieldValues();
-            sectionFormFields.push(formField);
-        }
-
-        return sectionFormFields;
-    }
-
-    /*******************************************************************************
-    * @description Updates the formSection label in memory
-    */
-    handleSaveFormSection() {
-        let formSection = mutable(this.formSection);
-        formSection.elements = this.getSectionFormFields();
-
-        const formSectionLabelInputElement =
-            this.template.querySelector('lightning-input[data-name="formSectionLabelInputElement"]');
-        formSection.label = formSectionLabelInputElement.value;
-        this.formSection = formSection;
-        this.handleExitEditMode();
-    }
-
-    /*******************************************************************************
-    * @description Dispatches an event to parent component geTemplateBuilderFormLayout
-    */
-    handleDeleteSection() {
-        this.dispatchEvent(new CustomEvent(
-            'deleteformsection',
-            { detail: this.formSection }));
-    }
-
-    /*******************************************************************************
-    * @description Sets formSection into edit mode
-    */
-    handleEditFormSection() {
-        this.isEditMode = true;
-    }
-
-    /*******************************************************************************
-    * @description Sets formSection into not edit mode
-    */
-    handleExitEditMode() {
-        this.isEditMode = false;
-    }
-
-    /*******************************************************************************
-    * @description Dispatches an event up to parent component geTemplateFormLayout
+    * @description Dispatches an event up to parent component geTemplateBuilderSelectFields
     * to set the currently active section
     */
     handleSelectActiveSection() {
-        this.dispatchEvent(new CustomEvent(
-            'changeactivesection',
-            { detail: this.formSection.id }));
+        dispatch(this, 'changeactivesection', this.formSection.id);
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component geTemplateFormLayout
-    * to shift the FormSection element up in the data structure
+    * @description Dispatches an event up to parent component geTemplateBuilderSelectFields
+    * to move the FormSection up.
+    * 
+    * @param {object} event: Event object from lightning-button-icon onclick event handler.
     */
-    handleFormSectionUp() {
-        this.dispatchEvent(new CustomEvent(
-            'formsectionup',
-            { detail: this.formSection.id }));
+    handleFormSectionUp(event) {
+        event.stopPropagation();
+        dispatch(this, 'formsectionup', this.formSection.id);
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component geTemplateFormLayout
-    * to shift the FormSection element down in the data structure
+    * @description Dispatches an event up to parent component geTemplateBuilderSelectFields
+    * to move the FormSection down.
+    * 
+    * @param {object} event: Event object from lightning-button-icon onclick event handler.
     */
-    handleFormSectionDown() {
-        this.dispatchEvent(new CustomEvent(
-            'formsectiondown',
-            { detail: this.formSection.id }));
+    handleFormSectionDown(event) {
+        event.stopPropagation();
+        dispatch(this, 'formsectiondown', this.formSection.id);
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component geTemplateFormLayout
-    * to shift the FormField element up in the data structure
+    * @description Dispatches an event notifying the parent component
+    * geTemplateBuilderSelectFields to move a FormField in the FormSection up.
     *
-    * @param {object} event: Custom Event received from child component
-    * geTemplateBuilderFormField
+    * @param {object} event: Event received from child component.
+    * component chain: geTemplateBuilderFormField -> here
     */
-    handleFormFieldUp(event) {
-        this.dispatchEvent(new CustomEvent(
-            'formfieldup',
-            { detail: event.detail }));
+    handleFormElementUp(event) {
+        event.stopPropagation();
+        const detail = {
+            sectionId: this.formSection.id,
+            fieldName: event.detail
+        }
+        dispatch(this, 'formelementup', detail);
     }
 
     /*******************************************************************************
-    * @description Dispatches an event up to parent component geTemplateFormLayout
-    * to shift the FormField element down in the data structure
+    * @description Dispatches an event notifying the parent component
+    * geTemplateBuilderSelectFields to move a FormField in the FormSection down.
     *
-    * @param {object} event: Custom Event received from child component
-    * geTemplateBuilderFormField
+    * @param {object} event: Event received from child component.
+    * component chain: geTemplateBuilderFormField -> here
     */
-    handleFormFieldDown(event) {
-        this.dispatchEvent(new CustomEvent(
-            'formfielddown',
-            { detail: event.detail }));
+    handleFormElementDown(event) {
+        event.stopPropagation();
+        const detail = {
+            sectionId: this.formSection.id,
+            fieldName: event.detail
+        }
+        dispatch(this, 'formelementdown', detail);
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event notifying the parent component
+    * geTemplateBuilderSelectFields that a property in a FormField has changed values.
+    *
+    * @param {object} event: Event received from child component.
+    * component chain: geTemplateBuilderFormField -> here
+    */
+    handleUpdateFormElement(event) {
+        event.detail.sectionId = this.formSection.id;
+        dispatch(this, 'updateformelement', event.detail);
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event notifying the parent component
+    * geTemplateBuilderSelectFields that a FormField needs to be removed from the
+    * FormSection.
+    *
+    * @param {object} event: Event received from child component.
+    * component chain: geTemplateBuilderFormField -> here
+    */
+    handleDeleteFormElement(event) {
+        event.stopPropagation();
+        const detail = {
+            sectionId: this.formSection.id,
+            fieldName: event.detail.fieldName,
+            id: event.detail.id
+        }
+        dispatch(this, 'deleteformelement', detail);
     }
 }
