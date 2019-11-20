@@ -424,8 +424,8 @@ public without sharing class RD2_ScheduleService {
             if (isScheduleUpdateNeeded(rd, oldRd)) {
 
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
-                        rd.StartDate__c == oldRd.StartDate__c &&
-                        rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+                    rd.StartDate__c == oldRd.StartDate__c &&
+                    rd.Status__c != RD2_Constants.STATUS_CLOSED) {
                     rd.StartDate__c = Date.today();
                 }
 
