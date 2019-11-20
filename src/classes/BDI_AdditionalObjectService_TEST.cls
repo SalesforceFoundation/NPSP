@@ -513,7 +513,8 @@ private class BDI_AdditionalObjectService_TEST {
         System.assertNotEquals(null,testDataImportBResult.GAU_Allocation_1_Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportBResult.GAU_Allocation_1_Import_Status__c);
         System.assertEquals(null,testDataImportBResult.GAU_Allocation_2_Imported__c);
-        System.assert(testDataImportBResult.GAU_Allocation_2_Import_Status__c.startsWith(System.label.bdiAdditionalObjRequiredFieldsNull));
+        System.assert(testDataImportBResult.GAU_Allocation_2_Import_Status__c.startsWith(
+                                                                    System.label.bdiAdditionalObjRequiredFieldsNull));
 
     }
 
@@ -712,7 +713,8 @@ private class BDI_AdditionalObjectService_TEST {
         }
 
         // Confirm that only the appropriate opportunity contact roles were changed
-        System.assertEquals(8,ocrAll.size()); // the number 8 includes the automatically created donor and household member OCRs
+        // the number 8 includes the automatically created donor and household member OCRs
+        System.assertEquals(8,ocrAll.size()); 
         System.assertEquals('Other',ocrA1.Role);
         System.assertEquals('Soft Credit',ocrA2.Role);
         System.assertEquals('Soft Credit',ocrB1.Role);
@@ -763,7 +765,8 @@ private class BDI_AdditionalObjectService_TEST {
 
         DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
 
-        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultMappingService());
+        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, 
+                                                                BDI_DataImportService.getDefaultMappingService());
         
         BDI_MappingServiceAdvanced bdiMsAdv = BDI_MappingServiceAdvanced.getInstance();
 
@@ -1284,7 +1287,8 @@ private class BDI_AdditionalObjectService_TEST {
 
         DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
 
-        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultMappingService());
+        BDI_DataImportService bdiDIS = 
+            new BDI_DataImportService(false, BDI_DataImportService.getDefaultMappingService());
         
         BDI_MappingServiceAdvanced bdiMsAdv = BDI_MappingServiceAdvanced.getInstance();
 
@@ -1292,18 +1296,19 @@ private class BDI_AdditionalObjectService_TEST {
         BDI_ObjectMapping predecessorObjMapping = bdiMsAdv.objectMappingByDevName.get('Opportunity');
         BDI_FieldMapping[] opptFieldMappings = bdiMsAdv.fieldMappingsByObjMappingDevName.get('Opportunity'); 
 
-        String additionalObjJSONFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Additional_Object_JSON__c');
+        String additionalObjJSONFieldName = 
+            UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Additional_Object_JSON__c');
 
         Data_Import_Object_Mapping__mdt diom = 
             new Data_Import_Object_Mapping__mdt(DeveloperName = 'TestTestHonoree324',
-                            MasterLabel = 'Honoree',
-                            Data_Import_Object_Mapping_Set__c = predecessorObjMapping.Data_Import_Object_Mapping_Set,
-                            Object_API_Name__c = 'Contact',
-                            Predecessor__c = predecessorObjMapping.DeveloperName,
-                            Imported_Record_Field_Name__c = 'Contact1_Title__c',
-                            Imported_Record_Status_Field_Name__c = 'Contact1ImportStatus__c',
-                            Relationship_Field__c = 'Honoree_Contact__c',
-                            Relationship_To_Predecessor__c = 'Parent');
+                        MasterLabel = 'Honoree',
+                        Data_Import_Object_Mapping_Set__c = predecessorObjMapping.Data_Import_Object_Mapping_Set,
+                        Object_API_Name__c = 'Contact',
+                        Predecessor__c = predecessorObjMapping.DeveloperName,
+                        Imported_Record_Field_Name__c = 'Contact1_Title__c',
+                        Imported_Record_Status_Field_Name__c = 'Contact1ImportStatus__c',
+                        Relationship_Field__c = 'Honoree_Contact__c',
+                        Relationship_To_Predecessor__c = 'Parent');
 
         BDI_ObjectMapping testObjMapping = new BDI_ObjectMapping(diom);
 
@@ -1435,9 +1440,11 @@ private class BDI_AdditionalObjectService_TEST {
         }
 
         BDI_DynamicSourceGroup dsgA = 
-            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportAResult.Additional_Object_JSON__c,BDI_DynamicSourceGroup.class);
+            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportAResult.Additional_Object_JSON__c,
+                                                    BDI_DynamicSourceGroup.class);
         BDI_DynamicSourceGroup dsgB = 
-            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportBResult.Additional_Object_JSON__c,BDI_DynamicSourceGroup.class);
+            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportBResult.Additional_Object_JSON__c,
+                                                    BDI_DynamicSourceGroup.class);
 
         BDI_DynamicSource dsA1 = dsgA.dynamicSourceByObjMappingDevName.get(dynSourceA1.objectMappingDevName);
         BDI_DynamicSource dsA2 = dsgA.dynamicSourceByObjMappingDevName.get(dynSourceA2.objectMappingDevName);
@@ -1515,11 +1522,13 @@ private class BDI_AdditionalObjectService_TEST {
             BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
-        String additionalObjJSONFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Additional_Object_JSON__c');
+        String additionalObjJSONFieldName = 
+            UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Additional_Object_JSON__c');
         String templateName = 'GAU_Allocation_1';
         String templateNameOCR = 'Opportunity_Contact_Role_1';
 
-        BDI_DataImportService bdiDIS = new BDI_DataImportService(false, BDI_DataImportService.getDefaultMappingService());
+        BDI_DataImportService bdiDIS = 
+            new BDI_DataImportService(false, BDI_DataImportService.getDefaultMappingService());
 
         BDI_MappingServiceAdvanced bdiMSA = BDI_MappingServiceAdvanced.getInstance();
 
@@ -1711,9 +1720,12 @@ private class BDI_AdditionalObjectService_TEST {
         System.assertEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_Imported__c);
         System.assertEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
 
-        System.assert(testDataImportBResult.FailureInformation__c.contains('Additional Object JSON - GAU_Allocation_102'));
-        System.assert(testDataImportBResult.FailureInformation__c.contains('Error: record not created, missing required fields:'));
-        System.assert(testDataImportBResult.FailureInformation__c.contains('GAU_Allocation_1_GAU__c'));
+        System.assert(testDataImportBResult.FailureInformation__c.contains(
+                                                                'Additional Object JSON - GAU_Allocation_102'));
+        System.assert(testDataImportBResult.FailureInformation__c.contains(
+                                                            'Error: record not created, missing required fields:'));
+        System.assert(testDataImportBResult.FailureInformation__c.contains(
+                                                            'GAU_Allocation_1_GAU__c'));
         System.assertEquals(System.label.bdiFailed,testDataImportBResult.Status__c);
         System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);
@@ -1739,9 +1751,11 @@ private class BDI_AdditionalObjectService_TEST {
         System.assertEquals(null,testDataImportBResult.Opportunity_Contact_Role_2_ImportStatus__c);
 
         BDI_DynamicSourceGroup dsgA = 
-            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportAResult.Additional_Object_JSON__c,BDI_DynamicSourceGroup.class);
+            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportAResult.Additional_Object_JSON__c,
+                                                    BDI_DynamicSourceGroup.class);
         BDI_DynamicSourceGroup dsgB = 
-            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportBResult.Additional_Object_JSON__c,BDI_DynamicSourceGroup.class);
+            (BDI_DynamicSourceGroup)JSON.deserialize(testDataImportBResult.Additional_Object_JSON__c,
+                                                    BDI_DynamicSourceGroup.class);
 
         BDI_DynamicSource dsA1 = dsgA.dynamicSourceByObjMappingDevName.get(dynSourceA1.objectMappingDevName);
         BDI_DynamicSource dsA2 = dsgA.dynamicSourceByObjMappingDevName.get(dynSourceA2.objectMappingDevName);
@@ -1805,7 +1819,8 @@ private class BDI_AdditionalObjectService_TEST {
         }
 
         // Confirm that the desired ocr were created correctly
-        System.assertEquals(5,ocrAll.size()); // the number 5 includes the automatically created donor and household member OCRs
+        // the number 5 includes the automatically created donor and household member OCRs
+        System.assertEquals(5,ocrAll.size()); 
         System.assertEquals('Soft Credit',ocrA1.Role);
     }
 }
