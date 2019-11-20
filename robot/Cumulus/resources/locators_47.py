@@ -39,6 +39,8 @@ npsp_lex_locators={
     },
     "alert": "//span[contains(@class,'toastMessage')]/a",
     "alert-text":"//span[contains(@class,'toastMessage')]",
+    "toast_message": "//div[contains(@class,'toastContent')]/child::div/span[text()='{}']",
+    "toast_close": "//button[contains(@title,'Close')]",
     'popup': "//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]",
     'flexipage-popup':"//div[contains(@class, 'slds-is-open')][contains(@class, 'slds-combobox')]",
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
@@ -123,6 +125,7 @@ npsp_lex_locators={
     },
     'object':{
         'record':'//tbody//a[text()= "{}"]',
+        "field": "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//*[self::input or self::textarea]",
         'button': "css: div.windowViewMode-normal ul.forceActionsContainer.oneActionsRibbon a[title='{}']",
         'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
         'field-value':'//tbody/tr[./th//a[text()="{}"]]/td[.//span[text()="{}"]]',

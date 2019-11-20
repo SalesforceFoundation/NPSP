@@ -286,18 +286,13 @@ class NPSP(SalesforceRobotLibraryBase):
         locators = npsp_lex_locators["confirm"].values()
         for i in locators:
             locator = i.format(field)
-            if self.check_if_element_exists(locator):
-                if field=="Description":
-                    locator="//span[@class='uiOutputTextArea' and text()='{}']".format(value)
-                    self.selenium.scroll_element_into_view(locator)
-                    self.selenium.page_should_contain_element(locator)
-                else:    
-                    actual_value=self.selenium.get_webelement(locator).text
-                    if status.upper() == "Y":
-                        assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
-                    elif status.upper() == "N":
-                        assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
-                    list_found = True
+            if self.check_if_element_exists(locator):   
+                actual_value=self.selenium.get_webelement(locator).text
+                if status.upper() == "Y":
+                    assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
+                elif status.upper() == "N":
+                    assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
+                list_found = True
                 break
 
         assert list_found, "locator not found"  
@@ -1203,3 +1198,10 @@ class NPSP(SalesforceRobotLibraryBase):
          field.send_keys(value)
          time.sleep(2)
          field.send_keys(Keys.ENTER)
+
+    def verify_toast_message(self, value):
+        """ Verifies the toast message """
+        locator = npsp_lex_locators["alert"].format(value)
+        self.selenium.wait_until_page_contains_element(locator)
+        locator = npsp_lex_locators["toast_close"]
+        self.selenium.click_element(locator)

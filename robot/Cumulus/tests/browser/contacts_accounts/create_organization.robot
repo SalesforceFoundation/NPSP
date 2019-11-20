@@ -20,7 +20,9 @@ Create Organization Foundation
     ...                                Account Name=${account_name}
     ...                                Phone=1234567
     ...                                Billing Street=50 Fremont st
-    ...                                Description=Account created with Robot Automation
+    #...                                Description=Account created with Robot Automation
+    ${loc}                             Get NPSP Locator    object.field    Description
+    Press Keys                         ${loc}     Account created with Robot Automation 
     Save Form
     ${account_id} =                    Get Current Record Id
     Store Session Record               Account    ${account_id}
