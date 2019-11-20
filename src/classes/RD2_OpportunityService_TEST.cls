@@ -52,8 +52,8 @@ private with sharing class RD2_OpportunityService_TEST {
 
 
     /****
-    * @description Creates data required for unit tests
-    */
+     * @description Creates data required for unit tests
+     */
     @TestSetup
     private static void setUp() {
         insert UTIL_UnitTestData_TEST.getContact();
@@ -62,47 +62,24 @@ private with sharing class RD2_OpportunityService_TEST {
     /***
      * @description Verifies a Pledged Opp is created for the new recurring donation when
      * Installment Opportunity Stage Name in settings is Pledged
-    */
+     */
     @isTest
     private static void shouldCreateOppWhenRDIsInsertedWithContact() {
-        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         createRdSettingsWithStage(PLEDGED_STAGENAME);
 
-        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
-        insert campaign;
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        Contact contact = getContact();
-
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(contact.Id)
-            .withInstallmentPeriodMonthly()
-            .withDayOfMonth('20')
-            .withPaymentMethod(PAYMENT_CREDIT_CARD)
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withAmount(415)
-            .withCampaign(campaign.id)
-            .build();
-        insert rd;
-
-        rd = rdGateway.getRecord(rd.Id);
-
-        String oppNameFormat = getSpecializedNameFormat(rd, closeDates[0]);
-
-        rdsWithCloseDates.put(rd, closeDates);
-
-        Test.startTest();
-        RD2_OpportunityService service = new RD2_OpportunityService();
-        service.createInstallmentOpportunities(rdsWithCloseDates);
-        Test.stopTest();
+        String expectedOppName = getExpectedSpecializedOppName(rd, closeDates[0]);
+        
+        testAndAssertOppService(rd, expectedOppName);
 
         List<Opportunity> opps = getOpportunities();
 
-        System.assertEquals(opps[0].npe01__Contact_Id_for_Role__c, contact.id);
+        System.assertEquals(opps[0].npe01__Contact_Id_for_Role__c, getContact().Id);
         System.assertEquals(opps[0].Amount, rd.npe03__Amount__c);
         System.assertEquals(opps[0].Primary_Contact__c, rd.npe03__Contact__c);
-        System.assertEquals(opps[0].Name, oppNameFormat);
         System.assertEquals(opps[0].CloseDate, closeDates[0]);
         System.assertEquals(opps[0].CampaignId, rd.npe03__Recurring_Donation_Campaign__c);
         System.assertEquals(opps[0].StageName, PLEDGED_STAGENAME);
@@ -112,11 +89,9 @@ private with sharing class RD2_OpportunityService_TEST {
     /***
      * @description Verifies a Promised Opp is created for the new recurring donation when
      * Installment Opportunity Stage Name in settings is Promised
-    */
+     */
     @isTest
-    private static void shouldCreateOppWhenRDinsertedWithAccountAndAffiliation() {
-        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
-        
+    private static void shouldCreateOppWhenRDinsertedWithAccountAndAffiliation() {        
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         createRdSettingsWithStage(PROMISED_STAGENAME);
@@ -149,134 +124,111 @@ private with sharing class RD2_OpportunityService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        String oppNameFormat = getSpecializedNameFormat(rd, closeDates[0]);
-
-        rdsWithCloseDates.put(rd, closeDates);
-
-        Test.startTest();
-        RD2_OpportunityService service = new RD2_OpportunityService();
-        service.createInstallmentOpportunities(rdsWithCloseDates);
-        Test.stopTest();
+        String expectedOppName = getExpectedSpecializedOppName(rd, closeDates[0]);
+        
+        testAndAssertOppService(rd, expectedOppName);
 
         List<Opportunity> opps = getOpportunities();
-        List<OpportunityContactRole> ocrs = getOppContactRoles(new Set<Id>{ opps[0].id });
+
+        List<OpportunityContactRole> ocrs = getOppContactRoles(new Set<Id>{ opps[0].Id });
         System.assertEquals(1, ocrs.size(), 'OCR should be created: ' + ocrs);
 
-        OpportunityContactRole ocr = ocrs[0];
-
         System.assertEquals(opps[0].Amount, rd.npe03__Amount__c);
-        System.assertEquals(opps[0].Name, oppNameFormat);
         System.assertEquals(opps[0].CloseDate, closeDates[0]);
         System.assertEquals(opps[0].CampaignId, rd.npe03__Recurring_Donation_Campaign__c);
         System.assertEquals(opps[0].StageName, PROMISED_STAGENAME);
         System.assertEquals(getPayments(opps)[0].npe01__Payment_Method__c, PAYMENT_CREDIT_CARD);
-        System.assertEquals(opps[0].Id, ocr.OpportunityId, 'OCR Opportunity should match: ' + ocr);
-        System.assertEquals(AFFILIATION_OCR_ROLE_SOLICITOR, ocr.Role, 'OCR Contact Role should match: ' + ocr);
+        System.assertEquals(opps[0].Id, ocrs[0].OpportunityId, 'OCR Opportunity should match: ' + ocrs[0]);
+        System.assertEquals(AFFILIATION_OCR_ROLE_SOLICITOR, ocrs[0].Role, 'OCR Contact Role should match: ' + ocrs[0]);
         System.assertEquals(opps[0].CloseDate, closeDates[0]);
     }
 
     /***
-    * @description Verifies if it creates opportunities with specialized format when
-      no opportunity naming is specified in NPSP Settings
-    */
+     * @description Verifies if it creates opportunities with specialized format when
+     * no opportunity naming is specified in NPSP Settings
+     */
     @isTest
     private static void shouldCreateOppWithSpecialFormatWhenNoOppNamingSpecified() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Map<npe03__Recurring_Donation__c,List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c,List<Date>>();
         
         createRdSettingsWithStage(PLEDGED_STAGENAME);
 
-        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
-        insert campaign;
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(getContact().Id)
-            .withInstallmentPeriodMonthly()
-            .withDayOfMonth('20')
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withAmount(415)
-            .withCampaign(campaign.id)
-            .build();
-
-        insert rd;
-
-        rd = rdGateway.getRecord(rd.Id);
-
-        String oppNameFormat = getSpecializedNameFormat(rd, closeDates[0]);
-
-        rdsWithCloseDates.put(rd, closeDates);
-
-        Test.startTest();
-        RD2_OpportunityService service = new RD2_OpportunityService();
-        service.createInstallmentOpportunities(rdsWithCloseDates);
-        Test.stopTest();
+        String expectedOppName = getExpectedSpecializedOppName(rd, closeDates[0]);
         
-        List<Opportunity> opps = getOpportunities();
-        System.assertEquals(opps[0].Name, oppNameFormat);
+        testAndAssertOppService(rd, expectedOppName);
     }
 
-     /***
-    * @description Verifies if it creates opportunities with specialized format for the
-      next opportunity when no opportunity naming is specified in NPSP Settings
-    */
+    /***
+     * @description Verifies if it creates opportunities with specialized format for the
+     * next opportunity when no opportunity naming is specified in NPSP Settings
+     */
     @isTest
     private static void shouldCreateOppNameWithSpecialFormatForNextOpportunity() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Map<npe03__Recurring_Donation__c,List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c,List<Date>>();
         
         createRdSettingsWithStage(PLEDGED_STAGENAME);
 
-        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
-        insert campaign;
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(getContact().Id)
-            .withInstallmentPeriodMonthly()
-            .withDayOfMonth('20')
-            .withPaidInstallments(1)
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withAmount(415)
-            .withCampaign(campaign.id)
-            .build();
+        String expectedOppName = getExpectedSpecializedOppName(rd, closeDates[0]);
 
-        insert rd;
-
-        rd = rdGateway.getRecord(rd.Id);
-
-        String oppNameFormat = getSpecializedNameFormat(rd, closeDates[0]);
-
-        rdsWithCloseDates.put(rd, closeDates);
-
-        Test.startTest();
-        RD2_OpportunityService service = new RD2_OpportunityService();
-        service.createInstallmentOpportunities(rdsWithCloseDates);
-        Test.stopTest();
-
-        List<Opportunity> opps = getOpportunities();
-        System.assertEquals(opps[0].Name, oppNameFormat);
+        testAndAssertOppService(rd, expectedOppName);
     }
 
-     /***
-    * @description Verifies if it creates opportunities with opportunity naming format
-      in NPSP Settings.
-    */
+    /***
+     * @description Verifies if it creates opportunities with opportunity naming format in NPSP Settings.
+     */
     @isTest
     private static void shouldCreateOppNameWithOppNamingSpecifiedInSettings() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
-            Name = 'foo',
+        insert new Opportunity_Naming_Settings__c(
+            Name = 'Opp Naming Settings',
             Opportunity_Name_Format__c = '{!Contact.Name} {!RecordType.Name} {!CloseDate}',
-            Attribution__c = Label.oppNamingBoth
+            Attribution__c = System.Label.oppNamingBoth
         );
-        insert ons;
-
-        Map<npe03__Recurring_Donation__c,List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c,List<Date>>();
         
         createRdSettingsWithStage(PLEDGED_STAGENAME);
 
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        String expectedOppName = getExpectedOppNameBasedOnSettings(rd, closeDates[0]);
+
+        testAndAssertOppService(rd, expectedOppName);
+    }
+
+
+    // Helper Methods
+    //////////////////
+
+    /***
+    * @description Calls Opportunity service to create Opportunities. Verifies *first retrieved* Opportunity name
+    * @param rd Recurring Donation
+    * @param expectedOppName Expected Opportunity name for the first retrieved Opportunity
+    * @return void
+    */
+    private static void testAndAssertOppService(npe03__Recurring_Donation__c rd, String expectedOppName) {
+        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
+        rdsWithCloseDates.put(rd, closeDates);
+
+        Test.startTest();
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
+        Test.stopTest();
+
+        List<Opportunity> opps = getOpportunities();
+
+        System.assertEquals(closeDates.size(), opps.size(), 'Number of Opportunities should match expected close dates');
+        System.assertEquals(opps[0].Name, expectedOppName, 'Opportunity Name should match');
+    }
+
+    /***
+    * @description Creates Recurring Donation record
+    * @return npe03__Recurring_Donation__c
+    */
+    private static npe03__Recurring_Donation__c createRecurringDonation() {
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
         insert campaign;
 
@@ -286,32 +238,18 @@ private with sharing class RD2_OpportunityService_TEST {
             .withDayOfMonth('20')
             .withDateEstablished(Date.newInstance(2019, 9, 15))
             .withAmount(415)
-            .withCampaign(campaign.id)
+            .withPaymentMethod(PAYMENT_CREDIT_CARD)
+            .withCampaign(campaign.Id)
             .build();
 
         insert rd;
 
-        rd = rdGateway.getRecord(rd.Id);
-
-        String oppNameFormat = getOppNameFormat(rd, closeDates[0]);
-
-        rdsWithCloseDates.put(rd, closeDates);
-
-        Test.startTest();
-        RD2_OpportunityService service = new RD2_OpportunityService();
-        service.createInstallmentOpportunities(rdsWithCloseDates);
-        Test.stopTest();
-
-        List<Opportunity> opps = getOpportunities();
-        System.assertEquals(opps[0].Name, oppNameFormat);
+        return rdGateway.getRecord(rd.Id);
     }
 
-    // Helper Methods
-    //////////////////
-
-    /*******************************************************************************************************
-    * @description Creates recurring donation settings
-    * @param Installment stagename
+    /***
+    * @description Creates Recurring Donation settings
+    * @param stageName Installment Opportunity Stage 
     * @return void
     */
     private static void createRdSettingsWithStage(String stageName) {
@@ -324,41 +262,37 @@ private with sharing class RD2_OpportunityService_TEST {
 
     /***
     * @description Builds Specialized name format for opportunity
-    * @param Recurring Donation Record
-    * @param Date close date
+    * @param rd Recurring Donation record
+    * @param closeDate Opportunity Close Date
     * @return String Expected Opportunity name
     */
-    public static String getSpecializedNameFormat(npe03__Recurring_Donation__c rd, Date closeDate) {
+    public static String getExpectedSpecializedOppName(npe03__Recurring_Donation__c rd, Date closeDate) {
         return
             rd.npe03__Donor_Name__c +  ' ' +
             System.Label.npe03.RecurringDonationPrefix + ' (' +
-            (rd.npe03__Total_Paid_Installments__c != null ?
-            rd.npe03__Total_Paid_Installments__c + 1 : 1) + ') ' +
+            (rd.npe03__Total_Paid_Installments__c != null ? rd.npe03__Total_Paid_Installments__c + 1 : 1) + ') ' +
             closeDate.format();
-
     }
 
     /***
     * @description Builds Opportunity name format from settings
-    * @param Recurring Donation Record
-    * @param Date close date
+    * @param rd Recurring Donation record
+    * @param closeDate Opportunity Close Date
     * @return String Expected Opportunity name
     */
-    public static String getOppNameFormat(npe03__Recurring_Donation__c rd, Date closeDate) {
+    public static String getExpectedOppNameBasedOnSettings(npe03__Recurring_Donation__c rd, Date closeDate) {
 
-        String dateFormatString = 'yyyy.MM.dd';
-        Datetime dt = Datetime.newInstance(closeDate.year(), closeDate.month(),closeDate.day());
-        String formatDate = dt.format(dateFormatString);
-        String RecordTypeName = UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType);
+        Datetime dt = Datetime.newInstance(closeDate.year(), closeDate.month(), closeDate.day());
+        String formattedDate = dt.format('yyyy.MM.dd');
+        String recordTypeName = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
 
         return
             rd.npe03__Donor_Name__c +  ' ' +
-            RecordTypeName + ' ' +
-            formatDate;
-
+            recordTypeName + ' ' +
+            formattedDate;
     }
 
-    /*******************************************************************************************************
+    /***
     * @description Queries OCRs for specified Opportunities
     * @param oppIds Opportunity Ids
     * @return List<OpportunityContactRole> OCRs assigned to provided Opportunities
@@ -393,6 +327,7 @@ private with sharing class RD2_OpportunityService_TEST {
             CloseDate, AccountId, npe01__Contact_Id_for_Role__c, Primary_Contact__c
             FROM Opportunity
             WHERE CreatedDate = Today AND CampaignId != null
+            ORDER BY CloseDate //ensure Opps are returned in the predictable order
         ];
     }
 

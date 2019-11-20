@@ -117,11 +117,11 @@ public with sharing class RD2_OpportunityService {
     private List<Opportunity> buildOpportunities(Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates) {
         List<Opportunity> opps = new List<Opportunity>();
 
-        for (npe03__Recurring_Donation__c r : rdsWithCloseDates.keySet()) {
-            List<Date> closeDates = rdsWithCloseDates.get(r);
+        for (npe03__Recurring_Donation__c rd : rdsWithCloseDates.keySet()) {
+            List<Date> closeDates = rdsWithCloseDates.get(rd);
 
             for (Date closeDate : closeDates) {
-                opps.add(buildOpportunity(r, closeDate));
+                opps.add(buildOpportunity(rd, closeDate));
             }
 
         }
