@@ -278,18 +278,26 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()   
         
         
-    def confirm_value(self, field,value,status):
+    def confirm_field_value(self, field,value,status):
+        """If status is Y then the specified value should be present in the field
+                        N then the specified value should not be present in the field
+        """
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
         for i in locators:
             locator = i.format(field)
             if self.check_if_element_exists(locator):
-                actual_value=self.selenium.get_webelement(locator).text
-                if status.upper() == "Y":
-                    assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
-                elif status.upper() == "N":
-                    assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
-                list_found = True
+                if field=="Description":
+                    locator="//span[@class='uiOutputTextArea' and text()='{}']".format(value)
+                    self.selenium.scroll_element_into_view(locator)
+                    self.selenium.page_should_contain_element(locator)
+                else:    
+                    actual_value=self.selenium.get_webelement(locator).text
+                    if status.upper() == "Y":
+                        assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
+                    elif status.upper() == "N":
+                        assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
+                    list_found = True
                 break
 
         assert list_found, "locator not found"  
@@ -312,7 +320,7 @@ class NPSP(SalesforceRobotLibraryBase):
         """ Checks for the record in the object page and returns true if found else returns false
         """
         locator=npsp_lex_locators['account_list'].format(name)
-        self.selenium.wait_until_page_contains_element(locator)
+        self.selenium.wait_until_page_contains_element(locator, error="could not find "+name+" on the page")
 
             
     def select_option(self, name):  
@@ -1195,4 +1203,3 @@ class NPSP(SalesforceRobotLibraryBase):
          field.send_keys(value)
          time.sleep(2)
          field.send_keys(Keys.ENTER)
-

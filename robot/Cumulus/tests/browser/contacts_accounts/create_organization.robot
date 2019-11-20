@@ -18,11 +18,19 @@ Create Organization Foundation
     Select Record Type                 Organization
     Populate Form
     ...                                Account Name=${account_name}
+    ...                                Phone=1234567
+    ...                                Billing Street=50 Fremont st
+    ...                                Description=Account created with Robot Automation
     Save Form
     ${account_id} =                    Get Current Record Id
     Store Session Record               Account    ${account_id}
     &{account} =  Salesforce Get       Account    ${account_id}
     Should Not Be Empty                ${account}
+    Select Tab                               Details 
+    Confirm Field Value                      Phone              1234567                                          Y
+    Confirm Field Value                      Billing Address    50 Fremont st                                    Y
+    Confirm Field Value                      Description        Account created with Robot Automation            Y
+    
     
     #Verify Account is only displayed in expected views
     Go To Page                         Listing    Account

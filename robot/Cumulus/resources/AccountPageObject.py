@@ -11,5 +11,3 @@ class OpportunityPage(ListingPage):
         return self.builtin.get_library_instance('NPSP')
     
     
-    
-        
