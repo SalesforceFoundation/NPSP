@@ -50,7 +50,7 @@ Dont select match for contact new donation with grid changes
     Page Should Not Contain Link    &{opportunity}[Name]
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Batch To Complete    data_imports.status    Completed
+    Wait For Batch To Process    BDI_DataImport_BATCH    Completed
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     Verify Expected Values    nonns    Opportunity    &{opportunity}[Id]

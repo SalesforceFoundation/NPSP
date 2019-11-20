@@ -132,7 +132,7 @@ tasks:
 
     robot_libdoc:
         options:
-            path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot
+            path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot,robot/Cumulus/resources/*PageObject.py
             output: robot/Cumulus/doc/Keywords.html
 
     update_admin_profile:
