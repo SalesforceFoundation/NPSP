@@ -91,7 +91,6 @@ export default class GeFormField extends LightningElement {
         return GeFormService.getFieldMappingWrapper(value);
     }
 
-
     get objectInfo() {
         return GeFormService.getObjectMappingWrapper(this.objectDevName);
     }
