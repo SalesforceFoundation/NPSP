@@ -77,14 +77,19 @@ export default class GeFormFieldLookup extends LightningElement {
      * @returns {string}
      */
     get targetObjectIconName() {
-        // TODO: add support for custom objects
         if(this.targetObjectInfo && this.targetObjectInfo.data) {
             if(this.targetObjectInfo.data.themeInfo) {
                 const {iconUrl} = this.targetObjectInfo.data.themeInfo;
                 const re = /\/(standard|custom)\/([a-zA-Z]+)/;
                 const result = re.exec(iconUrl);
-                if(result[1] === 'standard') {
-                    return 'standard:' + result[2];
+
+                // explicitly handle only standard and custom icon sets
+                if(result !== null) {
+                    if (result[1] === 'standard') {
+                        return 'standard:' + result[2];
+                    } else if (result[1] === 'custom') {
+                        return 'custom:' + result[2];
+                    }
                 }
             }
         }
