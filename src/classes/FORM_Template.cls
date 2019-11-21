@@ -36,6 +36,7 @@
 */
 public with sharing class FORM_Template {
 
+    @AuraEnabled public Id id;
     @AuraEnabled public String name;
     @AuraEnabled public String description;
     @AuraEnabled public String version;

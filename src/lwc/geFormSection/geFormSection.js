@@ -60,5 +60,23 @@ export default class GeFormSection extends LightningElement {
         }
         return widgetValues;
     }
+    
+    /**
+     * Get a list of fields that are required, but are null/undefined or otherwise blank in the dynamic form
+     * @returns {Array} of invalid fields. If all fields are ok, the array is empty.
+     */
+    @api
+    getInvalidFields() {
+        const fields = this.template.querySelectorAll('c-ge-form-field');
+        let invalidFields = [];
+
+        fields.forEach(f => {
+            if(!f.isValid()) {
+                invalidFields.push(f.fieldLabel);
+            }
+        });
+
+        return invalidFields;
+    }
 
 }
