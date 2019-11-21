@@ -266,7 +266,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param oldRds Trigger.old records
     */
     private void calculateNextDonationDateBeforeUpdate(List<SObject> rds, List<SObject> oldRds) {
-        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = scheduleService.setScheduleDependentFields(rds, oldRds);
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = scheduleService.getAllRecurringDonationSchedules(rds, oldRds);
         for (npe03__Recurring_Donation__c rd : (List<npe03__Recurring_Donation__c>)rds) {
             rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(schedulesByRdId.get(rd.Id));
         }

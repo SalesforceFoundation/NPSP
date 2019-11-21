@@ -327,7 +327,7 @@ public without sharing class RD2_ScheduleService {
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     */
-    public Map<Id, List<RecurringDonationSchedule__c>> setScheduleDependentFields(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
+    public Map<Id, List<RecurringDonationSchedule__c>> getAllRecurringDonationSchedules(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
 
         Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = getExistingSchedules(rds);
 
