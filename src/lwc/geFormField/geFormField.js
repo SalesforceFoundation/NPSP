@@ -71,10 +71,17 @@ export default class GeFormField extends LightningElement {
         // CMT record name at, element.value. 
         // However, it may change to the array dataImportFieldMappingDevNames
         // If so, we need to update this to reflect that.
-        // In the Execute Anonymous code, both fields are populated. 
-        fieldAndValue[this.element.value] = this.value;
+        // In the Execute Anonymous code, both fields are populated.
+        // PRINCE: Temporary change below. Please review and update
+        // as needed.
+        // Changed 'this.element.value' references to getter 'formElementName'.
+        fieldAndValue[this.formElementName] = this.value;
         
         return fieldAndValue;
+    }
+
+    get formElementName() {
+        return this.element.componentName ? this.element.componentName : this.element.dataImportFieldMappingDevNames[0];
     }
 
     get inputType() {
@@ -86,9 +93,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldInfo() {
-        // Check to see what type of element we have and set the correct mapping api name or widget component name
-        const value = this.element.componentName ? this.element.componentName : this.element.dataImportFieldMappingDevNames[0];
-        return GeFormService.getFieldMappingWrapper(value);
+        return GeFormService.getFieldMappingWrapper(this.formElementName);
     }
 
     get objectInfo() {
