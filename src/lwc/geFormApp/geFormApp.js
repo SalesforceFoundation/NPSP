@@ -12,12 +12,12 @@ export default class GeFormApp extends LightningElement {
         this.batchId = event.target.value;
         this.isBatchMode = this.batchId ? true : false;
 
+        const form = this.template.querySelector('c-ge-form-renderer');
+        form.isBatchMode = this.isBatchMode;
+
         const table = this.template.querySelector('c-ge-form-table');
         table.setBatchId(event.target.value);
         table.loadBatch();
-
-        const form = this.template.querySelector('c-ge-form-renderer');
-        form.setBatchMode(event.target.value);
     }
 
     //method used for testing until form has Account/Contact Lookups or is ready to be loaded
@@ -45,8 +45,6 @@ export default class GeFormApp extends LightningElement {
     handleSectionsRetrieved(event) {
         const formSections = event.target.sections;
         const table = this.template.querySelector('c-ge-form-table');
-        // if (!table.ready) {
-            table.handleSectionsRetrieved(formSections);
-        // }
+        table.handleSectionsRetrieved(formSections);
     }
 }

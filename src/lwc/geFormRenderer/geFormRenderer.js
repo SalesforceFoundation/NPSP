@@ -40,17 +40,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         });
     }
 
-    @api
-    setBatchMode(batchId) {
-        if (batchId) {
-            this.isBatchMode = true;
-            // dispatchEvent(new CustomEvent('sectionsretrieved')); //Sets the columns
-            // // on the table
-        } else {
-            this.isBatchMode = false;
-        }
-    }
-
     handleCancel() {
         console.log('Form Cancel button clicked');
     }
