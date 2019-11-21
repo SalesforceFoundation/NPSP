@@ -30,8 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group Recurring Donations
-* @description Unit Test for the data migration batch job
+* @group HGE
+* @description Unit Test for the Gift Entry Lookup Component Controller
 *
 */
 @IsTest
