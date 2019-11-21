@@ -13,6 +13,7 @@ from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
+from cumulusci.robotframework.utils import capture_screenshot_on_error
 from email.mime import text
 
 from cumulusci.tasks.apex.anon import AnonymousApexTask
@@ -850,7 +851,7 @@ class NPSP(SalesforceRobotLibraryBase):
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
         self.selenium.wait_until_element_is_visible(main_loc, timeout=90)
         
-        
+    @capture_screenshot_on_error    
     def wait_for_batch_to_complete(self, path, *args, **kwargs):
         """Checks every 15 secs for upto 3.5mins for batch with given status
         """
@@ -868,7 +869,32 @@ class NPSP(SalesforceRobotLibraryBase):
                     self.selenium.wait_until_element_is_visible(locator)
                     break
                 except Exception:
-                    time.sleep(15)    
+                    time.sleep(15)   
+     
+    @capture_screenshot_on_error                
+    def wait_for_batch_to_process(self, batch,status):
+        """Checks every 30 secs for upto 7mins for batch with given status
+        """
+        i = 0
+        sec=0
+        expected = npsp_lex_locators['batch_status'].format(batch,status)
+        error = npsp_lex_locators['batch_status'].format(batch,"Errors")
+        while True:
+            i += 1
+            if i > 14:
+                self.selenium.capture_page_screenshot()
+                raise AssertionError("Timed out waiting for batch {} with status {} to load.".format(batch,status))
+            elif self.check_if_element_exists(error):
+                if status != "Errors":
+                    raise AssertionError("Batch {} failed with Error".format(batch))
+                break
+            else:    
+                try:
+                    self.selenium.wait_until_element_is_visible(expected)
+                    break
+                except Exception:
+                    sec= sec+30
+                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))                 
 
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
