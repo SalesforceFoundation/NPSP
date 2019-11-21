@@ -161,7 +161,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
 
-        AsyncApexJob enablementJob = new TEST_SobjectGateway.AsyncApexJobGateway().getRecord('RD2_EnablementDelegate_CTRL');
+        AsyncApexJob enablementJob = new TEST_SObjectGateway.AsyncApexJobGateway().getRecord('RD2_EnablementDelegate_CTRL');
         System.assertNotEquals(null, enablementJob, 'Expected to find a Queueable job after clicking the MetaDeploy link');
     }
 
