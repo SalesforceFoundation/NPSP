@@ -35,7 +35,7 @@ Match Based on Number of Days from Donation Date Functionality
     Page Should Contain Link    ${pay_no}
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Batch To Complete    data_imports.status    Completed
+    Wait For Batch To Process    BDI_DataImport_BATCH    Completed
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     # Verify that the gift matched to existing opportunity and updated it to closed won status with gift date and payment is paid
