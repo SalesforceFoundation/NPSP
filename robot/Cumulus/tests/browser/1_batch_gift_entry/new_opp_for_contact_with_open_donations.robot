@@ -60,7 +60,7 @@ Create a new opportunity for a contact with open donations
     # Select Frame With Title    NPSP Data Import
     # Click Button With Value   Begin Data Import Process
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Batch To Complete    data_imports.status    Completed
+    Wait For Batch To Process    BDI_DataImport_BATCH    Completed
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     Verify Expected Values    nonns    Opportunity    &{opportunity2}[Id]
