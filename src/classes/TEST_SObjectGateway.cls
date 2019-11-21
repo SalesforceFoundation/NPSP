@@ -133,6 +133,38 @@ public class TEST_SObjectGateway {
     }
 
     /***
+    * @description Retrieves Opportunities
+    */
+    public class OpportunityGateway {
+
+        /***
+        * @description Retrieves Opportunities for the related Recurring Donation
+        * @param rd Recurring donation
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecords(npe03__Recurring_Donation__c rd) {
+            return getRecords(new List<npe03__Recurring_Donation__c>{ rd });
+        }
+
+        /***
+        * @description Retrieves Opportunities for related Recurring Donations
+        * @param rds Recurring donations
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
+            return [
+                SELECT 
+                    Name, Amount, 
+                    AccountId, Primary_Contact__c, 
+                    StageName, CloseDate,
+                    isClosed, isWon
+                FROM Opportunity 
+                WHERE npe03__Recurring_Donation__c IN :rds
+            ];
+        }        
+    }
+
+    /***
     * @description Retrieves Error record(s)
     */
     public class ErrorGateway {
@@ -171,27 +203,48 @@ public class TEST_SObjectGateway {
     * @description Retrieves AsyncApexJob record(s)
     */
     public class AsyncApexJobGateway {
+        private Set<String> fields = new Set<String>{
+            'CreatedDate',
+            'CompletedDate',
+            'ExtendedStatus',
+            'JobItemsProcessed',
+            'TotalJobItems',
+            'NumberOfErrors',
+            'JobType',
+            'ApexClass.NamespacePrefix',
+            'ApexClass.Name',
+            'MethodName'
+        };
 
         /***
-        * @description Retrieves AsyncApexJob records
+        * @description Retrieves AsyncApexJob record for the specified class name
+        * @param className Class Name
         * @return AsyncApexJob
         */
         public AsyncApexJob getRecord(String className) {
-            return [
-                SELECT 
-                    CompletedDate,
-                    ExtendedStatus,
-                    JobItemsProcessed,
-                    TotalJobItems,
-                    NumberOfErrors,
-                    JobType,
-                    ApexClass.NamespacePrefix,
-                    ApexClass.Name,
-                    MethodName
-                FROM AsyncApexJob
-                WHERE ApexClass.Name = :className
-                LIMIT 1
-            ];
+            String soql = new UTIL_Query()
+                .withFrom(AsyncApexJob.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('ApexClass.Name = :className')
+                .withLimit(1)
+                .build();
+                
+            return (AsyncApexJob) Database.query(soql);
+        }
+        
+        /***
+        * @description Retrieves AsyncApexJob record for the specified job Id
+        * @param jobId Async Apex Job Id 
+        * @return AsyncApexJob
+        */
+        public AsyncApexJob getRecord(Id jobId) {
+            String soql = new UTIL_Query()
+                .withFrom(AsyncApexJob.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('Id = :jobId')
+                .build();
+                
+            return (AsyncApexJob) Database.query(soql);
         }
     }
 }

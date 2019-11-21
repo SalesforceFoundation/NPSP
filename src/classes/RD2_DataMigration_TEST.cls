@@ -41,6 +41,7 @@ private class RD2_DataMigration_TEST {
     private static final Decimal AMOUNT_VALUE = 100;
 
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
     private static final TEST_SObjectGateway.AsyncApexJobGateway jobGateway = new TEST_SObjectGateway.AsyncApexJobGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
@@ -142,6 +143,9 @@ private class RD2_DataMigration_TEST {
 
         System.assertEquals(RD2_Constants.RECURRING_TYPE_OPEN, convertedRD.RecurringType__c, 'Recurring Type should match');
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, convertedRD.Status__c, 'Status should match');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
     }
 
     /**
@@ -636,7 +640,7 @@ private class RD2_DataMigration_TEST {
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
         
-        List<Opportunity> opps = getOpportunities(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -652,7 +656,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(rd.npe03__Amount__c, rdSchedules[0].InstallmentAmount__c, 'RD and Schedule Amounts should match');
         System.assertEquals('1', rdSchedules[0].DayOfMonth__c,  'Day of Month should match');
 
-        System.assertEquals(opps.size(), getOpportunities(rd.Id).size(),  'No new Opportunity should be created during data migration');
+        System.assertEquals(opps.size(), oppGateway.getRecords(rd).size(),  'No new Opportunity should be created during data migration');
     }
 
     /**
@@ -682,7 +686,8 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies legacy Recurring Donation not complying to enhanced format 
+     * @description Verifies an error is logged when legacy Recurring Donation cannot be migrated
+     * due to migration validation
      */
     @IsTest
     private static void shouldLogDataMigrationValidationError() {
@@ -703,12 +708,11 @@ private class RD2_DataMigration_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Test.startTest();
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
+        Id batchJobId = Database.executeBatch(new RD2_DataMigration_BATCH());
         Test.stopTest();
 
         List<Error__c> errors = errorGateway.getRecords();
-        System.assertEquals(1, errors.Size(), 'Validation error should be logged');
+        System.assertEquals(1, errors.size(), 'Validation error should be logged');
 
         String expectedMessage = String.format(
             System.Label.RD2_DataMigrationInvalidInstallmentPeriod,
@@ -718,10 +722,47 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
+        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');        
 
         System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
     }
 
+    /**
+     * @description Verifies an error is logged when legacy Recurring Donation cannot be migrated
+     * due to Recurring Donation validation in trigger
+     */
+    @IsTest
+    private static void shouldLogEnhancedRDTriggerValidationError() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .build();
+        insert rd;
+
+        //Set legacy RD to an invalid state 
+        //so an error is generated later during data migration
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+        rd.npe03__Contact__c = null;
+        update rd;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
+
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        Id batchJobId = Database.executeBatch(new RD2_DataMigration_BATCH());
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'Validation error should be logged');
+
+        System.assertEquals(System.Label.RD_DonorIsRequired, errors[0].Full_Message__c, 'Error message should match');
+        System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
+        System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
+        System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
+        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');        
+
+        System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
+    }
 
 
 
@@ -838,26 +879,14 @@ private class RD2_DataMigration_TEST {
     }
 
     /****
-    * @description Returns Opportunities associated with the specified Recurring Donation
-    * @param rdId Recurring Donation Id
-    * @return List<Opportunity>
+    * @description Returns expected data migration log context
+    * @param batchJobId Batch job Id
+    * @return String
     */
-    private static List<Opportunity> getOpportunities(Id rdId) {
-        return getOpportunities(new Set<Id>{ rdId });
-    }
+    private static String getExpectedLogContext(Id batchJobId) {
+        AsyncApexJob job = jobGateway.getRecord(batchJobId);
 
-    /****
-    * @description Returns Opportunities associated with specified Recurring Donations
-    * @param rdIds Recurring Donation Ids
-    * @return List<Opportunity>
-    */
-    private static List<Opportunity> getOpportunities(Set<Id> rdIds) {
-        return [
-            SELECT Amount, npe03__Recurring_Donation__c
-            FROM Opportunity
-            WHERE npe03__Recurring_Donation__c IN :rdIds
-        ];
+        return System.Label.RD2_DataMigrationLogContext + ' ' + String.valueOf(job.CreatedDate);
     }
-
 
 }

@@ -171,16 +171,17 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     private String constructLogContext() {
         UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService().getBatchJob(batchJobId);
 
-        String formattedDate = batchJob == null 
+        String formattedDateSuffix = batchJob == null 
             ? ''
-            : String.valueOf(batchJob.CreatedDate);
+            : ' ' + String.valueOf(batchJob.CreatedDate);
 
-        return 'Data Migration: ' + formattedDate;//TODO Label
+        return System.Label.RD2_DataMigrationLogContext + formattedDateSuffix;
     }
 
     /**
     * @description Constructs log records
     * @param e Exception
+    * @param rd Recurring Donation
     * @return void
     */
     private void logException(Exception e, npe03__Recurring_Donation__c rd) {
@@ -198,6 +199,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
 
     /**
     * @description When all RD's have been processed, handle any required DML and error/exception logging
+    * @param convertedRDs Converted Recurring Donations
     * @return void
     */
     private void handleDmlAndLogging(List<npe03__Recurring_Donation__c> convertedRDs) {
@@ -214,7 +216,11 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         }
         
         ERR_Handler.Errors errorResult = ERR_Handler.getErrors(saveResults, convertedRDs);
-        if (errorResult.errorsExist) {
+        if (errorResult.errorsExist) {            
+            for (Error__c error : errorResult.errorRecords) {
+                error.Context_Type__c = logContext;
+            }
+
             ERR_Handler.processErrors(errorResult.errorRecords, logContext);
         }
     }
