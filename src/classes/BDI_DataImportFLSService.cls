@@ -115,7 +115,11 @@ public class BDI_DataImportFLSService {
 
                 for (SObjectType objectType : targetFieldsByObject.keySet()) {
                     for (SObjectField field : targetFieldsByObject.get(objectType)) {
-                        if (!isValid(field)) {
+                        //Flag to allow for FLS check bypass for CampaignMember.CampaignId
+                        Boolean campaignMemberByPass =
+                                objectType.getDescribe().name.equals('CampaignMember') &&
+                                        field.getDescribe().name.equals('CampaignId');
+                        if (!isValid(field, campaignMemberByPass)) {
                             invalidFields.add(
                                     new SObjectFieldWrapper(
                                             objectType,
@@ -136,7 +140,7 @@ public class BDI_DataImportFLSService {
         }//END loop of Data Import records
     }
 
-    private Boolean isValid(SObjectField field) {
+    private Boolean isValid(SObjectField field, Boolean isCampaignMemberByPass) {
         Set<SObjectField> fieldSet = new Set<SObjectField>{
                 field
         };
@@ -144,7 +148,8 @@ public class BDI_DataImportFLSService {
                 && !permissionsService.canCreate(fieldSet))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-                        && !permissionsService.canUpdate(fieldSet)
+                        && (!permissionsService.canUpdate(fieldSet)
+                        && !isCampaignMemberByPass)
                         && !describeService.isMasterDetailField(field))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_READ)
