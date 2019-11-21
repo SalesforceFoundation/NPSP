@@ -84,9 +84,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 if (RD2_EnablementService.isRecurringDonations2Enabled) {
                     defaultScheduledJobs.put('NPSP 06 - Enhanced Recurring Donation Updates',
                         new List<String>{'0 0 22 ? * *', 'RD2_OpportunityEvaluation_BATCH'} );
+                    jobsToAbort.add('NPSP 06 - Recurring Donation Updates');
                 } else {
                     defaultScheduledJobs.put('NPSP 06 - Recurring Donation Updates',
                         new List<String>{'0 0 22 ? * *', 'RD_RecurringDonations_BATCH'} );
+                    jobsToAbort.add('NPSP 06 - Enhanced Recurring Donation Updates');
                 }
 
                 if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
