@@ -1,13 +1,10 @@
 <template>
-    <p>GAU Allocations</p>
+    <p>{element.label}</p>
+
     <template for:each={recordList} for:item='record' for:index='index'>
-        <!-- {record.apiName} {index} -->
-
+        <p key={record}>Allocation Field</p>
         <!-- TODO: Make this a separate component? With a Delete button? -->
-        <template for:each={element.dataImportFieldMappingDevNames} for:item='mappingDevName'>
-            <c-ge-form-field key={element} field-map-name={mappingDevName}></c-ge-form-field>
-        </template>
-
+        <!-- <c-ge-form-field key={element} field-map-name={mappingDevName}></c-ge-form-field> -->
     </template>
 
     <lightning-button label="Add Row" onclick={addRow}></lightning-button>

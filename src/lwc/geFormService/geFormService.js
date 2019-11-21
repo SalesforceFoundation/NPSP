@@ -131,7 +131,7 @@ class GeFormService {
             }
         }
         
-        // console.log(widgetValues); 
+        console.log(widgetValues); 
         const opportunityID =this.createOpportunityFromDataImport(diRecord, widgetValues);
         
         return opportunityID;

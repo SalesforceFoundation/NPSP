@@ -39,15 +39,19 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     @api
     returnValues() {
-        // TODO: Need to get this working with multiple rows of 
+        // TODO: Need to get this working with multiple rows of fields
+        // Loop over recordList
         const fields = this.template.querySelectorAll('c-ge-form-field');
+        let widgetData = {};
         let widgetFieldAndValues = {};
         if(fields !== null && typeof fields !== 'undefined') {
             fields.forEach(field => {
                 widgetFieldAndValues = { ...widgetFieldAndValues, ...(field.fieldAndValue) };
             });
         }
-        return widgetFieldAndValues;
+        widgetData[ALLOCATION_OBJECT.objectApiName] = widgetFieldAndValues;
+        console.log(widgetData); 
+        return widgetData;
     }
 
     /**
