@@ -36,6 +36,16 @@
 */
 public with sharing class RD2_ValidationService {
 
+    /*******************************************************************************************************
+    * @description map of valid Installment period picklist values
+    */
+    public static Map<String, String> validInstallmentPeriod = validInstallmentPeriodValues();
+
+     /*******************************************************************************************************
+    * @description map of valid Installment period picklist values
+    */
+    public static Map<String, String> validDayOfMonth = validDayofMonthValues();
+
     /***
     * @description Validates missing data on Recurring Donation
     * @param rds the Recurring Donation to validate
@@ -67,6 +77,7 @@ public with sharing class RD2_ValidationService {
 
         for (npe03__Recurring_Donation__c rd : rds) {
             validate(rd, accountsById.get(rd.npe03__Organization__c));
+            validateInstallmentFields(rd);
         }
     }
 
@@ -81,6 +92,7 @@ public with sharing class RD2_ValidationService {
             rd.addError(System.Label.RD_DonorIsRequired);
             return;
         }
+
         //no further check is required if the Contact is specified only or the Account is an Organization
         if (acct == null || acct.npe01__SYSTEMIsIndividual__c != true) {
             return;
@@ -94,6 +106,63 @@ public with sharing class RD2_ValidationService {
 
     }
 
+    /***
+    * @description Validates installment data on Recurring Donation
+    * @param rd the Recurring Donation to validate
+    */
+    private void validateInstallmentFields(npe03__Recurring_Donation__c rd) {
+        if (rd.Status__c == 'Closed') {
+            return;
+        }
+        if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
+            rd.addError(System.Label.RD2_CheckValidAmountOnRD);
+        }
+
+        if (rd.npe03__Installment_Period__c == 'Monthly' && String.isBlank(rd.Day_of_Month__c) ) {
+            rd.addError(System.Label.RD2_DayOfMonthIsReqForMonthlyInstallments);
+        }
+        if (!validInstallmentPeriod.containsKey(rd.npe03__Installment_Period__c.toUpperCase())){
+            rd.addError(
+                String.format(
+                    System.Label.RD2_CheckValidInstallmentPeriod,
+                    new String[]{ rd.npe03__Installment_Period__c })
+            );
+        }
+
+        if (!String.isBlank(rd.Day_of_Month__c) && !validDayOfMonth.containsKey(rd.Day_of_Month__c)){
+            rd.addError(
+                String.format(
+                    System.Label.RD2_CheckValidDayOfMonth,
+                    new String[]{ rd.Day_of_Month__c})
+            );
+        }
+
+    }
+
+
+    private static Map<String,String> validInstallmentPeriodValues(){
+        Map<String,String> validInstallmentPeriod = new Map<String,String>();
+
+        for (Schema.PicklistEntry p: npe03__Recurring_Donation__c.npe03__Installment_Period__c.getDescribe().getPicklistValues()) {
+            if (p.isActive()) {
+                validInstallmentPeriod.put(p.getLabel().toUpperCase(), p.getValue());
+
+        }
+        }
+        return validInstallmentPeriod;
+    }
+
+    private static Map<String,String> validDayofMonthValues(){
+        Map<String,String> validDayOfMonth = new Map<String,String>();
+
+        for (Schema.PicklistEntry p: npe03__Recurring_Donation__c.Day_of_Month__c.getDescribe().getPicklistValues()) {
+        if (p.isActive()) {
+            validDayOfMonth.put(p.getLabel(), p.getValue());
+
+        }
+        }
+        return validDayOfMonth;
+    }
      /***
     * @description Extracts record Ids from a list of SObject records.
     * @param records

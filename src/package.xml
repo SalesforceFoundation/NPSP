@@ -1452,6 +1452,10 @@
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
+        <members>RD2_CheckValidAmountOnRD</members>
+        <members>RD2_CheckValidInstallmentPeriod</members>
+        <members>RD2_CheckValidDayOfMonth</members>
+        <members>RD2_DayOfMonthIsReqForMonthlyInstallments</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
