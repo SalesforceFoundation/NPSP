@@ -117,8 +117,8 @@ public class BDI_DataImportFLSService {
                     for (SObjectField field : targetFieldsByObject.get(objectType)) {
                         //Flag to allow for FLS check bypass for CampaignMember.CampaignId
                         Boolean campaignMemberByPass =
-                                objectType.getDescribe().name.equals('CampaignMember') &&
-                                        field.getDescribe().name.equals('CampaignId');
+                                UTIL_Describe.getObjectDescribe(objectType).getName().equals('CampaignMember') &&
+                                        field.getDescribe().getName().equals('CampaignId');
                         if (!isValid(field, campaignMemberByPass)) {
                             invalidFields.add(
                                     new SObjectFieldWrapper(
