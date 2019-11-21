@@ -6,13 +6,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @api element;
     @track recordList = [];
 
-    singleRecord;
-
     /***
     * @description Initializes the component
     */
     connectedCallback() {
-        this.singleRecord = { apiName: ALLOCATION_OBJECT.objectApiName };
         this.addRow();
     }
 
@@ -34,23 +31,23 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     /**
-     * Expected to return an array of objects for each row of the widget
-     * @return [record1, record2, ...]
+     * Expected to return a map of Object API Name to array of records to be created from this widget
+     * @return {'Allocation__c' : [record1, record2, ...] }
      */
     @api
     returnValues() {
-        // TODO: Need to get this working with multiple rows of fields
-        // Loop over recordList
-        const fields = this.template.querySelectorAll('c-ge-form-field');
+        const rows = this.template.querySelectorAll('c-ge-form-widget-row');
         let widgetData = {};
-        let widgetFieldAndValues = {};
-        if(fields !== null && typeof fields !== 'undefined') {
-            fields.forEach(field => {
-                widgetFieldAndValues = { ...widgetFieldAndValues, ...(field.fieldAndValue) };
+        let widgetRowValues = [];
+
+        if(rows !== null && typeof rows !== 'undefined') {
+            rows.forEach(row => {
+                let rowRecord = row.getRecord();
+                widgetRowValues.push(rowRecord);
             });
         }
-        widgetData[ALLOCATION_OBJECT.objectApiName] = widgetFieldAndValues;
-        console.log(widgetData); 
+
+        widgetData[ALLOCATION_OBJECT.objectApiName] = widgetRowValues;
         return widgetData;
     }
 
@@ -58,7 +55,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * Add a new record to the list
      */
     addRow(){
-        let newRecord = this.singleRecord;
+        let newRecord = { apiName: ALLOCATION_OBJECT.objectApiName };
         this.recordList.push(newRecord);
     }
 

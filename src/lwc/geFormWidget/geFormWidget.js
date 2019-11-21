@@ -11,15 +11,12 @@ export default class GeFormWidget extends LightningElement {
 
     @api
     get widgetAndValues() {
-        // TODO: Should this contain a list of all records maintained by this widget?
         let widgetAndValues = {};
         const thisWidget = this.widgetComponent;
         // Need to make sure all widget components support returnValue()
         if(this.isValid && typeof thisWidget.returnValues === 'function'){
             widgetAndValues = thisWidget.returnValues();
-            // fieldAndValue[this.element.componentName] = this.value;
         }
-        console.log(widgetAndValues); 
         return widgetAndValues;
     }
 

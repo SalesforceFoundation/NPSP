@@ -3116,6 +3116,7 @@
         <members>geFormService</members>
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
+        <members>geFormWidgetRow</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>

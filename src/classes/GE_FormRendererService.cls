@@ -68,10 +68,10 @@ public with sharing class GE_FormRendererService {
         List<FORM_Section> sectionList = template.layout.sections;
 
         for (FORM_Section section : sectionList) {
-            
             // Go through all the elements
             for (FORM_Element element : section.elements) {
-                if (!element.dataImportFieldMappingDevNames.isEmpty()) {
+                if (element.dataImportFieldMappingDevNames != null 
+                    && !element.dataImportFieldMappingDevNames.isEmpty()) {
                     
                     if (fieldMappingSet.fieldMappingByDevName.containsKey(element.dataImportFieldMappingDevNames[0])) {
                         BDI_FieldMapping fieldMapping = fieldMappingSet.fieldMappingByDevName.get(element.dataImportFieldMappingDevNames[0]);
@@ -96,8 +96,6 @@ public with sharing class GE_FormRendererService {
 
         // Check for widget data and convert it to the correct format for processing
         String additionalObjectJSON = convertWidgetDataToObjectJSON(widgetData);
-        System.debug('Additional_Object_JSON: '); 
-        System.debug(additionalObjectJSON); 
         diRecord.Additional_Object_JSON__c = additionalObjectJSON;
 
         // Save the Data Import record to the Database
@@ -114,8 +112,8 @@ public with sharing class GE_FormRendererService {
     }
 
     private static String convertWidgetDataToObjectJSON(String widgetData) {
-        System.debug('widgetData: '); 
-        System.debug(widgetData); 
+        // System.debug('widgetData: '); 
+        // System.debug(widgetData); 
 
         List<SObject> thisList;
         Map<String, Object> objNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
@@ -125,8 +123,9 @@ public with sharing class GE_FormRendererService {
             Object objList = objNameToObjList.get(widgetKey);
             if(objList != null) {
                 String objListString = JSON.serialize(objList);
-                System.debug(widgetKey); 
-                System.debug(objListString); 
+
+                // System.debug(widgetKey); 
+                // System.debug(objListString); 
 
                 // TODO: Depending on how data gets passed, this will change
                 //Type listType = Type.forName('List<' + objName + '>');
@@ -136,10 +135,6 @@ public with sharing class GE_FormRendererService {
                 // String lookupField = opportunityLookupMap.get(objName);
                 // for(SObject relObj : thisList){
                 //     relObj.put(lookupField, oppId);
-                // }
-
-                // if(!thisList.isEmpty()){
-                //     objsToUpsert.add(thisList);
                 // }
             }
         }
