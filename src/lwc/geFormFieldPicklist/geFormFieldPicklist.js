@@ -5,10 +5,11 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api objectName;
     @api fieldName;
     @api label;
+    @api variant;
     @api required;
+    @api value;
 
     @track picklistValues;
-    @api value;
 
     @wire(getObjectInfo, { objectApiName: '$objectName' } ) objectInfo;
 

@@ -86,7 +86,9 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldInfo() {
-        return GeFormService.getFieldMappingWrapper(this.element.value);
+        // Check to see what type of element we have and set the correct mapping api name or widget component name
+        const value = this.element.componentName ? this.element.componentName : this.element.dataImportFieldMappingDevNames[0];
+        return GeFormService.getFieldMappingWrapper(value);
     }
 
     get objectInfo() {

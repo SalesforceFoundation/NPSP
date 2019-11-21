@@ -50,6 +50,7 @@ public virtual with sharing class BDI_ObjectMapping {
     @AuraEnabled public String Relationship_Field;
     @AuraEnabled public String Relationship_To_Predecessor;
     @AuraEnabled public String dynamicSourceField;
+    @AuraEnabled public BDI_FieldMapping[] Field_Mappings;
 
 
     /*******************************************************************************************************

@@ -1,0 +1,70 @@
+<template>
+    <c-util-page-header>
+        <h1 slot="title">
+            <span class="slds-page-header__title"
+                  title="Gift Entry">
+                Gift Entry
+            </span>
+        </h1>
+        <div slot="actions"
+             class="slds-button-group"
+             role="group">
+            <lightning-button label="New Batch"
+                              title="New Batch"
+                              variant="neutral"
+                              class="slds-float_right"
+                              onclick={navigateToForm}>
+            </lightning-button>
+        </div>
+    </c-util-page-header>
+
+    <div role="card"
+         class="slds-card slds-card_extension">
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="tab is loading">
+            </lightning-spinner>
+        </template>
+
+        <lightning-tabset active-tab-value="Templates"
+                          class="extension_test">
+
+            <lightning-tab value="Batches"
+                           label="Batches"
+                           class="slds-p-around_none">
+            </lightning-tab>
+
+            <lightning-tab value="Templates"
+                           label="Templates"
+                           class="slds-p-around_none">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size_3-of-4 slds-p-around_large">
+                        <h1 class="slds-text-heading_small slds-p-bottom_small">Templates</h1>
+                        <p class="slds-text-body_small">
+                            Create a new batch from templates by selecting from the template
+                            names below or create a new template.
+                        </p>
+                    </div>
+                    <div class="slds-size_1-of-4 slds-p-top_large slds-p-right_large">
+                        <lightning-button label="Create Template"
+                                          title="Create Template"
+                                          variant="neutral"
+                                          class="slds-float_right"
+                                          onclick={handleNewFormTemplate}>
+                        </lightning-button>
+                    </div>
+                    <div class="slds-size_1-of-1">
+                        <lightning-datatable key-field="id"
+                                             data={templates}
+                                             columns={columns}
+                                             hide-checkbox-column
+                                             onrowaction={handleRowAction}>
+                        </lightning-datatable>
+                    </div>
+                </div>
+            </lightning-tab>
+
+        </lightning-tabset>
+    </div>
+
+</template>
