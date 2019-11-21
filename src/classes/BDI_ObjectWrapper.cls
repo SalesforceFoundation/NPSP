@@ -42,6 +42,7 @@ public with sharing class BDI_ObjectWrapper {
     public BDI_FieldMapping[] fieldMappings;
     public DataImport__c dataImport;
     public SObject sobj;
+    public BDI_DynamicSource dynamicSource;
 
     public Id existingSObjectId;
 
@@ -52,12 +53,18 @@ public with sharing class BDI_ObjectWrapper {
     * @param objMapping  CMT record for object from config
     * @param fieldMappings CMT records for field mappings from config
     * @param predessessorObjMapping CMT record of predessessor
+    * @param dynamicSource if dynamic source objects are being used, this object contains the sourceSObj.
     */
-    public BDI_ObjectWrapper(DataImport__c dataImport, BDI_ObjectMapping objMapping, BDI_FieldMapping[] fieldMappings, BDI_ObjectMapping predecessorObjMapping) {
+    public BDI_ObjectWrapper(DataImport__c dataImport, 
+                            BDI_ObjectMapping objMapping, 
+                            BDI_FieldMapping[] fieldMappings, 
+                            BDI_ObjectMapping predecessorObjMapping,
+                            BDI_DynamicSource dynamicSource) {
         this.objMapping = objMapping;
         this.predecessorObjMapping = predecessorObjMapping;
         this.fieldMappings = fieldMappings;
         this.dataImport = dataImport;
+        this.dynamicSource = dynamicSource;
     }
 
     /*******************************************************************************************************
@@ -68,19 +75,121 @@ public with sharing class BDI_ObjectWrapper {
     }
 
     /*******************************************************************************************************
-    * @description Set error information on the DataImport__c
+    * @description Set object mapping level import status.
     */
-    public void setImportedRecordStatusError(String errorMessage) {
-        String statusField = objMapping.Imported_Record_Status_Field_Name;
-        if (statusField != null && errorMessage != null) {
-            dataImport.put(statusField, errorMessage.left(255));
+    public void setImportedRecordStatus(String newStatus) {
+        if (newStatus != null){
+            newStatus = newStatus.abbreviate(255);
+        }
+
+        if (dynamicSource == null) {
+            if (objMapping.Imported_Record_Status_Field_Name != null) {
+                dataImport.put(objMapping.Imported_Record_Status_Field_Name, newStatus);
+            }
+        } else {
+            dynamicSource.importedRecordStatus = newStatus;
         }
     }
 
     /*******************************************************************************************************
     * @description Set failure information on the DataImport__c
+    * @param failureInformation the new combined failure information value
     */
     public void setFailureInformation(String failureInformation) {
         dataImport.FailureInformation__c = failureInformation;
+    }
+
+    /*******************************************************************************************************
+    * @description Get the imported record Id (if any)
+    */
+    public Id getImportedRecordId() {
+        Id importedRecordId;
+
+        if (dynamicSource == null) {
+            if (dataImport.get(objMapping.Imported_Record_Field_Name) != null) {
+                importedRecordId = (Id)dataImport.get(objMapping.Imported_Record_Field_Name);
+            }
+        } else {
+            importedRecordId = dynamicSource.importedRecordId;
+        }
+        
+        return importedRecordId;
+    }
+
+    /*******************************************************************************************************
+    * @description Set Imported Record Id
+    * @param importedRecordId the Id of the record that was just created.
+    */
+    public void setImportedRecordId(Id importedRecordId) {
+
+        if (importedRecordId != null) {
+            if (dynamicSource == null) {
+                dataImport.put(objMapping.Imported_Record_Field_Name,
+                    importedRecordId);
+            } else {
+                dynamicSource.importedRecordId = importedRecordId;
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Get the source field value when given an API name
+    * @param sourceFieldAPIName The api name of the source field to extract from the wrapper.
+    */
+    public Object getSourceFieldValue(String sourceFieldAPIName) {
+        Object value;
+        if (dynamicSource == null) {
+            value = dataImport.get(sourceFieldAPIName);
+        } else {
+            //If the values are being drawn from a dynamic source then return the value from the DI
+            //for imported fields, otherwise return it from the dynamic source object.
+            BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance();
+            if (bdiMSAdv.importedRecordFieldNames.contains(sourceFieldAPIName.toLowerCase())) {
+                value = dataImport.get(sourceFieldAPIName);
+            } else {
+                value = dynamicSource.sourceObj.get(sourceFieldAPIName);
+            }
+        }
+        return value;
+    }
+
+    /*******************************************************************************************************
+    * @description Builds the appropriate error message with the status field label name to append to the 
+    * Failure Information field based on whether a dynamic source is being used.
+    * @param errorMessage The error message that needs to have the correct field label/objMapping prefixed 
+    */
+    public String getFailureInformationErrorMessage(String errorMessage) {
+
+        String errorMessageToAppend;
+        String errorPrefix;
+
+        if (dynamicSource == null && objMapping.Imported_Record_Status_Field_Name != null) {
+
+            String importedRecordStatusField = objMapping.Imported_Record_Status_Field_Name;
+
+            errorPrefix = UTIL_Describe.getFieldDescribe(
+                    DataImport__c.SObjectType.getDescribe().getName(),
+                    importedRecordStatusField).getLabel();
+
+
+        } else if (dynamicSource != null && objMapping.dynamicSourceField != null) {
+            
+            String dynFieldLabel = UTIL_Describe.getFieldDescribe(
+                    DataImport__c.SObjectType.getDescribe().getName(),
+                    objMapping.dynamicSourceField).getLabel();
+
+            errorPrefix = dynFieldLabel + ' - ' + dynamicSource.objectMappingDevName;
+        }
+
+        if (errorPrefix != null) {
+            errorMessageToAppend = String.join(
+                    new List<String>{
+                            errorPrefix, errorMessage
+                    }, ':\n');
+        } else {
+            errorMessageToAppend = errorMessage;
+        }
+
+        return errorMessageToAppend;
     }
 }

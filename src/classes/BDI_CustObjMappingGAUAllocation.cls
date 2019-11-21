@@ -62,7 +62,7 @@ public with sharing class BDI_CustObjMappingGAUAllocation extends BDI_ObjectMapp
                 String sourceFieldName = fieldMapping.Source_Field_API_Name;
                 String targetFieldName = fieldMapping.Target_Field_API_Name;
 
-                Object value = objWrap.dataImport.get(sourceFieldName);
+                Object value = objWrap.getSourceFieldValue(sourceFieldName);
 
                 Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(sourceObjName, sourceFieldName);
                 Schema.DescribeFieldResult targetFieldDescribe = UTIL_Describe.getFieldDescribe(objWrap.objMapping.Object_API_Name, targetFieldName);

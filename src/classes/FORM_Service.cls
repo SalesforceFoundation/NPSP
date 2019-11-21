@@ -35,6 +35,31 @@
 * @description Form Services for use in entering gifts or with other form types.
 */
 public virtual with sharing class FORM_Service {
+
+    /*******************************************************************************************************
+    * @description Method for retrieving all existing form templates.
+    */
+    public virtual FORM_Template[] getAllFormTemplates() {
+        return FORM_ServiceGiftEntry.getAllFormTemplates();
+    }
+
+    /*******************************************************************************************************
+    * @description Method clones a Form_Template__c record by id.
+    * @param id: Form_Template__c record id
+    * @return string: A Form_Template__c record id
+    */
+    public virtual FORM_Template cloneFormTemplate(String id) {
+        return FORM_ServiceGiftEntry.cloneFormTemplate(id);
+    }
+
+    /*******************************************************************************************************
+    * @description Method deletes a Form_Template__c record by id.
+    * @param id: Form_Template__c record id
+    */
+    public virtual void deleteFormTemplates(String[] ids) {
+        FORM_ServiceGiftEntry.deleteFormTemplates(ids);
+    }
+
     /*******************************************************************************************************
     * @description Method for retrieving an existing template that you already have the Id for.
     * @param templateId - the Id of an existing form template record for retrieval.

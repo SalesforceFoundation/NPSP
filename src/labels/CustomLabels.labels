@@ -4196,7 +4196,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Cancel</shortDescription>
-        <value>Save</value>
+        <value>Cancel</value>
     </labels>
     <labels>
         <fullName>labelGeSave</fullName>
