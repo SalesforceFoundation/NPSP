@@ -31,9 +31,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 if (typeof formTemplate.layout !== 'undefined'
                         && Array.isArray(formTemplate.layout.sections)) {
                     this.sections = formTemplate.layout.sections;
-                    if (this.isBatchMode) {
+                    // if (this.isBatchMode) {
                         this.dispatchEvent(new CustomEvent('sectionsretrieved'));
-                    }
+                    // }
                 }
             }
 
@@ -44,8 +44,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     setBatchMode(batchId) {
         if (batchId) {
             this.isBatchMode = true;
-            this.dispatchEvent(new CustomEvent('sectionsretrieved')); //Sets the columns
-            // on the table
+            // dispatchEvent(new CustomEvent('sectionsretrieved')); //Sets the columns
+            // // on the table
         } else {
             this.isBatchMode = false;
         }

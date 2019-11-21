@@ -118,7 +118,7 @@ export default class GeFormTable extends LightningElement {
                     element => {
                         const column = {
                             label: element.label,
-                            fieldName: GeFormService.getFieldMappingWrapper(element.value).Source_Field_API_Name,
+                            fieldName: GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]).Source_Field_API_Name,
                             type: GeFormService.getInputTypeFromDataType(element.dataType)
                         };
                         columns.push(column);

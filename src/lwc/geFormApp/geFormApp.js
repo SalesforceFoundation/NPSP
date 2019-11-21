@@ -9,6 +9,9 @@ export default class GeFormApp extends LightningElement {
 
     //method used for testing until form is ready to be loaded with a Batch id
     handleBatchId(event) {
+        this.batchId = event.target.value;
+        this.isBatchMode = this.batchId ? true : false;
+
         const table = this.template.querySelector('c-ge-form-table');
         table.setBatchId(event.target.value);
         table.loadBatch();
@@ -27,6 +30,8 @@ export default class GeFormApp extends LightningElement {
     }
 
     connectedCallback() {
+        //The form will load in batch mode once we are passing a batch id into the app on
+        // load, since the form responds to this property
         this.isBatchMode = this.batchId ? true : false;
     }
 
@@ -40,6 +45,8 @@ export default class GeFormApp extends LightningElement {
     handleSectionsRetrieved(event) {
         const formSections = event.target.sections;
         const table = this.template.querySelector('c-ge-form-table');
-        table.handleSectionsRetrieved(formSections);
+        // if (!table.ready) {
+            table.handleSectionsRetrieved(formSections);
+        // }
     }
 }
