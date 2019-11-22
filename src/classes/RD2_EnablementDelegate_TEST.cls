@@ -117,6 +117,12 @@ public with sharing class RD2_EnablementDelegate_TEST {
         RD2_EnablementDelegate_CTRL.enableEnhancement();
 
         System.assertEquals(true, STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c, 'Custom Settings field should be set');
+
+        List<AsyncApexJob> asyncJobs = [SELECT Id
+            FROM AsyncApexJob
+            WHERE ApexClass.Name = 'RD2_EnablementDelegate_CTRL'
+            LIMIT 1];
+        System.assert(!asyncJobs.isEmpty(), 'Expected to find a Queueable job after enabling Enhanced Recurring Donations');
     }
 
     /****
