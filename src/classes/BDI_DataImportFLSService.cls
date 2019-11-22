@@ -155,11 +155,12 @@ public class BDI_DataImportFLSService {
             return true;
         }
     }
+
     @TestVisible
-    private Boolean isValidateUpdateException(SObjectType objectType, SObjectField field){
-            return (!(objectType == CampaignMember.SObjectType
-                    && field == CampaignMember.CampaignId)
-                    && !describeService.isMasterDetailField(field));
+    private Boolean isValidateUpdateException(SObjectType objectType, SObjectField field) {
+        return (((objectType == CampaignMember.SObjectType
+                && field == CampaignMember.CampaignId)
+                && !describeService.isMasterDetailField(field)));
     }
 
     private class SObjectFieldWrapper {
