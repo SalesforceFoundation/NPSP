@@ -426,9 +426,34 @@ private with sharing class RD2_ValidationService_TEST {
 
     }
 
+    /***
+    * @description Verifies if it creates RDs when installment period
+        is monthly and day of month value is valid
+    */
+    @isTest
+    private static void shouldCreateRDWhenDayOfMonthIsValidInInstallPeriod() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
 
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withAmount(10)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('15')
+            .build();
 
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
+
+    }
 
     /***
     * @description Builds an HouseHold Account
