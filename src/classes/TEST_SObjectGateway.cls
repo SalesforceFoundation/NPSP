@@ -73,24 +73,58 @@ public class TEST_SObjectGateway {
             return [
                 SELECT
                     Name,
+                    npe03__Recurring_Donation_Campaign__c,
                     npe03__Organization__c,
                     npe03__Contact__c,
+                    npe03__Donor_Name__c,
                     npe03__Amount__c,
                     npe03__Paid_Amount__c,
+                    npe03__Date_Established__c,
+                    Day_of_Month__c,
+                    StartDate__c,
                     npe03__Next_Payment_Date__c, 
                     npe03__Last_Payment_Date__c,
-                    npe03__Date_Established__c,
-                    StartDate__c,
-                    Day_of_Month__c,
-                    InstallmentFrequency__c,
                     npe03__Installment_Period__c,
+                    InstallmentFrequency__c,
+                    npe03__Total_Paid_Installments__c,
+                    PaymentMethod__c,
                     RecurringType__c,
                     Status__c
                 FROM npe03__Recurring_Donation__c 
                 WHERE Id IN :rdIds
             ];
         }
+
+        /***
+        * @description Retrieves Recurring Donation records
+        * @return List<npe03__Recurring_Donation__c>
+        */
+        public List<npe03__Recurring_Donation__c> getRecords() {
+            return [
+                SELECT
+                    Name,
+                    npe03__Recurring_Donation_Campaign__c,
+                    npe03__Organization__c,
+                    npe03__Contact__c,
+                    npe03__Donor_Name__c,
+                    npe03__Amount__c,
+                    npe03__Paid_Amount__c,
+                    npe03__Date_Established__c,
+                    Day_of_Month__c,
+                    StartDate__c,
+                    npe03__Next_Payment_Date__c, 
+                    npe03__Last_Payment_Date__c,
+                    npe03__Installment_Period__c,
+                    InstallmentFrequency__c,
+                    npe03__Total_Paid_Installments__c,
+                    PaymentMethod__c,
+                    RecurringType__c,
+                    Status__c
+                FROM npe03__Recurring_Donation__c 
+            ];
+        }
     }
+
 
     /***
     * @description Retrieves Recurring Donation Schedule record(s)

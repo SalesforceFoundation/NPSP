@@ -664,6 +664,7 @@ private class RD2_DataMigration_TEST {
     private static void shouldCreateScheduleForActiveEnhancedRDs() {
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id).withId(null).build();
         insert rd;
+        rd = getRecords()[0];
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
@@ -697,6 +698,7 @@ private class RD2_DataMigration_TEST {
             .withOpenEndedStatusClosed()
             .build();
         insert rd;
+        rd = getRecords()[0];
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
@@ -792,6 +794,60 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
     }
 
+    /**
+     * @description Verifies open Opportunities for a closed *just migrated* RD are processed per RD settings
+     */
+    @IsTest
+    private static void shouldApplyCloseActionOnOpenOppsWhenMigratedRDIsClosed() {
+        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Open_Opportunity_Behavior__c = closeAction
+            )
+        );
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withOpenEndedStatusClosed()
+            .build();
+        insert rd;
+        rd = getRecords()[0];
+
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
+        Test.stopTest();
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+
+        System.assertEquals(2, opps.size(), 'Number of Opportunities should match');
+        System.assertEquals(true, oppById.get(opps[0].Id).isWon, 'Already closed Opp should stay won');
+        System.assertEquals(true, oppById.get(opps[1].Id).isClosed, 'Open Opp should be closed now');
+        System.assertEquals(false, oppById.get(opps[1].Id).isWon, 'Open Opp should be lost won now');
+    }
+
 
 
     // HELPER METHODS
@@ -802,14 +858,12 @@ private class RD2_DataMigration_TEST {
     * @return Contact
     */
     private static Contact getContact() {
-        return [	     
-            SELECT 
-                FirstName, LastName, 
-                AccountId, Account.Name
+        return [
+            SELECT FirstName, LastName, AccountId
             FROM Contact
             LIMIT 1
-        ];	 
-    }	   
+        ];
+    }
 
     /**
      * @description Instantiate a legacy recurring donation for a specific ContactId

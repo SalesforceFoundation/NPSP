@@ -41,8 +41,8 @@ public with sharing class UTIL_BatchJobService {
 
     private static final String JOB_TYPE_BATCH = 'BatchApex';
 
-    public enum ApexJobStatus { 
-        HOLDING, QUEUED, PREPARING, PROCESSING, COMPLETED, FAILED, ABORTED 
+    public enum ApexJobStatus {
+        HOLDING, QUEUED, PREPARING, PROCESSING, COMPLETED, FAILED, ABORTED
     }
 
     public static final Set<String> IN_PROGRESS_STATUSES = new Set<String>{
@@ -64,7 +64,7 @@ public with sharing class UTIL_BatchJobService {
 
         return (Database.countQuery('SELECT Count() FROM AsyncApexJob WHERE Id = :batchId AND Status IN :IN_PROGRESS_STATUSES') > 0);
     }
-    
+
     /***
     * @description Loads the latest batch job for the specified job Id
     * @param jobId BatchJobId
@@ -83,6 +83,7 @@ public with sharing class UTIL_BatchJobService {
 
         return apexJobs.isEmpty() ? null : new BatchJob(apexJobs[0]);
     }
+
 
     /***
     * @description Loads the latest batch job for the specified batch class name
@@ -153,10 +154,10 @@ public with sharing class UTIL_BatchJobService {
         }
 
         /***
-        * @description Calculates time elapsed since the batch job has started. 
-        * 
+        * @description Calculates time elapsed since the batch job has started.
+        *
         * @param startDate Batch Start Date
-        * @param endDate When completed, the endDate is completion date; 
+        * @param endDate When completed, the endDate is completion date;
         * otherwise, the endDate is the current datetime.
         * @return String Time elapsed
         */
@@ -171,7 +172,7 @@ public with sharing class UTIL_BatchJobService {
 
             return (days > 0 ? String.valueOf(days) + ' ' + System.Label.BatchProgressTimeElapsedDays + ' ' : '') +
                 String.format(
-                    '{0}:{1}:{2}', 
+                    '{0}:{1}:{2}',
                     new String[] { formatTime(diffDate.hourGmt()), formatTime(diffDate.minuteGmt()), formatTime(diffDate.secondGmt()) }
                 );
         }
@@ -215,7 +216,7 @@ public with sharing class UTIL_BatchJobService {
 
             } else {
                 percentComplete = Math.max(
-                    Math.roundToLong(100 * jobItemsProcessed / totalJobItems), 
+                    Math.roundToLong(100 * jobItemsProcessed / totalJobItems),
                     defaultPercentComplete
                 );
             }

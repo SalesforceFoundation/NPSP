@@ -18,6 +18,47 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>ClosedReason__c</fullName>
+        <description>The reason this Recurring Donation was closed.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The reason this Recurring Donation was closed.</inlineHelpText>
+        <label>Closed Reason</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Card Expired</fullName>
+                    <default>false</default>
+                    <label>Card Expired</label>
+                </value>
+                <value>
+                    <fullName>Deceased Donor</fullName>
+                    <default>false</default>
+                    <label>Deceased Donor</label>
+                </value>
+                <value>
+                    <fullName>Financial Difficulty</fullName>
+                    <default>false</default>
+                    <label>Financial Difficulty</label>
+                </value>
+                <value>
+                    <fullName>No Longer Interested</fullName>
+                    <default>false</default>
+                    <label>No Longer Interested</label>
+                </value>
+                <value>
+                    <fullName>Unknown</fullName>
+                    <default>false</default>
+                    <label>Unknown</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
         <fullName>Day_of_Month__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Sets future monthly, custom monthly, or quarterly donation installments to the selected day of the month, regardless of Next Donation Date. NOTE: If the Always use last day of month checkbox is selected, it supersedes the Day of Month value.</inlineHelpText>
