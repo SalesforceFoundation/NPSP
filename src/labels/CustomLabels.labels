@@ -1391,12 +1391,12 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Recurring Donation Installment Period "{0}" cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
     </labels>
     <labels>
-        <fullName>RD2_DataMigrationLogContext</fullName>
-        <categories>Recurring-Donations</categories>
+        <fullName>RD2_DataMigrationInvalidOpenEndedStatus</fullName>
+        <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Enhanced Recurring Donation data migration log context</shortDescription>
-        <value>DataMigration:</value>
+        <shortDescription>Open Ended Status cannot be converted to enhanced Recurring Donation format</shortDescription>
+        <value>Recurring Donation Open Ended Status "{0}" cannot be converted to the Enhanced Recurring Donations format.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>

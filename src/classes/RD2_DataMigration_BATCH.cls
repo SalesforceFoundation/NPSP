@@ -37,6 +37,9 @@
 */
 public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Schedulable, Database.Stateful {
 
+    public static final String LOG_CONTEXT_PREFIX = 'RDDataMigration:';
+    public static final String LOG_EXCEPTION_ERROR_TYPE = 'Data Migration Exception';
+
     /**
     * @description The default batch size for the migration job if it's not specified
     * in custom settings
@@ -175,7 +178,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             ? ''
             : ' ' + String.valueOf(batchJob.CreatedDate);
 
-        return System.Label.RD2_DataMigrationLogContext + formattedDateSuffix;
+        return LOG_CONTEXT_PREFIX + formattedDateSuffix;
     }
 
     /**
@@ -190,7 +193,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             Datetime__c = System.now(),
             Related_Record_ID__c = rd.Id,
             Record_URL__c = ERR_Handler.getRecordURL(rd.Id),
-            Error_Type__c = System.Label.errErrorTypeValidationFailed,
+            Error_Type__c = LOG_EXCEPTION_ERROR_TYPE,
             Full_Message__c = e.getMessage()
         );
 

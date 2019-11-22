@@ -629,7 +629,35 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(RD2_Constants.STATUS_CLOSED, convertedRD.Status__c, 'Status should match');
     }
 
-     /**
+    /**
+     * @description Verifies an exception is thrown when Open Ended Status cannot be converted
+     */
+    @IsTest
+    private static void shouldThrowExceptionWhenOpenEndedStatusCannotBeConverted() {
+        String invalidOpenEndedStatus = 'foo';
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withOpenEndedStatus(invalidOpenEndedStatus)
+            .build();
+
+        Exception actualException;
+        try {
+            rd = new RD2_DataMigrationMapper(rd).convertToEnhancedRD();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        String expectedMessage = String.format(
+            System.Label.RD2_DataMigrationInvalidOpenEndedStatus,
+            new String[]{ invalidOpenEndedStatus }
+        );
+
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+        System.assertEquals(expectedMessage, actualException.getMessage(), 'An exception message should match');
+    }
+
+    /**
      * @description Verifies a schedule record is created for Enhanced Recurring Donation record.
      */
     @IsTest
@@ -687,7 +715,7 @@ private class RD2_DataMigration_TEST {
 
     /**
      * @description Verifies an error is logged when legacy Recurring Donation cannot be migrated
-     * due to migration validation
+     * due to a migration validation error
      */
     @IsTest
     private static void shouldLogDataMigrationValidationError() {
@@ -719,7 +747,7 @@ private class RD2_DataMigration_TEST {
             new String[]{ installment.Name }
         );
         System.assertEquals(expectedMessage, errors[0].Full_Message__c, 'Error message should match');
-        System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
+        System.assertEquals(RD2_DataMigration_BATCH.LOG_EXCEPTION_ERROR_TYPE, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
         System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');        
@@ -886,7 +914,7 @@ private class RD2_DataMigration_TEST {
     private static String getExpectedLogContext(Id batchJobId) {
         AsyncApexJob job = jobGateway.getRecord(batchJobId);
 
-        return System.Label.RD2_DataMigrationLogContext + ' ' + String.valueOf(job.CreatedDate);
+        return RD2_DataMigration_BATCH.LOG_CONTEXT_PREFIX + ' ' + String.valueOf(job.CreatedDate);
     }
 
 }

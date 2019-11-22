@@ -1453,7 +1453,7 @@
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
-        <members>RD2_DataMigrationLogContext</members>
+        <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementEnableConfirm</members>
