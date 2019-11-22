@@ -432,13 +432,13 @@ public without sharing class HH_HouseholdNaming {
                             hhlist.add(h.id);
                     }
                 }
-                if (!hhlist.isEmpty()){
+                if (hhlist.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable()) {
                     HH_HouseholdNaming hn = new HH_HouseholdNaming();
                     hn.UpdateNames(hhlist);
+                } else {
+                    HH_HouseholdNaming.FutureUpdateNames(hhlist);
                 }
             }
         }
-
     }
-
 }
