@@ -185,6 +185,70 @@ private class BDI_DataImportFLSService_TEST {
     }
 
     /**
+     * @description This test validates that the CampaignMember.CampaignId gets
+     * exempted from Field Level Security checks to allow for campaign member imports
+     */
+    @IsTest
+    static void testIsValidateUpdateException (){
+        Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
+                Set<BDI_DataImportFLSService.AccessLevel>{
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE
+        };
+
+        DataImport__c dataImport = new DataImport__c(
+                Contact1_Firstname__c = 'testFirst'
+        );
+        insert dataImport;
+
+        BDI_DataImportFLSService service = new BDI_DataImportFLSService(
+                new List<DataImport__c>{
+                        dataImport
+                },
+                BDI_FieldMappingCustomMetadata.getInstance(),
+                accessLevels
+        );
+
+        System.assert(service.isValidateUpdateException(CampaignMember.SObjectType, CampaignMember.CampaignId),
+                'There should be an update exception for this field');
+    }
+
+    /**
+ * @description This test validates that the CampaignMember.CampaignId gets
+ * exempted from Field Level Security checks to allow for campaign member imports
+ */
+    @IsTest
+    static void testIsValid (){
+        Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
+                Set<BDI_DataImportFLSService.AccessLevel>{
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE,
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_READ,
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE
+        };
+
+        DataImport__c dataImport = new DataImport__c(
+                Contact1_Firstname__c = 'testFirst'
+        );
+        insert dataImport;
+
+        BDI_DataImportFLSService service = new BDI_DataImportFLSService(
+                new List<DataImport__c>{
+                        dataImport
+                },
+                BDI_FieldMappingCustomMetadata.getInstance(),
+                accessLevels
+        );
+
+        System.assert(service.isValid(CampaignMember.SObjectType, CampaignMember.CampaignId),
+                'There should be an update exception for this field');
+
+        System.assert(service.isValid(Contact.SObjectType, Contact.FirstName),
+                'You should have the right access to read, create and update this field');
+    }
+
+
+
+
+    /**
      * @description StubProvider implementation used to make a field be considered a
      * master-detail field in tests.
      */

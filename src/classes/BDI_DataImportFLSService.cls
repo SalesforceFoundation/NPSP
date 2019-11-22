@@ -115,11 +115,7 @@ public class BDI_DataImportFLSService {
 
                 for (SObjectType objectType : targetFieldsByObject.keySet()) {
                     for (SObjectField field : targetFieldsByObject.get(objectType)) {
-                        //Flag to allow for FLS check bypass for CampaignMember.CampaignId
-                        Boolean campaignMemberByPass =
-                                UTIL_Describe.getObjectDescribe(objectType).getName().equals('CampaignMember') &&
-                                        field.getDescribe().getName().equals('CampaignId');
-                        if (!isValid(field, campaignMemberByPass)) {
+                        if (!isValid(objectType, field)) {
                             invalidFields.add(
                                     new SObjectFieldWrapper(
                                             objectType,
@@ -140,7 +136,8 @@ public class BDI_DataImportFLSService {
         }//END loop of Data Import records
     }
 
-    private Boolean isValid(SObjectField field, Boolean isCampaignMemberByPass) {
+    @TestVisible
+    private Boolean isValid(SObjectType objectType, SObjectField field) {
         Set<SObjectField> fieldSet = new Set<SObjectField>{
                 field
         };
@@ -148,9 +145,8 @@ public class BDI_DataImportFLSService {
                 && !permissionsService.canCreate(fieldSet))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-                        && (!permissionsService.canUpdate(fieldSet)
-                        && !isCampaignMemberByPass)
-                        && !describeService.isMasterDetailField(field))
+                        && !isValidateUpdateException(objectType, field)
+                        && !permissionsService.canUpdate(new Set<SObjectField>{field}))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_READ)
                         && !permissionsService.canRead(fieldSet))) {
@@ -158,6 +154,13 @@ public class BDI_DataImportFLSService {
         } else {
             return true;
         }
+    }
+
+    @TestVisible
+    private Boolean isValidateUpdateException(SObjectType objectType, SObjectField field){
+            return (!(objectType == Campaign.SObjectType
+                    && field == CampaignMember.CampaignId)
+                    && !describeService.isMasterDetailField(field));
     }
 
     private class SObjectFieldWrapper {
