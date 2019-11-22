@@ -17,15 +17,23 @@ export default class GeFormField extends LightningElement {
     changeTimeout;
 
     handleValueChange(event) {
-        // get the value for the field; use the checked attribute for checkboxes
-        this.value  = this.fieldType !== BOOLEAN_TYPE ? event.target.value : event.target.checked.toString();     
-        
+        this.value = this.getValueFromChangeEvent(event);
         window.clearTimeout(this.changeTimeout);
         this.changeTimeout = setTimeout(() => {
             // parent component (formSection) should bind to onchange event
             const evt = new CustomEvent('change', {field: this.element, value: this.value});
             this.dispatchEvent(evt);
         }, DELAY);
+    }
+
+    getValueFromChangeEvent(event) {
+        if(this.isLookup) {
+            return event.detail.value;
+        } else if(this.fieldType === BOOLEAN_TYPE) {
+            return event.target.checked.toString();
+        }
+
+        return event.target.value;
     }
 
     /**
@@ -38,8 +46,8 @@ export default class GeFormField extends LightningElement {
         let fieldIsValid = this.checkFieldValidity();
 
         if(this.element.required) {
-            return this.value !== null 
-                && typeof this.value !== 'undefined' 
+            return this.value !== null
+                && typeof this.value !== 'undefined'
                 && this.value !== ''
                 && fieldIsValid;
         }
