@@ -1666,6 +1666,7 @@
         <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
+        <members>bdiMigrationLongDeployment</members>
         <members>bdiOMUIChildParentHelp</members>
         <members>bdiOMUIChildParentLabel</members>
         <members>bdiOMUICreateModalTitle</members>
