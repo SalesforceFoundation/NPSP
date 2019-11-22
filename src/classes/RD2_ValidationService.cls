@@ -153,13 +153,13 @@ public with sharing class RD2_ValidationService {
         }
         DayOfMonth.add('Last_Day');
 
-        System.debug('Values of Day of month are:' + DayOfMonth);
         return DayOfMonth;
 
     }
 
     /*******************************************************************************************************
     * @description Verify if installmentperiod is valid in the Recurring Donation
+    * @param Recurring Donation record
     */
     private static Boolean isValidInstallmentPeriod(npe03__Recurring_Donation__c rd) {
         List<String> validInstallmentPeriod = getValidInstallmentPeriod();
@@ -171,6 +171,7 @@ public with sharing class RD2_ValidationService {
 
     /*******************************************************************************************************
     * @description Verify if DayOfMonth is valid in the Recurring Donation
+    * @param Recurring Donation record
     */
     private static Boolean isValidDayOfMonth(npe03__Recurring_Donation__c rd) {
         List<String> validDayOfMonth = getValidDayOfMonth();
