@@ -1,4 +1,0 @@
-<aura:component description="geLookupPlaceholder" implements="lightning:isUrlAddressable">
-    <!-- TODO: Delete aura component later. Only used during dev for easy viewing -->
-    <c:geFormFieldLookup fieldApiName="AccountId" objectApiName="Opportunity"/>
-</aura:component>
