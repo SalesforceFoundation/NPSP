@@ -331,6 +331,14 @@ tasks:
                 errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
                 upsert errSettings;
 
+    run_tests:
+        options:
+            retry_failures:
+                - "unable to obtain exclusive access to this record"
+                - "UNABLE_TO_LOCK_ROW"
+                - "connection was cancelled here"
+            retry_always: True
+
 flows:
     config_dev:
         steps:
