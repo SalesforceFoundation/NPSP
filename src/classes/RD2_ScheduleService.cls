@@ -232,7 +232,7 @@ public without sharing class RD2_ScheduleService {
         }
 
         Integer adjustedFrequency =
-                (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ? 7 : 1) * Integer.valueOf(schedule.InstallmentFrequency__c);
+            (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ? DAYS_IN_WEEK : 1) * Integer.valueOf(schedule.InstallmentFrequency__c);
 
         Integer unitsBetween = getDateUnitsBetweenFirstValidAndCurrentDate(firstValid, schedule.InstallmentPeriod__c);
 
@@ -304,15 +304,15 @@ public without sharing class RD2_ScheduleService {
         Date nextDate = schedule.StartDate__c;
 
         if (schedule.DayOfMonth__c != null && (
-                schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ||
-                        schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH))
+            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ||
+            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH))
         {
             nextDate = Date.newInstance(
-                    nextDate.year(),
-                    nextDate.month(),
-                    schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
-                            Date.daysInMonth(nextDate.year(), nextDate.month()) :
-                            Integer.valueOf(schedule.DayOfMonth__c)
+                nextDate.year(),
+                nextDate.month(),
+                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
+                    Date.daysInMonth(nextDate.year(), nextDate.month()) :
+                    Integer.valueOf(schedule.DayOfMonth__c)
             );
             nextDate = nextDate >= schedule.StartDate__c ? nextDate : nextDate.addMonths(1);
         }
