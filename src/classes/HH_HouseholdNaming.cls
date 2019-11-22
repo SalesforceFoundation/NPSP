@@ -435,7 +435,7 @@ public without sharing class HH_HouseholdNaming {
                 if (hhlist.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable()) {
                     HH_HouseholdNaming hn = new HH_HouseholdNaming();
                     hn.UpdateNames(hhlist);
-                } else {
+                } else (!hhlist.isEmpty()) {
                     HH_HouseholdNaming.FutureUpdateNames(hhlist);
                 }
             }
