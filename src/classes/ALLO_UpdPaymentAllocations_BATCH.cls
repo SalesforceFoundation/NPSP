@@ -56,7 +56,6 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractChunkingLDV_B
         this.reviewCnt = 0;
         this.boundary = (allocationsSettings != null && allocationsSettings.LastJobStartTimePaymentAllocations__c != null) ?
                         allocationsSettings.LastJobStartTimePaymentAllocations__c : System.now().addYears(-1);
-
     }
 
     /**
@@ -152,10 +151,7 @@ public class ALLO_UpdPaymentAllocations_BATCH extends UTIL_AbstractChunkingLDV_B
         }
 
         return successfullyProcessed;
-
     }
-
-
 
     /**
      * @description Takes a set of Ids, and adds additional record Ids to it from the list of records

@@ -139,7 +139,7 @@
         <relatedList>Opportunity.npe03__Recurring_Donation__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <customButtons>Manage_Allocations</customButtons>
+        <customButtons>%%%NAMESPACE%%%Manage_Allocations</customButtons>
         <excludeButtons>MassChangeOwner</excludeButtons>
         <excludeButtons>New</excludeButtons>
         <fields>NAME</fields>
