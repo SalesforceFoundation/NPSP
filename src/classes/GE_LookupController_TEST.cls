@@ -38,7 +38,10 @@
 private class GE_LookupController_TEST {
     @IsTest
     static void testSearch() {
-        insert new Account(Name = 'Test Account');
+        insert new List<Account>{
+                new Account(Name = 'Test Account'),
+                new Account(Name = 'Non-Matching Account')
+        };
 
         Test.startTest();
         List<GE_LookupController.LookupResult> results = GE_LookupController.doSearch('test', 'Account');
