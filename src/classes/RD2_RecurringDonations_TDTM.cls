@@ -163,7 +163,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         if (!rdIds.isEmpty()) {
-            RD2_QueueableService.EvaluateInstallmentOpportunities service = 
+            RD2_QueueableService.EvaluateInstallmentOpportunities service =
                 new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds);
 
             if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
@@ -202,7 +202,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             buildNewSchedules(rds);
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            setNextDonationDateBeforeUpdate(rds);
+            calculateNextDonationDateBeforeUpdate(rds, oldRds);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             synchronizeSchedulesAfterRDUpdate(rds, oldRds);
@@ -215,7 +215,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     private void calculateNextDonationDates(List<npe03__Recurring_Donation__c> rds) {
 
-        for (npe03__Recurring_Donation__c rd: rds) {
+        for (npe03__Recurring_Donation__c rd : rds) {
             rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
         }
     }
@@ -226,21 +226,20 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     private void buildNewSchedules(List<npe03__Recurring_Donation__c> rds) {
 
-        for (npe03__Recurring_Donation__c rd: rds) {
+        for (npe03__Recurring_Donation__c rd : rds) {
             dmlActions.objectsToInsert.addAll(scheduleService.getNewSchedules(rd));
         }
     }
 
-
     /***
-    * @description Handles setting next donation date for updated recurring donations
+    * @description Handles calculation of next donation date before update of recurring donation
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     */
-    private void setNextDonationDateBeforeUpdate(List<npe03__Recurring_Donation__c> rds) {
-
-        for (npe03__Recurring_Donation__c rd : rds) {
-            rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
+    private void calculateNextDonationDateBeforeUpdate(List<SObject> rds, List<SObject> oldRds) {
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = scheduleService.getAllRecurringDonationSchedules(rds, oldRds);
+        for (npe03__Recurring_Donation__c rd : (List<npe03__Recurring_Donation__c>)rds) {
+            rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(schedulesByRdId.get(rd.Id));
         }
     }
 
@@ -251,18 +250,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     private void synchronizeSchedulesAfterRDUpdate(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
 
-        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = getRecurringDonationsNeedingScheduleUpdates(rds, oldRds);
+        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = scheduleService.getRecurringDonationsNeedingScheduleUpdates(rds, oldRds, TDTM_Runnable.Action.AfterUpdate);
 
-        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
-        for (RecurringDonationSchedule__c oldSchedule : [
-                SELECT RecurringDonation__c, StartDate__c, EndDate__c FROM RecurringDonationSchedule__c
-                WHERE RecurringDonation__c IN :filteredRecurringDonations.keySet()
-                AND Active__c = true]) {
-            if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
-                oldSchedules.put(oldSchedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
-            }
-            oldSchedules.get(oldSchedule.RecurringDonation__c).add(oldSchedule);
-        }
+        // We only need schedules for RDs that qualify for schedule updates in order to sync schedules
+        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = scheduleService.getExistingSchedules(filteredRecurringDonations.values());
 
         DmlWrapper revisedSchedules;
         for (npe03__Recurring_Donation__c rd : filteredRecurringDonations.values()) {
@@ -271,30 +262,4 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             dmlActions.objectsToUpdate.addAll(revisedSchedules.objectsToUpdate);
         }
     }
-
-    /***
-    * @description Filters recurring donations to determine which need schedule updates
-    * @param rds Trigger.new records
-    * @param oldRds Trigger.old records
-    */
-    private Map<Id, npe03__Recurring_Donation__c> getRecurringDonationsNeedingScheduleUpdates(
-        List<npe03__Recurring_Donation__c> rds,
-        List<npe03__Recurring_Donation__c> oldRds)
-    {
-
-        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>();
-        oldRdsById.putAll(oldRds);
-
-        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = new Map<Id, npe03__Recurring_Donation__c>();
-        for (npe03__Recurring_Donation__c rd : rds) {
-            npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
-
-            if (scheduleService.isScheduleUpdateNeeded(rd, oldRd)) {
-                filteredRecurringDonations.put(rd.Id, rd);
-            }
-        }
-
-        return filteredRecurringDonations;
-    }
-
 }
