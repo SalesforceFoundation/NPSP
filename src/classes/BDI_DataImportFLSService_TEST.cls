@@ -213,8 +213,8 @@ private class BDI_DataImportFLSService_TEST {
     }
 
     /**
- * @description This test validates that the CampaignMember.CampaignId gets
- * exempted from Field Level Security checks to allow for campaign member imports
+ * @description This test validates having the right permissions to read, create or update
+ *  object and fields to created from a Data Import record
  */
     @IsTest
     static void testIsValid (){
