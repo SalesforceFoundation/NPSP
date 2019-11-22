@@ -426,11 +426,6 @@ public class ALLO_AllocationsUtil_TEST {
     ********************************************************************************************************/ 
     @isTest private static void processOppsAndPaymentAllocationsViaCallableApi() {
 
-        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
-
-        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
-        insert accs;
-
         List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
         gaus[2].Name = 'Default GAU';
         General_Accounting_Unit__c defaultGau = gaus[2];
@@ -496,26 +491,26 @@ public class ALLO_AllocationsUtil_TEST {
             };
 
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
-        String sucessfullyProcessedOppsString = (String)npspApi.call(ALLO_PROCESS_OPPS_PMTS_ACTION, npspApiParams);
-        Set<Id> sucessfullyProcessedOpps = (Set<Id>)JSON.deserialize(sucessfullyProcessedOppsString,
-            Set<Id>.class);
-
-        List<Allocation__c> defaultAllocation = [
+        Set<Id> sucessfullyProcessedOpps = (Set<Id>)npspApi.call(ALLO_PROCESS_OPPS_PMTS_ACTION, npspApiParams);
+            
+        List<Allocation__c> pmtAllocations = [
             SELECT Id, General_Accounting_Unit__c, Amount__c, Payment__c, Percent__c, Opportunity__c 
             FROM Allocation__c 
             WHERE Payment__c = :pmtsProcess[0].Id and General_Accounting_Unit__c = :gaus[2].id];
 
         Test.stopTest();
-        
-        System.debug(defaultAllocation);
 
-        System.assert(sucessfullyProcessedOpps.contains(opps[0].id), 'Opp processed sucessfully');
-        System.assertNotEquals(null, defaultAllocation[0].Amount__c, 'Payment Allocation updated amount');
-        System.assert(!sucessfullyProcessedOpps.contains(opps[1].id), 'Opp excluded from processing');
+        System.debug(pmtAllocations);
+
+        System.assert(sucessfullyProcessedOpps.contains(opps[0].id), 'Opportunity was not processed successfully.');
+        System.assertEquals(490.00, pmtAllocations[0].Amount__c, 'Payment Default Allocation Amount');
+        System.assert(!sucessfullyProcessedOpps.contains(opps[1].id), 'Oppportunity was processed and should have been excluded');
     }
 
-    // @description Test validating the Payment Allocation Configuration via Callable_Api when the settings are configured
-    @isTest private static void validatePaymentAllocationConfigurationViaCallableApiNoProblems() {
+    /*******************************************************************************************************
+    * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings are configured
+    ********************************************************************************************************/
+    @isTest private static void validatePaymentAllocationConfigurationViaCallableApiNoErrors() {
         
         Test.startTest();
 
@@ -531,29 +526,27 @@ public class ALLO_AllocationsUtil_TEST {
 
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
         Map<String, Object> npspApiParams = new Map<String, Object>();
-        String configProblemsString = (String)npspApi.call(ALLO_VALIDATE_CONFIG_ACTION, npspApiParams);
-        List<String> configProblems = (List<String>)JSON.deserialize(configProblemsString,
-            List<String>.class);
+        List<String> configProblems = (List<String>)npspApi.call(ALLO_VALIDATE_CONFIG_ACTION, npspApiParams);
 
         Test.stopTest();
 
-        System.assertEquals(true, configProblems.isEmpty(), 'Payment Allocation config varified');
+        System.assertEquals(true, configProblems.isEmpty(), 'Payment Allocation configuration check returned errors');
     }
 
-    // @description Test validating the Payment Allocation Configuration via Callable_Api when the settings are not configured
-    @isTest private static void validatePaymentAllocationConfigurationViaCallableApiWithProblems() {
+    /*******************************************************************************************************
+    * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings are not configured
+    ********************************************************************************************************/
+    @isTest private static void validatePaymentAllocationConfigurationViaCallableApiWithErrors() {
         
         Test.startTest();
 
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
         Map<String, Object> npspApiParams = new Map<String, Object>();
-        String configProblemsString = (String)npspApi.call(ALLO_VALIDATE_CONFIG_ACTION, npspApiParams);
-        List<String> configProblems = (List<String>)JSON.deserialize(configProblemsString,
-            List<String>.class);
+        List<String> configProblems = (List<String>)npspApi.call(ALLO_VALIDATE_CONFIG_ACTION, npspApiParams);
 
         Test.stopTest();
 
-        System.assertEquals(false, configProblems.isEmpty(), 'Payment Allocation config varified');
+        System.assertEquals(false, configProblems.isEmpty(), 'Payment Allocation configuration validated - Errors were expected');
     }
 
     /*******************************************************************************************************

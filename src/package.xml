@@ -55,9 +55,9 @@
         <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
+        <members>ALLO_UpdPaymentAllocations_SCHED</members>
         <members>ALLO_UpdPaymentAllocations_BATCH</members>
         <members>ALLO_UpdPaymentAllocations_ERR_BATCH</members>
-        <members>ALLO_UpdPaymentAllocations_SCHED</members>
         <members>ALLO_UpdPaymentAllocations_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
@@ -226,10 +226,10 @@
         <members>CRLP_VRollupHandler</members>
         <members>CallableApiParameters</members>
         <members>CallableApiParameters_TEST</members>
-        <members>CallableDispatchService_ERR</members>
-        <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>CallableDispatchService_ERR</members>
+        <members>CallableDispatchService_ERR_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>

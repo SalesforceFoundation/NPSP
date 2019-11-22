@@ -54,7 +54,7 @@ global with sharing class Callable_API implements System.Callable {
 
         CallableApiParameters paramService = new CallableApiParameters(params);
 
-        switch on (cleanActionText) { 
+        switch on (cleanActionText) {
             when 'tdtm.disablealltriggers' {
                 TDTM_Config_API.disableAllTriggers();
 
@@ -90,7 +90,6 @@ global with sharing class Callable_API implements System.Callable {
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
                 // If you do so, your functionality can break without any warning or liability from Salesforce.
                 // If you have any questions, please inquire on the Power of Us Hub.
-
                 // Since there are multiple actions that can be invoked, the ERR_Dispatch_API will get the remaining params out of the
                 // parameter service depending on which action was invoked
                 return CallableDispatchService_ERR.getInstanceOf(paramService).dispatch();
@@ -101,13 +100,10 @@ global with sharing class Callable_API implements System.Callable {
                 Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PARAM_PROCESSING_BOUNDARY);
                 Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(CallableApiParameters.PARAM_DISABLE_ALLOCATION_TRIGGERS);
 
-                Set<Id> oppIds = ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true);
-                return JSON.serialize(oppIds, true);
-                //return ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true);  
+                return ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true); 
 
-            } when 'allo.validatepmtallocationconfig' { 
-                List<String> problems =  ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();
-                return JSON.serialize(problems, true);    
+            } when 'allo.validatepmtallocationconfig' {
+                return ALLO_AllocationsUtil.validatePaymentAllocationsConfiguration();    
 
             } when else {
                 throw new MalformedMethodInvocationException(
