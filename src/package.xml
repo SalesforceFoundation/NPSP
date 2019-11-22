@@ -1722,9 +1722,9 @@
         <members>bgeProcessBatch</members>
         <members>bgeTabHeader</members>
         <members>bgeUnmappedFieldsNoticeHeader</members>
+        <members>bgeUnmappedFieldsNoticeTitle</members>
         <members>bgeUnmappedFieldsNoticeMessageAdvancedMapping</members>
         <members>bgeUnmappedFieldsNoticeMessageHelpTextMapping</members>
-        <members>bgeUnmappedFieldsNoticeTitle</members>
         <members>bgeWizardHideAdvancedOptions</members>
         <members>bgeWizardShowAdvancedOptions</members>
         <members>btnContinue</members>
@@ -1734,9 +1734,9 @@
         <members>campaignMemberStatusResponded</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
-        <members>conMergeErrNoPersonAccounts</members>
         <members>conMergeErrorNoDeleteObjPermission</members>
         <members>conMergeErrorNoDeleteRecAccess</members>
+        <members>conMergeErrNoPersonAccounts</members>
         <members>conMergeFoundContacts</members>
         <members>conMergePageTitle</members>
         <members>conMergePageTitleDetail</members>
