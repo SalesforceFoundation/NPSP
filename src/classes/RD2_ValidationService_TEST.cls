@@ -133,6 +133,7 @@ private with sharing class RD2_ValidationService_TEST {
         List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
         .withAccount(contacts[0].AccountId)//only RD for one Contact will be valid
         .withAmount(100)
+        .withInstallmentPeriodYearly()
         .build(contacts);
 
         List<Database.SaveResult> results = Database.insert(rds, false);
@@ -165,6 +166,8 @@ private with sharing class RD2_ValidationService_TEST {
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(con.Id)
+            .withAmount(10)
+            .withInstallmentPeriodYearly()
             .build();
 
         try {
@@ -190,6 +193,7 @@ private with sharing class RD2_ValidationService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100)
+            .withInstallmentPeriodYearly()
             .build();
 
         try {
@@ -199,6 +203,232 @@ private with sharing class RD2_ValidationService_TEST {
         }
         System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
     }
+
+    /***
+    * @description Verifies if it displays error message when there zero amount is specified
+        for open Recurring Donations
+    */
+    @isTest
+    private static void shouldFailWhenZeroAmountIsSpecifiedForOpenRD() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withAmount(0)
+            .withInstallmentPeriodYearly()
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_CheckValidAmountOnRD));
+    }
+
+    /***
+    * @description Verifies if it displays error message when there is no amount for open Recurring Donations
+    */
+    @isTest
+    private static void shouldFailWhenNoAmountIsSpecifiedForOpenRD() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withInstallmentPeriodYearly()
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_CheckValidAmountOnRD));
+    }
+
+    /***
+    * @description Verifies if it displays error message when there is negative amount for open Recurring Donations
+    */
+    @isTest
+    private static void shouldFailWhenNegativeAmountIsSpecifiedForOpenRD() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withAmount(-10)
+            .withInstallmentPeriodYearly()
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_CheckValidAmountOnRD));
+    }
+
+    /***
+    * @description Verifies if it creates Recurring donations for closed status when
+        no amount is specified.
+    */
+    @isTest
+    private static void shouldCreateRDWhenNoAmountIsSpecifiedForClosedRD() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withInstallmentPeriodYearly()
+            .withStatusClosed()
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
+    }
+
+    /***
+    * @description Verifies if it creates Recurring donations for closed status when
+        zero amount is specified.
+    */
+    @isTest
+    private static void shouldCreateRDWhenZeroAmountIsSpecifiedForClosedRD() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withInstallmentPeriodYearly()
+            .withAmount(0)
+            .withStatusClosed()
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
+    }
+
+    /***
+    * @description Verifies if it displays error message when installment period
+        is monthly and day of month is blank
+    */
+    @isTest
+    private static void shouldFailWhenDayOfMonthIsBlankForMonthlyInstallmentPeriod() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withAmount(10)
+            .withInstallmentPeriodMonthly()
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        String expectedMessage = String.format(
+            System.Label.RD2_CheckValidDayOfMonth,
+            new String[]{ null }
+        );
+        System.assert(errMessage.contains(expectedMessage));
+
+    }
+
+    /***
+    * @description Verifies if it displays error message when installment period
+        is monthly and day of month is blank
+    */
+    @isTest
+    private static void shouldFailWhenInstallmentPeriodisOccasionally() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withAmount(10)
+            .withInstallmentPeriod('Occasionally')
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        String expectedMessage = String.format(
+            System.Label.RD2_CheckValidInstallmentPeriod,
+            new String[]{'Occasionally' }
+        );
+        System.assert(errMessage.contains(expectedMessage));
+
+    }
+
+    /***
+    * @description Verifies if it displays error message when installment period
+        is monthly and day of month value is not valid
+    */
+    @isTest
+    private static void shouldFailWhenDayOfMonthIsNotValidForMonthlyInstallments() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(con.Id)
+            .withAmount(10)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('31')
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        String expectedMessage = String.format(
+            System.Label.RD2_CheckValidDayOfMonth,
+            new String[]{'31' }
+        );
+        System.assert(errMessage.contains(expectedMessage));
+
+    }
+
+
+
+
 
     /***
     * @description Builds an HouseHold Account
