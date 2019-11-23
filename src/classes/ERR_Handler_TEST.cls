@@ -244,7 +244,7 @@ private class ERR_Handler_TEST {
         System.assertEquals(1, errors.size());
 
         //Verify error was NOT emailed
-        for(Error__c error : errors) {
+        for (Error__c error : errors) {
             System.assertEquals(true, error.Email_Sent__c);
             System.assertEquals(ERR_Handler_API.Context.TDTM.name(), error.Context_Type__c);
         }
@@ -267,7 +267,7 @@ private class ERR_Handler_TEST {
         System.assertEquals(true, errors[0].Email_Sent__c, 'The error should be emailed');
 
         List<ApexPages.Message> pageMessages = ApexPages.getMessages();
-        System.assertEquals(0, pageMessages.size(), 'Error message should not be displayed on the page');
+        System.assertEquals(0, pageMessages.size(), 'Error message should not be displayed on the page: ' + pageMessages);
     }
 
     /**
@@ -292,7 +292,33 @@ private class ERR_Handler_TEST {
         System.assertEquals(true, errors[0].Email_Sent__c, 'The error should be emailed');
 
         List<ApexPages.Message> pageMessages = ApexPages.getMessages();
-        System.assertEquals(0, pageMessages.size(), 'Error message should not be displayed on the page');
+        System.assertEquals(0, pageMessages.size(), 'Error message should not be displayed on the page: ' + pageMessages);
+    }
+
+    /**
+     * @description Verifies error notification processing.
+     * The error message is not displayed on the NPSP Settings page
+     */
+    @IsTest
+    private static void shouldProcessErrorResultButNotDisplayItOnPage() {
+        Test.setCurrentPage(Page.STG_SettingsManager);
+
+        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+        errorResult.errorsExist = true;
+        errorResult.errorRecords.add(
+            ERR_Handler.createError(testException, ERROR_CONTEXT)
+        );
+
+        Test.startTest();
+        ERR_Handler.processErrorsOnly(errorResult, ERROR_CONTEXT);
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be generated: ' + errors);
+        System.assertEquals(true, errors[0].Email_Sent__c, 'The error should be emailed');
+
+        List<ApexPages.Message> pageMessages = ApexPages.getMessages();
+        System.assertEquals(0, pageMessages.size(), 'Error message should not be displayed on the page: ' + pageMessages);
     }
 
     /**
@@ -317,7 +343,7 @@ private class ERR_Handler_TEST {
         System.assertEquals(true, errors[0].Email_Sent__c, 'The error should be emailed');
 
         List<ApexPages.Message> pageMessages = ApexPages.getMessages();
-        System.assertEquals(1, pageMessages.size(), 'Error message should be displayed on the page');
+        System.assertEquals(1, pageMessages.size(), 'Error message should be displayed on the page: ' + pageMessages);
     }
 
     

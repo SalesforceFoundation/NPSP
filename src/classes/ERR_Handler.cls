@@ -330,7 +330,7 @@ public class ERR_Handler {
     * @return void
     */
     public static void processErrorsOnly(Errors errorResult, String context) {
-        if (errorResult.errorsExist != true) {     
+        if (errorResult == null || errorResult.errorsExist != true) {     
             return;
         }  
 
