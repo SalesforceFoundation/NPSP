@@ -197,7 +197,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             Full_Message__c = e.getMessage()
         );
 
-        ERR_Handler.processErrors(new List<Error__c>{ logEntry }, logContext);
+        ERR_Handler.processErrorsOnly(new List<Error__c>{ logEntry }, logContext);
     }
 
     /**
@@ -218,14 +218,10 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             Database.rollback(sp);
         }
         
-        ERR_Handler.Errors errorResult = ERR_Handler.getErrors(saveResults, convertedRDs);
-        if (errorResult.errorsExist) {            
-            for (Error__c error : errorResult.errorRecords) {
-                error.Context_Type__c = logContext;
-            }
-
-            ERR_Handler.processErrors(errorResult.errorRecords, logContext);
-        }
+        ERR_Handler.processErrorsOnly(
+            ERR_Handler.getErrors(saveResults, convertedRDs), 
+            logContext
+        ); 
     }
 
     /**
