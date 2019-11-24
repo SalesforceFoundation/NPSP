@@ -1199,9 +1199,13 @@ class NPSP(SalesforceRobotLibraryBase):
          time.sleep(2)
          field.send_keys(Keys.ENTER)
 
-    def verify_toast_message(self, value):
+    def verify_toast_message_contains(self, text):
         """ Verifies the toast message """
-        locator = npsp_lex_locators["alert"].format(value)
-        self.selenium.wait_until_page_contains_element(locator)
-        locator = npsp_lex_locators["toast_close"]
-        self.selenium.click_element(locator)
+        self.selenium.wait_until_page_contains(text, timeout=30)
+
+
+    def close_toast_message(self):
+        """ Close the toast message banner """
+        self.selenium.wait_until_element_is_visible(npsp_lex_locators["toast"])
+        self.selenium.click_element(npsp_lex_locators["toast"])
+        self.selenium.wait_until_element_is_not_visible(npsp_lex_locators["toast"])
