@@ -1200,9 +1200,8 @@ class NPSP(SalesforceRobotLibraryBase):
          field.send_keys(Keys.ENTER)
 
     def verify_toast_message_contains(self, text):
-        """ Verifies the toast message """
+        """ Verifies the page contains the text specified """
         self.selenium.wait_until_page_contains(text, timeout=30)
-
 
     def close_toast_message(self):
         """ Close the toast message banner """
