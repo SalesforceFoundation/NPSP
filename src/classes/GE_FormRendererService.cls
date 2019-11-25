@@ -57,6 +57,7 @@ public with sharing class GE_FormRendererService {
 
         FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
 
+
         return renderWrapper;
     }
 
@@ -76,6 +77,34 @@ public with sharing class GE_FormRendererService {
             return renderWrapper;
         } else {
             return null;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Takes the template and field mappings and updates the template so that the required fields are set
+    * as required. 
+    * @param template - The deserailized template that is stored. 
+    * @param fieldMappingSet The field mapping set which determines what DI field is mapped to what target field. 
+    */
+    private static void updateTemplateWithRequired(FORM_Template template, BDI_FieldMappingSet fieldMappingSet) {
+        List<FORM_Section> sectionList = template.layout.sections;
+
+        for (FORM_Section section : sectionList) {
+    
+            // Go through all the elements
+            for (FORM_Element element : section.elements) {
+                if (!element.dataImportFieldMappingDevNames.isEmpty()) {
+                    
+                    if (fieldMappingSet.fieldMappingByDevName.containsKey(element.dataImportFieldMappingDevNames[0])) {
+                        BDI_FieldMapping fieldMapping = fieldMappingSet.fieldMappingByDevName.get(element.dataImportFieldMappingDevNames[0]);
+
+                        // Update the element's required by doing an OR between the element's required, DI source field, target field
+                        // Update the element's required to make sure we are respecting the source/target/template builder's required
+                        // with the most up to date information. 
+                        element.required = element.required || fieldMapping.Source_Field_Required || fieldMapping.Target_Field_Required;
+                    }
+                }
+            }
         }
     }
 

@@ -82,6 +82,8 @@
         <members>BDI_Donations</members>
         <members>BDI_Donations_TEST</members>
         <members>BDI_DryRun_TEST</members>
+        <members>BDI_DynamicSource</members>
+        <members>BDI_DynamicSourceGroup</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingSet</members>
         <members>BDI_IMatchDonations</members>
@@ -268,6 +270,8 @@
         <members>GAU_TDTM_TEST</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
+        <members>GE_LookupController</members>
+        <members>GE_LookupController_TEST</members>
         <members>GE_TemplateBuilderCtrl</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -705,6 +709,7 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
+        <members>GE_TemplateBuilder</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -729,7 +734,6 @@
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
         <members>geFormRendererPlaceholder</members>
-        <members>geTemplateBuilderPlaceholder</members>
         <members>modalFooter</members>
         <members>modalHeader</members>
         <members>pageNotification</members>
@@ -932,6 +936,7 @@
         <members>DataImport__c.Account2_Street__c</members>
         <members>DataImport__c.Account2_Website__c</members>
         <members>DataImport__c.Account2_Zip_Postal_Code__c</members>
+        <members>DataImport__c.Additional_Object_JSON__c</members>
         <members>DataImport__c.ApexJobId__c</members>
         <members>DataImport__c.Campaign_Member_Status__c</members>
         <members>DataImport__c.Contact1ImportStatus__c</members>
@@ -1688,6 +1693,7 @@
         <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
+        <members>bdiMigrationLongDeployment</members>
         <members>bdiOMUIChildParentHelp</members>
         <members>bdiOMUIChildParentLabel</members>
         <members>bdiOMUICreateModalTitle</members>
@@ -1831,6 +1837,8 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>GE_Remove_Selected_Option</members>
+        <members>GE_Search_Placeholder</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
@@ -2985,6 +2993,8 @@
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
+        <members>GE_Template_Builder</members>
+        <members>GE_Templates</members>
         <members>General_Accounting_Unit__c</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
@@ -3013,6 +3023,7 @@
         <members>IsEnabled_CustomizableRollups</members>
         <members>IsEnabled_DefaultGAU</members>
         <members>IsEnabled_HouseholdAcctModel</members>
+        <members>IsEnabled_PaymentAllocations</members>
         <members>IsEnabled_RecurringDonations2</members>
         <members>Org_IsEnabled_AdvancedMultiCurrency</members>
         <members>PilotEnabled</members>
@@ -3106,7 +3117,10 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>geAutocomplete</members>
+        <members>geAutocompleteOption</members>
         <members>geFormField</members>
+        <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>
         <members>geFormRenderer</members>
         <members>geFormSection</members>
@@ -3114,12 +3128,17 @@
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
-        <members>geTemplateBuilderFormLayout</members>
         <members>geTemplateBuilderFormSection</members>
-        <members>geTemplateBuilderGiftFields</members>
+        <members>geTemplateBuilderSectionModalBody</members>
+        <members>geTemplateBuilderSelectFields</members>
+        <members>geTemplateBuilderService</members>
         <members>geTemplateBuilderTemplateInfo</members>
+        <members>geTemplates</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>utilDedicatedListener</members>
+        <members>utilIllustration</members>
+        <members>utilPageHeader</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
@@ -3253,5 +3272,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>46.0</version>
+    <version>47.0</version>
 </Package>

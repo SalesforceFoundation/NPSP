@@ -1,0 +1,38 @@
+Accounts:
+    sf_object: Account
+    table: Account
+    fields:
+        Id: sf_id
+        Name: Name
+        npe01__SYSTEMIsIndividual__c: npe01__SYSTEMIsIndividual__c
+        npe01__SYSTEM_AccountType__c: npe01__SYSTEM_AccountType__c
+        RecordTypeId: RecordTypeId
+Contacts:
+    sf_object: Contact
+    table: Contact
+    fields:
+        Id: sf_id
+        FirstName: FirstName
+        LastName: LastName
+        Email: Email
+        Description: Description
+        npe01__HomeEmail__c: npe01__HomeEmail__c
+    lookups:
+        AccountId:
+            table: Account
+Recurring Donations:
+    sf_object: npe03__Recurring_Donation__c
+    table: npe03__Recurring_Donation__c
+    fields:
+        Id: sf_id
+        Name: name
+        npe03__Amount__c: npe03__Amount__c
+        npe03__Date_Established__c: npe03__Date_Established__c
+        npe03__Installment_Period__c: npe03__Installment_Period__c
+        npe03__Next_Payment_Date__c: npe03__Next_Payment_Date__c
+        npe03__Open_Ended_Status__c: npe03__Open_Ended_Status__c
+        npe03__Installments__c: npe03__Installments__c
+        npe03__Schedule_Type__c: npe03__Schedule_Type__c
+    lookups:
+        npe03__Contact__c:
+            table: Contact

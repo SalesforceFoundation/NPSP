@@ -1,3 +1,9 @@
 <template>
-    <lightning-combobox value={value} onchange={handleValueChange} label={label} options={picklistValues}></lightning-combobox>
+    <lightning-combobox value={value}
+                        variant={variant}
+                        onchange={handleValueChange}
+                        label={label}
+                        options={picklistValues}
+                        required={required}>
+    </lightning-combobox>
 </template>

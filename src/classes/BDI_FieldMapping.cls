@@ -40,9 +40,11 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public String Source_Field_Label;
     @AuraEnabled public String Source_Field_API_Name;
     @AuraEnabled public String Source_Field_Data_Type;
+    @AuraEnabled public Boolean Source_Field_Required;
     @AuraEnabled public String Target_Field_Label;
     @AuraEnabled public String Target_Field_API_Name;
     @AuraEnabled public String Target_Field_Data_Type;
+    @AuraEnabled public Boolean Target_Field_Required;
     @AuraEnabled public String Data_Import_Field_Mapping_Set;
     @AuraEnabled public String Target_Object_Mapping_Dev_Name;
     @AuraEnabled public String Target_Object_API_Name;
@@ -50,21 +52,19 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public Boolean Is_Deleted;
     @AuraEnabled public String Source_Field_Display_Type_Label;
     @AuraEnabled public String Target_Field_Display_Type_Label;
-    // A mapping of picklist value to label. 
-    // Schema.PicklistEntry does not work with AuraEnabled. 
-    @AuraEnabled public Map<String, String>  Target_Field_Picklist_Values = new Map<String, String>(); 
+    @AuraEnabled public Boolean Is_Required;
+    @AuraEnabled public Boolean Is_Source_Field_Required;
+    // Used for the Form Template Builder and Renderer
+    @AuraEnabled public String Element_Type = 'field';
 
-    /*******************************************************************************************************
-    * @description No parameter constructor to enable use as virtual class.
-    */
     public BDI_FieldMapping() {
 
     }
 
-    /*******************************************************************************************************
-    * @description Constructor that populates the wrapper with data from a Data_Import_Field_Mapping__mdt record.
-    * @param fieldMapping the Data_Import_Field_Mapping__mdt to populate from.
-    */
+    // A mapping of picklist value to label.
+    // Schema.PicklistEntry does not work with AuraEnabled.
+    @AuraEnabled public Map<String, String>  Target_Field_Picklist_Values = new Map<String, String>();
+
     public BDI_FieldMapping(Data_Import_Field_Mapping__mdt fieldMapping) {
         String dataImport = SobjectType.DataImport__c.Name;
 
@@ -96,24 +96,33 @@ public virtual with sharing class BDI_FieldMapping {
         this.Source_Field_Label = sourceFieldDescribe.label;
         this.Source_Field_Data_Type = String.valueOf(sourceFieldDescribe.type);
         this.Source_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Source_Field_Data_Type);
+        
+        // If a field is nillable, it can have a null value. A non-nillable field means it is required. 
+        this.Source_Field_Required = !sourceFieldDescribe.isNillable();
 
         this.Target_Field_Label = targetFieldDescribe.label;
         this.Target_Field_Data_Type = String.valueOf(targetFieldDescribe.type);
         this.Target_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Target_Field_Data_Type);
+        
+        // If a field is nillable, it can have a null value. A non-nillable field means it is required. 
+        this.Target_Field_Required = !targetFieldDescribe.isNillable();
 
         this.Data_Import_Field_Mapping_Set = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
         this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping__r.DeveloperName;
         this.Required = fieldMapping.Required__c;
         this.Is_Deleted = fieldMapping.Is_Deleted__c;
+
         List<Schema.PicklistEntry> picklistEntriesList = targetFieldDescribe.getPicklistValues();
         
         for (Schema.PicklistEntry picklistEntry : picklistEntriesList) {
-            
+
             // Create a mapping of active picklist entry value to label 
             if (picklistEntry.isActive()) {
                 Target_Field_Picklist_Values.put(picklistEntry.getValue(), picklistEntry.getLabel());
             }
-            
         }
+
+        // TODO: Complete when Template-level validation work item is in play
+        this.Is_Required = (this.Required == 'Yes' || !sourceFieldDescribe.isNillable() || !targetFieldDescribe.isNillable()) ? true : false;
     }
 }

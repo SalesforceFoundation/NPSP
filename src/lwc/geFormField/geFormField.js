@@ -17,15 +17,58 @@ export default class GeFormField extends LightningElement {
     changeTimeout;
 
     handleValueChange(event) {
-        // get the value for the field; use the checked attribute for checkboxes
-        this.value  = this.fieldType !== BOOLEAN_TYPE ? event.target.value : event.target.checked.toString();     
-        
+        this.value = this.getValueFromChangeEvent(event);
         window.clearTimeout(this.changeTimeout);
         this.changeTimeout = setTimeout(() => {
             // parent component (formSection) should bind to onchange event
             const evt = new CustomEvent('change', {field: this.element, value: this.value});
             this.dispatchEvent(evt);
         }, DELAY);
+    }
+
+    getValueFromChangeEvent(event) {
+        if(this.isLookup) {
+            return event.detail.value;
+        } else if(this.fieldType === BOOLEAN_TYPE) {
+            return event.target.checked.toString();
+        }
+
+        return event.target.value;
+    }
+
+    /**
+     * TRUE when a field is required and filled in correctly, or not required at all.
+     * @returns {boolean}
+     */
+    @api
+    isValid() {
+        // We need to check for invalid values, regardless if the field is required
+        let fieldIsValid = this.checkFieldValidity();
+
+        if(this.element.required) {
+            return this.value !== null
+                && typeof this.value !== 'undefined'
+                && this.value !== ''
+                && fieldIsValid;
+        }
+
+        return fieldIsValid;
+    }
+
+    /**
+     * TRUE when a field is filled in, and is the correct format.
+     * @returns {boolean}
+     */
+    checkFieldValidity() {
+        // TODO: Handle other input types, if needed
+        const inputField = this.template.querySelector('[data-id="inputComponent"]');
+        if(inputField !== null && typeof inputField !== 'undefined'
+            && typeof inputField.reportValidity === 'function'
+            && typeof inputField.checkValidity === 'function') {
+                inputField.reportValidity();
+                return inputField.checkValidity();
+        }
+        return true;
     }
 
     @api
@@ -36,10 +79,17 @@ export default class GeFormField extends LightningElement {
         // CMT record name at, element.value. 
         // However, it may change to the array dataImportFieldMappingDevNames
         // If so, we need to update this to reflect that.
-        // In the Execute Anonymous code, both fields are populated. 
-        fieldAndValue[this.element.value] = this.value;
+        // In the Execute Anonymous code, both fields are populated.
+        // PRINCE: Temporary change below. Please review and update
+        // as needed.
+        // Changed 'this.element.value' references to getter 'formElementName'.
+        fieldAndValue[this.formElementName] = this.value;
         
         return fieldAndValue;
+    }
+
+    get formElementName() {
+        return this.element.componentName ? this.element.componentName : this.element.dataImportFieldMappingDevNames[0];
     }
 
     get inputType() {
@@ -51,7 +101,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldInfo() {
-        return GeFormService.getFieldMappingWrapper(this.element.value);
+        return GeFormService.getFieldMappingWrapper(this.formElementName);
     }
 
     get objectInfo() {
@@ -92,5 +142,10 @@ export default class GeFormField extends LightningElement {
 
     get fieldApiName() {
         return this.fieldInfo.Target_Field_API_Name;
+    }
+
+    @api
+    get fieldLabel() {
+        return this.element.label;
     }
 }

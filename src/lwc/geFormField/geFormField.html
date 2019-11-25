@@ -1,27 +1,46 @@
 <template>
     <template if:true={isLightningInput}>
-        <lightning-input
+        <lightning-input data-id='inputComponent'
             value={value}
             type={inputType}
             formatter={formatter}
             required={element.required}
             onchange={handleValueChange} 
-            label={element.label}>
+            label={fieldLabel}>
         </lightning-input>
     </template>
     <template if:true={isLookup}>
-        <lightning-record-edit-form object-api-name={objectApiName}>
-            <label class="slds-form-element__label">{element.label}</label>
-            <lightning-input-field field-name={fieldApiName} variant='label-hidden'></lightning-input-field>
-        </lightning-record-edit-form>
+        <c-ge-form-field-lookup field-api-name={fieldApiName}
+                                object-api-name={objectApiName}
+                                onchange={handleValueChange}
+                                required={element.required}
+                                id={element.value}
+                                label={fieldLabel}>
+        </c-ge-form-field-lookup>
     </template>
     <template if:true={isRichText}>
-        <lightning-input-rich-text value={value} onblur={handleValueChange} label={element.label}></lightning-input-rich-text>
+        <lightning-input-rich-text data-id='inputComponent'
+            value={value}
+            onblur={handleValueChange}
+            label={fieldLabel}>
+        </lightning-input-rich-text>
     </template>
     <template if:true={isPicklist}>
-        <c-ge-form-field-picklist value={value} field-name={fieldApiName} object-name={objectApiName} onchange={handleValueChange} label={element.label}></c-ge-form-field-picklist>
+        <c-ge-form-field-picklist data-id='inputComponent'
+            value={value}
+            required={element.required}
+            field-name={fieldApiName}
+            object-name={objectApiName}
+            onchange={handleValueChange}
+            label={fieldLabel}>
+        </c-ge-form-field-picklist>
     </template>
     <template if:true={isTextArea}>
-        <lightning-textarea value={value} onchange={handleValueChange} label={element.label}></lightning-textarea>
+        <lightning-textarea data-id='inputComponent'
+            value={value}
+            required={element.required}
+            onchange={handleValueChange}
+            label={fieldLabel}>
+        </lightning-textarea>
     </template>
 </template>
