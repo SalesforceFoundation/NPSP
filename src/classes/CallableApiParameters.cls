@@ -103,7 +103,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a Datetime value
-     * @param paramName paramName to look in the parameter map under
+     * @param paramName Map key for the params collection
      * @param defaultValue Default if null
      */
     public Datetime getDatetime(String paramName) {
@@ -159,7 +159,7 @@ public class CallableApiParameters {
 
     /**
      * @description Retrieve the specified Parameter as a Set<Id> collection
-     * @param paramName
+     * @param paramName Map key for the params collection
      */
     public Set<Id> getSetId(String paramName) {
         try {

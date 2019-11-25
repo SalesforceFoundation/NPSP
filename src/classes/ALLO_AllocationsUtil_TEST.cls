@@ -420,9 +420,9 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description - Test calling ALLO_UpdPaymentAllocations_BATCH via the Callable_Api class. Assert that a opportunity
-    * is processed when meeting the criteria and excluded when the criteria are not met. Also enure that a deafult allocation
-    * is created for any unallocated amount.
+    * @description - Test calling ALLO_UpdPaymentAllocations_BATCH via the Callable_Api class. Assert that 
+    * a opportunity is processed when meeting the criteria and excluded when the criteria are not met. Also 
+    * ensure that a deafult allocation is created for any unallocated amount.
     ********************************************************************************************************/ 
     @isTest private static void processOppsAndPaymentAllocationsViaCallableApi() {
 
@@ -502,13 +502,14 @@ public class ALLO_AllocationsUtil_TEST {
 
         System.debug(pmtAllocations);
 
-        System.assert(sucessfullyProcessedOpps.contains(opps[0].id), 'Opportunity was not processed successfully.');
+        System.assert(sucessfullyProcessedOpps.contains(opps[0].id), 'Opportunity 0 was not processed successfully.');
         System.assertEquals(490.00, pmtAllocations[0].Amount__c, 'Payment Default Allocation Amount');
-        System.assert(!sucessfullyProcessedOpps.contains(opps[1].id), 'Oppportunity was processed and should have been excluded');
+        System.assert(!sucessfullyProcessedOpps.contains(opps[1].id), 'Oppportunity 1 was processed and should have been excluded');
     }
 
     /*******************************************************************************************************
-    * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings are configured
+    * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings 
+    * are configured properly.
     ********************************************************************************************************/
     @isTest private static void validatePaymentAllocationConfigurationViaCallableApiNoErrors() {
         
@@ -534,7 +535,8 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings are not configured
+    * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings 
+    * are not configured properly.
     ********************************************************************************************************/
     @isTest private static void validatePaymentAllocationConfigurationViaCallableApiWithErrors() {
         
