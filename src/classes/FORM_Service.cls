@@ -65,7 +65,7 @@ public virtual with sharing class FORM_Service {
     * @param templateId - the Id of an existing form template record for retrieval.
     */
     public virtual FORM_Template retrieveFormTemplate(Id templateId) {
-        return FORM_ServiceGiftEntry.retrieveFormTemplate(templateId);
+        return FORM_ServiceGiftEntry.retrieveFormTemplateById(templateId);
     }
 
     /*******************************************************************************************************
