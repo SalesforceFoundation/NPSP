@@ -3,14 +3,15 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
 Create Household With Name Only
-    [Documentation]                       Creates a contact with only name and verifies that contact is created
-    ...                                   and displays under recently viewed contacts
+    [Documentation]                       Creates a contact with lastname and firstname. Verifies that the toast message appears
+    ...                                   Verifies that contact is created and displays under recently viewed contacts
     #Create contact with only name 
     ${first_name} =                       Generate Random String
     ${last_name} =                        Generate Random String
@@ -20,6 +21,7 @@ Create Household With Name Only
     ...                                   First Name=${first_name}
     ...                                   Last Name=${last_name}
     Save Form
+    Verify Toast Message Contains           created
    # Verify Toast Message                 Contact "${first_name} ${last_name}" was created
     
     #Verify contact is created and shows under recently viewed
@@ -31,8 +33,8 @@ Create Household With Name Only
 
     
 Create Household With Name and Email
-    [Documentation]                       Creates a contact with name and email, verifies that contact is created
-    ...                                   and displays under recently viewed contacts
+    [Documentation]                       Creates a contact with lastname, firstname and email. Verifies that the toast message appears
+    ...                                   Verifies that contact is created and displays under recently viewed contacts
     [tags]  unstable
     ${first_name} =                       Generate Random String
     ${last_name} =                        Generate Random String
@@ -54,10 +56,13 @@ Create Household With Name and Email
 
     
 Create Household with Name and Address
-    ${first_name} =           Generate Random String
-    ${last_name} =            Generate Random String
-    Go To Page                Listing     Contact
-    Click Object Button       New
+    [Documentation]                       This test creates a househould with Lastname,firstname and address information.Verifies that the toast message appears
+    ...                                   Then verifies the household account details.
+
+    ${first_name} =                         Generate Random String
+    ${last_name} =                          Generate Random String
+    Go To Page                              Listing     Contact
+    Click Object Button                     New
     Populate Form
     ...                       First Name=${first_name}
     ...                       Last Name=${last_name}
@@ -69,6 +74,7 @@ Create Household with Name and Address
     Populate Field By Placeholder          Mailing State/Province    CA
     Populate Field By Placeholder          Mailing Country           USA
     Save Form
+    Verify Toast Message Contains           created
 
     ${contact_id} =           Get Current Record Id
     Store Session Record      Contact  ${contact_id}

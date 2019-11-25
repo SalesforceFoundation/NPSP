@@ -1218,3 +1218,12 @@ class NPSP(SalesforceRobotLibraryBase):
         record=self.salesforce.salesforce_get(object_name,id)
         self.builtin.should_not_be_empty(record)
         
+    def verify_toast_message_contains(self, text):
+        """ Verifies the page contains the text specified """
+        self.selenium.wait_until_page_contains(text, timeout=30)
+
+    def close_toast_message(self):
+        """ Close the toast message banner """
+        self.selenium.wait_until_element_is_visible(npsp_lex_locators["toast"])
+        self.selenium.click_element(npsp_lex_locators["toast"])
+        self.selenium.wait_until_element_is_not_visible(npsp_lex_locators["toast"])
