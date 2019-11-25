@@ -48,7 +48,7 @@ Select an opportunity for an account make grid changes and process it
     Scroll Page To Location    0    0
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    Wait For Batch To Complete    data_imports.status    Completed
+    Wait For Batch To Process    BDI_DataImport_BATCH    Completed
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     Go To Record Home    &{opportunity}[Id]
