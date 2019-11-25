@@ -24,6 +24,7 @@ Create Organization Foundation
     ${loc}                                 Get NPSP Locator           object.field                                    Description
     Press Keys                             ${loc}                     Account created with Robot Automation 
     Save Form
+    Current Page Should Be                 Details                    Account
     ${account_id}                          Save Session Record For Deletion    Account
     Verify Record Is Created In Database   Account                    ${account_id}    
     Select Tab                             Details 

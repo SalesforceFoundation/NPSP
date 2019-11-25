@@ -39,8 +39,6 @@ npsp_lex_locators={
     },
     "alert": "//span[contains(@class,'toastMessage')]/a",
     "alert-text":"//span[contains(@class,'toastMessage')]",
-    "toast_message": "//div[contains(@class,'toastContent')]/child::div/span[text()='{}']",
-    "toast_close": "//button[contains(@title,'Close')]",
     'batch_status':'//div[contains(@class,"slds-tile__title")][.//*[text()="{}"]]/div[contains(@class,"slds-col")]//span[text()="{}"]',
     'popup': "//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]",
     'flexipage-popup':"//div[contains(@class, 'slds-is-open')][contains(@class, 'slds-combobox')]",

@@ -1,12 +1,13 @@
 from cumulusci.robotframework.pageobjects import ListingPage
+from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
 from NPSP import npsp_lex_locators
 
 
 
-@pageobject("Listing", "contact")
-class ContactPage(ListingPage):
-    object_name = "contact"
+@pageobject("Listing", "Contact")
+class ContactListingPage(ListingPage):
+    object_name = "Contact"
 
     @property
     def npsp(self):
@@ -17,8 +18,28 @@ class ContactPage(ListingPage):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
 
 
-    def click_on_contacts(self, name):
-        self.salesforce.go_to_object_home(object_name)
-        self.salesforce.wait_until_loading_is_complete()
+    def populate_contact_form(self, **kwargs):
+        """"""
+        for key, value in kwargs.items():
+            if key == "Primary Address Type":
+                self.npsp.select_value_from_dropdown(key,value)
+                
+            elif "Mailing" in key:
+                self.npsp.search_field_by_value(key,value)
+                
+            else:
+                locator = npsp_lex_locators["object"]["field"].format(key)
+                self.salesforce._populate_field(locator, value)    
 
 
+@pageobject("Details", "Contact")
+class ContactDetailPage(DetailPage):
+    object_name = "Contact"
+
+    @property
+    def npsp(self):
+        return self.builtin.get_library_instance('NPSP')
+
+    @property
+    def cumulusci(self):
+        return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')

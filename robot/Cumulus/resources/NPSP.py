@@ -1223,13 +1223,6 @@ class NPSP(SalesforceRobotLibraryBase):
          field.send_keys(value)
          time.sleep(2)
          field.send_keys(Keys.ENTER)
-
-    def verify_toast_message(self, value):
-        """ Verifies the toast message """
-        locator = npsp_lex_locators["alert"].format(value)
-        self.selenium.wait_until_page_contains_element(locator)
-        locator = npsp_lex_locators["toast_close"]
-        self.selenium.click_element(locator)
         
     def save_session_record_for_deletion(self,object_name): 
         """Gets the current page record id and stores the for specified object 
@@ -1247,8 +1240,11 @@ class NPSP(SalesforceRobotLibraryBase):
         """ Verifies the page contains the text specified """
         self.selenium.wait_until_page_contains(text, timeout=30)
 
-    def close_toast_message(self):
-        """ Close the toast message banner """
-        self.selenium.wait_until_element_is_visible(npsp_lex_locators["toast"])
-        self.selenium.click_element(npsp_lex_locators["toast"])
-        self.selenium.wait_until_element_is_not_visible(npsp_lex_locators["toast"])
+
+    def select_value_from_dropdown(self,dropdown,value): 
+        """Select given value in the dropdown field"""
+        locator = npsp_lex_locators['record']['list'].format(dropdown)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()
+        self.wait_for_locator('popup')
+        self.selenium.click_link(value) 
