@@ -80,7 +80,7 @@ export default class GeFormTable extends LightningElement {
         const dataImportRecord =
             GeFormService.getDataImportRecord(submission.sectionsList);
         dataImportRecord.Account1Imported__c = this.accountId;
-        dataImportRecord.Donation_Donor__c = "Account1";
+        dataImportRecord.Donation_Donor__c = 'Account1';
         this.upsertRow(submission.submissionId, dataImportRecord);
 
         //todo: for prod going to want to pass in the batch Id
@@ -119,7 +119,7 @@ export default class GeFormTable extends LightningElement {
                         const column = {
                             label: element.label,
                             fieldName: GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]).Source_Field_API_Name,
-                            type: GeFormService.getInputTypeFromDataType(element.dataType)
+                            type: GeFormService.getInputTypeFromDataType(element.dataType) === 'date' ? 'date-local' : GeFormService.getInputTypeFromDataType(element.dataType)
                         };
                         columns.push(column);
                     }
