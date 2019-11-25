@@ -7,11 +7,14 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
+*** Variables ***
+${EMAIL} =       skristem@robot.com
+
 *** Test Cases ***
 
 Add New Contact to Household With Different LastName
 
-    &{contact1} =  API Create Contact       Email=skristem@robot.com
+    &{contact1} =  API Create Contact       Email=${EMAIL}
     Go To Record Home                       &{contact1}[AccountId]
     ${id}  Get Current Record Id
     Store Session Record                    Account    ${id}
