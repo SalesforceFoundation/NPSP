@@ -421,7 +421,7 @@ public class ALLO_AllocationsUtil_TEST {
 
     /*******************************************************************************************************
     * @description - Test calling ALLO_UpdPaymentAllocations_BATCH via the Callable_Api class. Assert that 
-    * a opportunity is processed when meeting the criteria and excluded when the criteria are not met. Also 
+    * an opportunity is processed when meeting the criteria and excluded when the criteria are not met. Also 
     * ensure that a deafult allocation is created for any unallocated amount.
     ********************************************************************************************************/ 
     @isTest private static void processOppsAndPaymentAllocationsViaCallableApi() {
