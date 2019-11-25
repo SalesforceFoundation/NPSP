@@ -59,6 +59,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Data_Import_Settings__c dataImportSettings;
     static Customizable_Rollup_Settings__c customizableRollupSettings;
     static Levels_Settings__c levelsSettings;
+    static Gift_Entry_Settings__c giftEntrySettings;
 
     //storing org-level custom settings in-memory to avoid slowing down the settings page
     static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
@@ -74,6 +75,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Data_Import_Settings__c orgDataImportSettings;
     static Customizable_Rollup_Settings__c orgCustomizableRollupSettings;
     static Levels_Settings__c orgLevelsSettings;
+    static Gift_Entry_Settings__c orgGiftEntrySettings;
 
     /*******************************************************************************************************
     * @description Resets specific Custom Settings that are updated after
@@ -309,6 +311,25 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     /*******************************************************************************************************
+    * @description Returns the Gift Entry Settings.
+    * @return Gift_Entry_Settings Custom settings record for Gift Entry Settings. At the org level, if no user level
+    * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
+    * in the database.
+    */
+    public static Gift_Entry_Settings__c getGiftEntrySettings() {
+        if(Test.isRunningTest() && giftEntrySettings == null) {
+            giftEntrySettings = new Gift_Entry_Settings__c();
+        } else if (giftEntrySettings == null) {
+            giftEntrySettings = Gift_Entry_Settings__c.getInstance();
+            if (giftEntrySettings.Id == null){
+                giftEntrySettings = getOrgGiftEntrySettings();
+            }
+        }
+       
+        return giftEntrySettings;
+    }
+
+    /*******************************************************************************************************
     * @description Returns the org-level Contacts and Orgs settings. Default org-level settings will be created
     * if none exist. Meant to be called only from settings page and install script.
     * @return npe01__Contacts_And_Orgs_Settings__c Org-level settings for Contacts and Orgs.
@@ -500,6 +521,24 @@ public without sharing class UTIL_CustomSettingsFacade {
             }
         }
         return orgDataImportSettings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the org-level Gift Entry settings. Default org-level settings will be created
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Gift_Entry_Settings__c Org-level settings for Gift Entry.
+    */
+    public static Gift_Entry_Settings__c getOrgGiftEntrySettings() {
+        if(orgGiftEntrySettings == null) {
+            orgGiftEntrySettings = Gift_Entry_Settings__c.getOrgDefaults();
+
+            if(orgGiftEntrySettings.Id == null) {
+                orgGiftEntrySettings.Setupownerid = UserInfo.getOrganizationId();
+                if(!Test.isRunningTest())
+                    upsert orgGiftEntrySettings;
+            }
+        }
+        return orgGiftEntrySettings;
     }
 
     /*******************************************************************************************************
@@ -873,6 +912,20 @@ public without sharing class UTIL_CustomSettingsFacade {
 
       orgHouseholdNamingSettings = householdNamingSettings;
       return householdNamingSettings;
+    }
+
+    public static Gift_Entry_Settings__c getGiftEntrySettingsForTests(Gift_Entry_Settings__c myGiftEntrySettings) {
+        if (giftEntrySettings == null) {
+            giftEntrySettings = new Gift_Entry_SEttings__c();
+        }
+
+        giftEntrySettings.Default_Batch_Gift_Entry_Template__c = myGiftEntrySettings.Default_Batch_Gift_Entry_Template__c;
+        giftEntrySettings.Default_Single_Gift_Entry_Template__c = myGiftEntrySettings.Default_Single_Gift_Entry_Template__c;
+
+        orgGiftEntrySettings = giftEntrySettings;
+
+        return giftEntrySettings;
+
     }
 
     /*******************************************************************************************************
