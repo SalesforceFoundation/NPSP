@@ -189,35 +189,7 @@ private class BDI_DataImportFLSService_TEST {
      * exempted from Field Level Security checks to allow for campaign member imports
      */
     @IsTest
-    static void testIsValidateUpdateException (){
-        Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
-                Set<BDI_DataImportFLSService.AccessLevel>{
-                BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE
-        };
-
-        DataImport__c dataImport = new DataImport__c(
-                Contact1_Firstname__c = 'testFirst'
-        );
-        insert dataImport;
-
-        BDI_DataImportFLSService service = new BDI_DataImportFLSService(
-                new List<DataImport__c>{
-                        dataImport
-                },
-                BDI_FieldMappingCustomMetadata.getInstance(),
-                accessLevels
-        );
-
-        System.assert(service.isValidateUpdateException(CampaignMember.SObjectType, CampaignMember.CampaignId),
-                'There should be an update exception for this field');
-    }
-
-    /**
- * @description This test validates having the right permissions to read, create or update
- *  object and fields to created from a Data Import record
- */
-    @IsTest
-    static void testIsValid (){
+    static void testCampaignIdIsValidateUpdateException (){
         Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
                 Set<BDI_DataImportFLSService.AccessLevel>{
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE,
@@ -225,28 +197,59 @@ private class BDI_DataImportFLSService_TEST {
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE
         };
 
-        DataImport__c dataImport = new DataImport__c(
-                Contact1_Firstname__c = 'testFirst'
-        );
-        insert dataImport;
+        BDIFieldMappingMock mock = new BDIFieldMappingMock();
+        mock.mapField(DataImport__c.Account1_Name__c, CampaignMember.SObjectType,
+                CampaignMember.CampaignId);
+        mock.mapField(DataImport__c.Campaign_Member_Status__c, CampaignMember.SObjectType,
+                CampaignMember.Status);
+        BDI_FieldMappingCustomMetadata stub = (BDI_FieldMappingCustomMetadata) Test.createStub(
+                BDI_FieldMappingCustomMetadata.class, mock);
 
+        BDI_FieldMappingCustomMetadata.setInstance(stub);
+
+        Campaign campaign = new Campaign(Name = 'Test Campaign');
+        insert campaign;
+
+        DataImport__c dataImport = new DataImport__c(
+                Account1_Name__c = campaign.Id,
+                Campaign_Member_Status__c = 'Responded'
+        );
+
+        insert dataImport;
         BDI_DataImportFLSService service = new BDI_DataImportFLSService(
                 new List<DataImport__c>{
                         dataImport
                 },
-                BDI_FieldMappingCustomMetadata.getInstance(),
+                BDI_DataImportService.getDefaultFieldMapping(),
                 accessLevels
         );
 
-        System.assert(service.isValid(CampaignMember.SObjectType, CampaignMember.CampaignId),
-                'There should be an update exception for this field');
+        System.assertEquals(service.getInvalidRecords().size(), 0,
+                'All records to be imported should be validated');
 
-        System.assert(service.isValid(Contact.SObjectType, Contact.FirstName),
-                'You should have the right access to read, create and update this field');
+        //Process the Data Import record
+        BDI_DataImportService dataImportService = new BDI_DataImportService(
+                false,
+                BDI_DataImportService.getDefaultFieldMapping());
+        dataImportService.process(
+                null,
+                BDI_DataImportService.loadSettings(null),
+                new List<DataImport__c>{
+                        dataImport
+                });
+
+        List<DataImport__c> processedDataImports = [
+                SELECT
+                        Status__c,
+                        FailureInformation__c
+                FROM DataImport__c
+                WHERE Id = :dataImport.Id
+        ];
+        System.assertEquals(processedDataImports.size(), 1,
+                'One record should have been processed successfully');
+        System.assertEquals(processedDataImports[0].Status__c, 'Imported',
+                'One record should have been imported successfully');
     }
-
-
-
 
     /**
      * @description StubProvider implementation used to make a field be considered a
@@ -291,6 +294,40 @@ private class BDI_DataImportFLSService_TEST {
             } else {
                 return true;
             }
+        }
+    }
+
+    /**
+     * @description StubProvider implementation used to create field mappings in tests
+     */
+    private class BDIFieldMappingMock implements StubProvider {
+        private Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = new
+                Map<SObjectField, BDI_TargetFields>();
+
+        @TestVisible
+        private void mapField(SObjectField sourceField, SObjectType targetObjectType,
+                SObjectField targetField) {
+            BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceField);
+            if (targetFields == null) {
+                targetFields = new BDI_TargetFields();
+            }
+            targetFields.addTargetField(targetObjectType, targetField);
+            targetFieldsBySourceField.put(sourceField, targetFields);
+        }
+
+        public Object handleMethodCall(
+                Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+            switch on stubbedMethodName {
+                when 'getTargetFieldsBySourceField' {
+                    return targetFieldsBySourceField;
+                }
+            }
+            return null;
         }
     }
 }

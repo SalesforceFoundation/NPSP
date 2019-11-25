@@ -136,7 +136,6 @@ public class BDI_DataImportFLSService {
         }//END loop of Data Import records
     }
 
-    @TestVisible
     private Boolean isValid(SObjectType objectType, SObjectField field) {
         Set<SObjectField> fieldSet = new Set<SObjectField>{
                 field
@@ -156,7 +155,6 @@ public class BDI_DataImportFLSService {
         }
     }
 
-    @TestVisible
     private Boolean isValidateUpdateException(SObjectType objectType, SObjectField field) {
         return (((objectType == CampaignMember.SObjectType
                 && field == CampaignMember.CampaignId)
