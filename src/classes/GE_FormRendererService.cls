@@ -71,6 +71,8 @@ public with sharing class GE_FormRendererService {
             // Get the mapping service which will retrieve all the mappings
             BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
 
+            updateTemplateWithRequired(template, mappingService.fieldMappingSet);
+
             // Create the wrapper which will hold the template and field mapping set.
             FORM_RenderWrapper renderWrapper = new FORM_RenderWrapper(template, mappingService.fieldMappingSet);
 
