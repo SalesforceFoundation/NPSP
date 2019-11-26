@@ -55,13 +55,11 @@ public with sharing class RD2_VisualizeScheduleController {
     public static List<Schedule> getSchedule(Id recordId) {
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
-            // TODO Move error message to a custom label
-            throw new AuraHandledException('Enhanced Recurring Donations is required for this component');
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
         }
 
         if (recordId == null || recordId.getSobjectType() != npe03__Recurring_Donation__c.SObjectType) {
-            // TODO Move error message to a custom label
-            throw new AuraHandledException('This can only be used on a Recurring Donation page');
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
         }
 
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
@@ -76,8 +74,7 @@ public with sharing class RD2_VisualizeScheduleController {
         }
 
         if (upcomingDonations.isEmpty()) {
-            // TODO Move error message to a custom label
-            throw new AuraHandledException('There are no future scheduled donations');
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
         }
 
         return upcomingDonations;

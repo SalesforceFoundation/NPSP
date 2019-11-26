@@ -2,8 +2,8 @@
 // TODO Implement a user definable setting (in the LWC) for number of schedules to show
 // TODO (Post-MVP) Implement a user definable setting (in the LWC) to define the columns to show
 
-// import labelScheduleTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
-// import labelColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
+import labelScheduleTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
+import labelColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -39,7 +39,8 @@ export default class RdScheduleVisualizer extends LightningElement {
     @track error;
     @track columns = SCHEDULE_COLS;
     @track currencyIsoCode;
-    @track lblCloseDate;
+    @track lblScheduleTitle = labelScheduleTitle;
+    @track lblCloseDate = labelColumnDate;
     @track lblAmount;
     @track lblPmtMethod;
     @track fldAmount;
@@ -85,7 +86,7 @@ export default class RdScheduleVisualizer extends LightningElement {
     @wire(getObjectInfo, { objectApiName: SOBJECT_RECURRING_DONATION })
     wireGetOppObjectInfo({error, data}) {
         if (data) {
-            this.lblCloseDate = 'Date'; // TODO Use custom label - RD2_ScheduleVisualizerColumnDate
+            this.lblCloseDate = this.lblCloseDate
             this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
             this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
         }
