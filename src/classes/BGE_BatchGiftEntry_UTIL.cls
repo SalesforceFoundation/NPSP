@@ -118,7 +118,12 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return list of field api names
     */
     public static List<String> getActiveFieldNamesFromBatch(Id batchId) {
-        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
+        DataImportBatch__c batch = [
+                SELECT Active_Fields__c,
+                        Donation_Matching_Rule__c
+                FROM DataImportBatch__c
+                WHERE Id = :batchId
+        ];
         String activeFieldsJSON = batch.Active_Fields__c;
         List<String> activeFieldNames = new List<String>();
 
@@ -137,6 +142,21 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                     );
                     String referencedObjectName = lookupDFR.getReferenceTo()[0].getDescribe().name;
                     activeFieldNames.add(field.name.substringBefore('__c') + '__r.' + UTIL_Describe.getNameField(referencedObjectName));
+                }
+            }
+        } else {
+            //If Active_Fields__c is null, then this Batch is not a BGE Batch and the fields
+            //it is using to render a form come from a Template.  Need to query the
+            //template and get its list of fields to be included in the query.
+            //Manually adding fields needed to match for now for dev
+            activeFieldNames.add('Donation_Date__c');
+            activeFieldNames.add('Donation_Amount__c');
+        }
+
+        if (String.isNotBlank(batch.Donation_Matching_Rule__c)) {
+            for (String matchingField : batch.Donation_Matching_Rule__c.split(';')) {
+                if (!activeFieldNames.contains(matchingField)) {
+                    activeFieldNames.add(matchingField);
                 }
             }
         }

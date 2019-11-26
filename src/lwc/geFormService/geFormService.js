@@ -119,7 +119,7 @@ class GeFormService {
         //temporary assignment of Account Id and Donation Donor for testing
         if (this.accountId) {
             diRecord.Account1Imported__c = this.accountId;
-            diRecord.Donation_Donor__c = "Account1";
+            diRecord.Donation_Donor__c = 'Account1';
         }
         //END temporary assignment of Account Id and Donation Donor for testing
 

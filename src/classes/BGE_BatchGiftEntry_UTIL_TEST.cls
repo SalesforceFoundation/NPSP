@@ -86,4 +86,21 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
         }
     }
 
+    @isTest
+    static void givenBatchHasMatchingRuleThenAssertMatchingFieldsIncludedInActiveFields() {
+        String matchingRule = 'donation_amount__c;donation_date__c';
+        DataImportBatch__c batch = new DataImportBatch__c(
+                Donation_Matching_Rule__c = matchingRule
+        );
+        insert batch;
+
+        System.assert(BGE_BatchGiftEntry_UTIL.getActiveFieldNamesFromBatch(batch.Id).contains
+                ('donation_amount__c'),
+                'Fields used for donation matching should be included ' +
+                        'in the Batch\'s active fields list.');
+        System.assert(BGE_BatchGiftEntry_UTIL.getActiveFieldNamesFromBatch(batch.Id).contains
+                ('donation_date__c'),
+                'Fields used for donation matching should be included ' +
+                        'in the Batch\'s active fields list.');
+    }
 }

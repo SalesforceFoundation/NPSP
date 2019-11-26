@@ -1,14 +1,24 @@
+//TODO: implement proper error handling in catch statements
+//TODO: set imported field values and donation donor field value once lookups
+//      can be used to populate those fields
+
 import {LightningElement, api, track} from 'lwc';
 import getDataImportModel
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import GeFormService from 'c/geFormService';
+import ACCOUNT_1_IMPORTED_FIELD from
+        '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import NPSP_DATA_IMPORT_BATCH_FIELD
+    from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
+import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 
 export default class GeFormTable extends LightningElement {
     @api ready = false;
     @api batchId;
     @track data = [];
     @track columns = [
-        {label: 'Status', fieldName: 'Status__c', type: 'text'},
+        {label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text'},
         {label: 'Errors', fieldName: 'errors', type: 'text'},
         {
             label: 'Donor', fieldName: 'donorLink', type: 'url',
@@ -79,13 +89,14 @@ export default class GeFormTable extends LightningElement {
     handleFormSubmission(submission) {
         const dataImportRecord =
             GeFormService.getDataImportRecord(submission.sectionsList);
-        dataImportRecord.Account1Imported__c = this.accountId;
-        dataImportRecord.Donation_Donor__c = 'Account1';
+
+        //simulate a lookup field being used to select an existing Account
+        dataImportRecord[ACCOUNT_1_IMPORTED_FIELD.fieldApiName] = this.accountId;
+        dataImportRecord[DONATION_DONOR_FIELD.fieldApiName] = 'Account1';
+
         this.upsertRow(submission.submissionId, dataImportRecord);
 
-        //todo: for prod going to want to pass in the batch Id
-        dataImportRecord.NPSP_Data_Import_Batch__c = this.batchId;
-
+        dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         GeFormService.saveAndDryRun(
             this.batchId, dataImportRecord)
             .then(
@@ -118,8 +129,13 @@ export default class GeFormTable extends LightningElement {
                     element => {
                         const column = {
                             label: element.label,
-                            fieldName: GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]).Source_Field_API_Name,
-                            type: GeFormService.getInputTypeFromDataType(element.dataType) === 'date' ? 'date-local' : GeFormService.getInputTypeFromDataType(element.dataType)
+                            fieldName: GeFormService.getFieldMappingWrapper(
+                                element.dataImportFieldMappingDevNames[0]
+                            ).Source_Field_API_Name,
+                            type: GeFormService.getInputTypeFromDataType(
+                                element.dataType
+                            ) === 'date' ? 'date-local' :
+                                GeFormService.getInputTypeFromDataType(element.dataType)
                         };
                         columns.push(column);
                     }
@@ -138,7 +154,7 @@ export default class GeFormTable extends LightningElement {
             for (let i = 0; i < this.data.length; i++) {
                 let row = this.data[i];
                 if (row.uid === uid) {
-                    row.Status__c = dataImport.Status__c;
+                    row[STATUS_FIELD.fieldApiName] = dataImport[STATUS_FIELD.fieldApiName];
                     row.donorName = dataImport.donorName;
                     row.donorLink = dataImport.donorLink;
                     row.matchedRecordLabel = dataImport.matchedRecordLabel;
