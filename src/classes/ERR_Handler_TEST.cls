@@ -60,12 +60,12 @@ private class ERR_Handler_TEST {
             insert chatterGroup;
 
             chatterGroupId = chatterGroup.Id;
-        } 
+        }
 
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(
             Error_Notifications_On__c = true,
-            Error_Notifications_To__c = chatterGroupId, 
-            Store_Errors_On__c = true, 
+            Error_Notifications_To__c = chatterGroupId,
+            Store_Errors_On__c = true,
             Respect_Duplicate_Rule_Settings__c = true
         ));
     }
@@ -86,8 +86,8 @@ private class ERR_Handler_TEST {
 
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(
             Error_Notifications_On__c = true,
-            Error_Notifications_To__c = user.Id, 
-            Store_Errors_On__c = true, 
+            Error_Notifications_To__c = user.Id,
+            Store_Errors_On__c = true,
             Respect_Duplicate_Rule_Settings__c = true
         ));
     }
@@ -236,7 +236,7 @@ private class ERR_Handler_TEST {
             Respect_Duplicate_Rule_Settings__c = true
         ));
 
-        Test.startTest();        
+        Test.startTest();
         ERR_Handler.processError(testException, ERR_Handler_API.Context.TDTM);
         Test.stopTest();
 
@@ -346,5 +346,5 @@ private class ERR_Handler_TEST {
         System.assertEquals(1, pageMessages.size(), 'Error message should be displayed on the page: ' + pageMessages);
     }
 
-    
+
 }

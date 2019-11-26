@@ -668,7 +668,7 @@ private class RD2_DataMigration_TEST {
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -709,7 +709,7 @@ private class RD2_DataMigration_TEST {
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
         batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
         Test.stopTest();
-        
+
         rdSchedules = rdScheduleGateway.getRecords(rd);
 
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
@@ -752,7 +752,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(RD2_DataMigration_BATCH.LOG_EXCEPTION_ERROR_TYPE, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
-        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');        
+        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
         System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
     }
@@ -768,7 +768,7 @@ private class RD2_DataMigration_TEST {
             .build();
         insert rd;
 
-        //Set legacy RD to an invalid state 
+        //Set legacy RD to an invalid state
         //so an error is generated later during data migration
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
         rd.npe03__Contact__c = null;
@@ -789,7 +789,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
-        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');        
+        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
         System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
     }

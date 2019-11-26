@@ -66,7 +66,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
                 batchSize = configValue.intValue();
             }
             return batchSize;
-        } 
+        }
         private set;
     }
 
@@ -108,7 +108,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     public Database.QueryLocator start(Database.BatchableContext context) {
         setBatchJobId(context);
-        
+
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             return Database.getQueryLocator(getRDMigrationQuery());
         } else {
@@ -133,8 +133,8 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd)
                 .withRelatedOpportunities(oppsByRdId.get(rd.Id));
 
-            if (mapper.isConverted()) {	
-                continue;	
+            if (mapper.isConverted()) {
+                continue;
             }
 
             try {
@@ -153,10 +153,10 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     public void finish(Database.BatchableContext context) {
     }
-    
+
 
     /**
-    * @description Sets batch job Id 
+    * @description Sets batch job Id
     * @param context Batchable context
     * @return void
     */
@@ -175,7 +175,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     private String constructLogContext() {
         UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService().getBatchJob(batchJobId);
 
-        String formattedDateSuffix = batchJob == null 
+        String formattedDateSuffix = batchJob == null
             ? ''
             : ' ' + String.valueOf(batchJob.CreatedDate);
 
@@ -208,7 +208,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @param errorResult Exception/error log container
     * @return void
     */
-    private void handleSaveAndLogging(List<npe03__Recurring_Donation__c> convertedRDs, ERR_Handler.Errors errorResult) { 
+    private void handleSaveAndLogging(List<npe03__Recurring_Donation__c> convertedRDs, ERR_Handler.Errors errorResult) {
 
         List<Database.SaveResult> saveResults = saveRecords(convertedRDs);
 

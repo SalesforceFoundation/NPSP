@@ -54,7 +54,7 @@ public with sharing class UTIL_BatchJobService_TEST {
         }
 
         System.assertNotEquals(null, actual, 'An exception should be thrown');
-        System.assertEquals(UTIL_BatchJobService.BATCH_JOB_REQUIRED, 
+        System.assertEquals(UTIL_BatchJobService.BATCH_JOB_REQUIRED,
             actual.getMessage(), 'Exception message should match');
     }
 
@@ -82,11 +82,11 @@ public with sharing class UTIL_BatchJobService_TEST {
     * @description Verifies batch job elapsed time is calculated as difference between start and completion date.
     * If the completion date is null, the difference is calculated using the current datetime.
     */
-    @isTest 
+    @isTest
     private static void shouldCalculateTimeElapsed() {
         AsyncApexJob job = buildAsyncApexJob();
         UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService.BatchJob(job);
-        
+
         DateTime startDate = DateTime.newInstance(2018, 01, 30, 15, 20, 40);
         DateTime endDate = DateTime.newInstance(2018, 01, 30, 18, 20, 40);
         System.assertEquals('03:00:00', batchJob.calcTimeElapsed(startDate, endDate));
@@ -111,7 +111,7 @@ public with sharing class UTIL_BatchJobService_TEST {
     private static void shouldUseCurrentDateToCalculateTimeElapsedForInProgressBatch() {
         AsyncApexJob job = buildAsyncApexJob();
         UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService.BatchJob(job);
-        
+
         DateTime startDate = DateTime.newInstance(2018, 01, 30, 15, 20, 40);
         DateTime endDate = null;
         String actual = batchJob.calcTimeElapsed(startDate, endDate);
@@ -131,7 +131,7 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         Integer jobItemsProcessed = 0;
         Integer totalJobItems = 100;
-        
+
         String status = UTIL_BatchJobService.ApexJobStatus.HOLDING.name();
         Long percentComplete = batchJob.calcPercentComplete(jobItemsProcessed, totalJobItems, status);
         System.assertEquals(defaultPercentage, percentComplete);
@@ -143,7 +143,7 @@ public with sharing class UTIL_BatchJobService_TEST {
         status = UTIL_BatchJobService.ApexJobStatus.PREPARING.name();
         percentComplete = batchJob.calcPercentComplete(jobItemsProcessed, totalJobItems, status);
         System.assertEquals(10, percentComplete);
-        
+
         jobItemsProcessed = 75;
         status = UTIL_BatchJobService.ApexJobStatus.PROCESSING.name();
         percentComplete = batchJob.calcPercentComplete(jobItemsProcessed, totalJobItems, status);
@@ -175,7 +175,7 @@ public with sharing class UTIL_BatchJobService_TEST {
         */
         public TestAsyncApexJob() {
             valuesByFieldName = new Map<String, Object>();
-            
+
             //defaults
             valuesByFieldName.put('Status', UTIL_BatchJobService.ApexJobStatus.COMPLETED.name());
             valuesByFieldName.put('CreatedDate', DateTime.newInstance(2018, 01, 31, 15, 10, 45));
@@ -194,7 +194,7 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         /***
         * @description Sets the batch job Id
-        * @param batchId 
+        * @param batchId
         * @return TestAsyncApexJob
         */
         public TestAsyncApexJob withId(Id batchId) {
@@ -204,7 +204,7 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         /***
         * @description Sets Created By for the batch job
-        * @param usr 
+        * @param usr
         * @return TestAsyncApexJob
         */
         public TestAsyncApexJob withCreatedBy(User usr) {
@@ -214,7 +214,7 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         /***
         * @description Sets the batch status
-        * @param status 
+        * @param status
         * @return TestAsyncApexJob
         */
         public TestAsyncApexJob withStatus(String status) {
@@ -228,7 +228,7 @@ public with sharing class UTIL_BatchJobService_TEST {
         */
         public AsyncApexJob build() {
             String jsonString = JSON.serialize(valuesByFieldName);
-                
+
             return (AsyncApexJob) JSON.deserialize(jsonString, AsyncApexJob.class);
         }
     }
@@ -256,7 +256,7 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         public Id getChildJobId() {
             return childJobId;
-        }     
+        }
     }
 
 
