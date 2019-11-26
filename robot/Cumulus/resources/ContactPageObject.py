@@ -43,3 +43,9 @@ class ContactDetailPage(DetailPage):
     @property
     def cumulusci(self):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
+
+    def update_field_value(self,field_name,old_value,new_value):
+        """Delete the old value in specified field by clicking on delete icon and update with new value"""
+        locator=npsp_lex_locators['delete_icon'].format(field_name,old_value)
+        self.selenium.get_webelement(locator).click() 
+        self.salesforce.populate_lookup_field(field_name,new_value)

@@ -1248,3 +1248,10 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
         self.selenium.click_link(value) 
+        
+    def edit_record(self):
+        """Clicks on the edit button on record page for standard objects
+           and waits for the modal to open"""  
+        self.salesforce.click_object_button("Edit")
+        self.salesforce.wait_until_modal_is_open()
+             
