@@ -1235,6 +1235,7 @@ class NPSP(SalesforceRobotLibraryBase):
         """Verifies that a record with specified id is saved in specified object table in database"""
         record=self.salesforce.salesforce_get(object_name,id)
         self.builtin.should_not_be_empty(record)
+        return record
         
     def verify_toast_message_contains(self, text):
         """ Verifies the page contains the text specified """
