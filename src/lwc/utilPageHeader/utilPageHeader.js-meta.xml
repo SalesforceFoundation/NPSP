@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="utilPageHeader">
-=======
-<<<<<<< HEAD:src/lwc/utilIllustration/utilIllustration.js-meta.xml
-<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="utilIllustration">
-=======
-<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="utilPageHeader">
->>>>>>> feature/gift-entry:src/lwc/utilPageHeader/utilPageHeader.js-meta.xml
->>>>>>> feature/gift-entry
     <apiVersion>47.0</apiVersion>
     <isExposed>false</isExposed>
 </LightningComponentBundle>
