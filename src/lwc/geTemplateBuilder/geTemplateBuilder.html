@@ -35,7 +35,7 @@
                                   class="extension_test">
 
                     <lightning-tab value={TabEnums.INFO_TAB}
-                                   label="Template Info"
+                                   label={TabEnums.INFO_TAB}
                                    class="slds-p-around_none"
                                    onactive={handleOnActiveTab}
                                    show-error-indicator={hasTemplateInfoTabError}>
@@ -49,7 +49,7 @@
                     </lightning-tab>
 
                     <lightning-tab value={TabEnums.SELECT_FIELDS_TAB}
-                                   label="Select Fields"
+                                   label={TabEnums.SELECT_FIELDS_TAB}
                                    class="slds-p-around_none"
                                    onactive={handleOnActiveTab}
                                    show-error-indicator={hasSelectFieldsTabError}>
@@ -74,11 +74,12 @@
                     </lightning-tab>
 
                     <lightning-tab value={TabEnums.BATCH_HEADER_TAB}
-                                   label="Batch Header"
+                                   label={TabEnums.BATCH_HEADER_TAB}
                                    class="slds-p-around_none"
                                    onactive={handleOnActiveTab}
                                    show-error-indicator={hasBatchHeaderTabError}>
                         <c-ge-template-builder-batch-header selected-batch-fields={batchHeaderFields}
+                                                            batch-fields={batchFieldFormElements}
                                                             onupdatevalidity={handleUpdateValidity}
                                                             onaddbatchheaderfield={handleAddBatchHeaderField}
                                                             onremovebatchheaderfield={handleRemoveBatchHeaderField}
