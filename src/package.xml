@@ -3125,7 +3125,7 @@
         <members>utilDedicatedListener</members>
         <members>utilIllustration</members>
         <members>utilPageHeader</members>
-        <members>utilPageLevelError</members>
+        <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
