@@ -1,4 +1,3 @@
-// TODO Get this component to refresh automatically when the record is updated
 // TODO Implement Custom Label as defined below
 // TODO Implement a user definable setting (in the LWC) for number of schedules to show
 
@@ -6,6 +5,7 @@
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getRecord } from 'lightning/uiRecordApi';
 
 import SOBJECT_OPPORTUNITY from '@salesforce/schema/Opportunity';
 import SOBJECT_PAYMENT from '@salesforce/schema/npe01__OppPayment__c';
@@ -13,6 +13,13 @@ import SOBJECT_PAYMENT from '@salesforce/schema/npe01__OppPayment__c';
 import FIELD_CLOSEDATE from '@salesforce/schema/Opportunity.CloseDate';
 import FIELD_AMOUNT from '@salesforce/schema/Opportunity.Amount';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Method__c';
+
+import FIELD_RD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
+import FIELD_RD_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
+import FIELD_RD_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
+import FIELD_RD_DAYOFMONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
+import FIELD_RD_STARTDATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
+import FIELD_RD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 
 import getSchedule from '@salesforce/apex/RD2_VisualizeScheduleController.getSchedule';
 import getCurrencyCode from '@salesforce/apex/RD2_VisualizeScheduleController.getCurrencyCode';
@@ -40,17 +47,30 @@ export default class RdScheduleVisualizer extends LightningElement {
     @track lblCloseDate;
     @track lblAmount;
     @track lblPmtMethod;
+    @track fldAmount;
 
     /*******************************************************************************
-     * @description Call Apex to retrieve the Schedule to render in the UI
+     * @description Whenever the related RD record is updated, this is called to force
+     * a refresh of the table and component.
      */
-    @wire(getSchedule, { recordId: '$recordId' })
-    wiredGetScheduleForRD( { data, error } ) {
-        if (data) {
-            this.handleColumns();
-            this.schedule = data;
-        } else {
-            this.error = this.handleError(error);
+    @wire(getRecord, { recordId: '$recordId',
+        fields: [FIELD_RD_AMOUNT, FIELD_RD_DAYOFMONTH, FIELD_RD_FREQUENCY, FIELD_RD_PERIOD, FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD] })
+    wireRecordChange() {
+        console.log('The record has changed: ', this.recordId);
+        if (this.recordId) {
+            getSchedule({ recordId: this.recordId })
+                .then(data => {
+                    console.log('Then', data);
+                    this.handleColumns();
+                    this.schedule = data
+                    this.error = null;
+
+                })
+                .catch(error => {
+                    console.log('error');
+                    this.schedule = null;
+                    this.error = this.handleError(error);
+                });
         }
     }
 
@@ -129,7 +149,6 @@ export default class RdScheduleVisualizer extends LightningElement {
             }
             labelConversions.forEach(function(lbl){
                 if (col.label === lbl.label) {
-                    console.log('converting ' + col.label + ' to ' + lbl.value);
                     col.label = lbl.value;
                 }
             });

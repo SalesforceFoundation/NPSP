@@ -34,7 +34,7 @@
 * @description Controller for the Schedule Visualization Component
 *
 */
-public class RD2_VisualizeScheduleController {
+public with sharing class RD2_VisualizeScheduleController {
 
     @TestVisible
     private static RD2_ScheduleService scheduleService {
@@ -66,7 +66,7 @@ public class RD2_VisualizeScheduleController {
      * @param recordId
      * @return List<Schedule>
      */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled
     public static List<Schedule> getSchedule(Id recordId) {
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
@@ -76,7 +76,7 @@ public class RD2_VisualizeScheduleController {
 
         if (recordId == null || recordId.getSobjectType() != npe03__Recurring_Donation__c.SObjectType) {
             // TODO Move error message to a custom label
-            throw new AuraHandledException('This can only be used on Recurring Donation pages');
+            throw new AuraHandledException('This can only be used on a Recurring Donation page');
         }
 
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
