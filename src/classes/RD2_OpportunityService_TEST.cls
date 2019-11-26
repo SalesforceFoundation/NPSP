@@ -199,6 +199,33 @@ private with sharing class RD2_OpportunityService_TEST {
         testAndAssertOppService(rd, expectedOppName);
     }
 
+    /***
+    *
+    */
+    @isTest
+    private static void oppRecordTypeShouldMatchWithSetting() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Id defaultRecordTypeId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType);
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
+            npe03__Add_Campaign_to_All_Opportunites__c = true,
+            IsRecurringDonations2Enabled__c = true,
+            npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+            npe03__Record_Type__c = defaultRecordTypeId
+        ));
+
+        Test.startTest();
+        createRecurringDonations(10);
+        Test.stopTest();
+
+        List<Opportunity> installmentOpps = getOpportunities();
+        System.assert(!installmentOpps.isEmpty(), 'Opportunities should be created');
+
+        for (Opportunity installmentOpp : installmentOpps) {
+            System.assertEquals(defaultRecordTypeId, installmentOpp.RecordTypeId,
+                'The record type should be configured according to the NPSP Opportunity Default Record Type');
+        }
+    }
 
     // Helper Methods
     //////////////////
@@ -224,15 +251,18 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(opps[0].Name, expectedOppName, 'Opportunity Name should match');
     }
 
+    private static npe03__Recurring_Donation__c createRecurringDonation() {
+        return createRecurringDonation();
+    }
     /***
     * @description Creates Recurring Donation record
     * @return npe03__Recurring_Donation__c
     */
-    private static npe03__Recurring_Donation__c createRecurringDonation() {
+    private static List<npe03__Recurring_Donation__c> createRecurringDonations(Integer size) {
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
         insert campaign;
 
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+        List<npe03__Recurring_Donation__c> rds = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withContact(getContact().Id)
             .withInstallmentPeriodMonthly()
             .withDayOfMonth('20')
@@ -240,11 +270,11 @@ private with sharing class RD2_OpportunityService_TEST {
             .withAmount(415)
             .withPaymentMethod(PAYMENT_CREDIT_CARD)
             .withCampaign(campaign.Id)
-            .build();
+            .build(size);
 
-        insert rd;
+        insert rds;
 
-        return rdGateway.getRecord(rd.Id);
+        return rdGateway.getRecords(rds);
     }
 
     /***
@@ -324,7 +354,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static List<Opportunity> getOpportunities() {
         return [
             SELECT Id, Name, npe03__Recurring_Donation__c, Amount, CampaignId, StageName,
-            CloseDate, AccountId, npe01__Contact_Id_for_Role__c, Primary_Contact__c
+            CloseDate, AccountId, npe01__Contact_Id_for_Role__c, Primary_Contact__c, RecordTypeId
             FROM Opportunity
             WHERE CreatedDate = Today AND CampaignId != null
             ORDER BY CloseDate //ensure Opps are returned in the predictable order

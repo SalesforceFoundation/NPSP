@@ -136,7 +136,6 @@ public with sharing class RD2_OpportunityService {
     * @return Opportunity
     */
     private Opportunity buildOpportunity(npe03__Recurring_Donation__c rd, Date closeDate) {
-
         Opportunity opp = new Opportunity(
             AccountId = rd.npe03__Organization__c,
             Primary_Contact__c = rd.npe03__Contact__c,
@@ -146,9 +145,11 @@ public with sharing class RD2_OpportunityService {
             Recurring_Donation_Installment_Number__c = (rd.npe03__Total_Paid_Installments__c != null ?
                 rd.npe03__Total_Paid_Installments__c + 1 : 1),
             npe03__Recurring_Donation__c = rd.Id
-
         );
         opp.Name = buildOpportunityName(rd, opp);
+        if(rdSettings.npe03__Record_Type__c != null) {
+            opp.RecordTypeId = rdSettings.npe03__Record_Type__c;
+        }
 
         if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
             opp.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
