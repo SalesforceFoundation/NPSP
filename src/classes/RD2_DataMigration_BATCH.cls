@@ -125,6 +125,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
         setBatchJobId(context);
 
+        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
         Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
 
@@ -140,11 +141,11 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
                 convertedRDs.add(mapper.convertToEnhancedRD());
 
             } catch (Exception e) {
-                logException(e, rd);
+                addError(e, rd.Id, errorResult);
             }
         }
 
-        handleDmlAndLogging(convertedRDs);
+        handleSaveAndLogging(convertedRDs, errorResult);
     }
 
     /**
@@ -182,32 +183,52 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     }
 
     /**
-    * @description Constructs log records
+    * @description Constructs log record and adds it into the error log container
     * @param e Exception
-    * @param rd Recurring Donation
+    * @param rdId Recurring Donation Id
+    * @param errorResult Exception/error log container
     * @return void
     */
-    private void logException(Exception e, npe03__Recurring_Donation__c rd) {
+    private void addError(Exception e, Id rdId, ERR_Handler.Errors errorResult) {
         Error__c logEntry = new Error__c(
             Context_Type__c = logContext,
             Datetime__c = System.now(),
-            Related_Record_ID__c = rd.Id,
-            Record_URL__c = ERR_Handler.getRecordURL(rd.Id),
+            Related_Record_ID__c = rdId,
+            Record_URL__c = ERR_Handler.getRecordURL(rdId),
             Error_Type__c = LOG_EXCEPTION_ERROR_TYPE,
             Full_Message__c = e.getMessage()
         );
 
-        ERR_Handler.processErrorsOnly(new List<Error__c>{ logEntry }, logContext);
+        errorResult.errorRecords.add(logEntry);
     }
 
     /**
-    * @description When all RD's have been processed, handle any required DML and error/exception logging
+    * @description Save records and log all exceptions and errors generated during records' validation and save
     * @param convertedRDs Converted Recurring Donations
+    * @param errorResult Exception/error log container
     * @return void
     */
-    private void handleDmlAndLogging(List<npe03__Recurring_Donation__c> convertedRDs) {
+    private void handleSaveAndLogging(List<npe03__Recurring_Donation__c> convertedRDs, ERR_Handler.Errors errorResult) { 
+
+        List<Database.SaveResult> saveResults = saveRecords(convertedRDs);
+
+        errorResult.errorRecords.addAll(
+            ERR_Handler.getErrors(saveResults, convertedRDs).errorRecords
+        );
+
+        errorResult.errorsExist = !errorResult.errorRecords.isEmpty();
+
+        ERR_Handler.processErrorsOnly(errorResult, logContext);
+    }
+
+    /**
+    * @description Save records
+    * @param convertedRDs Converted Recurring Donations
+    * @return List<Database.SaveResult>
+    */
+    private List<Database.SaveResult> saveRecords(List<npe03__Recurring_Donation__c> convertedRDs) {
         if (convertedRDs.isEmpty()) {
-            return;
+            return new List<Database.SaveResult>();
         }
 
         Savepoint sp = Database.setSavepoint();
@@ -217,11 +238,8 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         if (this.isDryRunMode) {
             Database.rollback(sp);
         }
-        
-        ERR_Handler.processErrorsOnly(
-            ERR_Handler.getErrors(saveResults, convertedRDs), 
-            logContext
-        ); 
+
+        return saveResults;
     }
 
     /**
