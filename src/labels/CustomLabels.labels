@@ -1383,28 +1383,12 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Processing</value>
     </labels>
      <labels>
-        <fullName>RD2_CheckValidAmountOnRD</fullName>
+        <fullName>RD2_AmountMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Validate Recurring Donations data if value on the amount is valid or not</shortDescription>
         <value>Enter a valid Amount. The Amount cannot be zero, negative, or blank.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_CheckValidInstallmentPeriod</fullName>
-        <categories>Recurring-Donations, Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Validate Recurring Donations data if it is valid install period</shortDescription>
-        <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_CheckValidDayOfMonth</fullName>
-        <categories>Recurring-Donations, Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Validate Recurring Donations data if it is valid day of month</shortDescription>
-        <value>{0} is not a supported value for Day of Month. Select a value between 1 and 28 or select Last Day of Month.</value>
     </labels>
     <labels>
         <fullName>RD2_DataMigrationInvalidInstallmentPeriod</fullName>
@@ -1414,8 +1398,16 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Installment Period cannot be converted to enhanced Recurring Donation format</shortDescription>
         <value>Recurring Donation Installment Period "{0}" cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
     </labels>
+    <labels>
+        <fullName>RD2_DayOfMonthMustBeValid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Recurring Donations data if it is valid day of month</shortDescription>
+        <value>{0} is not a supported value for Day of Month. Select a value between 1 and 28 or select Last Day of Month.</value>
+    </labels>
      <labels>
-        <fullName>RD2_DayOfMonthIsReqForMonthlyInstallments</fullName>
+        <fullName>RD2_DayOfMonthIsRequiredForMonthlyInstallment</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -1615,6 +1607,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>The RD2 Batch job can only be executed when Enhanced RD is enabled</shortDescription>
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
+    </labels>
+     <labels>
+        <fullName>RD2_InstallmentPeriodMustBeValid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Recurring Donations data if it is valid install period</shortDescription>
+        <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>

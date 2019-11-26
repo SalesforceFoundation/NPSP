@@ -132,7 +132,8 @@ public with sharing class RD2_EnablementService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
             .withAmount(100)
-            .withInstallmentPeriodYearly()
+            .withDefaultValues()
+            .withDayOfMonth('15')
             .build();
 
         insert rd;
@@ -180,7 +181,8 @@ public with sharing class RD2_EnablementService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
             .withAmount(100)
-            .withInstallmentPeriodYearly()
+            .withDefaultValues()
+            .withDayOfMonth('15')
             .build();
 
         Test.startTest();

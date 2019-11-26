@@ -66,9 +66,8 @@ public with sharing class RD2_ValidationService {
             ]);
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            validateInstallmentFields(rd);
-            validateAccountAndContact(rd, accountsById.get(rd.npe03__Organization__c));
-
+            validateActiveRecurringDonation(rd);
+            validateDonor(rd, accountsById.get(rd.npe03__Organization__c));
         }
     }
 
@@ -77,7 +76,7 @@ public with sharing class RD2_ValidationService {
     * @param rd the Recurring Donation to validate
     * @param acct is the associated account for the Recurring Donation
     */
-    private void validateAccountAndContact(npe03__Recurring_Donation__c rd, Account acct) {
+    private void validateDonor(npe03__Recurring_Donation__c rd, Account acct) {
         //either Account or Contact must be specified
         if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
             rd.addError(System.Label.RD_DonorIsRequired);
@@ -101,84 +100,57 @@ public with sharing class RD2_ValidationService {
     * @description Validates installment data on Recurring Donation
     * @param rd the Recurring Donation to validate
     */
-    private void validateInstallmentFields(npe03__Recurring_Donation__c rd) {
+    private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd) {
         if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return;
         }
         if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
-            rd.addError(System.Label.RD2_CheckValidAmountOnRD);
+            rd.addError(System.Label.RD2_AmountMustBeValid);
         }
 
-        if (rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY && String.isBlank(rd.Day_of_Month__c) ) {
-            rd.addError(System.Label.RD2_DayOfMonthIsReqForMonthlyInstallments);
-        }
-        if (!isValidInstallmentPeriod(rd)){
+        if (!RD2_Constants.allInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
             rd.addError(
                 String.format(
-                    System.Label.RD2_CheckValidInstallmentPeriod,
+                    System.Label.RD2_InstallmentPeriodMustBeValid,
                     new String[]{ rd.npe03__Installment_Period__c })
             );
         }
-        if (rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY && !isValidDayOfMonth(rd)){
-            rd.addError(
-                String.format(
-                    System.Label.RD2_CheckValidDayOfMonth,
-                    new String[]{ rd.Day_of_Month__c})
-            );
-        }
 
+        validateDayOfMonth(rd);
     }
 
-    /*******************************************************************************************************
-    * @description gets the valid Installment period from hard-coded supported values in RD_Constants
+    /***
+    * @description Validates Day of Month on Recurring Donation
+    * @param rd the Recurring Donation to validate
     */
-    private static List<String> getValidInstallmentPeriod() {
-        List<String> InstallmentPeriod = new List <String>();
-        InstallmentPeriod.add(RD2_Constants.INSTALLMENT_PERIOD_DAILY);
-        InstallmentPeriod.add(RD2_Constants.INSTALLMENT_PERIOD_WEEKLY);
-        InstallmentPeriod.add(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY);
-        InstallmentPeriod.add(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
-        InstallmentPeriod.add(RD2_Constants.INSTALLMENT_PERIOD_YEARLY);
-        return InstallmentPeriod;
-    }
-
-    /*******************************************************************************************************
-    * @description gets the valid list of Dayofmonth field in Recurring Donation
-    */
-    private static List<String> getValidDayOfMonth() {
-        List<String> DayOfMonth = new List <String>();
-
-        for (Integer day = 1; day < 29; day++) {
-            DayOfMonth.add(String.valueOf(day));
+    private void validateDayOfMonth(npe03__Recurring_Donation__c rd) {
+        if (rd.npe03__Installment_Period__c != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+            return;
         }
-        DayOfMonth.add('Last_Day');
 
-        return DayOfMonth;
-
-    }
-
-    /*******************************************************************************************************
-    * @description Verify if installmentperiod is valid in the Recurring Donation
-    * @param Recurring Donation record
-    */
-    private static Boolean isValidInstallmentPeriod(npe03__Recurring_Donation__c rd) {
-        List<String> validInstallmentPeriod = getValidInstallmentPeriod();
-        if  (validInstallmentPeriod.contains(rd.npe03__Installment_Period__c)) {
-            return true;
+        if (String.IsBlank(rd.Day_of_Month__c)) {
+            rd.addError(System.Label.RD2_DayOfMonthIsRequiredForMonthlyInstallment);
+            return;
         }
-        return false;
-    }
 
-    /*******************************************************************************************************
-    * @description Verify if DayOfMonth is valid in the Recurring Donation
-    * @param Recurring Donation record
-    */
-    private static Boolean isValidDayOfMonth(npe03__Recurring_Donation__c rd) {
-        List<String> validDayOfMonth = getValidDayOfMonth();
-        if  (validDayOfMonth.contains(rd.Day_of_Month__c)) {
-            return true;
+        if (rd.Day_of_Month__c != RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+            Integer dayOfMonth;
+            try {
+                dayOfMonth = Integer.valueOf(rd.Day_of_Month__c);
+
+            } catch (Exception e) {
+            }
+
+            Boolean isValid = dayOfMonth > 0 && dayOfMonth < 29;
+
+            if (!isValid) {
+                rd.addError(
+                    String.format(
+                        System.Label.RD2_DayOfMonthMustBeValid,
+                        new String[]{ rd.Day_of_Month__c})
+                );
+            }
         }
-        return false;
     }
 
     /***
