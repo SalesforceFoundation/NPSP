@@ -122,7 +122,6 @@ public virtual with sharing class BDI_FieldMapping {
             }
         }
 
-        // TODO: Complete when Template-level validation work item is in play
         this.Is_Source_Field_Required = !sourceFieldDescribe.isNillable() ? true : false;
         this.Is_Required = !sourceFieldDescribe.isNillable() ? true : false;
     }

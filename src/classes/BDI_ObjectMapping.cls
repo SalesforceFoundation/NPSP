@@ -49,6 +49,7 @@ public virtual with sharing class BDI_ObjectMapping {
     @AuraEnabled public String Predecessor_Label_Name;
     @AuraEnabled public String Relationship_Field;
     @AuraEnabled public String Relationship_To_Predecessor;
+    @AuraEnabled public String dynamicSourceField;
     @AuraEnabled public BDI_FieldMapping[] Field_Mappings;
 
 
@@ -90,5 +91,25 @@ public virtual with sharing class BDI_ObjectMapping {
         this.Is_Deleted = objectMapping.Is_Deleted__c;
         this.Predecessor = objectMapping.Predecessor__c;
         this.Relationship_To_Predecessor = objectMapping.Relationship_To_Predecessor__c;
+    }
+
+    /*******************************************************************************************************
+    * @description Constructor used when cloning an existing BDI_ObjectMapping
+    * @param objectMapping the existing BDI_ObjectMapping to be cloned
+    * @param newDevName the new Developer name to be used for the object mapping
+    */
+    public BDI_ObjectMapping(BDI_ObjectMapping objectMapping, String newDevName) {
+        this.MasterLabel = objectMapping.MasterLabel;
+        this.DeveloperName = newDevName;
+        this.Custom_Mapping_Logic_Class = objectMapping.Custom_Mapping_Logic_Class;
+        this.Data_Import_Object_Mapping_Set = objectMapping.Data_Import_Object_Mapping_Set;
+        this.Data_Import_Object_Mapping_Set_Dev_Name = objectMapping.Data_Import_Object_Mapping_Set_Dev_Name;
+        this.Imported_Record_Field_Name = objectMapping.Imported_Record_Field_Name;
+        this.Imported_Record_Status_Field_Name = objectMapping.Imported_Record_Status_Field_Name;
+        this.Object_API_Name = objectMapping.Object_API_Name;
+        this.Relationship_Field = objectMapping.Relationship_Field;
+        this.Is_Deleted = objectMapping.Is_Deleted;
+        this.Predecessor = objectMapping.Predecessor;
+        this.Relationship_To_Predecessor = objectMapping.Relationship_To_Predecessor;
     }
 }

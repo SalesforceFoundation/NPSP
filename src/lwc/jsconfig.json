@@ -2,62 +2,20 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "c/geTemplateBuilder": [
-                "geTemplateBuilder/geTemplateBuilder.js"
-            ],
-            "c/utilTemplateBuilder": [
-                "utilTemplateBuilder/utilTemplateBuilder.js"
-            ],
-            "c/geFormField": [
-                "geFormField/geFormField.js"
-            ],
-            "c/geFormFieldPicklist": [
-                "geFormFieldPicklist/geFormFieldPicklist.js"
-            ],
-            "c/geFormRenderer": [
-                "geFormRenderer/geFormRenderer.js"
-            ],
-            "c/geFormSection": [
-                "geFormSection/geFormSection.js"
-            ],
-            "c/geFormService": [
-                "geFormService/geFormService.js"
-            ],
-            "c/geTemplateBuilderBatchHeader": [
-                "geTemplateBuilderBatchHeader/geTemplateBuilderBatchHeader.js"
-            ],
-            "c/geTemplateBuilderFormField": [
-                "geTemplateBuilderFormField/geTemplateBuilderFormField.js"
-            ],
-            "c/geTemplateBuilderFormSection": [
-                "geTemplateBuilderFormSection/geTemplateBuilderFormSection.js"
-            ],
-            "c/geTemplateBuilderSectionModalBody": [
-                "geTemplateBuilderSectionModalBody/geTemplateBuilderSectionModalBody.js"
-            ],
-            "c/geTemplateBuilderSelectFields": [
-                "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
-            ],
-            "c/geTemplateBuilderService": [
-                "geTemplateBuilderService/geTemplateBuilderService.js"
+            "c/geTemplates": [
+                "geTemplates/geTemplates.js"
             ],
             "c/geTemplateBuilderTemplateInfo": [
                 "geTemplateBuilderTemplateInfo/geTemplateBuilderTemplateInfo.js"
             ],
-            "c/geTemplates": [
-                "geTemplates/geTemplates.js"
+            "c/geTemplateBuilderSelectFields": [
+                "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
             ],
-            "c/utilDedicatedListener": [
-                "utilDedicatedListener/utilDedicatedListener.js"
+            "c/geTemplateBuilderBatchHeader": [
+                "geTemplateBuilderBatchHeader/geTemplateBuilderBatchHeader.js"
             ],
-            "c/utilIllustration": [
-                "utilIllustration/utilIllustration.js"
-            ],
-            "c/utilPageHeader": [
-                "utilPageHeader/utilPageHeader.js"
-            ],
-            "c/utilPageLevelError": [
-                "utilPageLevelError/utilPageLevelError.js"
+            "c/geTemplateBuilder": [
+                "geTemplateBuilder/geTemplateBuilder.js"
             ]
         }
     }

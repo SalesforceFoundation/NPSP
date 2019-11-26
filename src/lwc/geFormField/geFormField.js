@@ -17,15 +17,23 @@ export default class GeFormField extends LightningElement {
     changeTimeout;
 
     handleValueChange(event) {
-        // get the value for the field; use the checked attribute for checkboxes
-        this.value  = this.fieldType !== BOOLEAN_TYPE ? event.target.value : event.target.checked.toString();     
-        
+        this.value = this.getValueFromChangeEvent(event);
         window.clearTimeout(this.changeTimeout);
         this.changeTimeout = setTimeout(() => {
             // parent component (formSection) should bind to onchange event
             const evt = new CustomEvent('change', {field: this.element, value: this.value});
             this.dispatchEvent(evt);
         }, DELAY);
+    }
+
+    getValueFromChangeEvent(event) {
+        if(this.isLookup) {
+            return event.detail.value;
+        } else if(this.fieldType === BOOLEAN_TYPE) {
+            return event.target.checked.toString();
+        }
+
+        return event.target.value;
     }
 
     /**
@@ -38,8 +46,8 @@ export default class GeFormField extends LightningElement {
         let fieldIsValid = this.checkFieldValidity();
 
         if(this.element.required) {
-            return this.value !== null 
-                && typeof this.value !== 'undefined' 
+            return this.value !== null
+                && typeof this.value !== 'undefined'
                 && this.value !== ''
                 && fieldIsValid;
         }
@@ -71,10 +79,17 @@ export default class GeFormField extends LightningElement {
         // CMT record name at, element.value. 
         // However, it may change to the array dataImportFieldMappingDevNames
         // If so, we need to update this to reflect that.
-        // In the Execute Anonymous code, both fields are populated. 
-        fieldAndValue[this.element.value] = this.value;
+        // In the Execute Anonymous code, both fields are populated.
+        // PRINCE: Temporary change below. Please review and update
+        // as needed.
+        // Changed 'this.element.value' references to getter 'formElementName'.
+        fieldAndValue[this.formElementName] = this.value;
         
         return fieldAndValue;
+    }
+
+    get formElementName() {
+        return this.element.componentName ? this.element.componentName : this.element.dataImportFieldMappingDevNames[0];
     }
 
     get inputType() {
@@ -86,7 +101,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldInfo() {
-        return GeFormService.getFieldMappingWrapper(this.element.value);
+        return GeFormService.getFieldMappingWrapper(this.formElementName);
     }
 
     get objectInfo() {

@@ -31,32 +31,56 @@ public with sharing class GE_FormRendererService {
     }
 
     /**
-     * This method creates a wrapper which contains the default template and a field mapping set.
+     * This method creates a wrapper which contains the default SGE template and a field mapping set.
      *
      * @return  A FORM_RenderWrapper containing the default template JSON.
      */
-    public static FORM_RenderWrapper getDefaultRenderWrapper() {
+    public static FORM_RenderWrapper getDefaultSGERenderWrapper() {
         FORM_Service formService = new FORM_Service();
 
-        FORM_Template defaultTemplate = formService.retrieveDefaultFormTemplate();
+        FORM_Template defaultTemplate = formService.retrieveDefaultSGEFormTemplate();
 
         FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
 
         return renderWrapper;
     }
 
-    private static FORM_RenderWrapper wrapTemplate(FORM_Template template) {
-        // Get the mapping service which will retrieve all the mappings
-        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
+    /**
+     * This method creates a wrapper which contains the default BGE template and a field mapping set.
+     *
+     * @return  A FORM_RenderWrapper containing the default template JSON.
+     */
+    public static FORM_RenderWrapper getDefaultBGERenderWrapper() {
+        FORM_Service formService = new FORM_Service();
 
-        updateTemplateWithRequired(template, mappingService.fieldMappingSet);
+        FORM_Template defaultTemplate = formService.retrieveDefaultBGEFormTemplate();
 
-        // Create the wrapper which will hold the template and field mapping set.
-        FORM_RenderWrapper renderWrapper = new FORM_RenderWrapper(template, mappingService.fieldMappingSet);
+        FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
+
 
         return renderWrapper;
     }
 
+    /**
+     * This method builds the wrapper given the template and the field mapping set. 
+     *
+     * @return  A FORM_RenderWrapper containing the default template JSON.
+     */
+    private static FORM_RenderWrapper wrapTemplate(FORM_Template template) {
+        if (template != null) {
+            // Get the mapping service which will retrieve all the mappings
+            BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
+
+            updateTemplateWithRequired(template, mappingService.fieldMappingSet);
+
+            // Create the wrapper which will hold the template and field mapping set.
+            FORM_RenderWrapper renderWrapper = new FORM_RenderWrapper(template, mappingService.fieldMappingSet);
+
+            return renderWrapper;
+        } else {
+            return null;
+        }
+    }
 
     /*******************************************************************************************************
     * @description Takes the template and field mappings and updates the template so that the required fields are set
@@ -68,7 +92,7 @@ public with sharing class GE_FormRendererService {
         List<FORM_Section> sectionList = template.layout.sections;
 
         for (FORM_Section section : sectionList) {
-            
+    
             // Go through all the elements
             for (FORM_Element element : section.elements) {
                 if (!element.dataImportFieldMappingDevNames.isEmpty()) {
