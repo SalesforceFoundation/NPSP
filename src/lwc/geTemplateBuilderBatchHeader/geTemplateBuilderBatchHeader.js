@@ -43,6 +43,41 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     }
 
     /*******************************************************************************
+    * @description Checks to see if there are any errors for the tab. Currently only
+    * checks for missing required fields.
+    *
+    * @return {boolean} hasErrors: Returns true if tab has any errors.
+    */
+    @api
+    validate() {
+        this.hasErrors = this.hasMissingRequiredFields();
+        return !this.hasErrors;
+    }
+
+    /*******************************************************************************
+    * @description Checks for any missing required DataImportBatch__c fields.
+    *
+    * @return {boolean} hasMissingFields: Returns true if any DataImportBatch__c
+    * fields are missing.
+    */
+    hasMissingRequiredFields() {
+        let hasMissingFields = false;
+        this.missingRequiredFields = findMissingRequiredBatchFields(this.batchFields, this.selectedBatchFields);
+
+        if (this.missingRequiredFields && this.missingRequiredFields.length > 0) {
+            dispatch(this, EVENT_UPDATE_VALIDITY, {
+                property: PROP_BATCH_HEADER_TAB_ERROR,
+                hasError: false
+            });
+            hasMissingFields = true;
+        } else {
+            hasMissingFields = false;
+        }
+
+        return hasMissingFields;
+    }
+
+    /*******************************************************************************
     * @description Receives event from child component and dispatches event to
     * parent to update a batch header field's details.
     *
