@@ -4,7 +4,7 @@ from cumulusci.robotframework.pageobjects import pageobject
 from NPSP import npsp_lex_locators
 
 @pageobject("Listing", "Account")
-class OpportunityListingPage(ListingPage):
+class AccountListingPage(ListingPage):
     object_name = "Account"
 
     @property
@@ -13,7 +13,7 @@ class OpportunityListingPage(ListingPage):
     
     
 @pageobject("Details", "Account")
-class ContactDetailPage(DetailPage):
+class AccountDetailPage(DetailPage):
     object_name = "Account"
 
     @property
