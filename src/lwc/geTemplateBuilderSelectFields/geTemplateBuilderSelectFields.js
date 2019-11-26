@@ -27,7 +27,6 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
 
     @api
     validate() {
-        console.log('Validate Select Fields Tab');
         let isValid;
         let objectMappingsWithMissingRequiredFields = new Set();
         let missingRequiredFieldMappings = [];
@@ -196,6 +195,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     @api
     handleDeleteFormSection(event) {
         const formSectionId = event.detail;
+        let isRequiredFormElement = false;
 
         let formSections = mutable(this.formSections);
         let formSection = formSections.find(fs => fs.id === formSectionId);
@@ -207,6 +207,10 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         if (formSection.elements && formSection.elements.length > 0) {
             const formFields = formSection.elements;
             for (let i = 0; i < formFields.length; i++) {
+                if (formFields[i].Is_Required) {
+                    isRequiredFormElement = true;
+                }
+
                 const inputName = formFields[i].componentName ? formFields[i].componentName : formFields[i].dataImportFieldMappingDevNames[0];
                 let checkbox =
                     this.template.querySelector(`lightning-input[data-field-mapping="${inputName}"]`);
@@ -221,7 +225,10 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             this.handleChangeActiveSection({ detail: this.formSections[0].id });
         }
 
-        this.validate();
+        if (isRequiredFormElement) {
+            this.validate();
+        }
+
         dispatch(this, 'refreshformsections', formSections);
     }
 
@@ -244,6 +251,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     */
     handleToggleFieldMapping(event) {
         const name = event.target.value;
+        const fieldMapping = TemplateBuilderService.fieldMappingByDevName[name];
+        const objectMapping = TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
         let sectionId = this.activeFormSectionId;
         const isAddField = event.target.checked;
 
@@ -264,9 +273,6 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 return;
             }
 
-            const fieldMapping = TemplateBuilderService.fieldMappingByDevName[name];
-            const objectMapping = TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
-
             let formElement;
             if (fieldMapping.Element_Type === 'field') {
                 formElement = this.constructFormField(objectMapping, fieldMapping, sectionId);
@@ -280,7 +286,9 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             this.handleRemoveFormElement(name);
         }
 
-        this.validate();
+        if (fieldMapping.Is_Required) {
+            this.validate();
+        }
     }
 
     /*******************************************************************************
@@ -415,9 +423,13 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
     */
     handleDeleteFormElement(event) {
+        const fieldMapping = TemplateBuilderService.fieldMappingByDevName[event.detail.fieldName];
         const element = this.template.querySelector(`lightning-input[data-field-mapping="${event.detail.fieldName}"]`);
         element.checked = false;
-        this.validate();
+
+        if (fieldMapping.Is_Required) {
+            this.validate();
+        }
         dispatch(this, 'deleteformelement', event.detail);
     }
 
