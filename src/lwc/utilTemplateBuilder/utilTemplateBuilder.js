@@ -1,8 +1,50 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 
+const FORMAT_VERSION = '1.0';
+const ADVANCED_MAPPING = 'Data Import Field Mapping';
+const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
+const LANDING_PAGE_TAB_NAME = 'GE_Templates';
+const SORTED_BY = 'required';
+const SORT_ORDER = 'desc';
+const PICKLIST = 'Picklist';
+const NEW = 'new';
+const EDIT = 'edit';
+
+const PROP_API_NAME = 'apiName';
+const PROP_BATCH_HEADER_TAB_ERROR = 'hasBatchHeaderTabError';
+
+const EVENT_UPDATE_VALIDITY = 'updatevalidity';
+const EVENT_BATCH_HEADER_FIELD_UPDATE = 'updatebatchheaderfield';
+const EVENT_BATCH_HEADER_FIELD_UP = 'batchheaderfieldup';
+const EVENT_BATCH_HEADER_FIELD_DOWN = 'batchheaderfielddown';
+const EVENT_BATCH_HEADER_FIELD_ADD = 'addbatchheaderfield';
+const EVENT_BATCH_HEADER_FIELD_REMOVE = 'removebatchheaderfield';
+
 const OBJECT = 'object';
 const FUNCTION = 'function';
+
+const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
+    'Name'
+];
+Object.freeze(ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS);
+
+// We've opted to exclude the following batch fields related to
+// matching logic as we're removing the matching options page
+// from this flow.
+// We're considering putting matching options in a 'global
+// batch settings' area. Potentially in NPSP Settings.
+const EXCLUDED_BATCH_HEADER_FIELDS = [
+    'Batch_Process_Size__c',
+    'Run_Opportunity_Rollups_while_Processing__c',
+    'Donation_Matching_Behavior__c',
+    'Donation_Matching_Implementing_Class__c',
+    'Donation_Matching_Rule__c',
+    'Donation_Date_Range__c',
+    'Post_Process_Implementing_Class__c',
+    'OwnerId',
+];
+Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
 
 /*******************************************************************************
 * @description Map of lightning-input types by data type.
@@ -42,6 +84,57 @@ const lightningInputTypeByDataType = {
     'richtext': 'lightning-input-rich-text',
     'textarea': 'lightning-textarea',
     'combobox': 'lightning-combobox'
+}
+
+/*******************************************************************************
+* @description Collects all the missing required field mappings. Currently only
+* checks 'requiredness' of the source (DataImport__c).
+*
+* @return {list} missingRequiredFieldMappings: List of missing field mappings.
+*/
+const findMissingRequiredFieldMappings = (TemplateBuilderService, formSections) => {
+    const requiredFieldMappings =
+        Object.keys(TemplateBuilderService.fieldMappingByDevName).filter(developerName => {
+            if (TemplateBuilderService.fieldMappingByDevName[developerName].Is_Required) {
+                return developerName;
+            }
+            return undefined;
+        });
+
+    let selectedFieldMappingDevNames =
+        formSections
+            .flatMap(section => section.elements)
+            .map(element => {
+                return element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0]
+            });
+
+    const missingRequiredFieldMappings =
+        requiredFieldMappings
+            .filter(developerName => !selectedFieldMappingDevNames.includes(developerName));
+
+    return missingRequiredFieldMappings;
+}
+
+/*******************************************************************************
+* @description Collects all the missing required DataImportBatch__c fields.
+*
+* @return {list} missingRequiredFields: List of missing DataImportBatch__c fields.
+*/
+const findMissingRequiredBatchFields = (batchFields, selectedBatchFields) => {
+    let missingRequiredFields = [];
+    const requiredFields = batchFields.filter(batchField => { return batchField.required });
+    const selectedFieldsExists = selectedBatchFields && selectedBatchFields.length > 0;
+
+    requiredFields.forEach((field) => {
+        if (selectedFieldsExists) {
+            const alreadySelected = selectedBatchFields.find(bf => { return bf.apiName === field.apiName; });
+            if (!alreadySelected) {
+                missingRequiredFields = [...missingRequiredFields, field.label];
+            }
+        }
+    });
+
+    return missingRequiredFields;
 }
 
 /*******************************************************************************
@@ -100,7 +193,7 @@ const isEmpty = (value) => {
 * @param {*} value: Anything
 */
 const isFunction = (value) => {
-    return typeof value === 'function';
+    return typeof value === FUNCTION;
 };
 
 /*******************************************************************************
@@ -110,7 +203,7 @@ const isFunction = (value) => {
 * @param {any} obj: Thing to check
 */
 const isObject = (obj) => {
-    return isFunction(obj) || typeof obj === 'object' && !!obj;
+    return isFunction(obj) || typeof obj === OBJECT && !!obj;
 }
 
 /*******************************************************************************
@@ -293,6 +386,25 @@ const generateId = () => {
 };
 
 export {
+    FORMAT_VERSION,
+    ADVANCED_MAPPING,
+    SORTED_BY,
+    SORT_ORDER,
+    PICKLIST,
+    NEW,
+    EDIT,
+    DEFAULT_FIELD_MAPPING_SET,
+    LANDING_PAGE_TAB_NAME,
+    PROP_API_NAME,
+    PROP_BATCH_HEADER_TAB_ERROR,
+    EVENT_UPDATE_VALIDITY,
+    EVENT_BATCH_HEADER_FIELD_UPDATE,
+    EVENT_BATCH_HEADER_FIELD_ADD,
+    EVENT_BATCH_HEADER_FIELD_REMOVE,
+    EVENT_BATCH_HEADER_FIELD_UP,
+    EVENT_BATCH_HEADER_FIELD_DOWN,
+    ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
+    EXCLUDED_BATCH_HEADER_FIELDS,
     removeByProperty,
     findIndexByProperty,
     shiftToIndex,
@@ -308,5 +420,7 @@ export {
     deepClone,
     debouncify,
     isEmpty,
-    isFunction
+    isFunction,
+    findMissingRequiredFieldMappings,
+    findMissingRequiredBatchFields
 }
