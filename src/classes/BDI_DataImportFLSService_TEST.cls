@@ -190,6 +190,7 @@ private class BDI_DataImportFLSService_TEST {
      */
     @IsTest
     static void testCampaignIdIsValidateUpdateException (){
+        UTIL_CustomSettingsFacade.enableAdvancedMapping();
         Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
                 Set<BDI_DataImportFLSService.AccessLevel>{
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE,
