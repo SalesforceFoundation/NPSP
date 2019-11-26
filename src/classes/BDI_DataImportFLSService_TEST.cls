@@ -204,7 +204,6 @@ private class BDI_DataImportFLSService_TEST {
                 CampaignMember.Status);
         BDI_FieldMappingCustomMetadata stub = (BDI_FieldMappingCustomMetadata) Test.createStub(
                 BDI_FieldMappingCustomMetadata.class, mock);
-
         BDI_FieldMappingCustomMetadata.setInstance(stub);
 
         Campaign campaign = new Campaign(Name = 'Test Campaign');
@@ -215,7 +214,6 @@ private class BDI_DataImportFLSService_TEST {
                 Campaign_Member_Status__c = 'Responded'
         );
 
-        insert dataImport;
         BDI_DataImportFLSService service = new BDI_DataImportFLSService(
                 new List<DataImport__c>{
                         dataImport
@@ -226,29 +224,6 @@ private class BDI_DataImportFLSService_TEST {
 
         System.assertEquals(service.getInvalidRecords().size(), 0,
                 'All records to be imported should be validated');
-
-        //Process the Data Import record
-        BDI_DataImportService dataImportService = new BDI_DataImportService(
-                false,
-                BDI_DataImportService.getDefaultFieldMapping());
-        dataImportService.process(
-                null,
-                BDI_DataImportService.loadSettings(null),
-                new List<DataImport__c>{
-                        dataImport
-                });
-
-        List<DataImport__c> processedDataImports = [
-                SELECT
-                        Status__c,
-                        FailureInformation__c
-                FROM DataImport__c
-                WHERE Id = :dataImport.Id
-        ];
-        System.assertEquals(processedDataImports.size(), 1,
-                'One record should have been processed successfully');
-        System.assertEquals(processedDataImports[0].Status__c, 'Imported',
-                'One record should have been imported successfully');
     }
 
     /**
