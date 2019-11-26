@@ -5,11 +5,21 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track value;
     @api element;
     @track recordList = [];
+    @track fieldList = [];
+
+    // TODO: Logic to determine "rules" for the Widget should go here
+    // Ex. Setting the Amount when a percent is entered
 
     /***
     * @description Initializes the component
     */
     connectedCallback() {
+        // Represents the fields in a row of the widget
+        this.fieldList = [
+            {'mappedField':'Allocation__c.General_Accounting_Unit__c', 'size':4, 'required': true},
+            {'mappedField':'Allocation__c.Amount__c', 'size':3},
+            {'mappedField':'Allocation__c.Percent__c', 'size':3}
+        ];
         this.addRow();
     }
 
@@ -42,12 +52,13 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
         if(rows !== null && typeof rows !== 'undefined') {
             rows.forEach(row => {
-                let rowRecord = row.getRecord();
+                let rowRecord = row.getValues();
                 widgetRowValues.push(rowRecord);
             });
         }
 
         widgetData[ALLOCATION_OBJECT.objectApiName] = widgetRowValues;
+        // console.log(widgetData); 
         return widgetData;
     }
 

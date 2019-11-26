@@ -3,13 +3,19 @@ import {LightningElement, api, track} from 'lwc';
 export default class GeFormWidgetRow extends LightningElement {
     @api rowIndex;
     @api rowRecord;
+    @api fieldList;
 
     @api
-    getRecord() {
-        // TODO: Need to fill in data from the widget fields
-        let recordData = { Amount__c: 50, General_Accounting_Unit__c : 'GAU_Id' };
-        recordData = { ...recordData, ...(this.rowRecord) };
-        return recordData;
+    getValues() {
+        const fields = this.template.querySelectorAll('c-ge-form-field');
+        let widgetFieldAndValues = {};
+        if(fields !== null && typeof fields !== 'undefined') {
+            fields.forEach(field => {
+                widgetFieldAndValues = { ...widgetFieldAndValues, ...(field.fieldAndValue) };
+            });
+        }
+        // console.log(widgetFieldAndValues); 
+        return widgetFieldAndValues;
     }
 
 }

@@ -1,7 +1,12 @@
 <template>
-    <div>
-        <p>Test Row {rowIndex}</p>
-        <!-- Should contain a series of ge-form-field components -->
-        <!-- <c-ge-form-field key={element}></c-ge-form-field> -->
-    </div>
+    <lightning-layout>
+        <template for:each={fieldList} for:item='field'>
+            <lightning-layout-item key={field} 
+                    class='slds-p-right_large'
+                    size='6' 
+                    medium-device-size={field.size}>
+                <c-ge-form-field target-field-name={field.mappedField}></c-ge-form-field>
+            </lightning-layout-item>
+        </template>
+    </lightning-layout>
 </template>

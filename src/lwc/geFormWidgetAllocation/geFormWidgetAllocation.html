@@ -2,7 +2,7 @@
     <h2>{element.label}</h2>
 
     <template for:each={recordList} for:item='record' for:index='index'>
-        <c-ge-form-widget-row key={record} row-index={index} row-record={record}></c-ge-form-widget-row>
+        <c-ge-form-widget-row field-list={fieldList} key={record} row-index={index} row-record={record}></c-ge-form-widget-row>
     </template>
 
     <lightning-button label="Add Row" onclick={addRow}></lightning-button>

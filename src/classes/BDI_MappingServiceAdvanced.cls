@@ -46,6 +46,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
 
     public Map<String,BDI_ObjectMapping> objectMappingByDevName = new Map<String,BDI_ObjectMapping>();
     public Map<String,BDI_FieldMapping> fieldMappingByDevName = new Map<String,BDI_FieldMapping>();
+    public Map<String,BDI_FieldMapping> fieldMappingByTargetFieldName = new Map<String,BDI_FieldMapping>();
     public Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingDevName = new Map<String,BDI_FieldMapping[]>();
     public Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingLegacyName = new Map<String,BDI_FieldMapping[]>();
     public Set<String> importedRecordFieldNames = new Set<String>();
@@ -256,6 +257,8 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
 
                 tempFieldMappings.add(fieldMapping);
                 fieldMappingByDevName.put(fieldMapping.DeveloperName,fieldMapping);
+                String objectAndField = fieldMapping.Target_Object_API_Name + '.' + fieldMapping.Target_Field_API_Name;
+                fieldMappingByTargetFieldName.put(objectAndField,fieldMapping);
                 fieldMappingsByObjMappingDevName.put(fieldMapping.Target_Object_Mapping_Dev_Name,tempFieldMappings);
                 fieldMappingsByObjMappingLegacyName.put(
                     difm.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
@@ -266,6 +269,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         fieldMappingSet = new BDI_FieldMappingSet(diFieldMappingSet,
             objectMappingByDevName,
             fieldMappingByDevName,
+            fieldMappingByTargetFieldName,
             fieldMappingsByObjMappingDevName);
     }
 
