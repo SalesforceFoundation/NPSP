@@ -34,8 +34,8 @@
 * @description Installment Opportunity Evaluation and Processing
 *
 */
-public class RD2_OpportunityEvaluationService {
-  
+public inherited sharing class RD2_OpportunityEvaluationService {
+
     private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
     /**
@@ -83,7 +83,6 @@ public class RD2_OpportunityEvaluationService {
         } set;
     }
 
-
     /**
      * @description Pass the set of Recurring Donation Id's to be processed
      * @param rdIds Recurring Donation Ids
@@ -124,18 +123,33 @@ public class RD2_OpportunityEvaluationService {
         Map<npe03__Recurring_Donation__c, List<Date>> newRDsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
         List<Opportunity> existingOpenOpps = new List<Opportunity>();
 
+        List<npe03__Recurring_Donation__c> updatedRDs = new List<npe03__Recurring_Donation__c>();
+
         for (npe03__Recurring_Donation__c rd : rds) {
 
+            // TODO Recalculate NextDonationDate before doing anything
+
+            // Collect the list of Opps that require a new Installment Opp
             if (isNewRecurringDonation(rd)) {
                 newRDsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
                 continue;
             }
-            
+
+            // TODO Handle Open Installments on Closed Opp
+            // TODO Schedule Visualizer
+            // TODO Update the Future Installment Opportunity if needed
+            // TODO Handle Past Due Installment
+
             if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
                 existingOpenOpps.addAll(extractOpenInstallmentOpps(rd));
             }
+
         }
 
+        // TODO Disable Customizable Rollups before DML
+
+        // Create the next installment opportunity where needed
+        // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
         oppService.createInstallmentOpportunities(newRDsWithCloseDates);
 
         handleClosedRecurringDonationOpps(existingOpenOpps);
@@ -156,6 +170,15 @@ public class RD2_OpportunityEvaluationService {
             && rd.Status__c == RD2_Constants.STATUS_ACTIVE 
             && rd.npe03__Donations__r.isEmpty()
             && !rd.RecurringDonationSchedules__r.isEmpty();
+    }
+
+    /**
+     * @description Disable Customizable Rollups before DML to reduce performance implications.
+     */
+    private void disableRollups() {
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
     }
 
     /**
@@ -216,7 +239,9 @@ public class RD2_OpportunityEvaluationService {
 
     /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
-     * with the related installment Opportunities and active Schedules
+     * with the related Installment Opportunities and Active Schedule Records. Due to a core KI (W-2503825)
+     * this query needs to exclude CLOB fields. Since there is no pure definition of that for a Describe, the
+     * query excludes Large Text Area fields larger than 4KB. These would only be custom fields.
      * @param rdIds Recurring Donation Ids
      * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
@@ -230,9 +255,12 @@ public class RD2_OpportunityEvaluationService {
         Set<String> queryFields = new Set<String>();
         for (String fld : allRdFields.keySet()) {
             DescribeFieldResult fldResult = allRdFields.get(fld);
-            if (fldResult.isAccessible()) {
-                queryFields.add(fld);
+            if (fldResult.getType() == DisplayType.BASE64 ||
+                    fldResult.getType() == DisplayType.ENCRYPTEDSTRING ||
+                    (fldResult.getSoapType() == SoapType.STRING && fldResult.getLength() > 4096)) {
+                continue;
             }
+            queryFields.add(fld);
         }
 
         String oppSubquery = 
