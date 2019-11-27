@@ -53,6 +53,7 @@ Create Household With additional details
     [Documentation]                       Create a contact with lastname, firstname and email and click save & new and 
     ...                                   create another contact with name and address. Verifies that the toast message appears
     ...                                   Verifies that contacts created and displays under recently viewed contacts
+    [tags]                                W-037650    feature:Contacts and Accounts
     # Create a contact with name and email
     Go To Page                            Listing                             Contact
     Click Object Button                   New

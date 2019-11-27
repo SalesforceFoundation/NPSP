@@ -1255,4 +1255,10 @@ class NPSP(SalesforceRobotLibraryBase):
            and waits for the modal to open"""  
         self.salesforce.click_object_button("Edit")
         self.salesforce.wait_until_modal_is_open()
-             
+
+    def delete_record(self,value):
+        """Select the row to be deleted on the listing page, click delete
+           and wait till the focus is back on the listings page."""
+        self.npsp.select_row(value)
+        self.selenium.click_link("Delete")
+        self.npsp.wait_until_url_contains("/list")
