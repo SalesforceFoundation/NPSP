@@ -1,5 +1,6 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
+import { showToast } from 'c/utilTemplateBuilder';
 
 const inputTypeByDescribeType = {
     'BOOLEAN': 'checkbox',
@@ -90,7 +91,9 @@ class GeFormService {
                     resolve(result);
                 })
                 .catch(error => {
+                    showToast(this, 'Error', JSON.stringify(error), 'error');
                     console.error(JSON.stringify(error));
+                    reject(error);
                 });
         });
     }
