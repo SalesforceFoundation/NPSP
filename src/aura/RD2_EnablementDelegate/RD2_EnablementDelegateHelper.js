@@ -250,10 +250,9 @@
     confirmMigration: function (component) {
         let enablementState = component.get("v.state");
 
-        if (enablementState.isMigrationCompleted) {
+        if (enablementState.isMigrationCompleted || enablementState.isMetaDeployConfirmed !== true) {
             return;
         }
-
         component.set('v.state.isMigrationCompleted', true);
 
         this.clearError(component);
