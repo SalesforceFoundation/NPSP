@@ -1396,7 +1396,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Open Ended Status cannot be converted to enhanced Recurring Donation format</shortDescription>
-        <value>Recurring Donation Open Ended Status "{0}" cannot be converted to the Enhanced Recurring Donations format.</value>
+        <value>Recurring Donation Open Ended Status "{0}" cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
