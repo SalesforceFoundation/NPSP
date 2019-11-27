@@ -42,8 +42,14 @@ public without sharing class RD2_ScheduleService {
     */
     private final Integer DAYS_IN_WEEK = 7;
 
+    /**
+    * @description Default number of visualization records to calculate
+    */
     private final Integer DEFAULT_VISUALIZATION_SCHEDULE_COUNT = 12;
 
+    /**
+    * @description Date to treat as current date in calculation of schedules
+    */
     @TestVisible
     private Date currentDate {
         get {
@@ -188,9 +194,20 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the date of the next donation
+    * @description Calculates the dates of the next DEFAULT_VISUALIZATION_SCHEDULE_COUNT donations
     * @param rd Recurring Donation record
-    * @return Date
+    * @return List<Installment>
+    */
+    public List<Installment> getNextDonationsForVisualization(npe03__Recurring_Donation__c rd) {
+        return getNextDonationsForVisualization(rd, currentDate, DEFAULT_VISUALIZATION_SCHEDULE_COUNT);
+    }
+
+    /***
+    * @description Calculates the dates of the next n donations
+    * @param rd Recurring Donation record
+    * @param visualizationStartDate Date
+    * @param maxDates Integer
+    * @return List<Installment>
     */
     public List<Installment> getNextDonationsForVisualization(npe03__Recurring_Donation__c rd, Date visualizationStartDate, Integer maxDates) {
 
