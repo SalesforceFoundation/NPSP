@@ -31,6 +31,10 @@ class ContactListingPage(ListingPage):
                 locator = npsp_lex_locators["object"]["field"].format(key)
                 self.salesforce._populate_field(locator, value)    
 
+    def click_delete_account_button(self):
+        """Clicks on Delete Account button inside the iframe"""
+        self.npsp.wait_until_url_contains("/delete")
+        self.npsp.select_frame_and_click_element("vfFrameId","button","Delete Account")    
 
 @pageobject("Details", "Contact")
 class ContactDetailPage(DetailPage):
@@ -49,3 +53,5 @@ class ContactDetailPage(DetailPage):
         locator=npsp_lex_locators['delete_icon'].format(field_name,old_value)
         self.selenium.get_webelement(locator).click() 
         self.salesforce.populate_lookup_field(field_name,new_value)
+        
+    
