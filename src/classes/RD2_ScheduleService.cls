@@ -165,7 +165,7 @@ public without sharing class RD2_ScheduleService {
         if (newRd == null) {
             isNeeded = false;
 
-        // oldRd will be null on insert.  This method is unnecessary on inserts, so it should also always be null.  Defensive again.
+        // Since this method should never be called on inserts, oldRd should never be null.  Defensive again.
         } else if (oldRd == null) {
             isNeeded = true;
 
@@ -221,7 +221,7 @@ public without sharing class RD2_ScheduleService {
 
         List <RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
 
-        Installment vzw;
+        Installment ins;
         List<Installment> vizSchedules = new List<Installment>();
         currentDate = visualizationStartDate;
         Integer dateCount = 0;
@@ -237,21 +237,24 @@ public without sharing class RD2_ScheduleService {
                 }
             }
 
-            vzw = getNextDonationSchedule(filteredSchedules);
-            if (vzw == null) {
+            ins = getNextDonationSchedule(filteredSchedules);
+            if (ins == null) {
                 currentDate = date.today();
                 break;
             }
 
-            vizSchedules.add(vzw);
+            vizSchedules.add(ins);
             dateCount++;
-            currentDate = vzw.nextDonationDate.addDays(1);
+            currentDate = ins.nextDonationDate.addDays(1);
         }
 
         currentDate = date.today();
         return vizSchedules;
     }
 
+    /***
+    * @description Wrapper class for Recurring Donation schedule data
+    */
     public class Installment {
 
         public Id       campaignId {get; set;}
