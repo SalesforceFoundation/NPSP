@@ -256,7 +256,7 @@ private with sharing class RD2_OpportunityService_TEST {
     * @return npe03__Recurring_Donation__c
     */
     private static npe03__Recurring_Donation__c createRecurringDonation() {
-        return createRecurringDonations(1)[0];    
+        return createRecurringDonations(1)[0]; 
     }
 
     /***
