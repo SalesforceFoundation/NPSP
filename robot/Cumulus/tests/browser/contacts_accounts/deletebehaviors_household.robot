@@ -20,9 +20,11 @@ Setup Test Data
 *** Test Cases ***
 
 Delete Contact with Closed Won Opportunity from Household
-    [Documentation]
+    [Documentation]                   Create a contact and an opportunity for the contact in closed won stage via API. 
+    ...                               On trying to delete the contact verify that a error is thrown     
+    [tags]                            W-037650    feature:Contacts and Accounts
     Go To Page                        Listing                                        Contact    
     Select Row                        &{Contact}[FirstName] &{Contact}[LastName]
     Click Link                        title=Delete
     Click Delete Account Button
-    Page Should Contain               Error
+    Wait Until Page Contains          Error: You can't delete

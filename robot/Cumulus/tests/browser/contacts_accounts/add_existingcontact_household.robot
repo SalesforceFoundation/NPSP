@@ -23,6 +23,7 @@ Add Existing Contact to Existing Household
     [Documentation]                      Create 2 contacts with API which inturn creates 2 household accounts.
     ...                                  Open contact2 record and change the account name to contact1 account
     ...                                  verify that both the contacts are now showing under contact1 account 
+    [tags]                               W-037650    feature:Contacts and Accounts
     Go To Page                           Details               Contact                                object_id=&{contact2}[Id]
     Edit Record
     

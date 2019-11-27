@@ -213,7 +213,7 @@ class NPSP(SalesforceRobotLibraryBase):
             if element.text == value:
                 drop_down = npsp_lex_locators['locate_dropdown'].format(index + 1)
                 self.selenium.get_webelement(drop_down).click()
-                time.sleep(1)
+                self.selenium.wait_until_page_contains("Delete")
 
     def select_related_row(self, value):
         """To select a row on object page based on name and open the dropdown"""
