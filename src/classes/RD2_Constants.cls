@@ -74,8 +74,7 @@ public inherited sharing class RD2_Constants {
     public static final String RECURRING_TYPE_OPEN = 'Open';
 
     /**
-    * @description sets the valid Installment period from Recurring Donation
-    * "Installment Period" picklist API values
+    * @description Returns all valid Installment Periods
     */
     public static Set<String> allInstallmentPeriods {
     get {

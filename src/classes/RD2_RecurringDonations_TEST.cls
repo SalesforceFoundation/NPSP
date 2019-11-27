@@ -67,13 +67,11 @@ private with sharing class RD2_RecurringDonations_TEST {
                 .withContact(contact.Id)
                 .withAmount(100)
                 .withDefaultValues()
-                .withDayOfMonth('15')
                 .build(),
             new TEST_RecurringDonationBuilder()
                 .withAccount(contact.AccountId)
                 .withAmount(200)
                 .withDefaultValues()
-                .withDayOfMonth('15')
                 .build()
         };
 
@@ -110,7 +108,6 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withAccount(contact.AccountId)
             .withAmount(100)
             .withDefaultValues()
-            .withDayOfMonth('15')
             .build();
         String name = rd.Name;
         insert rd;

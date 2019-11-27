@@ -133,7 +133,6 @@ public with sharing class RD2_EnablementService_TEST {
             .withContact(contact.Id)
             .withAmount(100)
             .withDefaultValues()
-            .withDayOfMonth('15')
             .build();
 
         insert rd;
@@ -182,7 +181,6 @@ public with sharing class RD2_EnablementService_TEST {
             .withContact(contact.Id)
             .withAmount(100)
             .withDefaultValues()
-            .withDayOfMonth('15')
             .build();
 
         Test.startTest();

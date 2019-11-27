@@ -42,7 +42,7 @@ private with sharing class RD2_ValidationService_TEST {
      */
     @TestSetup
     private static void setUp() {
-        insert UTIL_UnitTestData_TEST.getContact();
+        insert UTIL_UnitTestData_TEST.createMultipleTestContacts(2);
     }
 
     /***
@@ -101,12 +101,9 @@ private with sharing class RD2_ValidationService_TEST {
         Account acc = getHHAccount();
         insert acc;
 
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        insert con;
-
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
-            .withContact(con.Id)
+            .withContact(getContact().Id)
             .build();
         try {
             insert rd;
@@ -126,17 +123,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage ='';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        List<Contact> contacts = new List<Contact>{
-            UTIL_UnitTestData_TEST.getContact(),
-            UTIL_UnitTestData_TEST.getContact()
-        };
-        insert contacts;
-
-        contacts = [
-            SELECT AccountId
-            FROM Contact
-            WHERE Id IN :contacts
-        ];
+        List<Contact> contacts = getContacts();
 
         List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
         .withAccount(contacts[0].AccountId)//only RD for one Contact will be valid
@@ -169,11 +156,8 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        insert con;
-
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withContact(con.Id)
+            .withContact(getContact().Id)
             .withAmount(10)
             .withInstallmentPeriodYearly()
             .build();
@@ -224,8 +208,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
             .withContact(con.Id)
-            .withDefaultValues()
-            .withDayOfMonth('15');
+            .withDefaultValues();
 
         for (Decimal amount : new Set<Decimal>{
             null,
@@ -260,7 +243,6 @@ private with sharing class RD2_ValidationService_TEST {
         TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
             .withContact(con.Id)
             .withDefaultValues()
-            .withDayOfMonth('15')
             .withStatusClosed();
 
         for (Decimal amount : new Set<Decimal>{
@@ -291,11 +273,8 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        insert con;
-
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withContact(con.Id)
+            .withContact(getContact().Id)
             .withAmount(10)
             .withInstallmentPeriodMonthly()
             .build();
@@ -306,7 +285,8 @@ private with sharing class RD2_ValidationService_TEST {
             errMessage = e.getMessage();
         }
 
-        System.assert(errMessage.contains(System.Label.RD2_DayOfMonthIsRequiredForMonthlyInstallment));
+        System.assert(errMessage.contains(System.Label.RD2_DayOfMonthIsRequiredForMonthlyInstallment),
+            'Should indicate "Day Of Month" cannot be empty: ' + errMessage);
 
     }
 
@@ -319,11 +299,8 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        insert con;
-
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withContact(con.Id)
+            .withContact(getContact().Id)
             .withAmount(10)
             .withInstallmentPeriod('Occasionally')
             .build();
@@ -337,7 +314,8 @@ private with sharing class RD2_ValidationService_TEST {
             System.Label.RD2_InstallmentPeriodMustBeValid,
             new String[]{'Occasionally' }
         );
-        System.assert(errMessage.contains(expectedMessage));
+        System.assert(errMessage.contains(expectedMessage),
+            'Installment period should be valid ' + errMessage);
 
     }
 
@@ -347,29 +325,33 @@ private with sharing class RD2_ValidationService_TEST {
     */
     @isTest
     private static void shouldFailWhenDayOfMonthIsNotValidForMonthlyInstallments() {
-        String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        insert con;
-
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withContact(con.Id)
+        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
+            .withContact(getContact().Id)
             .withAmount(10)
-            .withInstallmentPeriodMonthly()
-            .withDayOfMonth('31')
-            .build();
+            .withInstallmentPeriodMonthly();
 
-        try {
-            insert rd;
-        } catch (Exception e) {
-            errMessage = e.getMessage();
+        for (String day : new Set<String>{
+            '29', '30', '31'
+        }) {
+            npe03__Recurring_Donation__c rd = rdBuilder
+                .withDayOfMonth(day)
+                .build();
+
+            String errMessage = '';
+            try {
+                insert rd;
+            } catch (Exception e) {
+                errMessage = e.getMessage();
+            }
+            String expectedMessage = String.format(
+                System.Label.RD2_DayOfMonthMustBeValid,
+                new String[]{day }
+            );
+            System.assert(errMessage.contains(expectedMessage),
+                'Day Of Month should be valid : ' + errMessage);
         }
-        String expectedMessage = String.format(
-            System.Label.RD2_DayOfMonthMustBeValid,
-            new String[]{'31' }
-        );
-        System.assert(errMessage.contains(expectedMessage));
 
     }
 
@@ -379,26 +361,28 @@ private with sharing class RD2_ValidationService_TEST {
     */
     @isTest
     private static void shouldCreateRDWhenDayOfMonthIsValid() {
-        String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        insert con;
-
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withContact(con.Id)
+        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
+            .withContact(getContact().Id)
             .withAmount(10)
-            .withInstallmentPeriodMonthly()
-            .withDayOfMonth('15')
-            .build();
+            .withInstallmentPeriodMonthly();
 
-        try {
-            insert rd;
-        } catch (Exception e) {
-            errMessage = e.getMessage();
+        for (String day : new Set<String>{
+            '15', '10', '28'
+        }) {
+            npe03__Recurring_Donation__c rd = rdBuilder
+                .withDayOfMonth(day)
+                .build();
+
+            String errMessage = '';
+            try {
+                insert rd;
+            } catch (Exception e) {
+                errMessage = e.getMessage();
+            }
+            System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
         }
-
-        System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
 
     }
 
@@ -411,6 +395,17 @@ private with sharing class RD2_ValidationService_TEST {
             SELECT FirstName, LastName, AccountId, Account.Name
             FROM Contact
             LIMIT 1
+        ];
+    }
+
+    /****
+    * @description Returns contact records
+    * @return Contacts
+    */
+    private static List<Contact> getContacts() {
+        return [
+            SELECT FirstName, LastName, AccountId, Account.Name
+            FROM Contact
         ];
     }
 
