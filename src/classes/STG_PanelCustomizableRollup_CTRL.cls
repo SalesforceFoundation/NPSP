@@ -56,8 +56,8 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
-    * @description Show CRLP settings if the org is on the HH Account model, 
-    * or if the org is on the One to One Account model and HEDA + Advancement is installed 
+    * @description Show CRLP settings if the org is on the HH Account model,
+    * or if the org is on the One to One Account model and HEDA + Advancement is installed
     * @return Boolean
     */
     public Boolean showCRLPSettings {
