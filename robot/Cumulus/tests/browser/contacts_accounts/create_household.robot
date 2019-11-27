@@ -29,7 +29,8 @@ Setup Variables
 
 Create Household With Name Only
     [Documentation]                       Creates a contact with lastname and firstname. Verifies that the toast message appears    
-    ...                                   Verifies that contact is created and displays under recently viewed contacts     
+    ...                                   Verifies that contact is created and displays under recently viewed contacts
+    [tags]                                W-037650                            feature:Contacts&Accounts
     #Create contact with only name
     Go To Page                            Listing                             Contact
     Click Object Button                   New
