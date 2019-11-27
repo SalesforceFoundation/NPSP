@@ -34,6 +34,23 @@
             <!-- END INTRO TEXT AND TOGGLE -->
 
             <!-- BEGIN HELP TEXT -->
+            <div class="slds" id="page_messages" style="{!IF(isCRLPEnabled, 'display:block', 'display:none')}">
+                <div role="alert" class="slds-notify slds-notify_toast slds-notify_toast slds-theme_warning slds-theme_warning">
+                    <div class="notify__content">
+                        <div class="slds-media" >
+                            <div class="slds-media__figure">
+                                <c:UTIL_SLDS_Icon icon="warning" iconCategory="utility" size="small" />
+                            </div>
+                            <div class="slds-media__body"  >
+                                <p class="slds-text-body_small slds-m-top_x-small">
+                                    <c:UTIL_HtmlOutput html="{!$Label.RD2_DisableCustomizableRollupWarning}" />
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="slds-grid {!IF(!isPolling, '', 'slds-hide')}">
                 <p class="slds-text-body_small slds-m-top_x-small">
                     <c:UTIL_HtmlOutput html="{!$Label.stgHelpCustomizableRollupsEnable2}" hasLink="true" />

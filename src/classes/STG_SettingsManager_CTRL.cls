@@ -70,10 +70,17 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
 
 
     /***
-    * @description Checks if the PilotEnabled is set for the Enhanced Recurring Donations 
+    * @description Checks if the PilotEnabled is set for the Enhanced Recurring Donations
     */
     public static Boolean getIsRD2PilotEnabled() {
         return  RD2_EnablementService.getInstance().isPilotEnabled;
+    }
+
+    /***
+    * @description Checks if Enhanced Recurring Donations is set
+    */
+    public static Boolean getIsEnhancedRD2() {
+        return  RD2_EnablementService.isRecurringDonations2Enabled;
     }
 
     /*********************************************************************************************************

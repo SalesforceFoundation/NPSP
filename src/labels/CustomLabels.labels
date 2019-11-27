@@ -1391,6 +1391,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Recurring Donation Installment Period "{0}" cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
     </labels>
     <labels>
+        <fullName>RD2_DisableCustomizableRollupWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Not disable customizable rollups when RD2 is enabled</shortDescription>
+        <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
