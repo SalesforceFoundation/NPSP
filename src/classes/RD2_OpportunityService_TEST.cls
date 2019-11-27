@@ -200,7 +200,7 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    *
+    * @description Verifies the installment opportunities are created with the record types set in the NPSP setting
     */
     @isTest
     private static void oppRecordTypeShouldMatchWithSetting() {
@@ -251,12 +251,17 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(opps[0].Name, expectedOppName, 'Opportunity Name should match');
     }
 
+    /***
+    * @description Creates a single Recurring Donation record
+    * @return npe03__Recurring_Donation__c
+    */
     private static npe03__Recurring_Donation__c createRecurringDonation() {
         return createRecurringDonations(1)[0];    
     }
+
     /***
-    * @description Creates Recurring Donation record
-    * @return npe03__Recurring_Donation__c
+    * @description Creates Recurring Donation records
+    * @return List<npe03__Recurring_Donation__c>
     */
     private static List<npe03__Recurring_Donation__c> createRecurringDonations(Integer size) {
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
