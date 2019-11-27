@@ -43,7 +43,7 @@ public class RD2_QueueableService {
     public class EvaluateInstallmentOpportunities implements Queueable {
         Set<Id> rdIds;
 
-        /***************************************************************************************************************
+        /***
          * @description Constructor
          * @param rdIds - the RD Ids to process in this Queueable action
          */

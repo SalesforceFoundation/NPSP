@@ -308,6 +308,18 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Paid Installments
+    * @param Total Paid installments
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withPaidInstallments(Integer installment) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('npe03__Total_Paid_Installments__c', installment);
+        return this;
+    }
+
+    /***
     * @description Sets Installment Period to Yearly
     * @return TEST_RecurringDonationBuilder Builder instance
     */
