@@ -292,7 +292,7 @@ private with sharing class RD2_ValidationService_TEST {
 
     /***
     * @description Verifies if it displays error message when installment period
-        is monthly and day of month is blank
+        is not valid
     */
     @isTest
     private static void shouldNotCreateRDWhenInstallmentPeriodIsNotValid() {
