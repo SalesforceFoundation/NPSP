@@ -26,7 +26,7 @@ Setup Variables
 Add New related Contact to Household With Different LastName
     [Documentation]                       Create a contact using the backend API. Navigate to the Account details
     ...                                   create another Linked contact with different name,address and email.
-    [tags]                                  W-037650                                feature:Contacts&Accounts
+    [tags]                                  W-037650                                feature:Contacts And Accounts
 
     &{contact1} =                           API Create Contact                      Email=${EMAIL1}
     Go To Page                              Details                                 Account                                object_id=&{contact1}[AccountId]

@@ -68,7 +68,7 @@ Enter a donation for an account with exact payment match
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
     Go To Record Home    &{opportunity}[Id]
-    Confirm Value    Amount    $100.00    Y 
+    Confirm Field Value   Amount    $100.00    Y
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y 
+    Confirm Field Value    Close Date    ${opp_date}    Y
+    Confirm Field Value    Stage    Closed Won    Y

@@ -56,8 +56,8 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     Process Data Import Batch        Errors
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Open Data Import Record          &{data_import_upd}[Name]    
-    Confirm Value                    Failure Information        Invalid Donation Donor    Y
-    Confirm Value                    Donation Import Status     Invalid Donation Donor    Y
+    Confirm Field Value              Failure Information        Invalid Donation Donor    Y
+    Confirm Field Value              Donation Import Status     Invalid Donation Donor    Y
     
     # Verify Account Details
     Verify Expected Values                     nonns    Account            &{data_import_upd}[${ns}Account1Imported__c]
@@ -70,8 +70,8 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Open Data Import Record          &{data_import_upd}[Name]    
-    Confirm Value                    Account1 Import Status     Matched    Y
-    Confirm Value                    Donation Import Status     Created    Y
+    Confirm Field Value              Account1 Import Status     Matched    Y
+    Confirm Field Value              Donation Import Status     Created    Y
    
     #Verify Opportunity is created as closed won with given date and amount
     Verify Expected Values                     nonns    Opportunity        &{data_import_upd}[${ns}DonationImported__c]
@@ -106,7 +106,7 @@ Verify GAU Allocation Fails on Incorrect Data and Reprocess
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Log Many       &{data_import_upd}
     Open Data Import Record          &{data_import_upd}[Name]    
-    Confirm Value                    Failure Information                 GAU Allocation 1: Import Status:\n Error: record not created, missing required fields:GAU_Allocation_1_GAU__c    Y
+    Confirm Field Value              Failure Information                 GAU Allocation 1: Import Status:\n Error: record not created, missing required fields:GAU_Allocation_1_GAU__c    Y
     
     # Verify Contact Details
     Verify Expected Values                     nonns    Contact            &{data_import_upd}[${ns}Contact1Imported__c]
@@ -135,8 +135,8 @@ Verify GAU Allocation Fails on Incorrect Data and Reprocess
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Open Data Import Record          &{data_import_upd}[Name]    
-    Confirm Value                    Contact1 Import Status     Matched    Y
-    Confirm Value                    Donation Import Status     Created    Y
+    Confirm Field Value              Contact1 Import Status     Matched    Y
+    Confirm Field Value              Donation Import Status     Created    Y
     Go To Page                Detail        Opportunity     object_id=&{data_import_upd}[${ns}DonationImported__c]
     Select Tab                Related
     Verify Allocations        GAU Allocations

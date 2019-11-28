@@ -65,19 +65,19 @@ Create Fixed Length Recurring Donation Multiply By
 
     #Check Rollups on Recurring Donation
     Go To Record Home            &{recurringdonation}[Id]
-    Confirm Value                Number Of Paid Installments    2         Y
-    Confirm Value                Total Paid Amount              $20.00    Y
+    Confirm Field Value          Number Of Paid Installments    2         Y
+    Confirm Field Value          Total Paid Amount              $20.00    Y
 
     #Check Soft Credit Rollups on Household Contact
     Go To Record Home            &{householdcontact}[Id]
     Select Tab                   Details
     Scroll Element Into View     text:Household Donation Info
-    Confirm Value                Soft Credit Total              $20.00    Y
-    Confirm Value                Number of Soft Credits         2         Y
+    Confirm Field Value          Soft Credit Total              $20.00    Y
+    Confirm Field Value          Number of Soft Credits         2         Y
 
     #Check Rollups on Recurring Account
     Go To Record Home            ${account_id}
     Select Tab                   Details
     Scroll Element Into View     text:Membership Information
-    Confirm Value                Total Gifts                    $20.00    Y
-    Confirm Value                Total Number of Gifts          2         Y
+    Confirm Field Value          Total Gifts                    $20.00    Y
+    Confirm Field Value          Total Number of Gifts          2         Y

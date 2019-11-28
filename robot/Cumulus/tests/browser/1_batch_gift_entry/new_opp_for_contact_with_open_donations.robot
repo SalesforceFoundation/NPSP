@@ -76,10 +76,10 @@ Create a new opportunity for a contact with open donations
     Click Link    ${opp_name}
     ${newopp_id}    Get Current Record ID
     Store Session Record    Opportunity    ${newopp_id}
-    Confirm Value    Amount    $100.00    Y 
+    Confirm Field Value   Amount    $100.00    Y
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y 
+    Confirm Field Value  Close Date  ${opp_date}  Y
+    Confirm Field Value    Stage    Closed Won    Y
     Go To Record Home    &{contact}[Id]
     Select Tab     Related
     Load Related List    Opportunities

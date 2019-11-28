@@ -52,15 +52,15 @@ Create Recurring Donation And Check Rollups
 
     #Check Rollups on Recurring Donation
     Go To Record Home            &{recurringdonation}[Id]
-    Confirm Value                Number Of Paid Installments    2         Y
-    Confirm Value                Total Paid Amount              $16.66    Y
+    Confirm Field Value                Number Of Paid Installments    2         Y
+    Confirm Field Value                Total Paid Amount              $16.66    Y
 
     #Check Rollups on Recurring Contact
     Go To Record Home            &{contact}[Id]
     Select Tab                   Details
     Scroll Element Into View     text:Soft Credit Total
-    Confirm Value                Total Gifts This Year          $16.66    Y
-    Confirm Value                Total Gifts                    $16.66    Y
+    Confirm Field Value                Total Gifts This Year          $16.66    Y
+    Confirm Field Value                Total Gifts                    $16.66    Y
 
     #Check Rollups on Recurring Account
     @{account} =                 Salesforce Query               Account
@@ -69,8 +69,8 @@ Create Recurring Donation And Check Rollups
     Go To Record Home            ${account}[0][Id]
     Select Tab                   Details
     Scroll Element Into View     text:Membership Information
-    Confirm Value                Total Gifts                    $16.66    Y
-    Confirm Value                Total Number of Gifts          2         Y
+    Confirm Field Value          Total Gifts                    $16.66    Y
+    Confirm Field Value          Total Number of Gifts          2         Y
 
     #Open NPSP Settings and run Recurring Donations Batch job
     Open NPSP Settings           Bulk Data Processes           Recurring Donations Batch
@@ -79,19 +79,19 @@ Create Recurring Donation And Check Rollups
 
     #Check Rollups on Recurring Donation
     Go To Record Home            &{recurringdonation}[Id]
-    Confirm Value                Number Of Paid Installments    2         Y
-    Confirm Value                Total Paid Amount              $16.66    Y
+    Confirm Field Value          Number Of Paid Installments    2         Y
+    Confirm Field Value               Total Paid Amount              $16.66    Y
 
     #Check Rollups on Recurring Contact
     Go To Record Home            &{contact}[Id]
     Select Tab                   Details
     Scroll Element Into View     text:Soft Credit Total
-    Confirm Value                Total Gifts This Year          $16.66    Y
-    Confirm Value                Total Gifts                    $16.66    Y
+    Confirm Field Value          Total Gifts This Year          $16.66    Y
+    Confirm Field Value          Total Gifts                    $16.66    Y
 
     #Check Rollups on Recurring Account
     Go To Record Home            ${account}[0][Id]
     Select Tab                   Details
     Scroll Element Into View     text:Membership Information
-    Confirm Value                Total Gifts                    $16.66    Y
-    Confirm Value                Total Number of Gifts          2         Y
+    Confirm Field Value          Total Gifts                    $16.66    Y
+    Confirm Field Value          Total Number of Gifts          2         Y

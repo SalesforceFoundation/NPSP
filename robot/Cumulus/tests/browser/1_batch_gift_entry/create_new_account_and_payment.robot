@@ -58,10 +58,10 @@ Create a new account and enter payment information
     Click Link    ${opp_name}
     ${opp_id} =           Get Current Record Id
     Store Session Record      Opportunity  ${opp_id}
-    Confirm Value    Amount    $20.00    Y 
+    Confirm Field Value    Amount    $20.00    Y
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y
+    Confirm Field Value    Close Date    ${opp_date}    Y
+    Confirm Field Value    Stage    Closed Won    Y
     Click Link With Text    text=${acc_name}
     ${account_id} =           Get Current Record Id
     Store Session Record      Account  ${account_id}

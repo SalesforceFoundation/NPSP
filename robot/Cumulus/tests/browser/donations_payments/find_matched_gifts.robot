@@ -61,10 +61,10 @@ Find Matching Gifts
     Go To Record Home    &{Contact1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Total Gifts    $50.00    Y
-    Confirm Value    Soft Credit Total    $50.00    Y
+    Confirm Field Value    Total Gifts    $50.00    Y
+    Confirm Field Value   Soft Credit Total    $50.00    Y
     Go To Record Home    &{Contact2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Total Gifts    $25.00    Y
-    Confirm Value    Soft Credit Total    $25.00    Y
+    Confirm Field Value    Total Gifts    $25.00    Y
+    Confirm Field Value    Soft Credit Total    $25.00    Y

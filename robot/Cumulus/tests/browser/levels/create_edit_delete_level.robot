@@ -16,7 +16,7 @@ ${contact_id}
     Set Global Variable      ${level_name}
     Set Global Variable      ${level_id}
     Go To Record Home        ${level_id}
-    Confirm Value    Minimum Amount (>=)    0.10    Y
+    Confirm Field Value    Minimum Amount (>=)    0.10    Y
     Page Should Contain  0.9  # work around platform not showing the right number of decimals
 
 2 Edit Level and Verify Fields
@@ -41,9 +41,9 @@ ${contact_id}
     # Wait For Locator  breadcrumb  Level
     # Reload Page
     Wait Until Loading Is Complete
-    Confirm Value    Minimum Amount (>=)    0.01    Y
-    Confirm Value    Maximum Amount (<)     0.99    Y
-    Confirm Value    Source Field    npo02__SmallestAmount__c    Y
+    Confirm Field Value    Minimum Amount (>=)    0.01    Y
+    Confirm Field Value    Maximum Amount (<)     0.99    Y
+    Confirm Field Value    Source Field    npo02__SmallestAmount__c    Y
 
 3 Validate Level Assignment in Batch Job
     [tags]  unstable
@@ -60,7 +60,7 @@ ${contact_id}
     Click Record Button     Save
     Wait Until Loading Is Complete
     Scroll Element Into View    text:Donation Totals
-    Confirm Value           Smallest Gift    $0.75    Y
+    Confirm Field Value           Smallest Gift    $0.75    Y
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
@@ -82,7 +82,7 @@ ${contact_id}
     Click Record Button     Save
     Wait Until Loading Is Complete
     Scroll Element Into View    text:Donation Totals
-    Confirm Value           Smallest Gift    $2.00    Y
+    Confirm Field Value           Smallest Gift    $2.00    Y
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
@@ -93,7 +93,7 @@ ${contact_id}
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
-    Confirm Value           Level               ${level_name}    N
+    Confirm Field Value           Level               ${level_name}    N
     Verify Field Value      Previous Level      ${level_name}    Y
 
 4 Delete Level and Validate Contact
@@ -106,4 +106,4 @@ ${contact_id}
     Click Link    link=Delete
     Click Modal Button    Delete
     Go To Record Home           ${contact_id}
-    Confirm Value    Level      ${level_name}    N
+    Confirm Field Value    Level      ${level_name}    N

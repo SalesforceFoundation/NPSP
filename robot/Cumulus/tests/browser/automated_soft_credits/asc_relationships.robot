@@ -49,10 +49,10 @@ Create ASC for Related Contact
     Go To Record Home    &{Contact2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Soft Credit This Year    $100.00    Y
-    Confirm Value    Soft Credit Total    $100.00    Y
+    Confirm Field Value    Soft Credit This Year    $100.00    Y
+    Confirm Field Value    Soft Credit Total    $100.00    Y
     Go To Record Home    &{Contact3}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Soft Credit This Year    $0.00    Y
-    Confirm Value    Soft Credit Total    $0.00    Y
+    Confirm Field Value    Soft Credit This Year    $0.00    Y
+    Confirm Field Value    Soft Credit Total    $0.00    Y

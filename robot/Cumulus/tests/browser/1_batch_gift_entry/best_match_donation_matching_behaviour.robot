@@ -65,16 +65,16 @@ Best Match Donation Matching Behaviour
     Click Link    ${opp_name}
     ${opp_id} =           Get Current Record Id
     Store Session Record      Opportunity  ${opp_id}
-    Confirm Value    Amount    $200.00    Y 
+    Confirm Field Value    Amount    $200.00    Y
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y
+    Confirm Field Value    Close Date    ${opp_date}    Y
+    Confirm Field Value    Stage    Closed Won    Y
     # Verify that the gift matched to existing opportunity and updated it to closed won status and payment is paid
     Go To Record Home    &{opp_match}[Id]
-    Confirm Value    Amount    $100.00    Y 
+    Confirm Field Value    Amount    $100.00    Y
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y 
+    Confirm Field Value    Close Date    ${opp_date}    Y
+    Confirm Field Value    Stage    Closed Won    Y
     Select Tab    Related
     Load Related List    GAU Allocations
     Click Link    ${pay_no}
@@ -86,10 +86,10 @@ Best Match Donation Matching Behaviour
     ...    npe01__Paid__c=True  
     # Verify that the opportunity that does not match is still in prospecting stage
     Go To Record Home    &{opp_dont_match}[Id]
-    Confirm Value    Amount    $50.00    Y 
+    Confirm Field Value    Amount    $50.00    Y
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Prospecting    Y  
+    Confirm Field Value    Close Date    ${opp_date}    Y
+    Confirm Field Value   Stage    Prospecting    Y
 
 ***Keywords***
 Setup Test Data

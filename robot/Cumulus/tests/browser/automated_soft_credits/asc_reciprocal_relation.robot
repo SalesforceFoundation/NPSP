@@ -23,15 +23,15 @@ ASC Reciprocal Relationship Test Case 1
     Go To Record Home    &{Contact1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Soft Credit This Year    $500.00    Y
-    Confirm Value    Soft Credit Total    $500.00    Y
+    Confirm Field Value    Soft Credit This Year    $500.00    Y
+    Confirm Field Value    Soft Credit Total    $500.00    Y
     Go To Record Home    &{Contact2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Total Gifts This Year    $500.00    Y
-    Confirm Value    Total Gifts    $500.00    Y
-    Confirm Value    Soft Credit This Year    $0.00    Y
-    Confirm Value    Soft Credit Total    $0.00    Y
+    Confirm Field Value    Total Gifts This Year    $500.00    Y
+    Confirm Field Value    Total Gifts    $500.00    Y
+    Confirm Field Value    Soft Credit This Year    $0.00    Y
+    Confirm Field Value    Soft Credit Total    $0.00    Y
     
 Test Case 2
     [tags]  unstable
@@ -58,12 +58,12 @@ Test Case 2
     Go To Record Home    &{Contact2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Soft Credit This Year    $500.00    Y
-    Confirm Value    Soft Credit Total    $500.00    Y
+    Confirm Field Value    Soft Credit This Year    $500.00    Y
+    Confirm Field Value    Soft Credit Total    $500.00    Y
     Go To Record Home    &{Contact1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Total Gifts This Year    $500.00    Y
-    Confirm Value    Total Gifts    $500.00    Y
-    Confirm Value    Soft Credit This Year    $0.00    Y
-    Confirm Value    Soft Credit Total    $0.00    Y
+    Confirm Field Value    Total Gifts This Year    $500.00    Y
+    Confirm Field Value    Total Gifts    $500.00    Y
+    Confirm Field Value    Soft Credit This Year    $0.00    Y
+    Confirm Field Value    Soft Credit Total    $0.00    Y

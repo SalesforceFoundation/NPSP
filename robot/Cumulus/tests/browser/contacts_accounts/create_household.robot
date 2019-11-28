@@ -17,11 +17,11 @@ Setup Variables
     Set suite variable    ${last_name1}
     ${first_name2} =           Generate Random String
     Set suite variable    ${first_name2}
-    ${last_name2} =            Generate Random String
+    ${last_name2} =            Generate Random String*
     Set suite variable    ${last_name2}
-    ${first_name} =            Generate Random String
+    ${first_name} =           Generate Random String
     Set suite variable    ${first_name}
-    ${last_name} =             Generate Random String
+    ${last_name} =            Generate Random String*
     Set suite variable    ${last_name}
 
 
@@ -29,8 +29,9 @@ Setup Variables
 
 Create Household With Name Only
     [Documentation]                       Creates a contact with lastname and firstname. Verifies that the toast message appears    
-    ...                                   Verifies that contact is created and displays under recently viewed contacts     
+    ...                                   Verifies that contact is created and displays under recently viewed contacts
     [tags]                                W-037650    feature:Contacts and Accounts
+
     #Create contact with only name
     Go To Page                            Listing                             Contact
     Click Object Button                   New
@@ -38,11 +39,11 @@ Create Household With Name Only
     ...                                   First Name=${first_name}
     ...                                   Last Name=${last_name}
     Save Form
-    Current Page Should Be                Details                             Contact
-    Verify Toast Message Contains         created
+    Current Page Should Be                Details        Contact
+    Verify Toast Message Contains           created
     
     #Verify contact is created and shows under recently viewed
-    ${contact_id} =                       Save Session Record For Deletion    Contact
+    ${contact_id} =                       Save Session Record For Deletion   Contact
     Verify Record Is Created In Database  Contact                             ${contact_id} 
     Header Field Value                    Account Name                        ${last_name} Household
     Go To Object Home                     Contact
@@ -55,7 +56,7 @@ Create Household With additional details
     ...                                   Verifies that contacts created and displays under recently viewed contacts
     [tags]                                W-037650    feature:Contacts and Accounts
     # Create a contact with name and email
-    Go To Page                            Listing                             Contact
+    Go To Page                            Listing     Contact
     Click Object Button                   New
     Populate Contact Form
     ...                                   First Name=${first_name1}
