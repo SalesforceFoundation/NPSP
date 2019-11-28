@@ -144,8 +144,8 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-     * @description Verifies if it creates opportunities with specialized format when
-     * no opportunity naming is specified in NPSP Settings
+     * @description Verifies an Opportunity name has the specialized format when
+     * Opportunity naming is not configured in NPSP Settings
      */
     @isTest
     private static void shouldCreateOppWithSpecialFormatWhenNoOppNamingSpecified() {
@@ -161,33 +161,15 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-     * @description Verifies if it creates opportunities with specialized format for the
-     * next opportunity when no opportunity naming is specified in NPSP Settings
-     */
-    @isTest
-    private static void shouldCreateOppNameWithSpecialFormatForNextOpportunity() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        
-        createRdSettingsWithStage(PLEDGED_STAGENAME);
-
-        npe03__Recurring_Donation__c rd = createRecurringDonation();
-
-        String expectedOppName = getExpectedSpecializedOppName(rd, closeDates[0]);
-
-        testAndAssertOppService(rd, expectedOppName);
-    }
-
-    /***
-     * @description Verifies if it creates opportunities with opportunity naming format in NPSP Settings.
+     * @description Verifies an Opportunity name is set as configured in NPSP Settings Opportunity naming
      */
     @isTest
     private static void shouldCreateOppNameWithOppNamingSpecifiedInSettings() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         insert new Opportunity_Naming_Settings__c(
-            Name = 'Opp Naming Settings',
-            Opportunity_Name_Format__c = '{!Contact.Name} {!RecordType.Name} {!CloseDate}',
-            Opportunity_Record_Types__c = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType),
+            Name = 'Test Opp Naming Settings',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!CloseDate}',
             Attribution__c = System.Label.oppNamingBoth
         );
 
@@ -199,9 +181,7 @@ private with sharing class RD2_OpportunityService_TEST {
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
         Datetime dt = Datetime.newInstance(closeDates[0].year(), closeDates[0].month(), closeDates[0].day());
-        String expectedOppName = rd.npe03__Donor_Name__c +  ' ' +
-            UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType) + ' ' +
-            dt.format('yyyy.MM.dd');
+        String expectedOppName = rd.npe03__Donor_Name__c + ' ' + dt.format('yyyy.MM.dd');
 
         testAndAssertOppService(rd, expectedOppName);
     }
