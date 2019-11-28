@@ -97,14 +97,6 @@ class GeFormService {
         });
     }
 
-    //temporary storage of Account Id to use for testing
-    accountId;
-    @api
-    setAccountId(id) {
-        this.accountId = id;
-    }
-    //END temporary storage of Account Id to use for testing
-
     /**
      * Takes a list of sections, reads the fields and values, creates a di record, and creates an opportunity from the di record
      * @param sectionList
@@ -121,19 +113,8 @@ class GeFormService {
         //END temporary assignment of Account Id and Donation Donor for testing
 
         const opportunityID = this.createOpportunityFromDataImport(diRecord);
-        return opportunityID;
-    }
 
-    saveAndDryRun(batchId, dataImport) {
-        return new Promise((resolve, reject) => {
-            saveAndDryRunRow({batchId: batchId, dataImport: dataImport})
-                .then((result) => {
-                    resolve(JSON.parse(result));
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+        return opportunityID;
     }
 
     getDataImportRecord(sectionList){
@@ -151,7 +132,7 @@ class GeFormService {
             if (fieldData.hasOwnProperty(key)) {
                 let value = fieldData[key];
 
-                // Get the field mapping wrapper with the CMT record name (this is the key variable). 
+                // Get the field mapping wrapper with the CMT record name (this is the key variable).
                 let fieldWrapper = this.getFieldMappingWrapper(key);
 
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
@@ -160,6 +141,26 @@ class GeFormService {
 
         return diRecord;
     }
+
+    saveAndDryRun(batchId, dataImport) {
+        return new Promise((resolve, reject) => {
+            saveAndDryRunRow({batchId: batchId, dataImport: dataImport})
+                .then((result) => {
+                    resolve(JSON.parse(result));
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
+
+    //temporary storage of Account Id to use for testing
+    accountId;
+    @api
+    setAccountId(id) {
+        this.accountId = id;
+    }
+    //END temporary storage of Account Id to use for testing
 }
 
 const geFormServiceInstance = new GeFormService();
