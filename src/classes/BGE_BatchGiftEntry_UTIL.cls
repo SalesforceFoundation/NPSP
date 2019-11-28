@@ -113,7 +113,9 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     }
 
      /*******************************************************************************************************
-    * @description parses Active_Fields__c for the list of user-defined fields included in the batch config
+    * @description parses Active_Fields__c for the list of user-defined fields included in
+    * the batch config, and ensures that any fields included in the Batch's Matching Rule
+    * field are included.
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return list of field api names
     */
