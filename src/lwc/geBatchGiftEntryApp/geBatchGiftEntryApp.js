@@ -1,7 +1,7 @@
 import {LightningElement, api} from 'lwc';
 import {setAccountId as setServiceAccountId} from 'c/geFormService';
 
-export default class GeFormApp extends LightningElement {
+export default class GeBatchGiftEntryApp extends LightningElement {
     @api batchId;
     @api accountId;
     @api isBatchMode = false; // once we are loading from a batch, just batchId should be
@@ -15,7 +15,7 @@ export default class GeFormApp extends LightningElement {
         const form = this.template.querySelector('c-ge-form-renderer');
         form.isBatchMode = this.isBatchMode;
 
-        const table = this.template.querySelector('c-ge-form-table');
+        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         table.setBatchId(event.target.value);
         table.loadBatch();
     }
@@ -24,7 +24,7 @@ export default class GeFormApp extends LightningElement {
     // with an Account Id
     handleAccountId(event) {
         this.accountId = event.target.value;
-        const table = this.template.querySelector('c-ge-form-table');
+        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         table.setAccountId(event.target.value);
         setServiceAccountId(event.target.value);
     }
@@ -38,13 +38,13 @@ export default class GeFormApp extends LightningElement {
     handleSubmit(event) {
         const latestSubmission =
             event.target.submissions[event.target.submissions.length - 1];
-        const table = this.template.querySelector('c-ge-form-table');
+        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         table.handleFormSubmission(latestSubmission);
     }
 
     handleSectionsRetrieved(event) {
         const formSections = event.target.sections;
-        const table = this.template.querySelector('c-ge-form-table');
+        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         table.handleSectionsRetrieved(formSections);
     }
 }

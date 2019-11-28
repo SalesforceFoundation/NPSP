@@ -1,5 +1,5 @@
 <aura:component implements="lightning:isUrlAddressable">
     <!-- TODO: Delete aura component later. Only used during dev for easy viewing -->
     <!-- Top-level LWC component for Gift Entry Form functionality. -->
-    <c:geFormApp></c:geFormApp>
+    <c:geBatchGiftEntryApp></c:geBatchGiftEntryApp>
 </aura:component>

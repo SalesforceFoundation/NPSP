@@ -13,7 +13,7 @@ import NPSP_DATA_IMPORT_BATCH_FIELD
     from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 
-export default class GeFormTable extends LightningElement {
+export default class GeBatchGiftEntryTable extends LightningElement {
     @api ready = false;
     @api batchId;
     @track data = [];

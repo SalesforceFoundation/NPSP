@@ -3117,7 +3117,8 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
-        <members>geFormApp</members>
+        <members>geBatchGiftEntryApp</members>
+        <members>geBatchGiftEntryTable</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
         <members>geFormField</members>
@@ -3126,7 +3127,6 @@
         <members>geFormRenderer</members>
         <members>geFormSection</members>
         <members>geFormService</members>
-        <members>geFormTable</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
