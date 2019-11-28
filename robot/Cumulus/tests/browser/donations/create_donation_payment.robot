@@ -23,8 +23,7 @@ Create Donation and Opportunity and Create Payment Manually
     Click Related List Button    Payments    New
     Select Window
     Populate Field    Payment Amount    100
-    Click Dropdown    Payment Method
-    Click Link    link=Credit Card
+    Select Value From Dropdown   Payment Method              Credit Card
     Open Date Picker    Payment Date
     Pick Date    Today
     Click Modal Button        Save

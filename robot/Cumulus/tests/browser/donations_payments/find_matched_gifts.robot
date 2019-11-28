@@ -17,8 +17,7 @@ Find Matching Gifts
     Click Link    link=Show more actions
     Click Link    link=Edit
     Populate Lookup Field    Matching Gift Account    &{Org}[Name]
-    Click Dropdown    Matching Gift Status
-    Click Link    link=Potential
+    Select Value From Dropdown   Matching Gift Status              Potential
     Click Modal Button        Save
     &{contact2} =  API Create Contact    Email=skristem@robot.com
     &{opportunity2} =  API Create Opportunity    &{Contact2}[AccountId]    Donation    Name=&{Contact2}[FirstName] $25 donation    Amount=25

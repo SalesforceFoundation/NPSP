@@ -14,8 +14,7 @@ Create Donation from a Contact
     Click Object Button  New Donation
     Populate Form
     ...                       Amount=100
-    Click Dropdown    Stage
-    Click Link    link=Closed Won
+    Select Value From Dropdown   Stage              Closed Won
     Open Date Picker    Close Date
     Pick Date    10
     Click Modal Button        Save

@@ -16,17 +16,13 @@ Create ASC for Related Contact
     Select Tab    Related
     Click Related List Button  Relationships    New
     Populate Lookup Field    Related Contact    &{contact2}[FirstName] &{contact2}[LastName]
-    Click Dropdown            Type
-    Click link    title:Employer
-    Click Dropdown            Related Opportunity Contact Role
-    Click link    title:Soft Credit
+    Select Value From Dropdown   Type              Employer
+    Select Value From Dropdown   Related Opportunity Contact Role              Soft Credit
     Click Modal Button        Save
     Click Related List Button  Relationships    New
     Populate Lookup Field    Related Contact    &{contact3}[FirstName] &{contact3}[LastName]
-    Click Dropdown            Type
-    Click link    title:Coworker
-    Click Dropdown            Related Opportunity Contact Role
-    Click link    title:Solicitor
+    Select Value From Dropdown   Type              Coworker
+    Select Value From Dropdown   Related Opportunity Contact Role              Solicitor
     Click Modal Button        Save
     #&{relation} =  API Create Relationship    &{contact1}[Id]    &{contact3}[Id]    Coworker    ${ns}Related_Opportunity_Contact_Role__c=Solicitor
     &{opportunity} =  API Create Opportunity    &{Contact1}[AccountId]    Donation    Name=&{Contact1}[FirstName] $100 donation    Amount=100

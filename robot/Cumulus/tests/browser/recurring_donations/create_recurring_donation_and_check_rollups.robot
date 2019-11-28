@@ -34,8 +34,7 @@ Create Recurring Donation And Check Rollups
     Store Session Record         Opportunity                    ${opportunity1}[0][Id]
     Go To Record Home            ${opportunity1}[0][Id]
     Click Link                   link=Edit
-    Click Dropdown               Stage
-    Click Link                   link=Closed Won
+    Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
 
     #Find 2nd Opportunity for Recurring Donation and Close It
@@ -43,8 +42,7 @@ Create Recurring Donation And Check Rollups
     Store Session Record         Opportunity                    ${opportunity2}[0][Id]
     Go To Record Home            ${opportunity2}[0][Id]
     Click Link                   link=Edit
-    Click Dropdown               Stage
-    Click Link                   link=Closed Won
+    Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
 
     #Open NPSP Settings and run Rollups Donations Batch job
