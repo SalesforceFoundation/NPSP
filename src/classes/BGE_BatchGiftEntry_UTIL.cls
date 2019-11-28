@@ -144,13 +144,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                     activeFieldNames.add(field.name.substringBefore('__c') + '__r.' + UTIL_Describe.getNameField(referencedObjectName));
                 }
             }
-        } else {
-            //If Active_Fields__c is null, then this Batch is not a BGE Batch and the fields
-            //it is using to render a form come from a Template.  Need to query the
-            //template and get its list of fields to be included in the query.
-            //Manually adding fields needed to match for now for dev
-            activeFieldNames.add('Donation_Date__c');
-            activeFieldNames.add('Donation_Amount__c');
         }
 
         if (String.isNotBlank(batch.Donation_Matching_Rule__c)) {
