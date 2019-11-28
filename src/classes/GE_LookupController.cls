@@ -30,38 +30,43 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group BGE
-* @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Controller for the geTemplateBuilder Lightning Web Component.
+* @group HGE
+* @group-content
+* @description Controller for the geFormFieldLookup Lightning Web Component.
 */
-
-public with sharing class GE_TemplateBuilderCtrl {
+public with sharing class GE_LookupController {
 
     /**
-     * @description Retrieves the render wrapper for gift entry by template name. If the template is not found, it returns the wrapper for the Default template
-     * @return      A render wrapper containing a template and information about the object/field mappings.
-     * @param String template name
+     * Search for an SObject by its name field.
+     *
+     * @param searchValue   Value to search for
+     * @param sObjectType   Type of SObject to Search
+     *
+     * @return              A List<LookupResult> containing records that match the search criteria.
      */
     @AuraEnabled(cacheable=true)
-    public static FORM_RenderWrapper retrieveFormRenderWrapper(String templateName) {
-        return GE_FormRendererService.getRenderWrapper(templateName);
+    public static List<LookupResult> doSearch(String searchValue, String sObjectType) {
+        String likeLike = '%' + searchValue + '%';
+        String queryString = 'SELECT Id, Name FROM ' + String.escapeSingleQuotes(sObjectType) + ' WHERE Name LIKE :likeLike';
+
+        List<LookupResult> results = new List<LookupResult>();
+        for(SObject result : Database.query(queryString)) {
+            results.add(new LookupResult(result));
+        }
+
+        return results;
     }
 
     /**
-     * @description Retrieves the default SGE render wrapper for gift entry.
-     * @return      A render wrapper containing a template and information about the object/field mappings.
+     * Class representing an option for a lookup search result in Gift Entry
      */
-    @AuraEnabled(cacheable=true)
-    public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper() {
-        return GE_FormRendererService.getDefaultSGERenderWrapper();
-    }
+    public class LookupResult {
+        @AuraEnabled public Id value;
+        @AuraEnabled public String displayValue;
 
-    /**
-     * @description Retrieves the default BGE render wrapper for gift entry. 
-     * @return      A render wrapper containing a template and information about the object/field mappings.
-     */
-    @AuraEnabled(cacheable=true)
-    public static FORM_RenderWrapper retrieveDefaultBGERenderWrapper() {
-        return GE_FormRendererService.getDefaultBGERenderWrapper();
+        public LookupResult(SObject result) {
+            this.value = (Id)result.get('Id');
+            this.displayValue = (String)result.get('Name');
+        }
     }
 }
