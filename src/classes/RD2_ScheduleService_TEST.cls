@@ -189,6 +189,54 @@ private with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
+    * @description Verifies only future schedule is created when RD is edited twice with future schedules
+    */
+    @isTest
+    private static void shouldCreateOneCurrentAndOneFutureSchedule() {
+
+        npe03__Recurring_Donation__c rd =
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withMockId()
+                .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
+                .withAmount(400)
+                .withPaymentMethod('Check')
+                .withInstallmentPeriodWeekly()
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.newInstance(2019, 9, 15))
+                .withStartDate(Date.newInstance(2019, 9, 15))
+                .build();
+
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
+
+        schedules.add(schedules[0].clone());
+        schedules[1].StartDate__c = Date.today().addMonths(1);
+        schedules[1].InstallmentAmount__c = 500;
+        schedules[0].EndDate__c = schedules[1].StartDate__c.addDays(-1);
+
+        rd.StartDate__c = Date.today().addMonths(2);
+        rd.npe03__Amount__c = 600;
+
+        TDTM_Runnable.DMLWrapper dmlUpdates = new RD2_ScheduleService().getUpdatedSchedules(rd, schedules);
+
+        System.assertEquals(dmlUpdates.objectsToUpdate.size(), 2, 'Number of updated schedules should equal 2');
+
+        System.assertEquals(
+            ((RecurringDonationSchedule__c)dmlUpdates.objectsToInsert[0]).StartDate__c.addDays(-1),
+            ((RecurringDonationSchedule__c)dmlUpdates.objectsToUpdate[0]).EndDate__c,
+            'End date should be one day earlier than Start Date of new donation');
+
+        System.assertEquals(
+            ((RecurringDonationSchedule__c)dmlUpdates.objectsToUpdate[1]).StartDate__c.addDays(-1),
+            ((RecurringDonationSchedule__c)dmlUpdates.objectsToUpdate[1]).EndDate__c,
+            'End date should be one day earlier than Start Date of the same donation');
+
+        System.assertEquals(
+            ((RecurringDonationSchedule__c)dmlUpdates.objectsToInsert[0]).EndDate__c, null,
+            'End date should be null on new donation');
+
+    }
+
+    /***
     * @description Verifies next donation date is not calculated for closed recurring donation.
     */
     @isTest

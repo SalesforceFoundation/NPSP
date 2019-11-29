@@ -36,6 +36,15 @@
 */
 public inherited sharing class RD2_Constants {
 
+    /***
+    * @description Enum to specify behavior of how to handle open opportunities when the related RD is closed
+    */ 
+    public enum CloseActions { 
+        Delete_Open_Opportunities, 
+        Mark_Opportunities_Closed_Lost, 
+        No_Action 
+    }
+
     /**
     * @description Recurring Donation "Installment Period" picklist API values
     */

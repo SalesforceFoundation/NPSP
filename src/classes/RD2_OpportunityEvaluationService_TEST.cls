@@ -38,6 +38,9 @@
 private class RD2_OpportunityEvaluationService_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
+
+    private static final Date START_DATE = Date.newInstance(2019, 9, 15);
 
     /****
     * @description Creates data required for unit tests
@@ -57,12 +60,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact)
-            .withPaymentMethod('Check')
-            .withInstallmentPeriodMonthly()
-            .withInstallmentFrequency(1)
             .withDayOfMonth('20')
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
 
@@ -71,13 +69,12 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
 
-        Opportunity opp = [SELECT Id, Amount, AccountId, Primary_Contact__c, StageName, CloseDate
-            FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id];
-
-        System.assertEquals(rd.npe03__Amount__c, opp.Amount, 'The Opportunity Amount does not match the RD Amount');
-        System.assertEquals(rd.npe03__Contact__c, opp.Primary_Contact__c, 'The Opportunity Contact does not match the RD Contact');
-        System.assertEquals(rd.npe03__Next_Payment_Date__c, opp.CloseDate, 'The Opportunity CloseDate does not match the RD NextDonationDate');
+        System.assertEquals(1, opps.size(), 'The number of returned Opp should match');
+        System.assertEquals(rd.npe03__Amount__c, opps[0].Amount, 'The Opportunity Amount does not match the RD Amount');
+        System.assertEquals(rd.npe03__Contact__c, opps[0].Primary_Contact__c, 'The Opportunity Contact does not match the RD Contact');
+        System.assertEquals(rd.npe03__Next_Payment_Date__c, opps[0].CloseDate, 'The Opportunity CloseDate does not match the RD NextDonationDate');
     }
 
     /**
@@ -90,12 +87,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact)
             .withStatusClosed()
-            .withPaymentMethod('Check')
-            .withInstallmentPeriodMonthly()
-            .withInstallmentFrequency(1)
             .withDayOfMonth('20')
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
 
@@ -105,56 +97,8 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        List<Opportunity> opps = [SELECT Id, Amount, AccountId, Primary_Contact__c, StageName, CloseDate
-            FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id];
+        List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(0, opps.size(), 'There should not have been any Installment Opps created for this RD');
-    }
-
-    /**
-     * @description Verify that the Recurring Donations are eligible to have an installment opportunity created
-     */
-    @IsTest
-    private static void shouldBeEligibleForNewInstallmentOpp() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-
-        npe03__Recurring_Donation__c rd1 = getRecurringDonationBuilder()
-            .withPaymentMethod('Check')
-            .withInstallmentPeriodMonthly()
-            .withInstallmentFrequency(1)
-            .withDayOfMonth('20')
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
-            .withCalculateNextDonationDate()
-            .build();
-        rd1 = mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.getNewSchedules(rd1));
-
-        npe03__Recurring_Donation__c rd2 = getRecurringDonationBuilder()
-            .withPaymentMethod('Check')
-            .withInstallmentPeriodWeekly()
-            .withInstallmentFrequency(3)
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
-            .withCalculateNextDonationDate()
-            .build();
-        rd2 = mockRecurringDonationFullQueryResult(rd2, new List<Opportunity>(), scheduleService.getNewSchedules(rd2));
-
-        npe03__Recurring_Donation__c rd3 = getRecurringDonationBuilder()
-            .withPaymentMethod('Check')
-            .withInstallmentPeriodYearly()
-            .withInstallmentFrequency(1)
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 6, 1))
-            .withCalculateNextDonationDate()
-            .build();
-        rd3 = mockRecurringDonationFullQueryResult(rd3, new List<Opportunity>(), scheduleService.getNewSchedules(rd3));
-
-        RD2_OpportunityEvaluationService oppEvalSvc = new RD2_OpportunityEvaluationService();
-        oppEvalSvc.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
-
-        System.assertEquals(true, oppEvalSvc.isCandidate(rd1), 'RD1 should be eligible for an Installment Opp');
-        System.assertEquals(true, oppEvalSvc.isCandidate(rd2), 'RD2 should be eligible for an Installment Opp');
-        System.assertEquals(true, oppEvalSvc.isCandidate(rd3), 'RD3 should be eligible for an Installment Opp');
     }
 
     /**
@@ -168,50 +112,40 @@ private class RD2_OpportunityEvaluationService_TEST {
         // Closed Recurring Donation
         npe03__Recurring_Donation__c rd1 = getRecurringDonationBuilder()
             .withStatusClosed()
-            .withPaymentMethod('Check')
-            .withInstallmentPeriodMonthly()
-            .withInstallmentFrequency(1)
             .withDayOfMonth('20')
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
         rd1 = mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.getNewSchedules(rd1));
 
         // Recurring Donation with no Schedule records
         npe03__Recurring_Donation__c rd2 = getRecurringDonationBuilder()
-            .withPaymentMethod('Check')
             .withInstallmentPeriodWeekly()
             .withInstallmentFrequency(3)
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
         rd2 = mockRecurringDonationFullQueryResult(rd2, new List<Opportunity>(), new List<RecurringDonationSchedule__c>());
 
         // Recurring Donation with an empty NextDonationDate
         npe03__Recurring_Donation__c rd3 = getRecurringDonationBuilder()
-            .withPaymentMethod('Check')
             .withInstallmentPeriodYearly()
             .withInstallmentFrequency(1)
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
             .withStartDate(Date.newInstance(2019, 6, 1))
             .withCalculateNextDonationDate()
             .build();
         rd3.npe03__Next_Payment_Date__c = null;
         rd3 = mockRecurringDonationFullQueryResult(rd3, new List<Opportunity>(), scheduleService.getNewSchedules(rd3));
 
-        RD2_OpportunityEvaluationService oppEvalSvc = new RD2_OpportunityEvaluationService();
-        oppEvalSvc.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
+        evalService.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
 
-        System.assertEquals(false, oppEvalSvc.isCandidate(rd1), 'Closed RD1 should not be eligible for an Installment Opp');
-        System.assertEquals(false, oppEvalSvc.isCandidate(rd2), 'RD2 with no Schedules should not be eligible for an Installment Opp');
-        System.assertEquals(false, oppEvalSvc.isCandidate(rd3), 'RD3 without a NextDonationDate should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewRecurringDonation(rd1), 'Closed RD should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewRecurringDonation(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewRecurringDonation(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
     }
 
     /**
      * @description Verify that the Recurring Donations are recognized as "New" if there are no related Opps
-     * or "Not New" if there are related Opps.
+     * or "Not New" if there have related Opps.
      */
     @IsTest
     private static void shouldDetermineIfNewOrPreExistingRecurringDonation() {
@@ -220,23 +154,15 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         // New Opportunity - Is New RD
         npe03__Recurring_Donation__c rdNew = getRecurringDonationBuilder()
-            .withPaymentMethod('Check')
-            .withInstallmentPeriodMonthly()
-            .withInstallmentFrequency(1)
             .withDayOfMonth('20')
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
         rdNew = mockRecurringDonationFullQueryResult(rdNew, new List<Opportunity>(), scheduleService.getNewSchedules(rdNew));
 
         // Old Opportunity (has related Opps) - Not New RD
         npe03__Recurring_Donation__c rdOld = getRecurringDonationBuilder()
-            .withPaymentMethod('Check')
             .withInstallmentPeriodWeekly()
             .withInstallmentFrequency(3)
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
             .withCalculateNextDonationDate()
             .build();
 
@@ -252,12 +178,165 @@ private class RD2_OpportunityEvaluationService_TEST {
         };
         rdOld = mockRecurringDonationFullQueryResult(rdOld, opps, scheduleService.getNewSchedules(rdOld));
 
-        RD2_OpportunityEvaluationService oppEvalSvc = new RD2_OpportunityEvaluationService();
-        oppEvalSvc.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
+        evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
 
-        System.assertEquals(true, oppEvalSvc.isNewRecurringDonation(rdNew), 'RD1 should be a New Recurring Donation');
-        System.assertEquals(false, oppEvalSvc.isNewRecurringDonation(rdOld), 'RD2 should not be a new Recurring Donation');
+        System.assertEquals(true, evalService.isNewRecurringDonation(rdNew), 
+            'RD having Schedules and no related Opp should be eligible for an Installment Opp');
+
+        System.assertEquals(false, evalService.isNewRecurringDonation(rdOld), 
+            'RD having Schedules and a related Opp should not be eligible for an Installment Opp');
     }
+
+    /**
+     * @description Verifies open Opportunities are marked as Closed Lost when RD is closed and
+     * Recurring Donation settings Open Opportunity Behaviour is set to mark open Opps as Closed Lost
+     */
+    @IsTest
+    private static void shouldMarkOpenOppsAsClosedLostWhenRDIsClosed() {        
+        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
+
+        npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
+        List<Opportunity> oldOpps = rd.npe03__Donations__r;
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+
+        System.assertEquals(oldOpps.size(), oppById.size(), 'The number of Opps should match');
+        System.assertEquals(true, oppById.get(oldOpps[0].Id).isWon, 'The closed Opp should stay won');
+        System.assertEquals(true, oppById.get(oldOpps[1].Id).isClosed, 'Open Opp should be closed now');
+        System.assertEquals(false, oppById.get(oldOpps[1].Id).isWon, 'Open Opp should be lost won now');
+    }
+
+    /**
+     * @description Verifies open Opportunities are deleted when RD is closed and
+     * Recurring Donation settings Open Opportunity Behaviour is set to delete open Opps
+     */
+    @IsTest
+    private static void shouldDeleteOpenOppsWhenRDIsClosed() {
+        String closeAction = RD2_Constants.CloseActions.Delete_Open_Opportunities.name();
+
+        npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
+        List<Opportunity> oldOpps = rd.npe03__Donations__r;
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'The number of Opps should match');
+        System.assertEquals(oldOpps[0].Name, opps[0].Name, 'The closed won Opp should not be deleted');
+        System.assertEquals(true, opps[0].isWon, 'The closed won Opp should be unchanged');
+    }
+
+    /**
+     * @description Verifies open Opportunities are unchanged when RD is closed and
+     * Recurring Donation settings Open Opportunity Behaviour is set to not change open Opps
+     */
+    @IsTest
+    private static void shouldNotChangeOpenOppsWhenRDIsClosed() {        
+        String closeAction = RD2_Constants.CloseActions.No_Action.name();
+
+        npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
+        List<Opportunity> oldOpps = rd.npe03__Donations__r;
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+
+        System.assertEquals(oldOpps.size(), oppById.size(), 'The number of Opps should match');
+        System.assertEquals(true, oppById.get(oldOpps[0].Id).isWon, 'Closed Opp should be unchanged');
+        System.assertEquals(false, oppById.get(oldOpps[1].Id).isClosed, 'Open Opp should stay open');
+    }
+
+    /**
+     * @description Sets up data to test open Installment Opportunity behaviour on RD close
+     * @param closeAction Recurring Donation settings Open Opportunity Behaviour close action
+     * @return npe03__Recurring_Donation__c Created Recurring Donation with related Opps
+     */
+    private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Open_Opportunity_Behavior__c = closeAction
+            )
+        );
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth('20')
+            .withCalculateNextDonationDate()
+            .build();
+        insert rd;
+        
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(rd.npe03__Next_Payment_Date__c.addMonths(-1))
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(rd.npe03__Next_Payment_Date__c)
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(), 'The number of returned Opps should match');
+
+        opps[0] = oppById.get(opps[0].Id);
+        opps[1] = oppById.get(opps[1].Id);
+
+        System.assertEquals(true, opps[0].isClosed, 'The first Opp should be closed');
+        System.assertEquals(true, opps[0].isWon, 'The first Opp should be won');
+        System.assertEquals(false, opps[1].isClosed, 'The second Opp should be open');
+
+        Test.startTest();
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
+        Test.stopTest();
+
+        rd = mockRecurringDonationFullQueryResult(rd, oppById.values(), null);
+        return rd;
+    }
+
+    /**
+     * @description Verifies no exception is thrown when RD is closed and
+     * has no Opportunities
+     */
+    @IsTest
+    private static void shouldNotThrowExceptionWhenRDWithoutOppsIsClosed() { 
+        Exception actualException;
+        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Open_Opportunity_Behavior__c = closeAction
+            )
+        );
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth('20')
+            .withCalculateNextDonationDate()
+            .build();
+        insert rd;
+
+        Test.startTest();
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        try {
+            update rd;
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+        Test.stopTest();
+
+        System.assertEquals(null, actualException, 'No exception should be thrown when closed RD has no Opps');
+    }
+
 
 
     // Helpers
@@ -280,23 +359,32 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @return TEST_RecurringDonationBuilder instance
      */
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
-        return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withDefaultValues()
-            .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-            .withCalculateNextDonationDate()
-            .withAmount(100);
+        return getRecurringDonationBuilder(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType));
     }
 
     /**
      * @description Base common RecurringDonation test structure for all test methods to start from
+     * @param c Contact
      * @return TEST_RecurringDonationBuilder instance
      */
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder(Contact c) {
+        return getRecurringDonationBuilder(c.Id);
+    }
+
+    /**
+     * @description Base common RecurringDonation test structure for all test methods to start from
+     * @param contactId Contact Id
+     * @return TEST_RecurringDonationBuilder instance
+     */
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder(Id contactId) {
         return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withDefaultValues()
-            .withContact(c.Id)
-            .withCalculateNextDonationDate()
-            .withAmount(100);
+            .withContact(contactId)
+            .withAmount(100)            
+            .withPaymentMethod('Check')
+            .withDateEstablished(START_DATE)
+            .withStartDate(START_DATE)
+            .withCalculateNextDonationDate();
     }
 
     /**
@@ -309,6 +397,14 @@ private class RD2_OpportunityEvaluationService_TEST {
      */
     private static npe03__Recurring_Donation__c mockRecurringDonationFullQueryResult(npe03__Recurring_Donation__c rd,
             List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
+
+        if (opps == null) {
+            opps = new List<Opportunity>();
+        }
+
+        if (schedules == null) {
+            schedules = new List<RecurringDonationSchedule__c>();
+        }
 
         Contact contact = new Contact(
             Id = rd.npe03__Contact__c,
