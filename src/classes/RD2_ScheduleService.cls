@@ -37,6 +37,11 @@
 
 public without sharing class RD2_ScheduleService {
 
+    /**
+    * @description Date unit conversion factor for Recurring Donation weekly period
+    */
+    private final Integer DAYS_IN_WEEK = 7;
+
     @TestVisible
     private Date currentDate {
         get {
@@ -92,6 +97,15 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
+    * @description Determines whether '1st and 15th' is the schedule selected.
+    * @param rd Recurring Donation record
+    * @return Boolean
+    */
+    private Boolean isFirstAndFifteenth(npe03__Recurring_Donation__c rd) {
+        return rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
+    }
+
+    /***
     * @description Synchronizes the schedule records to match an updated recurring donation
     * @param rd Recurring Donation record
     * @param schedules Recurring Donation Schedule record
@@ -104,11 +118,17 @@ public without sharing class RD2_ScheduleService {
 
         if (schedules != null) {
             for (RecurringDonationSchedule__c schedule : schedules) {
-                if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+
+                if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c <= currentDate) {
                     schedule.EndDate__c = newStartDate.addDays(-1);
+
+                } else if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c > currentDate) {
+                    schedule.EndDate__c = schedule.StartDate__c.addDays(-1);
+
                 } else {
                     schedule.EndDate__c = currentDate;
                 }
+
                 scheduleChanges.objectsToUpdate.add(schedule);
             }
         }
@@ -117,6 +137,7 @@ public without sharing class RD2_ScheduleService {
         for (RecurringDonationSchedule__c newSchedule : newSchedules) {
             newSchedule.StartDate__c = newStartDate;
         }
+
         scheduleChanges.objectsToInsert.addAll(newSchedules);
 
         return scheduleChanges;
@@ -187,6 +208,10 @@ public without sharing class RD2_ScheduleService {
         Date nextDate;
         Date previousDate;
 
+        if (rdSchedules == null) {
+            return nextDate;
+        }
+
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
             nextDate = getNextDonationDateGreaterThanToday(schedule);
 
@@ -256,7 +281,7 @@ public without sharing class RD2_ScheduleService {
                  schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
 
             if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
-                frequency *= 7;
+                frequency *= DAYS_IN_WEEK;
             }
 
             unitsBetween = firstValid.daysBetween(currentDate);
@@ -302,12 +327,117 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Determines whether '1st and 15th' is the schedule selected.
-    * @param rd Recurring Donation record
-    * @return Boolean
+    * @description Performs a full analysis and rebuild of the Schedule records for a Recurring Donation,
+    * but does not commit the schedule records to the database.  Uses the active schedules for the RD
+    * to calculate the Next Donation Date and store onto the RD record (in a Before Update context,
+    * thus avoiding the extra DML against the object).
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
     */
-    private Boolean isFirstAndFifteenth(npe03__Recurring_Donation__c rd) {
-        return rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
+    public Map<Id, List<RecurringDonationSchedule__c>> getAllRecurringDonationSchedules(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
+
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = getExistingSchedules(rds);
+
+        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = getRecurringDonationsNeedingScheduleUpdates(rds, oldRds, TDTM_Runnable.Action.BeforeUpdate);
+
+        TDTM_Runnable.DmlWrapper revisedSchedules;
+        Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId = new Map<Id, List<RecurringDonationSchedule__c>>();
+
+        for (npe03__Recurring_Donation__c rd : filteredRecurringDonations.values()) {
+
+            revisedSchedules = getUpdatedSchedules(rd, schedulesByRdId.get(rd.Id));
+
+            for (SObject sobj : revisedSchedules.objectsToUpdate) {
+                addUpdatedSchedules((RecurringDonationSchedule__c)sobj, newSchedulesByRdId);
+            }
+
+            for (SObject sobj : revisedSchedules.objectsToInsert) {
+                addUpdatedSchedules((RecurringDonationSchedule__c)sobj, newSchedulesByRdId);
+            }
+        }
+
+        // Merge the schedules from RDs NOT needing schedule updates with the updated schedules
+        for (Id rdId : newSchedulesByRdId.keySet()) {
+            schedulesByRdId.put(rdId, newSchedulesByRdId.get(rdId));
+        }
+
+        return schedulesByRdId;
     }
 
+    /***
+    * @description Filters recurring donations to determine which need schedule updates
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    */
+    public Map<Id, npe03__Recurring_Donation__c> getRecurringDonationsNeedingScheduleUpdates(
+            List<npe03__Recurring_Donation__c> rds,
+            List<npe03__Recurring_Donation__c> oldRds,
+            TDTM_Runnable.Action triggerAction)
+    {
+
+        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>();
+        oldRdsById.putAll(oldRds);
+
+        Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = new Map<Id, npe03__Recurring_Donation__c>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
+
+            if (isScheduleUpdateNeeded(rd, oldRd)) {
+
+                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
+                    rd.StartDate__c == oldRd.StartDate__c &&
+                    rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+                    rd.StartDate__c = Date.today();
+                }
+
+                filteredRecurringDonations.put(rd.Id, rd);
+            }
+        }
+
+        return filteredRecurringDonations;
+    }
+
+    /***
+    * @description Retrieves recurring donation schedules associated with recurring donation list
+    * @param rds List<npe03__Recurring_Donation__c>
+    */
+    public Map<Id, List<RecurringDonationSchedule__c>> getExistingSchedules(List<npe03__Recurring_Donation__c> rds) {
+
+        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
+
+        for (RecurringDonationSchedule__c oldSchedule : [
+                SELECT RecurringDonation__c,
+                        StartDate__c,
+                        EndDate__c,
+                        InstallmentFrequency__c,
+                        InstallmentPeriod__c,
+                        DayOfMonth__c
+                FROM RecurringDonationSchedule__c
+                WHERE RecurringDonation__c IN :rds
+                AND Active__c = true
+        ]) {
+            if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
+                oldSchedules.put(oldSchedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
+            }
+            oldSchedules.get(oldSchedule.RecurringDonation__c).add(oldSchedule);
+        }
+
+        return oldSchedules;
+    }
+
+    /***
+    * @description Adds recurring donation schedules to map by recurring donation Id
+    * @param rd SObject
+    * @param newSchedulesByRdId Map<Id, List<RecurringDonationSchedule__c>>
+    */
+    public void addUpdatedSchedules(RecurringDonationSchedule__c rd, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
+
+        if (rd.EndDate__c == null || (rd.EndDate__c >= Date.today() && rd.StartDate__c < rd.EndDate__c)) {
+
+            if (!newSchedulesByRdId.containsKey(rd.RecurringDonation__c)) {
+                newSchedulesByRdId.put(rd.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
+            }
+            newSchedulesByRdId.get(rd.RecurringDonation__c).add(rd);
+        }
+    }
 }
