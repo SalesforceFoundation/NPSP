@@ -36,8 +36,33 @@
 */
 public class RD2_DataMigrationMapper {
 
+    /**
+    * @description Contains Recurring Donation custom settings
+    */
+    private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+
+    /**
+    * @description Recurring Donation to convert to enhanced format
+    */
     private npe03__Recurring_Donation__c rd;
-    private List<Opportunity> opps;
+
+    /**
+    * @description All Opportunities related to the Recurring Donation
+    */
+    private List<Opportunity> allRelatedOpps;
+
+    /**
+    * @description Related Open Opportunities to void
+    */
+    public List<Opportunity> voidOpenOpps {
+        get {
+            if (voidOpenOpps == null) {
+                voidOpenOpps = getOpenOpportunitiesToVoid();
+            }
+            return voidOpenOpps;
+        }
+        private set;
+    }
 
     /**
      * @description Constructor
@@ -48,9 +73,10 @@ public class RD2_DataMigrationMapper {
 
     /**
      * @description Adds related Opportunities to the mapper
+     * @param opps Recurring Donation related Opportunities
      */
-    public RD2_DataMigrationMapper withRelatedOpportunities(List<Opportunity> opps) {
-        this.opps = opps;
+    public RD2_DataMigrationMapper withRelatedOpportunities(List<Opportunity> allRelatedOpps) {
+        this.allRelatedOpps = allRelatedOpps;
         return this;
     }
 
@@ -69,6 +95,8 @@ public class RD2_DataMigrationMapper {
         setDayOfMonth(rd);
         setStatus(rd);
         setOtherFields(rd);
+
+        validateOpenOpportunities();
 
         return rd;
     }
@@ -165,18 +193,19 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Sets Recurring Donation Start Date field
+     * @description Sets Recurring Donation Start Date field as the earliest Opp Close Date.
+     * If the Recurring Donation has no Opportunity, the Start Date is Date Established.
      * @param rd Recurring Donation in the legacy format
      * @return void
      */
     private void setStartDate(npe03__Recurring_Donation__c rd) {
 
-        if (opps == null || opps.isEmpty()) {
+        if (allRelatedOpps == null || allRelatedOpps.isEmpty()) {
             rd.StartDate__c = rd.npe03__Date_Established__c;
 
         } else {
             Date startDate;
-            for (Opportunity opp : opps) {
+            for (Opportunity opp : allRelatedOpps) {
                 if (startDate == null || startDate > opp.CloseDate) {
                     startDate = opp.CloseDate;
                 }
@@ -264,5 +293,52 @@ public class RD2_DataMigrationMapper {
         rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
     }
 
+    /**
+     * @description Extracts open installment Opportunities with Close Date >= today and return all but the first one.
+     * These Opportunities will become void (either closed lost or deleted).
+     * @return List<Opportunity> Open Opportunities
+     */
+    private void validateOpenOpportunities() {
+        if (voidOpenOpps.isEmpty()) {
+            return;
+        }
+
+        if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name()) {
+            throw new MigrationException(System.Label.RD2_DataMigrationInvalidCloseAction);
+        }
+    }
+
+    /**
+     * @description Extracts open installment Opportunities with Close Date >= today and
+     * return all but the Opportunity with the earliest Close Date.
+     * These Opportunities will become void (either closed lost or deleted).
+     * @return List<Opportunity> Open Opportunities
+     */
+    private List<Opportunity> getOpenOpportunitiesToVoid() {
+        List<Opportunity> opps = new List<Opportunity>();
+
+        if (allRelatedOpps == null || allRelatedOpps.isEmpty()) {
+            return opps;
+        }
+
+        final Date today = System.today();
+        for (Opportunity opp : allRelatedOpps) {
+            if (opp.IsClosed == false && opp.CloseDate >= today) {
+                opps.add(opp);
+            }
+        }
+
+        if (!opps.isEmpty()) {
+            // Exclude the earliest Close Date Open Opp.
+            // Opps are ordered by the Close Date.
+            opps.remove(0);
+        }
+
+        return opps;
+    }
+
+    /**
+     * @description Exception thrown when Recurring Donation cannot be converted to the enhanced format
+     */
     public class MigrationException extends Exception { }
 }

@@ -335,7 +335,9 @@ public class ERR_Handler {
         }
 
         for (Error__c error : errorResult.errorRecords) {
-            error.Context_Type__c = context;
+            if (String.isBlank(error.Context_Type__c)) {
+                error.Context_Type__c = context;
+            }
         }
 
         processErrorsOnly(errorResult.errorRecords, context);

@@ -37,7 +37,8 @@
 @IsTest(isParallel=true)
 private class RD2_DataMigration_TEST {
 
-    private static final Date DATE_ESTABLISHED = Date.newInstance(2010, 12, 23);
+    private static final Date TODAY = System.today();
+    private static final Date DATE_ESTABLISHED = TODAY.addMonths(-3);
     private static final Decimal AMOUNT_VALUE = 100;
 
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
@@ -58,7 +59,7 @@ private class RD2_DataMigration_TEST {
      * Enhanced Recurring Donations is not enabled
      */
     @IsTest
-    private static void shouldLaunchBatchJobWithNothingProcessed() {
+    private static void shouldThrowExceptionAndNotConvertRecordsWhenEnablementIsOff() {
         insert getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .build();
@@ -86,18 +87,12 @@ private class RD2_DataMigration_TEST {
      * Enhanced Recurring Donations is enabled
      */
     @IsTest
-    private static void shouldLaunchBatchJobWithOneRecordProcessed() {
+    private static void shouldConvertRecordsWhenEnablementIsOn() {
         insert getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .build();
 
-        //enablement should be done after the legacy Recurring Donation has been created
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        Database.executeBatch(batch);
-        Test.stopTest();
+        runDataMigration();
 
         AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
         System.assertEquals(1, job.JobItemsProcessed,
@@ -116,24 +111,37 @@ private class RD2_DataMigration_TEST {
             .build();
         insert rd;
 
-        //enablement should be done after the legacy Recurring Donation has been created
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        delete oppGateway.getRecords(rd);
 
-        Test.startTest();
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
-        Test.stopTest();
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        insert new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED.addMonths(1))
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+
+        runDataMigration();
 
         npe03__Recurring_Donation__c convertedRD = getRecords()[0];
-        Date minCloseDate = (Date) [
-            SELECT MIN(CloseDate) minCloseDate
-            FROM Opportunity
-            WHERE npe03__Recurring_Donation__c = :rd.Id
-            GROUP BY rollup(npe03__Recurring_Donation__c)
-        ][0].get('minCloseDate');
 
         System.assertEquals(rd.npe03__Date_Established__c, convertedRD.npe03__Date_Established__c, 'Date Established should be unchanged');
-        System.assertEquals(minCloseDate, convertedRD.StartDate__c, 'Start Date should match with the earliest Opp Close Date');
+        System.assertEquals(DATE_ESTABLISHED.addMonths(1), convertedRD.StartDate__c, 'Start Date should match with the earliest Opp Close Date');
         System.assertEquals(rd.Day_of_Month__c, convertedRD.Day_of_Month__c, 'Day of Month should be unchanged');
 
         System.assertEquals(rd.npe03__Amount__c, convertedRD.npe03__Amount__c, 'Amount should be unchanged');
@@ -591,21 +599,15 @@ private class RD2_DataMigration_TEST {
 
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>{
             new RD2_DataMigrationMapper(
-                rdBuilder
-                    .withOpenEndedStatusOpen()
-                    .build()
+                rdBuilder.withOpenEndedStatusOpen().build()
             ).convertToEnhancedRD(),
 
             new RD2_DataMigrationMapper(
-                rdBuilder
-                    .withOpenEndedStatusNone()
-                    .build()
+                rdBuilder.withOpenEndedStatusNone().build()
             ).convertToEnhancedRD(),
 
             new RD2_DataMigrationMapper(
-                rdBuilder
-                    .withOpenEndedStatus(null)
-                    .build()
+                rdBuilder.withOpenEndedStatus(null).build()
             ).convertToEnhancedRD()
         };
 
@@ -671,12 +673,7 @@ private class RD2_DataMigration_TEST {
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
-        Test.stopTest();
+        runDataMigration();
 
         rdSchedules = rdScheduleGateway.getRecords(rd);
 
@@ -703,12 +700,7 @@ private class RD2_DataMigration_TEST {
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
-        Test.stopTest();
+        runDataMigration();
 
         rdSchedules = rdScheduleGateway.getRecords(rd);
 
@@ -735,11 +727,7 @@ private class RD2_DataMigration_TEST {
         //reset custom settings static var
         UTIL_ListCustomSettingsFacade.mapCustomInstallmentSettings = null;
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        Id batchJobId = Database.executeBatch(new RD2_DataMigration_BATCH());
-        Test.stopTest();
+        Id batchJobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'Validation error should be logged');
@@ -775,17 +763,12 @@ private class RD2_DataMigration_TEST {
         update rd;
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
 
-
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        Id batchJobId = Database.executeBatch(new RD2_DataMigration_BATCH());
-        Test.stopTest();
+        Id batchJobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'Validation error should be logged');
 
-        System.assertEquals(System.Label.RD_DonorIsRequired, errors[0].Full_Message__c, 'Error message should match');
+        System.assertEquals(true, errors[0].Full_Message__c.contains(System.Label.RD_DonorIsRequired), 'Error message should match');
         System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
@@ -799,20 +782,13 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldApplyCloseActionOnOpenOppsWhenMigratedRDIsClosed() {
-        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
-
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                npe03__Open_Opportunity_Behavior__c = closeAction
-            )
-        );
+        setCloseActionSettingsToClosedLost();
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withOpenEndedStatusClosed()
             .build();
         insert rd;
-        rd = getRecords()[0];
 
         TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
             .withContact(rd.npe03__Contact__c)
@@ -833,19 +809,348 @@ private class RD2_DataMigration_TEST {
         };
         insert opps;
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
-        Test.stopTest();
+        runDataMigration();
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
 
-        System.assertEquals(2, opps.size(), 'Number of Opportunities should match');
-        System.assertEquals(true, oppById.get(opps[0].Id).isWon, 'Already closed Opp should stay won');
-        System.assertEquals(true, oppById.get(opps[1].Id).isClosed, 'Open Opp should be closed now');
-        System.assertEquals(false, oppById.get(opps[1].Id).isWon, 'Open Opp should be lost won now');
+        System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
+        System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
+        System.assertEquals(true, oppById.get(opps[1].Id).IsClosed, 'Open Opp should be closed now');
+        System.assertEquals(false, oppById.get(opps[1].Id).IsWon, 'Open Opp should be lost won now');
+    }
+
+
+    /**
+     * @description Verifies Recurring Donation with no Open Opportunity is converted successfully
+     */
+    @IsTest
+    private static void shouldConvertRDWhenItHasNoOpenOpps() {
+        setCloseActionSettingsToClosedLost();
+
+        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withCloseDate(TODAY)
+            .withClosedWonStage()
+            .build();
+
+        runDataMigration();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'Number of Opportunities should stay the same');
+        System.assertEquals(true, opps[0].IsClosed && opps[0].IsWon, 'Existing Closed Won Opp should be unchanged');
+    }
+
+    /**
+     * @description Verifies Open Opportunities having Close Date < today are not voided
+     */
+    @IsTest
+    private static void shouldNotVoidOpenOppWhenCloseDateIsInPast() {
+        setCloseActionSettingsToClosedLost();
+
+        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
+
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(-1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(-1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        runDataMigration();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
+        System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
+        System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
+        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'Open Opp with Close Date equal to yesterday should stay open');
+    }
+
+    /**
+     * @description Verifies if the earliest future Open Opportunity has Close Date = today,
+     * it stays open and other future Open Opportunities are voided.
+     */
+    @IsTest
+    private static void shouldNotVoidFirstFutureOpenOppWhenCloseDateIsToday() {
+        setCloseActionSettingsToClosedLost();
+
+        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
+
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(-1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        runDataMigration();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
+        System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
+        System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
+        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'Open Opp with Close Date equal to today should stay open');
+
+        System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon,
+            'The next future Open Opp should be Closed Lost');
+    }
+
+    /**
+     * @description Verifies if the earliest future Open Opportunity has Close Date > today,
+     * and there is no Open Opp with Close = today, then the Open Opp stays open
+     * and other future Open Opportunities are voided.
+     */
+    @IsTest
+    private static void shouldNotVoidFirstFutureOpenOpp() {
+        setCloseActionSettingsToClosedLost();
+
+        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
+
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(-1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(2))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        runDataMigration();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
+        System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
+        System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
+        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'The first future Open Opp should stay open');
+
+        System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon,
+            'The next future Open Opp should be Closed Lost');
+    }
+
+    /**
+     * @description Verifies the earliest Open Opportunity having Close Date >= today stays open
+     * and other future Open Opportunities are deleted when RD Settings close action is deletion.
+     */
+    @IsTest
+    private static void shouldDeleteFutureOpenOppsWhenCloseActionIsDeletion() {
+        setCloseActionSettingsToDelete();
+
+        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
+
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(-1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(2))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        runDataMigration();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(opps.size() - 1, oppById.size(), 'The next future Open Opportunity should be deleted');
+        System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
+        System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
+        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'The first future Open Opp should stay open');
+    }
+
+    /**
+     * @description Verifies Recurring Donation with one Open Opportunity having Close Date >= today
+     * is converted successfully when RD Settings close action is no action.
+     */
+    @IsTest
+    private static void shouldConvertRDWhenItHasOneOpenFutureOppAndCloseActionIsNoAction() {
+        setCloseActionSettingsToNoAction();
+
+        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
+
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(-1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        runDataMigration();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
+        System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
+        System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
+        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'The first future Open Opp should stay open');
+    }
+
+    /**
+     * @description Verifies Recurring Donation with two or more Open Opportunities having Close Date >= today
+     * fails to be converted when RD Settings close action is no action.
+     */
+    @IsTest
+    private static void shouldNotConvertRDWhenItHasManyOpenFutureOppsAndCloseActionIsNoAction() {
+        setCloseActionSettingsToNoAction();
+
+        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
+
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addDays(1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        runDataMigration();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be logged: ' + errors);
+        System.assertEquals(System.Label.RD2_DataMigrationInvalidCloseAction, errors[0].Full_Message__c, 'Error message should match');
+
+        System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
     }
 
 
@@ -863,6 +1168,21 @@ private class RD2_DataMigration_TEST {
             FROM Contact
             LIMIT 1
         ];
+    }
+
+    /**
+     * @description Creates a Recurring Donation without any Opportunity
+     * @return npe03__Recurring_Donation__c
+     */
+    private static npe03__Recurring_Donation__c createLegacyRecurringDonationNoOpps() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .build();
+        insert rd;
+
+        delete oppGateway.getRecords(rd);
+
+        return rd;
     }
 
     /**
@@ -960,6 +1280,52 @@ private class RD2_DataMigration_TEST {
         return installment;
     }
 
+    /**
+     * @description Sets RD Settings Opportunity Close Action to Closed Lost
+     * @return void
+     */
+    private static void setCloseActionSettingsToClosedLost() {
+        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
+
+        setCloseActionSettings(closeAction);
+    }
+
+    /**
+     * @description Sets RD Settings Opportunity Close Action to Deletion
+     * @return void
+     */
+    private static void setCloseActionSettingsToDelete() {
+        String closeAction = RD2_Constants.CloseActions.Delete_Open_Opportunities.name();
+
+        setCloseActionSettings(closeAction);
+    }
+
+    /**
+     * @description Sets RD Settings Opportunity Close Action to No Action
+     * @return void
+     */
+    private static void setCloseActionSettingsToNoAction() {
+        String closeAction = RD2_Constants.CloseActions.No_Action.name();
+
+        setCloseActionSettings(closeAction);
+    }
+
+    /**
+     * @description Sets RD Settings Opportunity Close Action to the specified action
+     * @param closeAction Close action
+     * @return void
+     */
+    private static void setCloseActionSettings(String closeAction) {
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Open_Opportunity_Behavior__c = closeAction,
+                npe03__Maximum_Donations__c = 50,
+                npe03__Opportunity_Forecast_Months__c = 6
+            )
+        );
+    }
+
     /****
     * @description Returns expected data migration log context
     * @param batchJobId Batch job Id
@@ -969,6 +1335,22 @@ private class RD2_DataMigration_TEST {
         AsyncApexJob job = jobGateway.getRecord(batchJobId);
 
         return RD2_DataMigration_BATCH.LOG_CONTEXT_PREFIX + ' ' + String.valueOf(job.CreatedDate);
+    }
+
+    /****
+    * @description Executes data migration batch
+    * @return Id Batch job Id
+    */
+    private static Id runDataMigration() {
+        //enablement should be done after the legacy Recurring Donation has been created
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        Id batchJobId = Database.executeBatch(batch);
+        Test.stopTest();
+
+        return batchJobId;
     }
 
 }
