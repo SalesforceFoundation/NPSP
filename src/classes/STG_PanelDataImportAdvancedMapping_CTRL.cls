@@ -47,6 +47,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public override String idPanel() { return 'idPanelDataImportAdvancedMapping'; }
 
     /*******************************************************************************************************
+    * @description Partial url path and parameters for building a link to a deployment status page
+    */
+    private final String DEPLOYMENT_STATUS_PAGE_PATH = '/lightning/setup/DeployStatus/page?' +
+        'address=/changemgmt/monitorDeploymentsDetails.apexp?asyncId=';
+
+    /*******************************************************************************************************
     * @description is the panel currently Polling for deployment results
     */
     public Boolean isPolling {
@@ -257,17 +263,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 successMessage();
             } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
-
-                String href =
-                    '/lightning/setup/DeployStatus/page?' +
-                    'address=/changemgmt/monitorDeploymentsDetails.apexp?asyncId=' +
-                    deploymentResult.id;
-                String url = String.format(
-                    Label.bdiErrorDeploymentFailedLink,
-                    new List<String>{String.valueOf(href)});
-                String message = Label.bdiErrorDeploymentFailed + ' ' + url;
-
-                addPageMessage(ApexPages.Severity.ERROR, message);
+                addPageMessage(ApexPages.Severity.ERROR,
+                    Label.bdiErrorDeploymentFailed + ' ' +
+                    deploymentStatusUrl());
             }
 
         } else if (deploymentResult == null
@@ -282,8 +280,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         if (timeoutCount > MAX_TIME_OUT && isPolling == true) {
             isPolling = false;
             addPageMessage(ApexPages.Severity.WARNING,
-                Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
-            return null;
+                Label.stgDeploymentTimedOut + ' ' +
+                Label.bdiMigrationLongDeployment + ' ' +
+                deploymentStatusUrl());
         }
 
         return null;
@@ -299,6 +298,19 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         } else {
             addPageMessage(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled);
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Builds the message with a url to deployment status that we display when a deployment
+    * times out.
+    */
+    private String deploymentStatusUrl() {
+        String href = DEPLOYMENT_STATUS_PAGE_PATH + deploymentResult.id;
+        String url = String.format(
+            label.bdiErrorDeploymentFailedLink,
+            new String[]{ String.valueOf(href) });
+
+        return url;
     }
 
     /*******************************************************************************************************
