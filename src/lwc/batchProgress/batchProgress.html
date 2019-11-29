@@ -46,7 +46,7 @@
                                     {labels.labelCompletedDate}</dt>
                                 <dd class="slds-dl_horizontal__detail slds-medium-size_8-of-12">
                                     <lightning-formatted-date-time value={batchJob.completedDate} year="numeric"
-                                        month="long" day="2-digit" hour="2-digit" minute="2-digit">
+                                        month="short" day="2-digit" hour="2-digit" minute="2-digit">
                                     </lightning-formatted-date-time>
                                 </dd>
                             </template>
@@ -75,7 +75,7 @@
                         </dl>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size="2" class="slds-media slds-media_center">
+                    <lightning-layout-item size="2" class="slds-media slds-media_center slds-truncate">
                         <lightning-badge label={batchJob.status} class={themeClass}></lightning-badge>
                     </lightning-layout-item>
 
