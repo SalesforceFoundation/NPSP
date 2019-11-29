@@ -215,6 +215,11 @@
             return;
         }
 
+        let enablementState = component.get("v.state");
+        if (enablementState == undefined || enablementState == null) {
+            return;
+        }
+
         if (batchProgress.isInProgress) {
             component.set('v.state.isMigrationInProgress', true);
 
