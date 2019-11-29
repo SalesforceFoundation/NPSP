@@ -344,6 +344,8 @@
         <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
+        <members>RD2_OpportunityEvaluation_BATCH</members>
+        <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>
         <members>RD2_OpportunityEvaluationService_TEST</members>
         <members>RD2_OpportunityService</members>
@@ -1248,6 +1250,7 @@
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.ClosedReason__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
@@ -1476,11 +1479,13 @@
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
+        <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
+        <members>RD_ErrorLegacyBatchJobCannotBeRun</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
         <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
         <members>REL_Create_New_Relationship</members>
@@ -1666,6 +1671,7 @@
         <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
+        <members>bdiMigrationLongDeployment</members>
         <members>bdiOMUIChildParentHelp</members>
         <members>bdiOMUIChildParentLabel</members>
         <members>bdiOMUICreateModalTitle</members>

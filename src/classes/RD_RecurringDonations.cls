@@ -83,12 +83,12 @@
 *
 */
 public class RD_RecurringDonations {
-    
-    /*******************************************************************************************************
-    * @description Enum to specify behavior of what happens to open opportunities when their RD is closed.
-    */ 
-    public enum RecurringDonationCloseOptions { Delete_Open_Opportunities, Mark_Opportunities_Closed_Lost, No_Action }
 
+    /*******************************************************************************************************	
+    * @description Enum to specify behavior of what happens to open opportunities when their RD is closed.	
+    */ 	
+    public enum RecurringDonationCloseOptions { Delete_Open_Opportunities, Mark_Opportunities_Closed_Lost, No_Action }	
+    
     /*******************************************************************************************************
     * @description holds the current custom field mappings used when creating opps for the RD.
     */
