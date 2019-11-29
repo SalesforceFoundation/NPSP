@@ -27,13 +27,15 @@ export default class ProgressRing extends LightningElement {
     * @param value Current progress value
     */
     set valueNow(value) {
-        this._valueNow = value;
+        this._valueNow = value === undefined || value === null ? 0 : value;
         let max = 100;
-        let quotient = value / max >= 0.5 ? "1" : "0";
 
-        this.arcValue = "M 1 0 A 1 1 0 " + quotient + " 1 " +
-            Math.cos(2 * Math.PI * value / max) + " " +
-            Math.sin(2 * Math.PI * value / max) + " L 0 0";
+        let arcX = Math.cos(2 * Math.PI * this._valueNow / max);
+        let arcY = Math.sin(2 * Math.PI * this._valueNow / max) * -1;
+        let isLong = this._valueNow === max ? 1 : Math.floor(this._valueNow / 50);
+        isLong = isLong > 1 ? 1 : isLong;
+
+        this.arcValue = "M 1 0 A 1 1 0 " + isLong + " 0 " + arcX + " " + arcY + " L 0 0";
 
         this.setAttribute('d', this.arcValue);
     }
