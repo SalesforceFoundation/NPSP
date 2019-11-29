@@ -34,7 +34,7 @@
 * @description Installment Opportunity Evaluation and Processing
 *
 */
-public class RD2_OpportunityEvaluationService {
+public inherited sharing class RD2_OpportunityEvaluationService {
 
     private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
@@ -83,10 +83,10 @@ public class RD2_OpportunityEvaluationService {
         } set;
     }
 
-
     /**
      * @description Pass the set of Recurring Donation Id's to be processed
-     * @param rdIds
+     * @param rdIds Recurring Donation Ids
+     * @return RD2_OpportunityEvaluationService The service instance
      */
     public RD2_OpportunityEvaluationService withRds(Set<Id> rdIds) {
         this.rdIds = rdIds;
@@ -94,58 +94,91 @@ public class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Returns true if any of the key fields used to create or manage installment
+     * Opportunities has been changed.
+     * @param rd Changed Recurring Donation
+     * @param oldRd Old Recurring Donation
+     * @return Boolean
+     */
+    public Boolean hasKeyFieldChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        return 
+            rd.npe03__Contact__c != oldRd.npe03__Contact__c ||
+            rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
+            rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
+            rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+            rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
+            rd.StartDate__c != oldRd.StartDate__c ||
+            rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
+            rd.Status__c != oldRd.Status__c ||
+            rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
+            rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c;
+    }
+
+    /**
      * @description Primary processor
+     * @return RD2_OpportunityEvaluationService The service instance
      */
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
 
-        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
+        Map<npe03__Recurring_Donation__c, List<Date>> newRDsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
+        List<Opportunity> existingOpenOpps = new List<Opportunity>();
+
+        List<npe03__Recurring_Donation__c> updatedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (!isCandidate(rd)) {
+
+            // TODO Recalculate NextDonationDate before doing anything
+
+            // Collect the list of Opps that require a new Installment Opp
+            if (isNewRecurringDonation(rd)) {
+                newRDsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
                 continue;
             }
 
-            if (isNewRecurringDonation(rd)) {
-                rdsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
-                continue;
-            }
+            // TODO Handle Open Installments on Closed Opp
+            // TODO Schedule Visualizer
             // TODO Update the Future Installment Opportunity if needed
+            // TODO Handle Past Due Installment
+
+            if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+                existingOpenOpps.addAll(extractOpenInstallmentOpps(rd));
+            }
+
         }
 
-        // TODO Recalculate NextDonationDate
-        // Date nextDonationDate = scheduleService.calculateNextDonationDate(rd);
+        // TODO Disable Customizable Rollups before DML
 
-        oppService.createInstallmentOpportunities(rdsWithCloseDates);
+        // Create the next installment opportunity where needed
+        // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
+        oppService.createInstallmentOpportunities(newRDsWithCloseDates);
+
+        handleClosedRecurringDonationOpps(existingOpenOpps);
 
         return this;
     }
 
     /**
-     * @description Is this Recurring Donation eligible to have an Installment Opportunity created
-     * for it?
-     * @param rd
-     * @return True if the NextDonationDate is not null and the Rd.Status is Active And there are
-     * Active Schedule records.
-     */
-    @TestVisible
-    private Boolean isCandidate(npe03__Recurring_Donation__c rd) {
-        return (rd.npe03__Next_Payment_Date__c != null &&
-            rd.Status__c == RD2_Constants.STATUS_ACTIVE &&
-            !rd.RecurringDonationSchedules__r.isEmpty());
-    }
-
-    /**
-     * @description Is this a new Recurring Donation that was just inserted and has not yet had
-     * an Installment Opportunity created?
-     * @param rd
-     * @return True if the RD.Status is Active and there is an Active schedule and there are no
-     * current installment opps attached.
+     * @description Is this a new Recurring Donation that was just inserted and 
+     * has not yet had an Installment Opportunity created?
+     * @param rd Recurring Donation
+     * @return Boolean 
      */
     @TestVisible
     private Boolean isNewRecurringDonation(npe03__Recurring_Donation__c rd) {
-        return (rd.Status__c == RD2_Constants.STATUS_ACTIVE &&
-                rd.npe03__Donations__r.isEmpty() &&
-                !rd.RecurringDonationSchedules__r.isEmpty());
+        return
+            rd.npe03__Next_Payment_Date__c != null
+            && rd.Status__c == RD2_Constants.STATUS_ACTIVE 
+            && rd.npe03__Donations__r.isEmpty()
+            && !rd.RecurringDonationSchedules__r.isEmpty();
+    }
+
+    /**
+     * @description Disable Customizable Rollups before DML to reduce performance implications.
+     */
+    private void disableRollups() {
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
     }
 
     /**
@@ -161,13 +194,60 @@ public class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Extracts open installment Opportunities for the specified Recurring Donation
+     * @param rd Recurring donation containing list of all related Opportunities
+     * @return List<Opportunity> Open Opportunities
+     */
+    private List<Opportunity> extractOpenInstallmentOpps(npe03__Recurring_Donation__c rd) {
+        List<Opportunity> opps = new List<Opportunity>();
+
+        for (Opportunity opp : rd.npe03__Donations__r) {
+            if (opp.IsClosed == false) {
+                opps.add(opp);
+            }
+        }
+
+        return opps;
+    }
+
+    /**
+     * @description Updates, deletes or keep unchanged closed RD open Installment Opportunities based on the settings
+     * @param opps Opportunities
+     * @return void
+     */
+    private void handleClosedRecurringDonationOpps(List<Opportunity> opps) {
+        if (opps.isEmpty()) {
+            return;
+        }
+
+        if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Delete_Open_Opportunities.name()) {
+            UTIL_DMLService.deleteRecordsAndLogErrors(opps, ERR_Handler_API.Context.RD.name());
+
+        } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
+            List<Opportunity> oppsToUpdate = new List<Opportunity>();
+
+            for (Opportunity opp : opps) {
+                oppsToUpdate.add(new Opportunity(
+                    Id = opp.Id,
+                    StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage
+                ));
+            } 
+
+            UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
+        }
+    }
+
+    /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
-     * with the related Installment Opportunities and Active Schedule Records
-     * @return List<RecurringDonation>
+     * with the related Installment Opportunities and Active Schedule Records. Due to a core KI (W-2503825)
+     * this query needs to exclude CLOB fields. Since there is no pure definition of that for a Describe, the
+     * query excludes Large Text Area fields larger than 4KB. These would only be custom fields.
+     * @param rdIds Recurring Donation Ids
+     * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
     @TestVisible
     private List<npe03__Recurring_Donation__c> getRecurringDonationRecords(Set<Id> rdIds) {
-        String PARENT_ACCOUNT_ID = 'npe03__Contact__r.AccountId';
+        final String parentAccountField = 'npe03__Contact__r.AccountId';
 
         Map<String, Schema.DescribeFieldResult> allRdFields =
             UTIL_Describe.getAllFieldsDescribe(npe03__Recurring_Donation__c.SObjectType.getDescribe().name);
@@ -175,33 +255,40 @@ public class RD2_OpportunityEvaluationService {
         Set<String> queryFields = new Set<String>();
         for (String fld : allRdFields.keySet()) {
             DescribeFieldResult fldResult = allRdFields.get(fld);
-            if (fldResult.isAccessible()) {
-                queryFields.add(fld);
+            if (fldResult.getType() == DisplayType.BASE64 ||
+                    fldResult.getType() == DisplayType.ENCRYPTEDSTRING ||
+                    (fldResult.getSoapType() == SoapType.STRING && fldResult.getLength() > 4096)) {
+                continue;
             }
+            queryFields.add(fld);
         }
 
-        String oppSubquery = '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
-                        'npe03__Recurring_Donation__c, ' +
-                        'Amount, CloseDate, ' +
-                        'StageName, IsClosed, IsWon, ' +
-                        'CampaignId ' +
-                        'FROM npe03__Donations__r ' +
-                        'WHERE IsClosed = False OR CloseDate >= TODAY ' +
-                        'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
-        String scheduleSubQuery = '(SELECT Id, InstallmentAmount__c, ' +
-                        'Campaign__c, ' +
-                        'InstallmentFrequency__c, ' +
-                        'InstallmentPeriod__c, ' +
-                        'DayOfMonth__c, ' +
-                        'PaymentMethod__c, ' +
-                        'StartDate__c, ' +
-                        'EndDate__c ' +
-                        'FROM RecurringDonationSchedules__r ' +
-                        'WHERE Active__c = True)';
+        String oppSubquery = 
+            '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
+            'npe03__Recurring_Donation__c, ' +
+            'Amount, CloseDate, ' +
+            'StageName, IsClosed, IsWon, ' +
+            'CampaignId ' +
+            'FROM npe03__Donations__r ' +
+            'WHERE IsClosed = false ' +
+            'OR CloseDate >= TODAY ' +
+            'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
-        queryFields.add(PARENT_ACCOUNT_ID);
+        String scheduleSubquery = 
+            '(SELECT Id, InstallmentAmount__c, ' +
+            'Campaign__c, ' +
+            'InstallmentFrequency__c, ' +
+            'InstallmentPeriod__c, ' +
+            'DayOfMonth__c, ' +
+            'PaymentMethod__c, ' +
+            'StartDate__c, ' +
+            'EndDate__c ' +
+            'FROM RecurringDonationSchedules__r ' +
+            'WHERE Active__c = true)';
+
+        queryFields.add(parentAccountField);
         queryFields.add(oppSubquery);
-        queryFields.add(scheduleSubQuery);
+        queryFields.add(scheduleSubquery);
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -211,4 +298,5 @@ public class RD2_OpportunityEvaluationService {
 
         return Database.query(soql);
     }
+
 }

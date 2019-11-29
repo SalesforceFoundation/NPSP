@@ -1548,7 +1548,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementMigrationWarning</shortDescription>
-        <value>WARNING: This process will rearrange existing data, insert new records, and delete records that don't match the Enhanced Recurring Donations model. This process may take some time. You can leave this page during migration and return later to check the progress.</value>
+        <value>&lt;b&gt;WARNING: This process rearranges existing Recurring Donation data to match the Enhanced Recurring Donations model. This process may take some time. You can leave this page and return later to check the progress.&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementPrepIntro</fullName>
@@ -1583,6 +1583,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>The job can only be executed when Enhanced RD is enabled in the org</shortDescription>
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations Data Migration job.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ErrorEnhancedRDBatchJobCannotBeRun</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The RD2 Batch job can only be executed when Enhanced RD is enabled</shortDescription>
+        <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
@@ -1631,6 +1639,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>You do not have permission to create a donation record</shortDescription>
         <value>You do not have permission to create a donation record. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
+        <fullName>RD_ErrorLegacyBatchJobCannotBeRun</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The legacy RD Batch job cannot be executed when Enhanced RD is enabled</shortDescription>
+        <value>The legacy Recurring Donations batch job cannot be executed because Enhanced Recurring Donations is enabled in this org.</value>
     </labels>
     <labels>
         <fullName>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</fullName>
@@ -2862,7 +2878,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiFMUILongDeploymentLink</shortDescription>
-        <value>You can view the deployment status here.</value>
+        <value>View the deployment status here.</value>
     </labels>
     <labels>
         <fullName>bdiFMUILongDeploymentMessage</fullName>
@@ -3137,6 +3153,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>Error message for long deployment</shortDescription>
         <value>Modifying this Object Group is taking longer than expected.</value>
+    </labels>
+    <labels>
+        <fullName>bdiMigrationLongDeployment</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error message for long deployment</shortDescription>
+        <value>Converting Help Text mappings to Advanced Mapping is taking longer than expected.</value>
     </labels>
     <labels>
         <fullName>bdiOMUIGroupNameHelp</fullName>
