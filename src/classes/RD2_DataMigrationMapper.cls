@@ -317,7 +317,9 @@ public class RD2_DataMigrationMapper {
     private List<Opportunity> getOpenOpportunitiesToVoid() {
         List<Opportunity> opps = new List<Opportunity>();
 
-        if (allRelatedOpps == null || allRelatedOpps.isEmpty()) {
+        if (allRelatedOpps == null || allRelatedOpps.isEmpty()
+            || rd.npe03__Open_Ended_Status__c != System.Label.npe03.RecurringDonationOpenStatus        
+        ) {
             return opps;
         }
 
