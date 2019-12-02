@@ -40,7 +40,7 @@
                         <div class="slds-media" >
                             <div>
                                 <p class="slds-text-body_small slds-m-top_medium">
-                                <c:UTIL_SLDS_Icon icon="warning" iconCategory="utility" size="small" fillColor="orange" />
+                                    <c:UTIL_SLDS_Icon icon="warning" iconCategory="utility" size="small" fillColor="orange" />
                                 </p>
                             </div>
                             <div class="slds-media__body slds-p-around_medium"  >
