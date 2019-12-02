@@ -140,8 +140,17 @@ public with sharing class GE_FormRendererService {
         // System.debug('widgetData: '); 
         // System.debug(widgetData); 
 
+        if(String.isBlank(widgetData)){
+            return null;
+        }
+
+        Map<String, Object> objNameToObjList;
         List<SObject> thisList;
-        Map<String, Object> objNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
+        try {
+            objNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
+        } catch(Exception e) {
+            throw returnAuraException(e.getMessage());
+        }
 
         // Create a map of sobject type to sobject list for processing
         for(String widgetKey : objNameToObjList.keySet()) {

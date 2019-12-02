@@ -91,7 +91,7 @@ class GeFormService {
      * @returns {Promise<Id>}
      */
     createOpportunityFromDataImport(createdDIRecord, widgetValues) {
-        let widgetDataString = JSON.stringify(widgetValues);
+        const widgetDataString = JSON.stringify(widgetValues);
         return new Promise((resolve, reject) => {
             saveAndProcessGift({diRecord: createdDIRecord, widgetData: widgetDataString})
                 .then((result) => {
