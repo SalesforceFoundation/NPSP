@@ -129,6 +129,8 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
         setBatchJobId(context);
+        
+        RD2_OpportunityEvaluationService.isCloseActionOverride = true;
 
         Logger logger = new Logger(logContext, LOG_EXCEPTION_ERROR_TYPE);
         Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);

@@ -778,10 +778,10 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies all open Opportunities for a closed RD are voided (either Closed Lost or deleted)
+     * @description Verifies open Opportunities for a closed RD are unchanged
      */
     @IsTest
-    private static void shouldVoidAllOpenOppsWhenRDIsClosed() {
+    private static void shouldNotVoidOpenOppWhenRDIsClosed() {
         setCloseActionSettingsToClosedLost();
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
@@ -805,6 +805,16 @@ private class RD2_DataMigration_TEST {
                 .withName()
                 .withCloseDate(DATE_ESTABLISHED.addMonths(1))
                 .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .withOpenStage()
                 .build()
         };
         insert opps;
@@ -815,15 +825,16 @@ private class RD2_DataMigration_TEST {
 
         System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
         System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
-        System.assertEquals(true, oppById.get(opps[1].Id).IsClosed, 'Open Opp should be closed now');
-        System.assertEquals(false, oppById.get(opps[1].Id).IsWon, 'Open Opp should be lost won now');
+        System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in past should stay open');
+        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'Open Opp with Close Date equal to today should stay open');
+        System.assertEquals(false, oppById.get(opps[3].Id).IsClosed, 'Open Opp with Close Date in future should stay open');
     }
 
     /**
      * @description Verifies all open Opportunities stay open when RD Open Ended Status is not Closed or Open
      */
     @IsTest
-    private static void shouldNotVoidAnyOpenOppWhenRDOpenEndedStatusIsNotClosedOrOpen() {
+    private static void shouldNotVoidOpenOppWhenRDOpenEndedStatusIsNotOpen() {
         setCloseActionSettingsToClosedLost();
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
@@ -878,7 +889,7 @@ private class RD2_DataMigration_TEST {
      * @description Verifies Recurring Donation with no Open Opportunity is converted successfully
      */
     @IsTest
-    private static void shouldNotVoidOppsWhenNotOpen() {
+    private static void shouldNotChangeAlreadyClosedOpps() {
         setCloseActionSettingsToClosedLost();
 
         npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
