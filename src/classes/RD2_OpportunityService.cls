@@ -147,7 +147,8 @@ public with sharing class RD2_OpportunityService {
             npe03__Recurring_Donation__c = rd.Id
         );
         opp.Name = buildOpportunityName(rd, opp);
-        if(rdSettings.npe03__Record_Type__c != null) {
+
+        if (rdSettings.npe03__Record_Type__c != null) {
             opp.RecordTypeId = rdSettings.npe03__Record_Type__c;
         }
 

@@ -35,7 +35,46 @@
 */
 
 @isTest
-private class UTIL_RecordTypes_TEST {
+public class UTIL_RecordTypes_TEST {
+    
+     /**
+    * @description Return the id of the active non-default record type of the sObject for the current user
+    * @param objectType The sObject type of the record type
+    * @return Id
+    */
+    public static Id getNonDefaultRecordType(sObjectType objectType) {
+        return getRecordType(objectType, false);
+    }
+
+    /**
+    * @description Return the id of the active default record type of the sObject for the current user
+    * @param objectType The sObject type of the record type
+    * @return Id
+    */
+    public static Id getDefaultRecordType(sObjectType objectType) {
+        return getRecordType(objectType, true);
+    }
+
+    /**
+    * @description Return the id of an active default/non default record type of the sObject for the current user
+    * @param objectType The sObject type of the record type
+    * @param isDefault Boolean to determine if the default record type is return or not
+    * @return Id
+    */
+    private static Id getRecordType(sObjectType objectType, Boolean isDefault) {
+        List<Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfos();
+
+        for (Schema.RecordTypeInfo rti : recordTypeInfos) {
+            if (!rti.isMaster() && rti.isAvailable()) {
+                if (isDefault && rti.isDefaultRecordTypeMapping()) {
+                    return rti.getRecordTypeId();
+                } else if (!isDefault && !rti.isDefaultRecordTypeMapping()) {
+                    return rti.getRecordTypeId();
+                }
+            }
+        }
+        return null;
+    }
 
     @isTest
     static void testRecTypes() {
