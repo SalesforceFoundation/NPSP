@@ -76,13 +76,6 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         return  RD2_EnablementService.getInstance().isPilotEnabled;
     }
 
-    /***
-    * @description Checks if Enhanced Recurring Donations is set
-    */
-    public static Boolean getIsEnhancedRD2() {
-        return  RD2_EnablementService.isRecurringDonations2Enabled;
-    }
-
     /*********************************************************************************************************
     * @description Action Method that runs the install script to setup TDTM, initializes the
     * Schedulables configuration and fixes invalid Record Types.

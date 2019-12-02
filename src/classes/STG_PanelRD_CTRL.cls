@@ -46,13 +46,6 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     private integer originalForecastMonths;
 
     /*********************************************************************************************************
-    * @description Checks if Enhanced Recurring Donations is set
-    */
-    public static Boolean getIsEnhancedRD2() {
-        return  RD2_EnablementService.isRecurringDonations2Enabled;
-    }
-
-    /*********************************************************************************************************
     * @description The panel's constructor
     */
     public STG_PanelRD_CTRL() { }

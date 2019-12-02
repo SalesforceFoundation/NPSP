@@ -37,16 +37,12 @@
             <div class="slds" id="page_messages" style="{!IF(isCRLPEnabled, 'display:block', 'display:none')}">
                 <div role="alert" class="slds-notify">
                     <div class="notify__content">
-                        <div class="slds-media" >
-                            <div>
-                                <p class="slds-text-body_small slds-m-top_medium">
-                                    <c:UTIL_SLDS_Icon icon="warning" iconCategory="utility" size="small" fillColor="orange" />
-                                </p>
+                        <div class="slds-media slds-text-body_small slds-m-top_small slds-m-bottom_small" >
+                            <div class="slds-media__figure">
+                                <c:UTIL_SLDS_Icon icon="warning" iconCategory="utility" size="x-small" fillColor="orange" />
                             </div>
-                            <div class="slds-media__body slds-p-around_medium"  >
-                                <p class="slds-text-body_small slds-m-top_x-small">
-                                    <c:UTIL_HtmlOutput html="{!$Label.RD2_DisableCustomizableRollupWarning}" />
-                                </p>
+                            <div class="slds-media__body"  >
+                                <c:UTIL_HtmlOutput html="{!$Label.RD2_DisableCustomizableRollupWarning}" />
                             </div>
                         </div>
                     </div>
