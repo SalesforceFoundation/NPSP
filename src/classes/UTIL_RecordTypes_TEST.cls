@@ -37,13 +37,28 @@
 @isTest
 public class UTIL_RecordTypes_TEST {
     
-     /**
+    /**
+    * @description Return a random valid record type for the sObject
+    * @param objectType The sObject type of the record type
+    * @return Id
+    */
+    public static Id getRandomRecordTypeId(sObjectType objectType) {
+        List<Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfos();
+        for (Schema.RecordTypeInfo rti : recordTypeInfos) {
+            if (rti.isAvailable()) {
+                return rti.getRecordTypeId();
+            }
+        }
+        return null;
+    }
+
+    /**
     * @description Return the id of the active non-default record type of the sObject for the current user
     * @param objectType The sObject type of the record type
     * @return Id
     */
-    public static Id getNonDefaultRecordType(sObjectType objectType) {
-        return getRecordType(objectType, false);
+    public static Id getNonDefaultRecordTypeId(sObjectType objectType) {
+        return getDefaultOrNonDefaultRecordTypeId(objectType, false);
     }
 
     /**
@@ -51,8 +66,8 @@ public class UTIL_RecordTypes_TEST {
     * @param objectType The sObject type of the record type
     * @return Id
     */
-    public static Id getDefaultRecordType(sObjectType objectType) {
-        return getRecordType(objectType, true);
+    public static Id getDefaultRecordTypeId(sObjectType objectType) {
+        return getDefaultOrNonDefaultRecordTypeId(objectType, true);
     }
 
     /**
@@ -61,7 +76,7 @@ public class UTIL_RecordTypes_TEST {
     * @param isDefault Boolean to determine if the default record type is return or not
     * @return Id
     */
-    private static Id getRecordType(sObjectType objectType, Boolean isDefault) {
+    private static Id getDefaultOrNonDefaultRecordTypeId(sObjectType objectType, Boolean isDefault) {
         List<Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfos();
 
         for (Schema.RecordTypeInfo rti : recordTypeInfos) {

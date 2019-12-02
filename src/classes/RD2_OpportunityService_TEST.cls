@@ -195,7 +195,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldSetOppRecordTypeIdFromSettings() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Id rdSettingRecordTypeId = UTIL_RecordTypes_TEST.getNonDefaultRecordType(Opportunity.sObjectType);
+        Id rdSettingRecordTypeId = UTIL_RecordTypes_TEST.getRandomRecordTypeId(Opportunity.sObjectType);
 
         Map<String, Object> rdSettingFieldMap = new Map<String, Object>{
             'npe03__Record_Type__c' => rdSettingRecordTypeId
@@ -229,7 +229,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         Opportunity installmentOpp = getOpportunities()[0];
 
-        Id defaultRecordTypeId = UTIL_RecordTypes_TEST.getDefaultRecordType(Opportunity.sObjectType);
+        Id defaultRecordTypeId = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.sObjectType);
 
         System.assert(installmentOpp != null, 'An opportunity should be created for each recurring donation record');
         System.assertEquals(defaultRecordTypeId, installmentOpp.RecordTypeId,
@@ -258,7 +258,7 @@ private with sharing class RD2_OpportunityService_TEST {
         insert installmentOpp;
 
         Test.startTest();
-        Id rdSettingRecordTypeId = UTIL_RecordTypes_TEST.getNonDefaultRecordType(Opportunity.sObjectType);
+        Id rdSettingRecordTypeId = UTIL_RecordTypes_TEST.getNonDefaultRecordTypeId(Opportunity.sObjectType);
 
         Map<String, Object> rdSettingFieldMap = new Map<String, Object>{
             'npe03__Record_Type__c' => rdSettingRecordTypeId
@@ -438,7 +438,7 @@ private with sharing class RD2_OpportunityService_TEST {
             CloseDate, AccountId, npe01__Contact_Id_for_Role__c, Primary_Contact__c, RecordTypeId
             FROM Opportunity
             WHERE CreatedDate = Today AND CampaignId != null
-            ORDER BY CloseDate, CreatedDate //ensure Opps are returned in the predictable order
+            ORDER BY CloseDate //ensure Opps are returned in the predictable order
         ];
     }
 
