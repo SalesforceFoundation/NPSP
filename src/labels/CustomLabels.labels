@@ -1585,6 +1585,46 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
     </labels>
     <labels>
+        <fullName>RD2_ScheduleVisualizerColumnDate</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Date Column Header</shortDescription>
+        <value>Date</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerErrorEnhancedRDNot</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Enhanced RD is not enabled</shortDescription>
+        <value>Enhanced Recurring Donations is required for this component</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerErrorInvalidUsage</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the component is used on a Non-Recurring Donations page</shortDescription>
+        <value>This can only be used on a Recurring Donation page</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerMessageNoSchedule</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when there is no future schedule to render</shortDescription>
+        <value>There are no future scheduled donations</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the Schedule Visualizer Component</shortDescription>
+        <value>Upcoming Schedule</value>
+    </labels>
+    <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>

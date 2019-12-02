@@ -2,7 +2,7 @@
 <!-- TODO Accessibility!! -->
 <template>
     <lightning-card
-        title="Upcoming Schedule"
+        title={lblScheduleTitle}
         variant="narrow"
         icon-name="action:defer">
 
@@ -12,7 +12,7 @@
 
         <div class="slds-m-around_medium" if:true={schedule}>
             <lightning-datatable
-                title="Schedule"
+                title={lblScheduleTitle}
                 key-field="installmentNumber"
                 data={schedule}
                 columns={columns}

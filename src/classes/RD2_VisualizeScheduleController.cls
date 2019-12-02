@@ -34,7 +34,7 @@
 * @description Controller for the Schedule Visualization Component
 *
 */
-public class RD2_VisualizeScheduleController {
+public with sharing class RD2_VisualizeScheduleController {
 
     @TestVisible
     private static RD2_ScheduleService scheduleService {
@@ -47,36 +47,19 @@ public class RD2_VisualizeScheduleController {
     }
 
     /**
-     * @description Retrieves the currency code to use for the display
-     * @param recordId
-     * @return CurrencyIsoCode
-     */
-    @AuraEnabled(Cacheable=true)
-    public static String getCurrencyCode(Id recordId) {
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
-            return (String)rd.get('CurrencyIsoCode');
-        } else {
-            return UserInfo.getDefaultCurrency();
-        }
-    }
-
-    /**
      * @description Retrieves the current schedule of future donations to render in the UI
      * @param recordId
      * @return List<Schedule>
      */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled
     public static List<Schedule> getSchedule(Id recordId) {
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
-            // TODO Move error message to a custom label
-            throw new AuraHandledException('Enhanced Recurring Donations is required for this component');
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
         }
 
         if (recordId == null || recordId.getSobjectType() != npe03__Recurring_Donation__c.SObjectType) {
-            // TODO Move error message to a custom label
-            throw new AuraHandledException('This can only be used on Recurring Donation pages');
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
         }
 
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
@@ -86,20 +69,30 @@ public class RD2_VisualizeScheduleController {
             List<RD2_ScheduleService.Installment> installments = scheduleService.getNextDonationsForVisualization(rd, Date.today(), 12);
             Integer num = 1;
             for (RD2_ScheduleService.Installment installment : installments) {
-                Schedule nextDonation = new Schedule(num++, installment.nextDonationDate, installment.installmentAmount);
-                nextDonation.paymentMethod = installment.paymentMethod;
-                nextDonation.campaign = installment.campaignName;
-                upcomingDonations.add(nextDonation);
+                upcomingDonations.add(new Schedule(num++, rd, installment));
             }
         }
 
         if (upcomingDonations.isEmpty()) {
-            // TODO Move error message to a custom label
-            throw new AuraHandledException('There are no future scheduled donations');
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
         }
 
         return upcomingDonations;
     }
+
+    /**
+     * @description Retrieves the currency code to use for the display
+     * @param recordId
+     * @return CurrencyIsoCode
+     */
+    public static String getCurrencyCode(npe03__Recurring_Donation__c rd) {
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            return (String)rd.get('CurrencyIsoCode');
+        } else {
+            return UserInfo.getDefaultCurrency();
+        }
+    }
+
 
     /**
      * @description Inner Class of Future Donations for a given Recurring Donation
@@ -110,11 +103,15 @@ public class RD2_VisualizeScheduleController {
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String campaign;
         @AuraEnabled public String paymentMethod;
+        @AuraEnabled public String currencyIsoCode;
 
-        public Schedule(Integer num, Date closeDate, Decimal amt) {
+        public Schedule(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.Installment installment) {
             this.installmentNumber = num;
-            this.donationDate = closeDate;
-            this.amount = amt;
+            this.paymentMethod = installment.paymentMethod;
+            this.campaign = installment.campaignName;
+            this.donationDate = installment.nextDonationDate;
+            this.amount = installment.installmentAmount;
+            this.currencyIsoCode = getCurrencyCode(rd);
         }
     }
 
