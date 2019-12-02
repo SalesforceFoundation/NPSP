@@ -65,7 +65,7 @@ public virtual with sharing class FORM_Service {
     * @param templateId - the Id of an existing form template record for retrieval.
     */
     public virtual FORM_Template retrieveFormTemplate(Id templateId) {
-        return FORM_ServiceGiftEntry.retrieveFormTemplate(templateId);
+        return FORM_ServiceGiftEntry.retrieveFormTemplateById(templateId);
     }
 
     /*******************************************************************************************************
@@ -80,8 +80,16 @@ public virtual with sharing class FORM_Service {
     * @description Method for retrieving the current default template.
     * @param templateId - the Id of an existing form template record for retrieval.
     */
-    public virtual FORM_Template retrieveDefaultFormTemplate() {
-        return FORM_ServiceGiftEntry.retrieveDefaultFormTemplate();
+    public virtual FORM_Template retrieveDefaultBGEFormTemplate() {
+        return FORM_ServiceGiftEntry.retrieveDefaultBGEFormTemplate();
+    }
+
+    /*******************************************************************************************************
+    * @description Method for retrieving the current default template.
+    * @param templateId - the Id of an existing form template record for retrieval.
+    */
+    public virtual FORM_Template retrieveDefaultSGEFormTemplate() {
+        return FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
     }
 
     /*******************************************************************************************************

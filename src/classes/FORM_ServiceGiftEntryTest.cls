@@ -112,10 +112,15 @@ public with sharing class FORM_ServiceGiftEntryTest {
         FORM_Service fs = new FORM_Service();
 
         FORM_Template template = createSampleTemplate();
-        String templateJSON = JSON.serialize(template);
-        fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
+        Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
+        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = template.name;
 
-        FORM_Template templateResult = fs.retrieveDefaultFormTemplate();
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+
+        String templateJSON = JSON.serialize(template);
+        fs.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
+
+        FORM_Template templateResult = fs.retrieveDefaultSGEFormTemplate();
         String templateResultJSON = JSON.serialize(templateResult);
 
         System.assertEquals(templateJSON, templateResultJSON);

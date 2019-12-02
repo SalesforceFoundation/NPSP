@@ -1,13 +1,18 @@
-import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormRenderWrapper';
+import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 
+
+// https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
+// this list only includes fields that can be handled by lightning-input
 const inputTypeByDescribeType = {
     'BOOLEAN': 'checkbox',
     'CURRENCY': 'number',
     'DATE': 'date',
     'DATETIME': 'datetime-local',
     'EMAIL': 'email',
-    'NUMBER': 'number',
+    'DOUBLE': 'number',
+    'INTEGER': 'number',
+    'LONG': 'number',
     'PERCENT': 'number',
     'STRING': 'text',
     'PHONE': 'tel',
@@ -20,9 +25,6 @@ const numberFormatterByDescribeType = {
   'PERCENT': 'percent-fixed'
 };
 
-// TODO: remove once we retrieve the template name from custom settings
-const sgeTemplate = 'Single Gift Entry Template';
-
 class GeFormService {
 
     fieldMappings;
@@ -34,7 +36,7 @@ class GeFormService {
      */
     getFormTemplate() {
         return new Promise((resolve, reject) => {
-            getRenderWrapper({templateName: sgeTemplate})
+            getRenderWrapper({})
                 .then((result) => {
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
