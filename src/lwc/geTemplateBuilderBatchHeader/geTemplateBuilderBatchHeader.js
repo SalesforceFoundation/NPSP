@@ -20,7 +20,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     @api batchFields;
     @api selectedBatchFields;
     @track hasErrors;
-    @track missingRequiredFields;
+    @api missingRequiredFields;
     isInitialized = false;
 
     renderedCallback() {
@@ -62,7 +62,9 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     */
     hasMissingRequiredFields() {
         let hasMissingFields = false;
-        this.missingRequiredFields = findMissingRequiredBatchFields(this.batchFields, this.selectedBatchFields);
+        if (this.missingRequiredFields === null || this.missingRequiredFields.length === 0) {
+            this.missingRequiredFields = findMissingRequiredBatchFields(this.batchFields, this.selectedBatchFields);
+        }
 
         if (this.missingRequiredFields && this.missingRequiredFields.length > 0) {
             dispatch(this, EVENT_UPDATE_VALIDITY, {

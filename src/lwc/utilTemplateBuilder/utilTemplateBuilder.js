@@ -129,7 +129,7 @@ const findMissingRequiredBatchFields = (batchFields, selectedBatchFields) => {
         if (selectedFieldsExists) {
             const alreadySelected = selectedBatchFields.find(bf => { return bf.apiName === field.apiName; });
             if (!alreadySelected) {
-                missingRequiredFields = [...missingRequiredFields, field.label];
+                missingRequiredFields = [...missingRequiredFields, { apiName: field.apiName, label: field.label }];
             }
         }
     });

@@ -64,6 +64,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     @track activeFormSectionId;
     @track diBatchInfo;
     @track batchFields;
+    @track missingRequiredBatchFields;
     batchFieldFormElements = [];
 
     @track hasTemplateInfoTabError;
@@ -131,6 +132,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
                 this.collectBatchHeaderFields();
                 this.addRequiredBatchHeaderFields();
+                this.validateBatchHeaderTab();
 
                 this.isLoading = false;
                 this.isAccessible = true;
@@ -598,7 +600,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         this.validateTemplateInfoTab(tabsWithErrors);
         this.validateSelectFieldsTab(tabsWithErrors);
-        this.validateBatchHeaderTab(tabsWithErrors);
+        this.validateBatchHeaderTab();
 
         if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchHeaderTabError) {
             const message = `Please review ${tabsWithErrors.size > 1 ? 'tabs' : 'tab'}: `;
@@ -658,18 +660,23 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
-    * @description Method checks for errors in the Batch Header tab.
+    * @description Method checks for missing required DataImportBatch__c fields
+    * and adds them proactively.
     */
-    validateBatchHeaderTab(tabsWithErrors) {
-        const missingRequiredBatchFields = findMissingRequiredBatchFields(
-            this.batchFieldFormElements,
+    validateBatchHeaderTab() {
+        this.missingRequiredBatchFields = findMissingRequiredBatchFields(this.batchFieldFormElements,
             this.batchHeaderFields);
 
-        if (missingRequiredBatchFields && missingRequiredBatchFields.length > 0) {
-            this.hasBatchHeaderTabError = true;
-            tabsWithErrors.add(this.TabEnums.BATCH_HEADER_TAB);
-        } else {
-            this.hasBatchHeaderTabError = false;
+        if (this.missingRequiredBatchFields && this.missingRequiredBatchFields.length > 0) {
+            for (let field of this.missingRequiredBatchFields) {
+                this.handleAddBatchHeaderField({ detail: field.apiName });
+            }
+
+            const fieldLabels = this.missingRequiredBatchFields.map(field => field.label);
+            showToast('Warning',
+                `Added the following missing required Batch Header fields: ${fieldLabels}`,
+                'warning',
+                'sticky');
         }
     }
 
