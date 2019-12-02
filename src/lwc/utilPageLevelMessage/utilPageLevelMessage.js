@@ -10,7 +10,7 @@ const THEME_ERROR = 'slds-theme_error';
 const THEME_INFO = 'slds-theme_info';
 const TEXT_ERROR = 'slds-text-color_error';
 
-export default class utilPageMessage extends LightningElement {
+export default class utilPageLevelMessage extends LightningElement {
     @api title;
     @api subtitle;
     @api errors;

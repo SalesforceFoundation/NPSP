@@ -4,16 +4,18 @@ import {
     mutable,
     dispatch,
     handleError,
-    findMissingRequiredBatchFields,
-    EVENT_BATCH_HEADER_FIELD_ADD,
-    EVENT_BATCH_HEADER_FIELD_DOWN,
-    EVENT_BATCH_HEADER_FIELD_REMOVE,
-    EVENT_BATCH_HEADER_FIELD_UP,
-    EVENT_BATCH_HEADER_FIELD_UPDATE,
-    EVENT_UPDATE_VALIDITY,
-    PROP_API_NAME,
-    PROP_BATCH_HEADER_TAB_ERROR
+    findMissingRequiredBatchFields
 } from 'c/utilTemplateBuilder';
+import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
+
+const PROP_API_NAME = 'apiName';
+const PROP_BATCH_HEADER_TAB_ERROR = 'hasBatchHeaderTabError';
+const EVENT_UPDATE_VALIDITY = 'updatevalidity';
+const EVENT_BATCH_HEADER_FIELD_UPDATE = 'updatebatchheaderfield';
+const EVENT_BATCH_HEADER_FIELD_UP = 'batchheaderfieldup';
+const EVENT_BATCH_HEADER_FIELD_DOWN = 'batchheaderfielddown';
+const EVENT_BATCH_HEADER_FIELD_ADD = 'addbatchheaderfield';
+const EVENT_BATCH_HEADER_FIELD_REMOVE = 'removebatchheaderfield';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track isLoading = true;
@@ -22,6 +24,10 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     @track hasErrors;
     @api missingRequiredFields;
     isInitialized = false;
+
+    get dataImportBatchName() {
+        return DI_BATCH_INFO && DI_BATCH_INFO.objectApiName ? DI_BATCH_INFO.objectApiName : null;
+    }
 
     renderedCallback() {
         if (!this.isInitialized && this.isLoading === false) {

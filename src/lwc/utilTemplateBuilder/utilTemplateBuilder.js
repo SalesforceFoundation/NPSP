@@ -1,31 +1,21 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-
-const FORMAT_VERSION = '1.0';
-const ADVANCED_MAPPING = 'Data Import Field Mapping';
-const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
-const LANDING_PAGE_TAB_NAME = 'GE_Templates';
-const SORTED_BY = 'required';
-const SORT_ORDER = 'desc';
-const PICKLIST = 'Picklist';
-const NEW = 'new';
-const EDIT = 'edit';
-
-const PROP_API_NAME = 'apiName';
-const PROP_BATCH_HEADER_TAB_ERROR = 'hasBatchHeaderTabError';
-
-const EVENT_UPDATE_VALIDITY = 'updatevalidity';
-const EVENT_BATCH_HEADER_FIELD_UPDATE = 'updatebatchheaderfield';
-const EVENT_BATCH_HEADER_FIELD_UP = 'batchheaderfieldup';
-const EVENT_BATCH_HEADER_FIELD_DOWN = 'batchheaderfielddown';
-const EVENT_BATCH_HEADER_FIELD_ADD = 'addbatchheaderfield';
-const EVENT_BATCH_HEADER_FIELD_REMOVE = 'removebatchheaderfield';
+import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
+import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
+import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
+import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
+import DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Implementing_Class__c'
+import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Rule__c'
+import DI_BATCH_DONATION_DATE_RANGE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
+import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
+import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerId'
 
 const OBJECT = 'object';
 const FUNCTION = 'function';
+const ASC = 'asc';
 
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
-    'Name'
+    DI_BATCH_NAME_FIELD_INFO.fieldApiName
 ];
 Object.freeze(ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS);
 
@@ -35,14 +25,14 @@ Object.freeze(ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS);
 // We're considering putting matching options in a 'global
 // batch settings' area. Potentially in NPSP Settings.
 const EXCLUDED_BATCH_HEADER_FIELDS = [
-    'Batch_Process_Size__c',
-    'Run_Opportunity_Rollups_while_Processing__c',
-    'Donation_Matching_Behavior__c',
-    'Donation_Matching_Implementing_Class__c',
-    'Donation_Matching_Rule__c',
-    'Donation_Date_Range__c',
-    'Post_Process_Implementing_Class__c',
-    'OwnerId',
+    DI_BATCH_PROCESS_SIZE_INFO.fieldApiName,
+    DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO.fieldApiName,
+    DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO.fieldApiName,
+    DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO.fieldApiName,
+    DI_BATCH_DONATION_MATCHING_RULE_INFO.fieldApiName,
+    DI_BATCH_DONATION_DATE_RANGE_INFO.fieldApiName,
+    DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO.fieldApiName,
+    DI_BATCH_OWNER_ID_INFO.fieldApiName,
 ];
 Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
 
@@ -263,7 +253,7 @@ const dispatch = (context, name, detail, bubbles = false, composed = false) => {
 const sort = (list, property, sortDirection) => {
     const data = mutable(list);
     const key = (a) => a[property];
-    const reverse = sortDirection === 'asc' ? 1 : -1;
+    const reverse = sortDirection === ASC ? 1 : -1;
 
     data.sort((a, b) => {
         let valueA = key(a) ? key(a) : '';
@@ -386,23 +376,6 @@ const generateId = () => {
 };
 
 export {
-    FORMAT_VERSION,
-    ADVANCED_MAPPING,
-    SORTED_BY,
-    SORT_ORDER,
-    PICKLIST,
-    NEW,
-    EDIT,
-    DEFAULT_FIELD_MAPPING_SET,
-    LANDING_PAGE_TAB_NAME,
-    PROP_API_NAME,
-    PROP_BATCH_HEADER_TAB_ERROR,
-    EVENT_UPDATE_VALIDITY,
-    EVENT_BATCH_HEADER_FIELD_UPDATE,
-    EVENT_BATCH_HEADER_FIELD_ADD,
-    EVENT_BATCH_HEADER_FIELD_REMOVE,
-    EVENT_BATCH_HEADER_FIELD_UP,
-    EVENT_BATCH_HEADER_FIELD_DOWN,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
     removeByProperty,

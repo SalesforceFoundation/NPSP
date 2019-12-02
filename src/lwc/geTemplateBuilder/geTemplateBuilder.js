@@ -17,19 +17,20 @@ import {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
-    EXCLUDED_BATCH_HEADER_FIELDS,
-    FORMAT_VERSION,
-    ADVANCED_MAPPING,
-    SORTED_BY,
-    SORT_ORDER,
-    PICKLIST,
-    NEW,
-    EDIT,
-    DEFAULT_FIELD_MAPPING_SET,
-    LANDING_PAGE_TAB_NAME,
+    EXCLUDED_BATCH_HEADER_FIELDS
 } from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
+
+const FORMAT_VERSION = '1.0';
+const ADVANCED_MAPPING = 'Data Import Field Mapping';
+const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
+const LANDING_PAGE_TAB_NAME = 'GE_Templates';
+const SORTED_BY = 'required';
+const SORT_ORDER = 'desc';
+const PICKLIST = 'Picklist';
+const NEW = 'new';
+const EDIT = 'edit';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
@@ -154,7 +155,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         Object.getOwnPropertyNames(this.batchFields).forEach((key) => {
             let field = this.batchFields[key];
 
-            if (EXCLUDED_BATCH_HEADER_FIELDS.includes(field.apiName.replace(this.namespace, ''))) {
+            if (EXCLUDED_BATCH_HEADER_FIELDS.includes(field.apiName)) {
                 return;
             }
 
@@ -164,7 +165,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 field.isPicklist = false;
             }
 
-            if (ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS.includes(field.apiName.replace(this.namespace, ''))) {
+            if (ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS.includes(field.apiName)) {
                 field.required = true;
             }
 
