@@ -43,7 +43,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static final String PLEDGED_STAGENAME = 'Pledged';
     private static final String PROMISED_STAGENAME = 'Promised';
     private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
-    private static final Id RECORD_TYPE_FAKE_ID = '0120x00000QF099999';
+    private static final Id RECORD_TYPE_MOCK_ID = '0120x00000QF099999';
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final List<Date> closeDates = new List<Date>{
@@ -208,7 +208,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         Opportunity installmentOpp = getOpportunities()[0];
 
-        System.assert(installmentOpp != null, 'An opportunity should be created for each recurring donation record');
+        System.assertNotEquals(null, installmentOpp, 'An opportunity should be created for each recurring donation record');
         System.assertEquals(rdSettingRecordTypeId, installmentOpp.RecordTypeId,
             'The record type should be configured according to the NPSP Opportunity Default Record Type');
     }
@@ -231,7 +231,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         Id defaultRecordTypeId = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.sObjectType);
 
-        System.assert(installmentOpp != null, 'An opportunity should be created for each recurring donation record');
+        System.assertNotEquals(null, installmentOpp, 'An opportunity should be created for each recurring donation record');
         System.assertEquals(defaultRecordTypeId, installmentOpp.RecordTypeId,
             'The record type should be the default opp record type when NPSP default record type is null');
     }
@@ -282,7 +282,7 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<String, Object> rdSettingFieldMap = new Map<String, Object>{
-            'npe03__Record_Type__c' => RECORD_TYPE_FAKE_ID
+            'npe03__Record_Type__c' => RECORD_TYPE_MOCK_ID
         };
         createRdSettingsWithFieldMap(rdSettingFieldMap);
 
@@ -290,7 +290,7 @@ private with sharing class RD2_OpportunityService_TEST {
         createRecurringDonations(2);
         Test.stopTest();
 
-        System.assert(getOpportunities().isEmpty(), 
+        System.assertEquals(0, getOpportunities().size(), 
             'No installment opportunity should be created when the default record type on the setting is invalid');
 
         List<Error__c> errors = errorGateway.getRecords();
@@ -298,7 +298,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(2, errors.size(), '2 Error records should be created for each installment opp');
 
         for (Error__c error : errors) {
-            System.assert(error.Full_Message__c.contains(String.valueOf(RECORD_TYPE_FAKE_ID)),
+            System.assert(error.Full_Message__c.contains(String.valueOf(RECORD_TYPE_MOCK_ID)),
                 'The error message should be related to the invalid record type Id');
         }    
     }
