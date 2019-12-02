@@ -1,13 +1,18 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 
+
+// https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
+// this list only includes fields that can be handled by lightning-input
 const inputTypeByDescribeType = {
     'BOOLEAN': 'checkbox',
     'CURRENCY': 'number',
     'DATE': 'date',
     'DATETIME': 'datetime-local',
     'EMAIL': 'email',
-    'NUMBER': 'number',
+    'DOUBLE': 'number',
+    'INTEGER': 'number',
+    'LONG': 'number',
     'PERCENT': 'number',
     'STRING': 'text',
     'PHONE': 'tel',
