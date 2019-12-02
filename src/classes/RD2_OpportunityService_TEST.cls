@@ -327,11 +327,17 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(opps[0].Name, expectedOppName, 'Opportunity Name should match');
     }
 
+    /***
+    * @description Creates a single Recurring Donation record
+    * @return npe03__Recurring_Donation__c
+    */
     private static npe03__Recurring_Donation__c createRecurringDonation() {
         return createRecurringDonations(1)[0];
     }
+
     /***
-    * @description Creates a single Recurring Donation record
+    * @description Creates a list of Recurring Donation records
+    * @param size Number of RDs to be created
     * @return npe03__Recurring_Donation__c
     */
     private static List<npe03__Recurring_Donation__c> createRecurringDonations(Integer size) {
@@ -352,8 +358,6 @@ private with sharing class RD2_OpportunityService_TEST {
 
         return rdGateway.getRecords(rds);
     }
-
-
 
     /***
     * @description Creates Recurring Donation settings
