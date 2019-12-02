@@ -85,12 +85,15 @@ class GeFormService {
     }
 
     /**
-     * Takes a Data Import record, processes it, and returns the new Opportunity created from it.
+     * Takes a Data Import record and additional object data, processes it, and returns the new Opportunity created from it.
+     * @param createdDIRecord
+     * @param widgetValues
      * @returns {Promise<Id>}
      */
-    createOpportunityFromDataImport(createdDIRecord) {
+    createOpportunityFromDataImport(createdDIRecord, widgetValues) {
+        const widgetDataString = JSON.stringify(widgetValues);
         return new Promise((resolve, reject) => {
-            saveAndProcessGift({diRecord: createdDIRecord})
+            saveAndProcessGift({diRecord: createdDIRecord, widgetData: widgetDataString})
                 .then((result) => {
                     resolve(result);
                 })
@@ -109,9 +112,11 @@ class GeFormService {
         
         // Gather all the data from the input
         let fieldData = {};
+        let widgetValues = {};
 
         sectionList.forEach(section => {
             fieldData = { ...fieldData, ...(section.values)};
+            widgetValues = { ...widgetValues, ...(section.widgetValues)};
         });
 
         // Build the DI Record
@@ -127,8 +132,9 @@ class GeFormService {
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
             }
         }
-
-        const opportunityID =this.createOpportunityFromDataImport(diRecord);
+        
+        // console.log(widgetValues); 
+        const opportunityID =this.createOpportunityFromDataImport(diRecord, widgetValues);
         
         return opportunityID;
     }

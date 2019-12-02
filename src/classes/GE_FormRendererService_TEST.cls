@@ -43,7 +43,8 @@ private with sharing class GE_FormRendererService_TEST {
     @isTest
     private static void createAndProcessDataImportRecord() {
         DataImport__c di = BDI_DataImport_TEST.newDI('First', 'Last', 100);
-        Id oppId = GE_FormRendererService.saveAndProcessSingleGift(di);
+        // TODO: Update this test to take a Additional Object string, and also process that
+        Id oppId = GE_FormRendererService.saveAndProcessSingleGift(di, null);
         System.assert(oppId != null);
     }
 

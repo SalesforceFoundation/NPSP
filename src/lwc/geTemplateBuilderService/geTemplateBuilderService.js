@@ -84,11 +84,11 @@ class GeTemplateBuilderService {
         objectMappingByDevName,
         fieldMappingsByObjMappingDevName) => {
 
-        fieldMappingByDevName.geCreditCardWidget = {
-            DeveloperName: 'geCreditCardWidget',
-            MasterLabel: 'Credit Card',
+        fieldMappingByDevName.geFormWidgetAllocation = {
+            DeveloperName: 'geFormWidgetAllocation',
+            MasterLabel: 'Allocations',
             Target_Object_Mapping_Dev_Name: 'Widgets',
-            Target_Field_Label: 'Credit Card',
+            Target_Field_Label: 'Allocations',
             Required: 'No',
             Element_Type: 'widget',
         }
@@ -99,7 +99,7 @@ class GeTemplateBuilderService {
         }
 
         fieldMappingsByObjMappingDevName.Widgets = [
-            fieldMappingByDevName.geCreditCardWidget
+            fieldMappingByDevName.geFormWidgetAllocation
         ]
     }
 }
