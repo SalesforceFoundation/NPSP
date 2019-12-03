@@ -1469,7 +1469,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     @IsTest
     private static void shouldRecalcRollupsOnRdAfterBatchJobWithLegacyRollups() {
 
-        npe03__Recurring_Donation__c rd = setupWhenVerifyingRollupJobBehaviorInRdBatchJob(false, true);
+        npe03__Recurring_Donation__c rd = configureForBatchJobWithRollupDisableTests(false, true);
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
 
         Database.executeBatch(new RD_RecurringDonations_BATCH(), 10);
@@ -1489,7 +1489,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     @IsTest
     private static void shouldRecalcRollupsOnRdAfterBatchJobWithCRLP() {
 
-        npe03__Recurring_Donation__c rd = setupWhenVerifyingRollupJobBehaviorInRdBatchJob(true, false);
+        npe03__Recurring_Donation__c rd = configureForBatchJobWithRollupDisableTests(true, false);
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
 
         Database.executeBatch(new RD_RecurringDonations_BATCH(), 10);
@@ -1509,7 +1509,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     @IsTest
     private static void shouldNotRecalcRollupsOnRdAfterBatchJobWithCRLP() {
 
-        npe03__Recurring_Donation__c rd = setupWhenVerifyingRollupJobBehaviorInRdBatchJob(true, true);
+        npe03__Recurring_Donation__c rd = configureForBatchJobWithRollupDisableTests(true, true);
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
 
         Database.executeBatch(new RD_RecurringDonations_BATCH(), 10);
@@ -1532,7 +1532,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     * test in the batch job logic.
     * @return Created Recurring Donation Record
     */
-    private static npe03__Recurring_Donation__c setupWhenVerifyingRollupJobBehaviorInRdBatchJob(Boolean isCRLP, Boolean isDisableRollups) {
+    private static npe03__Recurring_Donation__c configureForBatchJobWithRollupDisableTests(Boolean isCRLP, Boolean isDisableRollups) {
 
         if (isCRLP) {
             UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
@@ -1556,6 +1556,8 @@ private with sharing class RD_RecurringDonations_TEST2 {
             .withContact(c.Id)
             .withAmount(100)
             .withDateEstablished(Date.today())
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(true)
             .withOpenEndedStatusOpen()
             .withOwnerId()
             .withInstallments(null)

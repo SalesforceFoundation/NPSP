@@ -344,7 +344,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     @IsTest
     private static void shouldRecalcRollupsOnRdAfterBatchJobWithCRLP() {
 
-        npe03__Recurring_Donation__c rd = setupWhenVerifyingRollupJobBehaviorInRdBatchJob(false);
+        npe03__Recurring_Donation__c rd = configureForBatchJobWithRollupDisableTests(false);
         System.assertEquals(null, rd.npe03__Paid_Amount__c, 'The PaidAmount field should be null instead of zero');
 
         Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
@@ -365,7 +365,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     @IsTest
     private static void shouldNotRecalcRollupsOnRdAfterBatchJobWithCRLP() {
 
-        npe03__Recurring_Donation__c rd = setupWhenVerifyingRollupJobBehaviorInRdBatchJob(true);
+        npe03__Recurring_Donation__c rd = configureForBatchJobWithRollupDisableTests(true);
         System.assertEquals(null, rd.npe03__Paid_Amount__c, 'The PaidAmount field should be null instead of zero');
 
         Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
@@ -469,7 +469,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     * test in the batch job logic. However, the schedule records still need to be created
     * @return Created Recurring Donation Record
     */
-    private static npe03__Recurring_Donation__c setupWhenVerifyingRollupJobBehaviorInRdBatchJob(Boolean isDisableRollups) {
+    private static npe03__Recurring_Donation__c configureForBatchJobWithRollupDisableTests(Boolean isDisableRollups) {
 
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
             Customizable_Rollups_Enabled__c = true
