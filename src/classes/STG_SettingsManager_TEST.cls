@@ -594,6 +594,24 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Tests the Recurring Donations panel when RD2 is enabled
+    * @return void
+    */
+    public static testMethod void checkCloseActionsContainsSelectOptionsWhenRD2Enabled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        List<RD2_Constants.CloseActions> CloseOptionValues = RD2_Constants.CloseActions.values();
+
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        system.assertEquals('idPanelRD', panel.idPanel());
+        panel.init();
+
+        System.assertNotEquals(null, panel.listSORDCloseOptions);
+        System.assert(CloseOptionValues[0].name().contains(panel.listSORDCloseOptions[0].getValue()));
+
+    }
+
+    /*********************************************************************************************************
     * @description Tests the Run RD Batch panel
     * @return void
     */
