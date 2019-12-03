@@ -34,7 +34,7 @@
             <!-- END INTRO TEXT AND TOGGLE -->
 
             <!-- BEGIN HELP TEXT -->
-            <div class="slds" id="page_messages" style="{!IF(isCRLPEnabled, 'display:block', 'display:none')}">
+            <div class="slds" id="page_messages" style="{!IF(isCRLPAndRD2Enabled, 'display:block', 'display:none')}">
                 <div role="alert" class="slds-notify">
                     <div class="notify__content">
                         <div class="slds-media slds-text-body_small slds-m-top_small slds-m-bottom_small" >

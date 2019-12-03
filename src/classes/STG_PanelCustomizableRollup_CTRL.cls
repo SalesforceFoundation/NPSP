@@ -87,8 +87,10 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     /*******************************************************************************************************
     * @description Checks if CRLP is enabled
     */
-    public Boolean getIsCRLPEnabled() {
-        return STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
+    public Boolean getIsCRLPAndRD2Enabled() {
+        return
+            STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c
+            && isEnhancedRD2;
     }
 
     /*******************************************************************************************************
