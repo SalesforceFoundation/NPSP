@@ -3139,9 +3139,9 @@
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
+        <members>geTemplateBuilderFormFields</members>
         <members>geTemplateBuilderFormSection</members>
         <members>geTemplateBuilderSectionModalBody</members>
-        <members>geTemplateBuilderSelectFields</members>
         <members>geTemplateBuilderService</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>geTemplates</members>

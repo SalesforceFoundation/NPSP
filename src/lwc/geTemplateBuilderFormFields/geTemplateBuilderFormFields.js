@@ -7,7 +7,7 @@ import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amou
 import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
 
-export default class geTemplateBuilderSelectFields extends LightningElement {
+export default class geTemplateBuilderFormFields extends LightningElement {
     isInitialized;
     @api previousSaveAttempted;
 
