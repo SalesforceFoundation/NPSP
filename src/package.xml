@@ -344,10 +344,10 @@
         <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
-        <members>RD2_OpportunityEvaluation_BATCH</members>
-        <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>
         <members>RD2_OpportunityEvaluationService_TEST</members>
+        <members>RD2_OpportunityEvaluation_BATCH</members>
+        <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_QueueableService</members>
@@ -1457,6 +1457,7 @@
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
+        <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_EnablementDisabledHeader</members>
