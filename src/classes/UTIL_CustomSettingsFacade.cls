@@ -846,8 +846,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
         recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
         recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
-        recurringDonationsSettings.npe03__Record_Type__c = (settings.npe03__Record_Type__c != null) ? 
-            settings.npe03__Record_Type__c : recurringDonationsSettings.npe03__Record_Type__c;
+        recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 
