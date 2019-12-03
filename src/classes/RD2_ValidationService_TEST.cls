@@ -53,8 +53,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .build();
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder().build();
 
         try {
             insert rd;
@@ -90,8 +89,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies if it displays error message when the contact do not belong to
-        the selected HouseHold account.
+    * @description Verifies if it displays error message when the contact do not belong to the selected HouseHold account.
     */
     @isTest
     private static void shouldFailWhenContactDoesNotBelongToHHAccount() {
@@ -114,8 +112,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /**
-    * @description Should fail when there is an invalid contact for the account in the
-        Recurring Donations list.
+    * @description Should fail when there is an invalid contact for the account in the Recurring Donations list.
     */
     @isTest
     private static void shouldFailOnlyInvalidRecurringDonations() {
@@ -148,8 +145,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies if it creates Recurring donations for a single household contact
-        without an account.
+    * @description Verifies if it creates Recurring donations for a single household contact without an account.
     */
     @isTest
     private static void shouldCreateRDSForHouseholdContact() {
@@ -197,7 +193,8 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies an exception is thrown when Amount is not specified, zero or a negative number on an Active Recurring Donation.
+    * @description Verifies an exception is thrown when Amount is not specified, 
+    * zero or a negative number on an Active Recurring Donation.
     */
     @isTest
     private static void shouldNotCreateActiveRDWhenAmountIsNotValid() {
@@ -304,11 +301,10 @@ private with sharing class RD2_ValidationService_TEST {
         }
         String expectedMessage = String.format(
             System.Label.RD2_InstallmentPeriodMustBeValid,
-            new String[]{'Occasionally' }
+            new String[]{ 'Occasionally' }
         );
         System.assert(errMessage.contains(expectedMessage),
             'Installment period should be valid ' + errMessage);
-
     }
 
     /***
@@ -374,11 +370,10 @@ private with sharing class RD2_ValidationService_TEST {
             }
             System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
         }
-
     }
 
     // Helper Methods
-    //////////////////////
+    /////////////////////
 
     /****
     * @description Returns contact record
