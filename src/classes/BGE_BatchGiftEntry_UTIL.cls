@@ -150,12 +150,12 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
         if (String.isNotBlank(batch.Donation_Matching_Rule__c)) {
             for (String matchingField : batch.Donation_Matching_Rule__c.split(';')) {
-                // The npsp namespace is included in the String of fields listed in the
-                // <defaultValue> element of the DataImportBatch__c.Donation_Matching_Rule__c
-                // field. UTIL_Namespace.StrTokenRemoveNSPrefix() removes them when in a
-                // non-namespaced environment.
+                // The npsp namespace is included in the string of fields listed in the
+                // DataImportBatch__c.Donation_Matching_Rule__c <defaultValue> element.
+                // UTIL_Namespace.alignSchemaNSWithEnvironment() ensures the namespace is
+                // aligned with that of the current environment if not npsp.
                 String namespaceAdjustedMatchingFieldName =
-                        UTIL_Namespace.StrTokenRemoveNSPrefix(matchingField);
+                        UTIL_Namespace.alignSchemaNSWithEnvironment(matchingField);
                 if (!activeFieldNames.contains(namespaceAdjustedMatchingFieldName)) {
                     activeFieldNames.add(namespaceAdjustedMatchingFieldName);
                 }
