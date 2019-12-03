@@ -161,10 +161,6 @@ public class RD_RecurringDonations {
             if (disableCustomizableRollups == null) {
                 disableCustomizableRollups = false;
             }
-            System.debug('> disableCustomizableRollups = ' + disableCustomizableRollups);
-            System.debug('  > IsBatch=' + System.isBatch());
-            System.debug('  > IsFuture=' + System.isFuture());
-            System.debug('  > IsQueueable=' + System.isQueueable());
 
             disableCustomizableRollups = disableCustomizableRollups &&
                 (System.isBatch() || System.isFuture() || System.isQueueable());
@@ -520,7 +516,6 @@ public class RD_RecurringDonations {
                     }
 
                     while (oppCloseDate < dtForecast) {
-                        UTIL_Debug.debug('****DJH insert rdcounter: ' + rdcounter + ' oppCloseDate: ' + oppCloseDate + ' dtForecast: ' + dtForecast);
                         Opportunity o = new Opportunity();
                         o.CloseDate = oppCloseDate;
                         o.OwnerId = r.OwnerId;
@@ -1018,7 +1013,6 @@ public class RD_RecurringDonations {
                     oppCloseDate = getNextDate(oppCloseDate, rd);
 
                     while (oppCloseDate < dtForecast) {
-                        UTIL_Debug.debug('****DJH evaluate oppCounter: ' + oppCounter + ' oppCloseDate: ' + oppCloseDate + ' dtForecast: ' + dtForecast);
                         Opportunity o = new Opportunity();
                         o.OwnerId = rd.OwnerId;
 
