@@ -699,13 +699,14 @@ public class CMT_UnitTestData_TEST {
     }
 
     /**
- * @description Create Rollup__mdt records to test rolling up from the Opp object to Recurring Donations
- * To work with Enhanced Recurring Donations, this disables the rollup on the npe03__Next_Payment_Date__c field
- * @return Count of Rollup__mdt records mocked
- */
+     * @description Create Rollup__mdt records to test rolling up from the Opp object to Recurring Donations
+     * To work with Enhanced Recurring Donations, this disables the rollup on the npe03__Next_Payment_Date__c field
+     * @return Count of Rollup__mdt records mocked
+     */
     public static Integer mockEnhancedRecurringDonationRollupCMTValues() {
         mockRecurringDonationRollupCMTValues();
         List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitions();
+
         for (Integer n = 0; n < rollups.size(); n++) {
             Rollup__mdt r = rollups[n];
             if (r.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
@@ -713,6 +714,7 @@ public class CMT_UnitTestData_TEST {
                 break;
             }
         }
+
         return rollups.size();
     }
 
