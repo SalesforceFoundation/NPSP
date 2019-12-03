@@ -22,6 +22,14 @@ import {
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
+import geNewTemplate from '@salesforce/label/c.geNewTemplate';
+import labelGeCancel from '@salesforce/label/c.labelGeCancel';
+import geSaveAndClose from '@salesforce/label/c.geSaveAndClose';
+import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
+import geTemplateInfoLeftColHeader from '@salesforce/label/c.geTemplateInfoLeftColHeader';
+import geTemplateInfoLeftColBody from '@salesforce/label/c.geTemplateInfoLeftColBody';
+import geBuilderNavFormFields from '@salesforce/label/c.geBuilderNavFormFields';
+
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
@@ -33,6 +41,16 @@ const NEW = 'new';
 const EDIT = 'edit';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
+
+    CUSTOM_LABELS = {
+        geNewTemplate,
+        labelGeCancel,
+        geSaveAndClose,
+        geTabTemplateInfo,
+        geTemplateInfoLeftColHeader,
+        geTemplateInfoLeftColBody,
+        geBuilderNavFormFields
+    }
 
     // TODO: The following enum values will become custom labels.
     /*******************************************************************************
@@ -81,6 +99,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         } else if (error) {
             handleError(this, error);
         }
+    }
+
+    get templateBuilderHeader() {
+        return this.formTemplateRecordId ? this.formTemplate.name : this.CUSTOM_LABELS.geNewTemplate;
     }
 
     get mode() {

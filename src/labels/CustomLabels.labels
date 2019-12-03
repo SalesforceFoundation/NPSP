@@ -4199,6 +4199,48 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geNewTemplate</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder header text</shortDescription>
+        <value>New Template</value>
+    </labels>
+    <labels>
+        <fullName>geSaveAndClose</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder save button text</shortDescription>
+        <value>Save &amp; Close</value>
+    </labels>
+    <labels>
+        <fullName>geTabTemplateInfo</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Template Info tab text</shortDescription>
+        <value>Template Info</value>
+    </labels>
+    <labels>
+        <fullName>geTemplateInfoLeftColHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Template Info left column header</shortDescription>
+        <value>Gift Entry Template Information</value>
+    </labels>
+    <labels>
+        <fullName>geTemplateInfoLeftColBody</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Template Info left column body</shortDescription>
+        <value>Enter details about this Gift Entry Template.</value>
+    </labels>
+    <labels>
+        <fullName>geBuilderNavFormFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <value>Next: Form Fields</value>
+    </labels>
+    <labels>
         <fullName>labelGeCancel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

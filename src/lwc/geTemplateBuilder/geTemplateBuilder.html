@@ -8,21 +8,21 @@
 
             <c-util-page-header>
                 <h1 slot="title">
-                    <span class="slds-page-header__title"
-                          title="Batch Gift Entry">
-                        New Template
+                    <span class="slds-page-header__title slds-truncate"
+                          title={templateBuilderHeader}>
+                        {templateBuilderHeader}
                     </span>
                 </h1>
                 <div slot="actions"
                      class="slds-button-group">
-                    <lightning-button label="Cancel"
-                                      title="Cancel"
+                    <lightning-button label={CUSTOM_LABELS.labelGeCancel}
+                                      title={CUSTOM_LABELS.labelGeCancel}
                                       variant="neutral"
                                       class="slds-float_right slds-m-right_small"
                                       onclick={handleCancel}>
                     </lightning-button>
-                    <lightning-button label="Save &amp; Close"
-                                      title="Cancel"
+                    <lightning-button label={CUSTOM_LABELS.geSaveAndClose}
+                                      title={CUSTOM_LABELS.geSaveAndClose}
                                       variant="brand"
                                       class="slds-float_right"
                                       onclick={handleFormTemplateSave}>
@@ -33,7 +33,6 @@
             <div class="slds-card slds-card_extension">
                 <lightning-tabset active-tab-value={activeTab}
                                   class="extension_test">
-
                     <lightning-tab value={TabEnums.INFO_TAB}
                                    label={TabEnums.INFO_TAB}
                                    class="slds-p-around_none"
@@ -89,14 +88,12 @@
                                                             onupdatebatchheaderfield={handleUpdateBatchHeaderField}>
                         </c-ge-template-builder-batch-header>
                     </lightning-tab>
-
                 </lightning-tabset>
             </div>
 
             <template if:false={isLoading}>
                 <div class="slds-docked-form-footer"
                      aria-label="Utility Bar">
-
                     <div class="slds-grid slds-nowrap slds-p-around_small">
                         <div class="slds-size_1-of-3">
                             <template if:true={inSelectFieldsTab}>
@@ -121,8 +118,8 @@
                             <lightning-progress-indicator current-step={activeTab}
                                                           type="base"
                                                           variant="base">
-                                <lightning-progress-step label="Template Info"
-                                                         aria-label="Template Info"
+                                <lightning-progress-step label={CUSTOM_LABELS.geTabTemplateInfo}
+                                                         aria-label={CUSTOM_LABELS.geTabTemplateInfo}
                                                          value={TabEnums.INFO_TAB}>
                                 </lightning-progress-step>
                                 <lightning-progress-step label="Select Fields"
@@ -155,17 +152,15 @@
                                 </lightning-button>
                             </template>
                             <template if:true={inBatchHeaderTab}>
-                                <lightning-button label="Save &amp; Close"
-                                                  title="Next"
+                                <lightning-button label={CUSTOM_LABELS.geSaveAndClose}
+                                                  title={CUSTOM_LABELS.geSaveAndClose}
                                                   class="slds-float_right"
                                                   onclick={handleFormTemplateSave}
                                                   variant="brand">
                                 </lightning-button>
                             </template>
                         </div>
-
                     </div>
-
                 </div>
             </template>
         </div>
