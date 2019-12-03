@@ -270,6 +270,8 @@
         <members>GAU_TDTM_TEST</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
+        <members>GE_LookupController</members>
+        <members>GE_LookupController_TEST</members>
         <members>GE_TemplateBuilderCtrl</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -361,6 +363,8 @@
         <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
+        <members>RD2_OpportunityEvaluation_BATCH</members>
+        <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>
         <members>RD2_OpportunityEvaluationService_TEST</members>
         <members>RD2_OpportunityService</members>
@@ -1105,6 +1109,8 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
+        <members>Gift_Entry_Settings__c.Default_Batch_Gift_Entry_Template__c</members>
+        <members>Gift_Entry_Settings__c.Default_Single_Gift_Entry_Template__c</members>
         <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
         <members>Grant_Deadline__c.Grant_Deliverable_Close_Date__c</members>
         <members>Grant_Deadline__c.Grant_Deliverable_Requirements__c</members>
@@ -1271,6 +1277,7 @@
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.ClosedReason__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
@@ -1499,11 +1506,13 @@
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
+        <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
+        <members>RD_ErrorLegacyBatchJobCannotBeRun</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
         <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
         <members>REL_Create_New_Relationship</members>
@@ -1833,6 +1842,8 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>GE_Remove_Selected_Option</members>
+        <members>GE_Search_Placeholder</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
@@ -2596,6 +2607,7 @@
         <members>Form_Template__c</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
+        <members>Gift_Entry_Settings__c</members>
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
         <members>Level__c</members>
@@ -3110,7 +3122,10 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>geAutocomplete</members>
+        <members>geAutocompleteOption</members>
         <members>geFormField</members>
+        <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>
         <members>geFormRenderer</members>
         <members>geFormSection</members>

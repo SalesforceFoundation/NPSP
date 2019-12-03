@@ -1,7 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 
-const LIGHTNING_INPUT_TYPES = ['BOOLEAN', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'PERCENT', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
 const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -29,15 +28,23 @@ export default class GeFormField extends LightningElement {
     }
 
     handleValueChange(event) {
-        // get the value for the field; use the checked attribute for checkboxes
-        this.value  = this.fieldType !== BOOLEAN_TYPE ? event.target.value : event.target.checked.toString();     
-        
+        this.value = this.getValueFromChangeEvent(event);
         window.clearTimeout(this.changeTimeout);
         this.changeTimeout = setTimeout(() => {
             // parent component (formSection) should bind to onchange event
             const evt = new CustomEvent('change', {field: this.element, value: this.value});
             this.dispatchEvent(evt);
         }, DELAY);
+    }
+
+    getValueFromChangeEvent(event) {
+        if(this.isLookup) {
+            return event.detail.value;
+        } else if(this.fieldType === BOOLEAN_TYPE) {
+            return event.target.checked.toString();
+        }
+
+        return event.target.value;
     }
 
     /**
@@ -118,7 +125,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get isLightningInput() {
-        return LIGHTNING_INPUT_TYPES.indexOf(this.fieldType) !== -1;
+        return typeof GeFormService.getInputTypeFromDataType(this.fieldType) !== 'undefined';
     }
 
     get isRichText() {

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Default_Batch_Gift_Entry_Template__c</fullName>
+        <description>The name of the template to use for the Batch Gift Entry page.</description>
+        <externalId>false</externalId>
+        <label>Default Batch Gift Entry Template</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Default_Single_Gift_Entry_Template__c</fullName>
+        <description>The name of the template to use for the Single Gift Entry page.</description>
+        <externalId>false</externalId>
+        <label>Default Single Gift Entry Template</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Gift Entry Settings</label>
+    <visibility>Public</visibility>
+</CustomObject>
