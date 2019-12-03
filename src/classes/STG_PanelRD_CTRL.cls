@@ -75,17 +75,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
             update toUpdate;
 
             strRDOppRecordTypeLabel = null;
-
-            //if we reduced the number of forecast months, we need to trim opps
-            if (originalForecastMonths > STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c){
-                trimOpportunities();
-            }
-            //if we added months, kick off the batch job to update the RDs
-            else if (originalForecastMonths < STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c){
-                STG_PanelRDBatch_CTRL rdbatch = new STG_PanelRDBatch_CTRL();
-                rdbatch.runBatch();
-            }
-            originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
+            setOriginalForecastMonthsForLegacyRD();
             isEditMode = false;
         } catch (Exception e) {
             Database.rollback(sp);
@@ -112,20 +102,60 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
+    * @description set original forecast months for legacy RDs, if added months, start the batch job
+    * @return void
+    */
+    private void setOriginalForecastMonthsForLegacyRD() {
+        if (isEnhancedRD2) {
+            return;
+        }
+        //if we reduced the number of forecast months, we need to trim opps
+        if (originalForecastMonths > STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c){
+            trimOpportunities();
+        }
+        //if we added months, kick off the batch job to update the RDs
+        else if (originalForecastMonths < STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c){
+            STG_PanelRDBatch_CTRL rdbatch = new STG_PanelRDBatch_CTRL();
+            rdbatch.runBatch();
+        }
+        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
+
+    }
+
+    /*********************************************************************************************************
     * @description The SelectOption list of RD Close Options
     */
     public list<SelectOption> listSORDCloseOptions {
         get {
         	if (listSORDCloseOptions == null) {
-	            listSORDCloseOptions = new list<SelectOption>();
-	            list<RD_RecurringDonations.RecurringDonationCloseOptions> CloseOptionValues = RD_RecurringDonations.RecurringDonationCloseOptions.values();
-	            for (RD_RecurringDonations.RecurringDonationCloseOptions rdco : CloseOptionValues) {
-	                listSORDCloseOptions.add(new SelectOption(rdco.name(), rdco.name()));
-	            }
+	            listSORDCloseOptions = getSelectOptionsBasedUponLegacyOrEnhanced();
         	}
             return listSORDCloseOptions;
         }
         private set;
+    }
+
+    /*********************************************************************************************************
+    * @description Gets the list of select options based upon Enhanced or Legacy Recurring donations
+    * return the select options of rd close options
+    */
+    private List<SelectOption> getSelectOptionsBasedUponLegacyOrEnhanced() {
+        List<SelectOption> rdCloseOptions = new list<SelectOption>();
+
+        if (isEnhancedRD2) {
+            List<RD2_Constants.CloseActions> CloseOptionValues = RD2_Constants.CloseActions.values();
+            for (RD2_Constants.CloseActions rdco : CloseOptionValues) {
+                rdCloseOptions.add(new SelectOption(rdco.name(), rdco.name()));
+            }
+        } else {
+            List<RD_RecurringDonations.RecurringDonationCloseOptions> CloseOptionValues = RD_RecurringDonations.RecurringDonationCloseOptions.values();
+            for (RD_RecurringDonations.RecurringDonationCloseOptions rdco : CloseOptionValues) {
+                rdCloseOptions.add(new SelectOption(rdco.name(), rdco.name()));
+            }
+        }
+
+        return rdCloseOptions;
+
     }
 
     /*********************************************************************************************************
