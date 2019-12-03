@@ -82,15 +82,16 @@ public class TEST_SObjectGateway {
                     npe03__Date_Established__c,
                     Day_of_Month__c,
                     StartDate__c,
-                    npe03__Next_Payment_Date__c, 
+                    npe03__Next_Payment_Date__c,
                     npe03__Last_Payment_Date__c,
                     npe03__Installment_Period__c,
                     InstallmentFrequency__c,
                     npe03__Total_Paid_Installments__c,
+                    npe03__Installments__c,
                     PaymentMethod__c,
                     RecurringType__c,
                     Status__c
-                FROM npe03__Recurring_Donation__c 
+                FROM npe03__Recurring_Donation__c
                 WHERE Id IN :rdIds
             ];
         }
@@ -112,7 +113,7 @@ public class TEST_SObjectGateway {
                     npe03__Date_Established__c,
                     Day_of_Month__c,
                     StartDate__c,
-                    npe03__Next_Payment_Date__c, 
+                    npe03__Next_Payment_Date__c,
                     npe03__Last_Payment_Date__c,
                     npe03__Installment_Period__c,
                     InstallmentFrequency__c,
@@ -120,7 +121,7 @@ public class TEST_SObjectGateway {
                     PaymentMethod__c,
                     RecurringType__c,
                     Status__c
-                FROM npe03__Recurring_Donation__c 
+                FROM npe03__Recurring_Donation__c
             ];
         }
     }
@@ -187,15 +188,15 @@ public class TEST_SObjectGateway {
         */
         public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
             return [
-                SELECT 
-                    Name, Amount, 
-                    AccountId, Primary_Contact__c, 
+                SELECT
+                    Name, Amount,
+                    AccountId, Primary_Contact__c,
                     StageName, CloseDate,
                     isClosed, isWon
-                FROM Opportunity 
+                FROM Opportunity
                 WHERE npe03__Recurring_Donation__c IN :rds
             ];
-        }        
+        }
     }
 
     /***
@@ -223,7 +224,7 @@ public class TEST_SObjectGateway {
                 FROM Error__c
             ];
         }
-        
+
         /***
         * @description Returns number of Error__c records
         * @return Integer
@@ -244,7 +245,7 @@ public class TEST_SObjectGateway {
         */
         public AsyncApexJob getRecord(String className) {
             return [
-                SELECT 
+                SELECT
                     CompletedDate,
                     ExtendedStatus,
                     JobItemsProcessed,
