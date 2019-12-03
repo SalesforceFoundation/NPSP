@@ -26,8 +26,6 @@ import geNewTemplate from '@salesforce/label/c.geNewTemplate';
 import labelGeCancel from '@salesforce/label/c.labelGeCancel';
 import geSaveAndClose from '@salesforce/label/c.geSaveAndClose';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
-import geTemplateInfoLeftColHeader from '@salesforce/label/c.geTemplateInfoLeftColHeader';
-import geTemplateInfoLeftColBody from '@salesforce/label/c.geTemplateInfoLeftColBody';
 import geBuilderNavFormFields from '@salesforce/label/c.geBuilderNavFormFields';
 
 const FORMAT_VERSION = '1.0';
@@ -47,8 +45,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         labelGeCancel,
         geSaveAndClose,
         geTabTemplateInfo,
-        geTemplateInfoLeftColHeader,
-        geTemplateInfoLeftColBody,
         geBuilderNavFormFields
     }
 

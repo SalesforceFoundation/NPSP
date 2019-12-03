@@ -1843,8 +1843,10 @@
         <members>geNewTemplate</members>
         <members>geSaveAndClose</members>
         <members>geTabTemplateInfo</members>
+        <members>geTemplateInfoDescriptionFieldLabel</members>
         <members>geTemplateInfoLeftColBody</members>
         <members>geTemplateInfoLeftColHeader</members>
+        <members>geTemplateInfoNameFieldLabel</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>

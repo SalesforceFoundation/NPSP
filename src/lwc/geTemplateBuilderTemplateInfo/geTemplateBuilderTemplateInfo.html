@@ -7,16 +7,11 @@
                 </c-util-stencil>
             </template>
             <template if:false={isLoading}>
-                <h2 class="slds-text-heading_small slds-p-bottom_small">New Batch Gift Entry Template</h2>
+                <h2 class="slds-text-heading_small slds-p-bottom_small">
+                    {CUSTOM_LABELS.geTemplateInfoLeftColHeader}
+                </h2>
                 <p class="slds-text-body_small">
-                    Create a template for your gift entry user to quickly get started with all the right
-                    objects,
-                    fields and settings available when adding donations through Batch Gift Entry. Start with
-                    the
-                    basic
-                    template information and then select the fields you want at the batch and gift entry
-                    level.
-                    You can also adjust matching and other batch options using the tabs.
+                    {CUSTOM_LABELS.geTemplateInfoLeftColBody}
                 </p>
             </template>
         </div>
@@ -29,20 +24,15 @@
             <template if:false={isLoading}>
                 <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
                     <div class="slds-size_1-of-1">
-                        <h2>Enter Basic Information</h2>
-                    </div>
-                    <div class="slds-size_1-of-1">
-
-
                         <lightning-input type="text"
-                                         name="Template Name"
-                                         label="Template Name"
+                                         name={CUSTOM_LABELS.geTemplateInfoNameFieldLabel}
+                                         label={CUSTOM_LABELS.geTemplateInfoNameFieldLabel}
                                          value={templateName}
                                          required
                                          onblur={handleChangeTemplateInfoName}>
                         </lightning-input>
-                        <lightning-textarea name="Description"
-                                            label="Description"
+                        <lightning-textarea name={CUSTOM_LABELS.geTemplateInfoDescriptionFieldLabel}
+                                            label={CUSTOM_LABELS.geTemplateInfoDescriptionFieldLabel}
                                             value={templateDescription}
                                             onblur={handleChangeTemplateInfoDescription}
                                             maxlength="255">

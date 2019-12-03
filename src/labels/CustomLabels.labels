@@ -4199,6 +4199,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geBuilderNavFormFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <value>Next: Form Fields</value>
+    </labels>
+    <labels>
         <fullName>geNewTemplate</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4220,11 +4227,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Template Info</value>
     </labels>
     <labels>
-        <fullName>geTemplateInfoLeftColHeader</fullName>
+        <fullName>geTemplateInfoDescriptionFieldLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Template Info left column header</shortDescription>
-        <value>Gift Entry Template Information</value>
+        <shortDescription>Gift Entry Template Builder Template Info Description field label</shortDescription>
+        <value>Description</value>
     </labels>
     <labels>
         <fullName>geTemplateInfoLeftColBody</fullName>
@@ -4234,11 +4241,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Enter details about this Gift Entry Template.</value>
     </labels>
     <labels>
-        <fullName>geBuilderNavFormFields</fullName>
+        <fullName>geTemplateInfoLeftColHeader</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
-        <value>Next: Form Fields</value>
+        <shortDescription>Gift Entry Template Builder Template Info left column header</shortDescription>
+        <value>Gift Entry Template Information</value>
+    </labels>
+    <labels>
+        <fullName>geTemplateInfoNameFieldLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Template Info Name field label</shortDescription>
+        <value>Template Name</value>
     </labels>
     <labels>
         <fullName>labelGeCancel</fullName>
