@@ -48,7 +48,6 @@ public class CRLP_Rollup_SEL_TEST {
 
         Set<String> expectedFields = new Set<String>{
                 'AccountId', 'CloseDate', 'Amount',
-                Opportunity.Primary_Contact__c.getDescribe().getName(),
                 Opportunity.npe03__Recurring_Donation__c.getDescribe().getName(),
                 Opportunity.Fair_Market_Value__c.getDescribe().getName()
         };

@@ -241,12 +241,10 @@ public inherited sharing class CRLP_Rollup_SEL {
         // Collect SObjectFields in set in case there are duplicates
         final Set<SObjectField> fields = new Set<SObjectField>();
 
-        // Always add the 3 primary lookup relationships needed for all rollup operations:
-        // AccountId, Primary_Contact__c, npe03__and Recurring_Donation__c
+        // Always add the AccountId and Primary_Contact__c for the Opportunity object
         if (objType == Schema.Opportunity.SObjectType) {
             fields.add(Schema.Opportunity.AccountId);
             fields.add(Schema.Opportunity.Primary_Contact__c);
-            fields.add(Schema.Opportunity.npe03__Recurring_Donation__c);
         }
 
         if (objType != null) {
