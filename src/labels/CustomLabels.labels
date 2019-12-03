@@ -4199,6 +4199,27 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geBuilderNavBackFormFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <value>Back: Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geBuilderNavBackTemplateInfo</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <value>Back: Template Info</value>
+    </labels>
+    <labels>
+        <fullName>geBuilderNavBatchHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <value>Next: Batch Header</value>
+    </labels>
+    <labels>
         <fullName>geBuilderNavFormFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4218,6 +4239,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder save button text</shortDescription>
         <value>Save &amp; Close</value>
+    </labels>
+    <labels>
+        <fullName>geTabFormFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Form Fields tab text</shortDescription>
+        <value>Form Fields</value>
     </labels>
     <labels>
         <fullName>geTabTemplateInfo</fullName>

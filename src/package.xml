@@ -1839,9 +1839,13 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>geBuilderNavBackFormFields</members>
+        <members>geBuilderNavBackTemplateInfo</members>
+        <members>geBuilderNavBatchHeader</members>
         <members>geBuilderNavFormFields</members>
         <members>geNewTemplate</members>
         <members>geSaveAndClose</members>
+        <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geTemplateInfoDescriptionFieldLabel</members>
         <members>geTemplateInfoLeftColBody</members>

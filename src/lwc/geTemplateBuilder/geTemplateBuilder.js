@@ -26,7 +26,11 @@ import geNewTemplate from '@salesforce/label/c.geNewTemplate';
 import labelGeCancel from '@salesforce/label/c.labelGeCancel';
 import geSaveAndClose from '@salesforce/label/c.geSaveAndClose';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
+import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geBuilderNavFormFields from '@salesforce/label/c.geBuilderNavFormFields';
+import geBuilderNavBatchHeader from '@salesforce/label/c.geBuilderNavBatchHeader';
+import geBuilderNavBackTemplateInfo from '@salesforce/label/c.geBuilderNavBackTemplateInfo';
+import geBuilderNavBackFormFields from '@salesforce/label/c.geBuilderNavBackFormFields';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -45,7 +49,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         labelGeCancel,
         geSaveAndClose,
         geTabTemplateInfo,
-        geBuilderNavFormFields
+        geTabFormFields,
+        geBuilderNavFormFields,
+        geBuilderNavBatchHeader,
+        geBuilderNavBackTemplateInfo,
+        geBuilderNavBackFormFields
     }
 
     // TODO: The following enum values will become custom labels.
@@ -53,8 +61,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @description Enums used for navigating and flagging active lightning-tabs.
     */
     TabEnums = Object.freeze({
-        INFO_TAB: 'Template Info',
-        SELECT_FIELDS_TAB: 'Form Fields',
+        INFO_TAB: geTabTemplateInfo,
+        SELECT_FIELDS_TAB: geTabFormFields,
         BATCH_HEADER_TAB: 'Batch Header'
     });
 
@@ -274,7 +282,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         if (modalData.action === 'delete') {
-            const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-select-fields');
+            const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-form-fields');
             selectFieldsComponent.handleDeleteFormSection({ detail: modalData.section.id });
         }
     }
@@ -658,7 +666,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * checks for 'requiredness' in the Field Mapping's source (DataImport__c).
     */
     validateSelectFieldsTab(tabsWithErrors) {
-        const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-select-fields');
+        const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-form-fields');
 
         if (selectFieldsComponent) {
             // Component exists in the dom and can validate itself.

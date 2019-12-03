@@ -52,7 +52,7 @@
                                    class="slds-p-around_none"
                                    onactive={handleOnActiveTab}
                                    show-error-indicator={hasSelectFieldsTabError}>
-                        <c-ge-template-builder-select-fields selected-field-mapping-set={formLayout.fieldMappingSetDevName}
+                        <c-ge-template-builder-form-fields selected-field-mapping-set={formLayout.fieldMappingSetDevName}
                                                              form-sections={formSections}
                                                              active-form-section-id={activeFormSectionId}
                                                              previous-save-attempted={previousSaveAttempted}
@@ -69,7 +69,7 @@
                                                              ondeleteformelement={handleDeleteFormElement}
                                                              onupdateformelement={handleUpdateFormElement}
                                                              onrefreshformsections={handleRefreshFormSections}>
-                        </c-ge-template-builder-select-fields>
+                        </c-ge-template-builder-form-fields>
                     </lightning-tab>
 
                     <lightning-tab value={TabEnums.BATCH_HEADER_TAB}
@@ -97,16 +97,16 @@
                     <div class="slds-grid slds-nowrap slds-p-around_small">
                         <div class="slds-size_1-of-3">
                             <template if:true={inSelectFieldsTab}>
-                                <lightning-button label="Back: Template Info"
-                                                  title="Previous"
+                                <lightning-button label={CUSTOM_LABELS.geBuilderNavBackTemplateInfo}
+                                                  title={CUSTOM_LABELS.geBuilderNavBackTemplateInfo}
                                                   onclick={handleGoToTab}
                                                   variant="outline-brand"
                                                   data-tab-value={TabEnums.INFO_TAB}>
                                 </lightning-button>
                             </template>
                             <template if:true={inBatchHeaderTab}>
-                                <lightning-button label="Back: Select Fields"
-                                                  title="Previous"
+                                <lightning-button label={CUSTOM_LABELS.geBuilderNavBackFormFields}
+                                                  title={CUSTOM_LABELS.geBuilderNavBackFormFields}
                                                   onclick={handleGoToTab}
                                                   variant="outline-brand"
                                                   class="slds-m-right_small"
@@ -122,8 +122,8 @@
                                                          aria-label={CUSTOM_LABELS.geTabTemplateInfo}
                                                          value={TabEnums.INFO_TAB}>
                                 </lightning-progress-step>
-                                <lightning-progress-step label="Select Fields"
-                                                         aria-label="Select Fields"
+                                <lightning-progress-step label={CUSTOM_LABELS.geTabFormFields}
+                                                         aria-label={CUSTOM_LABELS.geTabFormFields}
                                                          value={TabEnums.SELECT_FIELDS_TAB}>
                                 </lightning-progress-step>
                                 <lightning-progress-step label="Batch Header"
@@ -134,8 +134,8 @@
                         </div>
                         <div class="slds-size_1-of-3">
                             <template if:true={inTemplateInfoTab}>
-                                <lightning-button label="Next: Select Fields"
-                                                  title="Next"
+                                <lightning-button label={CUSTOM_LABELS.geBuilderNavFormFields}
+                                                  title={CUSTOM_LABELS.geBuilderNavFormFields}
                                                   variant="brand"
                                                   class="slds-float_right"
                                                   onclick={handleGoToTab}
@@ -143,8 +143,8 @@
                                 </lightning-button>
                             </template>
                             <template if:true={inSelectFieldsTab}>
-                                <lightning-button label="Next: Batch Header"
-                                                  title="Next"
+                                <lightning-button label={CUSTOM_LABELS.geBuilderNavBatchHeader}
+                                                  title={CUSTOM_LABELS.geBuilderNavBatchHeader}
                                                   class="slds-float_right"
                                                   onclick={handleGoToTab}
                                                   variant="brand"
