@@ -195,7 +195,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldSetOppRecordTypeIdFromSettings() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Id rdSettingRecordTypeId = UTIL_RecordTypes_TEST.getRandomRecordTypeId(Opportunity.sObjectType);
+        Id rdSettingRecordTypeId = UTIL_RecordTypes_TEST.getRandomRecordTypeId(Opportunity.SObjectType);
 
         Map<String, Object> rdSettingFieldMap = new Map<String, Object>{
             'npe03__Record_Type__c' => rdSettingRecordTypeId
@@ -231,7 +231,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         List<Opportunity> installmentOpps = getOpportunities();
 
-        Id defaultRecordTypeId = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.sObjectType);
+        Id defaultRecordTypeId = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType);
 
         System.assertEquals(1, installmentOpps.size(),
             'An opportunity should be created for the recurring donation record');
