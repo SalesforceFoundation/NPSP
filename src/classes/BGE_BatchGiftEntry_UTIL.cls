@@ -150,8 +150,14 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
         if (String.isNotBlank(batch.Donation_Matching_Rule__c)) {
             for (String matchingField : batch.Donation_Matching_Rule__c.split(';')) {
-                if (!activeFieldNames.contains(matchingField)) {
-                    activeFieldNames.add(matchingField);
+                // The npsp namespace is included in the String of fields listed in the
+                // <defaultValue> element of the DataImportBatch__c.Donation_Matching_Rule__c
+                // field. UTIL_Namespace.StrTokenRemoveNSPrefix() removes them when in a
+                // non-namespaced environment.
+                String namespaceAdjustedMatchingFieldName =
+                        UTIL_Namespace.StrTokenRemoveNSPrefix(matchingField);
+                if (!activeFieldNames.contains(namespaceAdjustedMatchingFieldName)) {
+                    activeFieldNames.add(namespaceAdjustedMatchingFieldName);
                 }
             }
         }
