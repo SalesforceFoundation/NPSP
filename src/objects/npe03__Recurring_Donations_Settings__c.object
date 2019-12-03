@@ -15,6 +15,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>DisableRollupsWhenCreatingInstallments__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, if Customizable Rollups is enabled, immediate rollup calculations are disabled when new Installment Opportunities are created for a Recurring Donation</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, if Customizable Rollups is enabled, immediate rollup calculations are disabled when new Installment Opportunities are created for a Recurring Donation</inlineHelpText>
+        <label>Disable CRLP When Creating Installments</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>EnableAutomaticNaming__c</fullName>
         <defaultValue>false</defaultValue>
         <description>If enabled, Salesforce automatically populates the Recurring Donation Name.</description>
