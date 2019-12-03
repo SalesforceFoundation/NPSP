@@ -1,7 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 
-const LIGHTNING_INPUT_TYPES = ['BOOLEAN', 'CURRENCY', 'DATE', 'DATETIME', 'EMAIL', 'NUMBER', 'PERCENT', 'STRING', 'PHONE', 'TEXT', 'TIME', 'URL'];
 const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -113,7 +112,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get isLightningInput() {
-        return LIGHTNING_INPUT_TYPES.indexOf(this.fieldType) !== -1;
+        return typeof GeFormService.getInputTypeFromDataType(this.fieldType) !== 'undefined';
     }
 
     get isRichText() {
