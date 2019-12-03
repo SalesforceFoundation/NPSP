@@ -133,8 +133,8 @@ public without sharing class RD2_ScheduleService {
                 } else if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c > currentDate) {
                     schedule.EndDate__c = schedule.StartDate__c.addDays(-1);
 
-                } else {
-                    schedule.EndDate__c = currentDate;
+                } else if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+                    schedule.EndDate__c = currentDate.addDays(-1);
                 }
 
                 scheduleChanges.objectsToUpdate.add(schedule);
