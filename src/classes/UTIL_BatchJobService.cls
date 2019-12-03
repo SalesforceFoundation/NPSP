@@ -122,8 +122,7 @@ public with sharing class UTIL_BatchJobService {
         public Integer totalJobItems;
         public Integer numberOfErrors;
 
-        @TestVisible
-        private DateTime createdDate;
+        public DateTime createdDate;
         public DateTime completedDate;
 
         public String timeElapsed;
