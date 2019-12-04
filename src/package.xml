@@ -363,10 +363,10 @@
         <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
-        <members>RD2_OpportunityEvaluation_BATCH</members>
-        <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>
         <members>RD2_OpportunityEvaluationService_TEST</members>
+        <members>RD2_OpportunityEvaluation_BATCH</members>
+        <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_QueueableService</members>
@@ -3122,10 +3122,10 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
-        <members>geBatchGiftEntryApp</members>
-        <members>geBatchGiftEntryTable</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
+        <members>geBatchGiftEntryApp</members>
+        <members>geBatchGiftEntryTable</members>
         <members>geFormField</members>
         <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>
