@@ -18,7 +18,7 @@ Match Based on Number of Days from Donation Date Functionality
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Populate Field By Placeholder    Search Accounts    &{account}[Name]
+    Search Field By Value    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
     Click Link With Text    Review Donations
     Page Should Contain    &{opp}[Name]
@@ -47,8 +47,7 @@ Match Based on Number of Days from Donation Date Functionality
     Select Tab    Related
     Load Related List    GAU Allocations
     Click Link    ${pay_no}
-    ${pay}    Get Current Record ID
-    Store Session Record      npe01__OppPayment__c  ${pay}
+    ${pay}    Save Session Record For Deletion      npe01__OppPayment__c  
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay}
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${api_date}

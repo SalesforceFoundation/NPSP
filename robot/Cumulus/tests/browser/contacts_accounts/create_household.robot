@@ -17,11 +17,11 @@ Setup Variables
     Set suite variable    ${last_name1}
     ${first_name2} =           Generate Random String
     Set suite variable    ${first_name2}
-    ${last_name2} =            Generate Random String*
+    ${last_name2} =            Generate Random String
     Set suite variable    ${last_name2}
-    ${first_name} =           Generate Random String
+    ${first_name} =            Generate Random String
     Set suite variable    ${first_name}
-    ${last_name} =            Generate Random String*
+    ${last_name} =             Generate Random String
     Set suite variable    ${last_name}
 
 
@@ -33,20 +33,23 @@ Create Household With Name Only
     [tags]                                W-037650    feature:Contacts and Accounts
 
     #Create contact with only name
-    Go To Page                            Listing                             Contact
+    Go To Page                            Listing                               Contact
     Click Object Button                   New
+    Wait For Modal                        New                                   Contact
     Populate Form
     ...                                   First Name=${first_name}
     ...                                   Last Name=${last_name}
-    Save Form
-    Current Page Should Be                Details        Contact
-    Verify Toast Message Contains           created
+    Click Modal Button                    Save
+    Wait Until Modal Is Closed
+    Current Page Should Be                Details                               Contact
+    Verify Toast Message Contains         created
     
     #Verify contact is created and shows under recently viewed
-    ${contact_id} =                       Save Session Record For Deletion   Contact
-    Verify Record Is Created In Database  Contact                             ${contact_id} 
-    Header Field Value                    Account Name                        ${last_name} Household
-    Go To Object Home                     Contact
+    ${contact_id} =                       Save Session Record For Deletion      Contact
+    &{contact}                            Verify Record Is Created In Database  Contact                     ${contact_id} 
+    Store Session Record                  Account                               &{contact}[AccountId]
+    Header Field Value                    Account Name                          ${last_name} Household
+    Go To Page                            Listing                               Contact
     Verify Record                         ${first_name} ${last_name}
 
     
@@ -56,8 +59,9 @@ Create Household With additional details
     ...                                   Verifies that contacts created and displays under recently viewed contacts
     [tags]                                W-037650    feature:Contacts and Accounts
     # Create a contact with name and email
-    Go To Page                            Listing     Contact
+    Go To Page                            Listing                             Contact
     Click Object Button                   New
+    Wait For Modal                        New                                 Contact
     Populate Contact Form
     ...                                   First Name=${first_name1}
     ...                                   Last Name=${last_name1}
@@ -74,19 +78,24 @@ Create Household With additional details
     ...                                   Mailing Zip/Postal Code=95320
     ...                                   Mailing State/Province=CA
     ...                                   Mailing Country=USA
-    Save Form
-    Current Page Should Be                Details                             Contact
+    Click Modal Button                    Save
+    Wait Until Modal Is Closed
+    Current Page Should Be                Details                               Contact
     Verify Toast Message Contains         created
     
     # Verify records are saved and displayed in recently viewed contact list
-    ${contact_id2} =                       Save Session Record For Deletion   Contact
-    Verify Record Is Created In Database  Contact                             ${contact_id2}
-    Header Field Value                    Account Name                        ${last_name2} Household
+    ${contact_id2} =                      Save Session Record For Deletion      Contact
+    &{contact2}                           Verify Record Is Created In Database  Contact                       ${contact_id2}
+    Store Session Record                  Account                               &{contact2}[AccountId]
+    Header Field Value                    Account Name                          ${last_name2} Household
     Page Should Contain                   50 Fremont Street
-    Go To Page                            Listing                             Contact
+    Go To Page                            Listing                               Contact
     Verify Record                         ${first_name2} ${last_name2}
     Verify Record                         ${first_name1} ${last_name1}
     Click Link                            ${first_name1} ${last_name1}
+    ${contact_id1} =                      Save Session Record For Deletion      Contact
+    &{contact1}                           Verify Record Is Created In Database  Contact                        ${contact_id1}
+    Store Session Record                  Account                               &{contact1}[AccountId]
     Select Tab                            Details 
-    Confirm Field Value                   Work Email                          skristem@salesforce.com        Y
+    Confirm Field Value                   Work Email                            skristem@salesforce.com        Y
     

@@ -80,20 +80,20 @@ class NPSP(SalesforceRobotLibraryBase):
         level_object = [o for o in objects if o['label'] == 'Level'][0]
         return self.get_namespace_prefix(level_object['name'])
 
-    def populate_field_by_placeholder(self, loc, value):
-        """ Populate field with Place Holder as a locator
-            and actual value of the place holder.
-        """
-        xpath = npsp_lex_locators["placeholder"].format(loc)
-        field = self.selenium.get_webelement(xpath)
-#         self.salesforce._populate_field(xpath, value)
-        
-        field.send_keys(value)
-        time.sleep(2)
-# #         if loc == ("Search Contacts" or "Search Accounts"):
+#     def populate_field_by_placeholder(self, loc, value):
+#         """ Populate field with Place Holder as a locator
+#             and actual value of the place holder.
+#         """
+#         xpath = npsp_lex_locators["placeholder"].format(loc)
+#         field = self.selenium.get_webelement(xpath)
+# #         self.salesforce._populate_field(xpath, value)
+#         
+#         field.send_keys(value)
+#         time.sleep(2)
+# # #         if loc == ("Search Contacts" or "Search Accounts"):
+# #         field.send_keys(Keys.ENTER)
+# # #             field.send_keys(Keys.ARROW_DOWN)
 #         field.send_keys(Keys.ENTER)
-# #             field.send_keys(Keys.ARROW_DOWN)
-        field.send_keys(Keys.ENTER)
     
     def populate_campaign(self,loc,value):
         """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
@@ -160,12 +160,12 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.wait_until_element_is_visible(loc)
         self.selenium.click_link(loc)   
         
-    def click_dropdown(self, title):
-        """Click the dropdown to open it"""
-        locator = npsp_lex_locators['record']['list'].format(title)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
-        self.wait_for_locator('popup')
+#     def click_dropdown(self, title):
+#         """Click the dropdown to open it"""
+#         locator = npsp_lex_locators['record']['list'].format(title)
+#         self.selenium.set_focus_to_element(locator)
+#         self.selenium.get_webelement(locator).click()
+#         self.wait_for_locator('popup')
         
     def click_flexipage_dropdown(self, title):
         """Click the lightning dropdown to open it"""
@@ -1170,12 +1170,7 @@ class NPSP(SalesforceRobotLibraryBase):
         locator = npsp_lex_locators["record"]["related"]["button"].format(heading, button_title)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)   
-        
-    def change_view_to(self,view_name):
-        """Changes the view on the object page to the selected view"""
-        self.select_object_dropdown()
-        locator=npsp_lex_locators['link'].format(view_name)
-        self.selenium.click_element(locator)     
+            
         
     def wait_until_url_contains(self,exp_text):
         """Waits for maximum of 90sec for current url to contain the exp_text"""
@@ -1191,20 +1186,10 @@ class NPSP(SalesforceRobotLibraryBase):
                 time.sleep(10)
                 url=self.selenium.get_location()
                 i += 1
-
-    def save_form(self):
-        """clicks the save button on the modal and waits until the modal is closed"""
-        self.salesforce.click_modal_button("Save")
-        self.salesforce.wait_until_modal_is_closed()
-        self.wait_until_url_contains("/view")
-        
-    def store_object_record_for_deletion(self, object_name):
-        """Gets current record id and stores it for a specified object name for deleting during teardown"""
-        record_id=self.salesforce.get_current_record_id()
-        self.salesforce.store_session_record(object_name,record_id)    
+   
      
     @capture_screenshot_on_error    
-    def change_object_view(self,view_name): 
+    def change_view_to(self,view_name): 
         """Selects a different view for the object records in listing page""" 
         locator=npsp_lex_locators['object_dd']
         view=npsp_lex_locators['link'].format(view_name)
@@ -1232,14 +1217,15 @@ class NPSP(SalesforceRobotLibraryBase):
         return id
     
     def verify_record_is_created_in_database(self,object_name,id):
-        """Verifies that a record with specified id is saved in specified object table in database"""
+        """Verifies that a record with specified id is saved 
+           in specified object table in database and returns the record"""
         record=self.salesforce.salesforce_get(object_name,id)
         self.builtin.should_not_be_empty(record)
         return record
         
     def verify_toast_message_contains(self, text):
         """ Verifies the page contains the text specified """
-        self.selenium.wait_until_page_contains(text, timeout=30)
+        self.selenium.wait_until_page_contains_element(text)
 
 
     def select_value_from_dropdown(self,dropdown,value): 

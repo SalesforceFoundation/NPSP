@@ -39,8 +39,7 @@ Create Relationships for contacts
     ${id}    ${status2}    Check Status    &{contact2}[FirstName] &{contact2}[LastName]
     Should Be Equal As Strings    ${status2}    ${expected result2}
     Click Related Item Link      Relationships    &{contact2}[FirstName] &{contact2}[LastName]
-    ${id}    Get Current Record Id
-    Store Session Record    npe4__Relationship__c    ${id}
+    Save Session Record For Deletion    npe4__Relationship__c    
 
 
 *** Keywords ***

@@ -17,11 +17,11 @@ Convert Lead To Account
     ...                       First Name=${first_name}
     ...                       Last Name=${last_name}
     ...                       Company=${company}
-    Populate Field By Placeholder          Street            50 Fremont Street  
-    Populate Field By Placeholder          City              San Francisco
-    Populate Field By Placeholder          Zip/Postal Code   95320
-    Populate Field By Placeholder          State/Province    CA
-    Populate Field By Placeholder          Country           USA
+    Search Field By Value          Street            50 Fremont Street  
+    Search Field By Value          City              San Francisco
+    Search Field By Value          Zip/Postal Code   95320
+    Search Field By Value          State/Province    CA
+    Search Field By Value          Country           USA
     Select Value From Dropdown   Lead Status              Working - Contacted
     Click Modal Button        Save    
     Wait Until Modal Is Closed

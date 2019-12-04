@@ -19,7 +19,9 @@ class ContactListingPage(ListingPage):
 
 
     def populate_contact_form(self, **kwargs):
-        """"""
+        """Populates contact form with the field-value pairs
+           supported keys are any Primary Address Type, key containing Mailing, any input or textarea field 
+        """
         for key, value in kwargs.items():
             if key == "Primary Address Type":
                 self.npsp.select_value_from_dropdown(key,value)
@@ -40,6 +42,12 @@ class ContactListingPage(ListingPage):
 class ContactDetailPage(DetailPage):
     object_name = "Contact"
 
+    def _is_current_page(self):
+        """ Verify we are on the Contact detail page
+            by verifying that the url contains '/view'
+        """
+        self.npsp.wait_until_url_contains("/view")
+        
     @property
     def npsp(self):
         return self.builtin.get_library_instance('NPSP')
