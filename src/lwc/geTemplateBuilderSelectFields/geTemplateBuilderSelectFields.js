@@ -317,7 +317,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         return {
             id: generateId(),
             label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
-            required: false,
+            required: fieldMapping.Is_Required || false,
             sectionId: sectionId,
             defaultValue: null,
             dataType: fieldMapping.Target_Field_Data_Type,
