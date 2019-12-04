@@ -202,6 +202,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @param logger Exception/error log container
     * @return void
     */
+    @TestVisible
     private void handleSaveAndLogging(
         List<npe03__Recurring_Donation__c> convertedRDs, 
         Map<Id, List<Opportunity>> voidOppsByRDId,
@@ -213,7 +214,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
 
         voidOpenOpportunities(savedRDIds, voidOppsByRDId, logger);
 
-        if (this.isDryRunMode) {
+        if (this.isDryRunMode || logger.hasRelatedRecordFailed) {
             Database.rollback(sp);
         }
 
@@ -371,6 +372,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         /**
         * @description Contains error results
         */
+        @TestVisible
         private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
 
         /**
@@ -384,12 +386,19 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         private String exceptionErrorType;
 
         /**
+        * @description Indicates if there is error on a related record DML operation
+        */
+        @TestVisible
+        public Boolean hasRelatedRecordFailed { get; private set; }
+
+        /**
         * @description Constructor
         * @param context Log context
         */
         public Logger(String context, String exceptionErrorType) {
             this.context = context;
             this.exceptionErrorType = exceptionErrorType;
+            hasRelatedRecordFailed = false;
         }
 
         /**
@@ -418,8 +427,18 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         * @return void
         */
         public void addErrors(List<Object> dmlResults, List<SObject> records) {
+            if (records.isEmpty()) {
+                return;
+            }
+            
+            ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(dmlResults, records);
+
+            if (dmlErrors.errorsExist && records[0].getSObjectType() != npe03__Recurring_Donation__c.SObjectType) {
+                hasRelatedRecordFailed = true;
+            }
+
             errorResult.errorRecords.addAll(
-                ERR_Handler.getErrorsOnly(dmlResults, records).errorRecords
+                dmlErrors.errorRecords
             );
         }
 

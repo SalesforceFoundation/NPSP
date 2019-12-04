@@ -59,7 +59,7 @@ private class RD2_DataMigration_TEST {
      * Enhanced Recurring Donations is not enabled
      */
     @IsTest
-    private static void shouldThrowExceptionAndNotConvertRecordsWhenEnablementIsOff() {
+    private static void shouldThrowExceptionAndNotRunMigrationWhenEnablementIsOff() {
         insert getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .build();
@@ -87,7 +87,7 @@ private class RD2_DataMigration_TEST {
      * Enhanced Recurring Donations is enabled
      */
     @IsTest
-    private static void shouldConvertRecordsWhenEnablementIsOn() {
+    private static void shouldRunMigrationWhenEnablementIsOn() {
         insert getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .build();
@@ -104,7 +104,7 @@ private class RD2_DataMigration_TEST {
      * @description Verifies that the batch job converts Recurring Donations from legacy to enhanced format
      */
     @IsTest
-    private static void shouldConvertLegacyToEnhancedRecurringDonationInTheBatch() {
+    private static void shouldConvertLegacyToEnhancedRecurringDonation() {
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withScheduleTypeMultiplyValue()
@@ -742,7 +742,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
         System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
-        System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
+        assertLegacyFormat(getRecords());
     }
 
     /**
@@ -750,14 +750,14 @@ private class RD2_DataMigration_TEST {
      * due to Recurring Donation validation in trigger
      */
     @IsTest
-    private static void shouldLogEnhancedRDTriggerValidationError() {
+    private static void shouldLogTriggerValidationError() {
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .build();
         insert rd;
 
         //Set legacy RD to an invalid state
-        //so an error is generated later during data migration
+        //so an error is generated during data migration later on
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
         rd.npe03__Contact__c = null;
         update rd;
@@ -774,7 +774,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
         System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
-        System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
+        assertLegacyFormat(getRecords());
     }
 
     /**
@@ -820,6 +820,8 @@ private class RD2_DataMigration_TEST {
         insert opps;
 
         runDataMigration();
+
+        assertEnhancedFormat(getRecords());
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
 
@@ -876,6 +878,8 @@ private class RD2_DataMigration_TEST {
 
         runDataMigration();
 
+        assertEnhancedFormat(getRecords());
+
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
 
         System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
@@ -907,7 +911,7 @@ private class RD2_DataMigration_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
-        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+        assertEnhancedFormat(getRecords());
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'Number of Opportunities should stay the same');
@@ -952,7 +956,7 @@ private class RD2_DataMigration_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
-        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+        assertEnhancedFormat(getRecords());
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
@@ -1005,7 +1009,7 @@ private class RD2_DataMigration_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
-        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+        assertEnhancedFormat(getRecords());
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
@@ -1062,7 +1066,7 @@ private class RD2_DataMigration_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
-        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+        assertEnhancedFormat(getRecords());
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
@@ -1118,7 +1122,7 @@ private class RD2_DataMigration_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
-        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+        assertEnhancedFormat(getRecords());
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(opps.size() - 1, oppById.size(), 'The next future Open Opportunity should be deleted');
@@ -1166,7 +1170,7 @@ private class RD2_DataMigration_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
-        System.assertNotEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should be converted');
+        assertEnhancedFormat(getRecords());
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
@@ -1215,7 +1219,169 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(1, errors.size(), 'An error should be logged: ' + errors);
         System.assertEquals(System.Label.RD2_DataMigrationInvalidCloseAction, errors[0].Full_Message__c, 'Error message should match');
 
-        System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
+        assertLegacyFormat(getRecords());
+    }
+
+    /**
+     * @description Verifies Recurring Donations and their Open Opportunities are migrated together successfully
+     */
+    @IsTest
+    private static void shouldConvertRecurringDonationsAndVoidOppsInBulk() {
+        setCloseActionSettingsToClosedLost();
+
+        List<Contact> contacts = new List<Contact>{
+            UTIL_UnitTestData_TEST.getContact(),
+            UTIL_UnitTestData_TEST.getContact()
+        };
+        insert contacts;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            getLegacyRecurringDonationBuilder(contacts[0].Id).withId(null).build(),
+            getLegacyRecurringDonationBuilder(contacts[1].Id).withId(null).build()
+        };
+
+        //It is required to execute RD bulk insert in a Test.start/stopTest()
+        //in order to complete all future methods. Otherwise, future methods
+        //initiated in the bulk insert would be completed whenever Test.start/stopTest()
+        //is executed next. This would mess up test data setup.
+        Test.startTest();
+        insert rds;
+        Test.stopTest();
+
+        delete oppGateway.getRecords(rds);
+
+        List<Opportunity> opps = new List<Opportunity>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+                .withContact(rd.npe03__Contact__c)
+                .withRecurringDonation(rd.Id)
+                .withAmount(rd.npe03__Amount__c)
+                .withOpenStage();
+
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(TODAY)
+                .build()
+            );
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .build()
+            );
+        }
+        insert opps;
+
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        batch.execute(null, getRecords());
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        assertEnhancedFormat(getRecords());
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rds));
+        System.assertEquals(opps.size(), oppById.size(), 'Number of Opps should match: ' + oppById.values());
+
+        System.assertEquals(false, oppById.get(opps[0].Id).IsClosed, 
+            'First RD: Open Opp with Close Date today should stay open');
+        System.assertEquals(true, oppById.get(opps[1].Id).IsClosed && !oppById.get(opps[1].Id).IsWon, 
+            'First RD: Open Opp with Close Date in future should be Closed Lost');
+        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 
+            'Second RD: Open Opp with Close Date today should stay open');
+        System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon, 
+            'Second RD: Open Opp with Close Date in future should be Closed Lost');
+    }
+
+    /**
+     * @description Verifies Recurring Donations and their Open Opportunities are not migrated 
+     * when DML fails on an Open Opportunity
+     */
+    @IsTest
+    private static void shouldRollbackConversionWhenAnErrorOccursOnOppDML() {
+        setCloseActionSettingsToClosedLost();
+
+        List<Contact> contacts = new List<Contact>{
+            UTIL_UnitTestData_TEST.getContact(),
+            UTIL_UnitTestData_TEST.getContact()
+        };
+        insert contacts;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            getLegacyRecurringDonationBuilder(contacts[0].Id).withId(null).build(),
+            getLegacyRecurringDonationBuilder(contacts[1].Id).withId(null).build()
+        };
+
+        //It is required to execute RD bulk insert in a Test.start/stopTest()
+        //in order to complete all future methods. Otherwise, future methods
+        //initiated in the bulk insert would be completed whenever Test.start/stopTest()
+        //is executed next. This would mess up test data setup.
+        Test.startTest();
+        insert rds;
+        Test.stopTest();
+
+        delete oppGateway.getRecords(rds);
+
+        List<Opportunity> opps = new List<Opportunity>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+                .withContact(rd.npe03__Contact__c)
+                .withRecurringDonation(rd.Id)
+                .withAmount(rd.npe03__Amount__c)
+                .withOpenStage();
+
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(TODAY)
+                .build()
+            );
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .build()
+            );
+        }
+        insert opps;
+
+        //simulate an error on an Opportunity DML
+        String logContext = 'RunDataMigrationTest';
+        String errorMessage = 'Mock Opp DML error';
+
+        RD2_DataMigration_BATCH.Logger logger = new RD2_DataMigration_BATCH.Logger(
+            logContext,
+            RD2_DataMigration_BATCH.LOG_EXCEPTION_ERROR_TYPE
+        );
+        logger.hasRelatedRecordFailed = true;
+        logger.errorResult.errorRecords.add(
+            ERR_Handler.createError(errorMessage, logContext)
+        );
+
+        //try to update converted Recurring Donations and void Open Opps as Closed Lost        
+        List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
+        for (npe03__Recurring_Donation__c rd : getRecords()) {
+            convertedRDs.add(new RD2_DataMigrationMapper(rd).convertToEnhancedRD());
+        }
+
+        Map<Id, List<Opportunity>> voidOppsByRDId = new Map<Id, List<Opportunity>>{
+            rds[0].Id => new List<Opportunity>{ opps[1] },
+            rds[1].Id => new List<Opportunity>{ opps[3] }
+        };
+
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        batch.handleSaveAndLogging(convertedRDs, voidOppsByRDId, logger);
+
+        //assert Recurring Donations are not converted to enhanced format and an error is logged
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be logged: ' + errors);
+        System.assertEquals(errorMessage, errors[0].Full_Message__c, 'Error message should match');
+
+        assertLegacyFormat(getRecords());
+
+        List<Opportunity> actualOpps = oppGateway.getRecords(rds);
+        System.assertEquals(opps.size(), actualOpps.size(), 'Number of Opps should match: ' + actualOpps);
+
+        for (Opportunity opp : actualOpps) {
+            System.assertEquals(false, opp.IsClosed, 'Open Opp should be unchanged');
+        }
     }
 
 
@@ -1416,6 +1582,28 @@ private class RD2_DataMigration_TEST {
         Test.stopTest();
 
         return batchJobId;
+    }
+
+    /****
+    * @description Assert Recurring Donations are converted from legacy to the enhanced format
+    * @param rds Recurring Donations
+    * @return void
+    */
+    private static void assertEnhancedFormat(List<npe03__Recurring_Donation__c> rds) {
+        for (npe03__Recurring_Donation__c rd : rds) {
+            System.assertNotEquals(null, rd.InstallmentFrequency__c, 'The RD should be converted: ' + rd);
+        }
+    }
+
+    /****
+    * @description Assert Recurring Donations are still in the legacy format
+    * @param rds Recurring Donations
+    * @return void
+    */
+    private static void assertLegacyFormat(List<npe03__Recurring_Donation__c> rds) {
+        for (npe03__Recurring_Donation__c rd : rds) {
+            System.assertEquals(null, rd.InstallmentFrequency__c, 'The RD should not be converted: ' + rd);
+        }
     }
 
 }

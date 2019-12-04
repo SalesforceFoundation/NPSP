@@ -408,6 +408,7 @@ public class ERR_Handler {
     * @param context The context the exception was raised on.
     * @return Error__c Error record.
     */
+    @TestVisible
     private static Error__c createError(String msg, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
