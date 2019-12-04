@@ -16,6 +16,12 @@ class AccountListingPage(ListingPage):
 class AccountDetailPage(DetailPage):
     object_name = "Account"
 
+    def _is_current_page(self):
+        """ Verify we are on the Account detail page
+            by verifying that the url contains '/view'
+        """
+        self.npsp.wait_until_url_contains("/view")
+    
     @property
     def npsp(self):
         return self.builtin.get_library_instance('NPSP')

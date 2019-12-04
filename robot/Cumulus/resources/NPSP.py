@@ -1245,6 +1245,6 @@ class NPSP(SalesforceRobotLibraryBase):
     def delete_record(self,value):
         """Select the row to be deleted on the listing page, click delete
            and wait till the focus is back on the listings page."""
-        self.npsp.select_row(value)
+        self.select_row(value)
         self.selenium.click_link("Delete")
-        self.npsp.wait_until_url_contains("/list")
+        self.wait_until_url_contains("/list")

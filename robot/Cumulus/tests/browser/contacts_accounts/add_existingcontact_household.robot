@@ -37,6 +37,7 @@ Add Existing Contact to Existing Household
     
     #Verify both contacts are displayed under household account1
     Click Header Field Link              Account Name
+    Current Page Should Be               Details               Account 
     Select Tab                           Related
     Verify Related List Items            Contacts              &{contact1}[FirstName] &{contact1}[LastName]
     Verify Related List Items            Contacts              &{contact2}[FirstName] &{contact2}[LastName]
