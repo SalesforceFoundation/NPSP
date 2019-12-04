@@ -87,7 +87,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @description Indicates if Recurring Donation Settings close action on Open Opportunities 
      * is overriden when Recurring Donation is Closed
      */
-    public static Boolean isCloseActionOverride = false;
+    public static Boolean overrideVoidOfOpenOpps = false;
 
 
     /**
@@ -204,7 +204,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     private void handleClosedRecurringDonation(npe03__Recurring_Donation__c rd, List<Opportunity> openOppsToVoid) {
 
-        if (rd.Status__c != RD2_Constants.STATUS_CLOSED || isCloseActionOverride) {
+        if (rd.Status__c != RD2_Constants.STATUS_CLOSED || overrideVoidOfOpenOpps) {
             return;
         }
 

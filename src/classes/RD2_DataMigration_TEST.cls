@@ -1226,29 +1226,10 @@ private class RD2_DataMigration_TEST {
      * @description Verifies Recurring Donations and their Open Opportunities are migrated together successfully
      */
     @IsTest
-    private static void shouldConvertRecurringDonationsAndVoidOppsInBulk() {
-        setCloseActionSettingsToClosedLost();
-
-        List<Contact> contacts = new List<Contact>{
-            UTIL_UnitTestData_TEST.getContact(),
-            UTIL_UnitTestData_TEST.getContact()
-        };
-        insert contacts;
-
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            getLegacyRecurringDonationBuilder(contacts[0].Id).withId(null).build(),
-            getLegacyRecurringDonationBuilder(contacts[1].Id).withId(null).build()
-        };
-
-        //It is required to execute RD bulk insert in a Test.start/stopTest()
-        //in order to complete all future methods. Otherwise, future methods
-        //initiated in the bulk insert would be completed whenever Test.start/stopTest()
-        //is executed next. This would mess up test data setup.
-        Test.startTest();
-        insert rds;
-        Test.stopTest();
-
-        delete oppGateway.getRecords(rds);
+    private static void shouldConvertRecurringDonationsAndVoidOpenOppsInBulk() {
+        setCloseActionSettingsToClosedLost();        
+        
+        List<npe03__Recurring_Donation__c> rds = createLegacyRecurringDonationsNoOpps(2);
 
         List<Opportunity> opps = new List<Opportunity>();
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -1298,28 +1279,9 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldRollbackConversionWhenAnErrorOccursOnOppDML() {
-        setCloseActionSettingsToClosedLost();
-
-        List<Contact> contacts = new List<Contact>{
-            UTIL_UnitTestData_TEST.getContact(),
-            UTIL_UnitTestData_TEST.getContact()
-        };
-        insert contacts;
-
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            getLegacyRecurringDonationBuilder(contacts[0].Id).withId(null).build(),
-            getLegacyRecurringDonationBuilder(contacts[1].Id).withId(null).build()
-        };
-
-        //It is required to execute RD bulk insert in a Test.start/stopTest()
-        //in order to complete all future methods. Otherwise, future methods
-        //initiated in the bulk insert would be completed whenever Test.start/stopTest()
-        //is executed next. This would mess up test data setup.
-        Test.startTest();
-        insert rds;
-        Test.stopTest();
-
-        delete oppGateway.getRecords(rds);
+        setCloseActionSettingsToClosedLost();        
+        
+        List<npe03__Recurring_Donation__c> rds = createLegacyRecurringDonationsNoOpps(2);
 
         List<Opportunity> opps = new List<Opportunity>();
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -1342,18 +1304,10 @@ private class RD2_DataMigration_TEST {
         }
         insert opps;
 
-        //simulate an error on an Opportunity DML
-        String logContext = 'RunDataMigrationTest';
-        String errorMessage = 'Mock Opp DML error';
-
-        RD2_DataMigration_BATCH.Logger logger = new RD2_DataMigration_BATCH.Logger(
-            logContext,
-            RD2_DataMigration_BATCH.LOG_EXCEPTION_ERROR_TYPE
-        );
-        logger.hasRelatedRecordFailed = true;
-        logger.errorResult.errorRecords.add(
-            ERR_Handler.createError(errorMessage, logContext)
-        );
+        //simulate an error on a DML other than DML on a Recurring Donation
+        RD2_DataMigration_BATCH.Logger logger = getLogger();
+        List<Database.SaveResult> dmlResults = new List<Database.SaveResult>{ mockErrorDMLResult() };
+        logger.addErrors(dmlResults, new List<Contact>{ new Contact() });
 
         //try to update converted Recurring Donations and void Open Opps as Closed Lost        
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
@@ -1372,7 +1326,7 @@ private class RD2_DataMigration_TEST {
         //assert Recurring Donations are not converted to enhanced format and an error is logged
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'An error should be logged: ' + errors);
-        System.assertEquals(errorMessage, errors[0].Full_Message__c, 'Error message should match');
+        System.assertEquals(dmlResults[0].getErrors()[0].getMessage(), errors[0].Full_Message__c, 'Error message should match');
 
         assertLegacyFormat(getRecords());
 
@@ -1382,6 +1336,67 @@ private class RD2_DataMigration_TEST {
         for (Opportunity opp : actualOpps) {
             System.assertEquals(false, opp.IsClosed, 'Open Opp should be unchanged');
         }
+    }
+
+    /**
+     * @description Verifies Open Opps are voided only for RDs that have been converted to the enhanced format
+     */
+    @IsTest
+    private static void shouldNotVoidOpenOppsWhenRelatedRDIsNotConverted() {
+        setCloseActionSettingsToClosedLost();
+
+        List<npe03__Recurring_Donation__c> rds = createLegacyRecurringDonationsNoOpps(2);
+
+        List<Opportunity> opps = new List<Opportunity>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+                .withContact(rd.npe03__Contact__c)
+                .withRecurringDonation(rd.Id)
+                .withAmount(rd.npe03__Amount__c)
+                .withOpenStage();
+
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(TODAY)
+                .build()
+            );
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .build()
+            );
+        }
+        insert opps;
+
+        //convert only one RD to the enhanced format    
+        List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>{
+            new RD2_DataMigrationMapper(rds[1]).convertToEnhancedRD()
+        };
+
+        //open Opps collection contains Opps to void for all RDs in the transaction
+        Map<Id, List<Opportunity>> voidOppsByRDId = new Map<Id, List<Opportunity>>{
+            rds[0].Id => new List<Opportunity>{ opps[1] },
+            rds[1].Id => new List<Opportunity>{ opps[3] }
+        };
+
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        batch.handleSaveAndLogging(convertedRDs, voidOppsByRDId, getLogger());
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        Map<Id, npe03__Recurring_Donation__c> rdById = new Map<Id, npe03__Recurring_Donation__c>(getRecords());
+        assertLegacyFormat(new List<npe03__Recurring_Donation__c>{ rdById.get(rds[0].Id) });
+        assertEnhancedFormat(new List<npe03__Recurring_Donation__c>{ rdById.get(rds[1].Id) });
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rds));
+        System.assertEquals(opps.size(), oppById.size(), 'Number of Opps should match: ' + oppById.values());
+
+        Opportunity opp = oppById.get(voidOppsByRDId.get(rds[0].Id)[0].Id);
+        System.assertEquals(false, opp.IsClosed, 'Open Opp for the legacy RD should stay open');
+
+        opp = oppById.get(voidOppsByRDId.get(rds[1].Id)[0].Id);
+        System.assertEquals(true, opp.IsClosed && !opp.IsWon, 'Open Opp for the enhanced RD should be Closed Lost');
     }
 
 
@@ -1414,6 +1429,34 @@ private class RD2_DataMigration_TEST {
         delete oppGateway.getRecords(rd);
 
         return rd;
+    }
+     
+    /**
+     * @description Creates Recurring Donations without any Opportunity
+     * @param size Number of Recurring Donations to create
+     * @return List<npe03__Recurring_Donation__c>
+     */
+    private static List<npe03__Recurring_Donation__c> createLegacyRecurringDonationsNoOpps(Integer size) {
+        List<Contact> contacts = new List<Contact>();
+        for (Integer i = 0; i < size; i++) {
+            contacts.add(UTIL_UnitTestData_TEST.getContact());
+        }
+        insert contacts;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        for (Contact contact : contacts) {
+            rds.add(getLegacyRecurringDonationBuilder(contact.Id).withId(null).build());
+        }
+
+        //It is required to execute RD bulk insert in a Test.start/stopTest() 
+        //so all async legacy RD methods are completed. 
+        Test.startTest();
+        insert rds;
+        Test.stopTest();
+
+        delete oppGateway.getRecords(rds);
+
+        return rds;
     }
 
     /**
@@ -1558,6 +1601,19 @@ private class RD2_DataMigration_TEST {
     }
 
     /****
+    * @description Constructs data migration logger
+    * @return RD2_DataMigration_BATCH.Logger
+    */
+    private static RD2_DataMigration_BATCH.Logger getLogger() {
+        String logContext = 'RunDataMigrationTest';
+
+        return new RD2_DataMigration_BATCH.Logger(
+            logContext,
+            RD2_DataMigration_BATCH.LOG_EXCEPTION_ERROR_TYPE
+        );
+    }
+
+    /****
     * @description Returns expected data migration log context
     * @param batchJobId Batch job Id
     * @return String
@@ -1605,5 +1661,13 @@ private class RD2_DataMigration_TEST {
             System.assertEquals(null, rd.InstallmentFrequency__c, 'The RD should not be converted: ' + rd);
         }
     }
+
+    /***
+    * @description Generates error Database.SaveResult
+    */
+    public static Database.SaveResult mockErrorDMLResult() {
+        return Database.insert(new Contact(), false);
+    }
+
 
 }

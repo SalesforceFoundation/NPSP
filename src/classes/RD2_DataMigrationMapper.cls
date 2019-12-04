@@ -54,12 +54,12 @@ public class RD2_DataMigrationMapper {
     /**
     * @description Related Open Opportunities to void
     */
-    public List<Opportunity> voidOpenOpps {
+    public List<Opportunity> openOppsToVoid {
         get {
-            if (voidOpenOpps == null) {
-                voidOpenOpps = getOpenOpportunitiesToVoid();
+            if (openOppsToVoid == null) {
+                openOppsToVoid = getOpenOpportunitiesToVoid();
             }
-            return voidOpenOpps;
+            return openOppsToVoid;
         }
         private set;
     }
@@ -299,7 +299,7 @@ public class RD2_DataMigrationMapper {
      * @return List<Opportunity> Open Opportunities
      */
     private void validateOpenOpportunities() {
-        if (voidOpenOpps.isEmpty()) {
+        if (openOppsToVoid.isEmpty()) {
             return;
         }
 

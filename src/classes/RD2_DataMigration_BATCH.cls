@@ -130,11 +130,11 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
         setBatchJobId(context);
         
-        RD2_OpportunityEvaluationService.isCloseActionOverride = true;
+        RD2_OpportunityEvaluationService.overrideVoidOfOpenOpps = true;
 
         Logger logger = new Logger(logContext, LOG_EXCEPTION_ERROR_TYPE);
         Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);
-        Map<Id, List<Opportunity>> voidOppsByRDId = new Map<Id, List<Opportunity>>();
+        Map<Id, List<Opportunity>> openOppsToVoidByRDId = new Map<Id, List<Opportunity>>();
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -153,12 +153,12 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
                 continue;
             }
 
-            if (!mapper.voidOpenOpps.isEmpty()) {
-                voidOppsByRDId.put(rd.Id, mapper.voidOpenOpps);
+            if (!mapper.openOppsToVoid.isEmpty()) {
+                openOppsToVoidByRDId.put(rd.Id, mapper.openOppsToVoid);
             }
         }
 
-        handleSaveAndLogging(convertedRDs, voidOppsByRDId, logger);
+        handleSaveAndLogging(convertedRDs, openOppsToVoidByRDId, logger);
     }
 
     /**
@@ -198,21 +198,21 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     /**
     * @description Save records and log all exceptions and errors generated during records' validation and save
     * @param convertedRDs Converted Recurring Donations
-    * @param voidOppsByRDId Open Opportunities by Recurring Donation Id to void
+    * @param openOppsToVoidByRDId Open Opportunities by Recurring Donation Id to void
     * @param logger Exception/error log container
     * @return void
     */
     @TestVisible
     private void handleSaveAndLogging(
         List<npe03__Recurring_Donation__c> convertedRDs, 
-        Map<Id, List<Opportunity>> voidOppsByRDId,
+        Map<Id, List<Opportunity>> openOppsToVoidByRDId,
         Logger logger
     ) {
         Savepoint sp = Database.setSavepoint();
 
         Set<Id> savedRDIds = saveRecurringDonations(convertedRDs, logger);
 
-        voidOpenOpportunities(savedRDIds, voidOppsByRDId, logger);
+        voidOpenOpportunities(savedRDIds, openOppsToVoidByRDId, logger);
 
         if (this.isDryRunMode || logger.hasRelatedRecordFailed) {
             Database.rollback(sp);
@@ -258,15 +258,15 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     /**
     * @description Handles Open Opportunities that should be voided (sets them to Closed Lost or deletes them)
     * @param savedRDIds Ids of successfully saved Recurring Donations
-    * @param voidOppsByRDId To be voided Open Opportunities by Recurring Donation Id
+    * @param openOppsToVoidByRDId To be voided Open Opportunities by Recurring Donation Id
     * @param logger Exception/error log container
     * @return void
     */
-    private void voidOpenOpportunities(Set<Id> savedRDIds, Map<Id, List<Opportunity>> voidOppsByRDId, Logger logger) {
+    private void voidOpenOpportunities(Set<Id> savedRDIds, Map<Id, List<Opportunity>> openOppsToVoidByRDId, Logger logger) {
         List<Opportunity> opps = new List<Opportunity>();
         for (Id rdId : savedRDIds) {
-            if (voidOppsByRDId.containsKey(rdId)) {
-                opps.addAll(voidOppsByRDId.get(rdId));
+            if (openOppsToVoidByRDId.containsKey(rdId)) {
+                opps.addAll(openOppsToVoidByRDId.get(rdId));
             }
         }
 
@@ -388,7 +388,6 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         /**
         * @description Indicates if there is error on a related record DML operation
         */
-        @TestVisible
         public Boolean hasRelatedRecordFailed { get; private set; }
 
         /**
