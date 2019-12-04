@@ -37,11 +37,6 @@
 public class RD2_DataMigrationMapper {
 
     /**
-    * @description Contains Recurring Donation custom settings
-    */
-    private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-
-    /**
     * @description Recurring Donation to convert to enhanced format
     */
     private npe03__Recurring_Donation__c rd;
@@ -95,8 +90,6 @@ public class RD2_DataMigrationMapper {
         setDayOfMonth(rd);
         setStatus(rd);
         setOtherFields(rd);
-
-        validateOpenOpportunities();
 
         return rd;
     }
@@ -291,21 +284,6 @@ public class RD2_DataMigrationMapper {
      */
     private void setOtherFields(npe03__Recurring_Donation__c rd) {
         rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
-    }
-
-    /**
-     * @description Extracts open installment Opportunities with Close Date >= today and return all but the first one.
-     * These Opportunities will become void (either closed lost or deleted).
-     * @return List<Opportunity> Open Opportunities
-     */
-    private void validateOpenOpportunities() {
-        if (openOppsToVoid.isEmpty()) {
-            return;
-        }
-
-        if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name()) {
-            throw new MigrationException(System.Label.RD2_DataMigrationInvalidCloseAction);
-        }
     }
 
     /**

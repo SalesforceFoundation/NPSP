@@ -1396,7 +1396,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Open Opportunities cannot be migrated due to No_Action configuration</shortDescription>
-        <value>To migrate to Enhanced Recurring Donations, your existing Recurring Donations cannot have multiple open Opportunities. In NPSP Settings | Recurring Donations | Recurring Donations, select any value other than "No_Action" for Open Opportunity Behavior on RD Close.</value>
+        <value>To migrate to Enhanced Recurring Donations, your existing Recurring Donations cannot have multiple open Opportunities. In NPSP Settings | Recurring Donations | Recurring Donations, select any value other than "No_Action" for Open Opportunity Behavior on RD Close. After data migration is complete, you may change the setting back to the previous value.</value>
     </labels>
     <labels>
         <fullName>RD2_DataMigrationInvalidInstallmentPeriod</fullName>

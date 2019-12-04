@@ -114,10 +114,14 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     public Database.QueryLocator start(Database.BatchableContext context) {
         setBatchJobId(context);
 
-        if (RD2_EnablementService.isRecurringDonations2Enabled) {
-            return Database.getQueryLocator(getRDMigrationQuery());
-        } else {
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new MigrationException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
+
+        } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name()) {
+            throw new MigrationException(System.Label.RD2_DataMigrationInvalidCloseAction);
+            
+        } else {
+            return Database.getQueryLocator(getRDMigrationQuery());
         }
     }
 

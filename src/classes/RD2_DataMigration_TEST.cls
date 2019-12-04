@@ -79,7 +79,43 @@ private class RD2_DataMigration_TEST {
             'The exception should be generated because enhanced Recurring Donations setting is not enabled');
 
         System.assert(jobException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorDataMigrationJobCannotBeRun),
-            'The exception message should match ' + System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
+            'The exception message should match. Actual message: ' + jobException.getMessage());
+
+        assertLegacyFormat(getRecords());
+    }
+
+    /**
+     * @description Verifies that the job should run with zero records processed when
+     * RD Settings close action is set to No_Action
+     */
+    @IsTest
+    private static void shouldThrowExceptionAndNotRunMigrationWhenCloseActionIsNoAction() {
+        setCloseActionSettingsToNoAction();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .build();
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Exception jobException;
+        try {
+            Test.startTest();
+            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+            Database.executeBatch(batch);
+            Test.stopTest();
+
+        } catch (Exception ex) {
+            jobException = ex;
+        }
+
+        System.assertNotEquals(null, jobException,
+            'The exception should be generated because RD settings close action is set to No_Action');
+
+        System.assert(jobException.getMessage().containsIgnoreCase(System.Label.RD2_DataMigrationInvalidCloseAction),
+            'The exception message should match. Actual message: ' + jobException.getMessage());
+
+        assertLegacyFormat(getRecords());
     }
 
     /**
@@ -88,6 +124,8 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldRunMigrationWhenEnablementIsOn() {
+        setCloseActionSettingsToClosedLost();
+
         insert getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .build();
@@ -98,6 +136,8 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(1, job.JobItemsProcessed,
             'The batch should have run with one child batch processed'
         );
+
+        assertEnhancedFormat(getRecords());
     }
 
     /**
@@ -1132,97 +1172,6 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies Recurring Donation with one Open Opportunity having Close Date >= today
-     * is converted successfully when RD Settings close action is no action.
-     */
-    @IsTest
-    private static void shouldConvertRDWhenItHasOneOpenFutureOppAndCloseActionIsNoAction() {
-        setCloseActionSettingsToNoAction();
-
-        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
-
-        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c);
-
-        List<Opportunity> opps = new List<Opportunity>{
-            oppBuilder
-                .withName()
-                .withCloseDate(DATE_ESTABLISHED)
-                .withClosedWonStage()
-                .build(),
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addDays(-1))
-                .withOpenStage()
-                .build(),
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addDays(1))
-                .withOpenStage()
-                .build()
-        };
-        insert opps;
-
-        runDataMigration();
-
-        List<Error__c> errors = errorGateway.getRecords();
-        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
-
-        assertEnhancedFormat(getRecords());
-
-        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
-        System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
-        System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
-        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'The first future Open Opp should stay open');
-    }
-
-    /**
-     * @description Verifies Recurring Donation with two or more Open Opportunities having Close Date >= today
-     * fails to be converted when RD Settings close action is no action.
-     */
-    @IsTest
-    private static void shouldNotConvertRDWhenItHasManyOpenFutureOppsAndCloseActionIsNoAction() {
-        setCloseActionSettingsToNoAction();
-
-        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
-
-        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c);
-
-        List<Opportunity> opps = new List<Opportunity>{
-            oppBuilder
-                .withName()
-                .withCloseDate(DATE_ESTABLISHED)
-                .withClosedWonStage()
-                .build(),
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addDays(1))
-                .withOpenStage()
-                .build(),
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addMonths(1))
-                .withOpenStage()
-                .build()
-        };
-        insert opps;
-
-        runDataMigration();
-
-        List<Error__c> errors = errorGateway.getRecords();
-        System.assertEquals(1, errors.size(), 'An error should be logged: ' + errors);
-        System.assertEquals(System.Label.RD2_DataMigrationInvalidCloseAction, errors[0].Full_Message__c, 'Error message should match');
-
-        assertLegacyFormat(getRecords());
-    }
-
-    /**
      * @description Verifies Recurring Donations and their Open Opportunities are migrated together successfully
      */
     @IsTest
@@ -1307,7 +1256,7 @@ private class RD2_DataMigration_TEST {
         //simulate an error on a DML other than DML on a Recurring Donation
         RD2_DataMigration_BATCH.Logger logger = getLogger();
         List<Database.SaveResult> dmlResults = new List<Database.SaveResult>{ mockErrorDMLResult() };
-        logger.addErrors(dmlResults, new List<Contact>{ new Contact() });
+        logger.addErrors(dmlResults, new List<Opportunity>{ new Opportunity() });
 
         //try to update converted Recurring Donations and void Open Opps as Closed Lost        
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
@@ -1666,7 +1615,7 @@ private class RD2_DataMigration_TEST {
     * @description Generates error Database.SaveResult
     */
     public static Database.SaveResult mockErrorDMLResult() {
-        return Database.insert(new Contact(), false);
+        return Database.insert(new Opportunity(), false);
     }
 
 
