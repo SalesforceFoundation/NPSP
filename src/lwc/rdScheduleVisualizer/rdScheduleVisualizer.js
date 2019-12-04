@@ -1,5 +1,4 @@
 // TODO Implement Custom Label as defined below
-// TODO Implement a user definable setting (in the LWC) for number of schedules to show
 // TODO (Post-MVP) Implement a user definable setting (in the LWC) to define the columns to show
 
 import labelScheduleTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
@@ -34,6 +33,7 @@ const SCHEDULE_COLS = [
 export default class RdScheduleVisualizer extends LightningElement {
 
     @api recordId;
+    @api displayNum;
 
     @track schedule;
     @track error;
@@ -54,7 +54,7 @@ export default class RdScheduleVisualizer extends LightningElement {
     wireRecordChange() {
         console.log('The record has changed: ', this.recordId);
         if (this.recordId) {
-            getSchedule({ recordId: this.recordId })
+            getSchedule({ recordId: this.recordId, displayNum: this.displayNum })
                 .then(data => {
                     this.handleCurrencyIsoCode(data);
                     this.handleColumns();

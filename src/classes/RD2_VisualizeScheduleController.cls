@@ -52,7 +52,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @return List<Schedule>
      */
     @AuraEnabled
-    public static List<Schedule> getSchedule(Id recordId) {
+    public static List<Schedule> getSchedule(Id recordId, Integer displayNum) {
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
@@ -66,7 +66,7 @@ public with sharing class RD2_VisualizeScheduleController {
 
         List<Schedule> upcomingDonations = new List<Schedule>();
         if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-            List<RD2_ScheduleService.Installment> installments = scheduleService.getNextDonationsForVisualization(rd, Date.today(), 12);
+            List<RD2_ScheduleService.Installment> installments = scheduleService.getNextDonationsForVisualization(rd, Date.today(), displayNum);
             Integer num = 1;
             for (RD2_ScheduleService.Installment installment : installments) {
                 upcomingDonations.add(new Schedule(num++, rd, installment));

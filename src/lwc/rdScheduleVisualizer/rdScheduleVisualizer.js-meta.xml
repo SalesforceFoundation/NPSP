@@ -7,4 +7,9 @@
     <targets>
         <target>lightning__RecordPage</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="displayNum" type="Integer" default="12" label="Number of donations to display"/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>
