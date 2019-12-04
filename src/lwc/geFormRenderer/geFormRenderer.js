@@ -14,6 +14,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track mappingSet = '';
     @track version = '';
     @api showSpinner = false;
+    @api hasPageLevelError = false;
+    @api pageLevelErrorMessage = '';
     label = { messageLoading, geSave, geCancel };
 
     connectedCallback() {
@@ -57,17 +59,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         })
         .catch(error => {
             this.toggleSpinner();
-            // 11/27 Kiet Notes:
-            // What do we do?
-            // Display the error on the page? or display as a toast??
-            // error.body.message shows the error message from the insert
-            // "Insert failed. First exception on row 0; first error: FIELD_CUSTOM_VALIDATION_EXCEPTION, this is a test validation rule: []"
-            // 
+            this.pageLevelErrorMessage = error.body.message;
+            this.hasPageLevelError = true;
 
-            console.log('this is the error');
-            console.log(error);
-            console.log(error.body.message);
-            showToast(this, 'this aint it', 'test', error);
+            window.scrollTo(0,0);
         }) ;
     }
 
