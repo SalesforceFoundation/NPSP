@@ -462,22 +462,28 @@ public class CON_ContactMerge_TEST {
     //the second contact's org should be deleted
     static void merge2OneToOne(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        Test.startTest();  
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = 
+            UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c(npe01__Account_Processor__c = strProcessor));
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
 
 		Contact con2 = UTIL_UnitTestData_TEST.getContact();
 		con2.LastName = '2Contact_forTests_Merge';
 
-        insert new Contact[]{con, con2};
-
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        insert new Contact[] {con, con2};
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
 
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
+        CON_ContactMerge_CTRL controller = 
+            new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+            
+        Test.stopTest();          
+            
+        con = [SELECT Id, AccountId, FirstName, LastName, MailingStreet FROM Contact WHERE Id = :con.id];
+        con2 = [SELECT Id, AccountId, FirstName, LastName, MailingStreet FROM Contact WHERE Id = :con2.id];
+      
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
         Id[] fixedSearchResults=new Id[2];
@@ -485,6 +491,7 @@ public class CON_ContactMerge_TEST {
         fixedSearchResults[1]=con2.Id;
 
         Test.setFixedSearchResults(fixedSearchResults);
+        
         //search for contacts
         controller.search();
         //select the two contacts and grab them
@@ -507,7 +514,6 @@ public class CON_ContactMerge_TEST {
         //Second contact's account id should not have changed
         system.assertEquals(con2.accountId,[select AccountId from Contact where id=:con2.id].AccountId);
     }
-
 
     static testMethod void merge2OneToOneOppsOne2One(){
         //skip the test if Advancement is installed
