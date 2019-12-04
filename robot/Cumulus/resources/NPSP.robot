@@ -167,7 +167,7 @@ New Contact for HouseHold
     Go To Object Home         Contact
     Click Link                link= ${first_name} ${last_name}
     Wait Until Url Contains    /view
-    ${contact_id} =           Save Session Record For Deletion      Contact  ${contact_id}
+    ${contact_id} =           Save Session Record For Deletion      Contact
     [return]                  ${contact_id} 
         
 
@@ -195,8 +195,7 @@ Create Opportunities
     Populate Form
     ...                       Opportunity Name= ${opp_name}
     ...                       Amount=100 
-    Click Dropdown    Stage
-    Click Link    link=${stage}
+    Select Value From Dropdown    Stage    ${stage}
     Populate Lookup Field    Account Name    ${hh_name}
     Open Date Picker    Close Date
     Pick Date    Today

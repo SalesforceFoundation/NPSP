@@ -97,7 +97,7 @@ class NPSP(SalesforceRobotLibraryBase):
     
     def populate_campaign(self,loc,value):
         """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
-        self.populate_field_by_placeholder(loc, value)
+        self.search_field_by_value(loc, value)
         print(self.latest_api_version)       
         if self.latest_api_version == 47.0:
             self.selenium.click_link(value)
@@ -1222,7 +1222,8 @@ class NPSP(SalesforceRobotLibraryBase):
         record=self.salesforce.salesforce_get(object_name,id)
         self.builtin.should_not_be_empty(record)
         return record
-        
+    
+    @capture_screenshot_on_error
     def verify_toast_message_contains(self, text):
         """ Verifies the page contains the text specified """
         self.selenium.wait_until_page_contains_element(text)

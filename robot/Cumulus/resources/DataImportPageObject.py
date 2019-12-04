@@ -60,11 +60,7 @@ class DataImportDetailPage(DetailPage):
         self.selenium.wait_until_page_contains_element(dd, error="Show more actions dropdown didn't open in 30 sec")
         self.selenium.click_link("Edit")
         self.salesforce.wait_until_modal_is_open()
-        
-    def select_value_from_dropdown(self,dropdown,value): 
-        """Select given value in the dropdown field"""
-        self.npsp.click_dropdown(dropdown)     
-        self.selenium.click_link(value)    
+           
 
     def save_record(self):
         """clicks the save button on the modal and waits till modal is closed"""
