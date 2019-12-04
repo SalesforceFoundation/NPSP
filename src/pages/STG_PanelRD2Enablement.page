@@ -1,5 +1,4 @@
-<apex:page controller="RD2_EnablementDelegate_CTRL" id="RD2_Enablement" applyBodyTag="false" showHeader="true" sideBar="false"
-    standardStylesheets="false">
+<apex:page controller="RD2_EnablementDelegate_CTRL" id="RD2_Enablement" standardStylesheets="false">
 
     <apex:slds/>
     <apex:includeLightning/>

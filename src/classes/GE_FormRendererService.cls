@@ -95,7 +95,8 @@ public with sharing class GE_FormRendererService {
     
             // Go through all the elements
             for (FORM_Element element : section.elements) {
-                if (!element.dataImportFieldMappingDevNames.isEmpty()) {
+                if (element.dataImportFieldMappingDevNames != null 
+                    && !element.dataImportFieldMappingDevNames.isEmpty()) {
                     
                     if (fieldMappingSet.fieldMappingByDevName.containsKey(element.dataImportFieldMappingDevNames[0])) {
                         BDI_FieldMapping fieldMapping = fieldMappingSet.fieldMappingByDevName.get(element.dataImportFieldMappingDevNames[0]);
@@ -116,7 +117,12 @@ public with sharing class GE_FormRendererService {
     * @return The Id of the new Opportunity record, created from the Data Import
     */
     @AuraEnabled
-    public static Id saveAndProcessSingleGift(DataImport__c diRecord) {
+    public static Id saveAndProcessSingleGift(DataImport__c diRecord, String widgetData) {
+
+        // Check for widget data and convert it to the correct format for processing
+        String additionalObjectJSON = convertWidgetDataToObjectJSON(widgetData);
+        diRecord.Additional_Object_JSON__c = additionalObjectJSON;
+
         // Save the Data Import record to the Database
         diRecord = saveDataImport(diRecord);
 
@@ -128,6 +134,54 @@ public with sharing class GE_FormRendererService {
 
         return oppId;
 
+    }
+
+    private static String convertWidgetDataToObjectJSON(String widgetData) {
+        // System.debug('widgetData: '); 
+        // System.debug(widgetData); 
+
+        if(String.isBlank(widgetData)){
+            return null;
+        }
+
+        Map<String, Object> objNameToObjList;
+        List<SObject> thisList;
+        try {
+            objNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
+        } catch(Exception e) {
+            throw returnAuraException(e.getMessage());
+        }
+
+        // Create a map of sobject type to sobject list for processing
+        for(String widgetKey : objNameToObjList.keySet()) {
+            Object objList = objNameToObjList.get(widgetKey);
+            if(objList != null) {
+                String objListString = JSON.serialize(objList);
+
+                // System.debug(widgetKey); 
+                // System.debug(objListString); 
+
+                // TODO: Depending on how data gets passed, this will change
+                //Type listType = Type.forName('List<' + objName + '>');
+                //thisList = (List<SObject>)JSON.deserialize(objListString, listType);
+                
+                // Might not need this, could be provided by N-object logic?
+                // String lookupField = opportunityLookupMap.get(objName);
+                // for(SObject relObj : thisList){
+                //     relObj.put(lookupField, oppId);
+                // }
+            }
+        }
+
+        // TODO: Fit widget data into a series of Data Import records, and prepare them for Additional_Object_JSON__c
+        // See BDI_AdditionalObjectService_TEST for an example of this process (dynamicParentAdditionalObjectsShouldBeCreated)
+        
+        // String additionalObjJSONFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Additional_Object_JSON__c');
+        // Create BDI_DynamicSourceGroup
+        // Map of <String,BDI_DynamicSource>
+        // JSON.serialize(dynSourceGroupA);
+
+        return null;
     }
 
     /*******************************************************************************************************
