@@ -4199,6 +4199,74 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geBodyFormFieldsLeftCol</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template Builder Form Fields tab left column body</shortDescription>
+        <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsLeftColAdditional</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>More information about adding and mapping fields</shortDescription>
+        <value>
+        Set up a field by completing the following steps:
+        &lt;/br&gt;
+        &lt;/br&gt;
+        &lt;ol&gt;
+            &lt;li&gt; Create the field on the target object. &lt;/li&gt;
+            &lt;li&gt; Create the field on the NPSP Data Import object. &lt;/li&gt;
+            &lt;li&gt; If this is part of a new Object Group, create additional fields for a new Object group and create the new Object Group in NPSP Settings. &lt;/li&gt;
+            &lt;li&gt; Add Field Mapping in NPSP Settings to connect the NPSP Data Import field to the target field. &lt;/li&gt;
+        &lt;/ol&gt;
+        &lt;/br&gt;
+        See NPSP documentation about Advanced Mapping for additional details.
+        </value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsLeftColReadMore</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields sidebar help text</shortDescription>
+        <value>Read More</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsRightCol</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields right column text block</shortDescription>
+        <value>Click a section, then select a field in the side bar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. The gift entry form layout can be managed by creating sections and reordering the sections or fields.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyTemplateInfoLeftCol</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template Info sidebar text block</shortDescription>
+        <value>Enter details about this Gift Entry Template.</value>
+    </labels>
+    <labels>
+        <fullName>geBuilderButtonAltTextSectionUp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Form Fields section up button alt text</shortDescription>
+        <value>Move the {0} section up.</value>
+    </labels>
+    <labels>
+        <fullName>geBuilderButtonAltTextSectionDown</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Form Fields section down button alt text</shortDescription>
+        <value>Move the {0} section down.</value>
+    </labels>
+    <labels>
+        <fullName>geBuilderButtonAltTextSectionEdit</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Form Fields section edit button alt text</shortDescription>
+        <value>Edit the {0} section settings.</value>
+    </labels>
+    <labels>
         <fullName>geBuilderNavBackFormFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4227,11 +4295,60 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Next: Form Fields</value>
     </labels>
     <labels>
-        <fullName>geNewTemplate</fullName>
+        <fullName>geHeaderFormFieldsLeftCol</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder header text</shortDescription>
+        <shortDescription>Header for Form Fields sidebar</shortDescription>
+        <value>Form Fields &amp; Field Bundles</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsModalDeleteSection</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for deleting section in settings modal</shortDescription>
+        <value>Delete Section</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsModalRenameSection</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for renaming section in settings modal</shortDescription>
+        <value>Rename Section</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsRightCol</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Form Fields body</shortDescription>
+        <value>Configure Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderNewTemplate</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template header</shortDescription>
         <value>New Template</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderTemplateInfoLeftCol</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for gift entry template information</shortDescription>
+        <value>Gift Entry Template Information</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextFormFieldsFieldCustomLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields individual field help text</shortDescription>
+        <value>This field uses the {0} Mapping Group to target the {1} Field on the {2} Object.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextFormFieldsFieldLabelLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Form Fields Field Label</shortDescription>
+        <value>This shows the Mapping Object Group and Target Field API Name. You can edit the user-facing label below.</value>
     </labels>
     <labels>
         <fullName>geSaveAndClose</fullName>
@@ -4244,14 +4361,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>geTabFormFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Form Fields tab text</shortDescription>
+        <shortDescription>Header for form field</shortDescription>
         <value>Form Fields</value>
     </labels>
     <labels>
         <fullName>geTabTemplateInfo</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Template Info tab text</shortDescription>
+        <shortDescription>Template Info</shortDescription>
         <value>Template Info</value>
     </labels>
     <labels>
@@ -4260,20 +4377,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder Template Info Description field label</shortDescription>
         <value>Description</value>
-    </labels>
-    <labels>
-        <fullName>geTemplateInfoLeftColBody</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Template Info left column body</shortDescription>
-        <value>Enter details about this Gift Entry Template.</value>
-    </labels>
-    <labels>
-        <fullName>geTemplateInfoLeftColHeader</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Template Info left column header</shortDescription>
-        <value>Gift Entry Template Information</value>
     </labels>
     <labels>
         <fullName>geTemplateInfoNameFieldLabel</fullName>

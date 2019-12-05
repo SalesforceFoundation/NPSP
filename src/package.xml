@@ -1839,17 +1839,30 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>geBodyFormFieldsLeftCol</members>
+        <members>geBodyFormFieldsLeftColAdditional</members>
+        <members>geBodyFormFieldsLeftColReadMore</members>
+        <members>geBodyFormFieldsRightCol</members>
+        <members>geBodyTemplateInfoLeftCol</members>
+        <members>geBuilderButtonAltTextSectionDown</members>
+        <members>geBuilderButtonAltTextSectionEdit</members>
+        <members>geBuilderButtonAltTextSectionUp</members>
         <members>geBuilderNavBackFormFields</members>
         <members>geBuilderNavBackTemplateInfo</members>
         <members>geBuilderNavBatchHeader</members>
         <members>geBuilderNavFormFields</members>
-        <members>geNewTemplate</members>
+        <members>geHeaderFormFieldsLeftCol</members>
+        <members>geHeaderFormFieldsModalDeleteSection</members>
+        <members>geHeaderFormFieldsModalRenameSection</members>
+        <members>geHeaderFormFieldsRightCol</members>
+        <members>geHeaderNewTemplate</members>
+        <members>geHeaderTemplateInfoLeftCol</members>
+        <members>geHelpTextFormFieldsFieldCustomLabel</members>
+        <members>geHelpTextFormFieldsFieldLabelLabel</members>
         <members>geSaveAndClose</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geTemplateInfoDescriptionFieldLabel</members>
-        <members>geTemplateInfoLeftColBody</members>
-        <members>geTemplateInfoLeftColHeader</members>
         <members>geTemplateInfoNameFieldLabel</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
