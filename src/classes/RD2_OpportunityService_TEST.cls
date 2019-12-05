@@ -240,15 +240,10 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Error__c records should be created and opportunity records should not be inserted 
-    *   when creating a RD if the NPSP Opportunity record type is invalid. RD creation and no opp created is
-    *   applicable when more than 1 RDs are inserted together. When only 1 RD is created in a transaction, and
-    *   the record type setting is invalid, both RD and opp will be failed to created.
+    * @description Verify RD is created while opportunity is not created when NPSP setting Opp Record Type is not valid
     */
     @isTest
-    private static void shouldNotCreateOppsWhenSettingsRecordTypeIsInvalid() {
-        Integer rdSize = 2;
-
+    private static void shouldNotCreateOppWhenSettingRecordTypeIsInvalid() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<String, Object> rdSettingFieldMap = new Map<String, Object>{
@@ -257,7 +252,7 @@ private with sharing class RD2_OpportunityService_TEST {
         createRdSettings(rdSettingFieldMap);
 
         Test.startTest();
-        createRecurringDonations(rdSize);
+        createRecurringDonation();
         Test.stopTest();
 
         System.assertEquals(0, getOpportunities().size(), 
@@ -265,12 +260,9 @@ private with sharing class RD2_OpportunityService_TEST {
 
         List<Error__c> errors = errorGateway.getRecords();
 
-        System.assertEquals(rdSize, errors.size(), 'Numbers of Error records should match for each installment opp');
-
-        for (Error__c error : errors) {
-            System.assert(error.Full_Message__c.contains(String.valueOf(UTIL_RecordTypes_TEST.MOCK_ID)),
-                'The error message should be related to the invalid record type Id');
-        }    
+        System.assertEquals(1, errors.size(), 'Numbers of Error records should match');
+        System.assert(errors[0].Full_Message__c.contains(String.valueOf(UTIL_RecordTypes_TEST.MOCK_ID)),
+            'The error message should be related to the invalid record type Id: ' + errors[0]);
     }
 
     // Helper Methods

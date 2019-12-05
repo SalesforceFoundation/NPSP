@@ -85,7 +85,7 @@ public with sharing class RD2_OpportunityService {
             return createdOppIds;
         }
 
-        List<Database.SaveResult> saveResults = insertOpportunities(opps);
+        List<Database.SaveResult> saveResults = Database.insert(opps, false);
 
         for (Integer i = 0; i < saveResults.size(); i++) {
             Database.SaveResult result = saveResults[i];
@@ -171,30 +171,6 @@ public with sharing class RD2_OpportunityService {
             System.Label.npe03.RecurringDonationPrefix + ' (' +
             opp.Recurring_Donation_Installment_Number__c +  ') ' +
             opp.CloseDate.format();
-    }
-
-    /***
-    * @description Creates opportunities
-    * @param opps Opportunities
-    * @return List<Database.SaveResult> SaveResult records after the DML operation.
-    */
-    private static List<Database.SaveResult> insertOpportunities(List<Opportunity> opps) {
-        Set<Id> rdIds = new Set<Id>();
-        Database.SaveResult[] saveResults;
-
-        for (Opportunity o : opps) {
-            rdIds.add(o.npe03__Recurring_Donation__c);
-        }
-
-        //Check if the Recurring donation is one or more to know if it gets saved from UI or from batch
-        if (rdIds.size() == 1) {
-            saveResults = Database.insert(opps, true);
-
-        } else {//otherwise, this is a bulk operation.
-            saveResults = Database.insert(opps, false);
-        }
-
-        return saveResults;
     }
 
     /***
