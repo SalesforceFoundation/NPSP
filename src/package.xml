@@ -1839,6 +1839,9 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>geBodyBatchHeaderLeftCol</members>
+        <members>geBodyBatchHeaderRightCol</members>
+        <members>geBodyFormFieldModalDeleteSection</members>
         <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsLeftColReadMore</members>
@@ -1851,19 +1854,26 @@
         <members>geBuilderNavBackTemplateInfo</members>
         <members>geBuilderNavBatchHeader</members>
         <members>geBuilderNavFormFields</members>
+        <members>geButtonFormFieldsCollapseAll</members>
+        <members>geButtonFormFieldsExpandAll</members>
+        <members>geButtonSaveAndClose</members>
+        <members>geHeaderBatchHeaderLeftCol</members>
+        <members>geHeaderBatchHeaderRightCol</members>
         <members>geHeaderFormFieldsLeftCol</members>
         <members>geHeaderFormFieldsModalDeleteSection</members>
         <members>geHeaderFormFieldsModalRenameSection</members>
         <members>geHeaderFormFieldsRightCol</members>
         <members>geHeaderNewTemplate</members>
         <members>geHeaderTemplateInfoLeftCol</members>
+        <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
-        <members>geSaveAndClose</members>
+        <members>geLabelTemplateInfoNameField</members>
+        <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geTemplateInfoDescriptionFieldLabel</members>
-        <members>geTemplateInfoNameFieldLabel</members>
+        <members>geWarningFormFieldModalDeleteSection</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>

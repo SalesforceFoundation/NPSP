@@ -4199,6 +4199,27 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geBodyBatchHeaderLeftCol</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text block about adding or removing fields in the batch header</shortDescription>
+        <value>Choose fields to include in your Batch Header. Select the checkbox to add a field and deselect to remove the field from the form. If you'd like additional custom fields available for the Batch Header, add them in the NPSP Data Import Batch object.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchHeaderRightCol</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text block about setting up batch header fields</shortDescription>
+        <value>For each field, you can edit the field label, mark it as required, or assign a default value. Default values can be overwritten by the person who creates the batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldModalDeleteSection</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for deleting a section without required fields</shortDescription>
+        <value>Deleting this section also removes any fields in it.</value>
+    </labels>
+    <labels>
         <fullName>geBodyFormFieldsLeftCol</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4295,6 +4316,41 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Next: Form Fields</value>
     </labels>
     <labels>
+        <fullName>geButtonFormFieldsCollapseAll</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to collapse all</shortDescription>
+        <value>Collapse All</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsExpandAll</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to expand all</shortDescription>
+        <value>Expand All</value>
+    </labels>
+    <labels>
+        <fullName>geButtonSaveAndClose</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder save button text</shortDescription>
+        <value>Save &amp; Close</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchHeaderLeftCol</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to select batch header fields</shortDescription>
+        <value>Select Batch Header Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchHeaderRightCol</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to configure batch header fields</shortDescription>
+        <value>Configure Batch Header Fields</value>
+    </labels>
+    <labels>
         <fullName>geHeaderFormFieldsLeftCol</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4337,6 +4393,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Gift Entry Template Information</value>
     </labels>
     <labels>
+        <fullName>geHelpTextBatchHeaderFieldLabelLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Batch Header Field Label</shortDescription>
+        <value>You can rename the user-facing field labels.</value>
+    </labels>
+    <labels>
         <fullName>geHelpTextFormFieldsFieldCustomLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4351,17 +4414,24 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>This shows the Mapping Object Group and Target Field API Name. You can edit the user-facing label below.</value>
     </labels>
     <labels>
-        <fullName>geSaveAndClose</fullName>
+        <fullName>geLabelTemplateInfoNameField</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder save button text</shortDescription>
-        <value>Save &amp; Close</value>
+        <shortDescription>Gift Entry Template Builder Template Info Name field label</shortDescription>
+        <value>Template Name</value>
+    </labels>
+    <labels>
+        <fullName>geTabBatchHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Header</shortDescription>
+        <value>Batch Header</value>
     </labels>
     <labels>
         <fullName>geTabFormFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for form field</shortDescription>
+        <shortDescription>Form Fields</shortDescription>
         <value>Form Fields</value>
     </labels>
     <labels>
@@ -4379,11 +4449,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Description</value>
     </labels>
     <labels>
-        <fullName>geTemplateInfoNameFieldLabel</fullName>
+        <fullName>geWarningFormFieldModalDeleteSection</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Template Info Name field label</shortDescription>
-        <value>Template Name</value>
+        <shortDescription>Warning message for deleting a section if it contains required field</shortDescription>
+        <value>Warning: By deleting this section, you are also removing required fields from the template. These fields need to be added into another section before you can save the template.</value>
     </labels>
     <labels>
         <fullName>labelGeCancel</fullName>
