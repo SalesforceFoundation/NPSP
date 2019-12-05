@@ -35,24 +35,29 @@
                                   class="extension_test">
 
                     <lightning-tab value={TabEnums.INFO_TAB}
-                                   label="Template Info"
+                                   label={TabEnums.INFO_TAB}
                                    class="slds-p-around_none"
-                                   onactive={handleOnActiveTab}>
+                                   onactive={handleOnActiveTab}
+                                   show-error-indicator={hasTemplateInfoTabError}>
                         <c-ge-template-builder-template-info template-name={formTemplate.name}
                                                              template-description={formTemplate.description}
                                                              is-loading={isLoading}
+                                                             onupdatevalidity={handleUpdateValidity}
                                                              onchangetemplateinfoname={handleChangeTemplateInfoName}
                                                              onchangetemplateinfodescription={handleChangeTemplateInfoDescription}>
                         </c-ge-template-builder-template-info>
                     </lightning-tab>
 
                     <lightning-tab value={TabEnums.SELECT_FIELDS_TAB}
-                                   label="Select Fields"
+                                   label={TabEnums.SELECT_FIELDS_TAB}
                                    class="slds-p-around_none"
-                                   onactive={handleOnActiveTab}>
+                                   onactive={handleOnActiveTab}
+                                   show-error-indicator={hasSelectFieldsTabError}>
                         <c-ge-template-builder-select-fields selected-field-mapping-set={formLayout.fieldMappingSetDevName}
                                                              form-sections={formSections}
                                                              active-form-section-id={activeFormSectionId}
+                                                             previous-save-attempted={previousSaveAttempted}
+                                                             onupdatevalidity={handleUpdateValidity}
                                                              ontogglemodal={toggleModal}
                                                              onchangeactivesection={handleChangeActiveSection}
                                                              onaddformsection={handleAddFormSection}
@@ -69,10 +74,14 @@
                     </lightning-tab>
 
                     <lightning-tab value={TabEnums.BATCH_HEADER_TAB}
-                                   label="Batch Header"
+                                   label={TabEnums.BATCH_HEADER_TAB}
                                    class="slds-p-around_none"
-                                   onactive={handleOnActiveTab}>
+                                   onactive={handleOnActiveTab}
+                                   show-error-indicator={hasBatchHeaderTabError}>
                         <c-ge-template-builder-batch-header selected-batch-fields={batchHeaderFields}
+                                                            batch-fields={batchFieldFormElements}
+                                                            missing-required-fields={missingRequiredBatchFields}
+                                                            onupdatevalidity={handleUpdateValidity}
                                                             onaddbatchheaderfield={handleAddBatchHeaderField}
                                                             onremovebatchheaderfield={handleRemoveBatchHeaderField}
                                                             onbatchheaderfieldup={handleBatchHeaderFieldUp}

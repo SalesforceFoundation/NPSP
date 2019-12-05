@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "c/geTemplates": [
+                "geTemplates/geTemplates.js"
+            ],
+            "c/geTemplateBuilderTemplateInfo": [
+                "geTemplateBuilderTemplateInfo/geTemplateBuilderTemplateInfo.js"
+            ],
+            "c/geTemplateBuilderSelectFields": [
+                "geTemplateBuilderSelectFields/geTemplateBuilderSelectFields.js"
+            ],
+            "c/geTemplateBuilderBatchHeader": [
+                "geTemplateBuilderBatchHeader/geTemplateBuilderBatchHeader.js"
+            ],
+            "c/geTemplateBuilder": [
+                "geTemplateBuilder/geTemplateBuilder.js"
+            ]
+        }
+    }
+}

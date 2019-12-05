@@ -45,6 +45,22 @@
             </template>
             <template if:false={isLoading}>
                 <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
+                    <template if:true={hasErrors}>
+                        <div class="slds-size_1-of-1 slds-p-bottom_small">
+                            <c-util-page-level-message title="Heads up!"
+                                                     subtitle="These required fields were automatically added to the Batch Header: "
+                                                     variant='warning'>
+                                <ul slot="body" class="slds-list_dotted">
+                                    <template for:each={missingRequiredFields}
+                                              for:item="missingRequiredField">
+                                        <li key={missingRequiredField.apiName}>
+                                            {missingRequiredField.label}
+                                        </li>
+                                    </template>
+                                </ul>
+                            </c-util-page-level-message>
+                        </div>
+                    </template>
                     <div class="slds-size_1-of-1 slds-p-bottom_small">
                         <h2 class="slds-text-heading_small slds-p-bottom_small">Set Batch Field Values</h2>
                         <p class="slds-text-body_small">

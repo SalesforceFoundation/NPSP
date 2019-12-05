@@ -1470,6 +1470,8 @@
         <members>EPTaskTemplate</members>
         <members>EPTo</members>
         <members>ErrorEmailMessage</members>
+        <members>GE_Remove_Selected_Option</members>
+        <members>GE_Search_Placeholder</members>
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
         <members>NameRequired</members>
@@ -1842,8 +1844,6 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
-        <members>GE_Remove_Selected_Option</members>
-        <members>GE_Search_Placeholder</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
@@ -3147,6 +3147,7 @@
         <members>utilDedicatedListener</members>
         <members>utilIllustration</members>
         <members>utilPageHeader</members>
+        <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
