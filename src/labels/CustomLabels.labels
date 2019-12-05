@@ -4267,13 +4267,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Enter details about this Gift Entry Template.</value>
     </labels>
     <labels>
-        <fullName>geBuilderButtonAltTextSectionUp</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Form Fields section up button alt text</shortDescription>
-        <value>Move the {0} section up.</value>
-    </labels>
-    <labels>
         <fullName>geBuilderButtonAltTextSectionDown</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4288,28 +4281,35 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Edit the {0} section settings.</value>
     </labels>
     <labels>
-        <fullName>geBuilderNavBackFormFields</fullName>
+        <fullName>geBuilderButtonAltTextSectionUp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Form Fields section up button alt text</shortDescription>
+        <value>Move the {0} section up.</value>
+    </labels>
+    <labels>
+        <fullName>geButtonBuilderNavBackFormFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
         <value>Back: Form Fields</value>
     </labels>
     <labels>
-        <fullName>geBuilderNavBackTemplateInfo</fullName>
+        <fullName>geButtonBuilderNavBackTemplateInfo</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
         <value>Back: Template Info</value>
     </labels>
     <labels>
-        <fullName>geBuilderNavBatchHeader</fullName>
+        <fullName>geButtonBuilderNavBatchHeader</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
         <value>Next: Batch Header</value>
     </labels>
     <labels>
-        <fullName>geBuilderNavFormFields</fullName>
+        <fullName>geButtonBuilderNavFormFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>

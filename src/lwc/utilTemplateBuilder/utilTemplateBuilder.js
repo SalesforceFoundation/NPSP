@@ -410,7 +410,7 @@ const generateId = () => {
 * @return {string} formattedString: Formatted custom label
 */
 const format = (string, replacements) => {
-    const formattedString = isEmpty(string) ? '' : string;
+    let formattedString = isEmpty(string) ? '' : string;
     if (replacements) {
         let key;
         const type = typeof replacements;

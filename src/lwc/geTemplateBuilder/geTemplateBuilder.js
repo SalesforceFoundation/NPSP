@@ -27,10 +27,10 @@ import labelGeCancel from '@salesforce/label/c.labelGeCancel';
 import geButtonSaveAndClose from '@salesforce/label/c.geButtonSaveAndClose';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
-import geBuilderNavFormFields from '@salesforce/label/c.geBuilderNavFormFields';
-import geBuilderNavBatchHeader from '@salesforce/label/c.geBuilderNavBatchHeader';
-import geBuilderNavBackTemplateInfo from '@salesforce/label/c.geBuilderNavBackTemplateInfo';
-import geBuilderNavBackFormFields from '@salesforce/label/c.geBuilderNavBackFormFields';
+import geButtonBuilderNavFormFields from '@salesforce/label/c.geButtonBuilderNavFormFields';
+import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
+import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
+import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilderNavBackFormFields';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -50,10 +50,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         geButtonSaveAndClose,
         geTabTemplateInfo,
         geTabFormFields,
-        geBuilderNavFormFields,
-        geBuilderNavBatchHeader,
-        geBuilderNavBackTemplateInfo,
-        geBuilderNavBackFormFields
+        geButtonBuilderNavFormFields,
+        geButtonBuilderNavBatchHeader,
+        geButtonBuilderNavBackTemplateInfo,
+        geButtonBuilderNavBackFormFields
     }
 
     // TODO: The following enum values will become custom labels.

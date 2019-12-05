@@ -97,16 +97,16 @@
                     <div class="slds-grid slds-nowrap slds-p-around_small">
                         <div class="slds-size_1-of-3">
                             <template if:true={inSelectFieldsTab}>
-                                <lightning-button label={CUSTOM_LABELS.geBuilderNavBackTemplateInfo}
-                                                  title={CUSTOM_LABELS.geBuilderNavBackTemplateInfo}
+                                <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}
+                                                  title={CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}
                                                   onclick={handleGoToTab}
                                                   variant="outline-brand"
                                                   data-tab-value={TabEnums.INFO_TAB}>
                                 </lightning-button>
                             </template>
                             <template if:true={inBatchHeaderTab}>
-                                <lightning-button label={CUSTOM_LABELS.geBuilderNavBackFormFields}
-                                                  title={CUSTOM_LABELS.geBuilderNavBackFormFields}
+                                <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavBackFormFields}
+                                                  title={CUSTOM_LABELS.geButtonBuilderNavBackFormFields}
                                                   onclick={handleGoToTab}
                                                   variant="outline-brand"
                                                   class="slds-m-right_small"
@@ -134,8 +134,8 @@
                         </div>
                         <div class="slds-size_1-of-3">
                             <template if:true={inTemplateInfoTab}>
-                                <lightning-button label={CUSTOM_LABELS.geBuilderNavFormFields}
-                                                  title={CUSTOM_LABELS.geBuilderNavFormFields}
+                                <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavFormFields}
+                                                  title={CUSTOM_LABELS.geButtonBuilderNavFormFields}
                                                   variant="brand"
                                                   class="slds-float_right"
                                                   onclick={handleGoToTab}
@@ -143,8 +143,8 @@
                                 </lightning-button>
                             </template>
                             <template if:true={inSelectFieldsTab}>
-                                <lightning-button label={CUSTOM_LABELS.geBuilderNavBatchHeader}
-                                                  title={CUSTOM_LABELS.geBuilderNavBatchHeader}
+                                <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavBatchHeader}
+                                                  title={CUSTOM_LABELS.geButtonBuilderNavBatchHeader}
                                                   class="slds-float_right"
                                                   onclick={handleGoToTab}
                                                   variant="brand"

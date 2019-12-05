@@ -1850,10 +1850,10 @@
         <members>geBuilderButtonAltTextSectionDown</members>
         <members>geBuilderButtonAltTextSectionEdit</members>
         <members>geBuilderButtonAltTextSectionUp</members>
-        <members>geBuilderNavBackFormFields</members>
-        <members>geBuilderNavBackTemplateInfo</members>
-        <members>geBuilderNavBatchHeader</members>
-        <members>geBuilderNavFormFields</members>
+        <members>geButtonBuilderNavBackFormFields</members>
+        <members>geButtonBuilderNavBackTemplateInfo</members>
+        <members>geButtonBuilderNavBatchHeader</members>
+        <members>geButtonBuilderNavFormFields</members>
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonSaveAndClose</members>
