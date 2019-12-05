@@ -1,10 +1,30 @@
 import { LightningElement, api } from 'lwc';
-import { dispatch } from 'c/utilTemplateBuilder';
+import { dispatch, format } from 'c/utilTemplateBuilder';
+
+// Import custom labels
+import bdiFMUIFieldLabel from '@salesforce/label/c.bdiFMUIFieldLabel';
+import lblRequired from '@salesforce/label/c.lblRequired';
+import stgDefaultValue from '@salesforce/label/c.stgDefaultValue';
+import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
+import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
+import geBuilderButtonAltTextSectionEdit from '@salesforce/label/c.geBuilderButtonAltTextSectionEdit';
+import geBuilderButtonAltTextSectionUp from '@salesforce/label/c.geBuilderButtonAltTextSectionUp';
+import geBuilderButtonAltTextSectionDown from '@salesforce/label/c.geBuilderButtonAltTextSectionDown';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
 const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
 
 export default class GeTemplateBuilderFormSection extends LightningElement {
+
+    // Expose custom labels to template
+    CUSTOM_LABELS = {
+        bdiFMUIFieldLabel,
+        lblRequired,
+        stgDefaultValue,
+        geHelpTextFormFieldsFieldLabelLabel,
+        geHelpTextFormFieldsFieldCustomLabel
+    }
+
     @api activeFormSectionId;
     @api isFirst;
     @api isLast;
@@ -21,6 +41,18 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
 
     get isEmptySection() {
         return this.formSection.elements.length === 0 ? true : false;
+    }
+
+    get labelGeBuilderButtonAltTextSectionEdit() {
+        return format(geBuilderButtonAltTextSectionEdit, [this.formSection.label]);
+    }
+
+    get labelGeBuilderButtonAltTextSectionUp() {
+        return format(geBuilderButtonAltTextSectionDown, [this.formSection.label]);
+    }
+
+    get labelGeBuilderButtonAltTextSectionDown() {
+        return format(geBuilderButtonAltTextSectionUp, [this.formSection.label]);
     }
 
     /*******************************************************************************

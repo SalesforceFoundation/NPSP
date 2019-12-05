@@ -1,7 +1,7 @@
 <template>
     <article class="slds-card slds-card_extension slds-m-vertical_small">
         <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-grid slds-grid_vertical-align-start">
+            <div class="slds-grid slds-grid_vertical-align-end">
 
                 <template if:true={isWidget}>
                     <div class="slds-size_11-of-12 slds-p-top_large slds-p-bottom_large">
@@ -13,24 +13,12 @@
                     <div class="slds-size_5-of-12 slds-p-right_small">
                         <lightning-input class="slds-truncate"
                                          data-name="customLabel"
-                                         field-level-help={field.label}
+                                         field-level-help={labelHelpText}
                                          label={field.label}
                                          onblur={handleOnBlurCustomLabel}
                                          onclick={stopPropagation}
                                          type="text"
                                          value={field.customLabel}>
-                        </lightning-input>
-                    </div>
-
-                    <div class="slds-size_1-of-12 slds-p-left_medium slds-p-top_small">
-                        <lightning-input aria-label="Required"
-                                         checked={isRequired}
-                                         data-name="required"
-                                         disabled={field.isRequiredFieldDisabled}
-                                         onchange={handleOnChangeRequiredField}
-                                         onclick={stopPropagation}
-                                         type="checkbox"
-                                         variant="label-stacked">
                         </lightning-input>
                     </div>
 
@@ -118,7 +106,19 @@
                     </div>
                 </template>
 
-                <div class="slds-size_1-of-12 slds-p-top_large">
+                <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_x-small">
+                    <lightning-input aria-label="Required"
+                                     checked={isRequired}
+                                     data-name="required"
+                                     disabled={field.isRequiredFieldDisabled}
+                                     onchange={handleOnChangeRequiredField}
+                                     onclick={stopPropagation}
+                                     type="checkbox"
+                                     variant="label-hidden">
+                    </lightning-input>
+                </div>
+
+                <div class="slds-size_1-of-12 slds-p-bottom_x-small">
                     <div class="slds-float_right">
                         <template if:true={isRemovable}>
                             <lightning-button-icon class="slds-m-right_xxx-small "

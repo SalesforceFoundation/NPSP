@@ -13,19 +13,19 @@
 
             <div class="slds-no-flex">
                 <lightning-button-icon icon-name="utility:settings"
-                                       alternative-text="Section Settings Button"
+                                       alternative-text={labelGeBuilderButtonAltTextSectionEdit}
                                        onclick={handleEditFormSection}
                                        class="slds-m-left_xxx-small">
                 </lightning-button-icon>
                 <lightning-button-icon icon-name="utility:chevronup"
-                                       alternative-text="Move section up"
+                                       alternative-text={labelGeBuilderButtonAltTextSectionUp}
                                        onclick={handleFormSectionUp}
                                        data-section-id={formSection.id}
                                        class="slds-m-left_xxx-small"
                                        disabled={isFirst}>
                 </lightning-button-icon>
                 <lightning-button-icon icon-name="utility:chevrondown"
-                                       alternative-text="Move section down"
+                                       alternative-text={labelGeBuilderButtonAltTextSectionDown}
                                        onclick={handleFormSectionDown}
                                        data-section-id={formSection.id}
                                        class="slds-m-left_xxx-small"
@@ -57,16 +57,24 @@
 
             <template if:false={isEmptySection}>
                 <div class="slds-grid slds-grid_vertical-align-center">
-                    <div class="slds-size_5-of-12">
-                        Field Label
+                    <div class="slds-size_5-of-12 slds-truncate">
+                        <p class="slds-form-element__label">
+                            {CUSTOM_LABELS.bdiFMUIFieldLabel}
+                        </p>
+                        <lightning-helptext content={CUSTOM_LABELS.geHelpTextFormFieldsFieldLabelLabel}>
+                        </lightning-helptext>
                     </div>
-                    <div class="slds-size_1-of-12">
-                        Required
+                    <div class="slds-size_5-of-12 slds-truncate">
+                        <p class="slds-form-element__label">
+                            {CUSTOM_LABELS.stgDefaultValue}
+                        </p>
                     </div>
-                    <div class="slds-size_5-of-12">
-                        Default Value
-                    </div>
-                    <div class="slds-size_1-of-12">
+                    <div class="slds-size_2-of-12 slds-truncate">
+                        <p class="slds-form-element__label">
+                            {CUSTOM_LABELS.lblRequired}
+                        </p>
+                        <lightning-helptext content={CUSTOM_LABELS}>
+                        </lightning-helptext>
                     </div>
                 </div>
 

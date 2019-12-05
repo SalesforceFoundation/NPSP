@@ -1,17 +1,17 @@
 import { LightningElement, api } from 'lwc';
 import { dispatch, isEmpty, isFunction } from 'c/utilTemplateBuilder';
 
-import geTemplateInfoLeftColHeader from '@salesforce/label/c.geTemplateInfoLeftColHeader';
-import geTemplateInfoLeftColBody from '@salesforce/label/c.geTemplateInfoLeftColBody';
-import geTemplateInfoNameFieldLabel from '@salesforce/label/c.geTemplateInfoNameFieldLabel';
+import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInfoLeftCol';
+import geBodyTemplateInfoLeftCol from '@salesforce/label/c.geBodyTemplateInfoLeftCol';
+import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
 import geTemplateInfoDescriptionFieldLabel from '@salesforce/label/c.geTemplateInfoDescriptionFieldLabel';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
 
     CUSTOM_LABELS = {
-        geTemplateInfoLeftColHeader,
-        geTemplateInfoLeftColBody,
-        geTemplateInfoNameFieldLabel,
+        geHeaderTemplateInfoLeftCol,
+        geBodyTemplateInfoLeftCol,
+        geLabelTemplateInfoNameField,
         geTemplateInfoDescriptionFieldLabel
     }
 

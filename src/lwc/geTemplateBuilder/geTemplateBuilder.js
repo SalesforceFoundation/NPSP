@@ -22,9 +22,9 @@ import {
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
-import geNewTemplate from '@salesforce/label/c.geNewTemplate';
+import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
 import labelGeCancel from '@salesforce/label/c.labelGeCancel';
-import geSaveAndClose from '@salesforce/label/c.geSaveAndClose';
+import geButtonSaveAndClose from '@salesforce/label/c.geButtonSaveAndClose';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geBuilderNavFormFields from '@salesforce/label/c.geBuilderNavFormFields';
@@ -45,9 +45,9 @@ const EDIT = 'edit';
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
     CUSTOM_LABELS = {
-        geNewTemplate,
+        geHeaderNewTemplate,
         labelGeCancel,
-        geSaveAndClose,
+        geButtonSaveAndClose,
         geTabTemplateInfo,
         geTabFormFields,
         geBuilderNavFormFields,
@@ -62,7 +62,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     TabEnums = Object.freeze({
         INFO_TAB: geTabTemplateInfo,
-        SELECT_FIELDS_TAB: geTabFormFields,
+        FORM_FIELDS_TAB: geTabFormFields,
         BATCH_HEADER_TAB: 'Batch Header'
     });
 
@@ -106,7 +106,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     get templateBuilderHeader() {
-        return this.formTemplateRecordId ? this.formTemplate.name : this.CUSTOM_LABELS.geNewTemplate;
+        return this.formTemplateRecordId ? this.formTemplate.name : this.CUSTOM_LABELS.geHeaderNewTemplate;
     }
 
     get mode() {
@@ -122,7 +122,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     get inSelectFieldsTab() {
-        return this.activeTab === this.TabEnums.SELECT_FIELDS_TAB ? true : false;
+        return this.activeTab === this.TabEnums.FORM_FIELDS_TAB ? true : false;
     }
 
     get namespace() {
@@ -251,8 +251,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             case this.TabEnums.INFO_TAB:
                 this.activeTab = this.TabEnums.INFO_TAB;
                 break;
-            case this.TabEnums.SELECT_FIELDS_TAB:
-                this.activeTab = this.TabEnums.SELECT_FIELDS_TAB;
+            case this.TabEnums.FORM_FIELDS_TAB:
+                this.activeTab = this.TabEnums.FORM_FIELDS_TAB;
                 break;
             case this.TabEnums.BATCH_HEADER_TAB:
                 this.activeTab = this.TabEnums.BATCH_HEADER_TAB;
@@ -679,7 +679,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             if (missingRequiredFields && missingRequiredFields.length > 0) {
                 this.hasSelectFieldsTabError = true;
-                tabsWithErrors.add(this.TabEnums.SELECT_FIELDS_TAB);
+                tabsWithErrors.add(this.TabEnums.FORM_FIELDS_TAB);
             } else {
                 this.hasSelectFieldsTabError = false;
             }

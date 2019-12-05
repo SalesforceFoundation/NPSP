@@ -8,13 +8,23 @@
         <div class="slds-size_3-of-12 slds-p-around_large slds-border_right">
             <div class="slds-grid slds-wrap">
                 <div class="slds-size_1-of-1">
-                    <h2 class="slds-text-heading_small slds-p-bottom_small">Select Gift Fields</h2>
+                    <h2 class="slds-text-heading_small slds-p-bottom_small">
+                        {CUSTOM_LABELS.geHeaderFormFieldsLeftCol}
+                    </h2>
                     <p class="slds-text-body_small slds-p-bottom_small">
-                        Select the fields to use for entering gifts in this batch template.
-                        You will only see fields that you have access to and have configured.
-                        Manage the available objects and fields in
-                        <a href="#">NPSP Batch Data Import Advanced Mapping</a> in NPSP Settings.
+                        {CUSTOM_LABELS.geBodyFormFieldsLeftCol}
+                        <span class="slds-p-left_xxx-small">
+                            <lightning-button label={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
+                                              title={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
+                                              variant="base"
+                                              onclick={handleBodyReadMore}>
+                            </lightning-button>
+                        </span>
                     </p>
+                    <div class="ge-locator_read-more slds-hide">
+                        <lightning-formatted-rich-text value={CUSTOM_LABELS.geBodyFormFieldsLeftColAdditional}>
+                        </lightning-formatted-rich-text>
+                    </div>
                 </div>
                 <div class="slds-size_1-of-1">
                     <template if:false={isAllSectionsExpanded}>
@@ -93,16 +103,14 @@
                     </div>
                 </template>
                 <div class="slds-size_1-of-1">
-                    <h2 class="slds-text-heading_small slds-p-bottom_small">Set Gift Field Values</h2>
+                    <h2 class="slds-text-heading_small slds-p-bottom_small">
+                        {CUSTOM_LABELS.geHeaderFormFieldsRightCol}
+                    </h2>
                     <p class="slds-text-body_small">
-                        Mark required select fields and enable default values for user input.
-                        Please note that any default values can be overwritten by the gift entry user.
-                        Create sections to organize the fields within their object groups,
-                        then use the up and down icons to reorder fields as you'd like them to appear on
-                        the batch gift entry form.
+                        {CUSTOM_LABELS.geBodyFormFieldsRightCol}
                     </p>
                 </div>
-                <div class="slds-size_1-of-1 slds-p-vertical_large slds-m-vertical_large">
+                <div class="slds-size_1-of-1 slds-p-vertical_large">
 
                     <template iterator:it={formSections}>
                         <c-ge-template-builder-form-section key={it.value.id}

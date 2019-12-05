@@ -2,12 +2,31 @@ import { LightningElement, track, api } from 'lwc';
 import { findIndexByProperty, mutable, generateId, dispatch, showToast } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 
+// Import custom labels
+import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
+import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
+import geBodyFormFieldsLeftColReadMore from '@salesforce/label/c.geBodyFormFieldsLeftColReadMore';
+import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
+import geHeaderFormFieldsRightCol from '@salesforce/label/c.geHeaderFormFieldsRightCol';
+import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
+
 // Import source field names for required Field Mappings
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
 
 export default class geTemplateBuilderFormFields extends LightningElement {
+
+    // Expose labels to template
+    CUSTOM_LABELS = {
+        geBodyFormFieldsLeftCol,
+        geBodyFormFieldsLeftColReadMore,
+        geBodyFormFieldsLeftColAdditional,
+        geHeaderFormFieldsLeftCol,
+        geHeaderFormFieldsRightCol,
+        geBodyFormFieldsRightCol
+    }
+
     isInitialized;
     @api previousSaveAttempted;
 
@@ -551,5 +570,15 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
         element.setCustomValidity(customValidity);
         element.reportValidity();
+    }
+
+    /*******************************************************************************
+    * @description Method shows additional text content under the left column body.
+    */
+    handleBodyReadMore() {
+        const element = this.template.querySelector('div.ge-locator_read-more');
+        if (element) {
+            element.classList.remove('slds-hide');
+        }
     }
 }

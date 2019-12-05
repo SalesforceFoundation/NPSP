@@ -8,10 +8,10 @@
             </template>
             <template if:false={isLoading}>
                 <h2 class="slds-text-heading_small slds-p-bottom_small">
-                    {CUSTOM_LABELS.geTemplateInfoLeftColHeader}
+                    {CUSTOM_LABELS.geHeaderTemplateInfoLeftCol}
                 </h2>
                 <p class="slds-text-body_small">
-                    {CUSTOM_LABELS.geTemplateInfoLeftColBody}
+                    {CUSTOM_LABELS.geBodyTemplateInfoLeftCol}
                 </p>
             </template>
         </div>
@@ -25,8 +25,8 @@
                 <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
                     <div class="slds-size_1-of-1">
                         <lightning-input type="text"
-                                         name={CUSTOM_LABELS.geTemplateInfoNameFieldLabel}
-                                         label={CUSTOM_LABELS.geTemplateInfoNameFieldLabel}
+                                         name={CUSTOM_LABELS.geLabelTemplateInfoNameField}
+                                         label={CUSTOM_LABELS.geLabelTemplateInfoNameField}
                                          value={templateName}
                                          required
                                          onblur={handleChangeTemplateInfoName}>

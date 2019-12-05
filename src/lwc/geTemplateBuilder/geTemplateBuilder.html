@@ -21,8 +21,8 @@
                                       class="slds-float_right slds-m-right_small"
                                       onclick={handleCancel}>
                     </lightning-button>
-                    <lightning-button label={CUSTOM_LABELS.geSaveAndClose}
-                                      title={CUSTOM_LABELS.geSaveAndClose}
+                    <lightning-button label={CUSTOM_LABELS.geButtonSaveAndClose}
+                                      title={CUSTOM_LABELS.geButtonSaveAndClose}
                                       variant="brand"
                                       class="slds-float_right"
                                       onclick={handleFormTemplateSave}>
@@ -47,8 +47,8 @@
                         </c-ge-template-builder-template-info>
                     </lightning-tab>
 
-                    <lightning-tab value={TabEnums.SELECT_FIELDS_TAB}
-                                   label={TabEnums.SELECT_FIELDS_TAB}
+                    <lightning-tab value={TabEnums.FORM_FIELDS_TAB}
+                                   label={TabEnums.FORM_FIELDS_TAB}
                                    class="slds-p-around_none"
                                    onactive={handleOnActiveTab}
                                    show-error-indicator={hasSelectFieldsTabError}>
@@ -110,7 +110,7 @@
                                                   onclick={handleGoToTab}
                                                   variant="outline-brand"
                                                   class="slds-m-right_small"
-                                                  data-tab-value={TabEnums.SELECT_FIELDS_TAB}>
+                                                  data-tab-value={TabEnums.FORM_FIELDS_TAB}>
                                 </lightning-button>
                             </template>
                         </div>
@@ -124,7 +124,7 @@
                                 </lightning-progress-step>
                                 <lightning-progress-step label={CUSTOM_LABELS.geTabFormFields}
                                                          aria-label={CUSTOM_LABELS.geTabFormFields}
-                                                         value={TabEnums.SELECT_FIELDS_TAB}>
+                                                         value={TabEnums.FORM_FIELDS_TAB}>
                                 </lightning-progress-step>
                                 <lightning-progress-step label="Batch Header"
                                                          aria-label="Batch Header"
@@ -139,7 +139,7 @@
                                                   variant="brand"
                                                   class="slds-float_right"
                                                   onclick={handleGoToTab}
-                                                  data-tab-value={TabEnums.SELECT_FIELDS_TAB}>
+                                                  data-tab-value={TabEnums.FORM_FIELDS_TAB}>
                                 </lightning-button>
                             </template>
                             <template if:true={inSelectFieldsTab}>
@@ -152,8 +152,8 @@
                                 </lightning-button>
                             </template>
                             <template if:true={inBatchHeaderTab}>
-                                <lightning-button label={CUSTOM_LABELS.geSaveAndClose}
-                                                  title={CUSTOM_LABELS.geSaveAndClose}
+                                <lightning-button label={CUSTOM_LABELS.geButtonSaveAndClose}
+                                                  title={CUSTOM_LABELS.geButtonSaveAndClose}
                                                   class="slds-float_right"
                                                   onclick={handleFormTemplateSave}
                                                   variant="brand">

@@ -1,6 +1,9 @@
 import { LightningElement, api } from 'lwc';
-import { inputTypeByDescribeType, dispatch } from 'c/utilTemplateBuilder';
+import { inputTypeByDescribeType, dispatch, format } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
+
+// Import custom labels
+import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 
 export default class geTemplateBuilderFormField extends LightningElement {
     @api isFirst;
@@ -23,6 +26,20 @@ export default class geTemplateBuilderFormField extends LightningElement {
             return this.field.apiName;
         }
 
+        return null;
+    }
+
+    get labelHelpText() {
+        if (this.fieldMapping && this.fieldMapping.Target_Object_Mapping_Dev_Name) {
+            const objectMapping = TemplateBuilderService.objectMappingByDevName[this.fieldMapping.Target_Object_Mapping_Dev_Name];
+            return format(
+                geHelpTextFormFieldsFieldCustomLabel,
+                [
+                    objectMapping.MasterLabel,
+                    this.fieldMapping.Target_Field_API_Name,
+                    objectMapping.Object_API_Name
+                ]);
+        }
         return null;
     }
 
@@ -197,7 +214,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     */
     handleDeleteFormElement(event) {
         this.stopPropagation(event);
-        let detail = {id: this.field.id, fieldName: this.name};
+        let detail = { id: this.field.id, fieldName: this.name };
         dispatch(this, 'deleteformelement', detail);
     }
 
