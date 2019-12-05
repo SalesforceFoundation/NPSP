@@ -98,7 +98,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         createRdSettingsWithStage(PROMISED_STAGENAME);
 
-        Account acc = UTIL_UnitTestData_TEST.getOrgAccount();
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert acc;
 
         npe5__Affiliation__c affiliation = new npe5__Affiliation__c(
