@@ -91,7 +91,6 @@ class GeFormService {
                     resolve(result);
                 })
                 .catch(error => {
-                    showToast(this, 'Error', JSON.stringify(error), 'error');
                     console.error(JSON.stringify(error));
                     reject(error);
                 });
