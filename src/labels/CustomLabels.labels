@@ -4316,6 +4316,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Next: Form Fields</value>
     </labels>
     <labels>
+        <fullName>geButtonFormFieldsAddSection</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to add new section to template</shortDescription>
+        <value>Add Section</value>
+    </labels>
+    <labels>
         <fullName>geButtonFormFieldsCollapseAll</fullName>
         <language>en_US</language>
         <protected>true</protected>

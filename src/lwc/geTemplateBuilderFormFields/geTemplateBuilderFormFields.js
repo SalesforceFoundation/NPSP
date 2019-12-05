@@ -9,6 +9,9 @@ import geBodyFormFieldsLeftColReadMore from '@salesforce/label/c.geBodyFormField
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
 import geHeaderFormFieldsRightCol from '@salesforce/label/c.geHeaderFormFieldsRightCol';
 import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
+import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormFieldsCollapseAll';
+import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
+import geButtonFormFieldsAddSection from '@salesforce/label/c.geButtonFormFieldsAddSection';
 
 // Import source field names for required Field Mappings
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
@@ -24,7 +27,10 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         geBodyFormFieldsLeftColAdditional,
         geHeaderFormFieldsLeftCol,
         geHeaderFormFieldsRightCol,
-        geBodyFormFieldsRightCol
+        geBodyFormFieldsRightCol,
+        geButtonFormFieldsCollapseAll,
+        geButtonFormFieldsExpandAll,
+        geButtonFormFieldsAddSection
     }
 
     isInitialized;

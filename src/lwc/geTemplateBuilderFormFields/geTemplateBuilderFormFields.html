@@ -13,12 +13,13 @@
                     </h2>
                     <p class="slds-text-body_small slds-p-bottom_small">
                         {CUSTOM_LABELS.geBodyFormFieldsLeftCol}
-                        <span class="slds-p-left_xxx-small">
-                            <lightning-button label={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
-                                              title={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
-                                              variant="base"
-                                              onclick={handleBodyReadMore}>
-                            </lightning-button>
+                        <span>
+                            <button class="slds-button slds-button__extension slds-p-left_xxx-small"
+                                    title={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
+                                    aria-label={CUSTOM_LABELS.geButtonFormFieldsAddSection}
+                                    onclick={handleBodyReadMore}>
+                                {CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
+                            </button>
                         </span>
                     </p>
                     <div class="ge-locator_read-more slds-hide">
@@ -30,16 +31,16 @@
                     <template if:false={isAllSectionsExpanded}>
                         <lightning-button class="slds-float_right"
                                           variant="base"
-                                          label="Expand All"
-                                          title="Expand All"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
+                                          title={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           onclick={handleExpandAllSections}>
                         </lightning-button>
                     </template>
                     <template if:true={isAllSectionsExpanded}>
                         <lightning-button class="slds-float_right"
                                           variant="base"
-                                          label="Collapse All"
-                                          title="Collapse All"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
+                                          title={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           onclick={handleCollapseAllSections}>
                         </lightning-button>
                     </template>
@@ -133,10 +134,10 @@
                 </div>
                 <div class="slds-size_1-of-1 slds-p-top_large slds-m-top_large">
                     <button class="slds-button slds-button_neutral slds-button_stretch"
-                            title="Add Section"
-                            aria-label="Add Section"
+                            title={CUSTOM_LABELS.geButtonFormFieldsAddSection}
+                            aria-label={CUSTOM_LABELS.geButtonFormFieldsAddSection}
                             onclick={addSection}>
-                        Add Section
+                        {CUSTOM_LABELS.geButtonFormFieldsAddSection}
                     </button>
                 </div>
             </div>
