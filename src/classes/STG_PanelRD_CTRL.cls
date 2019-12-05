@@ -86,23 +86,8 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description Deletes future Opportunities that are beyond the number of forecast months
-    * @return void
-    */
-    private void trimOpportunities(){
-        date limitDate = system.today().addMonths((integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
-        string openlabel = system.label.npe03.RecurringDonationOpenStatus;
-        delete [select id from Opportunity
-               where CloseDate > :limitDate
-               and isClosed != true
-               and npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openLabel];
-
-        map<Id, npe03__Recurring_Donation__c> mapIdRD = new map<Id, npe03__Recurring_Donation__c>([select Id from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c = :openLabel]);
-        RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(mapIdRD.keySet());
-    }
-
-    /*********************************************************************************************************
-    * @description set original forecast months for legacy RDs, if added months, start the batch job
+    * @description Sets Opportunity forecast months. If the new settings is higher, starts the batch job to
+    * update RDs. The settings is applicable to legacy Recurring Donations only.
     * @return void
     */
     private void setOriginalForecastMonthsForLegacyRD() {
@@ -123,12 +108,28 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
+    * @description Deletes future Opportunities that are beyond the number of forecast months
+    * @return void
+    */
+    private void trimOpportunities(){
+        date limitDate = system.today().addMonths((integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
+        string openlabel = system.label.npe03.RecurringDonationOpenStatus;
+        delete [select id from Opportunity
+               where CloseDate > :limitDate
+               and isClosed != true
+               and npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openLabel];
+
+        map<Id, npe03__Recurring_Donation__c> mapIdRD = new map<Id, npe03__Recurring_Donation__c>([select Id from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c = :openLabel]);
+        RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(mapIdRD.keySet());
+    }
+
+    /*********************************************************************************************************
     * @description The SelectOption list of RD Close Options
     */
     public list<SelectOption> listSORDCloseOptions {
         get {
         	if (listSORDCloseOptions == null) {
-	            listSORDCloseOptions = getSelectOptionsBasedUponLegacyOrEnhanced();
+	            listSORDCloseOptions = getCloseOptions();
         	}
             return listSORDCloseOptions;
         }
@@ -136,25 +137,24 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description Gets the list of select options based upon Enhanced or Legacy Recurring donations
-    * return the select options of rd close options
+    * @description Returns close options (actions) applicable to open Opportunities on a closed RD.
+    * Options have different source depending if the enhanced Recurring Donations are enabled.
+    * @return List<SelectOption>
     */
-    private List<SelectOption> getSelectOptionsBasedUponLegacyOrEnhanced() {
-        List<SelectOption> rdCloseOptions = new list<SelectOption>();
+    private List<SelectOption> getCloseOptions() {
+        List<SelectOption> options = new list<SelectOption>();
 
         if (isRD2Enabled) {
-            List<RD2_Constants.CloseActions> CloseOptionValues = RD2_Constants.CloseActions.values();
-            for (RD2_Constants.CloseActions rdco : CloseOptionValues) {
-                rdCloseOptions.add(new SelectOption(rdco.name(), rdco.name()));
+            for (RD2_Constants.CloseActions option : RD2_Constants.CloseActions.values()) {
+                options.add(new SelectOption(option.name(), option.name()));
             }
         } else {
-            List<RD_RecurringDonations.RecurringDonationCloseOptions> CloseOptionValues = RD_RecurringDonations.RecurringDonationCloseOptions.values();
-            for (RD_RecurringDonations.RecurringDonationCloseOptions rdco : CloseOptionValues) {
-                rdCloseOptions.add(new SelectOption(rdco.name(), rdco.name()));
+            for (RD_RecurringDonations.RecurringDonationCloseOptions option : RD_RecurringDonations.RecurringDonationCloseOptions.values()) {
+                options.add(new SelectOption(option.name(), option.name()));
             }
         }
 
-        return rdCloseOptions;
+        return options;
 
     }
 

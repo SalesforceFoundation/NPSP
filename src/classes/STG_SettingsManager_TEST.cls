@@ -594,20 +594,43 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Tests the Recurring Donations panel when RD2 is enabled
+    * @description verify the RD2 constants closeactions contains select options when RD2 is enabled
     * @return void
     */
-    public static testMethod void checkCloseActionsContainsSelectOptionsWhenRD2Enabled() {
+    @isTest
+    private static void checkCloseActionsContainsSelectOptionsWhenRD2Enabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        List<RD2_Constants.CloseActions> CloseOptionValues = RD2_Constants.CloseActions.values();
+        List<RD2_Constants.CloseActions> options = RD2_Constants.CloseActions.values();
 
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
         system.assertEquals('idPanelRD', panel.idPanel());
         panel.init();
 
         System.assertNotEquals(null, panel.listSORDCloseOptions);
-        System.assert(CloseOptionValues[0].name().contains(panel.listSORDCloseOptions[0].getValue()));
+        System.assert(options[0].name().contains(panel.listSORDCloseOptions[0].getValue()));
+        System.assert(options[1].name().contains(panel.listSORDCloseOptions[1].getValue()));
+        System.assert(options[2].name().contains(panel.listSORDCloseOptions[2].getValue()));
+
+    }
+
+    /*********************************************************************************************************
+    * @description verify the Recurring Donations closeoptions contains the select options
+    * for Legacy Recurring Donations
+    * @return void
+    */
+    @isTest
+    private static void checkRDCloseOptionsContainsSelectOptionsWhenRD2isNotEnabled() {
+        List<RD_RecurringDonations.RecurringDonationCloseOptions> options = RD_RecurringDonations.RecurringDonationCloseOptions.values();
+
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        system.assertEquals('idPanelRD', panel.idPanel());
+        panel.init();
+
+        System.assertNotEquals(null, panel.listSORDCloseOptions);
+        System.assert(options[0].name().contains(panel.listSORDCloseOptions[0].getValue()));
+        System.assert(options[1].name().contains(panel.listSORDCloseOptions[1].getValue()));
+        System.assert(options[2].name().contains(panel.listSORDCloseOptions[2].getValue()));
 
     }
 
