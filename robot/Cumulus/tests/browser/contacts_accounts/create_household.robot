@@ -42,7 +42,6 @@ Create Household With Name Only
     Click Modal Button                    Save
     Wait Until Modal Is Closed
     Current Page Should Be                Details                               Contact
-    Verify Toast Message Contains         created
     
     #Verify contact is created and shows under recently viewed
     ${contact_id} =                       Save Session Record For Deletion      Contact
@@ -81,7 +80,6 @@ Create Household With additional details
     Click Modal Button                    Save
     Wait Until Modal Is Closed
     Current Page Should Be                Details                               Contact
-    Verify Toast Message Contains         created
     
     # Verify records are saved and displayed in recently viewed contact list
     ${contact_id2} =                      Save Session Record For Deletion      Contact

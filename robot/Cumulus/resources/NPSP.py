@@ -1223,11 +1223,6 @@ class NPSP(SalesforceRobotLibraryBase):
         self.builtin.should_not_be_empty(record)
         return record
     
-    @capture_screenshot_on_error
-    def verify_toast_message_contains(self, text):
-        """ Verifies the page contains the text specified """
-        self.selenium.wait_until_page_contains_element(text)
-
 
     def select_value_from_dropdown(self,dropdown,value): 
         """Select given value in the dropdown field"""
