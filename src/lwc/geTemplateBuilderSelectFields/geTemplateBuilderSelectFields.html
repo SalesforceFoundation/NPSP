@@ -58,6 +58,7 @@
                                                      class="slds-truncate slds-p-bottom_xxx-small"
                                                      title={fieldMapping.DeveloperName}
                                                      required={fieldMapping.Is_Required}
+                                                     data-object-mapping-label={objectMapping.MasterLabel}
                                                      data-field-mapping={fieldMapping.DeveloperName}
                                                      data-object-mapping={objectMapping.DeveloperName}>
                                     </lightning-input>
@@ -73,6 +74,24 @@
 
         <div class="slds-size_9-of-12 slds-p-around_large slds-border_left">
             <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
+                <template if:true={hasErrors}>
+                    <div class="slds-size_1-of-1">
+                        <c-util-page-level-message title="Review the errors on this page."
+                                                   subtitle="You must include all required fields in your template. Review and add the following fields:"
+                                                   variant='error'>
+                            <ul slot="body"
+                                class="slds-list_dotted">
+                                <template for:each={errors}
+                                          for:item="error">
+                                    <li key={error}
+                                        class="slds-text-color_error">
+                                        {error}
+                                    </li>
+                                </template>
+                            </ul>
+                        </c-util-page-level-message>
+                    </div>
+                </template>
                 <div class="slds-size_1-of-1">
                     <h2 class="slds-text-heading_small slds-p-bottom_small">Set Gift Field Values</h2>
                     <p class="slds-text-body_small">

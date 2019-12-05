@@ -1,10 +1,24 @@
 import { LightningElement, api } from 'lwc';
-import { dispatch } from 'c/utilTemplateBuilder';
+import { dispatch, isEmpty, isFunction } from 'c/utilTemplateBuilder';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
     @api isLoading;
     @api templateName;
     @api templateDescription;
+
+    @api
+    validate() {
+        const nameInput = this.template.querySelector('lightning-input');
+        let isValid = false;
+
+        if (isFunction(nameInput.reportValidity) && !isEmpty(nameInput)) {
+            nameInput.reportValidity();
+            isValid = nameInput.checkValidity();
+        }
+
+        dispatch(this, 'updatevalidity', { property: 'hasTemplateInfoTabError', hasError: !isValid });
+        return isValid;
+    }
 
     /*******************************************************************************
     * @description Handles onblur event from lightning-input and dispatches an
@@ -16,6 +30,7 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     */
     handleChangeTemplateInfoName(event) {
         dispatch(this, 'changetemplateinfoname', event.target.value);
+        this.validate();
     }
 
     /*******************************************************************************
