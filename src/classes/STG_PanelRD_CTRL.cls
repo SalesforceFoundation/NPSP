@@ -106,7 +106,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     * @return void
     */
     private void setOriginalForecastMonthsForLegacyRD() {
-        if (isEnhancedRD2) {
+        if (isRD2Enabled) {
             return;
         }
         //if we reduced the number of forecast months, we need to trim opps
@@ -142,7 +142,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     private List<SelectOption> getSelectOptionsBasedUponLegacyOrEnhanced() {
         List<SelectOption> rdCloseOptions = new list<SelectOption>();
 
-        if (isEnhancedRD2) {
+        if (isRD2Enabled) {
             List<RD2_Constants.CloseActions> CloseOptionValues = RD2_Constants.CloseActions.values();
             for (RD2_Constants.CloseActions rdco : CloseOptionValues) {
                 rdCloseOptions.add(new SelectOption(rdco.name(), rdco.name()));

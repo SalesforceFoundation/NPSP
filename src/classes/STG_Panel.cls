@@ -88,11 +88,11 @@ public with sharing virtual class STG_Panel {
 	}
 
     /*********************************************************************************************************
-    * @description Checks if Enhanced Recurring Donations is set
+    * @description Checks if Enhanced Recurring Donations are enabled
     */
-    public Boolean isEnhancedRD2 {
+    public Boolean isRD2Enabled {
         get {
-            return  RD2_EnablementService.isRecurringDonations2Enabled;
+            return RD2_EnablementService.isRecurringDonations2Enabled;
         } private set;
     }
 

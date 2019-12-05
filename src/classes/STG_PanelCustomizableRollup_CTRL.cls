@@ -85,15 +85,6 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public String jobId { get; private set; }
 
     /*******************************************************************************************************
-    * @description Checks if CRLP is enabled
-    */
-    public Boolean getIsCRLPAndRD2Enabled() {
-        return
-            STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c
-            && isEnhancedRD2;
-    }
-
-    /*******************************************************************************************************
     * @description Overridden Action Method to put the current page into Edit mode and cache the existing setting
     * @return null
     */

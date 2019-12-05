@@ -44,6 +44,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler event="force:refreshView" action="{!c.refreshView}" />
 
+    <aura:registerEvent name="enhancementEnabledEvent" type="c:RD2_EnhancementEnabledEvent" />
 
     <lightning:layout horizontalAlign="spread" multipleRows="true" class="slds-hide" aura:id="enablement-disabled">
         <lightning:layoutItem padding="horizontal-large" size="10">

@@ -64,6 +64,13 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description An empty method called from actionFunction to reRender panels when it completes
+    */
+    public void refreshPanels() {
+        
+    }
+
+    /***
     * @description Enablement service
     */
     @TestVisible

@@ -1633,6 +1633,22 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</value>
     </labels>
     <labels>
+        <fullName>RD2_PageNotAvailableHeader</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_PageNotAvailableHeader</shortDescription>
+        <value>Page Not Available</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PageNotAvailableMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_PageNotAvailableMessage</shortDescription>
+        <value>Data is not available when Enhanced Recurring Donations are enabled</value>
+    </labels>
+    <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>

@@ -201,21 +201,21 @@
                                     <a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRecurringDonations}</a>
                                 </li>
                                 <li role="treeitem" aria-level="2" id="idPanelRDInstPdNav"
-                                    class="{!IF(!isEnhancedRD2, 'slds-tree__item', 'hide')}"
-                                    style="{!IF(!isEnhancedRD2, 'display: block', 'display: none')}">
+                                    class="{!IF(!isRD2Enabled, 'slds-tree__item', 'hide')}"
+                                    style="{!IF(!isRD2Enabled, 'display: block', 'display: none')}">
 
                                     <a href="#" onclick="ShowPanel('idPanelRDInstPd');return false;"
                                         class="slds-grow slds-m-left_large"
-                                        style="{!IF(!isEnhancedRD2, 'display: block', 'display: none')}">
+                                        style="{!IF(!isRD2Enabled, 'display: block', 'display: none')}">
                                         {!$Label.stgNavRDInstallmentPeriods}</a>
                                 </li>
                                 <li role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"
-                                    class="{!IF(!isEnhancedRD2, 'slds-tree__item', 'hide')}"
-                                    style="{!IF(!isEnhancedRD2, 'display: block', 'display: none')}">
+                                    class="{!IF(!isRD2Enabled, 'slds-tree__item', 'hide')}"
+                                    style="{!IF(!isRD2Enabled, 'display: block', 'display: none')}">
 
                                     <a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;"
                                         class="slds-grow slds-m-left_large"
-                                        style="{!IF(!isEnhancedRD2, 'display: block', 'display: none')}">
+                                        style="{!IF(!isRD2Enabled, 'display: block', 'display: none')}">
                                         {!$Label.stgNavRDFieldMap}</a>
                                 </li>
                             </ul>
@@ -356,7 +356,7 @@
                 </div>
 
                 <div class="panel noborder" id="idPanelCustomizableRollup" style="display:none" >
-                    <apex:include pageName="STG_PanelCustomizableRollup" />
+                    <apex:include pageName="STG_PanelCustomizableRollup" id="idPanelCustomizableRollup" />
                 </div>
 
                 <!-- Recurring Donations -->
@@ -365,15 +365,15 @@
                 </div>
 
                 <div class="panel noborder" id="idPanelRD" style="display:none" >
-                    <apex:include pageName="STG_PanelRD" />
+                    <apex:include pageName="STG_PanelRD" id="idPanelRD"/>
                 </div>
 
                 <div class="panel noborder" id="idPanelRDInstPd" style="display:none" >
-                    <apex:include pageName="STG_PanelRDCustomInstallment" />
+                    <apex:include pageName="STG_PanelRDCustomInstallment" id="idPanelRDInstPd" />
                 </div>
 
                 <div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
-                    <apex:include pageName="STG_PanelRDCustomFieldMapping" />
+                    <apex:include pageName="STG_PanelRDCustomFieldMapping" id="idPanelRDFieldMap" />
                 </div>
 
                 <!-- Bulk Data Processes -->
