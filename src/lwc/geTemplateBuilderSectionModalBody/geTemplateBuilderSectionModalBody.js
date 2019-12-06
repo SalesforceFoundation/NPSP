@@ -11,7 +11,7 @@ import geButtonFormFieldsModalDeleteSectionAndFields from '@salesforce/label/c.g
 import labelGeCancel from '@salesforce/label/c.labelGeCancel';
 import labelGeSave from '@salesforce/label/c.labelGeSave';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
-import geAssistModalCancelAndDiscard from '@salesforce/label/c.geAssistModalCancelAndDiscard';
+import geAssistiveModalCancelAndDiscard from '@salesforce/label/c.geAssistiveModalCancelAndDiscard';
 
 export default class GeTemplateBuilderSectionModalBody extends LightningElement {
 
@@ -25,7 +25,7 @@ export default class GeTemplateBuilderSectionModalBody extends LightningElement 
         geLabelSectionName,
         labelGeCancel,
         labelGeSave,
-        geAssistModalCancelAndDiscard
+        geAssistiveModalCancelAndDiscard
     }
 
     @api modalData;

@@ -7,7 +7,7 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { findIndexByProperty } from 'c/utilTemplateBuilder';
 
 // Import custom labels
-import geAssistSpinner from '@salesforce/label/c.geAssistSpinner';
+import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
@@ -28,7 +28,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     // Expose custom labels to template
     CUSTOM_LABELS = {
-        geAssistSpinner,
+        geAssistiveSpinner,
     }
 
     @track templates;

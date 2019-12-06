@@ -13,9 +13,9 @@ import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormField
 import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
 import geButtonFormFieldsAddSection from '@salesforce/label/c.geButtonFormFieldsAddSection';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
-import geAssistSpinner from '@salesforce/label/c.geAssistSpinner';
-import geAssistFormFieldsCollapseAll from '@salesforce/label/c.geAssistFormFieldsCollapseAll';
-import geAssistFormFieldsExpandAll from '@salesforce/label/c.geAssistFormFieldsExpandAll';
+import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
+import geAssistiveFormFieldsCollapseAll from '@salesforce/label/c.geAssistiveFormFieldsCollapseAll';
+import geAssistiveFormFieldsExpandAll from '@salesforce/label/c.geAssistiveFormFieldsExpandAll';
 
 // Import source field names for required Field Mappings
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
@@ -35,9 +35,9 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         geButtonFormFieldsCollapseAll,
         geButtonFormFieldsExpandAll,
         geButtonFormFieldsAddSection,
-        geAssistSpinner,
-        geAssistFormFieldsCollapseAll,
-        geAssistFormFieldsExpandAll,
+        geAssistiveSpinner,
+        geAssistiveFormFieldsCollapseAll,
+        geAssistiveFormFieldsExpandAll,
     }
 
     isInitialized;

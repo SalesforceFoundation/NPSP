@@ -2,7 +2,7 @@
     <div class="slds-grid slds-wrap">
 
         <template if:true={isLoading}>
-            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistSpinner}></lightning-spinner>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
         </template>
 
         <div class="slds-size_3-of-12 slds-p-around_large slds-border_right">
@@ -35,7 +35,7 @@
                         <lightning-button class="slds-float_right"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
-                                          title={CUSTOM_LABELS.geAssistFormFieldsExpandAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
                                           onclick={handleExpandAllSections}>
                         </lightning-button>
                     </template>
@@ -43,7 +43,7 @@
                         <lightning-button class="slds-float_right"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
-                                          title={CUSTOM_LABELS.geAssistFormFieldsCollapseAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
                                           onclick={handleCollapseAllSections}>
                         </lightning-button>
                     </template>

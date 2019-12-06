@@ -4199,7 +4199,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
-        <fullName>geAssistFormFieldSectionDown</fullName>
+        <fullName>geAssistiveFormFieldSectionDown</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -4207,7 +4207,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Move the {0} section down.</value>
     </labels>
     <labels>
-        <fullName>geAssistFormFieldSectionUp</fullName>
+        <fullName>geAssistiveFormFieldSectionUp</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -4215,7 +4215,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Move the {0} section up.</value>
     </labels>
     <labels>
-        <fullName>geAssistFormFieldsCollapseAll</fullName>
+        <fullName>geAssistiveFormFieldsCollapseAll</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -4223,7 +4223,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Collapse all Object Groups and Template Components.</value>
     </labels>
     <labels>
-        <fullName>geAssistFormFieldsExpandAll</fullName>
+        <fullName>geAssistiveFormFieldsExpandAll</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -4231,7 +4231,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Expand all Object Groups and Template Components.</value>
     </labels>
     <labels>
-        <fullName>geAssistModalCancelAndDiscard</fullName>
+        <fullName>geAssistiveFormFieldsSectionEdit</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Form Fields section edit button alt text</shortDescription>
+        <value>Edit the {0} section settings.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveModalCancelAndDiscard</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -4239,7 +4247,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Cancel and discard changes to section settings.</value>
     </labels>
     <labels>
-        <fullName>geAssistSpinner</fullName>
+        <fullName>geAssistiveSpinner</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -4261,6 +4269,16 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Text block about setting up batch header fields</shortDescription>
         <value>For each field, you can edit the field label, mark it as required, or assign a default value. Default values can be overwritten by the person who creates the batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchHeaderWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning body of required field added to Batch Header</shortDescription>
+        <!-- {0} is comma separated list of field api names from the Data Import Batch object -->
+        <!-- e.g. npsp__GiftBatch__c, npsp__Batch_Description__c -->
+        <value>These required fields were automatically added to the Batch Header: {0}</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftCol</fullName>
@@ -4307,14 +4325,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Deleting this section also removes any fields in it.</value>
     </labels>
     <labels>
-        <fullName>geBodyFormFieldsRightCol</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Form Fields right column text block</shortDescription>
-        <value>Click a section, then select a field in the side bar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. The gift entry form layout can be managed by creating sections and reordering the sections or fields.</value>
-    </labels>
-    <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4323,12 +4333,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Enter details about this Gift Entry Template.</value>
     </labels>
     <labels>
-        <fullName>geAssistFormFieldsSectionEdit</fullName>
+        <fullName>geBodyFormFieldsRightCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Form Fields section edit button alt text</shortDescription>
-        <value>Edit the {0} section settings.</value>
+        <shortDescription>Form Fields right column text block</shortDescription>
+        <value>Click a section, then select a field in the side bar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. The gift entry form layout can be managed by creating sections and reordering the sections or fields.</value>
     </labels>
     <labels>
         <fullName>geButtonBuilderNavBackFormFields</fullName>
@@ -4483,6 +4493,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Gift Entry Template Information</value>
     </labels>
     <labels>
+        <fullName>geHeaderWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning header of required field added to Batch Header</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
         <fullName>geHelpTextBatchHeaderFieldLabelLabel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4577,6 +4595,32 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Template Info</shortDescription>
         <value>Template Info</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateCreateSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully created</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The {0} template was created.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateUpdateSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully updated</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The {0} template was updated.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateSaveFail</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to save if there isn't a system error to display</shortDescription>
+        <value>Your changes cannot be saved. Please try again.</value>
     </labels>
     <labels>
         <fullName>geWarningFormFieldsModalDeleteSection</fullName>

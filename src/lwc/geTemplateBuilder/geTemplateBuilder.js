@@ -33,7 +33,7 @@ import geButtonBuilderNavFormFields from '@salesforce/label/c.geButtonBuilderNav
 import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
 import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
 import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilderNavBackFormFields';
-import geAssistSpinner from '@salesforce/label/c.geAssistSpinner';
+import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -59,7 +59,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         geButtonBuilderNavBatchHeader,
         geButtonBuilderNavBackTemplateInfo,
         geButtonBuilderNavBackFormFields,
-        geAssistSpinner,
+        geAssistiveSpinner,
     }
 
     // TODO: The following enum values will become custom labels.

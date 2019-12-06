@@ -1839,15 +1839,16 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
-        <members>geAssistFormFieldSectionDown</members>
-        <members>geAssistFormFieldSectionUp</members>
-        <members>geAssistFormFieldsCollapseAll</members>
-        <members>geAssistFormFieldsExpandAll</members>
-        <members>geAssistFormFieldsSectionEdit</members>
-        <members>geAssistModalCancelAndDiscard</members>
-        <members>geAssistSpinner</members>
+        <members>geAssistiveFormFieldSectionDown</members>
+        <members>geAssistiveFormFieldSectionUp</members>
+        <members>geAssistiveFormFieldsCollapseAll</members>
+        <members>geAssistiveFormFieldsExpandAll</members>
+        <members>geAssistiveFormFieldsSectionEdit</members>
+        <members>geAssistiveModalCancelAndDiscard</members>
+        <members>geAssistiveSpinner</members>
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
+        <members>geBodyBatchHeaderWarning</members>
         <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsLeftColReadMore</members>
@@ -1873,6 +1874,7 @@
         <members>geHeaderFormFieldsRightCol</members>
         <members>geHeaderNewTemplate</members>
         <members>geHeaderTemplateInfoLeftCol</members>
+        <members>geHeaderWarning</members>
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
@@ -1885,6 +1887,9 @@
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
+        <members>geToastTemplateCreateSuccess</members>
+        <members>geToastTemplateSaveFail</members>
+        <members>geToastTemplateUpdateSuccess</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
