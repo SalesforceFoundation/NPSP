@@ -1391,6 +1391,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Enter a valid Amount. The Amount cannot be zero, negative, or blank.</value>
     </labels>
     <labels>
+        <fullName>RD2_DataMigrationInvalidCloseAction</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Open Opportunities cannot be migrated due to No_Action configuration</shortDescription>
+        <value>In NPSP Settings | Recurring Donations, select any value other than "No_Action" for Open Opportunity Behavior on RD Close. After data migration is complete, you may change the setting back to the previous value.</value>
+    </labels>
+    <labels>
         <fullName>RD2_DataMigrationInvalidInstallmentPeriod</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>

@@ -96,6 +96,31 @@ public class ERR_Handler {
         return errors;
     }
 
+
+    /*******************************************************************************************************
+    * @description Constructs errors for records that failed in the DML operation.
+    * Errors are displayed on a page.
+    *
+    * @param dmlResults The results of a single DML operation performed using the Database class.
+    * @param sObjects The records the DML operation was performed on.
+    * @return Errors The errors that occurred during the DML operation performed using the Database class.
+    */
+    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {
+        return getErrors(dmlResults, sObjects, true);
+    }
+
+    /*******************************************************************************************************
+    * @description Constructs errors for records that failed in the DML operation.
+    * Errors are not displayed on a page.
+    *
+    * @param dmlResults The results of a single DML operation performed using the Database class.
+    * @param sObjects The records the DML operation was performed on.
+    * @return Errors The errors that occurred during the DML operation performed using the Database class.
+    */
+    public static Errors getErrorsOnly(List<Object> dmlResults, List<SObject> sObjects) {
+        return getErrors(dmlResults, sObjects, false);
+    }
+
     /*******************************************************************************************************
     * @description Processes the results of a single DML operation performed using the Database class to determine
     *              if errors occurred. It does not store errors or send error email notifications. These operations
@@ -103,9 +128,10 @@ public class ERR_Handler {
     *
     * @param dmlResults The results of a single DML operation performed using the Database class.
     * @param sObjects The records the DML operation was performed on.
+    * @param displayErrors Indicates if errors should be displayed on a page
     * @return Errors The errors that occurred during the DML operation performed using the Database class.
     */
-    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {
+    private static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects, Boolean displayErrors) {
         Errors errors = new Errors();
 
         if (dmlResults == null || dmlResults.isEmpty()) {
@@ -137,7 +163,7 @@ public class ERR_Handler {
                 //no error record will be saved, or error notification sent.
 
                 //Displaying an error message to the user
-                if (ApexPages.currentPage() != null) {
+                if (displayErrors && ApexPages.currentPage() != null) {
                     ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c));
                 }
             }
@@ -335,7 +361,9 @@ public class ERR_Handler {
         }
 
         for (Error__c error : errorResult.errorRecords) {
-            error.Context_Type__c = context;
+            if (String.isBlank(error.Context_Type__c)) {
+                error.Context_Type__c = context;
+            }
         }
 
         processErrorsOnly(errorResult.errorRecords, context);
@@ -380,6 +408,7 @@ public class ERR_Handler {
     * @param context The context the exception was raised on.
     * @return Error__c Error record.
     */
+    @TestVisible
     private static Error__c createError(String msg, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
