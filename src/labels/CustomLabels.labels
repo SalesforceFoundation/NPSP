@@ -4413,6 +4413,70 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save &amp; Close</value>
     </labels>
     <labels>
+        <fullName>geErrorExistingTemplateName</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field-level error message when template name is not unique</shortDescription>
+        <value>This name has been used by another template. Please enter a unique name.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorFieldPermission</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field-level error message for insufficient field access</shortDescription>
+        <value>You don't have permission to edit this field.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelAdvancedMappingBody</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message body when Advanced Mapping off</shortDescription>
+        <value>This feature requires Advanced Mapping. Please enable it in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelAdvancedMappingHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message header when Advanced Mapping off</shortDescription>
+        <value>Enable Advanced Mapping</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelFieldPermission1</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for insufficient field access with fields listed</shortDescription>
+        <value>To save changes to this template you must have permission to edit all of the fields in the form. Please remove the following fields: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelFieldPermission2</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for insufficient field access about exiting without saving</shortDescription>
+        <value>Alternatively, exit this form without saving and check your permissions on both the target object and on the NPSP Data Import object.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelMissingRequiredFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for insufficient field access about exiting without saving</shortDescription>
+        <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorRequiredField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field-level error message for required field missing on NPSP Data Import object</shortDescription>
+        <value>Required field</value>
+    </labels>
+    <labels>
         <fullName>geHeaderBatchHeaderLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

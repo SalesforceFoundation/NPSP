@@ -1864,6 +1864,14 @@
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
         <members>geButtonSaveAndClose</members>
+        <members>geErrorExistingTemplateName</members>
+        <members>geErrorFieldPermission</members>
+        <members>geErrorPageLevelAdvancedMappingBody</members>
+        <members>geErrorPageLevelAdvancedMappingHeader</members>
+        <members>geErrorPageLevelFieldPermission1</members>
+        <members>geErrorPageLevelFieldPermission2</members>
+        <members>geErrorPageLevelMissingRequiredFields</members>
+        <members>geErrorRequiredField</members>
         <members>geHeaderBatchHeaderLeftCol</members>
         <members>geHeaderBatchHeaderRightCol</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
