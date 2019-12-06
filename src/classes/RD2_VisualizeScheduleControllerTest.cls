@@ -37,7 +37,188 @@
 @IsTest(IsParallel=true)
 private with sharing class RD2_VisualizeScheduleControllerTest {
 
+    /****
+    * @description Creates data required for unit tests
+    */
+    @TestSetup
+    private static void setUp() {
+        Account acc = new Account(Name = 'RD2 Trigger Handler Account');
+        insert acc;
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        contact.AccountId = acc.Id;
+        insert contact;
+    }
+
+
+    /****
+    * @description Validates that AuraHandledException is thrown when RD Id is null
+    */
     @IsTest
-    private static void testBehavior() {
+    private static void shouldThrowAuraHandledExceptionWhenRDIdIsNull() {
+        try {
+            RD2_VisualizeScheduleController.getSchedule(null, null);
+        }
+        catch(Exception e) {
+            System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
+                    'Both exception types should be System.AuraHandledException');
+        }
+    }
+
+    /****
+    * @description Validates that AuraHandledException is thrown when zero installments are requested
+    */
+    @IsTest
+    private static void shouldThrowAuraHandledExceptionWhenZeroInstallmentsRequested() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriod('1st and 15th')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        try {
+            RD2_VisualizeScheduleController.getSchedule(rd.Id, 0);
+        }
+        catch(Exception e) {
+            System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
+                    'Both exception types should be System.AuraHandledException');
+        }
+    }
+
+    /****
+    * @description Validates that AuraHandledException is thrown when negative number of installments are requested
+    */
+    @IsTest
+    private static void shouldThrowAuraHandledExceptionWhenNegativeNumberOfInstallmentsRequested() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriod('1st and 15th')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        try {
+            RD2_VisualizeScheduleController.getSchedule(null, -5);
+        }
+        catch(Exception e) {
+            System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
+                    'Both exception types should be System.AuraHandledException');
+        }
+    }
+
+    /****
+    * @description Validates that 12 installments are returned when twelve are requested for a valid non-closed RD
+    */
+    @IsTest
+    private static void shouldReturn12InstallmentsForValidNonClosedRD() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriod('1st and 15th')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        Test.startTest();
+        insert rd;
+        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedule(rd.Id, 12);
+        Test.stopTest();
+
+        System.assertEquals(12, schedules.size(), 'There should be 12 installments.');
+
+    }
+
+    /****
+    * @description Validates that AuraHandledException is thrown when Enhanced RD is not enabled
+    */
+    @IsTest
+    private static void shouldThrowAuraHandledExceptionWhenEnhancedRDNotEnabled() {
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructLegacyBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        try {
+            List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedule(rd.Id, 12);
+        }
+        catch(Exception e) {
+            System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
+                    'Both exception types should be System.AuraHandledException');
+        }
+    }
+
+    /****
+    * @description Validates that AuraHandledException is thrown when incorrect SObject Id is used
+    */
+    @IsTest
+    private static void shouldThrowAuraHandledExceptionWhenNonRDSObjectUsed() {
+        Account acc = new Account(Name = 'Test Account');
+        insert acc;
+
+        try {
+            RD2_VisualizeScheduleController.getSchedule(acc.Id, 12);
+        }
+        catch(Exception e) {
+            System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
+                    'Both exception types should be System.AuraHandledException');
+        }
+    }
+
+
+    //// Helpers
+
+    /****
+    * @description Returns contact record
+    */
+    private static Contact getContact() {
+        return [
+                SELECT FirstName, LastName, AccountId, Account.Name
+                FROM Contact
+                LIMIT 1
+        ];
     }
 }

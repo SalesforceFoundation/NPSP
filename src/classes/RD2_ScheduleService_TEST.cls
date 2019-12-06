@@ -37,6 +37,19 @@
 @isTest(IsParallel=true)
 private with sharing class RD2_ScheduleService_TEST {
 
+    /****
+    * @description Creates data required for unit tests
+    */
+    @TestSetup
+    private static void setUp() {
+        Account acc = new Account(Name = 'RD2 Trigger Handler Account');
+        insert acc;
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        contact.AccountId = acc.Id;
+        insert contact;
+    }
+
     /***
     * @description Verifies details of monthly schedule creation
     */
@@ -1003,9 +1016,228 @@ private with sharing class RD2_ScheduleService_TEST {
 
     }
 
+    /***
+    * @description Verifies visualization works with a large number of installments requested
+    */
+    @isTest
+    private static void shouldReturn480InstallmentsWhen480Requested() {
 
-    //// Helpers
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth('1')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+
+        Test.startTest();
+        insert rd;
+        List<RD2_ScheduleService.Installment> installments = service.getNextDonationsForVisualization(rd, Date.newInstance(2019, 11, 1), 480);
+        Test.stopTest();
+
+        System.assertEquals(480, installments.size(), 'There should be 480 installments.');
+        System.assertEquals(Date.newInstance(2059, 10, 1), installments[479].nextDonationDate, 'Final installment date should be 10/1/2059.');
+
+    }
+
+    /***
+    * @description Verifies visualization does not fail when zero installments are requested
+    */
+    @isTest
+    private static void shouldReturnZeroInstallmentsWhenZeroRequested() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth('1')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .withStatusClosed()
+                        .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+
+        Test.startTest();
+        insert rd;
+        List<RD2_ScheduleService.Installment> installments = service.getNextDonationsForVisualization(rd, Date.newInstance(2019, 11, 1), 12);
+        Test.stopTest();
+
+        System.assertEquals(0, installments.size(), 'There should be 0 installments.');
+
+    }
+
+    /***
+    * @description Verifies visualization does not fail when null RD Id is used
+    */
+    @isTest
+    private static void shouldReturnZeroInstallmentsWhenRDIdIsNull() {
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+
+        List<RD2_ScheduleService.Installment> installments = service.getNextDonationsForVisualization(null, Date.newInstance(2019, 11, 1), 12);
+
+        System.assertEquals(0, installments.size(), 'There should be 0 installments.');
+
+    }
+
+    /***
+    * @description Verifies visualization substitutes default when null start date is used
+    */
+    @isTest
+    private static void shouldReturnRequestedInstallmentsWhenStartDateIsNull() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth('1')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+
+        Test.startTest();
+        insert rd;
+        List<RD2_ScheduleService.Installment> installments = service.getNextDonationsForVisualization(rd, null, 12);
+        Test.stopTest();
+
+        System.assertEquals(12, installments.size(), 'There should be 12 installments.');
+        System.assertEquals(Date.newInstance(2020, 10, 1), installments[11].nextDonationDate, 'Final installment date should be 10/1/2020.');
+
+    }
+
+    /***
+    * @description Verifies visualization substitutes default when null maxDates are requested
+    */
+    @isTest
+    private static void shouldReturn12InstallmentsWhenNumberRequestedIsNull() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth('1')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+
+        Test.startTest();
+        insert rd;
+        List<RD2_ScheduleService.Installment> installments = service.getNextDonationsForVisualization(rd, Date.newInstance(2019, 11, 1), null);
+        Test.stopTest();
+
+        System.assertEquals(12, installments.size(), 'There should be 12 installments.');
+        System.assertEquals(Date.newInstance(2020, 10, 1), installments[11].nextDonationDate, 'Final installment date should be 10/1/2020.');
+
+    }
+
+    /***
+    * @description Verifies visualization does not fail when negative max dates requested
+    */
+    @isTest
+    private static void shouldReturnZeroInstallmentsWhenNegativeNumberRequested() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth('1')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+
+        Test.startTest();
+        insert rd;
+        List<RD2_ScheduleService.Installment> installments = service.getNextDonationsForVisualization(rd, Date.newInstance(2019, 11, 1), -5);
+        Test.stopTest();
+
+        System.assertEquals(0, installments.size(), 'There should be 0 installments.');
+
+    }
+
+    /***
+    * @description Verifies visualization behaves as expected with 1st and 15th schedule
+    */
+    @isTest
+    private static void shouldReturn12InstallmentsWhen1stAnd15thRequested() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriod('1st and 15th')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+
+        Test.startTest();
+        insert rd;
+        List<RD2_ScheduleService.Installment> installments = service.getNextDonationsForVisualization(rd, Date.newInstance(2019, 11, 1), 12);
+        Test.stopTest();
+
+        System.assertEquals(12, installments.size(), 'There should be 12 installments.');
+        System.assertEquals(Date.newInstance(2020, 4, 15), installments[11].nextDonationDate, 'Final installment date should be 4/15/2020.');
+
+    }
+
+
+        //// Helpers
+
+    /****
+    * @description Returns Schedule Service with current date override
+    */
     private static RD2_ScheduleService getScheduleServiceWithCurrentDateOverride(Date currDateOverride) {
 
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
@@ -1014,4 +1246,14 @@ private with sharing class RD2_ScheduleService_TEST {
         return scheduleService;
     }
 
+    /****
+    * @description Returns contact record
+    */
+    private static Contact getContact() {
+        return [
+                SELECT FirstName, LastName, AccountId, Account.Name
+                FROM Contact
+                LIMIT 1
+        ];
+    }
 }

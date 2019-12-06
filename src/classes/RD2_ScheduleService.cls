@@ -194,15 +194,6 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the dates of the next DEFAULT_VISUALIZATION_SCHEDULE_COUNT donations
-    * @param rd Recurring Donation record
-    * @return List<Installment>
-    */
-    public List<Installment> getNextDonationsForVisualization(npe03__Recurring_Donation__c rd) {
-        return getNextDonationsForVisualization(rd, currentDate, DEFAULT_VISUALIZATION_SCHEDULE_COUNT);
-    }
-
-    /***
     * @description Calculates the dates of the next n donations
     * @param rd Recurring Donation record
     * @param visualizationStartDate Date
@@ -219,13 +210,17 @@ public without sharing class RD2_ScheduleService {
             visualizationStartDate = currentDate;
         }
 
-        List <RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
-
         Installment ins;
         List<Installment> vizSchedules = new List<Installment>();
         currentDate = visualizationStartDate;
         Integer dateCount = 0;
         List <RecurringDonationSchedule__c> filteredSchedules;
+
+        List <RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
+
+        if (schedules == null) {
+            return vizSchedules;
+        }
 
         while (dateCount < maxDates) {
 
@@ -318,15 +313,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         return nextDonationSchedule;
-    }
-
-    /***
-    * @description Retrieves recurring donation schedules associated with a single recurring donation
-    * @param rd npe03__Recurring_Donation__c
-    */
-    public List<RecurringDonationSchedule__c> getExistingSchedules(npe03__Recurring_Donation__c rd) {
-
-        return getExistingSchedules(new List<npe03__Recurring_Donation__c> {rd}).get(rd.Id);
     }
 
     /***
@@ -507,6 +493,18 @@ public without sharing class RD2_ScheduleService {
         }
 
         return schedulesByRdId;
+    }
+
+    /***
+    * @description Retrieves recurring donation schedules associated with a single recurring donation
+    * @param rd npe03__Recurring_Donation__c
+    */
+    public List<RecurringDonationSchedule__c> getExistingSchedules(npe03__Recurring_Donation__c rd) {
+        if (rd == null) {
+            return null;
+        }
+
+        return getExistingSchedules(new List<npe03__Recurring_Donation__c> {rd}).get(rd.Id);
     }
 
     /***

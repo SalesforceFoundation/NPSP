@@ -1,6 +1,3 @@
-// TODO Implement Custom Label as defined below
-// TODO (Post-MVP) Implement a user definable setting (in the LWC) to define the columns to show
-
 import labelScheduleTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
 import labelColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 
@@ -52,7 +49,6 @@ export default class RdScheduleVisualizer extends LightningElement {
     @wire(getRecord, { recordId: '$recordId',
         fields: [FIELD_RD_AMOUNT, FIELD_RD_DAYOFMONTH, FIELD_RD_FREQUENCY, FIELD_RD_PERIOD, FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD] })
     wireRecordChange() {
-        console.log('The record has changed: ', this.recordId);
         if (this.recordId) {
             getSchedule({ recordId: this.recordId, displayNum: this.displayNum })
                 .then(data => {
@@ -81,10 +77,10 @@ export default class RdScheduleVisualizer extends LightningElement {
     }
 
     /*******************************************************************************
-     * @description Retrieve the object info for the Opportunity Object to set the field labels
+     * @description Retrieve the object info for the Recurring Donation Object to set the field labels
      */
     @wire(getObjectInfo, { objectApiName: SOBJECT_RECURRING_DONATION })
-    wireGetOppObjectInfo({error, data}) {
+    wireGetRDObjectInfo({error, data}) {
         if (data) {
             this.lblCloseDate = this.lblCloseDate
             this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
