@@ -344,10 +344,10 @@
         <members>RD2_EnablementService_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
-        <members>RD2_OpportunityEvaluation_BATCH</members>
-        <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>
         <members>RD2_OpportunityEvaluationService_TEST</members>
+        <members>RD2_OpportunityEvaluation_BATCH</members>
+        <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_QueueableService</members>
@@ -1455,7 +1455,11 @@
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
+        <members>RD2_AmountMustBeValid</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
+        <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
+        <members>RD2_DayOfMonthMustBeValid</members>
+        <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementEnableConfirm</members>
@@ -1480,6 +1484,7 @@
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
+        <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
