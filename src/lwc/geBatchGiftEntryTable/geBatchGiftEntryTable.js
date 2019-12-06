@@ -32,7 +32,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             typeAttributes: {label: {fieldName: 'matchedRecordLabel'}}
         }
     ];
-    _actionsColumn = [{
+    _actionsColumn = {
         type: 'action',
         typeAttributes: {
             rowActions: [
@@ -40,7 +40,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             ],
             menuAlignment: 'right'
         }
-    }];
+    };
 
     connectedCallback() {
         if (this.batchId) {
@@ -96,7 +96,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.columns = [
             ...this._columns,
             ...userDefinedColumns,
-            ...this._actionsColumn];
+            this._actionsColumn];
         this.columnsLoaded();
     }
 
