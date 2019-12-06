@@ -598,19 +598,18 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    private static void checkCloseActionsContainsSelectOptionsWhenRD2Enabled() {
+    private static void shouldReturnEnhancedRDCloseActionsWhenRD2IsEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         List<RD2_Constants.CloseActions> options = RD2_Constants.CloseActions.values();
 
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
-        system.assertEquals('idPanelRD', panel.idPanel());
         panel.init();
 
-        System.assertNotEquals(null, panel.listSORDCloseOptions);
-        System.assert(options[0].name().contains(panel.listSORDCloseOptions[0].getValue()));
-        System.assert(options[1].name().contains(panel.listSORDCloseOptions[1].getValue()));
-        System.assert(options[2].name().contains(panel.listSORDCloseOptions[2].getValue()));
+        System.assertEquals(options.size(), panel.listSORDCloseOptions.size(), 'Panel should return options');
+        for (Integer i = 0; i < options.size(); i++) {
+            System.assertEquals(options[i].name(), panel.listSORDCloseOptions[i].getValue(), 'Options should match');
+        }
 
     }
 
@@ -620,17 +619,16 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    private static void checkRDCloseOptionsContainsSelectOptionsWhenRD2isNotEnabled() {
+    private static void shouldReturnLegacyRDCloseActionsWhenRD2IsNotEnabled() {
         List<RD_RecurringDonations.RecurringDonationCloseOptions> options = RD_RecurringDonations.RecurringDonationCloseOptions.values();
 
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
-        system.assertEquals('idPanelRD', panel.idPanel());
         panel.init();
 
-        System.assertNotEquals(null, panel.listSORDCloseOptions);
-        System.assert(options[0].name().contains(panel.listSORDCloseOptions[0].getValue()));
-        System.assert(options[1].name().contains(panel.listSORDCloseOptions[1].getValue()));
-        System.assert(options[2].name().contains(panel.listSORDCloseOptions[2].getValue()));
+        System.assertEquals(options.size(), panel.listSORDCloseOptions.size(), 'Panel should return options');
+        for (Integer i = 0; i < options.size(); i++) {
+            System.assertEquals(options[i].name(), panel.listSORDCloseOptions[i].getValue(), 'Options should match');
+        }
 
     }
 

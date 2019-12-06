@@ -1646,7 +1646,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_PageNotAvailableMessage</shortDescription>
-        <value>Data is not available when Enhanced Recurring Donations are enabled</value>
+        <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
