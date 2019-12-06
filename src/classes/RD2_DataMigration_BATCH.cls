@@ -35,7 +35,10 @@
 * Legacy to Enhanced Recurring Donation format
 *
 */
-public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Schedulable {
+public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Schedulable, Database.Stateful {
+
+    public static final String LOG_CONTEXT_PREFIX = 'RDDataMigration:';
+    public static final String LOG_EXCEPTION_ERROR_TYPE = 'Data Migration Exception';
 
     /**
     * @description The default batch size for the migration job if it's not specified
@@ -43,10 +46,10 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     private static final Integer DEFAULT_MIGRATION_JOB_BATCH_SIZE = 25;
 
-
+    /**
+    * @description Indicates if Recurring Donations will be attempted to be converted but not committed to database
+    */
     private Boolean isDryRunMode = false;
-
-    private List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
 
     /**
     * @description Batch size for Apex Job. Uses default if the Custom Setting batch size is not provided.
@@ -63,8 +66,26 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
                 batchSize = configValue.intValue();
             }
             return batchSize;
-        } 
+        }
         private set;
+    }
+
+    /**
+    * @description Contains batch job Id
+    */
+    private Id batchJobId;
+
+    /**
+    * @description Constructs context used to log errors
+    */
+    private String logContext {
+        get {
+            if (logContext == null) {
+                logContext = constructLogContext();
+            }
+            return logContext;
+        }
+        set;
     }
 
     /***
@@ -86,6 +107,8 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @description Batch Start Method
     */
     public Database.QueryLocator start(Database.BatchableContext context) {
+        setBatchJobId(context);
+
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             return Database.getQueryLocator(getRDMigrationQuery());
         } else {
@@ -94,18 +117,35 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     }
 
     /**
-    * @description Batch Execute Method
+    * @description Converts legacy Recurring Donation into enhanced Recurring Donation format
+    * @param context Batchable context
+    * @param rds Recurring Donations
+    * @return void
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
-        Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);
+        setBatchJobId(context);
 
-        Savepoint sp = Database.setSavepoint();
+        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+        Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);
+        List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            handleConversion(rd, oppsByRdId.get(rd.Id));
+            RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd)
+                .withRelatedOpportunities(oppsByRdId.get(rd.Id));
+
+            if (mapper.isConverted()) {
+                continue;
+            }
+
+            try {
+                convertedRDs.add(mapper.convertToEnhancedRD());
+
+            } catch (Exception e) {
+                addError(e, rd.Id, errorResult);
+            }
         }
 
-        handleDmlAndLogging(sp);
+        handleSaveAndLogging(convertedRDs, errorResult);
     }
 
     /**
@@ -114,40 +154,92 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     public void finish(Database.BatchableContext context) {
     }
 
-    /**
-    * @description Process the Rd2 migration for a single Recurring Donation and its related opps
-    * @param rd Recurring Donation
-    * @param opps All Related Opportunities for this RD
-    */
-    private void handleConversion(npe03__Recurring_Donation__c rd, List<Opportunity> opps) {
-        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd)
-            .withRelatedOpportunities(opps);
 
-        if (mapper.isConverted()) {	
-            return;	
+    /**
+    * @description Sets batch job Id
+    * @param context Batchable context
+    * @return void
+    */
+    private void setBatchJobId(Database.BatchableContext context) {
+        if (context == null || batchJobId != null) {
+            return;
         }
 
-        convertedRDs.add(mapper.convertToEnhancedRD());
-
-        // TODO Opportunity Updates
-
-        // TODO Retrieve any validation errors that blocked the conversion
+        batchJobId = context.getJobId();
     }
 
     /**
-    * @description When all RD's have been processed, handle any required DML and error/exception logging
-    * @param sp SavePoint if a rollback is required for dry run mode
+    * @description Constructs log context
+    * @return String Log context containing batch job Created Date
     */
-    private void handleDmlAndLogging(Savepoint sp) {
-        // TODO Rewrite this to capture and log dml exceptions in a new logging service
-        //Database.update(convertedRDs, false);
-        update convertedRDs;
+    private String constructLogContext() {
+        UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService().getBatchJob(batchJobId);
+
+        String formattedDateSuffix = batchJob == null
+            ? ''
+            : ' ' + String.valueOf(batchJob.CreatedDate);
+
+        return LOG_CONTEXT_PREFIX + formattedDateSuffix;
+    }
+
+    /**
+    * @description Constructs log record and adds it into the error log container
+    * @param e Exception
+    * @param rdId Recurring Donation Id
+    * @param errorResult Exception/error log container
+    * @return void
+    */
+    private void addError(Exception e, Id rdId, ERR_Handler.Errors errorResult) {
+        Error__c logEntry = new Error__c(
+            Context_Type__c = logContext,
+            Datetime__c = System.now(),
+            Related_Record_ID__c = rdId,
+            Record_URL__c = ERR_Handler.getRecordURL(rdId),
+            Error_Type__c = LOG_EXCEPTION_ERROR_TYPE,
+            Full_Message__c = e.getMessage()
+        );
+
+        errorResult.errorRecords.add(logEntry);
+    }
+
+    /**
+    * @description Save records and log all exceptions and errors generated during records' validation and save
+    * @param convertedRDs Converted Recurring Donations
+    * @param errorResult Exception/error log container
+    * @return void
+    */
+    private void handleSaveAndLogging(List<npe03__Recurring_Donation__c> convertedRDs, ERR_Handler.Errors errorResult) {
+
+        List<Database.SaveResult> saveResults = saveRecords(convertedRDs);
+
+        errorResult.errorRecords.addAll(
+            ERR_Handler.getErrors(saveResults, convertedRDs).errorRecords
+        );
+
+        errorResult.errorsExist = !errorResult.errorRecords.isEmpty();
+
+        ERR_Handler.processErrorsOnly(errorResult, logContext);
+    }
+
+    /**
+    * @description Save records
+    * @param convertedRDs Converted Recurring Donations
+    * @return List<Database.SaveResult>
+    */
+    private List<Database.SaveResult> saveRecords(List<npe03__Recurring_Donation__c> convertedRDs) {
+        if (convertedRDs.isEmpty()) {
+            return new List<Database.SaveResult>();
+        }
+
+        Savepoint sp = Database.setSavepoint();
+
+        List<Database.SaveResult> saveResults = Database.update(convertedRDs, false);
 
         if (this.isDryRunMode) {
             Database.rollback(sp);
         }
 
-        // TODO Commit any logging records after the rollback
+        return saveResults;
     }
 
     /**
@@ -201,17 +293,18 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     private Map<Id, List<Opportunity>> getRelatedOpportunities(List<npe03__Recurring_Donation__c> rds) {
         Map<Id, List<Opportunity>> oppsByRdId = new Map<Id, List<Opportunity>>();
 
-        for (Opportunity opp : [SELECT Id,
-                    Name,
-                    Amount,
-                    CloseDate,
-                    CreatedDate,
-                    IsWon,
-                    IsClosed,
-                    npe03__Recurring_Donation__c
-                FROM Opportunity
-                WHERE npe03__Recurring_Donation__c IN :rds
-                ORDER BY npe03__Recurring_Donation__c, CloseDate ASC
+        for (Opportunity opp : [
+            SELECT Id,
+                Name,
+                Amount,
+                CloseDate,
+                CreatedDate,
+                IsWon,
+                IsClosed,
+                npe03__Recurring_Donation__c
+            FROM Opportunity
+            WHERE npe03__Recurring_Donation__c IN :rds
+            ORDER BY npe03__Recurring_Donation__c, CloseDate ASC
         ]) {
 
             if (!oppsByRdId.containsKey(opp.npe03__Recurring_Donation__c)) {
