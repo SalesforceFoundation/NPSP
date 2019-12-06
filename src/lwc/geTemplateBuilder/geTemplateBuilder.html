@@ -168,8 +168,8 @@
 
     <template if:false={isAccessible}>
         <div class="slds-card slds-card_extension slds-p-around_large">
-            <c-util-illustration title='You do not have access to this page'
-                                 message='Template Builder requires Advanced Mapping. Please go to NPSP Settings and turn on Advanced Mapping.'
+            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
+                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
                                  size="large">
             </c-util-illustration>
         </div>

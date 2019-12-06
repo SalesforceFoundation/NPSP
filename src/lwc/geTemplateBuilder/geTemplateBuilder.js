@@ -43,6 +43,8 @@ import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarni
 import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCreateSuccess';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geToastTemplateSaveFail from '@salesforce/label/c.geToastTemplateSaveFail';
+import geErrorPageLevelAdvancedMappingHeader from '@salesforce/label/c.geErrorPageLevelAdvancedMappingHeader';
+import geErrorPageLevelAdvancedMappingBody from '@salesforce/label/c.geErrorPageLevelAdvancedMappingBody';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -76,6 +78,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         geButtonBuilderNavBackTemplateInfo,
         geButtonBuilderNavBackFormFields,
         geAssistiveSpinner,
+        geErrorPageLevelAdvancedMappingHeader,
+        geErrorPageLevelAdvancedMappingBody,
     }
 
     // TODO: The following enum values will become custom labels.

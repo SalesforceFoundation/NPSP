@@ -16,6 +16,9 @@ import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFo
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
 import geAssistiveFormFieldsCollapseAll from '@salesforce/label/c.geAssistiveFormFieldsCollapseAll';
 import geAssistiveFormFieldsExpandAll from '@salesforce/label/c.geAssistiveFormFieldsExpandAll';
+import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
+import geHeaderError from '@salesforce/label/c.geHeaderError';
+import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
 
 // Import source field names for required Field Mappings
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
@@ -38,6 +41,8 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         geAssistiveSpinner,
         geAssistiveFormFieldsCollapseAll,
         geAssistiveFormFieldsExpandAll,
+        geErrorPageLevelMissingRequiredFields,
+        geHeaderError,
     }
 
     isInitialized;
@@ -566,9 +571,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     * event handler.
     */
     handleCollapseAllSections() {
-        const lightningAccordion = this.template.querySelector(
-            'lightning-accordion'
-        );
+        const lightningAccordion = this.template.querySelector('lightning-accordion');
         lightningAccordion.activeSectionName = [];
         this.isAllSectionsExpanded = false;
     }
@@ -580,9 +583,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     * of.
     */
     validateGiftField(element) {
-        let customValidity = 'Required field';
-        customValidity = (element.required && element.checked === false) ? customValidity : '';
-
+        let customValidity = (element.required && element.checked === false) ? geErrorRequiredField : '';
         element.setCustomValidity(customValidity);
         element.reportValidity();
     }

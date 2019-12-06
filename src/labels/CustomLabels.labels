@@ -4470,8 +4470,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error for insufficient field access about exiting without saving</shortDescription>
-        <!-- {0} is a list. Name of fields e.g. npsp__Amount__c, npsp__Description__c -->
-        <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields: {0}</value>
+        <!-- Label should be followed by a list of fields e.g. npsp__Amount__c, npsp__Description__c -->
+        <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields:</value>
     </labels>
     <labels>
         <fullName>geErrorRequiredField</fullName>
