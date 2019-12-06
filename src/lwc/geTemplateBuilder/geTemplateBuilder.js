@@ -22,6 +22,7 @@ import {
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
+// Import custom labels
 import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
 import labelGeCancel from '@salesforce/label/c.labelGeCancel';
 import geButtonSaveAndClose from '@salesforce/label/c.geButtonSaveAndClose';
@@ -32,6 +33,7 @@ import geButtonBuilderNavFormFields from '@salesforce/label/c.geButtonBuilderNav
 import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
 import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
 import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilderNavBackFormFields';
+import geAssistSpinner from '@salesforce/label/c.geAssistSpinner';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -45,6 +47,7 @@ const EDIT = 'edit';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
+    // Expose custom labels to template
     CUSTOM_LABELS = {
         geHeaderNewTemplate,
         labelGeCancel,
@@ -55,7 +58,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         geButtonBuilderNavFormFields,
         geButtonBuilderNavBatchHeader,
         geButtonBuilderNavBackTemplateInfo,
-        geButtonBuilderNavBackFormFields
+        geButtonBuilderNavBackFormFields,
+        geAssistSpinner,
     }
 
     // TODO: The following enum values will become custom labels.

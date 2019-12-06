@@ -6,6 +6,9 @@ import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormT
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { findIndexByProperty } from 'c/utilTemplateBuilder';
 
+// Import custom labels
+import geAssistSpinner from '@salesforce/label/c.geAssistSpinner';
+
 const actions = [
     { label: 'Edit', name: 'edit' },
     { label: 'Clone', name: 'clone' },
@@ -22,6 +25,12 @@ const columns = [
 ];
 
 export default class GeTemplates extends NavigationMixin(LightningElement) {
+
+    // Expose custom labels to template
+    CUSTOM_LABELS = {
+        geAssistSpinner,
+    }
+
     @track templates;
     @track columns = columns;
     @track isLoading = true;

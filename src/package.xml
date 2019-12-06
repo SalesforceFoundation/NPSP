@@ -1839,6 +1839,13 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>geAssistFormFieldSectionDown</members>
+        <members>geAssistFormFieldSectionUp</members>
+        <members>geAssistFormFieldsCollapseAll</members>
+        <members>geAssistFormFieldsExpandAll</members>
+        <members>geAssistFormFieldsSectionEdit</members>
+        <members>geAssistModalCancelAndDiscard</members>
+        <members>geAssistSpinner</members>
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
         <members>geBodyFormFieldsLeftCol</members>
@@ -1847,9 +1854,6 @@
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
         <members>geBodyTemplateInfoLeftCol</members>
-        <members>geBuilderButtonAltTextSectionDown</members>
-        <members>geBuilderButtonAltTextSectionEdit</members>
-        <members>geBuilderButtonAltTextSectionUp</members>
         <members>geButtonBuilderNavBackFormFields</members>
         <members>geButtonBuilderNavBackTemplateInfo</members>
         <members>geButtonBuilderNavBatchHeader</members>

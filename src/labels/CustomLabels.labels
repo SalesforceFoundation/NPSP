@@ -4199,6 +4199,48 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geAssistFormFieldSectionDown</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move section down</shortDescription>
+        <value>Move the {0} section down.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistFormFieldSectionUp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move section up</shortDescription>
+        <value>Move the {0} section up.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistFormFieldsCollapseAll</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button to collapse all Object Groups and Template Components</shortDescription>
+        <value>Collapse all Object Groups and Template Components.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistFormFieldsExpandAll</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button to expand all Object Groups and Template Components</shortDescription>
+        <value>Expand all Object Groups and Template Components.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistModalCancelAndDiscard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button to cancel and discard changes to section settings</shortDescription>
+        <value>Cancel and discard changes to section settings.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistSpinner</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: lightning-spinner</shortDescription>
+        <value>Content is loading.</value>
+    </labels>
+    <labels>
         <fullName>geBodyBatchHeaderLeftCol</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4267,25 +4309,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Enter details about this Gift Entry Template.</value>
     </labels>
     <labels>
-        <fullName>geBuilderButtonAltTextSectionDown</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Form Fields section down button alt text</shortDescription>
-        <value>Move the {0} section down.</value>
-    </labels>
-    <labels>
-        <fullName>geBuilderButtonAltTextSectionEdit</fullName>
+        <fullName>geAssistFormFieldsSectionEdit</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder Form Fields section edit button alt text</shortDescription>
         <value>Edit the {0} section settings.</value>
-    </labels>
-    <labels>
-        <fullName>geBuilderButtonAltTextSectionUp</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Form Fields section up button alt text</shortDescription>
-        <value>Move the {0} section up.</value>
     </labels>
     <labels>
         <fullName>geButtonBuilderNavBackFormFields</fullName>
@@ -4473,14 +4501,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>geLabelTemplateInfoDescriptionField</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Template Info Description field label</shortDescription>
+        <shortDescription>Label for the field for the template's description</shortDescription>
         <value>Description</value>
     </labels>
     <labels>
         <fullName>geLabelTemplateInfoNameField</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Template Info Name field label</shortDescription>
+        <shortDescription>Label for the field for the template's name</shortDescription>
         <value>Template Name</value>
     </labels>
     <labels>

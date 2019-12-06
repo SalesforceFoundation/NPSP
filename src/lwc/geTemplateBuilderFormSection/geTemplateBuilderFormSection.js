@@ -7,9 +7,9 @@ import geLabelRequired from '@salesforce/label/c.geLabelRequired';
 import geLabelDefaultValue from '@salesforce/label/c.geLabelDefaultValue';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
-import geBuilderButtonAltTextSectionEdit from '@salesforce/label/c.geBuilderButtonAltTextSectionEdit';
-import geBuilderButtonAltTextSectionUp from '@salesforce/label/c.geBuilderButtonAltTextSectionUp';
-import geBuilderButtonAltTextSectionDown from '@salesforce/label/c.geBuilderButtonAltTextSectionDown';
+import geAssistFormFieldsSectionEdit from '@salesforce/label/c.geAssistFormFieldsSectionEdit';
+import geAssistFormFieldSectionUp from '@salesforce/label/c.geAssistFormFieldSectionUp';
+import geAssistFormFieldSectionDown from '@salesforce/label/c.geAssistFormFieldSectionDown';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
 const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
@@ -43,16 +43,16 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         return this.formSection.elements.length === 0 ? true : false;
     }
 
-    get labelGeBuilderButtonAltTextSectionEdit() {
-        return format(geBuilderButtonAltTextSectionEdit, [this.formSection.label]);
+    get labelgeAssistFormFieldsSectionEdit() {
+        return format(geAssistFormFieldsSectionEdit, [this.formSection.label]);
     }
 
     get labelGeBuilderButtonAltTextSectionUp() {
-        return format(geBuilderButtonAltTextSectionDown, [this.formSection.label]);
+        return format(geAssistFormFieldSectionDown, [this.formSection.label]);
     }
 
     get labelGeBuilderButtonAltTextSectionDown() {
-        return format(geBuilderButtonAltTextSectionUp, [this.formSection.label]);
+        return format(geAssistFormFieldSectionUp, [this.formSection.label]);
     }
 
     /*******************************************************************************

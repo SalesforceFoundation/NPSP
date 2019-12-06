@@ -17,6 +17,7 @@ import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpText
 import geLabelDefaultValue from '@salesforce/label/c.geLabelDefaultValue';
 import geLabelFieldLabel from '@salesforce/label/c.geLabelFieldLabel';
 import geLabelRequired from '@salesforce/label/c.geLabelRequired';
+import geAssistSpinner from '@salesforce/label/c.geAssistSpinner';
 
 const PROP_API_NAME = 'apiName';
 const PROP_BATCH_HEADER_TAB_ERROR = 'hasBatchHeaderTabError';
@@ -38,7 +39,8 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         geHelpTextBatchHeaderFieldLabelLabel,
         geLabelDefaultValue,
         geLabelFieldLabel,
-        geLabelRequired
+        geLabelRequired,
+        geAssistSpinner
     }
 
     @track isLoading = true;
