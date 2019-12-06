@@ -8,6 +8,16 @@ import {
 } from 'c/utilTemplateBuilder';
 import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 
+// Import custom labels
+import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
+import geBodyBatchHeaderLeftCol from '@salesforce/label/c.geBodyBatchHeaderLeftCol';
+import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeaderRightCol';
+import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRightCol';
+import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
+import geLabelDefaultValue from '@salesforce/label/c.geLabelDefaultValue';
+import geLabelFieldLabel from '@salesforce/label/c.geLabelFieldLabel';
+import geLabelRequired from '@salesforce/label/c.geLabelRequired';
+
 const PROP_API_NAME = 'apiName';
 const PROP_BATCH_HEADER_TAB_ERROR = 'hasBatchHeaderTabError';
 const EVENT_UPDATE_VALIDITY = 'updatevalidity';
@@ -18,6 +28,19 @@ const EVENT_BATCH_HEADER_FIELD_ADD = 'addbatchheaderfield';
 const EVENT_BATCH_HEADER_FIELD_REMOVE = 'removebatchheaderfield';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
+
+    // Expose custom labels to template
+    CUSTOM_LABELS = {
+        geHeaderBatchHeaderLeftCol,
+        geBodyBatchHeaderLeftCol,
+        geHeaderBatchHeaderRightCol,
+        geBodyBatchHeaderRightCol,
+        geHelpTextBatchHeaderFieldLabelLabel,
+        geLabelDefaultValue,
+        geLabelFieldLabel,
+        geLabelRequired
+    }
+
     @track isLoading = true;
     @api batchFields;
     @api selectedBatchFields;

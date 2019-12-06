@@ -4213,13 +4213,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>For each field, you can edit the field label, mark it as required, or assign a default value. Default values can be overwritten by the person who creates the batch.</value>
     </labels>
     <labels>
-        <fullName>geBodyFormFieldModalDeleteSection</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Warning message for deleting a section without required fields</shortDescription>
-        <value>Deleting this section also removes any fields in it.</value>
-    </labels>
-    <labels>
         <fullName>geBodyFormFieldsLeftCol</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4251,6 +4244,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Form Fields sidebar help text</shortDescription>
         <value>Read More</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsModalDeleteSection</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for deleting a section without required fields</shortDescription>
+        <value>Deleting this section also removes any fields in it.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsRightCol</fullName>
@@ -4337,6 +4337,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Expand All</value>
     </labels>
     <labels>
+        <fullName>geButtonFormFieldsModalDeleteSectionAndFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to delete a section and remove its fields</shortDescription>
+        <value>Delete Section and Fields</value>
+    </labels>
+    <labels>
         <fullName>geButtonSaveAndClose</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4358,6 +4365,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Configure Batch Header Fields</value>
     </labels>
     <labels>
+        <fullName>geHeaderFormFieldsDefaultSectionName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Name of default form section</shortDescription>
+        <value>Gift Entry Form</value>
+    </labels>
+    <labels>
         <fullName>geHeaderFormFieldsLeftCol</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4377,6 +4391,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header for renaming section in settings modal</shortDescription>
         <value>Rename Section</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsModalSectionSettings</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for form fields section settings modal</shortDescription>
+        <value>Section Settings</value>
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsRightCol</fullName>
@@ -4421,6 +4442,41 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>This shows the Mapping Object Group and Target Field API Name. You can edit the user-facing label below.</value>
     </labels>
     <labels>
+        <fullName>geLabelDefaultValue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Default Value</shortDescription>
+        <value>Default Value</value>
+    </labels>
+    <labels>
+        <fullName>geLabelFieldLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field Label</shortDescription>
+        <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>geLabelRequired</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Required</shortDescription>
+        <value>Required</value>
+    </labels>
+    <labels>
+        <fullName>geLabelSectionName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Section Name</shortDescription>
+        <value>Section Name</value>
+    </labels>
+    <labels>
+        <fullName>geLabelTemplateInfoDescriptionField</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Template Info Description field label</shortDescription>
+        <value>Description</value>
+    </labels>
+    <labels>
         <fullName>geLabelTemplateInfoNameField</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -4449,14 +4505,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Template Info</value>
     </labels>
     <labels>
-        <fullName>geTemplateInfoDescriptionFieldLabel</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder Template Info Description field label</shortDescription>
-        <value>Description</value>
-    </labels>
-    <labels>
-        <fullName>geWarningFormFieldModalDeleteSection</fullName>
+        <fullName>geWarningFormFieldsModalDeleteSection</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning message for deleting a section if it contains required field</shortDescription>

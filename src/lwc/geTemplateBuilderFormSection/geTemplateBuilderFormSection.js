@@ -2,9 +2,9 @@ import { LightningElement, api } from 'lwc';
 import { dispatch, format } from 'c/utilTemplateBuilder';
 
 // Import custom labels
-import bdiFMUIFieldLabel from '@salesforce/label/c.bdiFMUIFieldLabel';
-import lblRequired from '@salesforce/label/c.lblRequired';
-import stgDefaultValue from '@salesforce/label/c.stgDefaultValue';
+import geLabelFieldLabel from '@salesforce/label/c.geLabelFieldLabel';
+import geLabelRequired from '@salesforce/label/c.geLabelRequired';
+import geLabelDefaultValue from '@salesforce/label/c.geLabelDefaultValue';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geBuilderButtonAltTextSectionEdit from '@salesforce/label/c.geBuilderButtonAltTextSectionEdit';
@@ -18,9 +18,9 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
 
     // Expose custom labels to template
     CUSTOM_LABELS = {
-        bdiFMUIFieldLabel,
-        lblRequired,
-        stgDefaultValue,
+        geLabelFieldLabel,
+        geLabelRequired,
+        geLabelDefaultValue,
         geHelpTextFormFieldsFieldLabelLabel,
         geHelpTextFormFieldsFieldCustomLabel
     }

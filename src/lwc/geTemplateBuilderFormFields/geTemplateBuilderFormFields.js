@@ -12,6 +12,7 @@ import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightC
 import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormFieldsCollapseAll';
 import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
 import geButtonFormFieldsAddSection from '@salesforce/label/c.geButtonFormFieldsAddSection';
+import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
 
 // Import source field names for required Field Mappings
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
@@ -169,7 +170,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 PAYMENT_CHECK_REF_NUM_INFO.fieldApiName
             ];
 
-            let sectionId = this.addSection('Gift Entry Form');
+            let sectionId = this.addSection(geHeaderFormFieldsDefaultSectionName);
 
             for (let fieldMappingDevName in TemplateBuilderService.fieldMappingByDevName) {
                 if (TemplateBuilderService.fieldMappingByDevName[fieldMappingDevName]) {
@@ -342,7 +343,8 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         return {
             id: generateId(),
             label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
-            required: false,
+            customLabel: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
+            required: fieldMapping.Is_Required || false,
             sectionId: sectionId,
             defaultValue: null,
             dataType: fieldMapping.Target_Field_Data_Type,

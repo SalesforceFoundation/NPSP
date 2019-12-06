@@ -4,15 +4,15 @@
             <div class="slds-section slds-is-open">
                 <h3 class="slds-section__title slds-theme_shade">
                     <span class="slds-truncate slds-p-horizontal_small"
-                          title="Rename Section">
-                        Rename Section
+                          title={CUSTOM_LABELS.geHeaderFormFieldsModalRenameSection}>
+                        {CUSTOM_LABELS.geHeaderFormFieldsModalRenameSection}
                     </span>
                 </h3>
                 <div aria-hidden="false"
                      class="slds-section__content">
                     <lightning-input type="text"
                                      value={sectionBeingEdited.label}
-                                     label="Section Label"
+                                     label={CUSTOM_LABELS.geLabelSectionName}
                                      data-name="customLabel">
                     </lightning-input>
                 </div>
@@ -22,19 +22,24 @@
             <div class="slds-section slds-is-open">
                 <h3 class="slds-section__title slds-theme_shade">
                     <span class="slds-truncate slds-p-horizontal_small"
-                          title="Delete Section">
-                        Delete Section
+                          title={CUSTOM_LABELS.geHeaderFormFieldsModalDeleteSection}>
+                        {CUSTOM_LABELS.geHeaderFormFieldsModalDeleteSection}
                     </span>
                 </h3>
                 <div aria-hidden="false"
                      class="slds-section__content">
-                    <p class="slds-text-body_regular">
-                        Deleting a section will also remove any fields within it.
-                        If there are any required fields in this section, they
-                        will need to be added back into another section.
-                    </p>
-                    <lightning-button label="Delete Sections and Fields"
-                                      title="Delete Sections and Fields"
+                    <template if:true={hasRequiredFields}>
+                        <c-util-page-level-message title={CUSTOM_LABELS.geWarningFormFieldsModalDeleteSection}
+                                                   variant="warning">
+                        </c-util-page-level-message>
+                    </template>
+                    <template if:false={hasRequiredFields}>
+                        <p class="slds-text-body_regular slds-p-bottom_small">
+                            {CUSTOM_LABELS.geBodyFormFieldsModalDeleteSection}
+                        </p>
+                    </template>
+                    <lightning-button label={CUSTOM_LABELS.geButtonFormFieldsModalDeleteSectionAndFields}
+                                      title={CUSTOM_LABELS.geButtonFormFieldsModalDeleteSectionAndFields}
                                       variant="neutral"
                                       onclick={handleDelete}>
                     </lightning-button>
@@ -45,14 +50,14 @@
 
     <footer class="slds-modal__footer slds-clearfix">
         <div class="slds-float_right">
-            <lightning-button label="Cancel"
-                              title="Modal"
+            <lightning-button label={CUSTOM_LABELS.labelGeCancel}
+                              title={CUSTOM_LABELS.labelGeCancel}
                               variant="neutral"
                               class="slds-m-right_small"
                               onclick={handleCancel}>
             </lightning-button>
-            <lightning-button label="Save"
-                              title="Modal"
+            <lightning-button label={CUSTOM_LABELS.labelGeSave}
+                              title={CUSTOM_LABELS.labelGeSave}
                               variant="brand"
                               onclick={handleSave}>
             </lightning-button>

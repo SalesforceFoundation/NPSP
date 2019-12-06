@@ -1841,10 +1841,10 @@
         <members>flsReadAccessError</members>
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
-        <members>geBodyFormFieldModalDeleteSection</members>
         <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsLeftColReadMore</members>
+        <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBuilderButtonAltTextSectionDown</members>
@@ -1857,24 +1857,31 @@
         <members>geButtonFormFieldsAddSection</members>
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
+        <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
         <members>geButtonSaveAndClose</members>
         <members>geHeaderBatchHeaderLeftCol</members>
         <members>geHeaderBatchHeaderRightCol</members>
+        <members>geHeaderFormFieldsDefaultSectionName</members>
         <members>geHeaderFormFieldsLeftCol</members>
         <members>geHeaderFormFieldsModalDeleteSection</members>
         <members>geHeaderFormFieldsModalRenameSection</members>
+        <members>geHeaderFormFieldsModalSectionSettings</members>
         <members>geHeaderFormFieldsRightCol</members>
         <members>geHeaderNewTemplate</members>
         <members>geHeaderTemplateInfoLeftCol</members>
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
+        <members>geLabelDefaultValue</members>
+        <members>geLabelFieldLabel</members>
+        <members>geLabelRequired</members>
+        <members>geLabelSectionName</members>
+        <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
-        <members>geTemplateInfoDescriptionFieldLabel</members>
-        <members>geWarningFormFieldModalDeleteSection</members>
+        <members>geWarningFormFieldsModalDeleteSection</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>

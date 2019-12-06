@@ -4,7 +4,7 @@ import { dispatch, isEmpty, isFunction } from 'c/utilTemplateBuilder';
 import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInfoLeftCol';
 import geBodyTemplateInfoLeftCol from '@salesforce/label/c.geBodyTemplateInfoLeftCol';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
-import geTemplateInfoDescriptionFieldLabel from '@salesforce/label/c.geTemplateInfoDescriptionFieldLabel';
+import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
 
@@ -12,7 +12,7 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
         geHeaderTemplateInfoLeftCol,
         geBodyTemplateInfoLeftCol,
         geLabelTemplateInfoNameField,
-        geTemplateInfoDescriptionFieldLabel
+        geLabelTemplateInfoDescriptionField
     }
 
     @api isLoading;
