@@ -35,23 +35,24 @@
 */
 
 @isTest
-private class UTIL_RecordTypes_TEST {
+public class UTIL_RecordTypes_TEST {
+    public static final Id MOCK_ID = '0120x00000QF099999';
 
     @isTest
     static void testRecTypes() {
         // try bogus values
-        Id bogus = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, 'Bogus');
-        bogus = UTIL_RecordTypes.GetRecordTypeId(Contact.sObjectType, 'Bogus');
+        Id bogus = UTIL_RecordTypes.GetRecordTypeId(Opportunity.SObjectType, 'Bogus');
+        bogus = UTIL_RecordTypes.GetRecordTypeId(Contact.SObjectType, 'Bogus');
         bogus = UTIL_RecordTypes_API.GetRecordTypeId('Campaign', 'Bogus');
         
         // try all the functions
         Set<Id> oppRtSet = UTIL_RecordTypes_API.GetRecordTypeIdSet('Opportunity', (new Set<String>{'Bogus', 'Master', 'Grant'}));
-        List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.sObjectType);
+        List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.SObjectType);
         
         // check against queried rectypes
-        List<RecordType> ort = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND sObjectType='Opportunity' LIMIT 1];
+        List<RecordType> ort = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND SObjectType='Opportunity' LIMIT 1];
         if (!ort.isEmpty()) {
-            Id rtId = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, ort[0].name);
+            Id rtId = UTIL_RecordTypes.GetRecordTypeId(Opportunity.SObjectType, ort[0].name);
             System.assertEquals(ort[0].id, rtId);
             String rtName = UTIL_RecordTypes_API.GetRecordTypeName('Opportunity', ort[0].id);
             System.assertEquals(ort[0].name, rtName);
@@ -65,17 +66,19 @@ private class UTIL_RecordTypes_TEST {
     @isTest
     static void testVFRecordTypes() {
 
-        ID idGift = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
+        ID idGift = UTIL_RecordTypes.GetRecordTypeId(Opportunity.SObjectType, 
+            UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.SObjectType));
         
-        Set<String> setStr = new Set<String>{UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType)};
-        Set<Id> setId = UTIL_RecordTypes.GetRecordTypeIdSet(Opportunity.sObjectType, setStr);
+        Set<String> setStr = new Set<String>{UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.SObjectType)};
+        Set<Id> setId = UTIL_RecordTypes.GetRecordTypeIdSet(Opportunity.SObjectType, setStr);
 
         if (idGift!=null) {
             System.assert(setId.contains(idGift));
         
-            System.assertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType), UTIL_RecordTypes.GetRecordTypeName(Opportunity.sObjectType, idGift));
+            System.assertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.SObjectType),
+                UTIL_RecordTypes.GetRecordTypeName(Opportunity.SObjectType, idGift));
                 
-            List<SelectOption> listSO = UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.sObjectType);
+            List<SelectOption> listSO = UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.SObjectType);
             System.assert(listSO.IsEmpty() == false);
         }
     }
@@ -85,11 +88,11 @@ private class UTIL_RecordTypes_TEST {
 
         User sysAdmin = UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
         System.runAs(sysAdmin) {
-            List<RecordType> recordTypes = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND sObjectType='Opportunity'];
+            List<RecordType> recordTypes = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND SObjectType='Opportunity'];
 
-            List<Map<String, String>> recordTypeIdAndName = UTIL_RecordTypes.getRecordTypeDevNamesForLightningSelectList(Opportunity.sObjectType);
-            List<Map<String, String>> recordTypeDevNameAndName = UTIL_RecordTypes.getRecordTypesForLightningSelect(Opportunity.sObjectType);
-            List<Map<String, String>> recordTypeNameAndName = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(Opportunity.sObjectType);
+            List<Map<String, String>> recordTypeIdAndName = UTIL_RecordTypes.getRecordTypeDevNamesForLightningSelectList(Opportunity.SObjectType);
+            List<Map<String, String>> recordTypeDevNameAndName = UTIL_RecordTypes.getRecordTypesForLightningSelect(Opportunity.SObjectType);
+            List<Map<String, String>> recordTypeNameAndName = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(Opportunity.SObjectType);
 
             if (recordTypes.size() > 0) {
                 System.assert(recordTypeIdAndName.size() > 0, 'No record types are assigned.');
@@ -99,4 +102,59 @@ private class UTIL_RecordTypes_TEST {
         }
     }
 
+    //Helper Methods
+
+    /**
+    * @description Return a random valid record type for the sObject
+    * @param objectType The sObject type of the record type
+    * @return Id
+    */
+    public static Id getRandomRecordTypeId(SObjectType objectType) {
+        List<Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfos();
+        for (Schema.RecordTypeInfo rti : recordTypeInfos) {
+            if (rti.isAvailable()) {
+                return rti.getRecordTypeId();
+            }
+        }
+        return null;
+    }
+
+    /**
+    * @description Return the id of the active non-default record type of the sObject for the current user
+    * @param objectType The sObject type of the record type
+    * @return Id
+    */
+    public static Id getNonDefaultRecordTypeId(SObjectType objectType) {
+        return getRecordType(objectType, false);
+    }
+
+    /**
+    * @description Return the id of the active default record type of the sObject for the current user
+    * @param objectType The sObject type of the record type
+    * @return Id
+    */
+    public static Id getDefaultRecordTypeId(SObjectType objectType) {
+        return getRecordType(objectType, true);
+    }
+
+    /**
+    * @description Return the id of an active default/non default record type of the sObject for the current user
+    * @param objectType The sObject type of the record type
+    * @param isDefault Boolean to determine if the default record type is return or not
+    * @return Id
+    */
+    private static Id getRecordType(SObjectType objectType, Boolean isDefault) {
+        List<Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfos();
+
+        for (Schema.RecordTypeInfo rti : recordTypeInfos) {
+            if (!rti.isMaster() && rti.isAvailable()) {
+                if (isDefault && rti.isDefaultRecordTypeMapping()) {
+                    return rti.getRecordTypeId();
+                } else if (!isDefault && !rti.isDefaultRecordTypeMapping()) {
+                    return rti.getRecordTypeId();
+                }
+            }
+        }
+        return null;
+    }
 }
