@@ -4200,6 +4200,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geAssistFormFieldSectionDown</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Arrow button to move section down</shortDescription>
@@ -4207,6 +4208,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geAssistFormFieldSectionUp</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Arrow button to move section up</shortDescription>
@@ -4214,6 +4216,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geAssistFormFieldsCollapseAll</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Button to collapse all Object Groups and Template Components</shortDescription>
@@ -4221,6 +4224,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geAssistFormFieldsExpandAll</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Button to expand all Object Groups and Template Components</shortDescription>
@@ -4228,6 +4232,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geAssistModalCancelAndDiscard</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Button to cancel and discard changes to section settings</shortDescription>
@@ -4235,6 +4240,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geAssistSpinner</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: lightning-spinner</shortDescription>
@@ -4242,6 +4248,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geBodyBatchHeaderLeftCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text block about adding or removing fields in the batch header</shortDescription>
@@ -4249,6 +4256,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geBodyBatchHeaderRightCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text block about setting up batch header fields</shortDescription>
@@ -4256,6 +4264,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Template Builder Form Fields tab left column body</shortDescription>
@@ -4263,6 +4272,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftColAdditional</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>More information about adding and mapping fields</shortDescription>
@@ -4282,6 +4292,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftColReadMore</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields sidebar help text</shortDescription>
@@ -4289,6 +4300,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geBodyFormFieldsModalDeleteSection</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning message for deleting a section without required fields</shortDescription>
@@ -4296,6 +4308,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geBodyFormFieldsRightCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields right column text block</shortDescription>
@@ -4303,6 +4316,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Template Info sidebar text block</shortDescription>
@@ -4310,6 +4324,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geAssistFormFieldsSectionEdit</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder Form Fields section edit button alt text</shortDescription>
@@ -4317,6 +4332,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geButtonBuilderNavBackFormFields</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
@@ -4324,6 +4340,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geButtonBuilderNavBackTemplateInfo</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
@@ -4331,6 +4348,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geButtonBuilderNavBatchHeader</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
@@ -4338,6 +4356,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geButtonBuilderNavFormFields</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
@@ -4345,6 +4364,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geButtonFormFieldsAddSection</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button to add new section to template</shortDescription>
@@ -4352,6 +4372,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geButtonFormFieldsCollapseAll</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button to collapse all</shortDescription>
@@ -4359,6 +4380,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geButtonFormFieldsExpandAll</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button to expand all</shortDescription>
@@ -4366,6 +4388,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geButtonFormFieldsModalDeleteSectionAndFields</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button to delete a section and remove its fields</shortDescription>
@@ -4373,6 +4396,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geButtonSaveAndClose</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder save button text</shortDescription>
@@ -4380,6 +4404,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderBatchHeaderLeftCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header to select batch header fields</shortDescription>
@@ -4387,6 +4412,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderBatchHeaderRightCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header to configure batch header fields</shortDescription>
@@ -4394,6 +4420,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsDefaultSectionName</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Name of default form section</shortDescription>
@@ -4401,6 +4428,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsLeftCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for Form Fields sidebar</shortDescription>
@@ -4408,6 +4436,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsModalDeleteSection</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for deleting section in settings modal</shortDescription>
@@ -4415,6 +4444,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsModalRenameSection</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for renaming section in settings modal</shortDescription>
@@ -4422,6 +4452,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsModalSectionSettings</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for form fields section settings modal</shortDescription>
@@ -4429,6 +4460,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsRightCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for Form Fields body</shortDescription>
@@ -4436,6 +4468,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderNewTemplate</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Template header</shortDescription>
@@ -4443,6 +4476,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHeaderTemplateInfoLeftCol</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for gift entry template information</shortDescription>
@@ -4450,6 +4484,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHelpTextBatchHeaderFieldLabelLabel</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for Batch Header Field Label</shortDescription>
@@ -4457,6 +4492,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHelpTextFormFieldsFieldCustomLabel</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields individual field help text</shortDescription>
@@ -4464,6 +4500,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geHelpTextFormFieldsFieldLabelLabel</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for Form Fields Field Label</shortDescription>
@@ -4471,6 +4508,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geLabelDefaultValue</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Default Value</shortDescription>
@@ -4478,6 +4516,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geLabelFieldLabel</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Field Label</shortDescription>
@@ -4485,6 +4524,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geLabelRequired</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Required</shortDescription>
@@ -4492,6 +4532,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geLabelSectionName</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Section Name</shortDescription>
@@ -4499,6 +4540,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geLabelTemplateInfoDescriptionField</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for the field for the template's description</shortDescription>
@@ -4506,6 +4548,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geLabelTemplateInfoNameField</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for the field for the template's name</shortDescription>
@@ -4513,6 +4556,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geTabBatchHeader</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Batch Header</shortDescription>
@@ -4520,6 +4564,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geTabFormFields</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields</shortDescription>
@@ -4527,6 +4572,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geTabTemplateInfo</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Template Info</shortDescription>
@@ -4534,6 +4580,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>geWarningFormFieldsModalDeleteSection</fullName>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning message for deleting a section if it contains required field</shortDescription>
